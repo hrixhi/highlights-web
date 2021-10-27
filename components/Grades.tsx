@@ -272,28 +272,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
     return (
-        <ScrollView style={{
-            width: '100%',
-            // maxHeight: 600,
-            backgroundColor: '#efefef',
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
-        }}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
-            scrollEventThrottle={1}
-            keyboardDismissMode={'on-drag'}
-            overScrollMode={'always'}
-            nestedScrollEnabled={true}
-        >
-            <Animated.View style={{
-                opacity: modalAnimation,
-                width: '100%',
-                // maxHeight: 600,
-                backgroundColor: '#efefef',
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0
-            }}>
+            <View style={{ width: '100%', backgroundColor: '#efefef'}}>
                 {
                     loading
                         ? <View style={{
@@ -332,8 +311,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             channelColor={props.channelColor}
                         />
                 }
-            </Animated.View>
-        </ScrollView>
+            </View>
     );
 }
 

@@ -1915,11 +1915,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'flex-end',
             width: '100%',
             paddingTop: 14,
-            paddingBottom: 10,
+            paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
             flexDirection: 'row',
             justifyContent: 'center',
-            height: 54,
+            height: Dimensions.get('window').width < 768 ? 54 : 68,
             shadowColor: "#000",
             shadowOffset: {
               width: 0,

@@ -405,9 +405,15 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     channelId={sub.channelId}
                                                     channelCreatedBy={sub.channelCreatedBy}
                                                     channelColor={sub.colorCode}
-                                                /> : <View style={{ maxWidth: 900, alignSelf: 'center', width: '100%', backgroundColor: '#efefef', }}>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                /> : <View style={{ maxWidth: 500, alignSelf: 'center', width: '100%', backgroundColor: 'white', borderLeftWidth: 3, borderLeftColor: sub.colorCode, paddingVertical: 20, paddingHorizontal: 40, borderRadius: 1, shadowOffset: {
+                                                    width: 2,
+                                                    height: 2,
+                                                },
+                                                shadowOpacity: 0.1,
+                                                shadowRadius: 10,
+                                                zIndex: 5000000 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -417,14 +423,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Meetings
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                 {attendance[sub.channelId] ? attendance[sub.channelId].length : 0} / {date[sub.channelId] ? date[sub.channelId].length : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -434,14 +440,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Posts
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                 {thread[sub.channelId] ? thread[sub.channelId].length : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -451,14 +457,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Assessments
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].totalAssessments : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 25 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -468,14 +474,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Late
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].lateAssessments : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 25 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -485,14 +491,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Graded
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].gradedAssessments : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 25 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -502,14 +508,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Submitted
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10, }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10, }}>
                                                             <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].submittedAssessments : 0}
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -519,14 +525,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Grade
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].score : 0}%
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: '#efefef', }}>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: 'white', }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{
                                                                 flex: 1, flexDirection: 'row',
                                                                 color: '#393939',
@@ -536,7 +542,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 Progress
                                                             </Text>
                                                         </View>
-                                                        <View style={{ flex: 1, backgroundColor: '#efefef', paddingLeft: 10 }}>
+                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                                             <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                 {score[sub.channelId] ? score[sub.channelId].total : 0}%
                                                             </Text>

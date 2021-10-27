@@ -946,7 +946,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
                     Channel
                 </Text>
-                <label style={{ width: 200 }}>
+                <label style={{ width: 200, backgroundColor: 'white' }}>
                     <Select
                         touchUi={true}
                         theme="ios"
@@ -974,7 +974,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Type
                 </Text>
 
-                <label style={{ width: 200 }}>
+                <label style={{ width: 200, backgroundColor: 'white' }}>
                     <Select
                         touchUi={true}
                         theme="ios"
@@ -1310,6 +1310,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     contentContainerStyle={{
                                                                         maxWidth: '100%', backgroundColor: '#efefef',
                                                                     }}
+                                                                    showsHorizontalScrollIndicator={false}
                                                                     key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                                                     {categoryMap[key].map((category: any, i: any) => {
                                                                         return <View style={{
@@ -1773,7 +1774,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Sort By
                         </Text>
 
-                        <label style={{ width: 200 }}>
+                        <label style={{ width: 200, backgroundColor: 'white' }}>
                             <Select
                                 touchUi={true}
                                 theme="ios"
@@ -1803,7 +1804,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Filter
                         </Text>
 
-                        <label style={{ width: 200 }}>
+                        <label style={{ width: 200, backgroundColor: 'white' }}>
                             <Datepicker
                                 themeVariant="light"
                                 controls={['calendar']}

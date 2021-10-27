@@ -358,10 +358,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         <View style={{
             backgroundColor: '#efefef',
             width: '100%',
-            // height: '100%',
-            // paddingHorizontal: 20,
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
         }}>
             <Text style={{ width: '100%', textAlign: 'center' }}>
                 {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
@@ -373,7 +369,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         width: "100%",
                         flexDirection: "row",
                         backgroundColor: '#efefef',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        borderBottomColor: '#d9dcdf',
+                        borderBottomWidth: 1
                     }}>
                         <Datepicker
                             themeVariant="light"
@@ -464,13 +462,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     (!showAttendanceStats ? <View style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        flex: 1,
-                        maxHeight: 500,
-                        flexDirection: 'row',
-                        paddingHorizontal: 10,
-                        borderBottomRightRadius: 10,
-                        borderTopRightRadius: 10,
+                        // flex: 1,
                         paddingTop: 10,
+                        maxHeight: 500,
+                        paddingHorizontal: 10,
+                        borderRadius: 1,
                         borderLeftColor: props.channelColor,
                         borderLeftWidth: 3,
                         shadowOffset: {
@@ -485,19 +481,20 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
 
                         <ScrollView
-                            showsHorizontalScrollIndicator={true}
+                            showsHorizontalScrollIndicator={false}
                             horizontal={true}
                             contentContainerStyle={{
                                 height: '100%',
+                                maxHeight: 450,
                                 flexDirection: 'column'
                             }}
                             nestedScrollEnabled={true}
                         >
                             <View>
                                 <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
-                                    <View style={styles.col} key={'0,0'} />
+                                    {isOwner ? <View style={styles.col} key={'0,0'} /> : null}
                                     <View style={styles.col} key={'0,0'} >
-                                        <Text style={{ fontSize: 13, color: '#000000', fontFamily: 'inter' }}>
+                                        <Text style={{ fontSize: 13, color: '#000000', fontFamily: 'inter', textAlign: 'center' }}>
                                             Total
                                         </Text>
                                     </View>
@@ -527,20 +524,19 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}
                                 nestedScrollEnabled={true}
                             >
-                                <View>
                                     {
                                         channelAttendances.map((channelAttendance: any, row: number) => {
 
                                             const studentCount = attendanceTotalMap[channelAttendance.userId];
 
                                             return <View style={styles.row} key={row}>
-                                                <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#000000', fontFamily: 'inter' }}>
+                                                {isOwner ? <View style={styles.col} >
+                                                    <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter' }}>
                                                         {channelAttendance.fullName}
                                                     </Text>
-                                                </View>
+                                                </View> : null}
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#000000', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>
                                                 </View>
@@ -568,7 +564,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             </View>
                                         })
                                     }
-                                </View>
                             </ScrollView>
                         </ScrollView>
                         {/* {channelAttendances.length === 0 || pastMeetings.length === 0  ? 

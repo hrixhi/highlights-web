@@ -56,7 +56,7 @@ import {
 import TextareaAutosize from 'react-textarea-autosize';
 import { Editor } from '@tinymce/tinymce-react';
 import FormulaGuide from './FormulaGuide';
-
+import { handleFile } from '../helpers/FileUpload';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -658,6 +658,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     await AsyncStorage.setItem(type, value);
   }, []);
 
+  const updateAfterFileImport = useCallback((uploadURL, uploadType) => {
+
+    const obj = { url: uploadURL, type: uploadType, title };
+    setCue(JSON.stringify(obj));
+
+  }, [title])
+
   const handleCreate = useCallback(
     async (quizId?: string) => {
       setIsSubmitting(true);
@@ -910,6 +917,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         text: "Clear",
         onPress: () => {
           setCue("");
+          setCueDraft("");
           setImported(false);
           setUrl("");
           setType("");
@@ -1028,6 +1036,41 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               </Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
+              {/* QUIZ BUTTON FOR INSTRUCTORS */}
+              {
+                role === 'instructor' && !imported ? <TouchableOpacity style={{
+                  borderRadius: 15,
+                  backgroundColor: "white",
+                }}
+                onPress={() => {
+                  if (isQuiz) {
+                    clearAll()
+                    return
+                  }
+                  setIsQuiz(true);
+                  setSubmission(true);
+                }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: "#006AFF",
+                      borderWidth: 1,
+                      fontSize: 12,
+                      borderColor: "#006AFF",
+                      borderRadius: 15,
+                      paddingHorizontal: 20,
+                      fontFamily: "inter",
+                      overflow: "hidden",
+                      height: 35,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
+                  </Text></TouchableOpacity> : null
+              }
+              
               {
                 showOptions ? null :
                   <TouchableOpacity
@@ -1044,6 +1087,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       borderRadius: 15,
                       backgroundColor: "white",
+                      marginLeft: 15
                     }}
                   >
                     <Text
@@ -1084,7 +1128,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               onTouchStart={() => Keyboard.dismiss()}
             >
               <View style={{ flexDirection: "row", paddingTop: 20 }}>
-                {!isQuiz && !imported ? (
+                {/* {!isQuiz && !imported ? (
                   <Text
                     style={{
                       lineHeight: 35,
@@ -1099,8 +1143,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     {PreferredLanguageText("formula")}
                   </Text>
-                ) : null}
-                {isQuiz || imported ? null : (
+                ) : null} */}
+                {/* {isQuiz || imported ? null : (
                   <FileUpload
                     back={() => setShowImportOptions(false)}
                     onUpload={(u: any, t: any) => {
@@ -1109,31 +1153,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       setShowImportOptions(false);
                     }}
                   />
-                )}
-                {
-                  role === 'instructor' && !imported ? <Text
-                    style={{
-                      color: "#006AFF",
-                      lineHeight: 35,
-                      textAlign: "right",
-                      // paddingRight: 10,
-                      paddingLeft: 20,
-                      textTransform: "uppercase",
-                      fontSize: 12,
-                      fontFamily: 'overpass',
-                    }}
-                    onPress={() => {
-                      if (isQuiz) {
-                        clearAll()
-                        return
-                      }
-                      setIsQuiz(true);
-                      setSubmission(true);
-                    }}
-                  >
-                    {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
-                  </Text> : null
-                }
+                )} */}
+                
               </View>
             </View>
           }
@@ -2566,6 +2587,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           // display: "flex",
                           // paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
                           flexDirection: "row",
+                          alignItems: 'center'
                         }}
                       >
                         <TextareaAutosize
@@ -2591,7 +2613,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           !isQuiz ?
                             <TouchableOpacity
                               style={{
-                                marginLeft: 15,
+                                marginLeft: 25,
                                 paddingTop: 15,
                               }}
                               onPress={() => clearAll()}
@@ -2798,9 +2820,42 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                           tools: { title: 'Tools', items: 'spellchecker code' }
                         },
+                        setup: (editor: any) => {
+
+                          // const equationIcon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 48 60" style="enable-background:new 0 0 48 48;" xml:space="preserve"><g><path d="M45,2v2H20.8271484l-7.8447266,41.1875c-0.0830078,0.4335938-0.4404297,0.7617188-0.8789063,0.8076172   C12.0683594,45.9980469,12.0341797,46,12,46c-0.4003906,0-0.7666016-0.2402344-0.9228516-0.6152344L6.7265625,34.9433594   L3.78125,38.625l-1.5625-1.25l4-5c0.2207031-0.2753906,0.5654297-0.4189453,0.9208984-0.3652344   c0.3496094,0.0488281,0.6474609,0.2792969,0.7832031,0.6054688l3.71875,8.9238281L19.0175781,2.8125   C19.1074219,2.3408203,19.5195313,2,20,2H45z M27.7070313,21.7070313L33,16.4140625l5.2929688,5.2929688l1.4140625-1.4140625   L34.4140625,15l5.2929688-5.2929688l-1.4140625-1.4140625L33,13.5859375l-5.2929688-5.2929688l-1.4140625,1.4140625L31.5859375,15   l-5.2929688,5.2929688L27.7070313,21.7070313z M32.9546509,38.5549316l-5.1089478-8.0891113l-1.6914063,1.0683594   l5.6068115,8.8773804l-2.6019287,4.0474243l1.6816406,1.0820313l9-14l-1.6816406-1.0820313L32.9546509,38.5549316z M23,27h20v-2H23   V27z"/></g></svg>'
+                          
+                          const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
+                          editor.ui.registry.addIcon('formula', equationIcon)
+                          
+                          editor.ui.registry.addButton("formula", {
+                            icon: 'formula',
+                            // text: "Upload File",
+                            tooltip: 'Insert equation',
+                            onAction: () => {
+                              setShowEquationEditor(!showEquationEditor)
+                            }
+                          });
+
+                          editor.ui.registry.addButton("upload", {
+                            icon: 'upload',
+                            tooltip: 'Import File (pdf, docx, media, etc.)',
+                            onAction: async () => {
+                              const res = await handleFile(false);
+
+                              console.log("File upload result", res);
+
+                              if (!res || res.url === "" || res.type === "") {
+                                return;
+                              }
+
+                              updateAfterFileImport(res.url, res.type);
+                              
+                            }
+                          })
+                        },
                         // menubar: 'file edit view insert format tools table tc help',
                         menubar: false,
-                        toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                        toolbar: 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                         importcss_append: true,
                         image_caption: true,
                         quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',

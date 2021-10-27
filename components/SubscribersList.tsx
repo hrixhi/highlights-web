@@ -1806,9 +1806,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 // height: windowHeight - 132
                                             }}
                                             style={{ flex: 1, paddingTop: 12 }}>
-                                            <View style={{ flexDirection: 'row', flex: 1 }}>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                                                 <View style={{
-                                                    flex: 1, flexDirection: 'row'
+                                                    flex: 1, flexDirection: 'row', alignItems: 'center'
                                                 }}>
                                                     <TouchableOpacity onPress={() => {
                                                         if (showChat) {
@@ -1858,6 +1858,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{
                                                         backgroundColor: "white",
                                                         flexDirection: "row",
+                                                        alignItems: 'center'
                                                     }}>
                                                     <TextInput
                                                         value={score}
@@ -1868,9 +1869,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             borderBottomWidth: 1,
                                                             fontSize: 14,
                                                             // paddingTop: 13,
-                                                            paddingVertical: 5,
-                                                            marginTop: 5,
-                                                            marginBottom: 20,
+                                                            padding: 10,
                                                             marginRight: 20
                                                         }}
                                                         placeholder={'Score 0-100'}

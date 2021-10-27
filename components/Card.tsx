@@ -85,10 +85,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }
                         </Text>
                         {
+                            props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
+                                ? <Ionicons name='alert-circle-outline' size={14} color='#f94144' />
+                                : null
+                        } 
+                        {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
                                 color: '#006AFF',
-                                marginLeft: 10, textAlign: 'right'
+                                marginLeft: 5, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
                             </Text> : null
@@ -96,7 +101,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                     <View style={{
                         backgroundColor: '#fff',
-                        width: '100%', flexDirection: 'row', flex: 1, height: '75%'
+                        width: '100%', flexDirection: 'row', flex: 1, height: '70%'
                     }}>
                         <Text
                             ellipsizeMode={'tail'}
@@ -104,14 +109,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             style={styleObject.title}>
                             {title}
                         </Text>
-                        {
-                            props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
-                                ?
-                                <Text style={{ paddingTop: 6 }}>
-                                    <Ionicons name='alert-circle-outline' size={15} color='#f94144' />
-                                </Text>
-                                : null
-                        }
                         {/* {
                             props.cue.channelId && props.cue.unreadThreads !== 0 ?
                                 <Text style={{
@@ -197,14 +194,15 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     dateContainer: {
         fontSize: 10,
         color: '#fff',
-        height: '25%',
+        height: '30%',
         backgroundColor: '#fff',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     flipDateContainer: {
         fontSize: 10,
-        height: '25%',
+        height: '70%',
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
@@ -217,10 +215,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         lineHeight: 10,
     },
     date2: {
-        fontSize: 9,
+        fontSize: 10,
         color: colorScheme === 'light' ? '#fff' : '#393939',
         // marginLeft: 10,
-        lineHeight: 10,
+        lineHeight: 12,
         textAlign: 'left',
         paddingVertical: 2,
         flex: 1

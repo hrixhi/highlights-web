@@ -26,11 +26,11 @@ import ReactPlayer from "react-player";
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+    // State 
     const [loading, setLoading] = useState(false)
     const unparsedThreads: any[] = JSON.parse(JSON.stringify(props.threads))
     const [threads] = useState<any[]>(unparsedThreads.reverse())
     const [threadWithReplies, setThreadWithReplies] = useState<any[]>([])
-    const styles = styleObject()
     const [showThreadCues, setShowThreadCues] = useState(false)
     const [filterChoice, setFilterChoice] = useState('All')
     const [showPost, setShowPost] = useState(false)
@@ -41,19 +41,40 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [threadCategories, setThreadCategories] = useState<any[]>([])
     const [customCategory, setCustomCategory] = useState('None')
     const [addCustomCategory, setAddCustomCategory] = useState(false)
-
     const [isOwner, setIsOwner] = useState(false)
+    const [userId, setUserId] = useState('')
+    const [threadChat, setThreadChat] = useState<any[]>([])
+
+    // Local 
+    const styles = styleObject()
     const categories: any[] = []
     const categoryObject: any = {}
     let filteredThreads: any[] = []
+
+    /**
+     * @description Error Messages
+     */
+    const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread')
+    const checkConnectionAlert = PreferredLanguageText('checkConnection')
+    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
+    
+    /**
+     * @description Builds all categories
+     */
     threads.map((item) => {
         if (item.category !== '' && !categoryObject[item.category]) {
             categoryObject[item.category] = 'category'
         }
     })
+
     Object.keys(categoryObject).map((key) => {
         categories.push(key)
     })
+
+
+    /** 
+     * @description Filter threads using Category
+     */
     if (filterChoice === 'All') {
         filteredThreads = threads
     } else {
@@ -62,14 +83,43 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         })
     }
 
-    const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread')
-    const checkConnectionAlert = PreferredLanguageText('checkConnection')
-    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
+    // ON INIT
 
-    const [threadChat, setThreadChat] = useState<any[]>([])
+    /**
+     * @description Load categories on init
+     */
+    useEffect(() => {
+        loadCategories()
+    }, [props.channelId])
 
-    const [userId, setUserId] = useState('')
 
+    /**
+     * Set is Owner on init
+     */
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem("user")
+                if (u) {
+                    const user = JSON.parse(u)
+                    setUserId(user._id)
+                    if (user.avatar) {
+                        setAvatar(user.avatar)
+                    } else {
+                        setAvatar('https://cues-files.s3.amazonaws.com/images/default.png')
+                    }
+                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                }
+            }
+        )()
+    }, [])
+    
+
+    /**
+     * @description Fetches all the categories for that Channel
+     */
     const loadCategories = useCallback(async () => {
         if (props.channelId === undefined || props.channelId === null || props.channelId === '') {
             return;
@@ -90,11 +140,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             })
     }, [props.channelId])
 
-    useEffect(() => {
-        loadCategories()
-    }, [props.channelId])
 
-    // Load chat opened from Search
+    /**
+     * Load discussion from Search or Activity
+     */
     useEffect(() => {
         (
             async () => {
@@ -113,6 +162,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }, [threads])
 
 
+    /**
+     * @description Create a new Thread
+     */
     const onSend = useCallback(async (messages: any) => {
 
         const server = fetchAPI('')
@@ -141,6 +193,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     }, [props.cueId, props.channelId, threadId, userId, showPost, customCategory, privatePost, isOwner])
 
+
+    /**
+     * @description Load the entire the Thread using the thread ID
+     */
     const loadCueDiscussions = useCallback(async (tId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -235,25 +291,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     }, [])
 
-    useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem("user")
-                if (u) {
-                    const user = JSON.parse(u)
-                    setUserId(user._id)
-                    if (user.avatar) {
-                        setAvatar(user.avatar)
-                    } else {
-                        setAvatar('https://cues-files.s3.amazonaws.com/images/default.png')
-                    }
-                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                        setIsOwner(true)
-                    }
-                }
-            }
-        )()
-    }, [])
 
     const deletePost = useCallback((threadId: string) => {
         if (!isOwner) {
@@ -273,6 +310,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             }
         }).catch(e => Alert(somethingWentWrongAlert))
     }, [isOwner])
+
+
+    /**
+     * Renders Custom bubble for Gifted Chat
+     */
 
     const renderBubble = (props: any) => {
         return (
@@ -331,6 +373,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
 
+    /**
+     * @description Map categories for New Category Select dropdown
+     */
     let categoriesOptions = [{
         value: 'None', text: 'None'
     }];
@@ -342,7 +387,25 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         })
     })
 
+    /**
+     * @description Map categories for Filter Category Select dropdown
+     */
+    let categoryChoices = [{
+        value: 'All',
+        text: 'All'
+    }]
 
+    categories.map((cat: any) => {
+        categoryChoices.push({
+            value: cat,
+            text: cat
+        })
+    })
+
+
+    /**
+     * @description Helper to display Time in email format
+     */
     function emailTimeDisplay(dbDate: string) {
         let date = moment(dbDate);
         var currentDate = moment();
@@ -425,29 +488,306 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         </View>
     </View>)
 
-    let categoryChoices = [{
-        value: 'All',
-        text: 'All'
-    }]
+    /**
+     * @description Renders the Filter Dropdown and the New Post button
+     */
+    const renderThreadHeader = () => {
+        return <View style={{
+            backgroundColor: '#efefef',
+            flexDirection: 'row',
+            paddingBottom: 20,
+            width: '100%',
+            maxWidth: 900,
+            borderRadius: 1
+        }}>
+            {
+                props.cueId === null && !showPost && categoryChoices.length > 1 ?
+                    <View style={{
+                        backgroundColor: '#efefef',
+                    }}>
+                        <label style={{ width: 150, backgroundColor: '#efefef', borderBottom: '1px solid #d9dcdf' }}>
+                            <Select
+                                touchUi={true}
+                                themeVariant="light"
+                                value={filterChoice}
+                                onChange={(val: any) => {
+                                    setFilterChoice(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    }
+                                }}
+                                data={categoryChoices}
+                            />
+                        </label>
+                    </View> : null}
+            {
+                showComments && !showPost ?
+                    <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', backgroundColor: '#efefef' }}>
+                        <TouchableOpacity
+                            key={Math.random()}
+                            onPress={() => {
+                                setThreadId('')
+                                setThreadChat([])
+                                setShowPost(true)
+                            }}
+                            style={{
+                                backgroundColor: '#efefef',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                right: 0
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#006AFF',
+                                fontSize: 12,
+                                borderColor: '#006AFF',
+                                paddingHorizontal: 20,
+                                borderWidth: 1,
+                                fontFamily: 'inter',
+                                height: 35,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                NEW POST
+                                {/* <Ionicons name='create-outline' size={15} color={'#000000'} /> */}
+                            </Text>
+                        </TouchableOpacity>
+                    </View> : null
+            }
 
-    categories.map((cat: any) => {
-        categoryChoices.push({
-            value: cat,
-            text: cat
-        })
-    })
+        </View>
+    }
+
+    /**
+     * @description Renders selected thread with GiftedChat component
+     */
+    const renderSelectedThread = () => {
+        return (<View style={{
+            width: '100%',
+            maxWidth: 900,
+            borderRadius: 1,
+            padding: 10,
+            minHeight: 400,
+        }}
+        >
+            <GiftedChat
+                renderUsernameOnMessage={true}
+                messages={threadChat}
+                onSend={messages => onSend(messages)}
+                user={{
+                    _id: userId,
+                    avatar
+                }}
+                renderBubble={renderBubble}
+                renderActions={() => (
+                    <View style={{
+                        marginTop: -10
+                    }}>
+                        <FileUpload
+                            chat={true}
+                            onUpload={(u: any, t: any) => {
+                                const title = prompt('Enter title and click on OK to share.')
+                                if (!title || title === "") return;
+
+                                let text: any = ''
+                                let img: any = ''
+                                let audio: any = ''
+                                let video: any = ''
+                                let file: any = ''
+
+                                if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
+                                    img = u
+                                } else if (t === "mp3" || t === "wav" || t === "mp2") {
+                                    audio = u
+                                } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
+                                    video = u
+                                } else {
+                                    file = u
+                                    text = <TouchableOpacity
+                                        onPress={() => {
+                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                window.open(u, '_blank')
+                                            } else {
+                                                Linking.openURL(u)
+                                            }
+                                        }}
+                                        style={{
+                                            backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                            marginTop: 6,
+                                        }}>
+                                        <Text style={{
+                                            textAlign: "center",
+                                            lineHeight: 35,
+                                            color: '#006AFF',
+                                            fontSize: 12,
+                                            borderWidth: 1,
+                                            borderColor: '#006AFF',
+                                            paddingHorizontal: 20,
+                                            fontFamily: "inter",
+                                            height: 35,
+                                            // paddingTop: 2
+                                            // width: 125,
+                                            borderRadius: 15,
+                                            textTransform: "uppercase"
+                                        }}>
+                                            {title}
+                                        </Text>
+                                    </TouchableOpacity>
+                                }
+
+                                const obj = { title, type: t, url: u }
+
+                                onSend([{
+                                    title,
+                                    text,
+                                    image: img,
+                                    audio,
+                                    video,
+                                    file,
+                                    saveCue: JSON.stringify(obj)
+                                }])
+                            }}
+                        />
+                    </View>
+                )}
+            />
+        </View>)
+    }
+
+    /**
+     * @description Renders List of threads
+     */
+    const renderAllThreads = () => {
+        return (<View style={{ width: '100%', backgroundColor: threads.length === 0 ? '#efefef' : 'white', maxWidth: 900, paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10, borderRadius: 1 }}>
+        {
+            threads.length === 0 ?
+                <View style={{ flex: 1 }}>
+                    <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef' }}>
+                        {
+                            !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
+                        }
+                    </Text>
+                </View>
+                : <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    horizontal={false}
+                    // style={{ height: '100%' }}
+                    contentContainerStyle={{
+                        // borderWidth: 1,
+                        // borderRightWidth: 0,
+                        // borderLeftWidth: 0,
+                        // borderRightWidth: 1,
+                        borderColor: '#efefef',
+                        borderRadius: 1,
+                        width: '100%',
+                        maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500,
+                    }}
+                >
+                    {
+                        filteredThreads.map((thread: any, ind) => {
+
+                            let title = ''
+
+                            if (thread.message[0] === '{' && thread.message[thread.message.length - 1] === '}') {
+                                const obj = JSON.parse(thread.message)
+                                title = obj.title
+                            } else {
+                                const { title: t, subtitle: s } = htmlStringParser(thread.message)
+                                title = t
+                            }
+
+                            return <TouchableOpacity
+                                onPress={() => loadCueDiscussions(thread._id)}
+                                style={{
+                                    // backgroundColor: '#efefef',
+                                    flexDirection: 'row',
+                                    borderColor: '#efefef',
+                                    paddingVertical: 5,
+                                    // borderRightWidth: 1,
+                                    borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
+                                    // minWidth: 600, // flex: 1,
+                                    width: '100%'
+                                }}>
+                                <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                    <Image
+                                        style={{
+                                            height: 35,
+                                            width: 35,
+                                            marginTop: 5,
+                                            marginLeft: 5,
+                                            marginBottom: 5,
+                                            borderRadius: 75,
+                                            // marginTop: 20,
+                                            alignSelf: 'center'
+                                        }}
+                                        source={{ uri: thread.avatar ? thread.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                    />
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
+                                        {thread.anonymous ? 'Anonymous' : thread.fullName}
+                                    </Text>
+                                    <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
+                                        {title}
+                                    </Text>
+                                </View>
+                                <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                                    <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10, alignItems: 'center' }}>
+                                        {
+                                            thread.isPrivate ?
+                                                <Text style={{ fontSize: 13, padding: 5, color: '#006AFF', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                    <Ionicons name='eye-off-outline' size={18} />
+                                                </Text>
+                                                : null
+                                        }
+                                        {thread.unreadThreads > 0 ? <View style={{
+                                            width: 16,
+                                            height: 16,
+                                            borderRadius: 8,
+                                            marginHorizontal: 5,
+                                            backgroundColor: "#006AFF",
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginBottom: 3
+                                        }}>
+                                            <Text style={{ color: 'white', fontSize: 10 }}>
+                                                {thread.unreadThreads}
+                                            </Text>
+
+                                        </View> : null}
+                                        <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, fontWeight: 'bold', color: thread.unreadThreads > 0 ? "#006AFF" : '#000000' }} ellipsizeMode='tail'>
+                                            {emailTimeDisplay(thread.time)}
+                                        </Text>
+                                        <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                            <Ionicons name='chevron-forward-outline' size={18} color='#006AFF' />
+                                        </Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        })
+                    }
+                </ScrollView>
+        }
+    </View>)
+    }
+
+    // MAIN RETURN 
 
     return (
         <View style={{
             backgroundColor: '#efefef',
             width: '100%',
-            // height: props.cueId ? windowHeight - 200 : windowHeight - 50,
-            // paddingRight: 20,
-            // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
-            borderTopRightRadius: props.cueId ? 0 : 30,
-            borderTopLeftRadius: props.cueId ? 0 : 30,
-            paddingTop: props.cueId ? 0 : 0,
-            // borderWidth: 1,
+            paddingTop: 0,
             justifyContent: 'center',
             flexDirection: 'row',
         }}>
@@ -455,114 +795,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 width: '100%',
                 maxWidth: 900,
                 backgroundColor: '#efefef',
-                borderBottomRightRadius: 10,
-                borderTopRightRadius: 10
+                borderRadius: 1
             }}>
                 {
                     !showPost && !showThreadCues ?
-                        <View style={{
-                            backgroundColor: '#efefef',
-                            flexDirection: 'row',
-                            paddingBottom: 20,
-                            width: '100%',
-                            maxWidth: 900,
-                            borderBottomRightRadius: 10,
-                            borderTopRightRadius: 10
-                        }}>
-                            {
-                                props.cueId === null && !showPost && categoryChoices.length > 1 ?
-                                    <View style={{
-                                        // width: '100%',
-                                        // paddingTop: 10,
-                                        // paddingRight: 20,
-                                        // paddingTop: 7,
-                                        backgroundColor: '#efefef',
-                                    }}>
-                                        <label style={{ width: 150, backgroundColor: '#efefef', }}>
-                                            <Select
-                                                touchUi={true}
-                                                themeVariant="light"
-                                                value={filterChoice}
-                                                onChange={(val: any) => {
-                                                    setFilterChoice(val.value)
-                                                }}
-                                                responsive={{
-                                                    small: {
-                                                        display: 'bubble'
-                                                    },
-                                                    medium: {
-                                                        touchUi: false,
-                                                    }
-                                                }}
-                                                data={categoryChoices}
-                                            />
-                                        </label>
-                                    </View> : null}
-                            {
-                                showComments && !showPost ?
-                                    <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', backgroundColor: '#efefef' }}>
-                                        <TouchableOpacity
-                                            key={Math.random()}
-                                            onPress={() => {
-                                                setThreadId('')
-                                                setThreadChat([])
-                                                setShowPost(true)
-                                            }}
-                                            style={{
-                                                backgroundColor: '#efefef',
-                                                overflow: 'hidden',
-                                                height: 35,
-                                                // marginTop: 15,
-                                                justifyContent: 'center',
-                                                flexDirection: 'row',
-                                                right: 0
-                                            }}>
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                lineHeight: 35,
-                                                color: '#006AFF',
-                                                fontSize: 12,
-                                                borderColor: '#006AFF',
-                                                paddingHorizontal: 20,
-                                                borderWidth: 1,
-                                                fontFamily: 'inter',
-                                                height: 35,
-                                                // width: 100,
-                                                borderRadius: 15,
-                                                textTransform: 'uppercase'
-                                            }}>
-                                                NEW POST
-                                                {/* <Ionicons name='create-outline' size={15} color={'#000000'} /> */}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View> : null
-                            }
-
-                        </View> :
-                        <View style={{
-                            width: '100%',
-                            backgroundColor: '#fff',
-                            borderLeftWidth: 3,
-                            borderLeftColor: props.channelColor,
-                            borderTopRightRadius: 10
-                        }}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setShowPost(false)
-                                    setShowThreadCues(false)
-                                    props.reload()
-                                }}
-                                style={{
-                                    paddingRight: 20,
-                                    paddingLeft: 10,
-                                    alignSelf: 'flex-start',
-                                }}
-                            >
-                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10, }}>
-                                    <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                        renderThreadHeader() : null
                 }
                 <Collapse isOpened={showComments} style={{ flex: 1 }}>
                     {
@@ -580,34 +817,50 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View> :
                                 <View style={{
                                     width: '100%',
-                                    // height: props.cueId ? 'auto' : windowHeight - 100,
-                                    // borderWidth: 1,
                                     backgroundColor: 'white',
                                     flex: 1,
-                                    flexDirection: 'row',
+                                    flexDirection: 'column',
                                     borderLeftWidth: threads.length === 0 ? 0 : 3,
                                     borderLeftColor: props.channelColor,
-                                    borderTopRightRadius: 10,
-                                    borderBottomRightRadius: 10,
+                                    borderRadius: 1,
                                     shadowOffset: {
-                                        width: 2,
-                                        height: 2,
+                                        width: threads.length === 0 ? 0 : 2,
+                                        height:  threads.length === 0 ? 0 : 2,
                                     },
                                     shadowOpacity: 0.1,
-                                    shadowRadius: 10,
+                                    shadowRadius:  threads.length === 0 ? 0 : 10,
                                 }}
                                     key={JSON.stringify(filteredThreads) + JSON.stringify(showPost)}
                                 >
+                                    {showPost || showThreadCues ? <View style={{
+                                        width: '100%',
+                                        backgroundColor: '#fff',
+                                    }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setShowPost(false)
+                                                setShowThreadCues(false)
+                                                props.reload()
+                                            }}
+                                            style={{
+                                                paddingRight: 20,
+                                                paddingLeft: 10,
+                                                alignSelf: 'flex-start',
+                                            }}
+                                        >
+                                            <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10, }}>
+                                                <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View> : null }
                                     {
                                         showPost ?
                                             <View style={{
                                                 width: '100%',
                                                 maxWidth: 900,
                                                 padding: 10,
-                                                borderBottomRightRadius: 10,
                                                 minHeight: 400,
                                             }}
-                                            // key={threadChat.toString()}
                                             >
                                                 <GiftedChat
                                                     renderUsernameOnMessage={true}
@@ -714,210 +967,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 />
                                             </View>
                                             : (showThreadCues ?
-                                                <View style={{
-                                                    width: '100%',
-                                                    maxWidth: 900,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomRightRadius: 10,
-                                                    padding: 10,
-                                                    minHeight: 400,
-                                                    // paddingLeft: 20,
-                                                    // height: Dimensions.get('window').height - 350,
-                                                }}
-                                                // key={threadChat.toString()}
-                                                >
-                                                    <GiftedChat
-                                                        renderUsernameOnMessage={true}
-                                                        messages={threadChat}
-                                                        onSend={messages => onSend(messages)}
-                                                        user={{
-                                                            _id: userId,
-                                                            avatar
-                                                        }}
-                                                        renderBubble={renderBubble}
-                                                        renderActions={() => (
-                                                            <View style={{
-                                                                marginTop: -10
-                                                            }}>
-                                                                <FileUpload
-                                                                    chat={true}
-                                                                    onUpload={(u: any, t: any) => {
-                                                                        const title = prompt('Enter title and click on OK to share.')
-                                                                        if (!title || title === "") return;
-
-                                                                        let text: any = ''
-                                                                        let img: any = ''
-                                                                        let audio: any = ''
-                                                                        let video: any = ''
-                                                                        let file: any = ''
-
-                                                                        if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
-                                                                            img = u
-                                                                        } else if (t === "mp3" || t === "wav" || t === "mp2") {
-                                                                            audio = u
-                                                                        } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
-                                                                            video = u
-                                                                        } else {
-                                                                            file = u
-                                                                            text = <TouchableOpacity
-                                                                                onPress={() => {
-                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                                                                        window.open(u, '_blank')
-                                                                                    } else {
-                                                                                        Linking.openURL(u)
-                                                                                    }
-                                                                                }}
-                                                                                style={{
-                                                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
-                                                                                    marginTop: 6,
-                                                                                }}>
-                                                                                <Text style={{
-                                                                                    textAlign: "center",
-                                                                                    lineHeight: 35,
-                                                                                    color: '#006AFF',
-                                                                                    fontSize: 12,
-                                                                                    borderWidth: 1,
-                                                                                    borderColor: '#006AFF',
-                                                                                    paddingHorizontal: 20,
-                                                                                    fontFamily: "inter",
-                                                                                    height: 35,
-                                                                                    // paddingTop: 2
-                                                                                    // width: 125,
-                                                                                    borderRadius: 15,
-                                                                                    textTransform: "uppercase"
-                                                                                }}>
-                                                                                    {title}
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                        }
-
-                                                                        const obj = { title, type: t, url: u }
-
-                                                                        onSend([{
-                                                                            title,
-                                                                            text,
-                                                                            image: img,
-                                                                            audio,
-                                                                            video,
-                                                                            file,
-                                                                            saveCue: JSON.stringify(obj)
-                                                                        }])
-                                                                    }}
-                                                                />
-                                                            </View>
-                                                        )}
-                                                    />
-                                                </View> : <View style={{ width: '100%', backgroundColor: threads.length === 0 ? '#efefef' : 'white', maxWidth: 900, paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10, borderTopRightRadius: 10, borderBottomRightRadius: 10, }}>
-                                                    {
-                                                        threads.length === 0 ?
-                                                            <View style={{ flex: 1 }}>
-                                                                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef' }}>
-                                                                    {
-                                                                        !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
-                                                                    }
-                                                                </Text>
-                                                            </View>
-                                                            : <ScrollView
-                                                                showsVerticalScrollIndicator={false}
-                                                                horizontal={false}
-                                                                // style={{ height: '100%' }}
-                                                                contentContainerStyle={{
-                                                                    // borderWidth: 1,
-                                                                    // borderRightWidth: 0,
-                                                                    // borderLeftWidth: 0,
-                                                                    // borderRightWidth: 1,
-                                                                    borderColor: '#efefef',
-                                                                    borderRadius: 1,
-                                                                    width: '100%',
-                                                                    maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500,
-                                                                }}
-                                                            >
-                                                                {
-                                                                    filteredThreads.map((thread: any, ind) => {
-
-                                                                        let title = ''
-
-                                                                        if (thread.message[0] === '{' && thread.message[thread.message.length - 1] === '}') {
-                                                                            const obj = JSON.parse(thread.message)
-                                                                            title = obj.title
-                                                                        } else {
-                                                                            const { title: t, subtitle: s } = htmlStringParser(thread.message)
-                                                                            title = t
-                                                                        }
-
-                                                                        return <TouchableOpacity
-                                                                            onPress={() => loadCueDiscussions(thread._id)}
-                                                                            style={{
-                                                                                // backgroundColor: '#efefef',
-                                                                                flexDirection: 'row',
-                                                                                borderColor: '#efefef',
-                                                                                paddingVertical: 5,
-                                                                                // borderRightWidth: 1,
-                                                                                borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
-                                                                                // minWidth: 600, // flex: 1,
-                                                                                width: '100%'
-                                                                            }}>
-                                                                            <View style={{ backgroundColor: '#fff', padding: 5 }}>
-                                                                                <Image
-                                                                                    style={{
-                                                                                        height: 35,
-                                                                                        width: 35,
-                                                                                        marginTop: 5,
-                                                                                        marginLeft: 5,
-                                                                                        marginBottom: 5,
-                                                                                        borderRadius: 75,
-                                                                                        // marginTop: 20,
-                                                                                        alignSelf: 'center'
-                                                                                    }}
-                                                                                    source={{ uri: thread.avatar ? thread.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                                />
-                                                                            </View>
-                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
-                                                                                    {thread.anonymous ? 'Anonymous' : thread.fullName}
-                                                                                </Text>
-                                                                                <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
-                                                                                    {title}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
-                                                                                <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10, alignItems: 'center' }}>
-                                                                                    {
-                                                                                        thread.isPrivate ?
-                                                                                            <Text style={{ fontSize: 13, padding: 5, color: '#006AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                                <Ionicons name='eye-off-outline' size={18} />
-                                                                                            </Text>
-                                                                                            : null
-                                                                                    }
-                                                                                    {thread.unreadThreads > 0 ? <View style={{
-                                                                                        width: 16,
-                                                                                        height: 16,
-                                                                                        borderRadius: 8,
-                                                                                        marginHorizontal: 5,
-                                                                                        backgroundColor: "#006AFF",
-                                                                                        alignItems: 'center',
-                                                                                        justifyContent: 'center',
-                                                                                        marginBottom: 3
-                                                                                    }}>
-                                                                                        <Text style={{ color: 'white', fontSize: 10 }}>
-                                                                                            {thread.unreadThreads}
-                                                                                        </Text>
-
-                                                                                    </View> : null}
-                                                                                    <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, fontWeight: 'bold', color: thread.unreadThreads > 0 ? "#006AFF" : '#000000' }} ellipsizeMode='tail'>
-                                                                                        {emailTimeDisplay(thread.time)}
-                                                                                    </Text>
-                                                                                    <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chevron-forward-outline' size={18} color='#006AFF' />
-                                                                                    </Text>
-                                                                                </View>
-                                                                            </View>
-                                                                        </TouchableOpacity>
-                                                                    })
-                                                                }
-                                                            </ScrollView>
-                                                    }
-                                                </View>)
+                                                renderSelectedThread() : renderAllThreads())
                                     }
                                 </View>
                         )

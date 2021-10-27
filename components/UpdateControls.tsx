@@ -59,6 +59,8 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 // import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select as MobiscrollSelect, Input, FormGroupTitle } from '@mobiscroll/react'
 import FormulaGuide from './FormulaGuide';
+import { handleFile } from '../helpers/FileUpload';
+
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -849,6 +851,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     //     notify,
     //     url, original, type, title, imported
     // ]);
+
+    const updateAfterFileImport = useCallback((u: any, t: any) => {
+        if (props.showOriginal) {
+            setOriginal(JSON.stringify({
+                url: u, type: t, title
+            }))
+        } else {
+            setSubmissionDraft(JSON.stringify({
+                url: u, type: t, title: submissionTitle, annotations: ''
+            }))
+            setSubmissionImported(true);
+            setSubmissionType(t);
+            setSubmissionUrl(u);
+        }
+        setShowImportOptions(false);
+    }, [title, submissionTitle])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h);
@@ -2205,7 +2223,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View
                 style={{
                     width: "100%",
-                    flexDirection: width < 1024 ? "column" : "row",
+                    flexDirection: width < 768 ? "column" : "row",
                     paddingBottom: 20
                 }}>
                 <View
@@ -2847,7 +2865,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : (
                     <View key={url + props.showOriginal.toString()} style={{}}>
-                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }} key={props.showOriginal + url + imported.toString()}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 768 ? "50vh" : "70vh" }} key={props.showOriginal + url + imported.toString()}></div>
                         {/* {renderSaveCueButton()} */}
                     </View>
                 )
@@ -2870,7 +2888,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : (
                     <View style={{}} key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(viewSubmissionTab)}>
-                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 768 ? "50vh" : "70vh" }}></div>
                         {renderFooter()}
                     </View>
                 )
@@ -2933,9 +2951,40 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                         tools: { title: 'Tools', items: 'spellchecker code' }
                     },
+                    setup: (editor: any) => {
+
+                        const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
+                        editor.ui.registry.addIcon('formula', equationIcon)
+                        
+                        editor.ui.registry.addButton("formula", {
+                          icon: 'formula',
+                          // text: "Upload File",
+                          tooltip: 'Insert equation',
+                          onAction: () => {
+                            setShowEquationEditor(!showEquationEditor)
+                          }
+                        });
+
+                        editor.ui.registry.addButton("upload", {
+                          icon: 'upload',
+                          tooltip: 'Import File (pdf, docx, media, etc.)',
+                          onAction: async () => {
+                            const res = await handleFile(false);
+
+                            console.log("File upload result", res);
+
+                            if (!res || res.url === "" || res.type === "") {
+                              return;
+                            }
+
+                            updateAfterFileImport(res.url, res.type);
+                            
+                          }
+                        })
+                    },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
-                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                     importcss_append: true,
                     image_caption: true,
                     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3096,7 +3145,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 {attempt.title}
                             </Text> : null}
-                            <div className="webviewer" ref={submissionViewerRef} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} style={{ height: Dimensions.get('window').width < 768 ? "50vh" : "70vh" }}></div>
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(attempt)}>
@@ -3104,7 +3153,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
                             </div> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }} key={viewSubmissionTab}></div>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 768 ? "50vh" : "70vh" }} key={viewSubmissionTab}></div>
                         }
                     </View>
 
@@ -3141,9 +3190,40 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                     tools: { title: 'Tools', items: 'spellchecker code' }
                 },
+                setup: (editor: any) => {
+
+                    const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
+                    editor.ui.registry.addIcon('formula', equationIcon)
+                    
+                    editor.ui.registry.addButton("formula", {
+                      icon: 'formula',
+                      // text: "Upload File",
+                      tooltip: 'Insert equation',
+                      onAction: () => {
+                        setShowEquationEditor(!showEquationEditor)
+                      }
+                    });
+
+                    editor.ui.registry.addButton("upload", {
+                      icon: 'upload',
+                      tooltip: 'Import File (pdf, docx, media, etc.)',
+                      onAction: async () => {
+                        const res = await handleFile(false);
+
+                        console.log("File upload result", res);
+
+                        if (!res || res.url === "" || res.type === "") {
+                          return;
+                        }
+
+                        updateAfterFileImport(res.url, res.type);
+                        
+                      }
+                    })
+                },
                 // menubar: 'file edit view insert format tools table tc help',
                 menubar: false,
-                toolbar: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? false : 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                toolbar: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? false : 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                 importcss_append: true,
                 image_caption: true,
                 quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3163,7 +3243,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
-            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row' }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row' }}>
                 <View
                     style={{
                         paddingBottom: 15,
@@ -3182,7 +3262,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View>
                     {
                         props.cue.channelId !== "" ? (<View>
-                            <View style={{ flexDirection: "row", justifyContent: width < 1024 ? 'flex-start' : 'flex-end' }}>
+                            <View style={{ flexDirection: "row", justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                                 <View
                                     style={{
                                         backgroundColor: "white",
@@ -3285,7 +3365,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderSubmissionRequiredOptions = () => {
         return props.cue.channelId !== "" ? (
-            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         flexDirection: 'row', flex: 1,
@@ -3299,7 +3379,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View>
-                    <View style={{ flexDirection: "row", justifyContent: width < 1024 ? 'flex-start' : 'flex-end' }}>
+                    <View style={{ flexDirection: "row", justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                         {isOwner ? (
                             (isQuiz ? null : <View
                                 style={{
@@ -3408,7 +3488,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 10,
-                                marginLeft: width < 1024 ? 0 : 'auto'
+                                marginLeft: width < 768 ? 0 : 'auto'
                             }}>
                             <Text
                                 style={{
@@ -3490,7 +3570,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderGradeOptions = () => {
         return submission ? (
-            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         flexDirection: 'row', flex: 1,
@@ -3504,7 +3584,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>Grade Weight</Text>
                 </View>
                 <View style={{}}>
-                    {isOwner ? <View style={{ flexDirection: "row", justifyContent: width < 1024 ? 'flex-start' : 'flex-end' }}>
+                    {isOwner ? <View style={{ flexDirection: "row", justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                         <View
                             style={{
                                 backgroundColor: "white",
@@ -3531,7 +3611,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                justifyContent: width < 1024 ? 'flex-start' : 'flex-end',
+                                justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                 alignItems: 'center'
                             }}>
                             {isOwner ? (
@@ -3580,7 +3660,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderLateSubmissionOptions = () => {
         return submission ? (
-            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         // width: 300,
@@ -3595,7 +3675,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>Late Submission</Text>
                 </View>
                 <View style={{}}>
-                    {isOwner ? <View style={{ flexDirection: "row", justifyContent: width < 1024 ? 'flex-start' : 'flex-end' }}>
+                    {isOwner ? <View style={{ flexDirection: "row", justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                         <View
                             style={{
                                 backgroundColor: "white",
@@ -3706,7 +3786,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderAttemptsOptions = () => {
         return isQuiz ? (
             (!isOwner ?
-                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40, }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
                             flexDirection: 'row', flex: 1,
@@ -3745,7 +3825,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 :
-                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40, }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
                             flexDirection: 'row', flex: 1,
@@ -3769,7 +3849,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 backgroundColor: "white",
                                 height: 40,
                                 marginRight: 10,
-                                flexDirection: 'row', justifyContent: width < 1024 ? 'flex-start' : 'flex-end'
+                                flexDirection: 'row', justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                             }}
                         >
                             <Switch
@@ -3842,16 +3922,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     borderRightWidth: 0,
-                    flexDirection: width < 1024 ? 'column' : 'row',
-                    alignItems: width < 1024 ? 'flex-start' : 'center',
+                    flexDirection: width < 768 ? 'column' : 'row',
+                    alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
                     paddingBottom: 15,
                     borderColor: "#efefef",
                 }}>
                 <View
                     style={{
-                        flexDirection: 'row', flex: 1,
-                        backgroundColor: "white"
+                        flexDirection: 'row', 
+                        flex: 1,
+                        backgroundColor: "white",
+                        paddingBottom: width < 768 ? 15 : 0
                     }}>
                     <Text style={{
                         fontSize: 14,
@@ -4015,8 +4097,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     borderRightWidth: 0,
-                    flexDirection: width < 1024 ? 'column' : 'row',
-                    alignItems: width < 1024 ? 'flex-start' : 'center',
+                    flexDirection: width < 768 ? 'column' : 'row',
+                    alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
                     borderColor: "#efefef",
                     paddingBottom: 15
@@ -4025,7 +4107,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: "white"
+                        backgroundColor: "white",
+                        paddingBottom: width < 768 ? 15 : 0
                     }}>
                     <Text style={{
                         fontSize: 14,
@@ -4078,8 +4161,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View
                 style={{
                     width: "100%",
-                    flexDirection: width < 1024 ? 'column' : 'row',
-                    alignItems: width < 1024 ? 'flex-start' : 'center',
+                    flexDirection: width < 768 ? 'column' : 'row',
+                    alignItems: width < 768 ? 'flex-start' : 'center',
                     borderRightWidth: 0,
                     borderColor: "#efefef",
                     paddingTop: 40,
@@ -4089,7 +4172,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row', flex: 1,
                         // paddingTop: 40,
-                        backgroundColor: "white"
+                        backgroundColor: "white",
+                        paddingBottom: width < 768 ? 15 : 0
                     }}>
                     <Text style={{
                         fontSize: 14,
@@ -4182,7 +4266,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paddingTop: 15,
                     flexDirection: "column"
                 }}>
-                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40, }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
                             // width: 300,
@@ -4225,7 +4309,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 {notify ? (
-                    <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                         <View
                             style={{
                                 // width: 300,
@@ -4244,7 +4328,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
-                                    alignSelf: width < 1024 ? 'flex-start' : 'flex-end'
+                                    alignSelf: width < 768 ? 'flex-start' : 'flex-end'
                                 }}>
                                 <Switch
                                     value={!shuffle}
@@ -4423,7 +4507,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : null}
                 {notify && !shuffle ? (
-                    <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40, }}>
+                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -4442,7 +4526,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
-                                    justifyContent: width < 1024 ? 'flex-start' : 'flex-end',
+                                    justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                     flexDirection: 'row'
                                 }}>
                                 <Switch
@@ -4834,7 +4918,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 width: "100%",
                                 display: "flex",
-                                flexDirection: Dimensions.get("window").width < 1024 ? "column-reverse" : "row",
+                                flexDirection: Dimensions.get("window").width < 768 ? "column-reverse" : "row",
                                 marginBottom: 5,
                                 backgroundColor: "white",
                                 // marginTop: 20,
@@ -4847,7 +4931,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
                                 style={{
-                                    flexDirection: Dimensions.get("window").width < 1024 ? "column" : "row",
+                                    flexDirection: Dimensions.get("window").width < 768 ? "column" : "row",
                                     flex: 1,
                                 }}>
                                 {/* {renderRichToolbar()} */}
@@ -5084,7 +5168,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         width: '100%',
                         maxWidth: 900,
                         alignSelf: 'center',
-                        paddingLeft: Dimensions.get('window').width < 1024 ? 12 : 15
+                        paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
                     }}>
                         <Collapse isOpened={props.showOptions}>
                             <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -5235,20 +5319,20 @@ const styles: any = StyleSheet.create({
         fontFamily: 'Inter'
     },
     all: {
-        fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
+        fontSize: Dimensions.get('window').width < 768 ? 12 : 14,
         color: '#000000',
         fontWeight: 'bold',
         height: 25,
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
+        paddingHorizontal: Dimensions.get('window').width < 768 ? 12 : 15,
         backgroundColor: '#fff',
         lineHeight: 25,
         fontFamily: 'overpass',
         textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
+        fontSize: Dimensions.get('window').width < 768 ? 12 : 14,
         color: '#fff',
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
+        paddingHorizontal: Dimensions.get('window').width < 768 ? 12 : 15,
         borderRadius: 12,
         backgroundColor: '#006AFF',
         lineHeight: 25,

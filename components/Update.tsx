@@ -810,7 +810,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         flexDirection: 'row',
         flex: 1,
         backgroundColor: '#000000', // paddingVertical: 2,
-        paddingTop: 12,
+        paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
         height: 48,
         justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
         // alignSelf: 'center'
@@ -1822,7 +1822,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 flexDirection: 'row',
                 width: '100%', justifyContent: 'center',
                 height: 52, backgroundColor: '#000000',
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
+                paddingHorizontal: 10,
             }}>
                 <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#000000', }}>
 
@@ -1910,7 +1910,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             {
-                                (channelOwner || showOptions || !props.channelId) && (!editFolder && !createNewFolder) ?
+                                ((channelOwner && showOriginal) || showOptions || !props.channelId) && (!editFolder && !createNewFolder) ?
                                     <TouchableOpacity
                                         onPress={async () => {
                                             setSave(true)
@@ -1940,7 +1940,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </TouchableOpacity> : null
                             }
                             {
-                                (channelOwner || !props.channelId) && (!editFolder && !createNewFolder) ?
+                                ((channelOwner && showOriginal) || (channelOwner && showOptions) || !props.channelId) && (!editFolder && !createNewFolder) ?
                                     <TouchableOpacity
                                         onPress={async () => {
                                             setDel(true)
@@ -2045,11 +2045,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 //alignSelf: 'flex-end',
                                 width: '100%',
                                 paddingTop: 5,
-                                paddingBottom: 10,
+                                paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
                                 paddingHorizontal: 20,
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                height: 54
+                                height: Dimensions.get('window').width < 768 ? 54 : 68
                             }}>
                                 {options}
                             </View> : null

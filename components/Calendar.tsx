@@ -26,7 +26,7 @@ import { Eventcalendar, Datepicker } from "@mobiscroll/react";
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 // import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 // import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
-import Swiper from "react-native-web-swiper";
+import _ from 'lodash'
 
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
@@ -37,11 +37,6 @@ import { Select } from '@mobiscroll/react'
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [tab, setTab] = useState(props.tab)
-
-    useEffect(() => {
-        props.setTab(tab)
-    }, [tab])
-
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
@@ -651,7 +646,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, [props.cues]);
+    }, []);
 
     const datesEqual = (date1: string, date2: string) => {
         const one = new Date(date1);
@@ -834,7 +829,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         marginLeft: 0
                     }}>
 
-                    <label style={{ width: '100%', maxWidth: 400 }}>
+                    <label style={{ width: '100%', maxWidth: 400, backgroundColor: 'white' }}>
                         <Select
                             themeVariant="light"
                             touchUi={true}
@@ -1652,8 +1647,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                                                 shadowColor: "#000",
                                                 shadowOffset: {
-                                                    width: 2,
-                                                    height: 2,
+                                                    width: tab === 'Add' ? 0 : 2,
+                                                    height: tab === 'Add' ? 0 : 2,
                                                 },
                                                 shadowOpacity: 0.1,
                                                 shadowRadius: tab === 'Add' ? 0 : 10,
@@ -1822,7 +1817,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     contentContainerStyle={{
                                                                                         maxHeight: width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                                                         alignItems: 'center',
-                                                                                        backgroundColor: 'white'
+                                                                                        backgroundColor: 'white',
+                                                                                        paddingHorizontal: width < 1024 ? 20 : 0
                                                                                     }}
                                                                                 >
                                                                                     <View
@@ -2024,7 +2020,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         </MenuOptions>
                                                                                                     </Menu> */}
                                                                                                     <label style={{
-                                                                                                        width: '100%', maxWidth: 400,
+                                                                                                        width: '100%', maxWidth: 400, backgroundColor: 'white'
                                                                                                     }}>
                                                                                                         <Select
                                                                                                             touchUi={true}
@@ -2160,7 +2156,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 };
 
-export default (CalendarX)
+export default React.memo(CalendarX, (prev, next) => {
+    return _.isEqual(prev.cues, next.cues)
+})
+
 
 const styles: any = StyleSheet.create({
     input: {

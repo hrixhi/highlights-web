@@ -398,8 +398,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         paddingTop: 10,
                         maxHeight: 500,
                         paddingHorizontal: 10,
-                        borderBottomRightRadius: 10,
-                        borderTopRightRadius: 10,
+                        borderRadius: 1,
                         borderLeftColor: props.channelColor,
                         borderLeftWidth: 3,
                         shadowOffset: {
@@ -452,14 +451,26 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             nestedScrollEnabled={true}
                         >
                             <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
-                                <View style={styles.col} key={'0,0'}>
-                                    {props.isOwner ? <CustomTextInput
+                                {props.isOwner ? <View style={styles.col} key={'0,0'}>
+                                    <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
                                         placeholder={"Search"}
                                         placeholderTextColor={'#393939'}
-                                    /> : null}
-                                </View>
+                                    /> 
+                                </View> : null}
+                                {
+                                    cues.length === 0 ? null :
+                                        <View style={styles.col} key={'total'}>
+                                            <View style={{ height: 10, marginBottom: 5 }} />
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: 35, }}>
+                                                {PreferredLanguageText('total')}
+                                            </Text>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
+                                                100%
+                                            </Text>
+                                        </View>
+                                }
                                 {
                                     cues.map((cue: any, col: number) => {
                                         const { title } = htmlStringParser(cue.cue)
@@ -480,18 +491,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         </TouchableOpacity>
                                     })
                                 }
-                                {
-                                    cues.length === 0 ? null :
-                                        <View style={styles.col} key={'total'}>
-                                            <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: 35, }}>
-                                                {PreferredLanguageText('total')}
-                                            </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
-                                                100%
-                                            </Text>
-                                        </View>
-                                }
+                                
                             </View>
 
                             {/* Search results empty */}
@@ -525,14 +525,19 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             })
 
                                             return <View style={styles.row} key={row}>
-                                                <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#000000', fontFamily: 'inter' }}>
+                                                {props.isOwner ? <View style={styles.col} >
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#000000', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#000000' }}>
-                                                        {score.displayName}
-                                                    </Text> */}
-                                                </View>
+                                                </View> : null}
+                                                {
+                                                    cues.length === 0 ? null :
+                                                        <View style={styles.col} key={'total'}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#000000', textTransform: 'uppercase' }}>
+                                                                {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
+                                                            </Text>
+                                                        </View>
+                                                }
                                                 {
                                                     cues.map((cue: any, col: number) => {
 
@@ -589,14 +594,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         </TouchableOpacity>
                                                     })
                                                 }
-                                                {
-                                                    cues.length === 0 ? null :
-                                                        <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#000000', textTransform: 'uppercase' }}>
-                                                                {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
-                                                            </Text>
-                                                        </View>
-                                                }
+                                                
                                             </View>
                                         })
                                     }

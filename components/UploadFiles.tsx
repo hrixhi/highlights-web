@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Text, View } from './Themed'
 import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons'
-import { Dimensions } from 'react-native'
+import { Dimensions, ActivityIndicator } from 'react-native'
 
 import * as DocumentPicker from 'expo-document-picker';
 import { PreferredLanguageText } from '../helpers/LanguageContext'
@@ -43,6 +43,12 @@ const FileUpload: React.FC<any> = (props: any) => {
 
         if (type === "wma" || type === "avi") {
             alert("This video format is not supported. Uplaod mp4 or ogg.")
+            setUploading(false)
+            return;
+        }
+
+        if (type === "svg") {
+            alert("This file type is not supported.")
             setUploading(false)
             return;
         }
@@ -104,19 +110,9 @@ const FileUpload: React.FC<any> = (props: any) => {
     return <View>
         {
             uploading ?
-                <Text
-                    style={{
-                        color: "#006AFF",
-                        lineHeight: 35,
-                        textAlign: "right",
-                        fontSize: 14,
-                        fontFamily: 'overpass'
-                    }}
-                    onPress={() => handleFile()}
-                >
-                    ...
-                </Text> :
-
+            <View>
+                <ActivityIndicator color={"#a2a2ac"} size={'small'} />
+            </View> :
                 (
                     props.quiz
                         ?
