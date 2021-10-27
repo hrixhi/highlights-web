@@ -80,7 +80,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </Text>
                                     </View>
                                 </a>
-                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#16181C', fontSize: 14 }} />
+                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#000000', fontSize: 14 }} />
                         }
                     </View>
                     {

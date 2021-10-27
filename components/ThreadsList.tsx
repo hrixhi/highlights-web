@@ -379,7 +379,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     onChangeText={val => {
                                         setCustomCategory(val)
                                     }}
-                                    placeholderTextColor={'#343A40'}
+                                    placeholderTextColor={'#393939'}
                                 />
                             </View> : <label style={{ width: 180, }}>
                                 <Select
@@ -417,7 +417,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}
                         style={{ backgroundColor: 'white' }}>
                         <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#343A40'} />
+                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#393939'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -532,13 +532,13 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 textTransform: 'uppercase'
                                             }}>
                                                 NEW POST
-                                                {/* <Ionicons name='create-outline' size={15} color={'#16181C'} /> */}
+                                                {/* <Ionicons name='create-outline' size={15} color={'#000000'} /> */}
                                             </Text>
                                         </TouchableOpacity>
                                     </View> : null
                             }
 
-                        </View> : 
+                        </View> :
                         <View style={{
                             width: '100%',
                             backgroundColor: '#fff',
@@ -559,10 +559,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                             >
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10, }}>
-                                    <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
+                                    <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
                                 </Text>
                             </TouchableOpacity>
-                        </View> 
+                        </View>
                 }
                 <Collapse isOpened={showComments} style={{ flex: 1 }}>
                     {
@@ -585,10 +585,16 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     backgroundColor: 'white',
                                     flex: 1,
                                     flexDirection: 'row',
-                                    borderLeftWidth: threads.length === 0 ? 0 : 3, 
+                                    borderLeftWidth: threads.length === 0 ? 0 : 3,
                                     borderLeftColor: props.channelColor,
-                                    borderTopRightRadius: 10, 
+                                    borderTopRightRadius: 10,
                                     borderBottomRightRadius: 10,
+                                    shadowOffset: {
+                                        width: 2,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 10,
                                 }}
                                     key={JSON.stringify(filteredThreads) + JSON.stringify(showPost)}
                                 >
@@ -711,7 +717,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 <View style={{
                                                     width: '100%',
                                                     maxWidth: 900,
-                                                    borderTopRightRadius: 10, 
+                                                    borderTopRightRadius: 10,
                                                     borderBottomRightRadius: 10,
                                                     padding: 10,
                                                     minHeight: 400,
@@ -898,7 +904,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                         </Text>
 
                                                                                     </View> : null}
-                                                                                    <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, fontWeight: 'bold', color: thread.unreadThreads > 0 ? "#006AFF" : '#16181C' }} ellipsizeMode='tail'>
+                                                                                    <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, fontWeight: 'bold', color: thread.unreadThreads > 0 ? "#006AFF" : '#000000' }} ellipsizeMode='tail'>
                                                                                         {emailTimeDisplay(thread.time)}
                                                                                     </Text>
                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>

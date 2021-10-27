@@ -503,7 +503,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#16181C'
+                                color: '#000000'
                             }}>
                                 {PreferredLanguageText('name')}
                             </Text>
@@ -526,7 +526,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        color: '#16181C'
+                                        color: '#000000'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
                                     </Text>
@@ -563,7 +563,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            color: '#16181C'
+                                            color: '#000000'
                                         }}>Temporary</Text>
                                     </View>
                                     <View
@@ -606,7 +606,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            color: '#16181C'
+                                            color: '#000000'
                                         }}>Theme</Text>
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -694,7 +694,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#16181C',
+        backgroundColor: '#000000',
         borderRadius: 12,
     },
     colorBar: {

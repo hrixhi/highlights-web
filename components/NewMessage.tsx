@@ -296,7 +296,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             editorStyle={{
                                 backgroundColor: '#efefef',
                                 placeholderColor: '#393939',
-                                color: '#16181C',
+                                color: '#000000',
                                 contentCSSText: 'font-size: 13px;'
                             }}
                             initialContentHTML={props.message}
@@ -324,7 +324,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#000000', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -425,7 +425,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase' }}>
+                                                    <Text style={{ fontSize: 11, color: '#000000', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>

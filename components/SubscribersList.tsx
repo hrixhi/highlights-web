@@ -1516,7 +1516,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 placeholder='Select users'
                                                                 displayValue='label'
                                                                 // key={userDropdownOptions.toString()}
-                                                                // style={{ width: '100%', color: '#16181C', 
+                                                                // style={{ width: '100%', color: '#000000', 
                                                                 //     optionContainer: { // To change css for option container 
                                                                 //         zIndex: 9999
                                                                 //     }
@@ -1966,7 +1966,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 editorStyle={{
                                                                     backgroundColor: '#efefef',
                                                                     placeholderColor: '#393939',
-                                                                    color: '#16181C',
+                                                                    color: '#000000',
                                                                     contentCSSText: 'font-size: 13px;'
                                                                 }}
                                                                 initialContentHTML={submission}
@@ -2049,7 +2049,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     </View>) :
                     <View style={{ width: 500, maxWidth: '100%' }}>
-                        <Text style={{ color: '#16181C', fontSize: 14, paddingBottom: 10 }}>
+                        <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
                         </Text>
                         <TextInput
@@ -2084,7 +2084,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontSize: 12,
                                 backgroundColor: '#efefef',
                                 paddingHorizontal: 20,
@@ -2101,7 +2101,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#16181C',
+                            color: '#000000',
                             fontSize: 12,
                             paddingHorizontal: 20,
                             width: "100%",
@@ -2207,7 +2207,7 @@ const styleObject = () => {
         },
         all: {
             fontSize: 14,
-            color: '#16181C',
+            color: '#000000',
             height: 24,
             paddingHorizontal: 15,
             backgroundColor: '#efefef',
@@ -2220,7 +2220,7 @@ const styleObject = () => {
             color: '#fff',
             paddingHorizontal: 15,
             borderRadius: 12,
-            backgroundColor: '#16181C',
+            backgroundColor: '#000000',
             lineHeight: 24,
             height: 24,
             fontFamily: 'inter',

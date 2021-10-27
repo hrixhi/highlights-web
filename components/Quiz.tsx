@@ -250,7 +250,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Text style={{
                     fontSize: 14,
                     fontFamily: 'inter',
-                    color: '#16181C'
+                    color: '#000000'
                 }}>Timed</Text>
             </View>
             <View
@@ -301,7 +301,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         style={{
                                             // fontFamily: "inter",
                                             fontSize: 14,
-                                            color: "#16181C",
+                                            color: "#000000",
                                         }}
                                     >
                                         {duration.hours} H <Ionicons name="chevron-down-outline" size={15} /> &nbsp;&nbsp;:&nbsp;&nbsp;
@@ -340,7 +340,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         style={{
                                             // fontFamily: "inter",
                                             fontSize: 14,
-                                            color: "#16181C",
+                                            color: "#000000",
                                         }}
                                     >
                                         {duration.minutes}  m  <Ionicons name="chevron-down-outline" size={15} />
@@ -394,7 +394,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Text style={{
                     fontSize: 14,
                     fontFamily: '#inter',
-                    color: '#16181C'
+                    color: '#000000'
                 }}>Random Order</Text>
             </View>
             <View
@@ -735,7 +735,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#16181C" size={15} />
+                            <Ionicons name="add-circle-outline" color="#000000" size={15} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -745,7 +745,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#16181C" size={18} />
+                            <Ionicons name="help-circle-outline" color="#000000" size={18} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -773,7 +773,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 editorStyle={{
                     backgroundColor: "#fff",
                     placeholderColor: "#393939",
-                    color: "#16181C",
+                    color: "#000000",
                     contentCSSText: "font-size: 14px;",
                 }}
                 initialContentHTML={audioVideoQuestion ? content : problems[index].question}
@@ -1055,7 +1055,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                 >
                     <Text style={{
-                        color: "#16181C",
+                        color: "#000000",
                         fontSize: !props.isOwner ? 15 : 11,
                         fontWeight: !props.isOwner ? 'bold' : 'normal',
                         lineHeight: 35,
@@ -1186,7 +1186,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <View style={{ width: '100%' }}>
                             <View style={{ width: '100%' }}>
                                 <View style={{ paddingTop: 15, flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
-                                    <Text style={{ color: '#16181C', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
+                                    <Text style={{ color: '#000000', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
                                         {index + 1}.
                                     </Text>
                                     <View style={{
@@ -1424,7 +1424,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#16181C'
+                                let color = '#000000'
                                 if (props.isOwner && option.isCorrect) {
                                     color = '#3B64F8'
                                 }
@@ -1522,7 +1522,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             //         }}
                                                             //         onPress={() => insertOptionEquation(i)}
                                                             //     >
-                                                            //         <Ionicons name="add-circle-outline" color="#16181C" size={18} />
+                                                            //         <Ionicons name="add-circle-outline" color="#000000" size={18} />
                                                             //     </TouchableOpacity>
                                                             //     {/*  */}
                                                             //     <TouchableOpacity
@@ -1533,7 +1533,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             //         }}
                                                             //         onPress={() => setShowFormulaGuide(true)}
                                                             //     >
-                                                            //         <Ionicons name="help-circle-outline" color="#16181C" size={18} />
+                                                            //         <Ionicons name="help-circle-outline" color="#000000" size={18} />
                                                             //     </TouchableOpacity>
                                                             // </View>
                                                             <FormulaGuide 
@@ -1668,7 +1668,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingBottom: 12,
                                         // width: '50%',
                                         // maxWidth: "100%",
-                                        color: props.isOwner ? "#393939" : "#16181C",
+                                        color: props.isOwner ? "#393939" : "#000000",
                                         marginBottom: props.isOwner ? 50 : 30
                                     }}>
                                         {props.isOwner ? "Free Response Answer" : solutions[problemIndex].response}
@@ -1705,7 +1705,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 //             }}
                                                 //             onPress={() => insertResponseEquation(problemIndex)}
                                                 //         >
-                                                //             <Ionicons name="add-circle-outline" color="#16181C" size={18} />
+                                                //             <Ionicons name="add-circle-outline" color="#000000" size={18} />
                                                 //         </TouchableOpacity>
                                                 //         <TouchableOpacity
                                                 //             style={{
@@ -1715,7 +1715,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 //             }}
                                                 //             onPress={() => setShowFormulaGuide(true)}
                                                 //         >
-                                                //             <Ionicons name="help-circle-outline" color="#16181C" size={18} />
+                                                //             <Ionicons name="help-circle-outline" color="#000000" size={18} />
                                                 //         </TouchableOpacity>
                                                 //     </View>
                                                 //     : null
@@ -1869,7 +1869,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             setRegradeChoices(updateRegradeChoices);
                                         }}>
                                         <MenuTrigger>
-                                            <Text style={{ fontSize: 14, color: '#16181C', width: Dimensions.get('window').width > 768 ? '100%' : 200 }}>
+                                            <Text style={{ fontSize: 14, color: '#000000', width: Dimensions.get('window').width > 768 ? '100%' : 200 }}>
                                                 {regradeChoices[index] === '' ? 'Select Option' : regradeOptions[regradeChoices[index]]}<Ionicons name='chevron-down-outline' size={15} />
                                             </Text>
                                         </MenuTrigger>
@@ -1914,7 +1914,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             style={{
                                                 textAlign: "center",
                                                 lineHeight: 35,
-                                                color: "#16181C",
+                                                color: "#000000",
                                                 fontSize: 12,
                                                 backgroundColor: "#efefef",
                                                 borderRadius: 15,
@@ -1939,7 +1939,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             style={{
                                                 textAlign: "center",
                                                 lineHeight: 35,
-                                                color: "#16181C",
+                                                color: "#000000",
                                                 fontSize: 12,
                                                 backgroundColor: "#efefef",
                                                 borderRadius: 15,

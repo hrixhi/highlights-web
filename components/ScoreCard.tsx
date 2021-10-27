@@ -30,7 +30,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {/* <Text style={{
                             fontSize: 11,
                             fontWeight: 'bold',
-                            color: '#16181C',
+                            color: '#000000',
                             marginRight: 5,
                             flex: 1,
                             textAlign: 'right'
@@ -130,7 +130,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#16181C',
+        color: '#000000',
         flex: 1
     },
     titleArrow: {
@@ -138,7 +138,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#16181C',
+        color: '#000000',
         marginLeft: 10
     },
     description: {

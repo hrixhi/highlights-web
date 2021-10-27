@@ -35,6 +35,8 @@ import axios from 'axios';
 
 import logo from '../components/default-images/cues-logo-white-exclamation-hidden.jpg'
 
+import InsetShadow from 'react-native-inset-shadow'
+
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -598,13 +600,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             width: '100%',
             overflow: 'hidden',
             justifyContent: 'center',
-            backgroundColor: '#efefef' 
+            backgroundColor: '#efefef'
         }}>
         <View style={{
             width: '100%',
             maxWidth: 900,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
-            backgroundColor: '#efefef' 
+            backgroundColor: '#efefef'
         }}>
             {!loadingSearchResults && resultCount !== 0 ? <Text style={{
                 fontSize: 20,
@@ -613,7 +615,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 // flex: 1,
                 lineHeight: 23,
                 color: '#006AFF',
-                backgroundColor: '#efefef' 
+                backgroundColor: '#efefef'
             }}>
                 {resultCount} Results
             </Text> : null}
@@ -638,7 +640,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             justifyContent: "center",
                             display: "flex",
                             flexDirection: "column",
-                            backgroundColor: '#efefef' 
+                            backgroundColor: '#efefef'
                         }}>
                         <ActivityIndicator color={"#393939"} />
                     </View> : null
@@ -727,14 +729,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }
 
                                         return <View style={{
-                                                // height: 150,
-                                                marginBottom: 15,
-                                                // marginBottom: i === priorities.length - 1 ? 0 : 20,
-                                                // maxWidth: 150,
-                                                backgroundColor: '#efefef',
-                                                width: '100%',
-                                                maxWidth: 150,
-                                            }}
+                                            // height: 150,
+                                            marginBottom: 15,
+                                            // marginBottom: i === priorities.length - 1 ? 0 : 20,
+                                            // maxWidth: 150,
+                                            backgroundColor: '#efefef',
+                                            width: '100%',
+                                            maxWidth: 150,
+                                        }}
                                             key={index}
                                         >
                                             <SearchResultCard
@@ -941,7 +943,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         return (<div style={{ display: 'flex', flexDirection: 'column', }}>
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                <Text style={{ fontSize: 10, color: '#16181C', paddingLeft: 5, paddingBottom: 10 }}>
+                <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
                     Channel
                 </Text>
                 <label style={{ width: 200 }}>
@@ -968,7 +970,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
 
-                <Text style={{ fontSize: 10, color: '#16181C', paddingLeft: 5, paddingBottom: 10 }}>
+                <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
                     Type
                 </Text>
 
@@ -1025,383 +1027,393 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         >
             {
                 Object.keys(cueMap).map((key: any, ind: any) => {
-
-                    return <View
-                        style={{
-                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                            borderColor: '#efefef',
-                            borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0,
-                            // paddingBottom: 10,
-                        }}
-                        key={ind}
-                        onLayout={(event) => {
-                            const layout = event.nativeEvent.layout;
-                            const temp1 = [...channelKeyList]
-                            const temp2 = [...channelHeightList]
-                            temp1[ind] = key.split('-SPLIT-')[1];
-                            temp2[ind] = layout.y;
-                            setChannelKeyList(temp1);
-                            setChannelHeightList(temp2)
+                    return <InsetShadow
+                        shadowColor={"#000"}
+                        shadowOffset={2}
+                        shadowOpacity={0.12}
+                        shadowRadius={collapseMap[key] ? 10 : 0}
+                        elevation={500000}
+                        containerStyle={{
+                            height: 'auto'
                         }}
                     >
-                        {
-                            ind !== 0 ?
-                                <View style={{
-                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                    flexDirection: 'row',
-                                    borderColor: '#efefef',
-                                    paddingTop: 10,
-                                    paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
-                                    borderTopWidth: ind === 0 || collapseMap[key] || collapseMap[Object.keys(cueMap)[ind - 1]] ? 0 : 1,
-                                    paddingBottom: 0, maxWidth: 900, alignSelf: 'center', width: '100%',
-                                }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                        }}
-                                        onPress={() => {
-                                            const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
-
-                                            Object.keys(tempCollapse).forEach((item: any, index: any) => { 
-                                                if (item === key) return;
-                                                tempCollapse[item] = false
-                                            })
-
-                                            tempCollapse[key] = !collapseMap[key]
-                                            setCollapseMap(tempCollapse)
-                                        }}
-                                    >
-                                        <Text style={{
-                                            fontSize: 16,
-                                            paddingBottom: 20,
-                                            paddingTop: 10,
-                                            fontFamily: 'inter',
-                                            flex: 1,
-                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                            lineHeight: 16,
-                                            color: collapseMap[key] ? '#16181C' : '#1a3026',
-                                        }}>
-                                            <View style={{
-                                                width: 12,
-                                                height: 12,
-                                                borderRadius: 9,
-                                                // marginTop: 2,
-                                                marginRight: 5,
-                                                backgroundColor: key.split('-SPLIT-')[3]
-                                            }} /> {key.split('-SPLIT-')[0]}
-                                        </Text>
-                                    </TouchableOpacity>
+                        <View
+                            style={{
+                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                borderColor: '#efefef',
+                                borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0,
+                                // paddingBottom: 10,
+                            }}
+                            key={ind}
+                            onLayout={(event) => {
+                                const layout = event.nativeEvent.layout;
+                                const temp1 = [...channelKeyList]
+                                const temp2 = [...channelHeightList]
+                                temp1[ind] = key.split('-SPLIT-')[1];
+                                temp2[ind] = layout.y;
+                                setChannelKeyList(temp1);
+                                setChannelHeightList(temp2)
+                            }}
+                        >
+                            {
+                                ind !== 0 ?
                                     <View style={{
                                         backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                        paddingTop: 5, paddingLeft: 15
+                                        flexDirection: 'row',
+                                        borderColor: '#efefef',
+                                        paddingTop: 10,
+                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                        borderTopWidth: ind === 0 || collapseMap[key] || collapseMap[Object.keys(cueMap)[ind - 1]] ? 0 : 1,
+                                        paddingBottom: 0, maxWidth: 900, alignSelf: 'center', width: '100%',
                                     }}>
-                                        <View style={{
-                                            flexDirection: 'row', justifyContent: 'center', display: 'flex',
-                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-
-                                        }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-
-                                                    const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
-
-                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => { 
-                                                        if (item === key) return;
-                                                        tempCollapse[item] = false
-                                                    })
-
-                                                    tempCollapse[key] = !collapseMap[key]
-                                                    setCollapseMap(tempCollapse)
-                                                }}
-                                                style={{ backgroundColor: collapseMap[key] ? '#efefef' : '#fff', }}
-                                            >
-                                                <Text style={{
-                                                    textAlign: 'center',
-                                                    lineHeight: 30,
-                                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-
-                                                }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View> : <View style={{
-                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                    flexDirection: 'row', paddingBottom: 0,
-                                    paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
-                                    maxWidth: 900, alignSelf: 'center', width: '100%'
-                                }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-
-                                        }}
-                                        onPress={() => {
-                                            const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
-                                            
-                                            Object.keys(tempCollapse).forEach((item: any, index: any) => { 
-                                                if (item === key) return;
-                                                tempCollapse[item] = false
-                                            })
-                                            
-                                            tempCollapse[key] = !collapseMap[key]
-                                            setCollapseMap(tempCollapse)
-                                        }}
-                                    >
-                                        <Text
-                                            ellipsizeMode='tail'
+                                        <TouchableOpacity
                                             style={{
-                                                fontSize: 16,
-                                                paddingBottom: 15,
+                                                flex: 1,
+                                                flexDirection: 'row',
                                                 backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                                paddingTop: 20,
+                                            }}
+                                            onPress={() => {
+                                                const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+
+                                                Object.keys(tempCollapse).forEach((item: any, index: any) => {
+                                                    if (item === key) return;
+                                                    tempCollapse[item] = false
+                                                })
+
+                                                tempCollapse[key] = !collapseMap[key]
+                                                setCollapseMap(tempCollapse)
+                                            }}
+                                        >
+                                            <Text style={{
+                                                fontSize: 18,
+                                                paddingBottom: 20,
+                                                paddingTop: 9,
                                                 fontFamily: 'inter',
                                                 flex: 1,
-                                                lineHeight: 16,
-                                                color: collapseMap[key] ? '#16181C' : '#393939'
+                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                lineHeight: 18,
+                                                color: collapseMap[key] ? '#000000' : '#1a3026',
                                             }}>
-                                            <View style={{
-                                                width: 12,
-                                                height: 12,
-                                                marginRight: 5,
-                                                borderRadius: 9,
-                                                // marginTop: 2,
-                                                backgroundColor: '#16181C'
-                                            }} /> {key}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{
-                                        flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                        paddingTop: 5
-                                    }}>
+                                                <View style={{
+                                                    width: 12,
+                                                    height: 12,
+                                                    borderRadius: 9,
+                                                    // marginTop: 2,
+                                                    marginRight: 5,
+                                                    backgroundColor: key.split('-SPLIT-')[3]
+                                                }} /> {key.split('-SPLIT-')[0]}
+                                            </Text>
+                                        </TouchableOpacity>
                                         <View style={{
-                                            flexDirection: 'row',
-                                            paddingLeft: 7,
-                                            justifyContent: 'center', display: 'flex', backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-
+                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                            paddingTop: 5, paddingLeft: 15
                                         }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
-                                                    tempCollapse[key] = !collapseMap[key]
+                                            <View style={{
+                                                flexDirection: 'row', justifyContent: 'center', display: 'flex',
+                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
 
-                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => { 
-                                                        if (item === key) return;
-                                                        tempCollapse[item] = false
-                                                    })
+                                            }}>
+                                                <TouchableOpacity
+                                                    onPress={() => {
 
-                                                    setCollapseMap(tempCollapse)
-                                                }}
-                                                style={{ backgroundColor: collapseMap[key] ? '#efefef' : '#fff' }}
-                                            >
-                                                <Text style={{
-                                                    textAlign: 'center',
-                                                    lineHeight: 30,
+                                                        const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+
+                                                        Object.keys(tempCollapse).forEach((item: any, index: any) => {
+                                                            if (item === key) return;
+                                                            tempCollapse[item] = false
+                                                        })
+
+                                                        tempCollapse[key] = !collapseMap[key]
+                                                        setCollapseMap(tempCollapse)
+                                                    }}
+                                                    style={{ backgroundColor: collapseMap[key] ? '#efefef' : '#fff', }}
+                                                >
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 30,
+                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+
+                                                    }}>
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View> : <View style={{
+                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                        flexDirection: 'row', paddingBottom: 0,
+                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                        maxWidth: 900, alignSelf: 'center', width: '100%'
+                                    }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: 'row',
+                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+
+                                            }}
+                                            onPress={() => {
+                                                const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+
+                                                Object.keys(tempCollapse).forEach((item: any, index: any) => {
+                                                    if (item === key) return;
+                                                    tempCollapse[item] = false
+                                                })
+
+                                                tempCollapse[key] = !collapseMap[key]
+                                                setCollapseMap(tempCollapse)
+                                            }}
+                                        >
+                                            <Text
+                                                ellipsizeMode='tail'
+                                                style={{
+                                                    fontSize: 18,
+                                                    paddingBottom: 15,
                                                     backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-
+                                                    paddingTop: 19,
+                                                    fontFamily: 'inter',
+                                                    flex: 1,
+                                                    lineHeight: 18,
+                                                    color: collapseMap[key] ? '#000000' : '#393939'
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
-                                                </Text>
-                                            </TouchableOpacity>
+                                                <View style={{
+                                                    width: 12,
+                                                    height: 12,
+                                                    marginRight: 5,
+                                                    borderRadius: 9,
+                                                    // marginTop: 2,
+                                                    backgroundColor: '#000000'
+                                                }} /> {key}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={{
+                                            flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                            paddingTop: 5
+                                        }}>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                paddingLeft: 7,
+                                                justifyContent: 'center', display: 'flex', backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+
+                                            }}>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+                                                        tempCollapse[key] = !collapseMap[key]
+
+                                                        Object.keys(tempCollapse).forEach((item: any, index: any) => {
+                                                            if (item === key) return;
+                                                            tempCollapse[item] = false
+                                                        })
+
+                                                        setCollapseMap(tempCollapse)
+                                                    }}
+                                                    style={{ backgroundColor: collapseMap[key] ? '#efefef' : '#fff' }}
+                                                >
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 30,
+                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+
+                                                    }}>
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                        }
-                        {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            backgroundColor: '#efefef',
-                            borderColor: '#efefef',
-                            borderBottomWidth: collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0,
-                        }} key={collapseMap.toString()}>
+                            }
+                            {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
                             <View style={{
-                                width: '100%',
-                                maxWidth: 900,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
                                 backgroundColor: '#efefef',
-                                paddingHorizontal: width < 1024 ? 20 : 0
-                            }}>
-                                {
-                                    (
-                                        collapseMap[key] ?
-                                            <View
-                                                style={{ width: '100%', paddingBottom: 25, backgroundColor: '#efefef' }}
-                                                key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
-                                                {
-                                                    indexMap[key] !== 0 ?
-                                                        (
-                                                            indexMap[key] === 1 ?
-                                                                // meet
-                                                                (
-                                                                    <View
-                                                                        style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}
-                                                                    >
-                                                                        <Meeting
-                                                                            channelId={key.split('-SPLIT-')[1]}
-                                                                            channelName={key.split('-SPLIT-')[0]}
-                                                                            channelCreatedBy={key.split('-SPLIT-')}
-                                                                            closeModal={() => { }}
-                                                                            filterChoice={key.split('-SPLIT-')[0]}
-                                                                        // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
-                                                                        />
-                                                                    </View>
-                                                                ) :
-                                                                // discuss
-                                                                (
-                                                                    indexMap[key] === 2 ?
-                                                                        <Discussion
-                                                                            channelId={key.split('-SPLIT-')[1]}
-                                                                            filterChoice={key.split('-SPLIT-')[0]}
-                                                                            channelCreatedBy={key.split('-SPLIT-')[2]}
-                                                                            refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
-                                                                            channelColor={key.split('-SPLIT-')[3]}
-                                                                        /> :
-                                                                        // settings 
-                                                                        // settings 
-                                                                        // settings 
-                                                                        // settings 
-                                                                        // settings 
-                                                                        // settings 
-                                                                        // settings 
+                                borderColor: '#efefef',
+                                borderBottomWidth: collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0,
+                            }} key={collapseMap.toString()}>
+                                <View style={{
+                                    width: '100%',
+                                    maxWidth: 900,
+                                    backgroundColor: '#efefef',
+                                    paddingHorizontal: width < 1024 ? 20 : 0
+                                }}>
+                                    {
+                                        (
+                                            collapseMap[key] ?
+                                                <View
+                                                    style={{ width: '100%', paddingBottom: 25, backgroundColor: '#efefef' }}
+                                                    key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
+                                                    {
+                                                        indexMap[key] !== 0 ?
+                                                            (
+                                                                indexMap[key] === 1 ?
+                                                                    // meet
+                                                                    (
                                                                         <View
-                                                                            style={{ 
-                                                                                width: '100%', 
-                                                                                maxWidth: 400, 
-                                                                                alignSelf: 'center',
-                                                                                borderTopRightRadius: 10,
-                                                                                borderBottomRightRadius: 10
-                                                                            }}
+                                                                            style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}
                                                                         >
-                                                                            <ChannelSettings
+                                                                            <Meeting
                                                                                 channelId={key.split('-SPLIT-')[1]}
-                                                                                refreshSubscriptions={props.refreshSubscriptions}
-                                                                                closeModal={() => {
-                                                                                    // setShowHome(false)
-                                                                                    // closeModal()
-                                                                                }}
-                                                                                channelColor={key.split('-SPLIT-')[3]}
+                                                                                channelName={key.split('-SPLIT-')[0]}
+                                                                                channelCreatedBy={key.split('-SPLIT-')}
+                                                                                closeModal={() => { }}
+                                                                                filterChoice={key.split('-SPLIT-')[0]}
+                                                                            // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                                                                             />
                                                                         </View>
-                                                                )
-                                                        ) :
-                                                        cueMap[key].length === 0 ?
-                                                            <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                                {PreferredLanguageText('noCuesCreated')}
-                                                            </Text>
-                                                            :
-                                                            (<ScrollView
-                                                                horizontal={true}
-                                                                contentContainerStyle={{
-                                                                    maxWidth: '100%', backgroundColor: '#efefef',
-                                                                }}
-                                                                key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
-                                                                {categoryMap[key].map((category: any, i: any) => {
-                                                                    return <View style={{
-                                                                        width: '100%',
-                                                                        maxWidth: 130,
-                                                                        backgroundColor: '#efefef',
-                                                                        marginRight: 15
-                                                                    }}>
-                                                                        <View style={{
-                                                                            backgroundColor: '#efefef',
-                                                                            // marginBottom: 10
-                                                                        }}>
-                                                                            <Text style={{
-                                                                                flex: 1, flexDirection: 'row',
-                                                                                color: '#393939',
-                                                                                fontWeight: 'bold',
-                                                                                fontSize: width < 1024 ? 12 : 14, lineHeight: 25,
-                                                                                // fontFamily: 'inter',
-                                                                                backgroundColor: '#efefef',
-                                                                            }} ellipsizeMode='tail'>
-                                                                                {category === '' ? ' ' : category}
-                                                                            </Text>
-                                                                        </View>
-                                                                        <View
-                                                                            style={{
-                                                                                // borderWidth: 1,
-                                                                                maxWidth: 130,
-                                                                                paddingLeft: 5,
-                                                                                backgroundColor: '#efefef',
-                                                                                width: '100%'
-                                                                                // height: 190
-                                                                            }}
-                                                                            key={i.toString() + key.toString()}
-                                                                        >
-                                                                            {cueMap[key].map((cue: any, index: any) => {
-                                                                                if (cue.customCategory.toString().trim() !== category.toString().trim()) {
-                                                                                    return null
-                                                                                }
-                                                                                return <View style={{
-                                                                                    // height: 150,
-                                                                                    marginBottom: 15,
-                                                                                    // marginBottom: i === priorities.length - 1 ? 0 : 20,
-                                                                                    // maxWidth: 150,
-                                                                                    backgroundColor: '#efefef',
+                                                                    ) :
+                                                                    // discuss
+                                                                    (
+                                                                        indexMap[key] === 2 ?
+                                                                            <Discussion
+                                                                                channelId={key.split('-SPLIT-')[1]}
+                                                                                filterChoice={key.split('-SPLIT-')[0]}
+                                                                                channelCreatedBy={key.split('-SPLIT-')[2]}
+                                                                                refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                                                                                channelColor={key.split('-SPLIT-')[3]}
+                                                                            /> :
+                                                                            // settings 
+                                                                            // settings 
+                                                                            // settings 
+                                                                            // settings 
+                                                                            // settings 
+                                                                            // settings 
+                                                                            // settings 
+                                                                            <View
+                                                                                style={{
                                                                                     width: '100%',
-                                                                                    maxWidth: 130,
+                                                                                    maxWidth: 400,
+                                                                                    alignSelf: 'center',
+                                                                                    borderTopRightRadius: 10,
+                                                                                    borderBottomRightRadius: 10
                                                                                 }}
-                                                                                    key={index}
-                                                                                >
-                                                                                    <Card
-                                                                                        gray={true}
-                                                                                        cueIds={cueIds}
-                                                                                        onLongPress={() => {
-                                                                                            setCueIds([])
-                                                                                            setEditFolderChannelId(cue.channelId ? cue.channelId : 'Home')
-                                                                                            // alert(cue.channelId ? cue.channelId : 'Home')
-                                                                                        }}
-                                                                                        add={() => {
-                                                                                            const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                            const found = temp.find((i: any) => {
-                                                                                                return i === cue._id
-                                                                                            })
-                                                                                            if (!found) {
-                                                                                                temp.push(cue._id)
-                                                                                            }
-                                                                                            setCueIds(temp)
-                                                                                        }}
-                                                                                        remove={() => {
-                                                                                            const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                            const upd = temp.filter((i: any) => {
-                                                                                                return i !== cue._id
-                                                                                            })
-                                                                                            setCueIds(upd)
-                                                                                        }}
-                                                                                        editFolderChannelId={editFolderChannelId}
-                                                                                        fadeAnimation={props.fadeAnimation}
-                                                                                        updateModal={() => {
-                                                                                            props.openUpdate(
-                                                                                                cue.key,
-                                                                                                cue.index,
-                                                                                                0,
-                                                                                                cue._id,
-                                                                                                (cue.createdBy ? cue.createdBy : ''),
-                                                                                                (cue.channelId ? cue.channelId : '')
-                                                                                            )
-                                                                                        }}
-                                                                                        cue={cue}
-                                                                                        channelId={props.channelId}
-                                                                                        subscriptions={props.subscriptions}
-                                                                                    />
-                                                                                </View>
-                                                                            })}
+                                                                            >
+                                                                                <ChannelSettings
+                                                                                    channelId={key.split('-SPLIT-')[1]}
+                                                                                    refreshSubscriptions={props.refreshSubscriptions}
+                                                                                    closeModal={() => {
+                                                                                        // setShowHome(false)
+                                                                                        // closeModal()
+                                                                                    }}
+                                                                                    channelColor={key.split('-SPLIT-')[3]}
+                                                                                />
+                                                                            </View>
+                                                                    )
+                                                            ) :
+                                                            cueMap[key].length === 0 ?
+                                                                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                    {PreferredLanguageText('noCuesCreated')}
+                                                                </Text>
+                                                                :
+                                                                (<ScrollView
+                                                                    horizontal={true}
+                                                                    contentContainerStyle={{
+                                                                        maxWidth: '100%', backgroundColor: '#efefef',
+                                                                    }}
+                                                                    key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
+                                                                    {categoryMap[key].map((category: any, i: any) => {
+                                                                        return <View style={{
+                                                                            width: '100%',
+                                                                            maxWidth: 130,
+                                                                            backgroundColor: '#efefef',
+                                                                            marginRight: 15
+                                                                        }}>
+                                                                            <View style={{
+                                                                                backgroundColor: '#efefef',
+                                                                                // marginBottom: 10
+                                                                            }}>
+                                                                                <Text style={{
+                                                                                    flex: 1, flexDirection: 'row',
+                                                                                    color: '#393939',
+                                                                                    // fontWeight: 'bold',
+                                                                                    fontSize: 12, lineHeight: 25,
+                                                                                    fontFamily: 'inter',
+                                                                                    backgroundColor: '#efefef',
+                                                                                }} ellipsizeMode='tail'>
+                                                                                    {category === '' ? ' ' : category}
+                                                                                </Text>
+                                                                            </View>
+                                                                            <View
+                                                                                style={{
+                                                                                    // borderWidth: 1,
+                                                                                    maxWidth: 130,
+                                                                                    paddingLeft: 5,
+                                                                                    backgroundColor: '#efefef',
+                                                                                    width: '100%'
+                                                                                    // height: 190
+                                                                                }}
+                                                                                key={i.toString() + key.toString()}
+                                                                            >
+                                                                                {cueMap[key].map((cue: any, index: any) => {
+                                                                                    if (cue.customCategory.toString().trim() !== category.toString().trim()) {
+                                                                                        return null
+                                                                                    }
+                                                                                    return <View style={{
+                                                                                        // height: 150,
+                                                                                        marginBottom: 15,
+                                                                                        // marginBottom: i === priorities.length - 1 ? 0 : 20,
+                                                                                        // maxWidth: 150,
+                                                                                        backgroundColor: '#efefef',
+                                                                                        width: '100%',
+                                                                                        maxWidth: 130,
+                                                                                    }}
+                                                                                        key={index}
+                                                                                    >
+                                                                                        <Card
+                                                                                            gray={true}
+                                                                                            cueIds={cueIds}
+                                                                                            onLongPress={() => {
+                                                                                                setCueIds([])
+                                                                                                setEditFolderChannelId(cue.channelId ? cue.channelId : 'Home')
+                                                                                                // alert(cue.channelId ? cue.channelId : 'Home')
+                                                                                            }}
+                                                                                            add={() => {
+                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                const found = temp.find((i: any) => {
+                                                                                                    return i === cue._id
+                                                                                                })
+                                                                                                if (!found) {
+                                                                                                    temp.push(cue._id)
+                                                                                                }
+                                                                                                setCueIds(temp)
+                                                                                            }}
+                                                                                            remove={() => {
+                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                const upd = temp.filter((i: any) => {
+                                                                                                    return i !== cue._id
+                                                                                                })
+                                                                                                setCueIds(upd)
+                                                                                            }}
+                                                                                            editFolderChannelId={editFolderChannelId}
+                                                                                            fadeAnimation={props.fadeAnimation}
+                                                                                            updateModal={() => {
+                                                                                                props.openUpdate(
+                                                                                                    cue.key,
+                                                                                                    cue.index,
+                                                                                                    0,
+                                                                                                    cue._id,
+                                                                                                    (cue.createdBy ? cue.createdBy : ''),
+                                                                                                    (cue.channelId ? cue.channelId : '')
+                                                                                                )
+                                                                                            }}
+                                                                                            cue={cue}
+                                                                                            channelId={props.channelId}
+                                                                                            subscriptions={props.subscriptions}
+                                                                                        />
+                                                                                    </View>
+                                                                                })}
+                                                                            </View>
                                                                         </View>
-                                                                    </View>
-                                                                })}</ScrollView>
-                                                            )
-                                                }
-                                            </View> : null
-                                    )
-                                }
+                                                                    })}</ScrollView>
+                                                                )
+                                                    }
+                                                </View> : null
+                                        )
+                                    }
+                                </View>
                             </View>
                         </View>
-                    </View>
+                    </InsetShadow>
                 })
             }
         </ScrollView >
@@ -1414,23 +1426,31 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             // flexDirection: width < 1024 ? 'column-reverse' : 'column'
         }}>
             <View style={{
-                backgroundColor: '#16181C',
+                backgroundColor: '#000000',
                 // borderColor: '#efefef',
                 borderBottomWidth: 2,
-                overflow: 'hidden',
+                // overflow: 'hidden',
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 // paddingBottom: 0,
                 width: '100%',
                 height: 52,
-                paddingVertical: 2
+                paddingVertical: 2,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 7,
+                },
+                shadowOpacity: 0.12,
+                shadowRadius: 10,
+                zIndex: 500000,
             }}>
                 <View style={{
                     flexDirection: 'row',
                     width: '100%',
                     maxWidth: 900, alignSelf: 'center',
-                    backgroundColor: '#16181C',
+                    backgroundColor: '#000000',
                     paddingVertical: 10,
                     flex: 1,
                     height: 48
@@ -1440,9 +1460,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             null :
                             <View style={{
                                 flexDirection: 'row',
-                                backgroundColor: '#16181C',
+                                backgroundColor: '#000000',
                                 flex: 1,
-                                height: 50,
+                                height: 28,
                                 paddingTop: 0
                             }}>
                                 <Image
@@ -1455,7 +1475,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#16181C', paddingTop: 1 }}>
+                                <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#000000', paddingTop: 1 }}>
                                     {
                                         props.options.map((op: any) => {
                                             if (op === 'Settings' || op === 'Channels') {
@@ -1463,7 +1483,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }
                                             return <TouchableOpacity
                                                 style={{
-                                                    backgroundColor: '#16181C'
+                                                    backgroundColor: '#000000'
                                                 }}
                                                 onPress={() => {
                                                     if (op === 'To Do') {
@@ -1487,7 +1507,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{
                         flexDirection: 'row',
                         // justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
-                        backgroundColor: '#16181C',
+                        backgroundColor: '#000000',
                         width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
                     }}>
                         {
@@ -1529,7 +1549,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                         {
                             Dimensions.get('window').width < 1024 ?
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#16181C' }} />
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#000000' }} />
                                 : null
                         }
                         {props.option === "To Do" || props.option === "Classroom" ?
@@ -1592,7 +1612,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     value={'Channels'}>
                                     <Text style={{
                                         fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
-                                        color: '#16181C'
+                                        color: '#000000'
                                     }}>
                                         &nbsp;WORKSPACES
                                     </Text>
@@ -1601,7 +1621,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     value={'Settings'}>
                                     <Text style={{
                                         fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
-                                        color: '#16181C'
+                                        color: '#000000'
                                     }}>
                                         &nbsp;ACCOUNT
                                     </Text>
@@ -1749,7 +1769,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {/* Show all the settings here */}
                 <View style={{ flexDirection: 'column', padding: 25, backgroundColor: 'none' }} className="mbsc-align-center mbsc-padding">
                     {props.option === 'Classroom' ? <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                        <Text style={{ fontSize: 10, color: '#16181C', paddingLeft: 5, paddingBottom: 10 }}>
+                        <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
                             Sort By
                         </Text>
 
@@ -1779,7 +1799,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </div> : null}
 
                     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                        <Text style={{ fontSize: 10, color: '#16181C', paddingLeft: 5, paddingBottom: 10 }}>
+                        <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
                             Filter
                         </Text>
 
@@ -1849,7 +1869,7 @@ const styleObject: any = () => StyleSheet.create({
         color: '#fff',
         height: 24,
         paddingHorizontal: 15,
-        backgroundColor: '#16181C',
+        backgroundColor: '#000000',
         lineHeight: 24,
         fontFamily: 'overpass',
         fontWeight: 'bold',

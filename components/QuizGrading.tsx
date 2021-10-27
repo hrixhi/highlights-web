@@ -266,7 +266,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}>
                                 {currentScore}/{totalPossible}
                             </Text>
-                            {props.isOwner ? <Text style={{ fontSize: 14, color: "#16181C", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
+                            {props.isOwner ? <Text style={{ fontSize: 14, color: "#000000", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
                                 {props.partiallyGraded ? "In progress" : "Graded"}
                             </Text> : null}
                         </View>
@@ -444,7 +444,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#16181C'
+                                let color = '#000000'
                                 if (option.isCorrect) {
                                     color = '#006AFF'
                                 } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {

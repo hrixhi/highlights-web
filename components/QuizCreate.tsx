@@ -211,7 +211,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#16181C" size={15} />
+                            <Ionicons name="add-circle-outline" color="#000000" size={15} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -221,7 +221,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#16181C" size={18} />
+                            <Ionicons name="help-circle-outline" color="#000000" size={18} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -654,7 +654,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#16181C', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
+                                <Text style={{ color: '#000000', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
                                     {index + 1}.
                                 </Text>
                                 <View style={{

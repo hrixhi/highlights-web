@@ -62,7 +62,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </Text>
                             </View>
                         </a>
-                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#16181C', fontSize: 14 }} />
+                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#000000', fontSize: 14 }} />
 
                 }
             </View>

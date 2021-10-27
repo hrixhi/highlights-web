@@ -893,7 +893,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             //         style={{
                                             //             textAlign: 'center',
                                             //             lineHeight: 35,
-                                            //             // color: '#16181C',
+                                            //             // color: '#000000',
                                             //             fontSize: 10,
                                             //             // backgroundColor: '#efefef',
                                             //             // paddingHorizontal: 20,
@@ -934,7 +934,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                                                         </label>
                                                     </View>
-                                                    {/* <Text style={{ fontSize: 10, color: '#16181C', paddingLeft: 5, paddingTop: 10 }}>
+                                                    {/* <Text style={{ fontSize: 10, color: '#000000', paddingLeft: 5, paddingTop: 10 }}>
                                                         Channel
                                                     </Text> */}
                                                 </View> : null
@@ -1066,7 +1066,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             <Text style={{
                                                                                 textAlign: 'center',
                                                                                 lineHeight: 35,
-                                                                                color: '#16181C',
+                                                                                color: '#000000',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#efefef',
                                                                                 paddingHorizontal: 20,
@@ -1090,7 +1090,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <Text style={{
                                                                     fontSize: 14,
                                                                     // fontFamily: 'inter',
-                                                                    color: '#16181C'
+                                                                    color: '#000000'
                                                                 }}>
                                                                     {PreferredLanguageText('name')}
                                                                 </Text>
@@ -1112,7 +1112,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 <Text style={{
                                                     fontSize: 14,
                                                     // fontFamily: 'inter',
-                                                    color: '#16181C'
+                                                    color: '#000000'
                                                 }}>
                                                     Users
                                                 </Text>
@@ -1359,7 +1359,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     <Text style={{
                                                                         fontSize: 14,
                                                                         // fontFamily: 'inter',
-                                                                        color: '#16181C'
+                                                                        color: '#000000'
                                                                     }}>
                                                                         {PreferredLanguageText('name')}
                                                                     </Text>
@@ -1379,7 +1379,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <Text style={{
                                                                     fontSize: 14,
                                                                     // fontFamily: 'inter',
-                                                                    color: '#16181C',
+                                                                    color: '#000000',
                                                                     marginBottom: 15
                                                                 }}>
                                                                     Users
@@ -1615,7 +1615,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             </Text>
                                                                                         </View> : null}
 
-                                                                                        <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, color: chat.unreadMessages > 0 ? "#006AFF" : '#16181C' }} ellipsizeMode='tail'>
+                                                                                        <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, color: chat.unreadMessages > 0 ? "#006AFF" : '#000000' }} ellipsizeMode='tail'>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>

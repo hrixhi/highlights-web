@@ -1178,7 +1178,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              color: '#16181C',
+                              color: '#000000',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -1265,7 +1265,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                               }}
                             >
@@ -1346,7 +1346,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                               }}
                             >
@@ -1531,7 +1531,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontWeight: 'bold'
                               }}
                             >
@@ -1616,7 +1616,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontWeight: 'bold'
                               }}
                             >
@@ -1730,7 +1730,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontWeight: 'bold'
                               }}
                             >
@@ -1828,7 +1828,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              color: '#16181C',
+                              color: '#000000',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -1912,7 +1912,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 <Ionicons
                                   name={addCustomCategory ? "close" : "create-outline"}
                                   size={18}
-                                  color={"#16181C"}
+                                  color={"#000000"}
                                 />
                               </Text>
                             </TouchableOpacity>
@@ -1940,7 +1940,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#16181C',
+                            color: '#000000',
                             fontFamily: 'Inter'
                           }}
                         >
@@ -2006,7 +2006,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#16181C',
+                            color: '#000000',
                             fontFamily: 'Inter'
                           }}
                         >
@@ -2055,7 +2055,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              color: '#16181C',
+                              color: '#000000',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -2264,7 +2264,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              color: '#16181C',
+                              color: '#000000',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -2374,7 +2374,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#16181C'
+                            color: '#000000'
                           }}
                         >
                           Timed
@@ -2429,7 +2429,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     style={{
                                       // fontFamily: "inter",
                                       fontSize: 15,
-                                      color: "#16181C",
+                                      color: "#000000",
                                     }}
                                   >
                                     {duration.hours} H <Ionicons name="chevron-down-outline" size={15} /> &nbsp; &nbsp;: &nbsp; &nbsp;
@@ -2468,7 +2468,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     style={{
                                       // fontFamily: "inter",
                                       fontSize: 15,
-                                      color: "#16181C",
+                                      color: "#000000",
                                     }}
                                   >
                                     {duration.minutes}  m  <Ionicons name="chevron-down-outline" size={15} />
@@ -2516,7 +2516,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#16181C'
+                            color: '#000000'
                           }}
                         >
                           Random Order
@@ -2753,7 +2753,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               editorStyle={{
                 backgroundColor: "#fff",
                 placeholderColor: "#393939",
-                color: "#16181C",
+                color: "#000000",
                 contentCSSText: "font-size: 14px;",
               }}
               initialContentHTML={cue}
@@ -2914,7 +2914,7 @@ const styles: any = StyleSheet.create({
     width: 125,
     fontSize: 14,
     height: 45,
-    color: "#16181C",
+    color: "#000000",
     borderRadius: 1,
     marginLeft: 10,
   },
@@ -3017,7 +3017,7 @@ const styles: any = StyleSheet.create({
   },
   allBlack: {
     fontSize: 12,
-    color: "#16181C",
+    color: "#000000",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
@@ -3029,7 +3029,7 @@ const styles: any = StyleSheet.create({
     height: 22,
     paddingHorizontal: 10,
     borderRadius: 1,
-    backgroundColor: "#16181C",
+    backgroundColor: "#000000",
     marginBottom: 20,
   },
   allGrayOutline: {

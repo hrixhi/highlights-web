@@ -110,7 +110,7 @@ const styles: any = (status: any) => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#16181C',
+        color: '#000000',
         marginLeft: 10
     },
     title: {
@@ -118,7 +118,7 @@ const styles: any = (status: any) => StyleSheet.create({
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#16181C'
+        color: '#000000'
     },
     description: {
         fontSize: 13,

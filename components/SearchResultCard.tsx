@@ -49,7 +49,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     lineHeight: 20,
                                     flex: 1,
                                     marginTop: 5,
-                                    color: '#16181C'
+                                    color: '#000000'
                                 }}>
                                 {props.title}
                             </Text>
@@ -78,7 +78,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
             </TouchableOpacity>
             {/* <View
                 style={{
-                    backgroundColor: props.colorCode !== '' ? props.colorCode : '#16181C',
+                    backgroundColor: props.colorCode !== '' ? props.colorCode : '#000000',
                     flex: 1,
                     // borderLeftWidth: 2,
                     borderColor: '#efefef',
@@ -133,7 +133,7 @@ const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
         borderRadius: 1,
         padding: 13,
         color: '#efefef',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
     },
     descriptionFlip: {
         color: '#efefef',
@@ -147,7 +147,7 @@ const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
     flipText: {
         height: '100%',
         color: '#efefef',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : '#efefef'
+        backgroundColor: colorScheme === 'light' ? '#000000' : '#efefef'
     },
     dateContainer: {
         fontSize: 10,
@@ -164,7 +164,7 @@ const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#efefef',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : '#efefef'
+        backgroundColor: colorScheme === 'light' ? '#000000' : '#efefef'
     },
     date: {
         fontSize: 9,
@@ -187,10 +187,10 @@ const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: '#16181C'
+        color: '#000000'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#16181C' : '#16181C',
+        color: colorScheme === 'light' ? '#000000' : '#000000',
         backgroundColor: 'white',
         fontFamily: 'inter',
         fontSize: 13,

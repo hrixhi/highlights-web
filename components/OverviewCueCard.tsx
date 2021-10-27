@@ -14,7 +14,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
     const starred = props.cue.starred;
     const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#16181C');
+    const [colorCode, setColorCode] = useState('#000000');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -254,7 +254,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -268,7 +268,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : '#efefef'
+        backgroundColor: colorScheme === 'light' ? '#000000' : '#efefef'
     },
     dateContainer: {
         fontSize: 10,
@@ -284,7 +284,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : '#efefef'
+        backgroundColor: colorScheme === 'light' ? '#000000' : '#efefef'
     },
     date: {
         fontSize: 10,
@@ -310,7 +310,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: col
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#16181C' : '#16181C',
+        color: colorScheme === 'light' ? '#000000' : '#000000',
         backgroundColor: colorScheme === 'light' ? '#efefef' : '#efefef',
         fontFamily: 'inter',
         fontSize: 13,

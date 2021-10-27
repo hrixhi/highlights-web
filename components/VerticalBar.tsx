@@ -78,7 +78,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 22,
                             fontFamily: 'inter',
                             lineHeight: 20,
-                            color: '#16181C',
+                            color: '#000000',
                             // marginTop: 1,
                         }}>
                             <View style={{
@@ -106,9 +106,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                                 onPress={() => props.openChannelSettings()}>
                                 <Text style={styles.channelText}>
-                                    <Ionicons name='hammer-outline' size={18} color={'#16181C'} />
+                                    <Ionicons name='hammer-outline' size={18} color={'#000000'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center', width: '100%', }}>
+                                <Text style={{ fontSize: 11, color: '#000000', textAlign: 'center', width: '100%', }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity> : null
@@ -122,9 +122,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
-                                        name='chatbubbles-outline' size={18} color={'#16181C'} />
+                                        name='chatbubbles-outline' size={18} color={'#000000'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
+                                <Text style={{ fontSize: 11, color: '#000000', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
@@ -184,13 +184,13 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'left',
-        backgroundColor: '#16181C'
+        backgroundColor: '#000000'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#16181C'
+        backgroundColor: '#000000'
     },
     iconContainer: {
         width: '100%',
@@ -211,8 +211,8 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#16181C'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#000000'
     },
     cusCategory: {
         fontSize: 14,
@@ -222,21 +222,21 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#16181C' : 'white',
+        color: colorScheme === 'light' ? '#000000' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#16181C' : 'white',
+        color: colorScheme === 'light' ? '#000000' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
     },
     text: {
         textAlign: 'right',
-        color: '#16181C',
+        color: '#000000',
         fontSize: 14,
         paddingRight: 15
     },

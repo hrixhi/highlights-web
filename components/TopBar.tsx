@@ -59,7 +59,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {/* <TouchableOpacity
                         disabled={true}
                         // onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: '#16181C' }}
+                        style={{ backgroundColor: '#000000' }}
                     >
                         <Image
                             source={
@@ -87,13 +87,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
-                                                name='chatbubbles-outline' size={18} color={'#16181C'} />
+                                                name='chatbubbles-outline' size={18} color={'#000000'} />
                                             {/* {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
                                             } */}
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#000000', textAlign: 'center' }}>
                                             Classroom
                                         </Text>
                                     </TouchableOpacity>
@@ -103,9 +103,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ marginRight: 0, backgroundColor: '#efefef' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='hammer-outline' size={18} color={'#16181C'} />
+                                                    <Ionicons name='hammer-outline' size={18} color={'#000000'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 10, color: '#000000', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null
@@ -151,7 +151,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     text: {
         textAlign: 'right',
-        color: '#16181C',
+        color: '#000000',
         fontSize: 14,
         paddingRight: 15
     },

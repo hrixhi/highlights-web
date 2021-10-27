@@ -90,7 +90,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#16181C' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#000000' }}>
                                             {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='chevron-down-outline' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -157,7 +157,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#16181C', paddingTop: 7, backgroundColor: '#efefef', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#000000', paddingTop: 7, backgroundColor: '#efefef', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
@@ -167,7 +167,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#efefef' }}>
                                 <Menu>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#16181C', paddingLeft: 10 }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#000000', paddingLeft: 10 }}>
                                             Filter <Ionicons name='chevron-down-outline' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -189,7 +189,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     props.setChannelFilterChoice(category)
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#16181C', paddingLeft: 10 }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#000000', paddingLeft: 10 }}>
                                                         {filterChoice}<Ionicons name='chevron-down-outline' size={15} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -222,7 +222,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }
                                                 </MenuOptions>
                                             </Menu>
-                                            <Text style={{ fontSize: 10, color: '#16181C', paddingTop: 7, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                            <Text style={{ fontSize: 10, color: '#000000', paddingTop: 7, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                 Category
                                             </Text>
                                         </MenuOption>
@@ -327,8 +327,8 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#16181C'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#000000'
     },
     cusCategory: {
         fontSize: 14,
@@ -338,16 +338,16 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#16181C' : 'white',
+        color: colorScheme === 'light' ? '#000000' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#16181C' : 'white',
+        color: colorScheme === 'light' ? '#000000' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
     }
 });

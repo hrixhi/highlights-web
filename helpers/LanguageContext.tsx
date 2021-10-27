@@ -642,7 +642,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#16181C' : '#fff'
+    const color = colorScheme === 'light' ? '#000000' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {

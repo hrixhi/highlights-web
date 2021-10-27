@@ -103,7 +103,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={styles.channelText}>
-                            <Ionicons name='chevron-back-outline' size={30} color={'#16181C'} style={{ marginTop: -5 }} />
+                            <Ionicons name='chevron-back-outline' size={30} color={'#000000'} style={{ marginTop: -5 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -116,7 +116,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 fontSize: 22,
                                 fontFamily: 'inter',
                                 lineHeight: 33,
-                                color: '#16181C',
+                                color: '#000000',
                                 marginTop: 12,
                             }}>
                                 <View style={{
@@ -139,9 +139,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={styles.center}
                                 onPress={() => props.openChannelSettings()}>
                                 <Text style={styles.channelText}>
-                                    <Ionicons name='hammer-outline' size={18} color={'#16181C'} />
+                                    <Ionicons name='hammer-outline' size={18} color={'#000000'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center' }}>
+                                <Text style={{ fontSize: 11, color: '#000000', textAlign: 'center' }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity>
@@ -155,9 +155,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
-                                        name='chatbubbles-outline' size={18} color={'#16181C'} />
+                                        name='chatbubbles-outline' size={18} color={'#000000'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center' }}>
+                                <Text style={{ fontSize: 11, color: '#000000', textAlign: 'center' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
@@ -171,7 +171,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <Ionicons
                                 name='chevron-up-outline' size={25} color={'#006AFF'} />
                         </Text>
-                        {/* <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
+                        {/* <Text style={{ fontSize: 10, color: '#000000', textAlign: 'center' }}>
                             Hide
                         </Text> */}
                     </TouchableOpacity>
@@ -243,7 +243,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     outline: {
         borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#efefef' : 'white',
-        color: colorScheme === 'light' ? '#16181C' : '#16181C'
+        color: colorScheme === 'light' ? '#000000' : '#000000'
     },
     cusCategory: {
         fontSize: 14,

@@ -1456,7 +1456,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#16181C', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#000000', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
@@ -1473,7 +1473,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#16181C', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
@@ -1486,7 +1486,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#16181C', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1528,7 +1528,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#006AFF',
+                    backgroundColor: '#006aff',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
@@ -1552,11 +1552,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
-                    color: '#006AFF',
+                    color: '#006aff',
                     width: 175,
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#006AFF',
+                    borderColor: '#006aff',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
@@ -1794,7 +1794,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##16181C', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##000000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1872,13 +1872,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               position: 'absolute',
               marginRight: Dimensions.get('window').width >= 1100 ? (((Dimensions.get('window').width - 1100) / 2) - 25) : 20,
               marginBottom: Dimensions.get('window').width < 1024 ? 77 : 25,
-              zIndex: showLoginWindow ? 40 : 600,
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 55, height: 55, borderRadius: 29, backgroundColor: '#006AFF',
+              width: 58, height: 58, borderRadius: 29, backgroundColor: '#006aff',
               borderColor: '#efefef',
-              borderWidth: 0
+              borderWidth: 0,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 4,
+                height: 4,
+              },
+              shadowOpacity: 0.12,
+              shadowRadius: 10,
+              zIndex: showLoginWindow ? 40 : 500000,
             }}
           >
             <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1895,7 +1902,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       )
                   )
               }
-
             </Text>
           </TouchableOpacity> : null
       }
@@ -1903,8 +1909,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         Dimensions.get('window').width < 1024 && showHome ?
           <View style={{
             position: 'absolute',
-            zIndex: showLoginWindow ? 40 : 1000,
-            backgroundColor: '#16181C',
+            backgroundColor: '#000000',
             // borderColor: '#efefef',
             // borderTopWidth: 2,
             alignSelf: 'flex-end',
@@ -1914,7 +1919,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
             flexDirection: 'row',
             justifyContent: 'center',
-            height: 54
+            height: 54,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: -7,
+            },
+            shadowOpacity: 0.12,
+            shadowRadius: 10,
+            zIndex: showLoginWindow ? 40 : 500000,
           }}>
             {
               options.map((op: any) => {
@@ -1923,7 +1936,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }
                 return <TouchableOpacity
                   style={{
-                    backgroundColor: '#16181C'
+                    backgroundColor: '#000000'
                   }}
                   onPress={() => {
                     // if (op === 'To Do') {
@@ -1963,7 +1976,7 @@ const styles = (channelId: string) => StyleSheet.create({
     fontWeight: 'bold',
     height: 25,
     paddingHorizontal: 12,
-    backgroundColor: '#16181C',
+    backgroundColor: '#000000',
     lineHeight: 25,
     fontFamily: 'overpass',
     textTransform: 'uppercase'
@@ -1973,7 +1986,7 @@ const styles = (channelId: string) => StyleSheet.create({
     color: '#fff',
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#006AFF',
+    backgroundColor: '#006aff',
     lineHeight: 25,
     height: 25,
     fontFamily: 'inter',

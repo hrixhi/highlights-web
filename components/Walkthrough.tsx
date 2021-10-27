@@ -403,7 +403,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         fontFamily: 'inter',
                                                         flex: 1,
                                                         lineHeight: 16,
-                                                        color: item.isOpen ? '#006AFF' : '#16181C'
+                                                        color: item.isOpen ? '#006AFF' : '#000000'
                                                     }}>
                                                         {item.question}
                                                     </Text>

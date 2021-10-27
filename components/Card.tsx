@@ -14,7 +14,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const starred = props.cue.starred;
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#16181C');
+    const [colorCode, setColorCode] = useState('#000000');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -145,21 +145,23 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '100%',
         backgroundColor: '#fff',
         borderRadius: 1,
-        // borderTopRightRadius: 8,
-        // borderBottomRightRadius: 8,
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
         // borderBottomRightRadius: 1,
-        overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
-        borderWidth: 1,
-        borderColor: '#efefef',
+        // borderLeftWidth: 1,
+        borderColor: col,
+        borderLeftWidth: 3,
         flexDirection: 'row',
         shadowOffset: {
-                width: -3,
-                height: 0,
+            width: 2,
+            height: 2,
         },
-        shadowOpacity: 0.8,
-        shadowColor: col
+        overflow: 'hidden',
+        shadowOpacity: 0.1,
+        shadowRadius: 7,
+        zIndex: 500000,
     },
     card: {
         maxWidth: 210,
@@ -176,7 +178,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 1,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -190,7 +192,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
     },
     dateContainer: {
         fontSize: 10,
@@ -206,7 +208,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
     },
     date: {
         fontSize: 9,
@@ -230,11 +232,11 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: '#16181C'
+        color: '#000000'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#16181C',
-        backgroundColor: colorScheme === 'light' ? '#16181C' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#000000',
+        backgroundColor: colorScheme === 'light' ? '#000000' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

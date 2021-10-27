@@ -2230,7 +2230,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         maxWidth: "10%"
                     }}
                     onPress={() => insertEquation()}>
-                    <Ionicons name="add-circle-outline" color="#16181C" size={15} />
+                    <Ionicons name="add-circle-outline" color="#000000" size={15} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
@@ -2240,7 +2240,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                     onPress={() => setShowFormulaGuide(true)}
                 >
-                    <Ionicons name="help-circle-outline" color="#16181C" size={18} />
+                    <Ionicons name="help-circle-outline" color="#000000" size={18} />
                 </TouchableOpacity>
             </View>
         ) : null;
@@ -2552,7 +2552,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View>
                 <Text
                     style={{
-                        color: "#16181C",
+                        color: "#000000",
                         fontSize: 14,
                         fontFamily: 'inter',
                         paddingBottom: 25,
@@ -2948,7 +2948,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{
                                             textAlign: "center",
                                             lineHeight: 35,
-                                            color: "#16181C",
+                                            color: "#000000",
                                             fontSize: 12,
                                             backgroundColor: "#efefef",
                                             paddingHorizontal: 20,
@@ -3335,7 +3335,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                         // textTransform: 'uppercase'
                     }}>
@@ -3399,7 +3399,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 placeholder='Share with...'
                                 displayValue='name'
                                 // key={userDropdownOptions.toString()}
-                                // style={{ width: '100%', color: '#16181C', 
+                                // style={{ width: '100%', color: '#000000', 
                                 //     optionContainer: { // To change css for option container 
                                 //         zIndex: 9999
                                 //     }
@@ -3457,7 +3457,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
@@ -3486,7 +3486,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>)
                         ) : (
                             <View style={{ flex: 1, backgroundColor: "#fff" }}>
-                                <Text style={{ fontSize: 14, color: '#16181C', textTransform: 'uppercase', fontFamily: 'Inter' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
+                                <Text style={{ fontSize: 14, color: '#000000', textTransform: 'uppercase', fontFamily: 'Inter' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                             </View>
                         )}
                     </View>
@@ -3662,7 +3662,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                     }}>Grade Weight</Text>
                 </View>
@@ -3753,7 +3753,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                     }}>Late Submission</Text>
                 </View>
@@ -3880,7 +3880,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                             }}
                         >
@@ -3919,7 +3919,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                             }}
                         >
@@ -4018,7 +4018,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
@@ -4036,7 +4036,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <TouchableOpacity style={styles.allGrayOutline} onPress={() => { }}>
                                         <Text
                                             style={{
-                                                color: "#16181C",
+                                                color: "#000000",
                                                 lineHeight: 20,
                                                 fontSize: 12
                                             }}>
@@ -4161,7 +4161,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 20,
                                             width: "100%"
                                         }}>
-                                        <Ionicons name={addCustomCategory ? "close" : "create-outline"} size={18} color={"#16181C"} />
+                                        <Ionicons name={addCustomCategory ? "close" : "create-outline"} size={18} color={"#000000"} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -4192,7 +4192,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("priority")}</Text>
                 </View>
@@ -4256,7 +4256,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        color: '#16181C',
+                        color: '#000000',
                         fontFamily: 'Inter',
                     }}>Forward</Text>
                 </View>
@@ -4327,7 +4327,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={"arrow-redo-outline"}
                                     size={18}
-                                    color={shareWithChannelId === "None" ? "#a0a0a0" : "#16181C"}
+                                    color={shareWithChannelId === "None" ? "#a0a0a0" : "#000000"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -4355,7 +4355,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}>
                         <Text style={{
                             fontSize: 14,
-                            color: '#16181C',
+                            color: '#000000',
                             fontFamily: 'Inter'
                         }}>Remind</Text>
                     </View>
@@ -4398,7 +4398,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                             }}>Repeat</Text>
                         </View>
@@ -4596,7 +4596,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#16181C',
+                                color: '#000000',
                                 fontFamily: 'Inter'
                             }}>Indefinitely</Text>
                         </View>
@@ -5284,7 +5284,7 @@ const styles: any = StyleSheet.create({
         width: 125,
         fontSize: 14,
         height: 45,
-        color: "#16181C",
+        color: "#000000",
         borderRadius: 1,
         marginLeft: 10
     },
@@ -5399,7 +5399,7 @@ const styles: any = StyleSheet.create({
     },
     all: {
         fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
-        color: '#16181C',
+        color: '#000000',
         fontWeight: 'bold',
         height: 25,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
@@ -5421,14 +5421,14 @@ const styles: any = StyleSheet.create({
     },
     allOutline: {
         fontSize: 12,
-        backgroundColor: "#16181C",
+        backgroundColor: "#000000",
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1
     },
     allBlack: {
         fontSize: 12,
-        color: "#16181C",
+        color: "#000000",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white"

@@ -367,9 +367,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={18} color={'#16181C'} />
+                                            <Ionicons name='copy-outline' size={18} color={'#000000'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#000000', textAlign: 'center', width: '100%', }}>
                                             Host Link
                                         </Text>
                                     </TouchableOpacity>
@@ -400,9 +400,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={18} color={'#16181C'} />
+                                            <Ionicons name='copy-outline' size={18} color={'#000000'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#000000', textAlign: 'center', width: '100%', }}>
                                             Guest Link
                                         </Text>
                                     </TouchableOpacity>
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#16181C'
+        color: '#000000'
     },
     description: {
         fontSize: 13,

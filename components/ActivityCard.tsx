@@ -135,7 +135,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 7,
-        color: '#16181C',
+        color: '#000000',
         flex: 1
     },
     titleArrow: {
