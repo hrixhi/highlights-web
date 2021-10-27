@@ -3176,7 +3176,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontFamily: 'Inter'
                         // textTransform: 'uppercase'
                     }}>
-                        {props.cue.channelId && props.cue.channelId !== "" ? "Shared With All" : "Saved In"}
+                        {props.cue.channelId && props.cue.channelId !== "" ? "Restrict Access" : "Saved In"}
                     </Text>
                 </View>
                 <View>
@@ -3191,7 +3191,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                 >
                                     <Switch
-                                        value={!limitedShares}
+                                        value={limitedShares}
                                         onValueChange={() => {
                                             setLimitedShares(!limitedShares);
                                         }}
@@ -3341,7 +3341,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingRight: 10,
                                     fontFamily: 'Inter'
                                 }}>
-                                Available on
+                                Released
                             </Text>
                             {isOwner ? (
                                 // <DatePicker
@@ -3632,7 +3632,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingRight: 10,
                                     fontFamily: 'Inter'
                                 }}>
-                                {!isOwner ? (allowLateSubmission ? "Available until  " + moment(new Date(availableUntil)).format('MMMM Do, h:mm a') : "No") : "Available Until"}
+                                {!isOwner ? (allowLateSubmission ? "Allowed until  " + moment(new Date(availableUntil)).format('MMMM Do, h:mm a') : "No") : "Allowed Until"}
                             </Text>
                             {isOwner ? (
                                 // <DatePicker

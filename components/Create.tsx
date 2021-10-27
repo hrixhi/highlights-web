@@ -1269,7 +1269,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 fontFamily: 'Inter'
                               }}
                             >
-                              Share With All
+                              Restrict Access
                             </Text>
                           </View>
                           <View>
@@ -1283,7 +1283,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             >
                               <Switch
-                                value={!limitedShare}
+                                value={limitedShare}
                                 onValueChange={() => {
                                   setLimitedShare(!limitedShare);
                                 }}
@@ -1659,7 +1659,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   }}
                                 >
                                   <Text style={styles.text}>
-                                    Available Until
+                                    Allowed Until
                                   </Text>
                                   {/* <DatePicker
                               format="YYYY-MM-DD HH:mm"
