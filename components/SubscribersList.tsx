@@ -84,7 +84,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [loading, setLoading] = useState(false);
     const [releaseSubmission, setReleaseSubmission] = useState(false);
     const [submissionAttempts, setSubmissionAttempts] = useState<any[]>([]);
-    const [viewSubmissionTab, setViewSubmissionTab] = useState('mySubmission');
+    const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
     const [activeQuizAttempt, setActiveQuizAttempt] = useState(0);
     const [currentQuizAttempt, setCurrentQuizAttempt] = useState(0);
@@ -965,7 +965,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
         }
 
-        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?", releaseSubmission ? "" : warning, [
+        Alert(releaseSubmission ? "Hide feedback? Feedback will be temporarily hidden from viewers." : "Share feedback? Feedback will be privately visible to viewers", releaseSubmission ? "" : warning, [
             {
                 text: "Cancel",
                 style: "cancel",
@@ -1027,7 +1027,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
-            {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
+            {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
                     style={{
                         justifyContent: "center",
@@ -1052,7 +1052,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Feedback
                     </Text>
                 </TouchableOpacity>
-            </View>}
+            </View>} */}
             {
                 attempt.url !== undefined ?
                     (attempt.type === "mp4" ||
@@ -1399,7 +1399,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         textTransform: "uppercase",
                                                                     }}
                                                                 >
-                                                                    Hide Grades
+                                                                    Hide Feedback
                                                                 </Text>
                                                             </TouchableOpacity> :
                                                             <TouchableOpacity
@@ -1427,7 +1427,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         textTransform: "uppercase",
                                                                     }}
                                                                 >
-                                                                    Release Grades
+                                                                    Share Feedback
                                                                 </Text>
                                                             </TouchableOpacity>
                                                     }
@@ -1806,73 +1806,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 // height: windowHeight - 132
                                             }}
                                             style={{ flex: 1, paddingTop: 12 }}>
-                                            {
-                                                submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                                    <View style={{ width: '100%', marginBottom: 30 }}>
-                                                        <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                            <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
-                                                                LATE SUBMISSION
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    :
-                                                    null
-                                            }
                                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                                 <View style={{
-                                                    flex: 1
+                                                    flex: 1, flexDirection: 'row'
                                                 }}>
-                                                    <TextInput
-                                                        value={score}
-                                                        style={{
-                                                            width: 120,
-                                                            borderBottomColor: '#efefef',
-                                                            borderBottomWidth: 1,
-                                                            fontSize: 14,
-                                                            // paddingTop: 13,
-                                                            paddingBottom: 13,
-                                                            marginTop: 0,
-                                                            marginBottom: 20
-                                                        }}
-                                                        placeholder={'Score (0-100)'}
-                                                        onChangeText={val => setScore(val)}
-                                                        placeholderTextColor={'#393939'}
-                                                    />
-                                                </View>
-                                                <View
-                                                    style={{
-                                                        backgroundColor: "white",
-                                                        flexDirection: "row",
-                                                    }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => handleGradeSubmit()} style={{
-                                                            backgroundColor: "white",
-                                                            overflow: "hidden",
-                                                            height: 35,
-                                                            marginTop: 5
-                                                            // marginBottom: 20
-                                                        }}>
-                                                        <Text
-                                                            style={{
-                                                                textAlign: "center",
-                                                                lineHeight: 35,
-                                                                backgroundColor: '#006AFF',
-                                                                fontSize: 12,
-                                                                color: '#fff',
-                                                                // borderWidth: 1,
-                                                                // borderColor: '#006AFF',
-                                                                paddingHorizontal: 20,
-                                                                fontFamily: "inter",
-                                                                height: 35,
-                                                                // paddingTop: 2
-                                                                // width: 125,
-                                                                borderRadius: 15,
-                                                                textTransform: "uppercase"
-                                                            }}>
-                                                            SAVE
-                                                        </Text>
-                                                    </TouchableOpacity>
-
                                                     <TouchableOpacity onPress={() => {
                                                         if (showChat) {
                                                             setShowChat(false)
@@ -1892,25 +1829,80 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         setShowAddUsers(false)
                                                         setShowNewGroup(false)
                                                     }} style={{
-                                                        backgroundColor: "white", borderRadius: 15, marginLeft: 15,
-                                                        marginTop: 5,
+                                                        backgroundColor: "white",
+                                                        borderRadius: 15, marginRight: 15,
                                                     }}>
-                                                        <Text style={{
-                                                            textAlign: "center",
-                                                            lineHeight: 35,
-                                                            color: '#006AFF',
-                                                            fontSize: 12,
-                                                            borderWidth: 1,
-                                                            borderColor: '#006AFF',
-                                                            paddingHorizontal: 20,
-                                                            fontFamily: "inter",
+                                                        <Text>
+                                                            <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                    <View style={{ flexDirection: 'row', marginRight: 15 }}>
+                                                        <Text style={{ fontSize: 14, lineHeight: 35 }}>
+                                                            {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
+                                                        </Text>
+                                                    </View>
+                                                    {
+                                                        submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
+                                                            <View>
+                                                                <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                                    <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
+                                                                        LATE
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                            :
+                                                            null
+                                                    }
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        flexDirection: "row",
+                                                    }}>
+                                                    <TextInput
+                                                        value={score}
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            width: 75,
+                                                            borderBottomColor: '#efefef',
+                                                            borderBottomWidth: 1,
+                                                            fontSize: 14,
+                                                            // paddingTop: 13,
+                                                            paddingVertical: 5,
+                                                            marginTop: 5,
+                                                            marginBottom: 20,
+                                                            marginRight: 20
+                                                        }}
+                                                        placeholder={'Score 0-100'}
+                                                        onChangeText={val => setScore(val)}
+                                                        placeholderTextColor={'#393939'}
+                                                    />
+                                                    <TouchableOpacity
+                                                        onPress={() => handleGradeSubmit()} style={{
+                                                            backgroundColor: "white",
+                                                            overflow: "hidden",
                                                             height: 35,
-                                                            // paddingTop: 2
-                                                            // width: 125,
-                                                            borderRadius: 15,
-                                                            textTransform: "uppercase"
+                                                            //  marginTop: 5
+                                                            // marginBottom: 20
                                                         }}>
-                                                            CANCEL
+                                                        <Text
+                                                            style={{
+                                                                textAlign: "center",
+                                                                lineHeight: 35,
+                                                                borderColor: '#006AFF',
+                                                                fontSize: 12,
+                                                                color: '#006AFF',
+                                                                borderWidth: 1,
+                                                                // borderColor: '#006AFF',
+                                                                paddingHorizontal: 20,
+                                                                fontFamily: "inter",
+                                                                height: 35,
+                                                                // paddingTop: 2
+                                                                // width: 125,
+                                                                borderRadius: 15,
+                                                                textTransform: "uppercase"
+                                                            }}>
+                                                            UPDATE
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
@@ -1929,12 +1921,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             />
                                                         </View> : null
                                                 }
-                                                <View style={{ flexDirection: 'row', paddingTop: 20 }}>
-                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
-                                                    <Text style={{ fontSize: 14, paddingLeft: 5, lineHeight: 35 }}>
-                                                        Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
-                                                    </Text>
-                                                </View>
+
                                             </View>
                                             {
                                                 isQuiz && Object.keys(quizSolutions).length > 0 ?

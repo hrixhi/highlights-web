@@ -1783,7 +1783,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 }}
                                                                                                 style={{
                                                                                                     flexDirection: 'row',
-                                                                                                    borderColor: '#c4c4c4',
+                                                                                                    borderColor: '#efefef',
                                                                                                     // borderRightWidth: 1,
                                                                                                     borderBottomWidth: index === activity.length - 1 ? 0 : 1,
                                                                                                     // minWidth: 600, // flex: 1,
@@ -1793,22 +1793,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     borderLeftWidth: 3,
                                                                                                     borderLeftColor: act.colorCode
                                                                                                 }}>
-                                                                                                {/* <View style={{
-                                                                                                    backgroundColor: 'white',
-                                                                                                    paddingLeft: 10,
-                                                                                                    paddingRight: 5,
-                                                                                                    flexDirection: 'row',
-                                                                                                    paddingTop: 2
-                                                                                                    // width: 125
-                                                                                                }}>
-                                                                                                    <View style={{
-                                                                                                        width: 4,
-                                                                                                        height: '100%',
-                                                                                                        borderRadius: 12,
-                                                                                                        // marginRight: 5,
-                                                                                                        backgroundColor: act.colorCode
-                                                                                                    }} />
-                                                                                                </View> */}
                                                                                                 <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 20 }}>
                                                                                                     <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                                         {act.channelName}

@@ -157,8 +157,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submissionDraft, setSubmissionDraft] = useState('')
     const [updatingCueContent, setUpdatingCueContent] = useState(false);
     const [updatingCueDetails, setUpdatingCueDetails] = useState(false);
-    const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
-    const [viewSubmissionTab, setViewSubmissionTab] = useState('mySubmission');
+    // const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
+    const [viewSubmission, setViewSubmission] = useState(true);
+    const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([])
     const [remainingAttempts, setRemainingAttempts] = useState<any>(null)
 
@@ -2246,157 +2247,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ) : null;
     };
 
-    const renderCueTabs = () => {
-        return (
-            <View style={{ flexDirection: 'row', width: '100%' }}>
-                {/* {
-                    props.showFolder ? null :
-                        <View style={{}}>
-                            <TouchableOpacity
-                                style={{
-                                    // justifyContent: 'center',
-                                    // flexDirection: 'column',
-                                    marginRight: 10,
-                                    // paddingTop: 2
-                                }}
-                                onPress={() => {
-                                    props.closeModal()
-                                }}>
-                                <Text>
-                                    <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                } */}
-                {/* {(props.folderId !== "" || isOwner) && !props.showComments ? <View style={{}}>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            paddingTop: 6,
-                        }}
-                        onPress={() => {
-                            props.setShowFolder(!props.showFolder)
-                        }}>
-                        <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={18} color={props.showFolder ? '#393939' : '#006AFF'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View> : null} */}
-                {
-                    props.showFolder ? null :
-                        <View style={{ flexDirection: "row", flex: 1, justifyContent: 'flex-start' }}>
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: "center",
-                                    flexDirection: "column",
-                                    // paddingTop: 0
-                                }}
-                                onPress={() => {
-                                    props.setShowOriginal(true);
-                                    props.setShowOptions(false)
-                                    props.setShowComments(false)
-                                }}>
-                                <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
-                                    {/* <Ionicons name='newspaper-outline' size={18} /> */}
-                                    Content
-                                </Text>
-                                {/* <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
-                                    Content
-                                </Text> */}
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: "center",
-                                    flexDirection: "column"
-                                }}
-                                onPress={() => {
-                                    props.setShowOptions(true)
-                                    props.setShowOriginal(true);
-                                    props.setShowComments(false)
-                                }}>
-                                <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                    {/* <Ionicons name='options-outline' size={18} /> */}
-                                    Details
-                                </Text>
-                                {/* <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                    Settings
-                                </Text> */}
-                            </TouchableOpacity>
-                            {/* <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column"
-                        }}
-                        onPress={() => {
-                            props.setShowComments(true)
-                            props.setShowOriginal(true);
-                            props.setShowOptions(false)
-                        }}>
-                        <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                            <Ionicons name='chatbubbles-outline' size={15} />
-                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} 
-                        </Text>
-                        <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                            Q&A
-                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
-                        </Text>
-                    </TouchableOpacity> */}
-                            {!submission || (isOwner && submission) || isQuiz ? null : (
-                                <TouchableOpacity
-                                    style={{
-                                        justifyContent: "center",
-                                        flexDirection: "column"
-                                    }}
-                                    onPress={() => {
-                                        props.setShowOriginal(false);
-                                        props.setShowOptions(false)
-                                        props.setShowComments(false)
-
-
-                                        setInitialSubmissionDraft(submissionDraft);
-
-                                    }}>
-                                    <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                                        {/* <Ionicons name='document-attach-outline' size={18} /> */}
-                                        SUBMISSION
-                                    </Text>
-                                    {/* <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                                        Submission
-                                    </Text> */}
-                                </TouchableOpacity>
-                            )}
-                            {/* Add Status button here */}
-                            {!isOwner || !props.channelOwner ? null : (
-                                <TouchableOpacity
-                                    style={{
-                                        justifyContent: "center",
-                                        flexDirection: "column"
-                                    }}
-                                    onPress={() => {
-                                        props.setShowOriginal(false);
-                                        setIsQuiz(false);
-                                        props.setShowOptions(false)
-                                        props.setShowComments(true)
-                                        props.changeViewStatus();
-                                    }}>
-                                    <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
-                                        {/* <Ionicons name='bar-chart-outline' size={15} /> */}
-                                        RESPONSES
-                                    </Text>
-                                    {/* <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
-                                        RESPONSES
-                                    </Text> */}
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                }
-                {/* {props.showOptions && !props.showFolder ? renderDeleteButtons() : null} */}
-                {/* {props.showOriginal && !isQuiz && !props.showOptions && !props.showComments && !props.showFolder ? renderSaveCueButton() : null} */}
-            </View>
-        );
-    };
-
     // QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
     const renderQuizTimerOrUploadOptions = () => {
         return props.showOriginal && (imported || isQuiz) ? (
@@ -2734,8 +2584,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         const usedAttempts = submissionAttempts.length;
 
         return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View>
-                {/* <View
+            {/* <View
                     style={{
                         width: "100%",
                         paddingTop: 40,
@@ -2748,119 +2597,107 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         color: '#2f2f3c'
                     }}>Submission History</Text>
                 </View> */}
-                {props.cue.submittedAt && props.cue.submittedAt !== ""
-                    ?
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-                        <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
-                        <Text style={{ fontSize: 14, paddingLeft: 5 }}>
-                            Turned In at {moment(new Date(props.cue.submittedAt)).format('MMMM Do, h:mm a')}
-                        </Text>
-                    </View>
-                    :
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-                        <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
-                        <Text style={{ fontSize: 14, paddingLeft: 5 }}>
-                            Not Turned In
-                        </Text>
-                    </View>}
-                {/* Add remaining attempts here */}
-                {/* <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+            {props.cue.submittedAt && props.cue.submittedAt !== "" && viewSubmission
+                ?
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 0 }}>
+                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
+                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                        {moment(new Date(props.cue.submittedAt)).format('MMMM Do, h:mm a')}
+                    </Text>
+                </View>
+                : null
+                // <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+                //     <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
+                //     <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                //         Not Turned In
+                //     </Text>
+                // </View>
+            }
+            {/* Add remaining attempts here */}
+            {/* <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                     <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                         {!allowedAttempts ? "" : "Remaining Attempts: " + (allowedAttempts - usedAttempts)}
                     </Text>
                 </View> */}
 
-                {/* View Submission button here */}
+            {/* View Submission button here */}
+            {props.cue.graded && props.cue.releaseSubmission && viewSubmission ? (
+                <View style={{ paddingLeft: 20 }}>
+                    <Text style={{
+                        fontSize: 14,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c',
+                        paddingTop: 20,
+                        paddingBottom: 15,
+                    }}>
+                        {PreferredLanguageText('score')}
+                    </Text>
+                    <Text style={{
+                        fontSize: 25,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c',
+                        borderRadius: 15
+                    }}>
+                        {props.cue.score}%
+                    </Text>
 
-                {
-                    props.cue.submittedAt && props.cue.submittedAt !== ""
-                        ?
-                        <View style={{ flexDirection: 'row', marginTop: 10, }}>
-                            {viewSubmission ?
-                                (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : <TouchableOpacity
-                                    onPress={async () => {
-                                        setViewSubmission(false)
-                                    }}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        // marginTop: 15,
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                    }}>
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        lineHeight: 35,
-                                        color: '#fff',
-                                        fontSize: 12,
-                                        backgroundColor: '#006AFF',
-                                        paddingHorizontal: 20,
-                                        fontFamily: 'inter',
-                                        height: 35,
-                                        // width: 100,
-                                        borderRadius: 15,
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        {"Re-Submit"}
-                                    </Text>
-                                </TouchableOpacity>)
-                                :
-                                <TouchableOpacity
-                                    onPress={async () => {
-                                        setViewSubmission(true)
-                                    }}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        // marginTop: 15,
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                    }}>
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        lineHeight: 35,
-                                        color: '#fff',
-                                        fontSize: 12,
-                                        backgroundColor: '#006AFF',
-                                        paddingHorizontal: 20,
-                                        fontFamily: 'inter',
-                                        height: 35,
-                                        // width: 100,
-                                        borderRadius: 15,
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        View Submission
-                                    </Text>
-                                </TouchableOpacity>}
-                        </View>
-                        :
-                        null
-                }
-            </View>
+                </View>) : null}
 
-            {props.cue.graded && props.cue.releaseSubmission ? (<View>
-                <Text style={{
-                    fontSize: 14,
-                    fontFamily: 'inter',
-                    color: '#2f2f3c',
-                    paddingTop: 20,
-                    paddingBottom: 15,
-                }}>
-                    {PreferredLanguageText('score')}
-                </Text>
-                <Text style={{
-                    fontSize: 25,
-                    fontFamily: 'inter',
-                    color: '#2f2f3c',
-                    borderRadius: 15
-                }}>
-                    {props.cue.score}%
-                </Text>
-
-            </View>) : null}
-
+            {
+                props.cue.submittedAt && props.cue.submittedAt !== ""
+                    ?
+                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                        {viewSubmission ?
+                            (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : <TouchableOpacity
+                                onPress={async () => {
+                                    setViewSubmission(false)
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    // marginTop: 15,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                }}>
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 35,
+                                    color: '#006AFF',
+                                    borderWidth: 1,
+                                    fontSize: 12,
+                                    borderColor: '#006AFF',
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    // width: 100,
+                                    borderRadius: 15,
+                                    textTransform: 'uppercase'
+                                }}>
+                                    {"NEW SUBMISSION"}
+                                </Text>
+                            </TouchableOpacity>)
+                            :
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    setViewSubmission(true)
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    // marginTop: 15,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                }}>
+                                <Text>
+                                    <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                </Text>
+                            </TouchableOpacity>}
+                    </View>
+                    :
+                    null
+            }
         </View>)
     }
 
@@ -3186,7 +3023,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
-            {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
+            {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
                     style={{
                         justifyContent: "center",
@@ -3211,7 +3048,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         Feedback
                     </Text>
                 </TouchableOpacity>
-            </View>}
+            </View>} */}
             {
                 attempt.url !== undefined ?
                     (attempt.type === "mp4" ||

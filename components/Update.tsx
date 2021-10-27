@@ -866,7 +866,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}>
                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                         {/* <Ionicons name='document-attach-outline' size={18} /> */}
-                        Submission
+                        SUBMIT
                     </Text>
                     {/* <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                     Submission
@@ -888,7 +888,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}>
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                         {/* <Ionicons name='bar-chart-outline' size={18} /> */}
-                        Responses
+                        Feedback
                     </Text>
                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                     Engagement
