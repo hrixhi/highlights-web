@@ -165,7 +165,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '100%',
         // borderTop
         width: '100%',
-        padding: 10,
+        padding: 7,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
     },
