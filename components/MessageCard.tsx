@@ -45,7 +45,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     <Text style={{
                         fontSize: 11,
                         fontWeight: 'bold',
-                        color: props.user.displayName === props.message.displayName ? '#333333' : '#393939',
+                        color: props.user.displayName === props.message.displayName ? '#333333' : '#1F1F1F',
                         marginRight: 5,
                         flex: 1,
                         textAlign: 'right'
@@ -57,8 +57,8 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     imported ?
                         <a download={true} href={url} style={{ textDecoration: 'none' }}>
                             <View style={{ backgroundColor: '#efefef', flex: 1 }}>
-                                <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={15} color='#393939' /> {title}.{type}
+                                <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={15} color='#1F1F1F' /> {title}.{type}
                                 </Text>
                             </View>
                         </a>
@@ -92,7 +92,7 @@ const styles: any = () => StyleSheet.create({
     },
     dateContainer: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         backgroundColor: '#efefef',
         display: 'flex',
         flexDirection: 'row',
@@ -100,7 +100,7 @@ const styles: any = () => StyleSheet.create({
     },
     date: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         marginLeft: 5
     }
 });

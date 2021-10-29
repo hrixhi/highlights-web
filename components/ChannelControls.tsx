@@ -328,7 +328,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     //         <View style={{ width: '100%', backgroundColor: 'white' }}>
     //             <View style={styles.colorBar}>
     //                 <Text style={{
-    //                     fontSize: 20, color: '#393939'
+    //                     fontSize: 20, color: '#1F1F1F'
     //                 }}>
     //                     {PreferredLanguageText('internetRequired')}
     //                 </Text>
@@ -349,7 +349,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             alignSelf: 'center',
             marginTop: 100,
         }}>
-            <ActivityIndicator color={'#393939'} />
+            <ActivityIndicator color={'#1F1F1F'} />
         </View>
     }
 
@@ -386,7 +386,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                        <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -479,7 +479,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{
                                                             textAlign: 'center', fontSize: 13,
                                                             fontFamily: 'inter',
-                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#006AFF' : '#393939'
+                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#006AFF' : '#1F1F1F'
                                                         }}>
                                                             {role}
                                                         </Text>
@@ -516,7 +516,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setName(val)
                                     setPasswordRequired(false)
                                 }}
-                                placeholderTextColor={'#393939'}
+                                placeholderTextColor={'#1F1F1F'}
                                 required={true}
                                 footerMessage={'case sensitive'}
                             />
@@ -536,7 +536,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textContentType="oneTimeCode"
                                         placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                         onChangeText={val => setPassword(val)}
-                                        placeholderTextColor={'#393939'}
+                                        placeholderTextColor={'#1F1F1F'}
                                         secureTextEntry={true}
                                         required={option === "Subscribe" ? true : false}
                                     />
@@ -584,7 +584,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             activeThumbColor="white"
                                         />
                                     </View>
-                                    <Text style={{ color: '#393939', fontSize: 12 }}>
+                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
                                         Channels that are not temporary can only be deleted by the school administrator.
                                     </Text>
                                 </View>
@@ -680,11 +680,11 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: '#393939'
+        borderColor: '#1F1F1F'
     },
     all: {
         fontSize: 14,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'

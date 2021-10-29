@@ -384,7 +384,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: '#efefef' }}>
-                        <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
@@ -456,7 +456,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
                                         placeholder={"Search"}
-                                        placeholderTextColor={'#393939'}
+                                        placeholderTextColor={'#1F1F1F'}
                                     /> 
                                 </View> : null} */}
                                 {
@@ -497,7 +497,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             {/* Search results empty */}
                             {
                                 scores.length === 0 ? <View>
-                                    <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                                    <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
                                         No Students.
                                     </Text>
                                 </View> : null
@@ -555,7 +555,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             setActiveScore(val)
                                                                         }}
                                                                         style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#efefef", borderBottomWidth: 1, fontSize: 12 }}
-                                                                        placeholderTextColor={'#393939'}
+                                                                        placeholderTextColor={'#1F1F1F'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
                                                                         modifyGrade()
@@ -637,13 +637,13 @@ const styles = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#393939",
+        color: "#1F1F1F",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: "#393939",
+        borderColor: "#1F1F1F",
         lineHeight: 20
     }
 })

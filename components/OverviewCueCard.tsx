@@ -321,7 +321,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     description: {
         fontSize: 13,
-        color: '#393939',
+        color: '#1F1F1F',
         // height: '30%'
         height: '27%',
     }

@@ -248,7 +248,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
             alignSelf: 'center',
             marginTop: 100,
         }}>
-            <ActivityIndicator color={'#393939'} />
+            <ActivityIndicator color={'#1F1F1F'} />
         </View>
     }
 
@@ -273,7 +273,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 17, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -290,7 +290,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 17, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -307,7 +307,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 17, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -324,7 +324,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -341,7 +341,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -358,7 +358,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -375,7 +375,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 17, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -392,7 +392,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 17, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>

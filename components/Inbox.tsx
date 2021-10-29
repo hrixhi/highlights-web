@@ -831,7 +831,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         backgroundColor: 'white',
                         marginTop: 50
                     }}>
-                        <ActivityIndicator color={'#393939'} />
+                        <ActivityIndicator color={'#1F1F1F'} />
                     </View>
                     :
                     <View style={{
@@ -877,7 +877,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 5 }}>
-                                                        <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                                        <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null
@@ -1100,7 +1100,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     onChangeText={val => {
                                                                         setEditGroupName(val)
                                                                     }}
-                                                                    placeholderTextColor={'#393939'}
+                                                                    placeholderTextColor={'#1F1F1F'}
                                                                     required={true}
                                                                 />
                                                             </View>
@@ -1344,7 +1344,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 flexDirection: 'row'
                                                                             }}>
                                                                             <Text>
-                                                                                <Ionicons name={'close-circle-outline'} size={18} color={'#393939'} />
+                                                                                <Ionicons name={'close-circle-outline'} size={18} color={'#1F1F1F'} />
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {
@@ -1369,7 +1369,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         onChangeText={val => {
                                                                             setNewGroupName(val)
                                                                         }}
-                                                                        placeholderTextColor={'#393939'}
+                                                                        placeholderTextColor={'#1F1F1F'}
                                                                         required={true}
                                                                     />
                                                                 </View>

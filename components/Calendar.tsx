@@ -983,7 +983,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             width: width < 1024 ? "100%" : "33.33%"
                         }}>
                         <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 30, paddingBottom: 15, backgroundColor: "#efefef" }}>
-                            <Text style={{ fontSize: 11, color: '#393939', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
+                            <Text style={{ fontSize: 11, color: '#1F1F1F', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
                         </View>
                         <Switch
                             value={recordMeeting}
@@ -993,7 +993,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{ height: 20 }}
                             trackColor={{
                                 false: "#efefef",
-                                true: "#393939"
+                                true: "#1F1F1F"
                             }}
                             activeThumbColor="white"
                         />
@@ -1270,7 +1270,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return <React.Fragment>
             <div>{data.title}</div>
             <div className="md-custom-event-cont">
-                <div style={{ color: '#393939', fontSize: 14 }}>{data.original.description}</div>
+                <div style={{ color: '#1F1F1F', fontSize: 14 }}>{data.original.description}</div>
                 {data.original.submitted !== null && userId !== "" && userId !== data.original.createdBy ? (<div><div style={{
                     color: data.original.submitted ? '#35AC78' : (!assingmentDue ? '#006AFF' : '#F94144'),
                     borderRadius: 12,
@@ -1316,7 +1316,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}
                     >
                         <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                            <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                         </Text>
                     </TouchableOpacity>
                 )
@@ -1600,7 +1600,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     marginTop: 50,
                                     marginBottom: 50
                                 }}>
-                                <ActivityIndicator color={"#393939"} />
+                                <ActivityIndicator color={"#1F1F1F"} />
                             </View>
                         ) : (
                             <View
@@ -1840,7 +1840,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     ''
                                                                                                 }
                                                                                                 onChangeText={val => setTitle(val)}
-                                                                                                placeholderTextColor={"#393939"}
+                                                                                                placeholderTextColor={"#1F1F1F"}
                                                                                                 required={true}
                                                                                             />
                                                                                         </View>
@@ -1857,7 +1857,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 value={description}
                                                                                                 placeholder=""
                                                                                                 onChangeText={val => setDescription(val)}
-                                                                                                placeholderTextColor={"#393939"}
+                                                                                                placeholderTextColor={"#1F1F1F"}
                                                                                             />
                                                                                         </View>
                                                                                     </View>
@@ -2186,7 +2186,7 @@ const styles: any = StyleSheet.create({
     },
     all1: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 20,
         // fontWeight: 'bold',
         paddingHorizontal: 7,

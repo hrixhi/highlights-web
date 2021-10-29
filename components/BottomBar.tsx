@@ -247,7 +247,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     cusCategory: {
         fontSize: 14,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10
     },

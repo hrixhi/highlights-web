@@ -70,7 +70,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#393939" size={15} style={{ marginTop: 4 }} />
+                            <Ionicons name="chevron-forward-outline" color="#1F1F1F" size={15} style={{ marginTop: 4 }} />
                         </Text>
                     </View>
                     <Text ellipsizeMode={'tail'}
@@ -128,7 +128,7 @@ const styles: any = () => StyleSheet.create({
     },
     date: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         // marginLeft: 5
     },
     title: {
@@ -148,7 +148,7 @@ const styles: any = () => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#393939',
+        color: '#1F1F1F',
         // height: '30%',
     },
     color: {

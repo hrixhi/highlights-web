@@ -855,7 +855,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 20,
         flexDirection: 'row',
         flex: 1,
-        backgroundColor: '#000000', // paddingVertical: 2,
+        backgroundColor: '#1f1f1f', // paddingVertical: 2,
         paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
         height: 48,
         justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
@@ -863,7 +863,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }}>
         <TouchableOpacity
             style={{
-                backgroundColor: '#000000',
+                backgroundColor: '#1f1f1f',
             }}
             onPress={() => {
                 setShowOptions(false)
@@ -881,7 +881,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         </TouchableOpacity>
         <TouchableOpacity
             style={{
-                backgroundColor: '#000000',
+                backgroundColor: '#1f1f1f',
             }}
             onPress={() => {
                 setShowOptions(true)
@@ -902,7 +902,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             (props.channelId === '') || !submission || (channelOwner && submission) || isQuiz ? null :
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#000000',
+                        backgroundColor: '#1f1f1f',
                     }}
                     onPress={() => {
                         setViewStatus(false)
@@ -924,7 +924,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             (props.channelId === '') || !channelOwner ? null :
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#000000',
+                        backgroundColor: '#1f1f1f',
                     }}
                     onPress={() => {
                         setViewStatus(true)
@@ -1476,7 +1476,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setEditFolder(true)
                         }}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                             // borderRadius: 15,
                             // backgroundColor: "white",
@@ -1514,7 +1514,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setChannelCues(filter)
                         }}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1573,7 +1573,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <MenuTrigger>
                     <View
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     // style={{
@@ -1667,7 +1667,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }}
                         disabled={selectedCues.length < 2 || creatingFolder}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1693,7 +1693,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setSelectedCues([])
                         }}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1763,7 +1763,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }}
                         disabled={folderCuesToDisplay.length < 2 || updatingFolder}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1813,7 +1813,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             })
                         }}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1845,7 +1845,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                         }}
                         style={{
-                            backgroundColor: '#000000',
+                            backgroundColor: '#1f1f1f',
                             paddingLeft: 0
                         }}
                     >
@@ -1877,15 +1877,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     * */
     const renderHeader = () => {
 
-        return <View style={{ width: '100%', backgroundColor: '#000000', flexDirection: 'column' }}>
+        return <View style={{ width: '100%', backgroundColor: '#1f1f1f', flexDirection: 'column' }}>
             {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
             <View style={{
                 flexDirection: 'row',
                 width: '100%', justifyContent: 'center',
-                height: 52, backgroundColor: '#000000',
+                height: 52, backgroundColor: '#1f1f1f',
                 paddingHorizontal: 10,
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#000000', }}>
+                <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#1f1f1f', }}>
 
                     {/* BACK BUTTON */}
                     <TouchableOpacity
@@ -1893,7 +1893,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             // justifyContent: 'center',
                             flexDirection: 'row',
                             paddingTop: 6,
-                            backgroundColor: '#000000'
+                            backgroundColor: '#1f1f1f'
                         }}
                         onPress={() => {
                             props.closeModal()
@@ -1962,7 +1962,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View
                             style={{
                                 flex: 1,
-                                backgroundColor: "#000000",
+                                backgroundColor: '#1f1f1f',
                                 justifyContent: "flex-end",
                                 // display: "flex",
                                 flexDirection: "row",
@@ -1978,7 +1978,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         style={{
                                             paddingLeft: 0,
-                                            backgroundColor: '#000000',
+                                            backgroundColor: '#1f1f1f',
                                             marginLeft: 20,
                                             // borderRadius: 15,
                                             // backgroundColor: "white",
@@ -1987,7 +1987,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text
                                             style={{
                                                 lineHeight: 35,
-                                                backgroundColor: '#000000',
+                                                backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,
                                                 textTransform: "uppercase",
@@ -2009,7 +2009,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             paddingLeft: 0,
                                             marginLeft: 20,
-                                            backgroundColor: '#000000',
+                                            backgroundColor: '#1f1f1f',
                                             // borderRadius: 15,
                                             // backgroundColor: "white",
                                         }}
@@ -2017,7 +2017,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text
                                             style={{
                                                 lineHeight: 35,
-                                                backgroundColor: '#000000',
+                                                backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,
                                                 textTransform: "uppercase",
@@ -2099,7 +2099,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{
                                 position: 'absolute',
                                 zIndex: 1000,
-                                backgroundColor: '#000000',
+                                backgroundColor: '#1f1f1f',
                                 // borderColor: '#efefef',
                                 // borderTopWidth: 2,
                                 bottom: 0,
@@ -2129,7 +2129,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         height: 25,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
-        backgroundColor: '#000000',
+        backgroundColor: '#1f1f1f',
         lineHeight: 25,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
@@ -2197,7 +2197,7 @@ const styles: any = StyleSheet.create({
     },
     date2: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         // marginLeft: 10,
         lineHeight: 12,
         textAlign: 'left',

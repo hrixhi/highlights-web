@@ -229,7 +229,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const renderPastMeetings = () => {
         return (pastMeetings.length === 0 ?
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                     {PreferredLanguageText('noPastMeetings')}
                 </Text>
             </View>
@@ -311,7 +311,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='trash-outline' size={15} color="#f94144" />
                                         </Text>
                                     </TouchableOpacity>
@@ -456,7 +456,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {
                                         attendances.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {PreferredLanguageText('noAttendances')}
                                                 </Text>
                                             </View>
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#393939",
+        color: "#1F1F1F",
         textAlign: "left",
         paddingHorizontal: 10,
         paddingTop: 5
@@ -546,11 +546,11 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#393939',
+        color: '#1F1F1F',
     },
     all: {
         fontSize: 11,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: '#fff',

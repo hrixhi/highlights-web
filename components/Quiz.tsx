@@ -770,11 +770,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     minHeight: 250,
                     display: "flex",
                     borderBottomWidth: 1,
-                    borderColor: "#393939",
+                    borderColor: "#1F1F1F",
                 }}
                 editorStyle={{
                     backgroundColor: "#fff",
-                    placeholderColor: "#393939",
+                    placeholderColor: "#1F1F1F",
                     color: "#000000",
                     contentCSSText: "font-size: 14px;",
                 }}
@@ -891,7 +891,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                     noneditable_noneditable_class: 'mceNonEditable',
                     toolbar_mode: 'sliding',
-                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                     // tinycomments_mode: 'embedded',
                     // content_style: '.mymention{ color: gray; }',
                     // contextmenu: 'link image table configurepermanentpen',
@@ -1037,7 +1037,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: "column",
             backgroundColor: "white"
         }}>
-        <ActivityIndicator color={"#393939"} />
+        <ActivityIndicator color={"#1F1F1F"} />
     </View>)
 
 
@@ -1146,7 +1146,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                                 noneditable_noneditable_class: 'mceNonEditable',
                                 toolbar_mode: 'sliding',
-                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                                 // tinycomments_mode: 'embedded',
                                 // content_style: '.mymention{ color: gray; }',
                                 // contextmenu: 'link image table configurepermanentpen',
@@ -1265,17 +1265,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     setProblems(newProbs)
                                                 }}
                                                 placeholder={'Enter points'}
-                                                placeholderTextColor={'#393939'}
+                                                placeholderTextColor={'#1F1F1F'}
                                             />
                                             {
                                                 Dimensions.get('window').width < 1024 ? null : <View style={{ flex: 1 }} />
                                             }
                                             {
                                                 !problem.required ?
-                                                    (<Text style={{ fontSize: 11, color: '#393939', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
+                                                    (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
                                                         Optional
                                                     </Text>)
-                                                    : (<Text style={{ fontSize: 11, color: '#393939', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
+                                                    : (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
                                                         Required
                                                     </Text>)
                                             }
@@ -1323,7 +1323,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </View>
                                         {
                                             !problem.questionType && !onlyOneCorrect ?
-                                                (<Text style={{ fontSize: 11, color: '#393939', marginTop: 5, marginBottom: 20, paddingRight: 30, paddingTop: 8, paddingLeft: Dimensions.get('window').width > 768 ? 0 : 40 }}>
+                                                (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingRight: 30, paddingTop: 8, paddingLeft: Dimensions.get('window').width > 768 ? 0 : 40 }}>
                                                     more than one correct answer
                                                 </Text>)
                                                 : null
@@ -1678,7 +1678,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                                                                     noneditable_noneditable_class: 'mceNonEditable',
                                                                     toolbar_mode: 'sliding',
-                                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                                                                     // tinycomments_mode: 'embedded',
                                                                     // content_style: '.mymention{ color: gray; }',
                                                                     // contextmenu: 'link image table configurepermanentpen',
@@ -1728,7 +1728,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingBottom: 12,
                                         // width: '50%',
                                         // maxWidth: "100%",
-                                        color: props.isOwner ? "#393939" : "#000000",
+                                        color: props.isOwner ? "#1F1F1F" : "#000000",
                                         marginBottom: props.isOwner ? 50 : 30
                                     }}>
                                         {props.isOwner ? "Free Response Answer" : solutions[problemIndex].response}
@@ -1856,7 +1856,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                                                     noneditable_noneditable_class: 'mceNonEditable',
                                                     toolbar_mode: 'sliding',
-                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                                                     // tinycomments_mode: 'embedded',
                                                     // content_style: '.mymention{ color: gray; }',
                                                     // contextmenu: 'link image table configurepermanentpen',

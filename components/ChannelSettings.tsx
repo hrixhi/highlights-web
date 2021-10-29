@@ -670,7 +670,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 backgroundColor: "#efefef",
                 paddingVertical: 100
             }}>
-            <ActivityIndicator color={"#393939"} />
+            <ActivityIndicator color={"#1F1F1F"} />
         </View>
     }
 
@@ -709,7 +709,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 width: '100%',
                                 fontSize: 14,
                                 fontWeight: 'bold',
-                                color: '#393939'
+                                color: '#1F1F1F'
                             }}>
                                 <Ionicons name='chevron-back-outline' size={22} color={'#000000'} style={{ marginRight: 10 }} />
                             </Text>
@@ -751,7 +751,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onChangeText={val => {
                                     setDuplicateChannelName(val)
                                 }}
-                                placeholderTextColor={'#393939'}
+                                placeholderTextColor={'#1F1F1F'}
                                 required={true}
                                 footerMessage={'case sensitive'}
                             />
@@ -767,7 +767,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 value={duplicateChannelPassword}
                                 placeholder={`(${PreferredLanguageText('optional')})`}
                                 onChangeText={val => setDuplicateChannelPassword(val)}
-                                placeholderTextColor={'#393939'}
+                                placeholderTextColor={'#1F1F1F'}
                                 secureTextEntry={true}
                                 required={false}
                             />
@@ -966,7 +966,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onChangeText={val => {
                                     setName(val)
                                 }}
-                                placeholderTextColor={'#393939'}
+                                placeholderTextColor={'#1F1F1F'}
                                 required={true}
                                 footerMessage={'case sensitive'}
                             />
@@ -983,7 +983,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 autoCompleteType='off'
                                 placeholder={`(${PreferredLanguageText('optional')})`}
                                 onChangeText={val => setPassword(val)}
-                                placeholderTextColor={'#393939'}
+                                placeholderTextColor={'#1F1F1F'}
                                 secureTextEntry={true}
                                 required={false}
                             />
@@ -1293,24 +1293,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#393939'
+        borderColor: '#1F1F1F'
     },
     all: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#393939'
+        borderColor: '#1F1F1F'
     },
     colorBar: {
         width: '100%',
@@ -1349,7 +1349,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#393939'
+        borderColor: '#1F1F1F'
     },
 });
 

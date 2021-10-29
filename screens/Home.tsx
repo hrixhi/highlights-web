@@ -1461,7 +1461,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 15, color: '#393939', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#1F1F1F', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1480,7 +1480,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#393939'}
+                placeholderTextColor={'#1F1F1F'}
                 errorText={emailValidError}
               />
               {
@@ -1494,7 +1494,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#393939'}
+                      placeholderTextColor={'#1F1F1F'}
                     />
                   </View>
               }
@@ -1612,7 +1612,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {
               reLoading ?
                 <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                  <ActivityIndicator color={'#393939'} />
+                  <ActivityIndicator color={'#1F1F1F'} />
                 </View> :
                 <Dashboard
                   setTab={(val: any) => setTab(val)}

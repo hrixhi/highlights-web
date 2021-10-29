@@ -68,7 +68,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         style={{ backgroundColor: '#efefef', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='chevron-back-outline' size={30} color={'#393939'} style={{ marginTop: -2 }} />
+                            <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} style={{ marginTop: -2 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -216,7 +216,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     cusCategory: {
         fontSize: 14,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10
     },

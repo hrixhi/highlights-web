@@ -840,7 +840,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                     <Ionicons
                                                         name='trash-outline'
-                                                        color={"#393939"}
+                                                        color={"#1F1F1F"}
                                                         onPress={() => {
                                                             Alert(`Delete Question ${editQuestionNumber} ?`, "", [
                                                                 {

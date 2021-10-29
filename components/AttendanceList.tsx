@@ -448,10 +448,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             borderTopLeftRadius: 0,
                             paddingVertical: 100,
                         }}>
-                            <ActivityIndicator color={'#393939'} />
+                            <ActivityIndicator color={'#1F1F1F'} />
                         </View>
                         : <View style={{ backgroundColor: '#efefef' }}>
-                            <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
+                            <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
                                 {
                                     pastMeetings.length === 0 ? "No past meetings." : "No Students."
                                     // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
     col: { width: Dimensions.get('window').width < 768 ? 90 : 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     text: {
         fontSize: 12,
-        color: "#393939",
+        color: "#1F1F1F",
         textAlign: "left",
         paddingHorizontal: 10
     },
@@ -631,13 +631,13 @@ const styles = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#393939",
+        color: "#1F1F1F",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: "#393939",
+        borderColor: "#1F1F1F",
         lineHeight: 20
     },
 })

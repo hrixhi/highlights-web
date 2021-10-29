@@ -1032,7 +1032,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 }
               }}>
               <Text>
-                <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
               </Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
@@ -1607,11 +1607,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     }}
                                     placeholder={"0-100"}
                                     onChangeText={(val) => setGradeWeight(val)}
-                                    placeholderTextColor={"#393939"}
+                                    placeholderTextColor={"#1F1F1F"}
                                   />
                                   <Text style={{
                                     fontSize: 14,
-                                    color: "#393939",
+                                    color: "#1F1F1F",
                                     textAlign: "left",
                                     paddingHorizontal: 10,
                                     fontFamily: 'Inter'
@@ -1816,7 +1816,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     if (Number.isNaN(Number(val))) return;
                                     setAttempts(val)
                                   }}
-                                  placeholderTextColor={"#393939"}
+                                  placeholderTextColor={"#1F1F1F"}
                                 />
                               </View>
                             ) : null}
@@ -1882,7 +1882,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   onChangeText={(val) => {
                                     setCustomCategory(val);
                                   }}
-                                  placeholderTextColor={"#393939"}
+                                  placeholderTextColor={"#1F1F1F"}
                                 />
                               </View>
                             ) : (
@@ -2115,7 +2115,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             >
                               <Text style={{
                                 fontSize: 14,
-                                color: "#393939",
+                                color: "#1F1F1F",
                                 textAlign: "right",
                                 paddingRight: 10,
                                 fontFamily: 'Inter'
@@ -2157,7 +2157,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 12,
-                                color: "#393939",
+                                color: "#1F1F1F",
                                 textAlign: "right",
                                 paddingRight: 10,
                                 paddingTop: 3
@@ -2207,7 +2207,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 <Text style={
                                   {
                                     fontSize: 12,
-                                    color: "#393939",
+                                    color: "#1F1F1F",
                                     textAlign: "right",
                                     paddingRight: 10,
                                     marginTop: 5
@@ -2620,7 +2620,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             >
                               {/* <Ionicons
                               name="close-circle-outline"
-                              color="#393939"
+                              color="#1F1F1F"
                               size={15}
                               style={{ alignSelf: "center" }}
                             /> */}
@@ -2703,7 +2703,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 noneditable_noneditable_class: 'mceNonEditable',
                                 toolbar_mode: 'sliding',
                                 // tinycomments_mode: 'embedded',
-                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                                 // contextmenu: 'link image table configurepermanentpen',
                                 // a11y_advanced_options: true,
                                 extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
@@ -2770,11 +2770,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 minHeight: 550,
                 display: isQuiz || imported ? "none" : "flex",
                 // borderTopWidth: 0.5,
-                // borderColor: "#393939",
+                // borderColor: "#1F1F1F",
               }}
               editorStyle={{
                 backgroundColor: "#fff",
-                placeholderColor: "#393939",
+                placeholderColor: "#1F1F1F",
                 color: "#000000",
                 contentCSSText: "font-size: 14px;",
               }}
@@ -2861,7 +2861,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                         noneditable_noneditable_class: 'mceNonEditable',
                         toolbar_mode: 'sliding',
-                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #393939;}",
+                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}",
                         // tinycomments_mode: 'embedded',
                         // content_style: '.mymention{ color: gray; }',
                         // contextmenu: 'link image table configurepermanentpen',
@@ -3017,7 +3017,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#393939"
+    borderColor: "#1F1F1F"
   },
   input: {
     width: "100%",
@@ -3058,14 +3058,14 @@ const styles: any = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    color: "#393939",
+    color: "#1F1F1F",
     textAlign: "left",
     paddingHorizontal: 10,
     fontFamily: 'Inter'
   },
   all: {
     fontSize: 12,
-    color: "#393939",
+    color: "#1F1F1F",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
@@ -3089,7 +3089,7 @@ const styles: any = StyleSheet.create({
   },
   allGrayOutline: {
     fontSize: 12,
-    color: "#393939",
+    color: "#1F1F1F",
     height: 25,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -3097,7 +3097,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 1,
     borderWidth: 1,
-    borderColor: "#393939",
+    borderColor: "#1F1F1F",
   },
   color1: {
     backgroundColor: "#D11C60",
@@ -3117,6 +3117,6 @@ const styles: any = StyleSheet.create({
   outline: {
     borderRadius: 1,
     borderWidth: 1,
-    borderColor: "#393939",
+    borderColor: "#1F1F1F",
   },
 });

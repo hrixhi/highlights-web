@@ -86,7 +86,7 @@
 }
 
 .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-    color: #393939 !important; 
+    color: #1F1F1F !important; 
 }
 
 .tox-tinymce {

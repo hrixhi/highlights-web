@@ -207,7 +207,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: "column",
             backgroundColor: "white"
         }}>
-        <ActivityIndicator color={"#393939"} />
+        <ActivityIndicator color={"#1F1F1F"} />
     </View>)
 
     return (
@@ -320,7 +320,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
                                 <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: Dimensions.get('window').width > 768 ? '65%' : '100%' }}>
                                     <View style={{ flexDirection: 'row', paddingTop: 15, width: '100%' }}>
-                                        <Text style={{ color: '#393939', fontSize: 14, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
+                                        <Text style={{ color: '#1F1F1F', fontSize: 14, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
                                             {index + 1}.
                                         </Text>
                                         {
@@ -393,7 +393,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         height: 40
                                     }}
                                     placeholder={'Enter points'}
-                                    placeholderTextColor={'#393939'}
+                                    placeholderTextColor={'#1F1F1F'}
                                 />}
                                 {!props.isOwner ? null : <TextInput
                                     editable={false}
@@ -410,7 +410,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         height: 40
                                     }}
                                     placeholder={'Enter points'}
-                                    placeholderTextColor={'#393939'}
+                                    placeholderTextColor={'#1F1F1F'}
                                 />}
                                 {
                                     !props.isOwner ? <Text style={{ fontSize: 14, marginTop: 5, marginBottom: 20, paddingTop: 12, paddingRight: 30, textAlign: 'right' }}>
@@ -422,13 +422,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     {
                                         !problem.required ?
                                             (<Text style={{
-                                                fontSize: 11, color: '#393939', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
+                                                fontSize: 11, color: '#1F1F1F', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
                                                 paddingTop: Dimensions.get('window').width < 1024 ? 25 : 15
                                             }}>
                                                 optional
                                             </Text>)
                                             : (<Text style={{
-                                                fontSize: 11, color: '#393939', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
+                                                fontSize: 11, color: '#1F1F1F', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
                                                 paddingTop: Dimensions.get('window').width < 1024 ? 25 : 15
                                             }}>
                                                 required

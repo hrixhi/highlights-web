@@ -157,17 +157,17 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     subOutline: {
         fontSize: 14,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
         borderRadius: 1,
-        borderColor: '#393939',
+        borderColor: '#1F1F1F',
         borderWidth: 1
     },
     sub: {
         fontSize: 14,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20

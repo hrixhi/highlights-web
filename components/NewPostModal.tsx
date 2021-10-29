@@ -45,7 +45,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     onChangeText={val => {
                                         setCustomCategory(val)
                                     }}
-                                    placeholderTextColor={'#393939'}
+                                    placeholderTextColor={'#1F1F1F'}
                                 />
                             </View> : <label style={{ width: 180, backgroundColor: 'white' }}>
                                 <Select
@@ -83,7 +83,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }}
                         style={{ backgroundColor: '#f2f2f7' }}>
                         <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#393939'} />
+                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#1F1F1F'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -223,18 +223,18 @@ const styleObject = () => {
             height: 22,
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: '#393939',
+            borderColor: '#1F1F1F',
             color: 'white'
         },
         allOutline: {
             fontSize: 12,
-            color: '#393939',
+            color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,
             backgroundColor: 'white',
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#393939'
+            borderColor: '#1F1F1F'
         },
     })
 }

@@ -662,7 +662,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 1,
-                            // border: "1px solid #393939",
+                            // border: "1px solid #1F1F1F",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

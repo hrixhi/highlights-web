@@ -489,7 +489,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     onChangeText={val => {
                                         setCustomCategory(val)
                                     }}
-                                    placeholderTextColor={'#393939'}
+                                    placeholderTextColor={'#1F1F1F'}
                                 />
                             </View> : <label style={{ width: 180, }}>
                                 <Select
@@ -527,7 +527,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}
                         style={{ backgroundColor: 'white' }}>
                         <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#393939'} />
+                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#1F1F1F'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -719,7 +719,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             threads.length === 0 ?
                 <View style={{ flex: 1 }}>
-                    <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef' }}>
+                    <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef' }}>
                         {
                             !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                         }
@@ -861,7 +861,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: '#efefef'
                                 }}>
-                                    <ActivityIndicator color={'#393939'} />
+                                    <ActivityIndicator color={'#1F1F1F'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -897,7 +897,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             }}
                                         >
                                             <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10, }}>
-                                                <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                                <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                             </Text>
                                         </TouchableOpacity>
                                     </View> : null }
@@ -963,18 +963,18 @@ const styleObject = () => {
             height: 22,
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: '#393939',
+            borderColor: '#1F1F1F',
             color: 'white'
         },
         allOutline: {
             fontSize: 12,
-            color: '#393939',
+            color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,
             backgroundColor: 'white',
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#393939'
+            borderColor: '#1F1F1F'
         },
     })
 }

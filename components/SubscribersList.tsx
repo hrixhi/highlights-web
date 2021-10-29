@@ -1205,7 +1205,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                    <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity> */}
                             {
@@ -1302,7 +1302,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#393939',
+                                        color: '#1F1F1F',
                                         fontSize: 11,
                                     }}>
                                         ADD USERS
@@ -1314,7 +1314,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -1468,7 +1468,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noMessages')}
                                                     </Text>
                                                     : null
@@ -1507,7 +1507,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{ flex: 1, paddingTop: 12 }}>
                                                     {/* <Text
                                                         ellipsizeMode="tail"
-                                                        style={{ fontSize: 11, color: '#393939', textTransform: 'uppercase' }}>
+                                                        style={{ fontSize: 11, color: '#1F1F1F', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('newGroup')}
                                                     </Text> */}
                                                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
@@ -1616,7 +1616,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             />
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
                                                                             {PreferredLanguageText('noGroups')}
                                                                         </Text>
                                                                     </View>
@@ -1833,7 +1833,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderRadius: 15, marginRight: 15,
                                                     }}>
                                                         <Text>
-                                                            <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
+                                                            <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                                         </Text>
                                                     </TouchableOpacity>
                                                     <View style={{ flexDirection: 'row', marginRight: 15 }}>
@@ -1874,7 +1874,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         }}
                                                         placeholder={'Score 0-100'}
                                                         onChangeText={val => setScore(val)}
-                                                        placeholderTextColor={'#393939'}
+                                                        placeholderTextColor={'#1F1F1F'}
                                                     />
                                                     <TouchableOpacity
                                                         onPress={() => handleGradeSubmit()} style={{
@@ -1916,7 +1916,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 style={styles.input}
                                                                 placeholder={'Title'}
                                                                 onChangeText={val => setTitle(val)}
-                                                                placeholderTextColor={'#393939'}
+                                                                placeholderTextColor={'#1F1F1F'}
                                                             />
                                                         </View> : null
                                                 }
@@ -1951,7 +1951,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 }}
                                                                 editorStyle={{
                                                                     backgroundColor: '#efefef',
-                                                                    placeholderColor: '#393939',
+                                                                    placeholderColor: '#1F1F1F',
                                                                     color: '#000000',
                                                                     contentCSSText: 'font-size: 13px;'
                                                                 }}
@@ -2053,7 +2053,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                             placeholder={'Enter one email per line.'}
                             onChangeText={val => setEmails(val)}
-                            placeholderTextColor={'#393939'}
+                            placeholderTextColor={'#1F1F1F'}
                             multiline={true}
                         />
                         <TouchableOpacity
@@ -2172,7 +2172,7 @@ const styleObject = () => {
         outline: {
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: '#393939',
+            borderColor: '#1F1F1F',
             color: 'white'
         },
         cusCategory: {
@@ -2188,7 +2188,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 1,
             borderWidth: 1,
-            borderColor: '#393939',
+            borderColor: '#1F1F1F',
             color: 'white'
         },
         all: {

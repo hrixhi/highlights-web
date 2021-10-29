@@ -90,7 +90,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ backgroundColor: '#efefef', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>

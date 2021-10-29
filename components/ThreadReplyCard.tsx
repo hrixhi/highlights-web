@@ -12,7 +12,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [url, setUrl] = useState('')
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
-    const [color, setColor] = useState('#393939');
+    const [color, setColor] = useState('#1F1F1F');
 
     useEffect(() => {
         if (props.thread.message[0] === '{' && props.thread.message[props.thread.message.length - 1] === '}') {
@@ -36,7 +36,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#006AFF')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#393939')
+                setColor('#1F1F1F')
             }
         }
     }, [props.thread, props.channelCreatedBy])
@@ -75,8 +75,8 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
                                     <View style={{ backgroundColor: '#efefef', flex: 1 }}>
-                                        <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                            <Ionicons name='document-outline' size={15} color='#393939' /> {title}.{type}
+                                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            <Ionicons name='document-outline' size={15} color='#1F1F1F' /> {title}.{type}
                                         </Text>
                                     </View>
                                 </a>
@@ -88,8 +88,8 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TouchableOpacity style={{ backgroundColor: '#efefef' }}
                                 onPress={() => props.deleteThread()}
                             >
-                                <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='trash-outline' size={15} color={props.index === 0 ? '#f94144' : '#393939'} />
+                                <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='trash-outline' size={15} color={props.index === 0 ? '#f94144' : '#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -121,7 +121,7 @@ const styles: any = () => StyleSheet.create({
     },
     dateContainer: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         backgroundColor: '#efefef',
         display: 'flex',
         flexDirection: 'row',
@@ -129,7 +129,7 @@ const styles: any = () => StyleSheet.create({
     },
     date: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         marginLeft: 5
     }
 });

@@ -629,7 +629,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             >
                 {
                     (!loadingSearchResults && results && results[searchOptions[0]].length === 0 && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{
-                        width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef'
+                        width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef'
                     }}>No results.</Text> : null
                 }
                 {
@@ -642,7 +642,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: "column",
                             backgroundColor: '#efefef'
                         }}>
-                        <ActivityIndicator color={"#393939"} />
+                        <ActivityIndicator color={"#1F1F1F"} />
                     </View> : null
                 }
                 <View style={{ flexDirection: 'row', backgroundColor: '#efefef' }}>
@@ -656,7 +656,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             return <View style={{ marginRight: 20, backgroundColor: '#efefef' }}>
                                 <Text style={{
                                     flexDirection: 'row',
-                                    color: '#393939',
+                                    color: '#1F1F1F',
                                     // fontWeight: 'bold',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter',
@@ -1170,7 +1170,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
 
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#1F1F1F' : '#006AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -1210,7 +1210,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     fontFamily: 'inter',
                                                     flex: 1,
                                                     lineHeight: 18,
-                                                    color: collapseMap[key] ? '#000000' : '#393939'
+                                                    color: collapseMap[key] ? '#000000' : '#1F1F1F'
                                                 }}>
                                                 <View style={{
                                                     width: 12,
@@ -1252,7 +1252,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
 
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#393939' : '#006AFF'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#1F1F1F' : '#006AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -1374,7 +1374,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     )
                                                             ) :
                                                             cueMap[key].length === 0 ?
-                                                                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                                     {PreferredLanguageText('noCuesCreated')}
                                                                 </Text>
                                                                 :
@@ -1405,7 +1405,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             }}>
                                                                                 <Text style={{
                                                                                     flex: 1, flexDirection: 'row',
-                                                                                    color: '#393939',
+                                                                                    color: '#1F1F1F',
                                                                                     // fontWeight: 'bold',
                                                                                     fontSize: 12, lineHeight: 25,
                                                                                     fontFamily: 'inter',
@@ -1611,7 +1611,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 // width: "100%",
                                 color: '#fff',
-                                backgroundColor: '#393939',
+                                backgroundColor: '#1F1F1F',
                                 // borderColor: "#efefef",
                                 // borderWidth: 1,
                                 borderRadius: 15,
@@ -1717,7 +1717,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             props.setOption('Settings')
                         }}>
                             <Text style={{
-                                fontSize: 11, color: '#393939',
+                                fontSize: 11, color: '#1F1F1F',
                                 marginTop: 1,
                                 textAlign: 'right'
                             }}>
@@ -1742,7 +1742,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         :
                         <View style={{
                             // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                            paddingHorizontal: width < 1024 && props.option !== 'To Do' ? 20 : 0,
+                            paddingHorizontal: width < 1024 && props.option !== 'To Do' && props.option !== 'Classroom' ? 20 : 0,
                             maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
@@ -1955,7 +1955,7 @@ const styleObject: any = () => StyleSheet.create({
     },
     all1: {
         fontSize: 10,
-        color: '#393939',
+        color: '#1F1F1F',
         height: 20,
         // fontWeight: 'bold',
         paddingHorizontal: 7,
