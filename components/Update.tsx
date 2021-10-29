@@ -548,7 +548,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Handle used to drage cues for sorting
      */
-    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} color='#000000' /> </Text>))
+    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 5, marginTop: 3, cursor: 'pointer' }}> <Ionicons name='swap-horizontal-outline' size={14} color='#000000' /> </Text>))
 
     /**
      * @description Sortable Cue for Create Folder
@@ -564,78 +564,99 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         return (<View
             style={{
-                overflow: 'hidden',
-                maxWidth: 150,
-                maxHeight: 50,
-                width: '100%',
-                marginBottom: 10,
-                marginRight: 15,
-                shadowOffset: {
-                    width: 3,
-                    height: 0,
-                },
-                shadowOpacity: 0.8,
+                height: '100%',
+                backgroundColor: '#fff',
                 borderRadius: 1,
-                shadowColor: col,
+                maxWidth: 175,
+                width: '100%',
+                borderColor: col,
+                borderLeftWidth: 3,
                 flexDirection: 'row',
+                shadowOffset: {
+                    width: 2,
+                    height: 2,
+                },
+                overflow: 'hidden',
+                shadowOpacity: 0.07,
+                shadowRadius: 7,
+                zIndex: 500000,
+                marginRight: 10
             }}
         >
+
             <View
                 key={'textPage'}
                 style={{
-                    maxWidth: 168,
-                    width: '100%',
+                    maxWidth: 210,
                     height: '100%',
-                    borderRadius: 1,
-                    padding: 10,
+                    // borderTop
+                    width: '100%',
+                    padding: 7,
                     paddingHorizontal: 10,
                     backgroundColor: '#fff',
-                    flexDirection: 'row',
-                    margin: 0
                 }}>
 
-                <DragHandle />
+                    <View style={{ 
+                        height: '30%',
+                        backgroundColor: '#fff',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center' }}>
 
-                <Text
-                    ellipsizeMode={'tail'}
-                    numberOfLines={1}
-                    style={{
-                        fontFamily: 'inter',
-                        fontSize: 12,
-                        lineHeight: 25,
-                        flex: 1, flexDirection: 'row',
-                        // marginTop: 3,
-                        color: value._id === props.cue._id ? '#006AFF' : '#000000'
+                        <Text style={styles.date2}>
+                            {
+                                (new Date(value.date)).toString().split(' ')[1] +
+                                ' ' +
+                                (new Date(value.date)).toString().split(' ')[2]
+                            }
+                        </Text>
+
+                        {value._id === props.cue._id ? null : <TouchableOpacity
+                            onPress={() => {
+
+                                const temp = [...channelCues];
+                                temp.push(value);
+                                setChannelCues(temp);
+
+                                const sCues = selectedCues.filter((c: any) => c._id !== value._id)
+                                setSelectedCues(sCues);
+                            }}
+                            style={{
+                                // justifyContent: 'center',
+                                // marginTop: 2,
+                                // width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                            }}
+                        >
+                            <Text style={{ color: '#f94144' }}>
+                                <Ionicons name='remove-circle-outline' size={16} />
+                            </Text>
+                        </TouchableOpacity>}
+                                        
+                    </View>
+
+                    <View style={{
+                        backgroundColor: '#fff',
+                        width: '100%', flexDirection: 'row', flex: 1, height: '70%', alignItems: 'center'
                     }}>
-                    {title}
-                </Text>
+                        <DragHandle />
 
-                {/* Add button here */}
-
-                {value._id !== props.cue._id ? <TouchableOpacity
-                    onPress={() => {
-
-                        const temp = [...channelCues];
-                        temp.push(value);
-                        setChannelCues(temp);
-
-                        const sCues = selectedCues.filter((c: any) => c._id !== value._id)
-                        setSelectedCues(sCues);
-
-                    }}
-                    style={{
-                        // justifyContent: 'center',
-                        // marginTop: 2,
-                        // width: 20, height: 20, borderRadius: 10,
-                    }}
-                >
-                    <Text style={{
-                        color: '#f94144',
-                    }}>
-                        <Ionicons name='remove-circle-outline' size={16} />
-                    </Text>
-                </TouchableOpacity> : null}
+                        <Text
+                            ellipsizeMode={'tail'}
+                            numberOfLines={1}
+                            style={{
+                                fontFamily: 'inter',
+                                // fontWeight: 'bold',
+                                fontSize: 12,
+                                lineHeight: 20,
+                                flex: 1,
+                                marginTop: 5,
+                                color: '#000000'
+                            }}>
+                            {title}
+                        </Text>
+                    </View>
             </View>
+
         </View>)
     })
 
@@ -653,73 +674,98 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         return (<View
             style={{
-                overflow: 'hidden',
-                maxWidth: 150,
-                maxHeight: 50,
-                width: '100%',
-                marginBottom: 10,
-                marginRight: 15,
-                shadowOffset: {
-                    width: 3,
-                    height: 0,
-                },
-                shadowOpacity: 0.8,
+                height: '100%',
+                backgroundColor: '#fff',
                 borderRadius: 1,
-                shadowColor: col,
+                maxWidth: 175,
+                width: '100%',
+                borderColor: col,
+                borderLeftWidth: 3,
                 flexDirection: 'row',
+                shadowOffset: {
+                    width: 2,
+                    height: 2,
+                },
+                overflow: 'hidden',
+                shadowOpacity: 0.07,
+                shadowRadius: 7,
+                zIndex: 500000,
+                marginRight: 10
             }}
         >
+
             <View
                 key={'textPage'}
                 style={{
-                    maxWidth: 168,
-                    width: '100%',
+                    maxWidth: 210,
                     height: '100%',
-                    borderRadius: 1,
-                    padding: 10,
+                    // borderTop
+                    width: '100%',
+                    padding: 7,
                     paddingHorizontal: 10,
                     backgroundColor: '#fff',
-                    flexDirection: 'row',
-                    margin: 0
                 }}>
 
-                <DragHandle />
+                    <View style={{ 
+                        height: '30%',
+                        backgroundColor: '#fff',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center' }}>
 
-                <Text
-                    ellipsizeMode={'tail'}
-                    numberOfLines={1}
-                    style={{
-                        fontFamily: 'inter',
-                        fontSize: 12,
-                        lineHeight: 25,
-                        flex: 1, flexDirection: 'row',
-                        // marginTop: 5,
-                        color: value._id === props.cue._id ? '#006AFF' : '#000000'
+                        <Text style={styles.date2}>
+                            {
+                                (new Date(value.date)).toString().split(' ')[1] +
+                                ' ' +
+                                (new Date(value.date)).toString().split(' ')[2]
+                            }
+                        </Text>
+
+                        {value._id === props.cue._id ? null : <TouchableOpacity
+                            onPress={() => {
+
+                                const temp = [...channelCues];
+                                temp.push(value);
+                                setChannelCues(temp);
+
+                                const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id)
+                                setFolderCuesToDisplay(sCues);
+
+                            }}
+                            style={{
+                                // justifyContent: 'center',
+                                // marginTop: 2,
+                                // width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                            }}
+                        >
+                            <Text style={{ color: '#f94144' }}>
+                                <Ionicons name='remove-circle-outline' size={16} />
+                            </Text>
+                        </TouchableOpacity>}
+                                        
+                    </View>
+
+                    <View style={{
+                        backgroundColor: '#fff',
+                        width: '100%', flexDirection: 'row', flex: 1, height: '70%', alignItems: 'center'
                     }}>
-                    {title}
-                </Text>
+                        <DragHandle />
 
-                <TouchableOpacity
-                    onPress={() => {
-
-                        const temp = [...channelCues];
-                        temp.push(value);
-                        setChannelCues(temp);
-
-                        const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id)
-                        setFolderCuesToDisplay(sCues);
-
-                    }}
-                    style={{
-                        // justifyContent: 'center',
-                        // marginTop: 2,
-                        // width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
-                    }}
-                >
-                    <Text style={{ color: '#f94144' }}>
-                        <Ionicons name='remove-circle-outline' size={16} />
-                    </Text>
-                </TouchableOpacity>
+                        <Text
+                            ellipsizeMode={'tail'}
+                            numberOfLines={1}
+                            style={{
+                                fontFamily: 'inter',
+                                // fontWeight: 'bold',
+                                fontSize: 12,
+                                lineHeight: 20,
+                                flex: 1,
+                                marginTop: 5,
+                                color: value._id === props.cue._id ? '#006AFF' : '#000000'
+                            }}>
+                            {title}
+                        </Text>
+                    </View>
             </View>
         </View>)
     })
@@ -736,7 +782,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#efefef',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    marginTop: 10
+                    // marginTop: 10
                 }}
                 horizontal={true}
                 showsVerticalScrollIndicator={false}
@@ -765,7 +811,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#efefef',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    marginTop: 10
+                    // marginTop: 10
                 }}
                 horizontal={true}
                 showsVerticalScrollIndicator={false}
@@ -903,7 +949,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     const renderExistingFolder = () => {
 
-        return <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 10 }}>
+        return <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 14 }}>
             <ScrollView
                 style={{
                     width: "100%",
@@ -911,7 +957,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#efefef',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    marginTop: 10
+                    // marginTop: 10
                 }}
                 horizontal={true}
                 showsVerticalScrollIndicator={false}
@@ -928,31 +974,34 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     return (<View
                         style={{
-                            overflow: 'hidden',
-                            maxWidth: 150,
-                            maxHeight: 50,
-                            width: '100%',
-                            marginBottom: 10,
-                            marginRight: 15,
-                            shadowOffset: {
-                                width: 3,
-                                height: 0,
-                            },
-                            shadowOpacity: 0.8,
+                            height: '100%',
+                            backgroundColor: '#fff',
                             borderRadius: 1,
-                            shadowColor: col,
+                            maxWidth: 175,
+                            width: '100%',
+                            borderColor: col,
+                            borderLeftWidth: 3,
                             flexDirection: 'row',
+                            shadowOffset: {
+                                width: 2,
+                                height: 2,
+                            },
+                            overflow: 'hidden',
+                            shadowOpacity: 0.07,
+                            shadowRadius: 7,
+                            zIndex: 500000,
+                            marginRight: 10
                         }}
                     >
                         <TouchableOpacity
                             onPress={() => props.openCue(cue._id)}
                             key={'textPage'}
                             style={{
-                                maxWidth: 168,
-                                width: '100%',
+                                maxWidth: 210,
                                 height: '100%',
-                                borderRadius: 1,
-                                padding: 10,
+                                // borderTop
+                                width: '100%',
+                                padding: 7,
                                 paddingHorizontal: 10,
                                 backgroundColor: '#fff',
                             }}>
@@ -965,19 +1014,25 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }
                                 </Text>
                             </View>
-                            <Text
-                                ellipsizeMode={'tail'}
-                                numberOfLines={1}
-                                style={{
-                                    fontFamily: 'inter',
-                                    fontSize: 12,
-                                    lineHeight: 25,
-                                    flex: 1, flexDirection: 'row',
-                                    // marginTop: 5,
-                                    color: cue._id === props.cue._id ? '#006AFF' : '#000000'
-                                }}>
-                                {title}
-                            </Text>
+                            <View style={{
+                                        backgroundColor: '#fff',
+                                        width: '100%', flexDirection: 'row', flex: 1, height: '70%'
+                                    }}>
+                                        <Text
+                                            ellipsizeMode={'tail'}
+                                            numberOfLines={1}
+                                            style={{
+                                                fontFamily: 'inter',
+                                                // fontWeight: 'bold',
+                                                fontSize: 12,
+                                                lineHeight: 20,
+                                                flex: 1,
+                                                marginTop: 5,
+                                                color: cue._id === props.cue._id ? '#006AFF' : '#000000'
+                                            }}>
+                                            {title}
+                                        </Text>
+                                    </View>
                         </TouchableOpacity>
                     </View>)
                 })}
@@ -995,7 +1050,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         return <View style={{ width: '100%', flexDirection: 'column', }}>
 
             {/* Section 1: Shows all cues from Channel */}
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 14, paddingBottom: 7 }}>
                 {channelCues.length !== 0 ? <ScrollView
                     style={{
                         width: "100%",
@@ -1003,7 +1058,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: '#efefef',
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
-                        marginTop: 10
+                        // marginTop: 10
                     }}
                     horizontal={true}
                     showsVerticalScrollIndicator={false}
@@ -1017,37 +1072,43 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                         return (<View
                             style={{
-                                overflow: 'hidden',
-                                maxWidth: 150,
-                                maxHeight: 50,
-                                width: '100%',
-                                marginBottom: 10,
-                                marginRight: 15,
-                                shadowOffset: {
-                                    width: 3,
-                                    height: 0,
-                                },
-                                shadowOpacity: 0.8,
+                                height: '100%',
+                                backgroundColor: '#fff',
                                 borderRadius: 1,
-                                shadowColor: col,
+                                maxWidth: 175,
+                                width: '100%',
+                                borderColor: col,
+                                borderLeftWidth: 3,
                                 flexDirection: 'row',
+                                shadowOffset: {
+                                    width: 2,
+                                    height: 2,
+                                },
+                                overflow: 'hidden',
+                                shadowOpacity: 0.07,
+                                shadowRadius: 7,
+                                zIndex: 500000,
+                                marginRight: 10
                             }}
                         >
                             <View
                                 key={'textPage'}
                                 style={{
-                                    maxWidth: 168,
-                                    width: '100%',
+                                    maxWidth: 210,
                                     height: '100%',
-                                    borderRadius: 1,
-                                    padding: 10,
+                                    // borderTop
+                                    width: '100%',
+                                    padding: 7,
                                     paddingHorizontal: 10,
                                     backgroundColor: '#fff',
-                                    flexDirection: 'row',
-                                    margin: 0
                                 }}>
-                                <View style={{ display: 'flex', flexDirection: 'column', width: '90%' }}>
-                                    <View style={styles.dateContainer}>
+                                    <View style={{ 
+                                        height: '30%',
+                                        backgroundColor: '#fff',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center' }}>
+
                                         <Text style={styles.date2}>
                                             {
                                                 (new Date(props.cue.date)).toString().split(' ')[1] +
@@ -1055,42 +1116,47 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 (new Date(props.cue.date)).toString().split(' ')[2]
                                             }
                                         </Text>
+
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                const temp = [...selectedCues];
+                                                temp.push(cue);
+                                                setSelectedCues(temp)
+
+                                                // Remove from channel Cues
+                                                const cCues = channelCues.filter((c: any) => c._id !== cue._id)
+                                                setChannelCues(cCues)
+                                            }}
+                                            style={{
+                                                marginLeft: 'auto'
+                                            }}
+                                        >
+                                            <Text style={{ color: '#006AFF', textAlign: 'center' }}>
+                                                <Ionicons name='add-outline' size={16} />
+                                            </Text>
+                                        </TouchableOpacity>
+                                        
                                     </View>
-                                    <Text
-                                        ellipsizeMode={'tail'}
-                                        numberOfLines={1}
-                                        style={{
-                                            fontFamily: 'inter',
-                                            fontSize: 12,
-                                            lineHeight: 25,
-                                            flex: 1, flexDirection: 'row',
-                                            // marginTop: 5,
-                                            color: cue._id === props.cue._id ? '#006AFF' : '#000000'
-                                        }}>
-                                        {title}
-                                    </Text>
-                                </View>
 
-                                {/* Add button here */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        const temp = [...selectedCues];
-                                        temp.push(cue);
-                                        setSelectedCues(temp)
-
-                                        // Remove from channel Cues
-                                        const cCues = channelCues.filter((c: any) => c._id !== cue._id)
-                                        setChannelCues(cCues)
-                                    }}
-                                    style={{
-                                        // justifyContent: 'center',
-                                        // width: 20, height: 20, borderRadius: 10, backgroundColor: '#006AFF'
-                                    }}
-                                >
-                                    <Text style={{ color: '#006AFF', width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='add-outline' size={16} />
-                                    </Text>
-                                </TouchableOpacity>
+                                    <View style={{
+                                        backgroundColor: '#fff',
+                                        width: '100%', flexDirection: 'row', flex: 1, height: '70%'
+                                    }}>
+                                        <Text
+                                            ellipsizeMode={'tail'}
+                                            numberOfLines={1}
+                                            style={{
+                                                fontFamily: 'inter',
+                                                // fontWeight: 'bold',
+                                                fontSize: 12,
+                                                lineHeight: 20,
+                                                flex: 1,
+                                                marginTop: 5,
+                                                color: '#000000'
+                                            }}>
+                                            {title}
+                                        </Text>
+                                    </View>
                             </View>
                         </View>)
                     })}
@@ -1103,7 +1169,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             {/* Section 2 */}
 
-            {channelCues.length !== 0 ? <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 10 }}>
+            {channelCues.length !== 0 ? <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 7, paddingBottom: 14  }}>
                 <SortableList
                     axis={'x'}
                     lockAxis={'x'}
@@ -1121,7 +1187,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         return <View style={{ width: '100%', flexDirection: 'column', }}>
 
             {/* Section 1: Shows all cues from Channel */}
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 14, paddingBottom: 7 }}>
                 {channelCues.length !== 0 ?
                     <ScrollView
                         style={{
@@ -1130,7 +1196,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#efefef',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
-                            marginTop: 10
+                            // marginTop: 10
                         }}
                         horizontal={true}
                         showsVerticalScrollIndicator={false}
@@ -1144,97 +1210,93 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                             return (<View
                                 style={{
-                                    overflow: 'hidden',
-                                    maxWidth: 150,
-                                    maxHeight: 50,
-                                    width: '100%',
-                                    marginBottom: 10,
-                                    marginRight: 15,
-                                    shadowOffset: {
-                                        width: 3,
-                                        height: 0,
-                                    },
-                                    shadowOpacity: 0.8,
+                                    height: '100%',
+                                    backgroundColor: '#fff',
                                     borderRadius: 1,
-                                    shadowColor: col,
+                                    maxWidth: 175,
+                                    width: '100%',
+                                    borderColor: col,
+                                    borderLeftWidth: 3,
                                     flexDirection: 'row',
+                                    shadowOffset: {
+                                        width: 2,
+                                        height: 2,
+                                    },
+                                    overflow: 'hidden',
+                                    shadowOpacity: 0.07,
+                                    shadowRadius: 7,
+                                    zIndex: 500000,
+                                    marginRight: 10
                                 }}
                             >
                                 <View
                                     key={'textPage'}
                                     style={{
-                                        maxWidth: 168,
-                                        width: '100%',
+                                        maxWidth: 210,
                                         height: '100%',
-                                        borderRadius: 1,
-                                        padding: 10,
+                                        // borderTop
+                                        width: '100%',
+                                        padding: 7,
                                         paddingHorizontal: 10,
                                         backgroundColor: '#fff',
-                                        flexDirection: 'row',
-                                        margin: 0
                                     }}>
 
-                                    <View style={{ display: 'flex', flexDirection: 'column', width: '90%' }}>
-                                        <View style={styles.dateContainer}>
-                                            <Text style={styles.date2}>
-                                                {
-                                                    (new Date(props.cue.date)).toString().split(' ')[1] +
-                                                    ' ' +
-                                                    (new Date(props.cue.date)).toString().split(' ')[2]
-                                                }
+                                    <View style={{ 
+                                        height: '30%',
+                                        backgroundColor: '#fff',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center' }}>
+
+                                        <Text style={styles.date2}>
+                                            {
+                                                (new Date(props.cue.date)).toString().split(' ')[1] +
+                                                ' ' +
+                                                (new Date(props.cue.date)).toString().split(' ')[2]
+                                            }
+                                        </Text>
+
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                const temp = [...folderCuesToDisplay];
+                                                temp.push(cue);
+                                                setFolderCuesToDisplay(temp)
+
+                                                // Remove from channel Cues
+                                                const cCues = channelCues.filter((c: any) => c._id !== cue._id)
+                                                setChannelCues(cCues)
+                                            }}
+                                            style={{
+                                                marginLeft: 'auto'
+                                            }}
+                                        >
+                                            <Text style={{ color: '#006AFF', textAlign: 'center' }}>
+                                                <Ionicons name='add-outline' size={16} />
                                             </Text>
-                                        </View>
+                                        </TouchableOpacity>
+                                        
+                                    </View>
+
+                                    <View style={{
+                                        backgroundColor: '#fff',
+                                        width: '100%', flexDirection: 'row', flex: 1, height: '70%'
+                                    }}>
                                         <Text
                                             ellipsizeMode={'tail'}
                                             numberOfLines={1}
                                             style={{
                                                 fontFamily: 'inter',
+                                                // fontWeight: 'bold',
                                                 fontSize: 12,
-                                                lineHeight: 25,
-                                                flex: 1, flexDirection: 'row',
-                                                // marginTop: 5,
-                                                color: cue._id === props.cue._id ? '#006AFF' : '#000000'
+                                                lineHeight: 20,
+                                                flex: 1,
+                                                marginTop: 5,
+                                                color: '#000000'
                                             }}>
                                             {title}
                                         </Text>
                                     </View>
-
-                                    {/* Add button here */}
-
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            const temp = [...folderCuesToDisplay];
-                                            temp.push(cue);
-                                            setFolderCuesToDisplay(temp)
-
-                                            // Remove from channel Cues
-                                            const cCues = channelCues.filter((c: any) => c._id !== cue._id)
-                                            setChannelCues(cCues)
-                                        }}
-                                        style={{
-                                            // justifyContent: 'center',
-                                            // alignSelf: 'flex-end',
-                                            // width: 20, height: 20, borderRadius: 10, backgroundColor: '#006AFF'
-                                        }}
-                                    >
-                                        <Text style={{ color: '#006AFF', width: '100%', textAlign: 'center' }}>
-                                            <Ionicons name='add-outline' size={16} />
-                                        </Text>
-                                    </TouchableOpacity>
                                 </View>
-                                <View
-                                    style={{
-                                        backgroundColor: col,
-                                        flex: 1,
-                                        // borderLeftWidth: 2,
-                                        borderColor: cue._id === props.cue._id ? '#006AFF' : '#fff',
-                                        opacity: 0.9,
-                                        // width: '4%',
-                                        height: '100%'
-                                        // borderTopLeftRadius: 8,
-                                        // borderBottomLeftRadius: 8,
-                                    }}
-                                ></View>
                             </View>)
                         })}
                     </ScrollView>
@@ -1249,7 +1311,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             {/* Section 2 */}
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 7, paddingBottom: 14 }}>
                 <SortableListUpdate items={folderCuesToDisplay} onSortEnd={onSortEndUpdate} useDragHandle={true} axis={'x'} lockAxis={'x'}
                 />
             </View>
@@ -1257,7 +1319,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         </View>
     }
-
 
     const windowHeight = Dimensions.get('window').height;
 
@@ -2129,17 +2190,18 @@ const styles: any = StyleSheet.create({
     dateContainer: {
         fontSize: 10,
         color: '#fff',
-        height: '25%',
+        height: '30%',
         // backgroundColor: '#efefef',
         display: 'flex',
         flexDirection: 'row'
     },
     date2: {
-        fontSize: 9,
-        color: '#000000',
+        fontSize: 10,
+        color: '#393939',
         // marginLeft: 10,
-        lineHeight: 10,
+        lineHeight: 12,
         textAlign: 'left',
+        paddingVertical: 2,
         flex: 1
     },
 })

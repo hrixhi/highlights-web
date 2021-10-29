@@ -1038,7 +1038,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
               {/* QUIZ BUTTON FOR INSTRUCTORS */}
               {
-                role === 'instructor' && !imported ? <TouchableOpacity style={{
+                role === 'instructor' && !imported && !showOptions ? <TouchableOpacity style={{
                   borderRadius: 15,
                   backgroundColor: "white",
                 }}

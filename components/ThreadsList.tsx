@@ -22,6 +22,7 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
 import { Select } from '@mobiscroll/react'
 import ReactPlayer from "react-player";
+import NewPostModal from './NewPostModal';
 
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -161,17 +162,63 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         )()
     }, [threads])
 
+    /**
+     * @description Called from Modal for creating a new thread
+     */
+    const createNewThread = useCallback(async (message: any, category: any, isPrivate: any) => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: createMessage,
+            variables: {
+                message,
+                userId,
+                channelId: props.channelId,
+                isPrivate,
+                anonymous: false,
+                cueId: props.cueId === null ? 'NULL' : props.cueId,
+                parentId: 'INIT',
+                category: category === "None" ? "" : category
+            }
+        }).then(res => {
+            if (res.data.thread.writeMessage) {
+                setShowPost(false)
+                props.reload()
+            } else {
+                Alert(checkConnectionAlert)
+            }
+        }).catch(err => {
+            Alert(somethingWentWrongAlert, checkConnectionAlert)
+        })
+
+    }, [props.cueId, props.channelId, userId, isOwner])
+
 
     /**
-     * @description Create a new Thread
+     * @description Send a Thread message
      */
     const onSend = useCallback(async (messages: any) => {
+        console.log("New Message", messages)
+
+        let message;
+
+        if (messages[0].file !== "" || messages[0].image !== "" || messages[0].audio !== "" || messages[0].video !== "") {
+            message = messages[0].msgObject;
+        } else {
+            message = messages[0].text;
+        }
+
+        messages[0] = {
+            ...messages[0],
+            user: {
+                _id: userId
+            }
+        }
 
         const server = fetchAPI('')
         server.mutate({
             mutation: createMessage,
             variables: {
-                message: messages[0].text,
+                message,
                 userId,
                 channelId: props.channelId,
                 isPrivate: showPost && !isOwner ? privatePost : false,
@@ -183,7 +230,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).then(res => {
             if (res.data.thread.writeMessage) {
                 setThreadChat(threadChat => GiftedChat.append(threadChat, messages))
-                props.reload()
+                // props.reload()
             } else {
                 Alert(checkConnectionAlert)
             }
@@ -501,7 +548,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderRadius: 1
         }}>
             {
-                props.cueId === null && !showPost && categoryChoices.length > 1 ?
+                props.cueId === null && categoryChoices.length > 1 ?
                     <View style={{
                         backgroundColor: '#efefef',
                     }}>
@@ -526,7 +573,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </label>
                     </View> : null}
             {
-                showComments && !showPost ?
+                showComments ?
                     <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', backgroundColor: '#efefef' }}>
                         <TouchableOpacity
                             key={Math.random()}
@@ -654,7 +701,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     audio,
                                     video,
                                     file,
-                                    saveCue: JSON.stringify(obj)
+                                    msgObject: JSON.stringify(obj)
                                 }])
                             }}
                         />
@@ -791,6 +838,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             justifyContent: 'center',
             flexDirection: 'row',
         }}>
+            <NewPostModal show={showPost} categories={categories} categoriesOptions={categoriesOptions} onClose={() => setShowPost(false)} onSend={createNewThread} />
             <View style={{
                 width: '100%',
                 maxWidth: 900,
@@ -798,7 +846,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 borderRadius: 1
             }}>
                 {
-                    !showPost && !showThreadCues ?
+                    !showThreadCues || showPost ?
                         renderThreadHeader() : null
                 }
                 <Collapse isOpened={showComments} style={{ flex: 1 }}>
@@ -832,7 +880,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                                     key={JSON.stringify(filteredThreads) + JSON.stringify(showPost)}
                                 >
-                                    {showPost || showThreadCues ? <View style={{
+                                    {showThreadCues ? <View style={{
                                         width: '100%',
                                         backgroundColor: '#fff',
                                     }}>
@@ -854,119 +902,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         </TouchableOpacity>
                                     </View> : null }
                                     {
-                                        showPost ?
-                                            <View style={{
-                                                width: '100%',
-                                                maxWidth: 900,
-                                                padding: 10,
-                                                minHeight: 400,
-                                            }}
-                                            >
-                                                <GiftedChat
-                                                    renderUsernameOnMessage={true}
-                                                    renderBubble={renderBubble}
-                                                    messages={threadChat}
-                                                    onSend={messages => onSend(messages)}
-                                                    user={{
-                                                        _id: userId,
-                                                        avatar
-                                                    }}
-                                                    renderActions={() => (
-                                                        <View style={{
-                                                            // flexDirection: 'row',
-                                                            marginRight: 20,
-                                                            maxWidth: 75
-                                                            // marginTop: -10
-                                                        }}>
-                                                            {props.type === 'Discussion' ? customCategoryInput : null}
-                                                            <View style={{ flexDirection: 'row', paddingTop: 2 }}>
-                                                                {!isOwner ? <View>
-                                                                    <TouchableOpacity>
-                                                                        <Text
-                                                                            style={{
-                                                                                color: "#006AFF",
-                                                                                lineHeight: 40, paddingHorizontal: 10,
-                                                                                textAlign: "right",
-                                                                                fontSize: 12,
-                                                                                fontFamily: 'inter'
-                                                                            }}
-                                                                            onPress={() => setPrivatePost(!privatePost)}
-                                                                        >
-                                                                            <Ionicons name="eye-off-outline" size={18} color={privatePost ? '#006AFF' : '#393939'} />
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                                </View> : null}
-                                                                <FileUpload
-                                                                    chat={true}
-                                                                    onUpload={(u: any, t: any) => {
-                                                                        const title = prompt('Enter title and click on OK to share.')
-                                                                        if (!title || title === "") return;
-
-                                                                        let text: any = ''
-                                                                        let img: any = ''
-                                                                        let audio: any = ''
-                                                                        let video: any = ''
-                                                                        let file: any = ''
-
-                                                                        if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
-                                                                            img = u
-                                                                        } else if (t === "mp3" || t === "wav" || t === "mp2") {
-                                                                            audio = u
-                                                                        } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
-                                                                            video = u
-                                                                        } else {
-                                                                            file = u
-                                                                            text = <TouchableOpacity
-                                                                                onPress={() => {
-                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                                                                        window.open(u, '_blank')
-                                                                                    } else {
-                                                                                        Linking.openURL(u)
-                                                                                    }
-                                                                                }}
-                                                                                style={{
-                                                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
-                                                                                    marginTop: 6,
-                                                                                }}>
-                                                                                <Text style={{
-                                                                                    textAlign: "center",
-                                                                                    lineHeight: 35,
-                                                                                    color: '#006AFF',
-                                                                                    fontSize: 12,
-                                                                                    borderWidth: 1,
-                                                                                    borderColor: '#006AFF',
-                                                                                    paddingHorizontal: 20,
-                                                                                    fontFamily: "inter",
-                                                                                    height: 35,
-                                                                                    // paddingTop: 2
-                                                                                    // width: 125,
-                                                                                    borderRadius: 15,
-                                                                                    textTransform: "uppercase"
-                                                                                }}>
-                                                                                    {title}
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                        }
-
-                                                                        const obj = { title, type: t, url: u }
-
-                                                                        onSend([{
-                                                                            title,
-                                                                            text,
-                                                                            image: img,
-                                                                            audio,
-                                                                            video,
-                                                                            file,
-                                                                            saveCue: JSON.stringify(obj)
-                                                                        }])
-                                                                    }}
-                                                                />
-                                                            </View>
-                                                        </View>
-                                                    )}
-                                                />
-                                            </View>
-                                            : (showThreadCues ?
+                                        (showThreadCues ?
                                                 renderSelectedThread() : renderAllThreads())
                                     }
                                 </View>

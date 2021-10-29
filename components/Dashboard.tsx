@@ -1386,6 +1386,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     showsHorizontalScrollIndicator={false}
                                                                     key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                                                     {categoryMap[key].map((category: any, i: any) => {
+
+                                                                        // Check if even one category exists in cues
+
+                                                                        const foundCue = cueMap[key].find((cue: any) => cue.customCategory.toString().trim() === category.toString().trim());
+
+                                                                        if (!foundCue) return null;
+
                                                                         return <View style={{
                                                                             width: '100%',
                                                                             maxWidth: 130,
@@ -1534,6 +1541,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             null :
                             <View style={{
                                 flexDirection: 'row',
+                                alignItems: 'center',
                                 backgroundColor: '#000000',
                                 flex: 1,
                                 height: 28,
@@ -1580,16 +1588,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                     <View style={{
                         flexDirection: 'row',
+                        alignItems: 'center',
                         // justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
                         backgroundColor: '#000000',
                         width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
+                        margin: 0
                     }}>
                         {
                             Dimensions.get('window').width < 1024 ? <Image
                                 source={logo}
                                 style={{
                                     width: 50,
-                                    marginTop: 5,
+                                    marginTop: 1,
                                     height: 18,
                                     marginRight: 13
                                 }}
@@ -1602,7 +1612,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // width: "100%",
                                 color: '#fff',
                                 backgroundColor: '#393939',
-                                borderColor: "#efefef",
+                                // borderColor: "#efefef",
                                 // borderWidth: 1,
                                 borderRadius: 15,
                                 fontSize: 12,
@@ -1610,7 +1620,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 paddingTop: 4,
                                 paddingHorizontal: 16,
                                 // paddingVertical: 8,
-                                marginTop: -8,
+                                marginTop: 10,
                                 marginRight: 2,
                                 // flex: 1, flexDirection: 'row',
                                 // marginLeft: 20,
