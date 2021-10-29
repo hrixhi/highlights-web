@@ -4216,8 +4216,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         />
                     </label>
 
-
-
                     <View style={{ backgroundColor: "white", paddingLeft: 20 }}>
                         <TouchableOpacity
                             disabled={shareWithChannelId === "None"}
@@ -4246,9 +4244,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     width: "100%"
                                 }}>
                                 <Ionicons
-                                    name={"arrow-redo-outline"}
+                                    name={"share-outline"}
                                     size={18}
-                                    color={shareWithChannelId === "None" ? "#a0a0a0" : "#000000"}
+                                    color={shareWithChannelId === "None" ? "#000000" : "#006aff"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -4321,7 +4319,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 fontSize: 14,
                                 color: '#000000',
                                 fontFamily: 'Inter'
-                            }}>Repeat</Text>
+                            }}>Repeat Reminder</Text>
                         </View>
                         <View style={{}}>
                             <View
@@ -4519,7 +4517,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 fontSize: 14,
                                 color: '#000000',
                                 fontFamily: 'Inter'
-                            }}>Indefinitely</Text>
+                            }}>Remind Indefinitely</Text>
                         </View>
                         <View>
                             <View

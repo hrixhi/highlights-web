@@ -806,7 +806,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     </View>
 
-    const tabs = ['Content', 'Meet', 'Discuss', 'Settings']
+    const tabs = ['Content', 'Discuss', 'Meet', 'Scores', 'Settings']
 
     const renderTabs = (key: any) => {
 
@@ -847,7 +847,43 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "column",
                         backgroundColor: '#efefef'
                     }}
+                    onPress={() => {
+                        const temp = JSON.parse(JSON.stringify(indexMap))
+                        temp[key] = 1
+                        setIndexMap(temp)
+                    }}>
+                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='chatbubbles-outline' size={18} />
+                    </Text>
+                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                        Discuss
+                    </Text>
+                </TouchableOpacity>
+                {/* <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        backgroundColor: '#efefef'
+                    }}
                     onPress={() => handleEnterClassroom()}>
+                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='videocam-outline' size={18} />
+                    </Text>
+                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                        Meet
+                    </Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        backgroundColor: '#efefef',
+                    }}
+                    onPress={() => {
+                        const temp = JSON.parse(JSON.stringify(indexMap))
+                        temp[key] = 2
+                        setIndexMap(temp)
+                    }}>
                     <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                         <Ionicons name='videocam-outline' size={18} />
                     </Text>
@@ -859,18 +895,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         justifyContent: "center",
                         flexDirection: "column",
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#efefef',
                     }}
                     onPress={() => {
                         const temp = JSON.parse(JSON.stringify(indexMap))
-                        temp[key] = 2
+                        temp[key] = 3
                         setIndexMap(temp)
                     }}>
-                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                        <Ionicons name='chatbubbles-outline' size={18} />
+                    <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='bar-chart-outline' size={18} />
                     </Text>
-                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                        Discuss
+                    <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
+                        Scores
                     </Text>
                 </TouchableOpacity>
                 {
@@ -883,7 +919,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap))
-                                temp[key] = 3
+                                temp[key] = 4
                                 setIndexMap(temp)
                             }}>
                             <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
@@ -1246,7 +1282,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     {
                                                         indexMap[key] !== 0 ?
                                                             (
-                                                                indexMap[key] === 1 ?
+                                                                indexMap[key] === 100 ? // no longer needed
                                                                     // meet
                                                                     (
                                                                         <View
@@ -1264,7 +1300,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     ) :
                                                                     // discuss
                                                                     (
-                                                                        indexMap[key] === 2 ?
+                                                                        indexMap[key] === 1 ?
                                                                             <Discussion
                                                                                 channelId={key.split('-SPLIT-')[1]}
                                                                                 filterChoice={key.split('-SPLIT-')[0]}
@@ -1272,32 +1308,69 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
                                                                                 channelColor={key.split('-SPLIT-')[3]}
                                                                             /> :
-                                                                            // settings 
-                                                                            // settings 
-                                                                            // settings 
-                                                                            // settings 
-                                                                            // settings 
-                                                                            // settings 
-                                                                            // settings 
-                                                                            <View
-                                                                                style={{
-                                                                                    width: '100%',
-                                                                                    maxWidth: 400,
-                                                                                    alignSelf: 'center',
-                                                                                    borderTopRightRadius: 10,
-                                                                                    borderBottomRightRadius: 10
-                                                                                }}
-                                                                            >
-                                                                                <ChannelSettings
-                                                                                    channelId={key.split('-SPLIT-')[1]}
-                                                                                    refreshSubscriptions={props.refreshSubscriptions}
-                                                                                    closeModal={() => {
-                                                                                        // setShowHome(false)
-                                                                                        // closeModal()
+                                                                            (
+                                                                                // Meet
+                                                                                indexMap[key] === 2 ? <Performance
+                                                                                    channelName={key.split('-SPLIT-')[0]}
+                                                                                    onPress={(name: any, id: any, createdBy: any) => {
+                                                                                        props.setChannelFilterChoice('All')
+                                                                                        props.handleFilterChange(name)
+                                                                                        props.setChannelId(id)
+                                                                                        props.setChannelCreatedBy(createdBy)
+                                                                                        props.openGrades()
+                                                                                        props.hideHome()
                                                                                     }}
-                                                                                    channelColor={key.split('-SPLIT-')[3]}
-                                                                                />
-                                                                            </View>
+                                                                                    filterStart={filterStart}
+                                                                                    filterEnd={filterEnd}
+                                                                                    channelId={key.split('-SPLIT-')[1]}
+                                                                                    channelCreatedBy={key.split('-SPLIT-')[2]}
+                                                                                    subscriptions={props.subscriptions}
+                                                                                    openCueFromGrades={props.openCueFromCalendar}
+                                                                                    colorCode={key.split('-SPLIT-')[3]}
+                                                                                    activeTab={'attendance'}
+                                                                                /> :
+                                                                                    (
+                                                                                        // Scores
+                                                                                        indexMap[key] === 3 ? <Performance
+                                                                                            channelName={key.split('-SPLIT-')[0]}
+                                                                                            onPress={(name: any, id: any, createdBy: any) => {
+                                                                                                props.setChannelFilterChoice('All')
+                                                                                                props.handleFilterChange(name)
+                                                                                                props.setChannelId(id)
+                                                                                                props.setChannelCreatedBy(createdBy)
+                                                                                                props.openGrades()
+                                                                                                props.hideHome()
+                                                                                            }}
+                                                                                            filterStart={filterStart}
+                                                                                            channelId={key.split('-SPLIT-')[1]}
+                                                                                            channelCreatedBy={key.split('-SPLIT-')[2]}
+                                                                                            filterEnd={filterEnd}
+                                                                                            subscriptions={props.subscriptions}
+                                                                                            openCueFromGrades={props.openCueFromCalendar}
+                                                                                            colorCode={key.split('-SPLIT-')[3]}
+                                                                                            activeTab={'scores'}
+                                                                                            isEditor={key.split('-SPLIT-')[2] === userId}
+                                                                                        /> : <View
+                                                                                            style={{
+                                                                                                width: '100%',
+                                                                                                maxWidth: 400,
+                                                                                                alignSelf: 'center',
+                                                                                                borderTopRightRadius: 10,
+                                                                                                borderBottomRightRadius: 10
+                                                                                            }}
+                                                                                        >
+                                                                                            <ChannelSettings
+                                                                                                channelId={key.split('-SPLIT-')[1]}
+                                                                                                refreshSubscriptions={props.refreshSubscriptions}
+                                                                                                closeModal={() => {
+                                                                                                    // setShowHome(false)
+                                                                                                    // closeModal()
+                                                                                                }}
+                                                                                                channelColor={key.split('-SPLIT-')[3]}
+                                                                                            />
+                                                                                        </View>
+                                                                                    )
+                                                                            )
                                                                     )
                                                             ) :
                                                             cueMap[key].length === 0 ?
@@ -1659,7 +1732,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         :
                         <View style={{
                             // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                            paddingHorizontal: width < 1024 && props.option !== 'Classroom' && props.option !== 'Performance' ? 5 : 0,
+                            paddingHorizontal: width < 1024 && props.option !== 'To Do' ? 20 : 0,
                             maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
@@ -1708,23 +1781,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         filterByChannel={filterByChannel}
                                         activityChannelId={activityChannelId}
                                         filterEventsType={filterEventsType}
-                                    /> : null
-                            }
-                            {
-                                props.option === 'Performance' ?
-                                    <Performance
-                                        onPress={(name: any, id: any, createdBy: any) => {
-                                            props.setChannelFilterChoice('All')
-                                            props.handleFilterChange(name)
-                                            props.setChannelId(id)
-                                            props.setChannelCreatedBy(createdBy)
-                                            props.openGrades()
-                                            props.hideHome()
-                                        }}
-                                        filterStart={filterStart}
-                                        filterEnd={filterEnd}
-                                        subscriptions={props.subscriptions}
-                                        openCueFromGrades={props.openCueFromCalendar}
                                     /> : null
                             }
                             {

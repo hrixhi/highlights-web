@@ -205,24 +205,6 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     Overview
                 </Text>
             </TouchableOpacity>}
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    backgroundColor: '#efefef',
-                }}
-                onPress={() => {
-                    const temp = JSON.parse(JSON.stringify(activeTabMap))
-                    temp[index] = 'scores'
-                    setActiveTabMap(temp)
-                }}>
-                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='bar-chart-outline' size={18} />
-                </Text>
-                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    Scores
-                </Text>
-            </TouchableOpacity>
             {/* <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -237,24 +219,6 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     <Ionicons name='analytics-outline' size={25} />
                 </Text>
             </TouchableOpacity> */}
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    backgroundColor: '#efefef',
-                }}
-                onPress={() => {
-                    const temp = JSON.parse(JSON.stringify(activeTabMap))
-                    temp[index] = 'attendance'
-                    setActiveTabMap(temp)
-                }}>
-                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='chatbubble-ellipses-outline' size={18} />
-                </Text>
-                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    Engagement
-                </Text>
-            </TouchableOpacity>
         </View>)
     }
 
@@ -288,276 +252,175 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         </View>
     }
 
-    return <View style={{
-        width: "100%",
-        // height: windowHeight - ,
-        backgroundColor: "white",
-        borderTopRightRadius: 0,
-        borderTopLeftRadius: 0,
-        flexDirection: width < 1024 ? 'column' : 'row',
-    }}>
-        <View style={{ width: '100%', }}>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                    maxHeight: width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
-                }}
-            >
-                {
-                    props.subscriptions.map((sub: any, ind: any) => {
-                        return <InsetShadow
-                            shadowColor={"#000"}
-                            shadowOffset={2}
-                            shadowOpacity={0.12}
-                            shadowRadius={!collapseMap[ind] ? 10 : 0}
-                            elevation={500000}
-                            containerStyle={{
-                                height: 'auto'
-                            }}
-                        >
-                            <View style={{
-                                backgroundColor: !collapseMap[ind] ? '#efefef' : '#fff',
-                                borderColor: '#efefef',
-                                borderBottomWidth: ind === props.subscriptions.length - 1 ? 0 : 1,
-                                paddingHorizontal: 20,
-                                // paddingBottom: 5,
-                                width: '100%'
-                            }}>
-                                <View style={{ flexDirection: 'row', backgroundColor: !collapseMap[ind] ? '#efefef' : '#fff', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 900, alignSelf: 'center', width: '100%', alignItems: 'center', }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            backgroundColor: !collapseMap[ind] ? '#efefef' : '#fff',
-                                        }}
-                                        onPress={() => {
-                                            const temp = JSON.parse(JSON.stringify(collapseMap))
-
-                                            Object.keys(temp).forEach((item: any, index: any) => {
-                                                if (index === ind) return;
-                                                temp[index] = true
-                                            })
-
-                                            temp[ind] = !temp[ind]
-
-                                            setCollapseMap(temp)
-                                        }}
-                                    >
-                                        <Text style={{
-                                            fontSize: 18,
-                                            paddingBottom: 15,
-                                            paddingTop: 19,
-                                            fontFamily: 'inter',
-                                            // flex: 1,
-                                            flexDirection: 'row',
-                                            lineHeight: 18,
-                                        }}>
-                                            <View style={{
-                                                width: 14,
-                                                marginRight: 5,
-                                                height: 14,
-                                                borderRadius: 9,
-                                                // marginTop: 1,
-                                                backgroundColor: sub.colorCode
-                                            }} /> {sub.channelName}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            const temp = JSON.parse(JSON.stringify(collapseMap))
-                                            temp[ind] = !temp[ind]
-                                            setCollapseMap(temp)
-                                        }}
-                                        style={{
-                                            backgroundColor: !collapseMap[ind] ? '#efefef' : '#fff'
-                                        }}
-                                    >
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 30,
-                                            paddingTop: 5,
-                                            paddingLeft: 7,
-                                            backgroundColor: !collapseMap[ind] ? '#efefef' : '#fff'
-                                        }}>
-                                            <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={!collapseMap[ind] ? '#393939' : '#006AFF'} />
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                {
-                                    !collapseMap[ind] ? <View style={{ width: '100%', maxWidth: 900, alignSelf: 'center', backgroundColor: '#efefef', paddingBottom: 50 }}>
-                                        {/* Render Tabs to switch between Grades, Stats and Attendance */}
-                                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef' }}>
-                                            {renderTabs(ind)}
-                                        </View>
-                                        {activeTabMap[ind] === "scores" || activeTabMap[ind] === "statistics" ? <Grades
-                                            closeModal={() => { }}
-                                            channelId={sub.channelId}
-                                            channelCreatedBy={sub.channelCreatedBy}
-                                            filterChoice={sub.channelName}
-                                            openCueFromGrades={(cueId: string) => {
-                                                props.openCueFromGrades(sub.channelId, cueId, sub.channelCreatedBy)
-                                            }}
-                                            activeTab={activeTabMap[ind]}
-                                            channelColor={sub.colorCode}
-                                        /> :
-                                            (
-                                                activeTabMap[ind] === "attendance" ? <AttendanceList
-                                                    channelId={sub.channelId}
-                                                    channelCreatedBy={sub.channelCreatedBy}
-                                                    channelColor={sub.colorCode}
-                                                /> : <View style={{ maxWidth: 500, alignSelf: 'center', width: '100%', backgroundColor: 'white', borderLeftWidth: 3, borderLeftColor: sub.colorCode, paddingVertical: 20, paddingHorizontal: 40, borderRadius: 1, shadowOffset: {
-                                                    width: 2,
-                                                    height: 2,
-                                                },
-                                                shadowOpacity: 0.1,
-                                                shadowRadius: 10,
-                                                zIndex: 5000000 }}>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 17, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Meetings
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                {attendance[sub.channelId] ? attendance[sub.channelId].length : 0} / {date[sub.channelId] ? date[sub.channelId].length : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 17, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Posts
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                {thread[sub.channelId] ? thread[sub.channelId].length : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 17, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Assessments
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].totalAssessments : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 14, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Late
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].lateAssessments : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 14, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Graded
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].gradedAssessments : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 14, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Submitted
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10, }}>
-                                                            <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].submittedAssessments : 0}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 17, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Grade
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].score : 0}%
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: 'white', }}>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{
-                                                                flex: 1, flexDirection: 'row',
-                                                                color: '#393939',
-                                                                fontSize: 17, lineHeight: 25,
-                                                                fontFamily: 'inter'
-                                                            }} ellipsizeMode='tail'>
-                                                                Progress
-                                                            </Text>
-                                                        </View>
-                                                        <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                                            <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                {score[sub.channelId] ? score[sub.channelId].total : 0}%
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            )}
-                                    </View> : null
-                                }
+    return <View style={{ width: '100%', maxWidth: 900, alignSelf: 'center', backgroundColor: '#efefef', paddingBottom: 50 }}>
+        {
+            props.activeTab === "attendance" ? <AttendanceList
+                channelId={props.channelId}
+                channelCreatedBy={props.channelCreatedBy}
+                channelColor={props.colorCode}
+            /> : (
+                props.isEditor ? null :
+                    <View style={{
+                        maxWidth: 500, alignSelf: 'center', width: '100%', backgroundColor: 'white', borderLeftWidth: 3, borderLeftColor: props.colorCode, paddingVertical: 20, paddingHorizontal: 40, borderRadius: 1, shadowOffset: {
+                            width: 2,
+                            height: 2,
+                        },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 10,
+                        zIndex: 5000000
+                    }}>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 17, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Meetings
+                                </Text>
                             </View>
-                        </InsetShadow>
-                    })
-                }
-            </ScrollView>
-        </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    {attendance[props.channelId] ? attendance[props.channelId].length : 0} / {date[props.channelId] ? date[props.channelId].length : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 17, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Posts
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    {thread[props.channelId] ? thread[props.channelId].length : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 17, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Assessments
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].totalAssessments : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 14, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Late
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].lateAssessments : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 14, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Graded
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].gradedAssessments : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 14, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Submitted
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10, }}>
+                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].submittedAssessments : 0}
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 17, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Grade
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].score : 0}%
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: 'white', }}>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#393939',
+                                    fontSize: 17, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    Progress
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    {score[props.channelId] ? score[props.channelId].total : 0}%
+                                </Text>
+                            </View>
+                        </View>
+                    </View>)
+        }
+        {
+            props.activeTab === 'attendance' ? null :
+                <Grades
+                    closeModal={() => { }}
+                    channelId={props.channelId}
+                    channelCreatedBy={props.channelCreatedBy}
+                    filterChoice={props.channelName}
+                    openCueFromGrades={(cueId: string) => {
+                        props.openCueFromGrades(props.channelId, cueId, props.channelCreatedBy)
+                    }}
+                    activeTab={props.activeTab}
+                    channelColor={props.colorCode}
+                />
+        }
     </View>
 }
 

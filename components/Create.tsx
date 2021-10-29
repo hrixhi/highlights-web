@@ -2080,7 +2080,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               fontFamily: 'Inter'
                             }}
                           >
-                            Repeat
+                            Repeat Reminder
                           </Text>
                         </View>
                         <View style={{}}>
@@ -2289,7 +2289,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               fontFamily: 'Inter'
                             }}
                           >
-                            Indefinitely
+                            Remind Indefinitely
                           </Text>
                         </View>
                         <View style={{}}>

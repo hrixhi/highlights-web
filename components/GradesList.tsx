@@ -451,14 +451,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             nestedScrollEnabled={true}
                         >
                             <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
-                                {props.isOwner ? <View style={styles.col} key={'0,0'}>
+                                {/* {props.isOwner ? <View style={styles.col} key={'0,0'}>
                                     <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
                                         placeholder={"Search"}
                                         placeholderTextColor={'#393939'}
                                     /> 
-                                </View> : null}
+                                </View> : null} */}
                                 {
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>

@@ -105,7 +105,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('To Do')
-  const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Performance', 'Channels', 'Settings'])
+  const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Channels', 'Settings'])
 
   const [navOptions] = useState([
     {

@@ -807,7 +807,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 color: '#000000'
                                             }}
                                         >
-                                            Duplicate Subscribers
+                                            Duplicate Viewers
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: "row" }}>
@@ -854,7 +854,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 color: '#000000'
                                             }}
                                         >
-                                            Duplicate Moderators
+                                            Duplicate Editors
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: "row" }}>
@@ -1012,7 +1012,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             paddingTop: 20,
                             color: '#000000'
                         }}>
-                            Subscribers
+                            Viewers
                         </Text>
 
                         {renderSubscriberFilters()}
@@ -1093,7 +1093,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //  fontFamily: 'inter',
                             color: '#000000', marginTop: 25, marginBottom: 20
                         }}>
-                            Moderators
+                            Editors
                         </Text>
                         {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                             <View style={{ width: '90%', height: 'auto' }}>
