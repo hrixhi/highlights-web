@@ -2855,7 +2855,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         },
                         // menubar: 'file edit view insert format tools table tc help',
                         menubar: false,
-                        toolbar: 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                        toolbar: 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat  pagebreak | preview print | outdent indent ltr rtl ',
                         importcss_append: true,
                         image_caption: true,
                         quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',

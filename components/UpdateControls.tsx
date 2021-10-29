@@ -2984,7 +2984,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
-                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
                     importcss_append: true,
                     image_caption: true,
                     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3223,7 +3223,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 },
                 // menubar: 'file edit view insert format tools table tc help',
                 menubar: false,
-                toolbar: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? false : 'undo redo | bold italic underline strikethrough | formula superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image upload link media | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                toolbar: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? false : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
                 importcss_append: true,
                 image_caption: true,
                 quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3243,7 +3243,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
-            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row' }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         paddingBottom: 15,
@@ -3639,8 +3639,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingRight: 10,
                                     // marginTop: isOwner ? 20 : 0,
                                     fontFamily: 'Inter'
+
                                 }}>
-                                {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
+                                {!isOwner ? gradeWeight : null} {!isOwner ? "%" : PreferredLanguageText("percentageOverall")}
                             </Text>
                         </View>
                     ) :
@@ -4101,7 +4102,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
                     borderColor: "#efefef",
-                    paddingBottom: 15
+                    // paddingBottom: 15
                 }}>
                 <View
                     style={{
@@ -4166,7 +4167,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderRightWidth: 0,
                     borderColor: "#efefef",
                     paddingTop: 40,
-                    paddingBottom: 15
                 }}>
                 <View
                     style={{
@@ -4901,16 +4901,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {(props.showOptions || props.showComments || isOwner || props.showOriginal || props.viewStatus || !submission || isQuiz) ? null : renderSubmissionHistory()}
                 {
                     props.showOptions || props.showComments || viewSubmission ?
-                        <View
-                            style={{
-                                // borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                //     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                //     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
-                                //     ? 0 : 1,
-                                marginTop: 20,
-                                borderBottomColor: '#efefef'
-                            }}
-                        />
+                        null
                         :
                         <View
                             style={{

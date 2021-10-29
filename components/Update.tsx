@@ -26,6 +26,7 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import InsetShadow from 'react-native-inset-shadow'
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -949,7 +950,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     const renderExistingFolder = () => {
 
-        return <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 14 }}>
+        return <InsetShadow
+        shadowColor={"#000"}
+        shadowOffset={2}
+        shadowOpacity={0.12}
+        shadowRadius={10}
+        elevation={500000}
+        containerStyle={{
+            height: 'auto'
+        }}
+    ><View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 14, paddingHorizontal: 10 }}>
             <ScrollView
                 style={{
                     width: "100%",
@@ -1038,7 +1048,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 })}
             </ScrollView>
         </View>
-
+        </InsetShadow>
     }
 
     /**
@@ -1047,7 +1057,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     const renderNewFolderOptions = () => {
 
-        return <View style={{ width: '100%', flexDirection: 'column', }}>
+        return <InsetShadow
+        shadowColor={"#000"}
+        shadowOffset={2}
+        shadowOpacity={0.12}
+        shadowRadius={10}
+        elevation={500000}
+        containerStyle={{
+            height: 'auto'
+        }}
+    ><View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
 
             {/* Section 1: Shows all cues from Channel */}
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 14, paddingBottom: 7 }}>
@@ -1177,6 +1196,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 />
             </View> : null}
         </View>
+        </InsetShadow>
     }
 
     /**
@@ -1184,7 +1204,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     * Two Sections (First section shows all options and the second one shows the selected cues)
     */
     const renderEditFolderOptions = () => {
-        return <View style={{ width: '100%', flexDirection: 'column', }}>
+        return <InsetShadow
+        shadowColor={"#000"}
+        shadowOffset={2}
+        shadowOpacity={0.12}
+        shadowRadius={10}
+        elevation={500000}
+        containerStyle={{
+            height: 'auto'
+        }}
+    ><View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
 
             {/* Section 1: Shows all cues from Channel */}
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingTop: 14, paddingBottom: 7 }}>
@@ -1315,9 +1344,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <SortableListUpdate items={folderCuesToDisplay} onSortEnd={onSortEndUpdate} useDragHandle={true} axis={'x'} lockAxis={'x'}
                 />
             </View>
-
-
         </View>
+        </InsetShadow>
     }
 
     const windowHeight = Dimensions.get('window').height;
@@ -1330,6 +1358,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         opacity: modalAnimation,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
+        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
     }}
         key={JSON.stringify(threads)}
     >
@@ -1884,6 +1913,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 width: '100%', justifyContent: 'center',
                 height: 52, backgroundColor: '#000000',
                 paddingHorizontal: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 4,
+                    height: 4,
+                },
+                shadowOpacity: 0.12,
+                shadowRadius: 10,
+                zIndex: 500000
             }}>
                 <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#000000', }}>
 
@@ -2038,21 +2075,18 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             <View style={{
                 backgroundColor: '#efefef',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
             }}>
                 {folderId !== "" && folderCuesToDisplay.length !== 0 && !editFolder && !createNewFolder && showOriginal ? renderExistingFolder() : null}
             </View>
 
             <View style={{
                 backgroundColor: '#efefef',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
             }}>
                 {createNewFolder ? renderNewFolderOptions() : null}
             </View>
 
             <View style={{
                 backgroundColor: '#efefef',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
             }}>
                 {editFolder ? renderEditFolderOptions() : null}
             </View>
@@ -2089,7 +2123,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {renderHeader()}
                         {/* Main Content */}
                         <View style={{
-                            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
                             width: '100%', backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center', flex: 1
                         }}>
                             {ContentView}
@@ -2110,7 +2143,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 paddingHorizontal: 20,
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                height: Dimensions.get('window').width < 768 ? 54 : 68
+                                height: Dimensions.get('window').width < 768 ? 54 : 68,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                width: 0,
+                                height: -7,
+                                },
+                                shadowOpacity: 0.12,
+                                shadowRadius: 10,
+                                zIndex: 500000,
                             }}>
                                 {options}
                             </View> : null
