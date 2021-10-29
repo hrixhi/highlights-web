@@ -1742,7 +1742,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         :
                         <View style={{
                             // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                            paddingHorizontal: width < 1024 && props.option !== 'To Do' && props.option !== 'Classroom' ? 20 : 0,
                             maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
