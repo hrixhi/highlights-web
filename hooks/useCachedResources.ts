@@ -15,7 +15,7 @@ export default function useCachedResources() {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
-          'inter': require('../assets/fonts/HelveticaNowDisplay-ExtraBold.otf'),
+          'inter': require('../assets/fonts/HelveticaNowDisplay-Bold.otf'),
           'overpass': require('../assets/fonts/HelveticaNowDisplay-Regular.otf')
         });
       } catch (e) {
