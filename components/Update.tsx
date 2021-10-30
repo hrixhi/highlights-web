@@ -568,8 +568,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 height: '100%',
                 backgroundColor: '#fff',
                 borderRadius: 1,
-                maxWidth: 175,
-                width: '100%',
+                maxWidth: 130,
+                width: 130,
                 borderColor: col,
                 borderLeftWidth: 3,
                 flexDirection: 'row',
@@ -581,7 +581,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowOpacity: 0.07,
                 shadowRadius: 7,
                 zIndex: 500000,
-                marginRight: 10
+                marginRight: 15
             }}
         >
 
@@ -678,8 +678,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 height: '100%',
                 backgroundColor: '#fff',
                 borderRadius: 1,
-                maxWidth: 175,
-                width: '100%',
+                maxWidth: 130,
+                width: 130,
                 borderColor: col,
                 borderLeftWidth: 3,
                 flexDirection: 'row',
@@ -691,7 +691,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowOpacity: 0.07,
                 shadowRadius: 7,
                 zIndex: 500000,
-                marginRight: 10
+                marginRight: 15
             }}
         >
 
@@ -959,7 +959,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         containerStyle={{
             height: 'auto'
         }}
-    ><View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#efefef', paddingVertical: 14, paddingHorizontal: 10 }}>
+    ><View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', backgroundColor: '#efefef', paddingVertical: 14, paddingHorizontal: 10 }}>
+            {/* Render Folder Title */}
+
+            <Text style={{ fontSize: 13, fontFamily: 'Inter', color: '#1F1F1F', paddingBottom: 10, width: '100%', maxWidth: 900 }}>
+                {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
+            </Text>
+
+            {/* Render Existing cues */}
+
             <ScrollView
                 style={{
                     width: "100%",
@@ -987,8 +995,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             height: '100%',
                             backgroundColor: '#fff',
                             borderRadius: 1,
-                            maxWidth: 175,
-                            width: '100%',
+                            maxWidth: 130,
+                            width: 130,
                             borderColor: col,
                             borderLeftWidth: 3,
                             flexDirection: 'row',
@@ -1000,7 +1008,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             shadowOpacity: 0.07,
                             shadowRadius: 7,
                             zIndex: 500000,
-                            marginRight: 10
+                            marginRight: 15
                         }}
                     >
                         <TouchableOpacity
@@ -1094,8 +1102,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 height: '100%',
                                 backgroundColor: '#fff',
                                 borderRadius: 1,
-                                maxWidth: 175,
-                                width: '100%',
+                                maxWidth: 130,
+                                width: 130,
                                 borderColor: col,
                                 borderLeftWidth: 3,
                                 flexDirection: 'row',
@@ -1107,7 +1115,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 shadowOpacity: 0.07,
                                 shadowRadius: 7,
                                 zIndex: 500000,
-                                marginRight: 10
+                                marginRight: 15
                             }}
                         >
                             <View
@@ -1242,8 +1250,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     height: '100%',
                                     backgroundColor: '#fff',
                                     borderRadius: 1,
-                                    maxWidth: 175,
-                                    width: '100%',
+                                    maxWidth: 130,
+                                    width: 130,
                                     borderColor: col,
                                     borderLeftWidth: 3,
                                     flexDirection: 'row',
@@ -1255,7 +1263,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     shadowOpacity: 0.07,
                                     shadowRadius: 7,
                                     zIndex: 500000,
-                                    marginRight: 10
+                                    marginRight: 15
                                 }}
                             >
                                 <View
@@ -1521,6 +1529,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             Edit Folder
@@ -1555,6 +1564,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             Create Folder
@@ -1621,6 +1631,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: 12,
                             fontFamily: 'overpass',
                             color: '#fff',
+                            fontWeight: 'bold',
                         }}>
                             Add to Folder
                         </Text>
@@ -1734,6 +1745,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             Cancel
@@ -1804,6 +1816,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             {creatingFolder
@@ -1854,6 +1867,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             {deletingFolder
@@ -1886,6 +1900,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
+                                fontWeight: 'bold',
                             }}
                         >
                             {deletingFolder
@@ -2027,6 +2042,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,
+                                                fontWeight: 'bold',
                                                 textTransform: "uppercase",
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
@@ -2057,6 +2073,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,
+                                                fontWeight: 'bold',
                                                 textTransform: "uppercase",
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',

@@ -93,6 +93,15 @@
     border: 1px solid #efefef !important;
 }
 
+.mbsc-ios.mbsc-select, .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-box, .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-outline {
+    background: transparent !important;
+}
+
+.mbsc-ios.mbsc-textfield-wrapper-underline {
+    background: transparent !important;
+
+}
+
 /* .dropdown {
     position: relative;
     display: inline-block;

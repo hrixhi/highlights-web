@@ -7,6 +7,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
+
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.colorCode)
@@ -99,23 +100,23 @@ const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
         height: '100%',
         backgroundColor: '#fff',
         borderRadius: 1,
-        // borderTopRightRadius: 8,
-        // borderBottomRightRadius: 8,
+        // borderTopRightRadius: 5,
+        // borderBottomRightRadius: 5,
         // borderBottomRightRadius: 1,
-        overflow: 'hidden',
-        maxWidth: 175,
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#efefef',
+        maxWidth: 130,
+        width: 130,
+        // borderLeftWidth: 1,
+        borderColor: col,
+        borderLeftWidth: 3,
         flexDirection: 'row',
-        // shadowOffset: {
-        //         width: -3,
-        //         height: 0,
-        // },
-        // shadowOpacity: 0.8,
-        // shadowColor: 'red',
-        borderLeftColor: col,
-        borderLeftWidth: 3
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        overflow: 'hidden',
+        shadowOpacity: 0.07,
+        shadowRadius: 7,
+        zIndex: 500000,
     },
     card: {
         // maxWidth: 210,

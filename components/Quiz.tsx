@@ -261,7 +261,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     // width: "100%",
                     height: 40,
                     // marginRight: 10,
-                    flexDirection: 'row',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
                     justifyContent: 'flex-start'
                 }}
             >
@@ -290,7 +291,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             borderRightWidth: 0,
                             paddingTop: 0,
                             borderColor: "#efefef",
-                            flexDirection: 'row'
+                            flexDirection: 'row',
+                            paddingTop: 10
                         }}
                     >
                         <View>
@@ -395,7 +397,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }}>
                 <Text style={{
                     fontSize: 14,
-                    fontFamily: '#inter',
+                    fontFamily: 'inter',
                     color: '#000000'
                 }}>Random Order</Text>
             </View>

@@ -145,8 +145,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         // borderTopRightRadius: 5,
         // borderBottomRightRadius: 5,
         // borderBottomRightRadius: 1,
-        maxWidth: 175,
-        width: '100%',
+        maxWidth: 130,
+        width: 130,
         // borderLeftWidth: 1,
         borderColor: col,
         borderLeftWidth: 3,
@@ -161,7 +161,6 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         zIndex: 500000,
     },
     card: {
-        maxWidth: 210,
         height: '100%',
         // borderTop
         width: '100%',

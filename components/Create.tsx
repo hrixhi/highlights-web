@@ -1035,7 +1035,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
               </Text>
             </TouchableOpacity>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
               {/* QUIZ BUTTON FOR INSTRUCTORS */}
               {
                 role === 'instructor' && !imported && !showOptions ? <TouchableOpacity style={{
@@ -1553,7 +1553,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#000000',
-                                fontWeight: 'bold'
+                                fontFamily: 'Inter'
                               }}
                             >
                               Grade Weight
@@ -1638,7 +1638,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#000000',
-                                fontWeight: 'bold'
+                                fontFamily: 'Inter'
                               }}
                             >
                               Late Submission
@@ -1752,7 +1752,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#000000',
-                                fontWeight: 'bold'
+                                fontFamily: 'Inter'
                               }}
                             >
                               Multiple Attempts
@@ -2395,7 +2395,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#000000'
+                            color: '#000000',
+                            fontFamily: 'Inter'
                           }}
                         >
                           Timed
@@ -2537,7 +2538,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            color: '#000000'
+                            color: '#000000',
+                            fontFamily: 'Inter'
                           }}
                         >
                           Random Order

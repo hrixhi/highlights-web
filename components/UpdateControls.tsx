@@ -2759,6 +2759,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             style={{
                 width: "100%",
                 minHeight: 475,
+                paddingTop: 10,
                 backgroundColor: "white"
             }}>
             {!props.showOriginal || loading ? null : isQuiz ? (
@@ -3641,7 +3642,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     fontFamily: 'Inter'
 
                                 }}>
-                                {!isOwner ? gradeWeight : null} {!isOwner ? "%" : PreferredLanguageText("percentageOverall")}
+                                {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
                             </Text>
                         </View>
                     ) :
@@ -4788,7 +4789,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     height: '100%',
-                    paddingTop: 10
+                    paddingTop: 20
                 }}>
                 {/* <Text
                     style={{
