@@ -15,8 +15,8 @@ export default function useCachedResources() {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
-          'inter': require('../assets/fonts/Gilroy-Bold.woff'),
-          'overpass': require('../assets/fonts/Gilroy-Regular.woff')
+          'inter': require('../assets/fonts/HelveticaNowDisplay-ExtraBold.otf'),
+          'overpass': require('../assets/fonts/HelveticaNowDisplay-Regular.otf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
