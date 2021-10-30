@@ -57,6 +57,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { Editor } from '@tinymce/tinymce-react';
 import FormulaGuide from './FormulaGuide';
 import { handleFile } from '../helpers/FileUpload';
+import Books from "./Books";
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -107,6 +108,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [allowLateSubmission, setAllowLateSubmission] = useState(false);
   // By default one day after deadline
   const [availableUntil, setAvailableUntil] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 48));
+
+  const [showBooks, setShowBooks] = useState(false)
 
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
@@ -1038,25 +1041,54 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
               {/* QUIZ BUTTON FOR INSTRUCTORS */}
               {
-                role === 'instructor' && !imported && !showOptions ? <TouchableOpacity style={{
+                !imported && !showOptions && !isQuiz ? <TouchableOpacity style={{
                   borderRadius: 15,
                   backgroundColor: "white",
                 }}
-                onPress={() => {
-                  if (isQuiz) {
-                    clearAll()
-                    return
-                  }
-                  setIsQuiz(true);
-                  setSubmission(true);
-                }}
+                  onPress={() => {
+                    setShowBooks(!showBooks)
+                  }}
                 >
                   <Text
                     style={{
                       textAlign: "center",
                       lineHeight: 35,
                       color: "#006AFF",
-                      borderWidth: 1,
+                      // borderWidth: 1,
+                      fontSize: 12,
+                      borderColor: "#006AFF",
+                      borderRadius: 15,
+                      paddingHorizontal: 20,
+                      fontFamily: "inter",
+                      overflow: "hidden",
+                      height: 35,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {showBooks ? 'Hide' : "Books"}
+                  </Text>
+                </TouchableOpacity> : null
+              }
+              {
+                role === 'instructor' && !imported && !showOptions && !showBooks ? <TouchableOpacity style={{
+                  borderRadius: 15,
+                  backgroundColor: "white",
+                }}
+                  onPress={() => {
+                    if (isQuiz) {
+                      clearAll()
+                      return
+                    }
+                    setIsQuiz(true);
+                    setSubmission(true);
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: "#006AFF",
+                      // borderWidth: 1,
                       fontSize: 12,
                       borderColor: "#006AFF",
                       borderRadius: 15,
@@ -1070,7 +1102,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
                   </Text></TouchableOpacity> : null
               }
-              
               {
                 showOptions ? null :
                   <TouchableOpacity
@@ -1154,11 +1185,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                   />
                 )} */}
-                
+
               </View>
             </View>
           }
-          {!showOptions ? <FormulaGuide value={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation} /> : null}
+          {
+            !showOptions ? <FormulaGuide value={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation} />
+              : null
+          }
           <View
             style={{ paddingBottom: 100 }}
           >
@@ -1946,7 +1980,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         width: "100%",
                         borderRightWidth: 0,
                         borderColor: "#efefef",
-                        flexDirection: width < 1024 ? 'column' : 'row', 
+                        flexDirection: width < 1024 ? 'column' : 'row',
                         paddingTop: 40,
                         alignItems: width < 1024 ? 'flex-start' : 'center',
                         paddingBottom: 15,
@@ -2747,57 +2781,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           height={'100%'}
                         />
                       ) : (
-                        <View key={url} style={{ flex: 1, maxHeight: 800 }}>
-                          {/* <Webview key={url} url={url} /> */}
-                          <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
-                        </View>
+                          <View key={url} style={{ flex: 1, maxHeight: 800 }}>
+                            {/* <Webview key={url} url={url} /> */}
+                            <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
+                          </View>
                       )
                     ) : null}
-                    {/* <RichEditor
-              key={reloadEditorKey.toString()}
-              containerStyle={{
-                height,
-                backgroundColor: "#fff",
-                padding: 3,
-                paddingTop: 5,
-                paddingBottom: 10,
-                // borderRadius: 15,
-                display: isQuiz || imported ? "none" : "flex",
-              }}
-              ref={RichText}
-              style={{
-                width: "100%",
-                backgroundColor: "#fff",
-                // borderRadius: 15,
-                minHeight: 550,
-                display: isQuiz || imported ? "none" : "flex",
-                // borderTopWidth: 0.5,
-                // borderColor: "#1F1F1F",
-              }}
-              editorStyle={{
-                backgroundColor: "#fff",
-                placeholderColor: "#1F1F1F",
-                color: "#000000",
-                contentCSSText: "font-size: 14px;",
-              }}
-              initialContentHTML={cue}
-              onScroll={() => Keyboard.dismiss()}
-              placeholder={PreferredLanguageText("title")}
-              onChange={(text) => {
-                const modifedText = text.split("&amp;").join("&");
-                setCue(modifedText);
-              }}
-              onHeightChange={handleHeightChange}
-              onBlur={() => Keyboard.dismiss()}
-              allowFileAccess={true}
-              allowFileAccessFromFileURLs={true}
-              allowUniversalAccessFromFileURLs={true}
-              allowsFullscreenVideo={true}
-              allowsInlineMediaPlayback={true}
-              allowsLinkPreview={true}
-              allowsBackForwardNavigationGestures={true}
-            /> */}
-                    {isQuiz || imported ? null : <Editor
+            {
+              showBooks ? <Books/> : null
+            }
+                    {isQuiz || imported || showBooks? null : <Editor
                       onInit={(evt, editor) => editorRef.current = editor}
                       initialValue={cueDraft !== "" ? cueDraft : "<h2>Title</h2>"}
                       apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
@@ -2825,10 +2818,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         setup: (editor: any) => {
 
                           // const equationIcon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 48 60" style="enable-background:new 0 0 48 48;" xml:space="preserve"><g><path d="M45,2v2H20.8271484l-7.8447266,41.1875c-0.0830078,0.4335938-0.4404297,0.7617188-0.8789063,0.8076172   C12.0683594,45.9980469,12.0341797,46,12,46c-0.4003906,0-0.7666016-0.2402344-0.9228516-0.6152344L6.7265625,34.9433594   L3.78125,38.625l-1.5625-1.25l4-5c0.2207031-0.2753906,0.5654297-0.4189453,0.9208984-0.3652344   c0.3496094,0.0488281,0.6474609,0.2792969,0.7832031,0.6054688l3.71875,8.9238281L19.0175781,2.8125   C19.1074219,2.3408203,19.5195313,2,20,2H45z M27.7070313,21.7070313L33,16.4140625l5.2929688,5.2929688l1.4140625-1.4140625   L34.4140625,15l5.2929688-5.2929688l-1.4140625-1.4140625L33,13.5859375l-5.2929688-5.2929688l-1.4140625,1.4140625L31.5859375,15   l-5.2929688,5.2929688L27.7070313,21.7070313z M32.9546509,38.5549316l-5.1089478-8.0891113l-1.6914063,1.0683594   l5.6068115,8.8773804l-2.6019287,4.0474243l1.6816406,1.0820313l9-14l-1.6816406-1.0820313L32.9546509,38.5549316z M23,27h20v-2H23   V27z"/></g></svg>'
-                          
+
                           const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
                           editor.ui.registry.addIcon('formula', equationIcon)
-                          
+
                           editor.ui.registry.addButton("formula", {
                             icon: 'formula',
                             // text: "Upload File",
@@ -2851,7 +2844,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }
 
                               updateAfterFileImport(res.url, res.type);
-                              
+
                             }
                           })
                         },
