@@ -79,7 +79,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, []);
     const viewSchedule: any = React.useMemo(() => {
         return {
-            schedule: { type: 'week' },
+            schedule: { type: 'week', startTime: '05:00', endTime: '24:00', startDay: 1, endDay: 0 },
         };
     }, []);
     const viewCalendar: any = React.useMemo(() => {
@@ -463,6 +463,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setRecordMeeting(false);
                     setIsCreatingEvents(false);
                     setShowAddEvent(false)
+
+                    props.setTab('Agenda')
                 })
                 .catch(err => {
                     setIsCreatingEvents(false);
@@ -678,7 +680,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
                 setEditEvent(event)
-                props.setTab('Add')
+                setTab('Add')
                 // setShowAddEvent(true)
 
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
@@ -1676,6 +1678,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 // height={}
                                                                 onEventClick={onSelectEvent}
                                                                 renderEventContent={renderEventContent}
+                                                                star
                                                             /> : (
                                                                 tab === tabs[2] ?
                                                                     <Eventcalendar
