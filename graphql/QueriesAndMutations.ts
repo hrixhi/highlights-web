@@ -894,6 +894,14 @@ export const totalUnreadMessages = gql`
     }
   }
 `;
+
+export const totalInboxUnread = gql`
+  query($userId: String!) {
+    messageStatus {
+      totalInboxUnread(userId: $userId)
+    }
+  }
+`
 export const getMeetingStatus = gql`
   query($channelId: String!) {
     channel {

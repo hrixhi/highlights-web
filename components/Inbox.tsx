@@ -210,10 +210,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
-                                text = <TouchableOpacity style={{}}>
+                                text = <TouchableOpacity style={{ backgroundColor: '#006AFF', }}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
-                                        // backgroundColor: '#006AFF',
+                                        backgroundColor: '#006AFF',
                                         color: '#fff'
                                     }}
                                         onPress={() => {
@@ -869,6 +869,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         setChatImg("")
                                                         loadChats()
                                                         setIsChatGroup(false);
+
+                                                        props.refreshUnreadInbox()
                                                     }}
                                                     style={{
                                                         paddingRight: 15,
@@ -1270,13 +1272,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 }
                                                                             }}
                                                                             style={{
-                                                                                backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                                                backgroundColor: "#006AFF", borderRadius: 15, marginLeft: 15,
                                                                                 marginTop: 6,
                                                                             }}>
                                                                             <Text style={{
                                                                                 textAlign: "center",
                                                                                 lineHeight: 35,
-                                                                                color: '#006AFF',
+                                                                                color: 'white',
                                                                                 fontSize: 12,
                                                                                 borderWidth: 1,
                                                                                 borderColor: '#006AFF',
@@ -1565,6 +1567,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                                     chat.users[0] === userId ? chat.users[1] : chat.users[0]
                                                                                                     , chat._id)
                                                                                             }
+
+                                                                                            // props.refreshUnreadInbox()
                                                                                         }
                                                                                     }
                                                                                     style={{
