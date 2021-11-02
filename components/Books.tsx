@@ -71,22 +71,39 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 let fileName = matches[0].split('.pdf')[0]
                 fileName = fileName.split('"')[(fileName.split('"')).length - 1]
 
-                server.query({
-                    query: getS3LinkForArchive,
-                    variables: {
+                // server.query({
+                //     query: getS3LinkForArchive,
+                //     variables: {
+                //         url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
+                //         title: fileName
+                //     }
+                // }).then((res: any) => {
+                //     if (res.data && res.data.cue.getS3LinkForArchive) {
+
+                //         props.onUpload({
+                //             url: res.data.cue.getS3LinkForArchive,
+                //             title: selectedBook.title,
+                //             type: 'pdf'
+                //         })
+                //     }
+                // })
+
+                axios.post(`http://localhost:8081/uploadPdfToS3`,
+                    {
                         url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
                         title: fileName
-                    }
-                }).then((res: any) => {
-                    if (res.data && res.data.cue.getS3LinkForArchive) {
-
+                    },
+                ).then((res: any) => {
+                    if (res.data) {
+                        console.log("res.data", res.data)
                         props.onUpload({
-                            url: res.data.cue.getS3LinkForArchive,
+                            url: res.data,
                             title: selectedBook.title,
                             type: 'pdf'
                         })
                     }
                 })
+
                 
                 
             }
