@@ -1348,3 +1348,10 @@ export const getReleaseSubmissionStatus = gql`
     }
   }
 `
+export const retrievePDFFromArchive = gql`
+query($identifier: String!) {
+  cue {
+    retrievePDFFromArchive(identifier: $identifier)
+  }
+}
+`

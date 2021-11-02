@@ -1030,6 +1030,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               onPress={() => {
                 if (showOptions) {
                   setShowOptions(false)
+                } else if (showBooks) {
+                  setShowBooks(false)
                 } else {
                   props.closeModal()
                 }
@@ -1041,7 +1043,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
               {/* QUIZ BUTTON FOR INSTRUCTORS */}
               {
-                !imported && !showOptions && !isQuiz ? <TouchableOpacity style={{
+                !imported && !showOptions && !isQuiz && !showBooks ? <TouchableOpacity style={{
                   borderRadius: 15,
                   backgroundColor: "white",
                 }}
@@ -1065,7 +1067,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase",
                     }}
                   >
-                    {showBooks ? 'Hide' : "Books"}
+                    Browse Books
                   </Text>
                 </TouchableOpacity> : null
               }
@@ -1099,11 +1101,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase",
                     }}
                   >
-                    {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
+                    {isQuiz ? 'Create Document' : "Create Quiz"}
                   </Text></TouchableOpacity> : null
               }
               {
-                showOptions ? null :
+                showOptions || showBooks ? null :
                   <TouchableOpacity
                     onPress={async () => {
                       // Update editor initial value
@@ -1178,11 +1180,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* {isQuiz || imported ? null : (
                   <FileUpload
                     back={() => setShowImportOptions(false)}
-                    onUpload={(u: any, t: any) => {
+                    <onUpload={(u: any, t: any) => {
                       const obj = { url: u, type: t, title };
                       setCue(JSON.stringify(obj));
                       setShowImportOptions(false);
-                    }}
+                    }}>
                   />
                 )} */}
 
@@ -2781,16 +2783,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           height={'100%'}
                         />
                       ) : (
-                          <View key={url} style={{ flex: 1, maxHeight: 800 }}>
-                            {/* <Webview key={url} url={url} /> */}
-                            <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
-                          </View>
+                        <View key={url} style={{ flex: 1, maxHeight: 800 }}>
+                          {/* <Webview key={url} url={url} /> */}
+                          <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
+                        </View>
                       )
                     ) : null}
-            {
-              showBooks ? <Books/> : null
-            }
-                    {isQuiz || imported || showBooks? null : <Editor
+                    {
+                      showBooks ? <Books
+                        onUpload={(obj: any) => {
+                          setCue(JSON.stringify(obj));
+                          setShowImportOptions(false);
+                          setShowBooks(false)
+                        }}
+                      /> : null
+                    }
+                    {isQuiz || imported || showBooks ? null : <Editor
                       onInit={(evt, editor) => editorRef.current = editor}
                       initialValue={cueDraft !== "" ? cueDraft : "<h2>Title</h2>"}
                       apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
