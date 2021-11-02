@@ -2048,7 +2048,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}>
                   <Text style={op === option ? styles('').allGrayFill : styles('').all}>
                     {op === 'Classroom' ? (
-                      props.version === 'read' ? 'Library' : 'Workspace'
+                      version === 'read' ? 'Library' : 'Workspace'
                     ) : (
                       op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                     )}
@@ -2059,7 +2059,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                           width: 7,
                           height: 7,
-                          borderRadius: '100%',
+                          borderRadius: 7,
                           backgroundColor: '#f94144',
                           position: 'absolute',
                           top: -3,
