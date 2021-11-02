@@ -249,7 +249,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     WebViewer(
       {
         licenseKey: 'xswED5JutJBccg0DZhBM',
-        initialDoc: decodeURIComponent(url),
+        initialDoc: url,
       },
       RichText.current,
     ).then((instance) => {

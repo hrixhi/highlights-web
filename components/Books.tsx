@@ -88,16 +88,16 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 //     }
                 // })
 
-                axios.post(`http://localhost:8081/uploadPdfToS3`,
+                axios.post(`https://api.cuesapp.co/uploadPdfToS3`,
                     {
                         url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
-                        title: fileName
+                        title: selectedBook.title + '.pdf'
                     },
-                ).then((res: any) => {
-                    if (res.data) {
-                        console.log("res.data", res.data)
+                ).then((res2: any) => {
+                    if (res2.data) {
+                        console.log("res.data", res2.data)
                         props.onUpload({
-                            url: res.data,
+                            url: res2.data,
                             title: selectedBook.title,
                             type: 'pdf'
                         })
