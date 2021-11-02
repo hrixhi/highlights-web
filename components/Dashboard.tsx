@@ -873,42 +873,48 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         Meet
                     </Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        backgroundColor: '#efefef',
-                    }}
-                    onPress={() => {
-                        const temp = JSON.parse(JSON.stringify(indexMap))
-                        temp[key] = 2
-                        setIndexMap(temp)
-                    }}>
-                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                        <Ionicons name='videocam-outline' size={18} />
-                    </Text>
-                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                        Meet
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        backgroundColor: '#efefef',
-                    }}
-                    onPress={() => {
-                        const temp = JSON.parse(JSON.stringify(indexMap))
-                        temp[key] = 3
-                        setIndexMap(temp)
-                    }}>
-                    <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
-                        <Ionicons name='bar-chart-outline' size={18} />
-                    </Text>
-                    <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
-                        Scores
-                    </Text>
-                </TouchableOpacity>
+                {
+                    props.version !== 'read' ?
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column",
+                                backgroundColor: '#efefef',
+                            }}
+                            onPress={() => {
+                                const temp = JSON.parse(JSON.stringify(indexMap))
+                                temp[key] = 2
+                                setIndexMap(temp)
+                            }}>
+                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name='videocam-outline' size={18} />
+                            </Text>
+                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                                Meet
+                            </Text>
+                        </TouchableOpacity> : null
+                }
+                {
+                    props.version !== 'read' ?
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column",
+                                backgroundColor: '#efefef',
+                            }}
+                            onPress={() => {
+                                const temp = JSON.parse(JSON.stringify(indexMap))
+                                temp[key] = 3
+                                setIndexMap(temp)
+                            }}>
+                            <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name='bar-chart-outline' size={18} />
+                            </Text>
+                            <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
+                                Scores
+                            </Text>
+                        </TouchableOpacity> : null
+                }
                 {
                     key.split('-SPLIT-')[2] === userId ?
                         <TouchableOpacity
@@ -1583,17 +1589,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                 {
                                                     op === "Inbox" && props.unreadMessages > 0 ?
-                                                    <View
-                                                        style={{
-                                                        width: 7,
-                                                        height: 7,
-                                                        borderRadius: '100%',
-                                                        backgroundColor: '#f94144',
-                                                        position: 'absolute',
-                                                        top: -3,
-                                                        right: 5
-                                                        }}
-                                                    /> : null
+                                                        <View
+                                                            style={{
+                                                                width: 7,
+                                                                height: 7,
+                                                                borderRadius: '100%',
+                                                                backgroundColor: '#f94144',
+                                                                position: 'absolute',
+                                                                top: -3,
+                                                                right: 5
+                                                            }}
+                                                        /> : null
                                                 }
                                             </TouchableOpacity>
                                         })
@@ -1793,6 +1799,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 props.option === 'To Do' ?
                                     <CalendarX
                                         tab={props.tab}
+                                        version={props.version}
                                         setTab={(val: any) => props.setTab(val)}
                                         filterStart={filterStart}
                                         filterEnd={filterEnd}

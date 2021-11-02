@@ -38,6 +38,10 @@ import VerticalBar from '../components/VerticalBar';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+
+  // read/learn
+  const version = 'learn'
+
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
 
@@ -107,7 +111,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('To Do')
-  const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Channels', 'Settings'])
+  const [options] = useState(
+    version === 'read' ? ['To Do', 'Classroom', 'Browse', 'Channels', 'Settings'] : ['To Do', 'Classroom', 'Inbox', 'Channels', 'Settings']
+  )
 
   const [navOptions] = useState([
     {
@@ -243,7 +249,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         }
       }
-    ) ()
+    )()
   }, [])
 
 
@@ -314,7 +320,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [channelId])
 
   const refreshUnreadInbox = useCallback(async () => {
-    
+
     const u = await AsyncStorage.getItem('user')
     if (u) {
       const user = JSON.parse(u)
@@ -373,7 +379,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setUnreadMessages(res.data.messageStatus.totalInboxUnread)
       }
     })
-      .catch(err => console.log(err)) 
+      .catch(err => console.log(err))
   }, [])
 
 
@@ -1316,6 +1322,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // />
     //   :
     (modalType === 'Update' ? <Update
+      version={version}
       key={cueId.toString()}
       customCategories={customCategories}
       cue={cues[updateModalKey][updateModalIndex]}
@@ -1671,6 +1678,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <ActivityIndicator color={'#1F1F1F'} />
                 </View> :
                 <Dashboard
+                  version={version}
                   setTab={(val: any) => setTab(val)}
                   tab={tab}
                   setShowCreate={(val: any) => setShowCreate(val)}

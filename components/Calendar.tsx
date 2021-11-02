@@ -1386,35 +1386,38 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Planner
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            backgroundColor: '#efefef'
-                        }}
-                        onPress={() => {
-                            setTab('Activity')
-                            // const temp = JSON.parse(JSON.stringify(indexMap))
-                            // temp[key] = 3
-                            // setIndexMap(temp)
-                        }}>
-                        {/* Alert  */}
-                        <View style={{ 
-                            width: 7,
-                            height: 7,
-                            borderRadius: '100%',
-                            backgroundColor: '#f94144',
-                            position: 'absolute',
-                            top: -3,
-                            right: 5
-                        }} />
-                        <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='notifications-outline' size={18} />
-                        </Text>
-                        <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                            Alerts
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        props.version === 'read' ? null :
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: "center",
+                                    flexDirection: "column",
+                                    backgroundColor: '#efefef'
+                                }}
+                                onPress={() => {
+                                    setTab('Activity')
+                                    // const temp = JSON.parse(JSON.stringify(indexMap))
+                                    // temp[key] = 3
+                                    // setIndexMap(temp)
+                                }}>
+                                {/* Alert  */}
+                                <View style={{
+                                    width: 7,
+                                    height: 7,
+                                    borderRadius: '100%',
+                                    backgroundColor: '#f94144',
+                                    position: 'absolute',
+                                    top: -3,
+                                    right: 5
+                                }} />
+                                <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
+                                    <Ionicons name='notifications-outline' size={18} />
+                                </Text>
+                                <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
+                                    Alerts
+                                </Text>
+                            </TouchableOpacity>
+                    }
                 </View> : null
             }
             {/* {
