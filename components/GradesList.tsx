@@ -459,6 +459,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         placeholderTextColor={'#1F1F1F'}
                                     /> 
                                 </View> : null} */}
+                                {props.isOwner ? <View style={styles.col} key={'0,0'} /> : null}
                                 {
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>

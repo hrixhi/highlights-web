@@ -79,7 +79,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, []);
     const viewSchedule: any = React.useMemo(() => {
         return {
-            schedule: { type: 'week' },
+            schedule: { type: 'week', startTime: '05:00', endTime: '24:00', startDay: 1, endDay: 0 },
         };
     }, []);
     const viewCalendar: any = React.useMemo(() => {
@@ -463,6 +463,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setRecordMeeting(false);
                     setIsCreatingEvents(false);
                     setShowAddEvent(false)
+
+                    props.setTab('Agenda')
                 })
                 .catch(err => {
                     setIsCreatingEvents(false);
@@ -678,7 +680,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
                 setEditEvent(event)
-                props.setTab('Add')
+                setTab('Add')
                 // setShowAddEvent(true)
 
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
@@ -1396,6 +1398,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             // temp[key] = 3
                             // setIndexMap(temp)
                         }}>
+                        {/* Alert  */}
+                        <View style={{ 
+                            width: 7,
+                            height: 7,
+                            borderRadius: '100%',
+                            backgroundColor: '#f94144',
+                            position: 'absolute',
+                            top: -3,
+                            right: 5
+                        }} />
                         <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
                             <Ionicons name='notifications-outline' size={18} />
                         </Text>
@@ -1676,6 +1688,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 // height={}
                                                                 onEventClick={onSelectEvent}
                                                                 renderEventContent={renderEventContent}
+                                                                star
                                                             /> : (
                                                                 tab === tabs[2] ?
                                                                     <Eventcalendar

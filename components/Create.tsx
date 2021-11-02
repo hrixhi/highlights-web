@@ -254,12 +254,83 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       RichText.current,
     ).then((instance) => {
       const { documentViewer } = instance.Core;
+
+      if (!documentViewer) return;
       // you can now call WebViewer APIs here...
       documentViewer.addEventListener('documentLoaded', () => {
         // perform document operations
       });
     });
-  }, [url, RichText, imported, type]);
+  }, [url, RichText, imported, type, showOptions]);
+
+  const isQuizValid = useCallback(() => {
+    let error = false;
+    if (problems.length === 0) {
+      Alert(enterOneProblemAlert);
+      return;
+    }
+    if (timer) {
+      if (
+        duration.hours === 0 &&
+        duration.minutes === 0 &&
+        duration.seconds === 0
+      ) {
+        Alert(invalidDurationAlert);
+        return;
+      }
+    }
+    problems.map((problem) => {
+      if (problem.question === "" || problem.question === "formula:") {
+        Alert(fillMissingProblemsAlert);
+        error = true;
+      }
+      if (problem.points === "" || Number.isNaN(Number(problem.points))) {
+        Alert(enterNumericPointsAlert);
+        error = true;
+      }
+      let optionFound = false;
+
+      // If MCQ then > 2 options
+      if (!problem.questionType && problem.options.length < 2) {
+        Alert("Problem must have at least 2 options");
+        error = true;
+      }
+
+      // If MCQ, check if any options repeat:
+      if (!problem.questionType || problem.questionType === "trueFalse") {
+        const keys: any = {};
+
+        problem.options.map((option: any) => {
+          if (option.option === "" || option.option === "formula:") {
+            Alert(fillMissingOptionsAlert);
+            error = true;
+          }
+
+          if (option.option in keys) {
+            Alert("Option repeated in a question");
+            error = true;
+          }
+
+          if (option.isCorrect) {
+            optionFound = true;
+          }
+
+          keys[option.option] = 1;
+        });
+
+        if (!optionFound) {
+          Alert(eachOptionOneCorrectAlert);
+          error = true;
+        }
+      }
+    });
+    if (error) {
+      // Alert
+      return false;
+    } else {
+      return true;
+    }
+  }, [duration, problems])
 
   const createNewQuiz = useCallback(() => {
     setIsSubmitting(true);
@@ -1108,6 +1179,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 showOptions || showBooks ? null :
                   <TouchableOpacity
                     onPress={async () => {
+
+                      // Validation for quiz before next
+                      if (isQuiz) {
+                        const validateQuiz = isQuizValid()
+
+                        if (!validateQuiz) return false;
+                      }
+
                       // Update editor initial value
                       const h = await AsyncStorage.getItem("cueDraft");
                       if (h !== null) {
@@ -2783,7 +2862,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           height={'100%'}
                         />
                       ) : (
-                        <View key={url} style={{ flex: 1, maxHeight: 800 }}>
+                        <View key={url + JSON.stringify(showOptions)} style={{ flex: 1, maxHeight: 800 }}>
                           {/* <Webview key={url} url={url} /> */}
                           <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
                         </View>

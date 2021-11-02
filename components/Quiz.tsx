@@ -259,7 +259,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                     backgroundColor: "white",
                     // width: "100%",
-                    height: 40,
                     // marginRight: 10,
                     flexDirection: 'column',
                     alignItems: 'flex-end',

@@ -1580,6 +1580,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                                                     )}
                                                 </Text>
+
+                                                {
+                                                    op === "Inbox" && props.unreadMessages > 0 ?
+                                                    <View
+                                                        style={{
+                                                        width: 7,
+                                                        height: 7,
+                                                        borderRadius: '100%',
+                                                        backgroundColor: '#f94144',
+                                                        position: 'absolute',
+                                                        top: -3,
+                                                        right: 5
+                                                        }}
+                                                    /> : null
+                                                }
                                             </TouchableOpacity>
                                         })
                                     }
@@ -1798,6 +1813,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         showDirectory={props.showDirectory}
                                         setShowDirectory={(val: any) => props.setShowDirectory(val)}
                                         subscriptions={props.subscriptions}
+                                        refreshUnreadInbox={props.refreshUnreadInbox}
                                     /> : null
                             }
                         </View> : searchResults

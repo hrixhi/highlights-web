@@ -159,8 +159,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submissionDraft, setSubmissionDraft] = useState('')
     const [updatingCueContent, setUpdatingCueContent] = useState(false);
     const [updatingCueDetails, setUpdatingCueDetails] = useState(false);
-    // const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
-    const [viewSubmission, setViewSubmission] = useState(true);
+    const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
+    // const [viewSubmission, setViewSubmission] = useState(true);
     const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([])
     const [remainingAttempts, setRemainingAttempts] = useState<any>(null)
@@ -1989,26 +1989,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 }
             ])
+            props.setSave(false);
         }
     }, [props.save, handleUpdateContent, handleUpdateDetails, props.channelOwner])
 
     useEffect(() => {
         if (props.del) {
-            Alert("Delete?", "", [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                    onPress: () => {
-                        return;
-                    }
-                },
-                {
-                    text: "Yes",
-                    onPress: () => {
-                        handleDelete()
-                    }
-                }
-            ])
+            handleDelete()
+            props.setDelete(false)
         }
     }, [props.del, handleDelete])
 
@@ -4948,7 +4936,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 ) : null}
                             </View>
                             <View style={{ backgroundColor: '#fff', flexDirection: 'row', marginBottom: 5 }}>
-                                {(!props.showOriginal && !submissionImported && !props.cue.graded && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil))
+                                {/* {(!props.showOriginal && !submissionImported && !props.cue.graded && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil))
                                     || (props.showOriginal && (isOwner || !props.cue.channelId) && !imported && !isQuiz)
                                     ? (
                                         <Text
@@ -4964,8 +4952,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>
                                             {PreferredLanguageText("formula")}
                                         </Text>
-                                    ) : null}
-                                {!props.showOriginal &&
+                                    ) : null} */}
+                                {/* {!props.showOriginal &&
                                     props.cue.submission &&
                                     currentDate < deadline &&
                                     !submissionImported &&
@@ -5019,7 +5007,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 }}
                                             />
                                         )
-                                )}
+                                )} */}
                             </View>
                         </View>
                 }

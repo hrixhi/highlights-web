@@ -19,7 +19,7 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, getMeetingStatus } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, totalInboxUnread, getMeetingStatus } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
@@ -84,6 +84,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [meetingOn, setMeetingOn] = useState(false)
+
+  console.log("Unread messages", unreadMessages);
 
   // Login Validation
   const [emailValidError, setEmailValidError] = useState("");
@@ -218,6 +220,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     )()
   }, [])
 
+  useEffect(() => {
+    (
+      async () => {
+        const u = await AsyncStorage.getItem('user')
+
+        if (u) {
+          const user = JSON.parse(u)
+
+          const server = fetchAPI('')
+
+          server.query({
+            query: totalInboxUnread,
+            variables: {
+              userId: user._id,
+            }
+          }).then(res => {
+            if (res.data.messageStatus.totalInboxUnread) {
+              setUnreadMessages(res.data.messageStatus.totalInboxUnread)
+            }
+          })
+
+        }
+      }
+    ) ()
+  }, [])
+
 
   useEffect(() => {
 
@@ -285,6 +313,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   }, [channelId])
 
+  const refreshUnreadInbox = useCallback(async () => {
+    
+    const u = await AsyncStorage.getItem('user')
+    if (u) {
+      const user = JSON.parse(u)
+      updateInboxCount(user._id)
+    }
+
+  }, [])
+
+
+
   const refreshMeetingStatus = useCallback(async () => {
     if (channelId !== '') {
       const server = fetchAPI('')
@@ -319,6 +359,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     })
       .catch(err => console.log(err))
   }, [channelId])
+
+  const updateInboxCount = useCallback((userId) => {
+    const server = fetchAPI('')
+    server.query({
+      query: totalInboxUnread,
+      variables: {
+        userId,
+        channelId
+      }
+    }).then(res => {
+      if (res.data.messageStatus.totalInboxUnread !== undefined && res.data.messageStatus.totalInboxUnread !== null) {
+        setUnreadMessages(res.data.messageStatus.totalInboxUnread)
+      }
+    })
+      .catch(err => console.log(err)) 
+  }, [])
 
 
 
@@ -1719,6 +1775,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setPageNumber(0)
                     loadData(true)
                   }}
+                  unreadMessages={unreadMessages}
+                  refreshUnreadInbox={refreshUnreadInbox}
                 />
             }
           </View>
@@ -1951,6 +2009,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                     )}
                   </Text>
+                  {
+                    op === "Inbox" && unreadMessages > 0 ?
+                      <View
+                        style={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: '100%',
+                          backgroundColor: '#f94144',
+                          position: 'absolute',
+                          top: -3,
+                          right: 5
+                        }}
+                      /> : null
+                  }
                 </TouchableOpacity>
               })
             }
