@@ -366,7 +366,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
-                    initialDoc: decodeURIComponent(url),
+                    initialDoc: (url),
                 },
                 submissionViewerRef.current,
             ).then(async (instance) => {
@@ -2029,7 +2029,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
-                    initialDoc: decodeURIComponent(url),
+                    initialDoc: (url),
                 },
                 RichText.current,
             ).then(async (instance: any) => {
@@ -2141,7 +2141,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
-                    initialDoc: decodeURIComponent(submissionUrl),
+                    initialDoc: (submissionUrl),
                 },
                 RichText.current,
             ).then(async (instance: any) => {
