@@ -472,7 +472,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             onPress={() => handleSub(channel.name)}
                                                         >
                                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#006AFF' }} ellipsizeMode='tail'>
-                                                                <Ionicons name='enter-outline' size={18} />
+                                                                <Ionicons name='duplicate-outline' size={18} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>

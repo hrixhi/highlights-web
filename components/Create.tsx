@@ -109,7 +109,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   // By default one day after deadline
   const [availableUntil, setAvailableUntil] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 48));
 
-  const [showBooks, setShowBooks] = useState(false)
+  const [showBooks, setShowBooks] = useState(props.option === 'Browse' ? true : false)
 
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
@@ -1093,28 +1093,30 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{
-                paddingTop: 10,
-                marginRight: 20
-              }}
-              onPress={() => {
-                if (showOptions) {
-                  setShowOptions(false)
-                } else if (showBooks) {
-                  setShowBooks(false)
-                } else {
-                  props.closeModal()
-                }
-              }}>
-              <Text>
-                <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
-              </Text>
-            </TouchableOpacity>
+            {
+              props.option === 'Browse' && !showOptions ? null : <TouchableOpacity
+                style={{
+                  paddingTop: 10,
+                  marginRight: 20
+                }}
+                onPress={() => {
+                  if (showOptions) {
+                    setShowOptions(false)
+                  } else if (showBooks) {
+                    setShowBooks(false)
+                  } else {
+                    props.closeModal()
+                  }
+                }}>
+                <Text>
+                  <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
+                </Text>
+              </TouchableOpacity>
+            }
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
               {/* QUIZ BUTTON FOR INSTRUCTORS */}
               {
-                !imported && !showOptions && !isQuiz && !showBooks ? <TouchableOpacity style={{
+                !imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' ? <TouchableOpacity style={{
                   borderRadius: 15,
                   backgroundColor: "white",
                 }}
@@ -1143,7 +1145,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </TouchableOpacity> : null
               }
               {
-                role === 'instructor' && !imported && !showOptions && !showBooks ? <TouchableOpacity style={{
+                role === 'instructor' && !imported && !showOptions && !showBooks && props.version !== 'read' ? <TouchableOpacity style={{
                   borderRadius: 15,
                   backgroundColor: "white",
                 }}
@@ -1318,7 +1320,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               fontFamily: 'Inter'
                             }}
                           >
-                            Workspace
+                            Shelf
                           </Text>
                         </View>
                         <View

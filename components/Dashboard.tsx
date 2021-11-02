@@ -838,7 +838,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Ionicons name='library-outline' size={18} style={{ marginBottom: 5 }} />
                     </Text>
                     <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                        Library
+                        {props.version === 'read' ? 'Read' : 'Library'}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -932,7 +932,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons name='build-outline' size={18} />
                             </Text>
                             <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                                Settings
+                                {props.version === 'read' ? 'Edit' : 'Settings'}
                             </Text>
                         </TouchableOpacity>
                         : null
@@ -1579,10 +1579,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         setFilterByChannel('')
                                                         setActivityChannelId('')
                                                     }
+                                                    if (op === 'Classroom') {
+                                                        props.closeCreateModal()
+                                                    }
                                                     props.setOption(op)
+                                                    if (op === 'Browse') {
+                                                        props.openCreate()
+                                                    }
                                                 }}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
-                                                    {op === 'Classroom' ? 'Workspace' : (
+                                                    {op === 'Classroom' ? (props.version === 'read' ? 'Library' : 'Workspace') : (
                                                         op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                                                     )}
                                                 </Text>
@@ -1593,7 +1599,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             style={{
                                                                 width: 7,
                                                                 height: 7,
-                                                                borderRadius: '100%',
+                                                                borderRadius: 7,
                                                                 backgroundColor: '#f94144',
                                                                 position: 'absolute',
                                                                 top: -3,
@@ -1719,7 +1725,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
                                         color: '#000000'
                                     }}>
-                                        &nbsp;WORKSPACES
+                                        &nbsp;{props.version !== 'read' ? "WORKSPACES" : 'SHELVES'}
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
@@ -1754,11 +1760,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View>
             {
                 searchTerm === '' ?
-                    props.modalType === "Create" && props.option === 'Classroom' ? <Create
+                    props.modalType === "Create" && (props.option === 'Classroom' || props.option === 'Browse') ? <Create
                         key={JSON.stringify(props.customCategories)}
                         customCategories={props.customCategories}
                         closeModal={() => props.closeCreateModal()}
                         closeOnCreate={() => props.closeOnCreate()}
+                        option={props.option}
+                        version={props.version}
                     />
                         :
                         <View style={{

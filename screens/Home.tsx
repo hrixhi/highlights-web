@@ -40,7 +40,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
   // read/learn
-  const version = 'learn'
+  const version = 'read'
 
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
@@ -1707,6 +1707,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   reloadData={() => {
                     loadDataFromCloud()
                   }}
+                  openCreate={() => {
+                    setCueId('')
+                    setModalType('')
+                    setCreatedBy('')
+                    setChannelFilterChoice('All')
+                    if (modalType === 'Update') {
+                      fadeAnimation.setValue(0)
+                      if (modalType === 'Update' && filterChoice === 'All-Channels') {
+                        setChannelId('')
+                      }
+                      loadData(true)
+                    }
+                    openModal('Create')
+                    // setShowHome(false)
+                    setMenuCollapsed(true)
+                  }}
                   cues={dateFilteredCues}
                   handleFilterChange={(choice: any) => handleFilterChange(choice)}
                   setChannelId={(id: string) => setChannelId(id)}
@@ -2011,9 +2027,29 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     //   setActivityChannelId('')
                     // }
                     setOption(op)
+                    if (op === 'Browse') {
+                      // open create
+                      setCueId('')
+                      setModalType('')
+                      setCreatedBy('')
+                      setChannelFilterChoice('All')
+                      if (modalType === 'Update') {
+                        fadeAnimation.setValue(0)
+                        if (modalType === 'Update' && filterChoice === 'All-Channels') {
+                          setChannelId('')
+                        }
+                        loadData(true)
+                      }
+
+                      openModal('Create')
+                      // setShowHome(false)
+                      setMenuCollapsed(true)
+                    }
                   }}>
                   <Text style={op === option ? styles('').allGrayFill : styles('').all}>
-                    {op === 'Classroom' ? 'Workspace' : (
+                    {op === 'Classroom' ? (
+                      props.version === 'read' ? 'Library' : 'Workspace'
+                    ) : (
                       op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                     )}
                   </Text>
