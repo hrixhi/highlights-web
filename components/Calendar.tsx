@@ -1039,7 +1039,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return (<View
             style={{
                 flex: 1,
-                backgroundColor: "#efefef",
+                backgroundColor: "white",
                 justifyContent: "center",
                 display: "flex",
                 paddingTop: 30
@@ -1049,7 +1049,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 (date > new Date(start) && date < new Date(end)) ?
                     <TouchableOpacity
                         style={{
-                            backgroundColor: "#efefef",
+                            backgroundColor: "white",
                             overflow: "hidden",
                             height: 35,
                             marginTop: 15,
@@ -1102,7 +1102,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
             <TouchableOpacity
                 style={{
-                    backgroundColor: "#efefef",
+                    backgroundColor: "white",
                     overflow: "hidden",
                     height: 35,
                     marginTop: 15,
@@ -1146,7 +1146,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
-                    backgroundColor: "#efefef",
+                    backgroundColor: "white",
                     overflow: "hidden",
                     height: 35,
                     marginTop: 15,
@@ -1176,13 +1176,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#000000",
+                        color: "#006AFF",
+                        borderWidth: 1,
+                        borderColor: '#006AFF',
+                        borderRadius: 15,
                         fontSize: 12,
-                        backgroundColor: "#efefef",
+                        backgroundColor: "white",
                         paddingHorizontal: 20,
                         fontFamily: "inter",
                         height: 35,
-                        borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
                     {isDeletingEvents ? "DELETING..." : "DELETE"}
@@ -1191,7 +1193,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             {recurringId && recurringId !== "" ? <TouchableOpacity
                 style={{
-                    backgroundColor: "#efefef",
+                    backgroundColor: "white",
                     overflow: "hidden",
                     height: 35,
                     marginTop: 15,
@@ -1221,13 +1223,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#000000",
+                        color: "#006AFF",
+                        borderWidth: 1,
+                        borderColor: '#006AFF',
+                        borderRadius: 15,
                         fontSize: 12,
-                        backgroundColor: "#efefef",
+                        backgroundColor: "white",
                         paddingHorizontal: 20,
                         fontFamily: "inter",
                         height: 35,
-                        borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
                     {isDeletingEvents ? "DELETING..." : "DELETE ALL"}
@@ -1309,6 +1313,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => {
                             setEditEvent(null)
                             props.setTab(tabs[0])
+                            setTab(tabs[0])
                         }}
                         style={{
                             paddingHorizontal: 20,
@@ -1399,7 +1404,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             // setIndexMap(temp)
                         }}>
                         {/* Alert  */}
-                        <View style={{ 
+                        {unreadCount !== 0 ? <View style={{ 
                             width: 7,
                             height: 7,
                             borderRadius: '100%',
@@ -1407,7 +1412,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             position: 'absolute',
                             top: -3,
                             right: 5
-                        }} />
+                        }} /> : null}
                         <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
                             <Ionicons name='notifications-outline' size={18} />
                         </Text>

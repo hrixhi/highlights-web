@@ -1534,6 +1534,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     }}
                                                                 >
                                                                     {
+                                                                        sortChatsByLastMessage.length === 0 ? 
+                                                                            <View style={{ backgroundColor: 'white' }}>
+                                                                                <Text style={{ width: '100%', color: '#000', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                                                                                    No conversations.
+                                                                                </Text>
+                                                                            </View> 
+                                                                            : null
+                                                                    }
+                                                                    {
                                                                         sortChatsByLastMessage.map((chat: any, index) => {
 
                                                                             console.log("Chat", chat);

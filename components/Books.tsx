@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Popup } from '@mobiscroll/react5'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { retrievePDFFromArchive } from '../graphql/QueriesAndMutations';
+import { retrievePDFFromArchive, getS3LinkForArchive } from '../graphql/QueriesAndMutations';
 
 const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -31,7 +31,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             setLoading(true)
             setSearchComplete(false)
             const url = 'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads&q='
-            const response = await axios.get(url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=5000')
+            const response = await axios.get(url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=100')
             const items = response.data.items
             const filteredItems = items.filter((item: any) => {
                 if (item.mediatype !== 'texts') {
@@ -70,11 +70,25 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 console.log(matches)
                 let fileName = matches[0].split('.pdf')[0]
                 fileName = fileName.split('"')[(fileName.split('"')).length - 1]
-                props.onUpload({
-                    url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
-                    title: selectedBook.title,
-                    type: 'pdf'
+
+                server.query({
+                    query: getS3LinkForArchive,
+                    variables: {
+                        url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
+                        title: fileName
+                    }
+                }).then((res: any) => {
+                    if (res.data && res.data.cue.getS3LinkForArchive) {
+
+                        props.onUpload({
+                            url: res.data.cue.getS3LinkForArchive,
+                            title: selectedBook.title,
+                            type: 'pdf'
+                        })
+                    }
                 })
+                
+                
             }
         })
     }, [selectedBook])

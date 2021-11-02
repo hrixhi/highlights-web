@@ -159,7 +159,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submissionDraft, setSubmissionDraft] = useState('')
     const [updatingCueContent, setUpdatingCueContent] = useState(false);
     const [updatingCueDetails, setUpdatingCueDetails] = useState(false);
-    const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
+    // Show submission by default 
+    const [viewSubmission, setViewSubmission] = useState((props.cue.submittedAt !== null && props.cue.submittedAt !== undefined) || props.cue.graded && props.cue.releaseSubmission);
     // const [viewSubmission, setViewSubmission] = useState(true);
     const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([])

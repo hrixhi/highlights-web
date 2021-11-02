@@ -1363,3 +1363,11 @@ query($identifier: String!) {
   }
 }
 `
+
+export const getS3LinkForArchive = gql`
+query($url: String!, $title: String!) {
+  cue {
+    uploadPDFToS3(url: $url, title: $title)
+  }
+}
+`
