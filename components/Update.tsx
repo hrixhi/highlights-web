@@ -1962,7 +1962,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </TouchableOpacity>
 
                     {/* CUE TABS IF THE DIMENSIONS IS BIGGER THAN 1024 */}
-                    {Dimensions.get('window').width > 1024 && !createNewFolder && !editFolder ? options : null}
+                    {Dimensions.get('window').width >= 1024 && !createNewFolder && !editFolder ? options : null}
 
                     {/* Render Folder Title input if Create / Edit */}
 

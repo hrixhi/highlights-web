@@ -662,7 +662,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     fontFamily: 'inter',
                                     paddingBottom: 10
                                 }}>
-                                    {option}
+                                    {option === "Classroom" ? "Content" : option}
                                 </Text>
                                 <ScrollView>
                                     {results[option].map((obj: any, index: any) => {
@@ -1407,6 +1407,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         }}>
                                                                             <View style={{
                                                                                 backgroundColor: '#efefef',
+                                                                                paddingLeft: 5,
                                                                                 // marginBottom: 10
                                                                             }}>
                                                                                 <Text style={{

@@ -3,7 +3,7 @@ import { ActivityIndicator, Dimensions, ScrollView, StyleSheet } from 'react-nat
 import { Text, TouchableOpacity, View } from '../components/Themed';
 import _ from 'lodash'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { findThreadsByUserId, getAllPastDates, getAttendancesByUser, getPerformanceReport } from '../graphql/QueriesAndMutations';
+import { findThreadsByUserId, getAllPastDates, getAttendancesByUser, getPerformanceReport  } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import Grades from './Grades';
@@ -258,154 +258,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 channelId={props.channelId}
                 channelCreatedBy={props.channelCreatedBy}
                 channelColor={props.colorCode}
-            /> : (
-                props.isEditor ? null :
-                    <View style={{
-                        maxWidth: 500, alignSelf: 'center', width: '100%', backgroundColor: 'white', borderLeftWidth: 3, borderLeftColor: props.colorCode, paddingVertical: 20, paddingHorizontal: 40, borderRadius: 1, shadowOffset: {
-                            width: 2,
-                            height: 2,
-                        },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 10,
-                        zIndex: 5000000
-                    }}>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 17, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Meetings
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                    {attendance[props.channelId] ? attendance[props.channelId].length : 0} / {date[props.channelId] ? date[props.channelId].length : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 17, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Posts
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                    {thread[props.channelId] ? thread[props.channelId].length : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 17, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Assessments
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].totalAssessments : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 14, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Late
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].lateAssessments : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 14, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Graded
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].gradedAssessments : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 14, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Submitted
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10, }}>
-                                <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].submittedAssessments : 0}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 17, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Grade
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].score : 0}%
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: 'white', }}>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{
-                                    flex: 1, flexDirection: 'row',
-                                    color: '#1F1F1F',
-                                    fontSize: 17, lineHeight: 25,
-                                    fontFamily: 'inter'
-                                }} ellipsizeMode='tail'>
-                                    Progress
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                    {score[props.channelId] ? score[props.channelId].total : 0}%
-                                </Text>
-                            </View>
-                        </View>
-                    </View>)
+            /> : null
         }
         {
             props.activeTab === 'attendance' ? null :
@@ -419,6 +272,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                     activeTab={props.activeTab}
                     channelColor={props.colorCode}
+                    report={scores}
+                    attendance={attendance}
+                    thread={thread}
+                    date={date}
                 />
         }
     </View>

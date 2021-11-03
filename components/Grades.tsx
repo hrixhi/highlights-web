@@ -12,6 +12,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { Ionicons } from '@expo/vector-icons';
 
 
+
 const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [modalAnimation] = useState(new Animated.Value(1))
@@ -290,7 +291,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </View>
                         :
                         <GradesList
-                            key={JSON.stringify(scores) + JSON.stringify(props.activeTab)}
+                            key={JSON.stringify(scores) + JSON.stringify(props.activeTab) + JSON.stringify(props.report)}
                             scores={scores}
                             cues={cues}
                             channelName={props.filterChoice}
@@ -309,6 +310,10 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             openCueFromGrades={props.openCueFromGrades}
                             activeTab={props.activeTab}
                             channelColor={props.channelColor}
+                            report={props.report}
+                            attendance={props.attendance}
+                            thread={props.thread}
+                            date={props.date}
                         />
                 }
             </View>

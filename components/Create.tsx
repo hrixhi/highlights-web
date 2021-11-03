@@ -1127,16 +1127,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       textAlign: "center",
-                      lineHeight: 35,
+                      lineHeight: 28,
                       color: "#006AFF",
                       // borderWidth: 1,
+                      marginTop: 2,
                       fontSize: 12,
                       borderColor: "#006AFF",
                       borderRadius: 15,
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
-                      height: 35,
+                      height: 30,
                       textTransform: "uppercase",
                     }}
                   >
@@ -1161,16 +1162,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       textAlign: "center",
-                      lineHeight: 35,
+                      lineHeight: 28,
                       color: "#006AFF",
                       // borderWidth: 1,
+                      marginTop: 2,
                       fontSize: 12,
                       borderColor: "#006AFF",
                       borderRadius: 15,
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
-                      height: 35,
+                      height: 30,
                       textTransform: "uppercase",
                     }}
                   >
@@ -1201,22 +1203,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       borderRadius: 15,
                       backgroundColor: "white",
-                      marginLeft: 15
+                      // marginLeft: 15
                     }}
                   >
                     <Text
                       style={{
                         textAlign: "center",
-                        lineHeight: 35,
+                        lineHeight: 28,
                         color: "#006AFF",
-                        borderWidth: 1,
+                        // borderWidth: 1,
+                        marginTop: 2,
                         fontSize: 12,
                         borderColor: "#006AFF",
                         borderRadius: 15,
-                        paddingHorizontal: 20,
+                        paddingLeft: 20,
                         fontFamily: "inter",
                         overflow: "hidden",
-                        height: 35,
+                        height: 30,
                         textTransform: "uppercase",
                       }}
                     >
