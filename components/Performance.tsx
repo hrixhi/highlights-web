@@ -272,7 +272,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                     activeTab={props.activeTab}
                     channelColor={props.colorCode}
-                    report={scores}
+                    report={score}
                     attendance={attendance}
                     thread={thread}
                     date={date}
