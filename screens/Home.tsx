@@ -40,7 +40,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
   // read/learn
-  const version = 'learn'
+  const version = 'read'
 
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
@@ -2021,11 +2021,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     backgroundColor: '#000000'
                   }}
                   onPress={() => {
-                    // if (op === 'To Do') {
-                    //   setFilterEventsType('')
-                    //   setFilterByChannel('')
-                    //   setActivityChannelId('')
-                    // }
                     setOption(op)
                     if (op === 'Browse') {
                       // open create
@@ -2040,10 +2035,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
                         loadData(true)
                       }
-
                       openModal('Create')
                       // setShowHome(false)
                       setMenuCollapsed(true)
+                    }
+                    if (op === 'Classroom') {
+                      setModalType('')
+                      setPageNumber(0)
                     }
                   }}>
                   <Text style={op === option ? styles('').allGrayFill : styles('').all}>

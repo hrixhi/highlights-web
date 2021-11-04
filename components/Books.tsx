@@ -31,7 +31,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             setLoading(true)
             setSearchComplete(false)
             const url = 'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads&q='
-            const response = await axios.get(url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=100')
+            const response = await axios.get(url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=2000')
             const items = response.data.items
             const filteredItems = items.filter((item: any) => {
                 if (item.mediatype !== 'texts') {

@@ -1855,7 +1855,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     // fontFamily: 'inter',
                                                                                                     color: '#000000'
                                                                                                 }}>
-                                                                                                Milestone
+                                                                                                Name
                                                                                             </Text>
                                                                                             <TextInput
                                                                                                 value={title}
