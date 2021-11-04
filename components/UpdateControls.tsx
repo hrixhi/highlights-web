@@ -2285,7 +2285,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingRight: 15,
                                 paddingTop: 12,
                                 paddingBottom: 12,
-                                marginTop: 20,
+                                // marginTop: 20,
                                 marginBottom: 5,
                                 maxWidth: "100%",
                                 fontWeight: "600",
@@ -4778,7 +4778,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     height: '100%',
-                    paddingTop: 20
+                    // paddingTop: 20
                 }}>
                 {/* <Text
                     style={{

@@ -199,13 +199,15 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const onSend = useCallback(async (messages: any) => {
         console.log("New Message", messages)
 
-        let message;
+        let message = "";
 
-        if (messages[0].file !== "" || messages[0].image !== "" || messages[0].audio !== "" || messages[0].video !== "") {
+        if ((messages[0].file && messages[0].file !== "")|| (messages[0].image && messages[0].image !== "") || (messages[0].audio && messages[0].audio !== "") || (messages[0].video && messages[0].video !== "")) {
             message = messages[0].msgObject;
         } else {
             message = messages[0].text;
         }
+
+        console.log("Message", message);
 
         messages[0] = {
             ...messages[0],

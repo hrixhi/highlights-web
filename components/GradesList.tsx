@@ -26,6 +26,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [cues] = useState<any[]>(unparsedCues.sort((a: any, b: any) => {
         return a.deadline < b.deadline ? -1 : 1
     }))
+    const styles = stylesObject(props.isOwner)
     const [submissionStatistics, setSubmissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
     const [exportAoa, setExportAoa] = useState<any[]>()
     const [activeCueId, setActiveCueId] = useState("")
@@ -396,7 +397,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         backgroundColor: 'white',
                         // flex: 1,
                         paddingTop: 10,
-                        maxHeight: 500,
+                        maxHeight: 650,
                         paddingHorizontal: 10,
                         borderRadius: 1,
                         borderLeftColor: props.channelColor,
@@ -407,50 +408,168 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         },
                         shadowOpacity: 0.1,
                         shadowRadius: 10,
-                        zIndex: 5000000
+                        zIndex: 5000000,
+                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                        justifyContent: props.isOwner ? 'flex-start' : 'center',
+                        overflow:  props.isOwner ? 'scroll' : 'visible',
                     }}
                         key={JSON.stringify(props.scores)}
                     >
-                        {/* <View style={{ flexDirection: 'row', marginBottom: 10, }}>
-                            <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <View
-                                    style={{
-                                        width: 10,
-                                        height: 10,
-                                        borderRadius: 5,
-                                        backgroundColor: '#f94144',
-                                    }}
-                                />
-                                <Text style={{ paddingLeft: 10, fontSize: 11 }}>
-                                    No Submission
-                                </Text>
-                            </View>
+                        {/* Performance report */}
 
-                            <View style={{ display: 'flex', flexDirection: 'row', paddingLeft: 30 }}>
-                                <View
-                                    style={{
-                                        width: 10,
-                                        height: 10,
-                                        borderRadius: 5,
-                                        backgroundColor: '#f3722c',
-                                    }}
-                                />
-                                <Text style={{ paddingLeft: 10, fontSize: 11 }}>
-                                    Late Submission
-                                </Text>
+                        {props.isOwner ? null : <View style={{ display: 'flex', flexDirection: 'column', maxWidth: 300, width: Dimensions.get('window').width < 768 ? '100%' : '50%', alignSelf: 'center', paddingTop: 0, paddingBottom: 25 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 17, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Meetings
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 18, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {props.attendance[props.channelId] ? props.attendance[props.channelId].length : 0} / {props.date[props.channelId] ? props.date[props.channelId].length : 0}
+                                    </Text>
+                                </View>
                             </View>
-                        </View> */}
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 17, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Posts
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 18, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {props.thread[props.channelId] ? props.thread[props.channelId].length : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, marginTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 17, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Assessments
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 18, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].totalAssessments : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 14, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Late
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].lateAssessments : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 14, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Graded
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].gradedAssessments : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 25 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 14, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Submitted
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10, }}>
+                                    <Text style={{ fontSize: 17, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].submittedAssessments : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 17, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Grade
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 18, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].score : 0}%
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10, paddingBottom: 20, backgroundColor: 'white', }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#1F1F1F',
+                                        fontSize: 17, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Progress
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 18, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {props.report[props.channelId] ? props.report[props.channelId].total : 0}%
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>}
+
+                        <View style={{ 
+                            height: props.isOwner ? '100%' : 'auto' ,
+                            maxHeight: 450,
+                            marginLeft: props.isOwner || Dimensions.get('window').width < 768 ? 0 : 100,
+                        }}>
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
-                            horizontal={true}
+                            horizontal={props.isOwner || Dimensions.get('window').width < 768 ? true : false}
                             contentContainerStyle={{
-                                height: '100%',
-                                maxHeight: 450,
-                                flexDirection: 'column'
+                                flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'column' : 'row'
                             }}
                             nestedScrollEnabled={true}
                         >
-                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
+                            <View style={{ minHeight: 70, flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
                                 {/* {props.isOwner ? <View style={styles.col} key={'0,0'}>
                                     <CustomTextInput
                                         value={studentSearch}
@@ -464,7 +583,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
                                             <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: 35, }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: props.isOwner || Dimensions.get('window').width < 768 ? 35 : 'auto', }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
@@ -483,7 +602,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     (new Date(cue.deadline)).toString().split(' ')[2]
                                                 }
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: 35, textAlignVertical: 'center' }} numberOfLines={2}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: props.isOwner || Dimensions.get('window').width < 768 ? 35 : 'auto', textAlignVertical: 'center' }} numberOfLines={2}>
                                                 {title}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
@@ -506,9 +625,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
-                                horizontal={false}
+                                horizontal={props.isOwner || Dimensions.get('window').width < 768 ? false : true}
                                 contentContainerStyle={{
-                                    height: '100%'
+                                    height: '100%',
+                                    width: '100%'
                                 }}
                                 nestedScrollEnabled={true}
                             >
@@ -602,6 +722,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                             </ScrollView>
                         </ScrollView>
+                        </View>
                     </View> :
                         renderStatistics()
                     )
@@ -615,9 +736,9 @@ export default React.memo(GradesList, (prev, next) => {
 })
 
 
-const styles = StyleSheet.create({
-    row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
-    col: { width: Dimensions.get('window').width < 768 ? 90 : 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
+const stylesObject: any = (isOwner: any) => StyleSheet.create({
+    row: { minHeight: 70, flexDirection: isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column',  borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
+    col: { height: isOwner || Dimensions.get('window').width < 768 ? 'auto' : 80, paddingBottom: isOwner ? 0 : 10, width: isOwner || Dimensions.get('window').width < 768 ? (Dimensions.get('window').width < 768 ? 90 : 120) : 180, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, borderBottomColor: '#efefef', borderBottomWidth: isOwner || Dimensions.get('window').width < 768 ? 0 : 1,  },
     all: {
         fontSize: 14,
         color: '#006AFF',

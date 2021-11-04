@@ -329,7 +329,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             />
                         </View>
                         <Text ellipsizeMode='tail' style={{
-                            padding: 5, fontSize: 20, fontFamily: 'inter', backgroundColor: '#efefef', maxHeight: 75,
+                            padding: 5, fontSize: 20, fontFamily: 'inter', backgroundColor: '#f2f2f7', maxHeight: 75,
                             marginTop: 25,
                             paddingTop: 10
                         }}>
@@ -341,12 +341,12 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             height: 25,
                             // marginTop: 15, 
                             paddingBottom: 10,
-                            fontSize: 12, fontFamily: 'inter', backgroundColor: '#efefef', color: '#0061ff'
+                            fontSize: 12, fontFamily: 'inter', backgroundColor: '#f2f2f7', color: '#0061ff'
                         }}>
                             <Ionicons name='bookmark-outline' /> {selectedBook.downloads}
                         </Text>
                         <Text ellipsizeMode='tail' style={{
-                            padding: 5, fontSize: 12, fontFamily: 'inter', backgroundColor: '#efefef', maxHeight: 200,
+                            padding: 5, fontSize: 12, fontFamily: 'inter', backgroundColor: '#f2f2f7', maxHeight: 200,
                             paddingTop: 10
                         }}>
                             {selectedBook.description}

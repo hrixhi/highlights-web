@@ -446,7 +446,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     setChatName(fName);
 
                     // Find the chat avatar
-                    const chatImg = (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar ? (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                    const otherUser = chat.userNames.find((user: any) => {
+                        return user._id !== userId
+                    })
+
+                    console.log("Other user", otherUser)
+
+                    const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (otherUser.avatar && otherUser.avatar !== "" ? otherUser.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png')
 
                     setChatImg(chatImg)
                 }
@@ -1562,7 +1568,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 })
                                                                             }
 
-                                                                            const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar ? (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                                                                            console.log("UserId", userId)
+
+                                                                            const otherUser = chat.userNames.find((user: any) => {
+                                                                                return user._id !== userId
+                                                                            })
+
+                                                                            console.log("Other user", otherUser)
+
+                                                                            const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (otherUser.avatar && otherUser.avatar !== "" ? otherUser.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png')
 
                                                                             const { title } = htmlStringParser(chat.lastMessage)
                                                                             return (
