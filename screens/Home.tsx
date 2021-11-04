@@ -40,7 +40,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
   // read/learn
-  const version = 'read'
+  const version = 'learn'
 
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
