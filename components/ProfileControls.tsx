@@ -93,39 +93,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       return;
     }
 
-    // if (!loggedIn) {
-    //   server
-    //     .mutate({
-    //       mutation: signup,
-    //       variables: {
-    //         email: email
-    //           .toString()
-    //           .trim()
-    //           .toLowerCase(),
-    //         password: password.toString(),
-    //         fullName: fullName.toString().trim(),
-    //         displayName: displayName.toString().trim(),
-    //         userId: user._id
-    //       }
-    //     })
-    //     .then(async res => {
-    //       console.log(res);
-    //       if (res.data.user.signup === "") {
-    //         const user = JSON.parse(u);
-    //         user.email = email;
-    //         user.fullName = fullName;
-    //         user.displayName = displayName;
-    //         const updatedUser = JSON.stringify(user);
-    //         await AsyncStorage.setItem("user", updatedUser);
-    //         props.saveDataInCloud();
-    //         props.reOpenProfile();
-    //       } else {
-    //         // Error
-    //         Alert(res.data.user.signup || somethingWentWrongAlert);
-    //       }
-    //     });
-    // } else {
-    // update profile if already logged in
     server
       .mutate({
         mutation: updateUser,
@@ -578,7 +545,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text
                   style={{
                     textAlign: "center",
-                    lineHeight: 35,
+                    lineHeight: 34,
                     color: "white",
                     fontSize: 12,
                     backgroundColor: "#006AFF",
@@ -609,7 +576,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       textAlign: "center",
-                      lineHeight: 35,
+                      lineHeight: 34,
                       color: '#006AFF',
                       borderWidth: 1,
                       borderRadius: 15,
@@ -656,7 +623,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         backgroundColor: '#fff',
                         fontSize: 12,
                         textAlign: "center",
-                        lineHeight: 35,
+                        lineHeight: 34,
                         paddingHorizontal: 20,
                         fontFamily: "inter",
                         height: 35,
@@ -684,7 +651,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       textAlign: "center",
-                      lineHeight: 35,
+                      lineHeight: 34,
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
@@ -723,7 +690,8 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
     backgroundColor: 'white',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingHorizontal: 10
   },
   outline: {
     borderRadius: 1,

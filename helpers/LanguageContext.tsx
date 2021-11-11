@@ -43,7 +43,7 @@ const EnglishBank: { [key: string]: string } = {
     channel: "Channel", // Done
     create: 'Create', // Done
     channels: "Channels", // Done
-    submissionRequired: "Response Required", // Done
+    submissionRequired: "Submission", // Done
     deadline: "Deadline", // Done
     graded: "Graded", // Done
     percentageOverall: "% of Total", // Done

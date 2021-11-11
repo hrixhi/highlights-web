@@ -385,7 +385,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         paddingBottom: 10
                                     }}
                                 >
-                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                    <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
                                         <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                     </Text>
                                 </TouchableOpacity>
@@ -644,7 +644,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text style={{
                                             textAlign: 'center',
-                                            lineHeight: 35,
+                                            lineHeight: 34,
                                             color: 'white',
                                             fontSize: 12,
                                             backgroundColor: '#006AFF',

@@ -1170,44 +1170,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }}>
             {
                 props.cueId ? null : <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                    {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
                 </Text>
             }
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                         <View style={{ flexDirection: 'row', width: '100%', maxWidth: 900 }}>
-                            {/* <TouchableOpacity
-                                key={Math.random()}
-                                style={{
-                                    backgroundColor: 'white'
-                                }}
-                                onPress={() => {
-                                    if (showChat) {
-                                        setShowChat(false)
-                                        setIsLoadedUserInactive(false)
-                                        setLoadedChatWithUser({})
-                                        setUsers([])
-                                        props.reload()
-                                    } else {
-                                        if (showSubmission) {
-                                            props.reloadStatuses()
-                                        }
-                                        setShowSubmission(false)
-                                        setStatus("")
-                                        setScore("0")
-                                        setUserId("")
-                                    }
-                                    setShowAddUsers(false)
-                                    setShowNewGroup(false)
-                                }}>
-                                <Text style={{
-                                    width: '100%',
-                                    lineHeight: 23,
-                                }}>
-                                    <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
-                                </Text>
-                            </TouchableOpacity> */}
                             {
                                 loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
                                     <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
@@ -1231,7 +1199,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             textAlign: 'center',
-                                            lineHeight: 35,
+                                            lineHeight: 34,
                                             color: '#fff',
                                             fontSize: 12,
                                             backgroundColor: '#006AFF',
@@ -1289,26 +1257,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </Text>
                                 </TouchableOpacity> : null
                         }
-                        {/* {
-                            isOwner && !props.cueId ?
-                                <TouchableOpacity
-                                    key={Math.random()}
-                                    style={{
-                                        backgroundColor: 'white'
-                                    }}
-                                    onPress={() => setShowAddUsers(true)}>
-                                    <Text style={{
-                                        width: '100%',
-                                        textAlign: 'right',
-                                        lineHeight: 23,
-                                        marginRight: 20,
-                                        color: '#1F1F1F',
-                                        fontSize: 11,
-                                    }}>
-                                        ADD USERS
-                                    </Text>
-                                </TouchableOpacity> : null
-                        } */}
                     </View>
             }
             {
@@ -1333,16 +1281,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             !props.cueId || showSubmission ? null :
                                 <View style={{
                                     width: '100%',
-                                    height: 70,
                                     backgroundColor: 'white',
-                                    // display: 'flex',
-                                    // justifyContent: 'flex-start',
-                                    // flex: 1,
-                                    flexDirection: 'row',
-                                    // maxWidth: 500,
-                                    marginBottom: 0
+                                    flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                                    marginBottom: 20
                                 }}>
-                                    <label style={{ width: 150 }}>
+                                    <label style={{ width: 160, marginTop: Dimensions.get('window').width < 768 ? 20 : 0 }}>
                                         <Select
                                             touchUi={true}
                                             themeVariant="light"
@@ -1368,7 +1311,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </label>
                                     {
                                         !showAddUsers && props.cue && props.cue.submission ?
-                                            <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, flex: 1, justifyContent: 'flex-end' }}>
+                                            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: Dimensions.get('window').width < 768 ? 'space-between' : 'flex-end', marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto' }}>
                                                 <View style={{
                                                     backgroundColor: 'white',
                                                     flexDirection: 'row'
@@ -1386,7 +1329,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 <Text
                                                                     style={{
                                                                         textAlign: "center",
-                                                                        lineHeight: 35,
+                                                                        lineHeight: 34,
                                                                         color: "#006AFF",
                                                                         fontSize: 12,
                                                                         borderColor: "#006AFF",
@@ -1413,7 +1356,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 <Text
                                                                     style={{
                                                                         textAlign: "center",
-                                                                        lineHeight: 35,
+                                                                        lineHeight: 34,
                                                                         color: "#006AFF",
                                                                         fontSize: 12,
                                                                         borderColor: "#006AFF",
@@ -1435,7 +1378,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 {isQuiz ? <Text
                                                     style={{
                                                         textAlign: "center",
-                                                        lineHeight: 35,
+                                                        lineHeight: 34,
                                                         color: "#006AFF",
                                                         fontSize: 12,
                                                         borderColor: "#006AFF",
@@ -1731,7 +1674,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 null
                                         }
                                         {
-                                            <View style={{ width: 140, marginVertical: 20, marginLeft: 'auto' }}>
+                                            <View style={{ width: 140, marginBottom: 20 }}>
                                                 <TouchableOpacity onPress={() => {
                                                     if (showSubmission) {
                                                         props.reloadStatuses()
@@ -1743,25 +1686,25 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 }
                                                 }
                                                     style={{
-                                                        backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                        backgroundColor: "white", 
+                                                        borderRadius: 15, 
                                                         marginTop: 5,
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center'
                                                     }}>
+                                                    <Ionicons name="chevron-back-outline" color="#006AFF" size={23} />
                                                     <Text style={{
                                                         textAlign: "center",
-                                                        lineHeight: 35,
+                                                        lineHeight: 34,
                                                         color: '#006AFF',
-                                                        fontSize: 12,
-                                                        borderWidth: 1,
-                                                        borderColor: '#006AFF',
-                                                        paddingHorizontal: 20,
+                                                        fontSize: 14,
+                                                        paddingHorizontal: 4,
                                                         fontFamily: "inter",
                                                         height: 35,
-                                                        // paddingTop: 2
-                                                        // width: 125,
-                                                        borderRadius: 15,
                                                         textTransform: "uppercase"
                                                     }}>
-                                                        CANCEL
+                                                        BACK
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -1837,7 +1780,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         </Text>
                                                     </TouchableOpacity>
                                                     <View style={{ flexDirection: 'row', marginRight: 15 }}>
-                                                        <Text style={{ fontSize: 14, lineHeight: 35 }}>
+                                                        <Text style={{ fontSize: 14, lineHeight: 34 }}>
                                                             {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
                                                         </Text>
                                                     </View>
@@ -1887,7 +1830,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text
                                                             style={{
                                                                 textAlign: "center",
-                                                                lineHeight: 35,
+                                                                lineHeight: 34,
                                                                 borderColor: '#006AFF',
                                                                 fontSize: 12,
                                                                 color: '#006AFF',
@@ -2005,24 +1948,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         >
                                                                             <View style={{ position: 'relative', flex: 1, height: 800 }}>
                                                                                 <View style={{ position: 'absolute', zIndex: 1, width: '100%' }}>
-                                                                                    {/* <Webview
-                                                                                        key={url}
-                                                                                        url={url}
-                                                                                        fullScreen={true}
-                                                                                    /> */}
                                                                                     <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
                                                                                 </View>
-                                                                                {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
-                                                                                    <Annotation
-                                                                                        style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none' }}
-                                                                                        src={require('./default-images/transparent.png')}
-                                                                                        annotations={annotations}
-                                                                                        // type={this.state.type}
-                                                                                        value={annotation}
-                                                                                        onChange={(e: any) => setAnnotation(e)}
-                                                                                        onSubmit={onSubmit}
-                                                                                    />
-                                                                                </View> */}
                                                                             </View>
                                                                         </View> : null)
                                                                 )
@@ -2069,7 +1996,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: '#000000',
                                 fontSize: 12,
                                 backgroundColor: '#efefef',
@@ -2086,7 +2013,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         <Text style={{
                             textAlign: 'center',
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: '#000000',
                             fontSize: 12,
                             paddingHorizontal: 20,

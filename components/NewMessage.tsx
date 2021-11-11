@@ -225,7 +225,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text style={{
                                 color: '#1F1F1F',
                                 fontSize: 11,
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 textAlign: 'right',
                                 paddingRight: 10,
                             }}>
@@ -472,7 +472,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }}>
                         <Text style={{
                             textAlign: 'center',
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: 'white',
                             fontSize: 12,
                             backgroundColor: '#006AFF',

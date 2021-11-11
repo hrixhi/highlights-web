@@ -1009,18 +1009,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const server = fetchAPI('')
     // UPDATE CUE CONFIG
-    server.mutate({
-      mutation: saveConfigToCloud,
-      variables: {
-        randomShuffleFrequency: f,
-        sleepFrom: sF,
-        sleepTo: sT,
-        currentDraft: draft ? draft : '',
-        subscriptions: parsedSubscriptions,
-        userId: parsedUser._id
-      }
-    }).then(res => {
-    }).catch(err => console.log(err))
+    // server.mutate({
+    //   mutation: saveConfigToCloud,
+    //   variables: {
+    //     randomShuffleFrequency: f,
+    //     sleepFrom: sF,
+    //     sleepTo: sT,
+    //     currentDraft: draft ? draft : '',
+    //     subscriptions: parsedSubscriptions,
+    //     userId: parsedUser._id
+    //   }
+    // }).then(res => {
+    // }).catch(err => console.log(err))
 
     // UPDATE CUES
     server.mutate({
@@ -1588,7 +1588,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}>
                   <Text style={{
                     textAlign: 'center',
-                    lineHeight: 35,
+                    lineHeight: 34,
                     color: 'white',
                     fontSize: 12,
                     backgroundColor: '#006aff',
@@ -1623,7 +1623,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
-                    lineHeight: 35,
+                    lineHeight: 34,
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,

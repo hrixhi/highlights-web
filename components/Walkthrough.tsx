@@ -328,7 +328,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         alignSelf: 'flex-start'
                                     }}
                                 >
-                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                    <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
                                         <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                     </Text>
                                 </TouchableOpacity>

@@ -595,7 +595,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: '#006AFF',
                                 fontSize: 12,
                                 borderColor: '#006AFF',
@@ -676,7 +676,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}>
                                         <Text style={{
                                             textAlign: "center",
-                                            lineHeight: 35,
+                                            lineHeight: 34,
                                             color: '#006AFF',
                                             fontSize: 12,
                                             borderWidth: 1,
@@ -898,7 +898,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 alignSelf: 'flex-start',
                                             }}
                                         >
-                                            <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10, }}>
+                                            <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center', paddingTop: 10, }}>
                                                 <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                             </Text>
                                         </TouchableOpacity>

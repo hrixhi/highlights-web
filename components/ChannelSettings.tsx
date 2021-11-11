@@ -897,7 +897,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text style={{
                                     textAlign: 'center',
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
                                     backgroundColor: '#006AFF',
@@ -1182,7 +1182,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text style={{
                                     textAlign: 'center',
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
                                     backgroundColor: '#006AFF',
@@ -1209,7 +1209,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text style={{
                                     textAlign: 'center',
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
@@ -1255,7 +1255,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text style={{
                                             textAlign: 'center',
-                                            lineHeight: 35,
+                                            lineHeight: 34,
                                             color: '#000000',
                                             fontSize: 12,
                                             backgroundColor: '#efefef',
