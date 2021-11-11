@@ -898,8 +898,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 DETAILS
             </Text>
             {/* <Text style={styles.all}>
-            Settings
-        </Text> */}
+                Settings
+            </Text> */}
         </TouchableOpacity>
         {
             (props.channelId === '') || !submission || (channelOwner && submission) || isQuiz ? null :
@@ -914,12 +914,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOptions(false)
                     }}>
                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                        {/* <Ionicons name='document-attach-outline' size={18} /> */}
                         SUBMIT
                     </Text>
-                    {/* <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                    Submission
-                </Text> */}
                 </TouchableOpacity>
         }
         {/* Add Status button here */}
@@ -936,12 +932,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOptions(false)
                     }}>
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                        {/* <Ionicons name='bar-chart-outline' size={18} /> */}
                         Feedback
                     </Text>
-                    {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                    Engagement
-                </Text> */}
                 </TouchableOpacity>
         }
     </View>
@@ -1527,7 +1519,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 // textAlign: "right",
                                 // paddingRight: 20,
                                 marginLeft: 20,
@@ -1564,7 +1556,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -1631,7 +1623,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     // }}
                     >
                         <Text style={{
-                            lineHeight: 35,
+                            lineHeight: 34,
                             marginLeft: 20,
                             textTransform: "uppercase",
                             fontSize: 12,
@@ -1719,7 +1711,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -1745,7 +1737,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -1816,7 +1808,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -1867,7 +1859,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -1900,7 +1892,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 marginLeft: 20,
                                 textTransform: "uppercase",
                                 fontSize: 12,
@@ -2029,7 +2021,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             {
-                                ((channelOwner && showOriginal) || showOptions || !props.channelId) && (!editFolder && !createNewFolder) ?
+                                ((channelOwner && showOriginal && !isQuiz) || showOptions || !props.channelId) && (!editFolder && !createNewFolder) ?
                                     <TouchableOpacity
                                         onPress={async () => {
                                             setSave(true)
@@ -2044,7 +2036,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     >
                                         <Text
                                             style={{
-                                                lineHeight: 35,
+                                                lineHeight: 34,
                                                 backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,
@@ -2075,7 +2067,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     >
                                         <Text
                                             style={{
-                                                lineHeight: 35,
+                                                lineHeight: 34,
                                                 backgroundColor: '#1f1f1f',
                                                 // textAlign: "right",
                                                 // paddingRight: 20,

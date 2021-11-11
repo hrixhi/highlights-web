@@ -142,7 +142,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     <Text
                         style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: "white",
                             fontSize: 12,
                             backgroundColor: "#006AFF",

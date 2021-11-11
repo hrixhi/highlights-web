@@ -1176,7 +1176,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase",
                     }}
                   >
-                    {isQuiz ? 'Create Document' : "Create Quiz"}
+                    {isQuiz ? 'Clear' : "Create Quiz"}
                   </Text></TouchableOpacity> : null
               }
               {
@@ -1248,7 +1248,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* {!isQuiz && !imported ? (
                   <Text
                     style={{
-                      lineHeight: 35,
+                      lineHeight: 34,
                       textAlign: "right",
                       paddingRight: 20,
                       textTransform: "uppercase",
@@ -1323,7 +1323,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               fontFamily: 'Inter'
                             }}
                           >
-                            Shelf
+                            Workspace
                           </Text>
                         </View>
                         <View
@@ -1676,7 +1676,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 fontFamily: 'Inter'
                               }}
                             >
-                              Grade Weight
+                              Graded
                             </Text>
                           </View>
                           <View>
@@ -1875,7 +1875,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 fontFamily: 'Inter'
                               }}
                             >
-                              Multiple Attempts
+                              Unlimited Attempts
                             </Text>
                           </View>
                           <View>
@@ -2749,7 +2749,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               <Text
                                 style={{
                                   fontSize: 12,
-                                  lineHeight: 35,
+                                  lineHeight: 34,
                                   fontFamily: 'inter',
                                   color: "#006AFF",
                                   // textAlign: "center",
@@ -2816,6 +2816,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                                   tools: { title: 'Tools', items: 'spellchecker code' }
                                 },
+                                statusbar: false,
                                 // menubar: 'file edit view insert format tools table tc help',
                                 menubar: false,
                                 toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
@@ -3000,7 +3001,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: "white",
                             fontSize: 12,
                             backgroundColor: "#006AFF",
@@ -3020,7 +3021,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: "white",
                             fontSize: 12,
                             backgroundColor: "#006AFF",

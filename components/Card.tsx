@@ -66,7 +66,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
-                                    lineheight: 35,
+                                    lineHeight: 34,
                                     marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',

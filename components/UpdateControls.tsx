@@ -2253,12 +2253,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         ) : null;
     };
-
+    
     // QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
     const renderQuizTimerOrUploadOptions = () => {
         return props.showOriginal && (imported || isQuiz) ? (
-            <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0, flex: 1 }}>
-                <View style={{ flexDirection: 'row', flex: 1 }}>
+            <View style={{ flexDirection: "column", marginRight: 0, marginLeft: 0, }}>
+                <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center', marginBottom: 25 }}>
                     {(isOwner || !props.cue.channelId) ? <TextareaAutosize
                         value={title}
                         // style={styles.input}
@@ -2267,8 +2267,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             padding: 15,
                             paddingTop: 12,
                             paddingBottom: 12,
-                            marginTop: 5,
-                            marginBottom: 20,
+                            marginTop: 10,
+                            marginBottom: 0,
                             maxWidth: 210,
                             borderBottom: '1px solid #efefef',
                             borderRadius: 1,
@@ -2283,11 +2283,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 fontSize: 18,
                                 paddingRight: 15,
-                                paddingTop: 12,
-                                paddingBottom: 12,
-                                // marginTop: 20,
-                                marginBottom: 5,
-                                maxWidth: "100%",
+                                paddingTop: 20,
+                                marginBottom: 10,
+                                maxWidth: Dimensions.get('window').width < 768 ? '100%' : 210,
                                 fontWeight: "600",
                                 width: '100%',
                                 fontFamily: 'Inter'
@@ -2295,15 +2293,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             {title}
                         </Text>}
+                    {
+                        isQuiz ? renderQuizDetails() : null
+                    }
                 </View>
+                
                 {isQuiz ? (
                     isQuizTimed ? (
                         initiatedAt && initDuration !== 0 ? (
                             <View
                                 style={{
-                                    flex: 1,
                                     flexDirection: "row",
-                                    justifyContent: "flex-end"
+                                    justifyContent: Dimensions.get('window').width < 768 ? "flex-start" : "flex-end"
                                 }}>
                                 <CountdownCircleTimer
                                     size={120}
@@ -2335,46 +2336,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             marginLeft: 15,
                             marginTop: 20,
-                            // alignSelf: "flex-start",
-                            // display: "flex",
-                            // flexDirection: "row"
                         }}>
-                        {/* <View style={{ marginRight: 25 }}>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "center",
-                                    flex: 1
-                                }}>
-                                <Ionicons
-                                    name="reload-outline"
-                                    color="#1F1F1F"
-                                    size={15}
-                                    onPress={() => setWebviewKey(Math.random())}
-                                />
-                            </View>
-                            <Text
-                                style={{
-                                    fontSize: 10,
-                                    color: "#1F1F1F",
-                                    textAlign: "center"
-                                }}>
-                                Reload
-                            </Text>
-                        </View> */}
-                        {/* <a download={true} href={url} style={{ textDecoration: "none", textAlign: "center" }}>
-                            <View>
-                                <Ionicons name="cloud-download-outline" color="#1F1F1F" size={15} />
-                                <Text
-                                    style={{
-                                        fontSize: 10,
-                                        color: "#1F1F1F",
-                                        textAlign: "center"
-                                    }}>
-                                    Download
-                                </Text>
-                            </View>
-                        </a> */}
                         {
                             (isOwner || !props.cue.channelId) ?
                                 <TouchableOpacity
@@ -2385,9 +2347,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}>
                                     <Text
                                         style={{
-                                            lineHeight: 35,
-                                            // textAlign: "right",
-                                            // paddingRight: 20,
+                                            lineHeight: 34,
                                             textTransform: "uppercase",
                                             fontSize: 12,
                                             fontFamily: 'overpass',
@@ -2456,19 +2416,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
-                {/* <View
-                    style={{
-                        width: "100%",
-                        paddingTop: 40,
-                        paddingBottom: 15,
-                        backgroundColor: "white"
-                    }}>
-                    <Text style={{
-                        fontSize: 14,
-                        fontFamily: 'inter',
-                        color: '#2f2f3c'
-                    }}>Submission History</Text>
-                </View> */}
                 {quizAttempted
                     ?
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
@@ -2484,82 +2431,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             Not Attempted
                         </Text>
                     </View>}
-                {/* Add remaining attempts here */}
-                {/* <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
-                        {!allowedAttempts ? "" : "Remaining Attempts: " + (allowedAttempts - usedAttempts)}
-                    </Text>
-                </View> */}
-
-                {/* View Submission button here */}
-
-                {/* {
-                    props.cue.submittedAt && props.cue.submittedAt !== "" 
-                    ?
-                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
-                        {viewSubmission ? 
-                        <TouchableOpacity
-                            disabled={props.cue.graded && props.cue.releaseSubmission}
-                            onPress={async () => {
-                                setViewSubmission(false)
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                // marginTop: 15,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#fff',
-                                fontSize: 12,
-                                backgroundColor: '#53BE6D',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                // width: 100,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                {(props.cue.graded && props.cue.releaseSubmission) ? "GRADED" : "Re-Submit"}
-                            </Text>
-                        </TouchableOpacity>
-                        :
-                        <TouchableOpacity
-                            onPress={async () => {
-                                setViewSubmission(true)
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                // marginTop: 15,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#fff',
-                                fontSize: 12,
-                                backgroundColor: '#53BE6D',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                // width: 100,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                View Submission
-                            </Text>
-                        </TouchableOpacity>}
-                    </View>
-                    :
-                    null
-                } */}
             </View>
 
             {props.cue.graded && props.cue.releaseSubmission ? (<View>
@@ -2669,7 +2540,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 <Text style={{
                                     textAlign: 'center',
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: '#006AFF',
                                     borderWidth: 1,
                                     fontSize: 12,
@@ -2714,29 +2585,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         let minutes = Math.floor((duration - hours * 3600) / 60);
 
-        return (<View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
-            <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
+        return (<View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto'  }}>
+            <Text style={{ marginRight: Dimensions.get('window').width < 768 ? 10 : 30, fontFamily: 'Inter', fontSize: 14 }}>
                 {problems.length} {problems.length === 1 ? "Question" : "Questions"}
             </Text>
-            {/* <Text style={{ marginRight: 10 }}>
-                |
-            </Text> */}
-            <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
+           
+            <Text style={{ marginRight: Dimensions.get('window').width < 768 ? 10 : 30, fontFamily: 'Inter', fontSize: 14 }}>
                 {totalQuizPoints} Points
             </Text>
-            {/* <Text style={{ marginRight: 10 }}>
-                |
-            </Text> */}
+
             {duration === 0 ?
-                <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>No Time Limit</Text> :
-                <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
+                <Text style={{ marginRight: Dimensions.get('window').width < 768 ? 10 : 30, fontFamily: 'Inter', fontSize: 14 }}>No Time Limit</Text> :
+                <Text style={{ marginRight: Dimensions.get('window').width < 768 ? 10 : 30, fontFamily: 'Inter', fontSize: 14 }}>
                     {hours} H {minutes} min
                 </Text>}
-            {/* {!isOwner ? <Text style={{ marginRight: 10, fontSize: 14 }}>
-                |
-            </Text> : null} */}
-            {!isOwner ? <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
-                {allowedAttempts && allowedAttempts !== null ? 'Remaining Attempts: ' + (remainingAttempts >= 0 ? remainingAttempts : '0') : "Unlimited Attempts"}
+            
+            {!isOwner ? <Text style={{ fontFamily: 'Inter', fontSize: 14 }}>
+                {allowedAttempts && allowedAttempts !== null ? 'Attempts: ' + (remainingAttempts >= 0 ? remainingAttempts : '0') : "Unlimited Attempts"}
             </Text> : null}
         </View>)
 
@@ -2754,7 +2619,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             {!props.showOriginal || loading ? null : isQuiz ? (
                 isQuizTimed && !isOwner ? (
                     initiatedAt ? (
-                        <View style={{ width: '100%', paddingBottom: 50 }}>
+                        <View style={{ width: '100%', flexDirection: 'column' }}>
                             <Quiz
                                 // disable quiz if graded or deadline has passed
                                 isOwner={isOwner}
@@ -2784,15 +2649,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         backgroundColor: "white",
                                         overflow: "hidden",
                                         height: 35,
-                                        marginTop: 15,
                                         justifyContent: "center",
                                         flexDirection: "row",
-                                        marginBottom: 50
+                                        marginVertical: 50
                                     }}>
                                     <Text
                                         style={{
                                             textAlign: "center",
-                                            lineHeight: 35,
+                                            lineHeight: 34,
                                             color: "#000000",
                                             fontSize: 12,
                                             backgroundColor: "#efefef",
@@ -2810,7 +2674,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     )
                 ) : (
-                    <View style={{ width: '100%', paddingBottom: 50 }}>
+                    <View style={{ width: '100%', flexDirection: 'column' }}>
                         <Quiz
                             isOwner={isOwner}
                             submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
@@ -2897,11 +2761,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         </View>
         );
     }
-
-    console.log("Loading", loading)
-    console.log("Is Quiz", isQuiz)
-    console.log("Fetching Quiz", fetchingQuiz)
-
 
     const renderRichEditorOriginalCue = () => {
 
@@ -3036,7 +2895,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text
                         style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: '#fff',
                             fontSize: 12,
                             // borderWidth: 1,
@@ -3801,7 +3660,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
-                            justifyContent: 'flex-end'
+                            justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end'
                         }}
                     >
                         <Text style={{
@@ -3831,7 +3690,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 fontFamily: 'Inter'
                             }}
                         >
-                            Multiple Attempts
+                            Unlimited Attempts
                         </Text>
                     </View>
                     <View >
@@ -3868,7 +3727,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     width: "100%",
                                     display: "flex",
                                     flexDirection: "row",
-                                    justifyContent: 'flex-end',
+                                    justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
                                     backgroundColor: "white",
                                     alignItems: 'center'
                                 }}
@@ -4430,7 +4289,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             marginTop: 5,
                                             fontFamily: 'Inter'
                                             // paddingTop: 5,
-                                            // lineHeight: 35,
+                                            // lineHeight: 34,
                                             // height: 35
                                         }}>{PreferredLanguageText("remindOn")}
                                         </Text>
@@ -4599,7 +4458,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderFooter = () => {
 
         return (
-            <View style={styles.footer}>
+            <View key={JSON.stringify(isQuiz) + JSON.stringify(isQuizTimed) + JSON.stringify(loading) + JSON.stringify(submission) + JSON.stringify(props.cue.channelId) + JSON.stringify(initiatedAt)} style={styles.footer}>
                 <View
                     style={{
                         flex: 1,
@@ -4607,8 +4466,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         justifyContent: "center",
                         display: "flex",
                         flexDirection: "row",
-                        height: 50,
-                        paddingTop: 10
+                        // height: 50,
+                        paddingTop: 10,
+                        backfaceVisibility: 'hidden'
                     }}>
                     {!isOwner && props.cue.channelId && props.cue.channelId !== "" && submission ? (
                         <TouchableOpacity
@@ -4625,11 +4485,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 (isQuiz && remainingAttempts === 0) || isSubmitting
                             }
                             onPress={() => handleSubmit()}
-                            style={{ backgroundColor: "white", borderRadius: 15 }}>
+                            style={{ borderRadius: 15, backfaceVisibility: 'hidden' }}>
                             <Text
                                 style={{
                                     textAlign: "center",
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: "white",
                                     fontSize: 12,
                                     backgroundColor: "#006AFF",
@@ -4638,7 +4498,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     fontFamily: "inter",
                                     overflow: "hidden",
                                     height: 35,
-                                    textTransform: 'uppercase'
+                                    textTransform: 'uppercase',
+                                    backfaceVisibility: 'hidden'
                                 }}>
                                 {
                                     (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) || (isQuiz && remainingAttempts === 0) || (props.cue.releaseSubmission && !props.cue.graded)
@@ -4689,7 +4550,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text
                         style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             backgroundColor: '#006AFF',
                             fontSize: 12,
                             color: '#fff',
@@ -4715,7 +4576,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                         <Text style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: '#006AFF',
                             fontSize: 12,
                             borderWidth: 1,
@@ -4833,7 +4694,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text
                                 style={{
                                     textAlign: "right",
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     marginTop: -31,
                                     // paddingRight: 25,
                                     width: "100%"
@@ -4942,7 +4803,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ? (
                                         <Text
                                             style={{
-                                                lineHeight: 35,
+                                                lineHeight: 34,
                                                 textAlign: "right",
                                                 paddingRight: 20,
                                                 textTransform: "uppercase",
@@ -5033,9 +4894,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View>
                                 <View style={{ flexDirection: 'column', width: '100%' }}>
                                     {renderQuizTimerOrUploadOptions()}
-                                    {
-                                        isQuiz ? renderQuizDetails() : null
-                                    }
                                 </View>
                                 {/* {renderCueRemarks()} */}
                                 {!props.showOriginal && submissionImported && !isQuiz && !viewSubmission ? (
@@ -5075,7 +4933,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             }}>
                                                             <Text
                                                                 style={{
-                                                                    lineHeight: 35,
+                                                                    lineHeight: 34,
                                                                     // textAlign: "right",
                                                                     // paddingRight: 20,
                                                                     textTransform: "uppercase",
@@ -5097,7 +4955,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             }}>
                                             <Text
                                                 style={{
-                                                    lineHeight: 35,
+                                                    lineHeight: 34,
                                                     // textAlign: "right",
                                                     // paddingRight: 20,
                                                     textTransform: "uppercase",
@@ -5126,7 +4984,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 ) : null}
                                 {
-                                    isQuiz && !isOwner ? renderQuizSubmissionHistory() : null
+                                    isQuiz && !isOwner && !initiatedAt ? renderQuizSubmissionHistory() : null
                                 }
                                 {isQuiz && cueGraded && props.cue.releaseSubmission ? <QuizGrading
                                     problems={problems}
@@ -5203,9 +5061,9 @@ const styles: any = StyleSheet.create({
         backgroundColor: "white",
         display: "flex",
         flexDirection: "row",
-        marginTop: 80,
-        marginBottom: 80,
-        lineHeight: 18
+        marginTop: Dimensions.get('window').width < 768 ? 40 : 80,
+        marginBottom: Dimensions.get('window').width < 768 ? 40 : 80,
+        lineHeight: 18,
     },
     colorContainer: {
         lineHeight: 20,

@@ -1084,7 +1084,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text
                             style={{
                                 textAlign: "center",
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: 'white',
                                 fontSize: 12,
                                 backgroundColor: '#006AFF',
@@ -1131,7 +1131,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text
                     style={{
                         textAlign: "center",
-                        lineHeight: 35,
+                        lineHeight: 34,
                         color: 'white',
                         fontSize: 12,
                         backgroundColor: '#006AFF',
@@ -1175,7 +1175,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text
                     style={{
                         textAlign: "center",
-                        lineHeight: 35,
+                        lineHeight: 34,
                         color: "#006AFF",
                         borderWidth: 1,
                         borderColor: '#006AFF',
@@ -1222,7 +1222,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text
                     style={{
                         textAlign: "center",
-                        lineHeight: 35,
+                        lineHeight: 34,
                         color: "#006AFF",
                         borderWidth: 1,
                         borderColor: '#006AFF',
@@ -1471,7 +1471,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: '#006AFF',
                             fontSize: 12,
                             borderWidth: 1,
@@ -1543,7 +1543,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text
                             style={{
                                 textAlign: "center",
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: '#006AFF',
                                 fontSize: 12,
                                 borderWidth: 1,
@@ -2106,7 +2106,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 <Text
                                                                                                     style={{
                                                                                                         textAlign: 'center',
-                                                                                                        lineHeight: 35,
+                                                                                                        lineHeight: 34,
                                                                                                         backgroundColor: '#006AFF',
                                                                                                         color: 'white',
                                                                                                         fontSize: 12,
@@ -2119,7 +2119,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         borderRadius: 15,
                                                                                                         textTransform: 'uppercase'
                                                                                                     }}>
-                                                                                                    {isCreatingEvents ? "..." : "ADD"}
+                                                                                                    {isCreatingEvents ? "..." : "CREATE"}
                                                                                                 </Text>
                                                                                             </TouchableOpacity>
                                                                                         </View> : null}

@@ -884,7 +884,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
-                                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 5 }}>
+                                                    <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center', paddingTop: 5 }}>
                                                         <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
                                                     </Text>
                                                 </TouchableOpacity>
@@ -900,7 +900,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             //     <Text
                                             //         style={{
                                             //             textAlign: 'center',
-                                            //             lineHeight: 35,
+                                            //             lineHeight: 34,
                                             //             // color: '#000000',
                                             //             fontSize: 10,
                                             //             // backgroundColor: '#efefef',
@@ -989,7 +989,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text
                                                         style={{
                                                             textAlign: "center",
-                                                            lineHeight: 35,
+                                                            lineHeight: 34,
                                                             color: '#006AFF',
                                                             fontSize: 12,
                                                             borderWidth: 1,
@@ -1022,7 +1022,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text
                                                         style={{
                                                             textAlign: "center",
-                                                            lineHeight: 35,
+                                                            lineHeight: 34,
                                                             color: '#006AFF',
                                                             fontSize: 12,
                                                             borderWidth: 1,
@@ -1073,7 +1073,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             }}>
                                                                             <Text style={{
                                                                                 textAlign: 'center',
-                                                                                lineHeight: 35,
+                                                                                lineHeight: 34,
                                                                                 color: '#000000',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#efefef',
@@ -1206,7 +1206,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}>
                                                     <Text style={{
                                                         textAlign: 'center',
-                                                        lineHeight: 35,
+                                                        lineHeight: 34,
                                                         color: '#fff',
                                                         fontSize: 12,
                                                         backgroundColor: '#006AFF',
@@ -1283,7 +1283,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             }}>
                                                                             <Text style={{
                                                                                 textAlign: "center",
-                                                                                lineHeight: 35,
+                                                                                lineHeight: 34,
                                                                                 color: 'white',
                                                                                 fontSize: 12,
                                                                                 borderWidth: 1,
@@ -1431,7 +1431,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             }}>
                                                             <Text style={{
                                                                 textAlign: 'center',
-                                                                lineHeight: 35,
+                                                                lineHeight: 34,
                                                                 color: '#fff',
                                                                 fontSize: 12,
                                                                 backgroundColor: '#006AFF',

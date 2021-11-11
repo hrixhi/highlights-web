@@ -249,9 +249,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                     },
-                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -261,6 +261,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                         tools: { title: 'Tools', items: 'spellchecker code' }
                     },
+                    statusbar: false,
                     setup: (editor: any) => {
                                                                     
                         const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
@@ -475,7 +476,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {index in headers
                 ?
                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 50, marginBottom: 20 }}>
-                    <View style={{ width: Dimensions.get('window').width < 1024 ? '95%' : '50%' }}>
+                    <View style={{ width: Dimensions.get('window').width < 768 ? '80%' : '50%' }}>
                         <TextareaAutosize
                             style={{
                                 maxWidth: '100%', marginBottom: 10, marginTop: 10,
@@ -531,7 +532,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             backgroundColor: '#fff',
                             fontSize: 12,
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             paddingHorizontal: 20,
                             fontFamily: "inter",
                             height: 35,
@@ -539,7 +540,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             width: 175,
                         }}
                     >
-                        Add Heading
+                        Add Header
                     </Text>
                 </TouchableOpacity>}
         </View>
@@ -658,8 +659,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             borderTopLeftRadius: 0,
             maxWidth: 900,
             borderTopRightRadius: 0,
-            borderTopColor: '#efefef',
-            borderTopWidth: 1,
+            // borderTopColor: '#efefef',
+            // borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
             flexDirection: 'column',
@@ -693,7 +694,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }
 
 
-                    return <View style={{ borderBottomColor: '#C1C9D2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25, width: '100%' }}>
+                    return <View style={{ borderBottomColor: '#efefef', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25, width: '100%' }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: 'row', flex: 1 }}>
@@ -702,11 +703,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </Text>
                                 <View style={{
                                     flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
-                                    alignItems: 'center',
                                     flex: 1,
                                     // width: '100%',
                                     maxWidth: 900,
-                                    marginTop: Dimensions.get('window').width < 1024 ? 0 : 0
+                                    marginTop: Dimensions.get('window').width < 1024 ? 0 : 0,
+                                    marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                    alignItems: Dimensions.get('window').width < 768 ? 'flex-end' : 'center'
                                 }}>
                                     <View style={{ flexDirection: 'row' }}>
                                         {editQuestionNumber === (index + 1) ? <View
@@ -716,7 +718,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 flexDirection: 'row',
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 30,
                                             }}>
-                                            <label style={{ width: 180, marginTop: 10 }}>
+                                            <label style={{ width: 160, marginTop: 10 }}>
                                                 <Select
                                                     touchUi={true}
                                                     cssClass="customDropdown"
@@ -762,6 +764,39 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 />
                                             </label>
                                         </View> : null}
+
+                                        {editQuestionNumber === (index + 1) ? <View style={{
+                                            paddingLeft: 20,
+                                            paddingTop: 10, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30
+                                        }}>
+                                            <input
+                                                style={{ paddingRight: 20 }}
+                                                type='checkbox'
+                                                checked={problem.required}
+                                                onChange={(e) => {
+                                                    const updatedProblems = [...problems]
+                                                    updatedProblems[index].required = !updatedProblems[index].required;
+                                                    setProblems(updatedProblems)
+                                                    props.setProblems(updatedProblems)
+                                                }}
+                                            />
+                                            <Text style={{ fontSize: 10, marginLeft: 10 }}>
+                                                Required
+                                            </Text>
+                                        </View> : null
+                                        }
+                                    </View>
+                                    {
+                                        Dimensions.get('window').width < 1024 ? null : <View style={{ flex: 1 }} />
+                                    }
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        {editQuestionNumber === (index + 1) ? null : (!problem.required ?
+                                            (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
+                                                Optional
+                                            </Text>)
+                                            : (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
+                                                Required
+                                            </Text>))}
                                         <DefaultTextInput
                                             value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
                                             editable={editQuestionNumber === (index + 1)}
@@ -789,41 +824,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }}
                                             placeholderTextColor={'#a2a2ac'}
                                         />
-                                    </View>
-                                    {
-                                        Dimensions.get('window').width < 1024 ? null : <View style={{ flex: 1 }} />
-                                    }
-                                    <View style={{ flexDirection: 'row' }}>
-                                        {editQuestionNumber === (index + 1) ? <View style={{
-                                            paddingRight: 20,
-                                            paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30
-                                        }}>
-                                            <input
-                                                style={{ paddingRight: 20 }}
-                                                type='checkbox'
-                                                checked={problem.required}
-                                                onChange={(e) => {
-                                                    const updatedProblems = [...problems]
-                                                    updatedProblems[index].required = !updatedProblems[index].required;
-                                                    setProblems(updatedProblems)
-                                                    props.setProblems(updatedProblems)
-                                                }}
-                                            />
-                                            <Text style={{ fontSize: 10, marginLeft: 10 }}>
-                                                Required
-                                            </Text>
-                                        </View> : (!problem.required ?
-                                            (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 5, marginBottom: 5, paddingTop: 8 }}>
-                                                Optional
-                                            </Text>)
-                                            : (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 5, marginBottom: 5, paddingTop: 8 }}>
-                                                Required
-                                            </Text>))
-                                        }
-                                        <View style={{ paddingTop: 10, paddingLeft: editQuestionNumber === (index + 1) ? 0 : 25, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
+
+
+                                        <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 10 : 5, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
                                             {editQuestionNumber === (index + 1) ?
-                                                <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0 }}>
-                                                    <Ionicons
+                                                <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
+                                                    {/* <Ionicons
                                                         name='save-outline'
                                                         color={"#006AFF"}
                                                         style={{
@@ -836,11 +842,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             }
                                                         }}
                                                         size={23}
-                                                    />
+                                                    /> */}
 
                                                     <Ionicons
                                                         name='trash-outline'
-                                                        color={"#1F1F1F"}
+                                                        color={"#006aff"}
                                                         onPress={() => {
                                                             Alert(`Delete Question ${editQuestionNumber} ?`, "", [
                                                                 {
@@ -864,7 +870,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         size={23}
                                                     />
                                                 </View> : <Ionicons
-                                                    name='pencil-outline'
+                                                    name='create-outline'
                                                     color={'#006AFF'}
                                                     onPress={() => {
                                                         if (isCurrentQuestionValid(editQuestionNumber - 1)) {
@@ -889,71 +895,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         }
 
                                                     }}
-                                                    size={18}
+                                                    size={20}
                                                 />}
                                         </View>
                                     </View>
                                 </View>
                             </View>
                             <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
-                                <View key={reloadEditorKey} style={{ width: '100%', paddingTop: 7, paddingLeft: 40 }}>
-                                    {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10, justifyContent: 'flex-end' }}>
-                                        {/* {
-                                            <TouchableOpacity
-                                                style={{
-                                                    backgroundColor: '#fff'
-                                                }}
-                                                onPress={() => {
-                                                    setShowEquationEditor(!showEquationEditor)
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color: '#006AFF',
-                                                        fontFamily: 'Overpass',
-                                                        fontSize: 10,
-                                                        marginRight: 10
-                                                    }}
-                                                >                                                    
-                                                    {PreferredLanguageText("formula")}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        } */}
-                                        {/* {
-                                            <TouchableOpacity
-                                                style={{
-                                                    backgroundColor: '#fff'
-                                                }}
-                                                onPress={() => {
-
-                                                    if (audioVideoQuestion) {
-                                                        const updateProblems = lodash.cloneDeep(problems);
-                                                        const question = updateProblems[index].question;
-                                                        const parse = JSON.parse(question);
-                                                        updateProblems[index].question = parse.content;
-                                                        setProblems(updateProblems)
-                                                        props.setProblems(updateProblems)
-
-                                                    } else {
-                                                        setShowImportOptions(!showImportOptions)
-                                                    }
-
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color: '#006AFF',
-                                                        fontFamily: 'Overpass',
-                                                        fontSize: 10,
-                                                        marginLeft: 20
-                                                    }}
-                                                >
-                                                    {
-                                                        showImportOptions ? "" : audioVideoQuestion ? "Clear" : "Media"
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        } */}
+                                <View key={reloadEditorKey} style={{ width: '100%', paddingTop: 7, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
+                                    {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
                                         {audioVideoQuestion ? 
                                             <TouchableOpacity onPress={() => {
                                                 const updateProblems = lodash.cloneDeep(problems);
@@ -970,19 +920,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }}> Clear</Text>
                                             </TouchableOpacity>
                                             :
-                                            // <FileUpload 
-                                            //     quiz={true}
-                                            //     action={"audio/video"}
-                                            //     back={() => setShowImportOptions(false)}
-                                            //     onUpload={(u: any, t: any) => {
-                                            //         const obj = { url: u, type: t, content: problems[index].question };
-                                            //         const newProbs = [...problems];
-                                            //         newProbs[index].question = JSON.stringify(obj);
-                                            //         setProblems(newProbs)
-                                            //         props.setProblems(newProbs)
-                                            //         setShowImportOptions(false);
-                                            //     }}
-                                            // />
                                             null
                                         }
                                     </View> : null)}
@@ -1014,8 +951,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 // maxWidth: Dimensions.get("window").width < 768 ? "100%" : "60%",
                                 color: "#a2a2ac",
                                 marginBottom: 20,
-                                borderBottomColor: '#C1C9D2',
-                                borderBottomWidth: 1
                             }}>
                                 Free Response Answer
                             </Text> : null
@@ -1024,7 +959,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             problem.options.map((option: any, i: any) => {
 
 
-                                return <View style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'none', width: '80%' }} >
+                                return <View style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'none', width: '100%' }} >
                                     <View style={{ paddingTop: 25, width: 40 }}>
                                         <input
                                             style={{}}
@@ -1043,62 +978,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             disabled={editQuestionNumber !== (index + 1)}
                                         />
                                     </View>
-                                    <View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '60%', paddingRight: 30, paddingBottom: 10 }}>
-                                        {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingBottom: 10 }}>
-                                            {/* {
-                                                questionType === "trueFalse" ? null :
-                                                    <TouchableOpacity
-                                                        style={{ backgroundColor: '#fff' }}
-                                                        onPress={() => {
-                                                            const updateShowFormulas = [...showOptionFormulas]
-                                                            updateShowFormulas[i] = !updateShowFormulas[i]
-                                                            setShowOptionFormulas(updateShowFormulas)
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                color: '#006AFF',
-                                                                fontFamily: 'Overpass',
-                                                                fontSize: 10
-                                                            }}
-                                                        >
-                                                            {PreferredLanguageText("formula")}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                            } */}
-                                            {questionType === "trueFalse" ? null :
-                                                <TouchableOpacity
-                                                    style={{
-                                                        backgroundColor: '#fff', marginLeft: 20
-                                                    }}
-                                                    onPress={() => {
-                                                        const updatedProblems = lodash.cloneDeep(problems)
-                                                        updatedProblems[index].options.splice(i, 1);
-                                                        setProblems(updatedProblems)
-                                                        props.setProblems(updatedProblems)
-                                                        setEditQuestion(updatedProblems[index])
-
-                                                        const updateOptionEquations: any[] = optionEquations.splice(i, 1);
-                                                        setOptionEquations(updateOptionEquations)
-
-                                                        const updateShowFormulas: any[] = showOptionFormulas.splice(i, 1);
-                                                        setShowOptionFormulas(updateShowFormulas)
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                            color: '#006AFF',
-                                                            fontFamily: 'Overpass',
-                                                            fontSize: 10
-                                                        }}
-                                                    >
-                                                        Remove
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            }
-                                        </View>}
+                                    <View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '70%', paddingRight: 30, paddingBottom: 10 }}>
                                         {
                                             <View style={{ width: '100%', marginBottom: 10 }}>
                                                 {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?
@@ -1106,7 +986,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         {parser(option.option)}
                                                     </Text>
                                                     :
-                                                    <View style={{ flexDirection: 'column' }}>
+                                                    <View style={{ flexDirection: 'row' }}>
                                                         <FormulaGuide 
                                                             equation={optionEquations[i]} 
                                                             onChange={(eq: any) => {
@@ -1144,9 +1024,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 paste_data_images: true,
                                                                 images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                                                                 mobile: {
-                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                                                                 },
-                                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
                                                                 menu: { // this is the complete default configuration
                                                                     file: { title: 'File', items: 'newdocument' },
                                                                     edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -1156,6 +1036,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                                                                     tools: { title: 'Tools', items: 'spellchecker code' }
                                                                 },
+                                                                statusbar: false,
                                                                 setup: (editor: any) => {
 
                                                                     const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
@@ -1198,6 +1079,40 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 props.setProblems(newProbs)
                                                             }}
                                                         />
+
+                                                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingBottom: 10, paddingTop: 20 }}>
+                                                            {questionType === "trueFalse" ? null :
+                                                                <TouchableOpacity
+                                                                    style={{
+                                                                        backgroundColor: '#fff', marginLeft: 20
+                                                                    }}
+                                                                    onPress={() => {
+                                                                        const updatedProblems = lodash.cloneDeep(problems)
+                                                                        updatedProblems[index].options.splice(i, 1);
+                                                                        setProblems(updatedProblems)
+                                                                        props.setProblems(updatedProblems)
+                                                                        setEditQuestion(updatedProblems[index])
+
+                                                                        const updateOptionEquations: any[] = optionEquations.splice(i, 1);
+                                                                        setOptionEquations(updateOptionEquations)
+
+                                                                        const updateShowFormulas: any[] = showOptionFormulas.splice(i, 1);
+                                                                        setShowOptionFormulas(updateShowFormulas)
+                                                                    }}
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            paddingTop: showOptionFormulas[i] ? 10 : 0,
+                                                                            color: '#006AFF',
+                                                                            fontFamily: 'Overpass',
+                                                                            fontSize: 10
+                                                                        }}
+                                                                    >
+                                                                        Remove
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            }
+                                                        </View>
 
                                                     </View>}
 
@@ -1248,7 +1163,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     textAlign: "center",
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     paddingHorizontal: 20,
                                     fontFamily: "inter",
                                     height: 35,
@@ -1258,7 +1173,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 Add Choice
                             </Text>
-                        </TouchableOpacity> : <View style={{ height: 100 }} />}
+                        </TouchableOpacity> : <View style={{ height: 30 }} />}
                     </View>
                 })
             }
@@ -1267,9 +1182,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 justifyContent: 'center',
                 // paddingLeft: 12,
                 // paddingTop: 25,
-                // borderBottomColor: '#C1C9D2',
                 paddingBottom: 25, 
-                // borderBottomWidth: 1
             }}>
                 <TouchableOpacity
                     onPress={() => {
@@ -1291,7 +1204,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <Text
                         style={{
                             textAlign: "center",
-                            lineHeight: 35,
+                            lineHeight: 34,
                             color: "white",
                             fontSize: 12,
                             backgroundColor: "#006AFF",
@@ -1303,7 +1216,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             width: 175,
                             textTransform: "uppercase",
                         }}>
-                        Add Problem
+                        Add Question
                     </Text>
                 </TouchableOpacity>
             </View>

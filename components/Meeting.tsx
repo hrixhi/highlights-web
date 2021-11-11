@@ -430,7 +430,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: '#006AFF',
                                 fontSize: 12,
                                 borderColor: '#006AFF',

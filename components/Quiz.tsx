@@ -240,6 +240,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 borderRightWidth: 0,
                 flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
                 paddingTop: 20,
+                marginBottom: 20,
                 borderColor: "#efefef"
             }}>
             <View
@@ -260,8 +261,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     backgroundColor: "white",
                     // width: "100%",
                     // marginRight: 10,
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column',
+                    alignItems: Dimensions.get('window').width < 768 ? 'center' : 'flex-end',
                     justifyContent: 'flex-start'
                 }}
             >
@@ -291,7 +292,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             paddingTop: 0,
                             borderColor: "#efefef",
                             flexDirection: 'row',
-                            paddingTop: 10
+                            paddingTop: 10,
+                            paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0
                         }}
                     >
                         <View>
@@ -385,7 +387,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 borderRightWidth: 0,
                 flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
                 paddingTop: 20,
-                borderColor: "#efefef"
+                borderColor: "#efefef",
+                marginBottom: 50
             }}>
             <View
                 style={{
@@ -689,7 +692,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             type = parse.type;
         }
 
-        return (<View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 20 }}>
+        return (<View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 25 }}>
             {audioVideoQuestion || !showImportOptions ? null : (
                 <View style={{ paddingVertical: 10 }}>
                     <FileUpload
@@ -712,107 +715,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 : null
             }
             <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation}  />
-            {/* {
-                (showEquationEditor ?
-                    <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
-                        <View style={{
-                            borderColor: '#efefef',
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            padding: 10,
-                            width: '70%',
-                            marginVertical: 20
-                        }}>
-                            <EquationEditor
-                                value={equation}
-                                onChange={setEquation}
-                                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                autoOperatorNames="sin cos tan arccos arcsin arctan"
-                            />
-                        </View>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: "center",
-                                paddingHorizontal: 20,
-                                maxWidth: "10%",
-                            }}
-                            onPress={() => insertEquation()}
-                        >
-                            <Ionicons name="add-circle-outline" color="#000000" size={15} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: "center",
-                                paddingLeft: 10,
-                                maxWidth: "10%",
-                            }}
-                            onPress={() => setShowFormulaGuide(true)}
-                        >
-                            <Ionicons name="help-circle-outline" color="#000000" size={18} />
-                        </TouchableOpacity>
-                    </View> : null)
-            } */}
-            {/* <RichEditor
-                key={reloadEditorKey.toString()}
-                containerStyle={{
-                    height: 250,
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    paddingTop: 5,
-                    paddingBottom: 10,
-                    // borderRadius: 15,
-                    display: "flex",
-                }}
-                ref={RichText}
-                style={{
-                    width: "100%",
-                    backgroundColor: "#fff",
-                    // borderRadius: 15,
-                    minHeight: 250,
-                    display: "flex",
-                    borderBottomWidth: 1,
-                    borderColor: "#1F1F1F",
-                }}
-                editorStyle={{
-                    backgroundColor: "#fff",
-                    placeholderColor: "#1F1F1F",
-                    color: "#000000",
-                    contentCSSText: "font-size: 14px;",
-                }}
-                initialContentHTML={audioVideoQuestion ? content : problems[index].question}
-                onScroll={() => Keyboard.dismiss()}
-                placeholder={"Problem"}
-                onChange={(text) => {
-                    if (audioVideoQuestion) {
-                        const currQuestion = JSON.parse(problems[index].question);
-                        const updatedQuestion = {
-                            ...currQuestion,
-                            content: text
-                        }
-                        const newProbs = [...problems];
-                        newProbs[index].question = JSON.stringify(updatedQuestion);
-                        setProblems(newProbs)
-                        props.setProblems(newProbs)
-
-                    } else {
-                        const modifedText = text.split("&amp;").join("&");
-                        // setCue(modifedText);
-                        const newProbs = [...problems];
-                        newProbs[index].question = modifedText;
-                        setProblems(newProbs)
-                        props.setProblems(newProbs)
-                    }
-                }}
-                onHeightChange={handleHeightChange}
-                onBlur={() => Keyboard.dismiss()}
-                allowFileAccess={true}
-                allowFileAccessFromFileURLs={true}
-                allowUniversalAccessFromFileURLs={true}
-                allowsFullscreenVideo={true}
-                allowsInlineMediaPlayback={true}
-                allowsLinkPreview={true}
-                allowsBackForwardNavigationGestures={true}
-            /> */}
             <Editor
                 onInit={(evt, editor) => RichText.current = editor}
                 initialValue={editQuestion && editQuestion.question ? editQuestion.question : ""}
@@ -827,9 +729,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     branding: false,
                     placeholder: 'Problem',
                     autoresize_on_init: false,
-                    autoresize_min_height: 350,
-                    height: 350,
-                    min_height: 350,
+                    autoresize_min_height: 250,
+                    height: 250,
+                    min_height: 250,
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
@@ -886,6 +788,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
+                    statusbar: false,
                     toolbar: 'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image upload link media | charmap emoticons ',
                     importcss_append: true,
                     image_caption: true,
@@ -1054,60 +957,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
         >
             {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
-
-            {/* Show number of questions, Points, number of attempts here */}
-            {/* {
-                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
-                        {problems.length} {problems.length === 1 ? "Question" : "Questions"}
-                    </Text>
-                    <Text style={{ marginRight: 10, fontSize: 14}}>
-                        |
-                    </Text>
-                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
-                        {totalPoints} Points 
-                    </Text>
-                    {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontSize: 14}}>
-                        |
-                    </Text> : null}
-                    {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                        {duration.hours} H {duration.minutes} min
-                    </Text> : null}
-
-                    {!props.isOwner ? <Text style={{ marginRight: 10, fontSize: 14}}>
-                        |
-                    </Text> : null}
-                    {!props.isOwner ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                        {props.remainingAttempts ? 'Remaining Attempts: ' + props.remainingAttempts : "Unlimited Attempts"}
-                    </Text> : null}
-                    
-                </View>
-            } */}
-            {props.isOwner ? renderTimer() : null}
-            {props.isOwner ? renderShuffleQuizOption() : null}
-
             <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 25, paddingTop: 15 }}>
-                {/* <View
-                    style={{
-                        width: "100%",
-                        paddingBottom: 15,
-                        backgroundColor: "white",
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start'
-                    }}
-                >
-                    <Text style={{
-                        color: "#000000",
-                        fontSize: !props.isOwner ? 15 : 11,
-                        fontWeight: !props.isOwner ? 'bold' : 'normal',
-                        lineHeight: 35,
-                        // paddingRight: 20,
-                        paddingTop: !props.isOwner ? 50 : 20,
-                        textTransform: "uppercase",
-                    }}>
-                        Instructions
-                    </Text>
-                </View> */}
                 {
                     (props.isOwner ?
                         <Editor
@@ -1121,9 +971,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 branding: false,
                                 placeholder: 'Instructions',
                                 autoresize_on_init: false,
-                                autoresize_min_height: 350,
-                                height: 350,
-                                min_height: 350,
+                                autoresize_min_height: 250,
+                                height: 250,
+                                min_height: 250,
                                 paste_data_images: true,
                                 images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                                 mobile: {
@@ -1141,6 +991,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 },
                                 // menubar: 'file edit view insert format tools table tc help',
                                 menubar: false,
+                                statusbar: false,
                                 toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
                                 importcss_append: true,
                                 image_caption: true,
@@ -1178,7 +1029,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
             </View>
 
-
+            {props.isOwner ? renderTimer() : null}
+            {props.isOwner ? renderShuffleQuizOption() : null}
 
 
             {
@@ -1215,7 +1067,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
 
 
-                    return <View style={{ borderBottomColor: '#efefef', width: '100%', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#efefef', width: '100%', paddingLeft: Dimensions.get('window').width < 768 ? 10 : 0, borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         {props.isOwner && modifiedCorrectAnswerProblems[index] ?
                             <View style={{ marginVertical: 10, flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f3f3f3', borderRadius: 1 }}>
@@ -1227,37 +1079,34 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             : null}
                         <View style={{ width: '100%' }}>
                             <View style={{ width: '100%' }}>
-                                <View style={{ paddingTop: 15, flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
-                                    <Text style={{ color: '#000000', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
+                                <View style={{ paddingTop: 15, flexDirection: 'row', width: '100%', }}>
+                                    <Text style={{ color: '#000000', fontSize: 22, paddingBottom: Dimensions.get('window').width < 768 ? 0 : 25, width: 40, paddingTop: Dimensions.get('window').width < 768 ? 20 : 15, fontFamily: 'inter' }}>
                                         {index + 1}.
                                     </Text>
                                     <View style={{
                                         flexDirection: 'row',
                                         // paddingTop: 15,
-                                        marginBottom: Dimensions.get('window').width < 1024 ? 30 : 0,
+                                        marginBottom: Dimensions.get('window').width < 768 ? 15 : 0,
                                         flex: 1, justifyContent: 'flex-end'
                                     }}>
                                         <View
-                                            style={{ flexDirection: 'row', height: 40, flex: 1 }}
+                                            style={{ flexDirection: 'row', justifyContent: 'flex-end',  alignItems: 'center' }}
                                         >
                                             <TextInput
                                                 editable={props.isOwner && editQuestionNumber === (index + 1)}
                                                 value={props.isOwner && editQuestionNumber === (index + 1) ? problem.points : (problem.points + " " + (Number(problem.points) === 1 ? 'Point' : ' Points'))}
                                                 style={{
-                                                    maxHeight: 40,
-                                                    paddingLeft: 0,
-                                                    fontWeight: props.isOwner && editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                    borderBottomColor: '#efefef',
                                                     fontSize: 14,
-                                                    // padding: 15,
+                                                    padding: 15,
                                                     paddingTop: 12,
                                                     paddingBottom: 12,
                                                     marginTop: 5,
-                                                    // width: 120,
-                                                    // marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
+                                                    width: 120,
+                                                    marginRight: editQuestionNumber === (index + 1) ? 20 : 0,
                                                     textAlign: 'center',
-                                                    marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
-                                                    borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0
+                                                    fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
+                                                    borderBottomColor: '#efefef',
+                                                    borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
                                                 }}
                                                 onChangeText={(val) => {
                                                     if (Number.isNaN(Number(val))) return;
@@ -1269,19 +1118,23 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 placeholderTextColor={'#1F1F1F'}
                                             />
                                             {
-                                                Dimensions.get('window').width < 1024 ? null : <View style={{ flex: 1 }} />
-                                            }
-                                            {
                                                 !problem.required ?
-                                                    (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
-                                                        Optional
-                                                    </Text>)
-                                                    : (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingTop: 8, textAlign: 'right' }}>
-                                                        Required
-                                                    </Text>)
+                                                (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
+                                                    Optional
+                                                </Text>)
+                                                : (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
+                                                    Required
+                                                </Text>)
                                             }
                                             {
-                                                props.isOwner ? (editQuestionNumber !== (index + 1) ?
+                                            !problem.questionType && !onlyOneCorrect ?
+                                                (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10, marginLeft: 15 }}>
+                                                    Multiple correct answers
+                                                </Text>)
+                                                : null
+                                            }
+                                            {
+                                                !props.isOwner || (editQuestionNumber === (index + 1) ? null :
                                                     (<TouchableOpacity onPress={() => {
                                                         setEditQuestionNumber(index + 1)
                                                         let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
@@ -1313,101 +1166,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         setShowFormulas(updateShowFormulas)
                                                         setOptionEquations(updateOptionEquations)
 
-                                                    }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30 }}> <Ionicons name='pencil-outline' size={18} color={'#006AFF'} /></TouchableOpacity>)
-                                                    : (
-                                                        null
-                                                        // <TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>
-                                                    ))
-                                                    :
-                                                    null
+                                                    }} style={{ marginBottom: 20, paddingTop: 25, paddingLeft: Dimensions.get('window').width < 768 ? 10 : 30 }}> <Ionicons name='create-outline' size={18} color={'#006AFF'} /></TouchableOpacity>)
+                                                )
                                             }
+                                            
                                         </View>
-                                        {
-                                            !problem.questionType && !onlyOneCorrect ?
-                                                (<Text style={{ fontSize: 11, color: '#1F1F1F', marginTop: 5, marginBottom: 20, paddingRight: 30, paddingTop: 8, paddingLeft: Dimensions.get('window').width > 768 ? 0 : 40 }}>
-                                                    more than one correct answer
-                                                </Text>)
-                                                : null
-                                        }
                                     </View>
 
                                 </View>
                                 {
-                                    problem.question && problem.question.includes("image:") ?
-                                        (<Image
-                                            resizeMode={'contain'}
-                                            style={{
-                                                width: 400,
-                                                height: 400
-                                            }}
-                                            source={{
-                                                uri: problem.question.split("image:")[1]
-                                            }}
-                                        />) :
-                                        (
-                                            problem.question && problem.question.includes("formula:") ? (
-                                                <View style={{
-                                                    // borderColor: '#efefef',
-                                                    // borderWidth: 1,
-                                                    // borderRadius: 15,
-                                                    padding: 10,
-                                                    width: '80%'
-                                                }}>
-                                                    <EquationEditor
-                                                        value={problem.question.split("formula:")[1]}
-                                                        onChange={() => { setUpdateKey(Math.random()) }}
-                                                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                        autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                    />
-                                                </View>
-                                            ) :
                                                 (props.isOwner && editQuestionNumber === (index + 1) ?
-                                                    <View style={{ flexDirection: 'column', width: '100%', paddingLeft: 40 }}>
+                                                    <View style={{ flexDirection: 'column', width: '100%', paddingLeft: Dimensions.get('window').width < 768 ? 10 : 40 }}>
                                                         {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10, justifyContent: 'flex-end' }}>
-                                                            {/* {
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        backgroundColor: '#fff'
-                                                                    }}
-                                                                    onPress={() => {
-                                                                        setShowEquationEditor(!showEquationEditor)
-                                                                    }}
-                                                                >
-                                                                    <Text
-                                                                        style={{
-                                                                            color: '#006AFF',
-                                                                            fontFamily: 'Overpass',
-                                                                            fontSize: 10,
-                                                                            marginRight: 10
-                                                                        }}
-                                                                    >
-                                                                        {PreferredLanguageText("formula")}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            } */}
-                                                            {/* {
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        backgroundColor: '#fff'
-                                                                    }}
-                                                                    onPress={() => {
-                                                                        setShowImportOptions(!showImportOptions)
-                                                                    }}
-                                                                >
-                                                                    <Text
-                                                                        style={{
-                                                                            color: '#006AFF',
-                                                                            fontFamily: 'Overpass',
-                                                                            fontSize: 10,
-                                                                            marginLeft: 20
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            showImportOptions ? "" : "Media"
-                                                                        }
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            } */}
                                                             {audioVideoQuestion ? 
                                                                 <TouchableOpacity onPress={() => {
                                                                     const updateProblems = lodash.cloneDeep(problems);
@@ -1415,32 +1185,14 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     const parse = JSON.parse(question);
                                                                     updateProblems[index].question = parse.content;
                                                                     setProblems(updateProblems)
-                                                                    // props.setProblems(updateProblems)
-                                                                    // const obj = { url: u, type: t, content: '' };
-                                                                    //     const newProbs = [...problems];
-                                                                    //     newProbs[index].question = JSON.stringify(obj);
-                                                                    //     setProblems(newProbs)
-                                                                    //     setShowImportOptions(false);
                                                                 }}>
                                                                     <Text style={{
                                                                         color: '#006AFF',
                                                                         fontFamily: 'Overpass',
                                                                         fontSize: 10,
-                                                                    }}> Clear</Text>
+                                                                    }}> Remove upload</Text>
                                                                 </TouchableOpacity>
                                                                 :
-                                                                // <FileUpload 
-                                                                //     quiz={true}
-                                                                //     action={"audio/video"}
-                                                                //     back={() => setShowImportOptions(false)}
-                                                                //     onUpload={(u: any, t: any) => {
-                                                                //         const obj = { url: u, type: t, content: problems[index].question };
-                                                                //         const newProbs = [...problems];
-                                                                //         newProbs[index].question = JSON.stringify(obj);
-                                                                //         setProblems(newProbs)
-                                                                //         // setShowImportOptions(false);
-                                                                //     }}
-                                                                // />
                                                                 null
                                                             }
                                                         </View> : null)}
@@ -1448,17 +1200,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         {renderQuestionEditor(editQuestionNumber - 1)}
                                                     </View>
                                                     :
-                                                    (audioVideoQuestion ? <View style={{ width: '100%', marginBottom: 10 }}>
+                                                    (audioVideoQuestion ? <View style={{ width: '100%', marginBottom: 25 }}>
                                                         <View style={{ marginBottom: 20 }}>
                                                             {renderAudioVideoPlayer(url, type)}
                                                         </View>
-                                                        <Text style={{ marginVertical: 20, marginLeft: 40, fontSize: 14, lineHeight: 25 }}>
+                                                        <Text style={{ marginVertical: 20, marginLeft: Dimensions.get('window').width < 768 ? 5 : 40, fontSize: 14, lineHeight: 25 }}>
                                                             {parser(content)}
                                                         </Text>
-                                                    </View> : <Text style={{ marginVertical: 20, paddingLeft: 40, fontSize: 14, width: '80%', marginBottom: 10, lineHeight: 25 }}>
+                                                    </View> : <Text style={{ marginVertical: 20, paddingLeft: Dimensions.get('window').width < 768 ? 5 : 40, fontSize: 14, width: Dimensions.get('window').width < 768 ? '100%' : '80%', marginBottom: 25, lineHeight: 25 }}>
                                                         {parser(problem.question)}
                                                     </Text>))
-                                        )
                                 }
 
                             </View>
@@ -1489,7 +1240,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 disabled={props.isOwner && editQuestionNumber === (index + 1) ? false : props.isOwner}
                                                 style={{ marginTop: 22 }}
                                                 type='checkbox'
-                                                // value={props.isOwner ? String(option.isCorrect) : String(solutions[index].selected[i].isSelected)}
                                                 checked={props.isOwner ? option.isCorrect : solutions[problemIndex].selected[i].isSelected}
                                                 onChange={(e: any) => {
 
@@ -1510,75 +1260,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             />}
                                     </View>
                                     {
-                                        option.option && option.option.includes("image:") ?
-                                            (<Image
-                                                resizeMode={'contain'}
-                                                style={{
-                                                    width: 200,
-                                                    height: 200
-                                                }}
-                                                source={{
-                                                    uri: option.option.split("image:")[1]
-                                                }}
-                                            />) :
-                                            (
-                                                option.option && option.option.includes("formula:") ?
-                                                    <View style={{
-                                                        padding: 10,
-                                                        width: '30%'
-                                                    }}>
-                                                        <EquationEditor
-                                                            value={option.option.split("formula:")[1]}
-                                                            onChange={() => { setUpdateKey(Math.random()) }}
-                                                            autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                            autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                        />
-                                                    </View> :
                                                     (props.isOwner && problem.questionType !== "trueFalse" && editQuestionNumber === (index + 1)
                                                         ?
-                                                        <View style={{ flexDirection: 'column', maxWidth: 400 }}>
-                                                            {
-                                                            //     !showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-                                                            //     <View style={{
-                                                            //         borderColor: '#efefef',
-                                                            //         borderWidth: 1,
-                                                            //         borderRadius: 15,
-                                                            //         padding: 10,
-                                                            //         width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
-                                                            //     }}>
-                                                            //         <EquationEditor
-                                                            //             value={optionEquations[i]}
-                                                            //             onChange={(eq) => {
-                                                            //                 const updateOptionEquations = [...optionEquations]
-                                                            //                 updateOptionEquations[i] = eq;
-                                                            //                 setOptionEquations(updateOptionEquations)
-                                                            //             }}
-                                                            //             autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                            //             autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                            //         />
-                                                            //     </View>
-                                                            //     <TouchableOpacity
-                                                            //         style={{
-                                                            //             justifyContent: "center",
-                                                            //             paddingHorizontal: 20,
-                                                            //             maxWidth: "10%",
-                                                            //         }}
-                                                            //         onPress={() => insertOptionEquation(i)}
-                                                            //     >
-                                                            //         <Ionicons name="add-circle-outline" color="#000000" size={18} />
-                                                            //     </TouchableOpacity>
-                                                            //     {/*  */}
-                                                            //     <TouchableOpacity
-                                                            //         style={{
-                                                            //             justifyContent: "center",
-                                                            //             paddingLeft: 10,
-                                                            //             maxWidth: "10%",
-                                                            //         }}
-                                                            //         onPress={() => setShowFormulaGuide(true)}
-                                                            //     >
-                                                            //         <Ionicons name="help-circle-outline" color="#000000" size={18} />
-                                                            //     </TouchableOpacity>
-                                                            // </View>
+                                                        <View style={{ flexDirection: 'column', maxWidth: Dimensions.get('window').width < 768 ? '80%' : 400 }}>
                                                             <FormulaGuide 
                                                                 equation={optionEquations[i]} 
                                                                 onChange={(eq: any) => {
@@ -1594,31 +1278,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 }}
                                                                 onInsertEquation={() => insertOptionEquation(i)}
                                                             />
-                                                            }
-                                                            {/* {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
-                                                                {
-                                                                    problem.questionType === "trueFalse" ? null :
-                                                                        <TouchableOpacity
-                                                                            style={{ backgroundColor: '#fff' }}
-                                                                            onPress={() => {
-                                                                                const updateShowFormulas = [...showOptionFormulas]
-                                                                                updateShowFormulas[i] = !updateShowFormulas[i]
-                                                                                setShowOptionFormulas(updateShowFormulas)
-                                                                            }}
-                                                                        >
-                                                                            <Text
-                                                                                style={{
-                                                                                    paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                                    color: '#006AFF',
-                                                                                    fontFamily: 'Overpass',
-                                                                                    fontSize: 10
-                                                                                }}
-                                                                            >
-                                                                                {PreferredLanguageText("formula")}
-                                                                            </Text>
-                                                                        </TouchableOpacity>
-                                                                }
-                                                            </View>} */}
                                                             <Editor
                                                                 onInit={(evt, editor) => {
                                                                     const currRef: any = setRef(i.toString());
@@ -1632,6 +1291,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 init={{
                                                                     skin: "snow",
                                                                     // toolbar_sticky: true,
+                                                                    statusbar: false,
                                                                     branding: false,
                                                                     placeholder: 'Option',
                                                                     autoresize_on_init: false,
@@ -1700,7 +1360,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             style={{
                                                                 width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
                                                                 fontSize: 14,
-                                                                padding: 15,
+                                                                padding: Dimensions.get('window').width < 768 ? 0 : 15,
                                                                 paddingTop: 12,
                                                                 paddingBottom: 12,
                                                                 marginTop: 5,
@@ -1711,7 +1371,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         >
                                                             {parser(option.option)}
                                                         </Text>)
-                                            )
                                     }
                                 </View>
                             })
@@ -1729,57 +1388,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingBottom: 12,
                                         // width: '50%',
                                         // maxWidth: "100%",
-                                        color: props.isOwner ? "#1F1F1F" : "#000000",
+                                        color: props.isOwner ? "#a2a2ac" : "#000000",
                                         marginBottom: props.isOwner ? 50 : 30
                                     }}>
                                         {props.isOwner ? "Free Response Answer" : solutions[problemIndex].response}
                                     </Text> :
                                         <View style={{ flexDirection: 'column', width: '100%' }}>
-                                            {
-                                                // showFormulas[problemIndex]
-                                                //     ?
-                                                //     <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
-                                                //         <View style={{
-                                                //             borderColor: '#efefef',
-                                                //             borderWidth: 1,
-                                                //             borderRadius: 15,
-                                                //             padding: 10,
-                                                //             width: '70%',
-                                                //             marginVertical: 20
-                                                //         }}>
-                                                //             <EquationEditor
-                                                //                 value={equation}
-                                                //                 onChange={(x) => {
-                                                //                     const updateResponseEquations = [...responseEquations];
-                                                //                     updateResponseEquations[problemIndex] = x;
-                                                //                     setResponseEquations(updateResponseEquations)
-                                                //                 }}
-                                                //                 autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                //                 autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                //             />
-                                                //         </View>
-                                                //         <TouchableOpacity
-                                                //             style={{
-                                                //                 justifyContent: "center",
-                                                //                 paddingHorizontal: 20,
-                                                //                 maxWidth: "10%",
-                                                //             }}
-                                                //             onPress={() => insertResponseEquation(problemIndex)}
-                                                //         >
-                                                //             <Ionicons name="add-circle-outline" color="#000000" size={18} />
-                                                //         </TouchableOpacity>
-                                                //         <TouchableOpacity
-                                                //             style={{
-                                                //                 justifyContent: "center",
-                                                //                 paddingLeft: 10,
-                                                //                 maxWidth: "10%",
-                                                //             }}
-                                                //             onPress={() => setShowFormulaGuide(true)}
-                                                //         >
-                                                //             <Ionicons name="help-circle-outline" color="#000000" size={18} />
-                                                //         </TouchableOpacity>
-                                                //     </View>
-                                                //     : null
                                                 <FormulaGuide 
                                                     equation={equation} 
                                                     onChange={(x: any) => {
@@ -1795,8 +1409,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     }}
                                                     onInsertEquation={() => insertResponseEquation(problemIndex)}
                                                 />
-
-                                            }
                                             <Editor
                                                 onInit={(evt, editor) => {
                                                     const updateRefs = [...problemRefs];
@@ -1873,51 +1485,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     props.setSolutions(updatedSolution)
                                                 }}
                                             />
-                                            {/* <View style={{ paddingTop: 15, paddingBottom: 15 }}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        backgroundColor: '#fff'
-                                                    }}
-                                                    onPress={() => {
-                                                        const updateShowFormulas = [...showFormulas]
-                                                        updateShowFormulas[problemIndex] = !updateShowFormulas[problemIndex]
-                                                        setShowFormulas(updateShowFormulas)
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#006AFF',
-                                                            fontFamily: 'Overpass',
-                                                            fontSize: 10,
-                                                        }}
-                                                    >
-                                                        {PreferredLanguageText("formula")}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View> */}
                                         </View>
-
-                                        // <TextareaAutosize
-                                        // value={solutions[problemIndex].response}
-                                        // onChange={(e: any) => {
-                                        //     const updatedSolution = [...solutions]
-                                        //     updatedSolution[problemIndex].response = e.target.value;
-                                        //     setSolutions(updatedSolution)
-                                        //     props.setSolutions(updatedSolution)
-                                        // }}
-                                        // style={{
-                                        //     marginTop: 20,
-                                        //     marginBottom: 20,
-                                        //     fontSize: 15,
-                                        //     paddingTop: 12,
-                                        //     paddingBottom: 12,
-                                        //     width: '100%',
-                                        //     maxWidth: "100%",
-                                        //     borderBottom: '1px solid #efefef',
-                                        // }}
-                                        // minRows={3}
-                                        // placeholder='Answer'
-                                        // />
                                     }
 
 
@@ -1939,7 +1507,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                         {
                             props.isOwner && modifiedCorrectAnswerProblems[index] && (editQuestionNumber === index + 1) ?
-                                <View style={{ padding: 20, flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ paddingVertical: 20, paddingLeft: Dimensions.get('window').width < 768 ? 20 : 40, flexDirection: 'row', alignItems: 'center' }}>
                                     <Text style={{ marginRight: 10 }}>Regrade Option: </Text>
                                     <Menu
                                         onSelect={(cat: any) => {
@@ -1958,7 +1526,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#b9b9b9',
+                                                borderColor: '#f4f4f6',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%',
                                                 width: Dimensions.get('window').width < 1024 ? 300 : 400
@@ -1983,25 +1551,26 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                         {
                             props.isOwner && editQuestionNumber === (index + 1) ?
-                                <View style={{ width: '100%', flexDirection: 'row', marginBottom: 30, marginLeft: 20 }}>
+                                <View style={{ width: '100%', flexDirection: 'row', paddingTop: 25, paddingBottom: 50, paddingLeft: Dimensions.get('window').width < 768 ? 20 : 40 }}>
                                     <TouchableOpacity
                                         onPress={() => resetChanges(index)}
                                         style={{ backgroundColor: "white", borderRadius: 15, width: 120, marginRight: 30 }}
                                     >
-
                                         <Text
                                             style={{
                                                 textAlign: "center",
-                                                lineHeight: 35,
-                                                color: "#000000",
-                                                fontSize: 12,
-                                                backgroundColor: "#efefef",
-                                                borderRadius: 15,
+                                                lineHeight: 34,
                                                 paddingHorizontal: 20,
                                                 fontFamily: "inter",
-                                                overflow: "hidden",
                                                 height: 35,
-                                                textTransform: 'uppercase'
+                                                color: '#006AFF',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                borderColor: '#006AFF',
+                                                backgroundColor: '#fff',
+                                                fontSize: 12,
+                                                width: 120,
+                                                textTransform: "uppercase"
                                             }}>
                                             Reset
                                         </Text>
@@ -2013,20 +1582,19 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         }}
                                         style={{ backgroundColor: "white", borderRadius: 15, width: 120 }}
                                     >
-
                                         <Text
                                             style={{
                                                 textAlign: "center",
-                                                lineHeight: 35,
-                                                color: "#000000",
-                                                fontSize: 12,
-                                                backgroundColor: "#efefef",
-                                                borderRadius: 15,
+                                                lineHeight: 34,
                                                 paddingHorizontal: 20,
                                                 fontFamily: "inter",
-                                                overflow: "hidden",
                                                 height: 35,
-                                                textTransform: 'uppercase'
+                                                color: 'white',
+                                                borderRadius: 15,
+                                                backgroundColor: '#006AFF',
+                                                fontSize: 12,
+                                                width: 120,
+                                                textTransform: "uppercase"
                                             }}>
                                             DONE
                                         </Text>
@@ -2055,7 +1623,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <Text
                                 style={{
                                     textAlign: "center",
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     color: "white",
                                     fontSize: 12,
                                     backgroundColor: "#006AFF",
@@ -2066,7 +1634,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 35,
                                     textTransform: 'uppercase'
                                 }}>
-                                Save
+                                UPDATE QUIZ
                             </Text>
                         </TouchableOpacity>
                     </View>

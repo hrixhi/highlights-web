@@ -121,7 +121,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
-                                    lineHeight: 35,
+                                    lineHeight: 34,
                                     marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',
