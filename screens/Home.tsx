@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   StyleSheet, Animated, ActivityIndicator, Dimensions,
-  Image
+  Image, ScrollView
 } from 'react-native';
 import { TextInput } from "../components/CustomTextInput";
 import Alert from '../components/Alert'
@@ -19,7 +19,7 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, totalInboxUnread, getMeetingStatus } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, totalInboxUnread, getMeetingStatus, signup, authWithProvider } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
@@ -29,6 +29,7 @@ import Calendar from '../components/Calendar';
 import Meeting from '../components/Meeting';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 import logo from '../components/default-images/cues-logo-black-exclamation-hidden.jpg'
+import SocialMediaButton from '../components/SocialMediaButton';
 
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
@@ -41,6 +42,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   // read/learn
   const version = 'learn'
+
+  // Dev/Prod
+  const env = 'DEV'
 
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
@@ -68,16 +72,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [channelCreatedBy, setChannelCreatedBy] = useState('')
   const [channelFilterChoice, setChannelFilterChoice] = useState('All')
   const [showLoginWindow, setShowLoginWindow] = useState(false)
+  const [showSignupWindow, setShowSignupWindow] = useState(false)
   const [email, setEmail] = useState('')
+  const [fullName, setFullname] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
+  const [isSignupSubmitDisabled, setIsSignupSubmitDisabled] = useState(true);
+  const [signingUp, setSigningUp] = useState(false);
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
   const [dimensions, setDimensions] = useState({ window, screen });
   const [target, setTarget] = useState('');
   const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
   const [openChannelId, setOpenChannelId] = useState('');
+  const [passwordValidError, setPasswordValidError] = useState("");
 
   const [tab, setTab] = useState('Agenda')
   const [showDirectory, setShowDirectory] = useState<any>(false)
@@ -107,6 +117,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const leaveChannelAlert = PreferredLanguageText('leaveChannel')
   const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
+  const passwordInvalidError = PreferredLanguageText('atleast8char')
   const [filterStart, setFilterStart] = useState<any>(new Date())
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
@@ -188,6 +199,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     password,
     emailValidError,
   ]);
+
+  useEffect(() => {
+
+    if (fullName === "" || email === "" || password === "" || confirmPassword === "" || signingUp || passwordValidError) {
+      setIsSignupSubmitDisabled(true)
+    } else {
+      setIsSignupSubmitDisabled(false)
+    }
+
+  }, [fullName, email, password, confirmPassword, signingUp])
 
   const onDimensionsChange = useCallback(({ window, screen }: any) => {
     // window.location.reload()
@@ -823,6 +844,94 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [fadeAnimation, init])
 
+  const handleSocialAuth = (user: any) => {
+
+    const profile = user._profile;
+
+    const { name, email, profilePicURL } = profile;
+
+    const server = fetchAPI('')
+    server.mutate({
+      mutation: authWithProvider,
+      variables: {
+        email: email.toLowerCase(),
+        fullName: name,
+        provider: user._provider,
+        avatar: profilePicURL
+      }
+    }).then(async (r: any) => {
+      if (r.data.user.authWithProvider.user && r.data.user.authWithProvider.token && !r.data.user.authWithProvider.error) {
+        const u = r.data.user.authWithProvider.user
+        const token = r.data.user.authWithProvider.token
+        if (u.__typename) {
+          delete u.__typename
+        }
+
+        const userId = u._id;
+
+        OneSignal.setExternalUserId(userId);
+
+        const sU = JSON.stringify(u)
+        await AsyncStorage.setItem('jwt_token', token);
+        await AsyncStorage.setItem('user', sU)
+        setShowLoginWindow(false)
+        loadDataFromCloud()
+      } else {
+        const { error } = r.data.user.authWithProvider;
+        Alert(error);
+      }
+    }).catch(e => {
+      console.log(e)
+      Alert("Something went wrong. Try again.");
+    })
+  };
+  
+  const handleSocialAuthFailure = (err: any) => {
+    console.error(err);
+    Alert("Something went wrong. Try again.");
+  };
+
+  useEffect(() => {
+    const validPasswrdRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+    if (password && !validPasswrdRegex.test(password)) {
+      setPasswordValidError(passwordInvalidError);
+      return;
+    }
+
+    setPasswordValidError("");
+  }, [password]);
+
+  const handleSignup = useCallback(() => {
+
+
+    if (password !== confirmPassword) {
+      Alert("Passwords don't match")
+      return;
+    }
+
+    const server = fetchAPI('')
+    server.mutate({
+      mutation: signup,
+      variables: {
+        email: email.toLowerCase(),
+        fullName,
+        password,
+      }
+    }).then(async (r: any) => {
+      if (r.data.user.signup && r.data.user.signup === "SUCCESS") {
+        Alert("Your account was created successfully. Sign in to begin use.")
+        setFullname("")
+        setEmail("")
+        setPassword("")
+        setShowSignupWindow(false);
+      } else {
+        Alert(r.data.user.signup !== "" ? r.data.user.signup : "Error signing up. Try again.");
+      }
+    }).catch(e => console.log(e))
+
+  }, [fullName, email, password, confirmPassword])
+
   // Move to profile page
   const handleLogin = useCallback(() => {
     const server = fetchAPI('')
@@ -853,7 +962,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const { error } = r.data.user.login;
         Alert(error);
       }
-    }).catch(e => console.log(e))
+    }).catch(e => {
+      console.log(e)
+      Alert("Something went wrong. Try again.");
+    })
   }, [email, password])
 
   // imp
@@ -1487,7 +1599,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   return (
     <View style={styles(channelId).container} key={showHome.toString() + option.toString() + tab.toString()}>
       {
-        showLoginWindow ? <View style={{
+        showLoginWindow && showSignupWindow ? <View style={{
           width: '100%',
           height: '100%',
           flex: 1,
@@ -1507,9 +1619,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: dimensions.window.width < 1024 ? '100%' : '100%',
             borderRadius: dimensions.window.width < 1024 ? 0 : 0,
             marginTop: dimensions.window.width < 1024 ? 0 : 0,
-            padding: 40
+            paddingHorizontal: 40
           }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 50 }}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              horizontal={false}
+              contentContainerStyle={{
+                height: '100%',
+                paddingVertical: 40
+              }}
+              nestedScrollEnabled={true}
+            >
+            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 20 }}>
               <Image
                 source={logo}
                 style={{
@@ -1519,16 +1640,240 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#000000', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
-              {
-                showForgotPassword ? '' : PreferredLanguageText('login')
-              }
-            </Text> */}
-            <Text style={{ fontSize: 15, color: '#1F1F1F', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#1F1F1F', fontFamily: 'overpass', paddingBottom: 20, textAlign: 'center' }}>
+              Streamline your workspace for free. 
+            </Text>
+
+                {/* Social media buttons */}
+                <SocialMediaButton
+                  provider="facebook"
+                  appId={env === "DEV" ? "922882341942535" : "746023139417168"}
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  scope="public_profile,email"
+                >
+                  Sign up with Facebook
+                </SocialMediaButton>
+
+                <SocialMediaButton
+                  provider='google'
+                  appId='39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com'
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  key={'google'}
+                  scope={'https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile, openid'}
+                >
+                  Sign up with Google
+                </SocialMediaButton>
+
+
+            <View style={{
+              maxWidth: 400,
+              width: '100%',
+              marginTop: 30,
+              backgroundColor: 'white',
+              justifyContent: 'center',
+              alignSelf: 'center'
+            }}>
+              <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+                {PreferredLanguageText('email')}
+              </Text>
+              <TextInput
+                value={email}
+                placeholder={''}
+                onChangeText={(val: any) => setEmail(val)}
+                placeholderTextColor={'#1F1F1F'}
+                required={true}
+                errorText={emailValidError}
+              />
+              <View>
+                <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
+                  Full Name
+                </Text>
+                <TextInput
+                  value={fullName}
+                  placeholder={''}
+                  onChangeText={(val: any) => setFullname(val)}
+                  required={true}
+                  placeholderTextColor={'#1F1F1F'}
+                />
+              </View>
+              <View>
+                <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
+                  {PreferredLanguageText('password')}
+                </Text>
+                <TextInput
+                  secureTextEntry={true}
+                  value={password}
+                  placeholder={''}
+                  onChangeText={(val: any) => setPassword(val)}
+                  required={true}
+                  placeholderTextColor={'#1F1F1F'}
+                  errorText={passwordValidError}
+                  footerMessage={
+                    PreferredLanguageText('atleast8char')
+                  }
+                />
+              </View>
+              <View>
+                <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
+                  Re-type Password
+                </Text>
+                <TextInput
+                  secureTextEntry={true}
+                  value={confirmPassword}
+                  placeholder={''}
+                  onChangeText={(val: any) => setConfirmPassword(val)}
+                  required={true}
+                  placeholderTextColor={'#1F1F1F'}
+                />
+              </View>
+              
+              <TouchableOpacity
+                  onPress={() => handleSignup()}
+                  disabled={isSignupSubmitDisabled}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    lineHeight: 34,
+                    color: 'white',
+                    fontSize: 12,
+                    backgroundColor: '#006aff',
+                    paddingHorizontal: 20,
+                    fontFamily: 'inter',
+                    height: 35,
+                    // width: 180,
+                    width: 175,
+                    borderRadius: 15,
+                    textTransform: 'uppercase'
+                  }}>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              
+                <TouchableOpacity
+                  onPress={() => setShowSignupWindow(false)}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    marginBottom: 30,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    color: '#006aff',
+                    width: 175,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: '#006aff',
+                    backgroundColor: '#fff',
+                    fontSize: 12,
+                    textAlign: 'center',
+                    lineHeight: 34,
+                    paddingHorizontal: 20,
+                    fontFamily: 'inter',
+                    height: 35,
+                    // width: 200,
+                    textTransform: 'uppercase'
+                  }}>
+                    BACK
+                  </Text>
+                </TouchableOpacity>
+                  
+            </View>
+            </ScrollView>
+            
+          </View>
+        </View> : null
+      }
+      
+      {
+        showLoginWindow && !showSignupWindow ? <View style={{
+          width: '100%',
+          height: '100%',
+          flex: 1,
+          position: 'absolute',
+          zIndex: 50,
+          backgroundColor: 'rgba(16,16,16, 0.7)',
+          overflow: 'hidden'
+        }}
+        >
+          <View style={{
+            position: 'absolute',
+            zIndex: 525,
+            display: 'flex',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            width: dimensions.window.width < 1024 ? '100%' : '100%',
+            height: dimensions.window.width < 1024 ? '100%' : '100%',
+            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
+            marginTop: dimensions.window.width < 1024 ? 0 : 0,
+            paddingHorizontal: 40,
+          }}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              horizontal={false}
+              contentContainerStyle={{
+                height: '100%',
+                paddingVertical: 40
+              }}
+              nestedScrollEnabled={true}
+            >
+            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 30 }}>
+              <Image
+                source={logo}
+                style={{
+                  width: dimensions.window.height * 0.16 * 0.53456,
+                  height: dimensions.window.height * 0.16 * 0.2
+                }}
+                resizeMode={'contain'}
+              />
+            </View>
+            <Text style={{ fontSize: 15, color: '#1F1F1F', fontFamily: 'overpass', paddingBottom: 20, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
             </Text>
+            {
+              showForgotPassword ? null :
+              <View style={{ 
+                maxWidth: 400,
+                width: '100%',
+                backgroundColor: 'white',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                paddingBottom: 30 }}>
+                {/* Social media buttons */}
+                <SocialMediaButton
+                  provider="facebook"
+                  appId={env === "DEV" ? "922882341942535" : "746023139417168"}
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  scope="public_profile,email"
+                >
+                  Sign in with Facebook
+                </SocialMediaButton>
+
+                <SocialMediaButton
+                  provider='google'
+                  appId='39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com'
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  key={'google'}
+                  scope={'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid'}
+                >
+                  Sign in with Google
+                </SocialMediaButton>
+              </View>
+            }
             <View style={{
               maxWidth: 400,
               width: '100%',
@@ -1568,7 +1913,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   display: 'flex',
                   flexDirection: 'column',
                   paddingBottom: 10,
-                  paddingTop: 40
                 }}>
                 <TouchableOpacity
                   disabled={isSubmitDisabled}
@@ -1605,6 +1949,37 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                   </Text>
                 </TouchableOpacity>
+                {/* Sign up button */}
+                {showForgotPassword ? null : <TouchableOpacity
+                  onPress={() => {
+                    setShowSignupWindow(true);
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    color: '#006aff',
+                    width: 175,
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: '#006aff',
+                    backgroundColor: '#fff',
+                    fontSize: 12,
+                    textAlign: 'center',
+                    lineHeight: 34,
+                    paddingHorizontal: 20,
+                    fontFamily: 'inter',
+                    height: 35,
+                    // width: 200,
+                    textTransform: 'uppercase'
+                  }}>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>}
                 <TouchableOpacity
                   onPress={() => setShowForgotPassword(!showForgotPassword)}
                   style={{
@@ -1638,8 +2013,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               </View>
             </View>
             <View style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
-              <LanguageSelect />
+              {/* <LanguageSelect /> */}
             </View>
+            </ScrollView>
           </View>
         </View> : null
       }

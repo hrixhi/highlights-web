@@ -148,22 +148,47 @@ export const convertToHtml = gql`
 export const signup = gql`
   mutation(
     $email: String!
-    $userId: String!
-    $password: String!
     $fullName: String!
-    $displayName: String!
+    $provider: String!
+    $password: String
+    $avatar: String
   ) {
     user {
       signup(
         email: $email
-        userId: $userId
-        password: $password
         fullName: $fullName
-        displayName: $displayName
+        provider: $provider
+        password: $password
+        avatar: $avatar
       )
     }
   }
 `;
+
+export const authWithProvider = gql`
+  mutation(
+    $email: String!
+    $fullName: String!
+    $provider: String!
+    $avatar: String
+  ) {
+    user {
+      authWithProvider(
+        email: $email
+        fullName: $fullName
+        provider: $provider
+        avatar: $avatar
+      ) {
+        user {
+          _id
+        }
+        error
+        token
+      }
+    } 
+  }
+`;
+
 export const saveCuesToCloud = gql`
   mutation($userId: String!, $cues: [CueInputObject!]!) {
     cue {

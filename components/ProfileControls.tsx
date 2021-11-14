@@ -671,7 +671,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               ) : null}
               {
                 props.showHelp || props.showSaveCue ? null : <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
-                  <LanguageSelect />
+                  {/* <LanguageSelect /> */}
                 </View>
               }
             </View>

@@ -69,6 +69,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [loadingFolder, setLoadingFolder] = useState(false)
     const [updateFolderTitle, setUpdateFolderTitle] = useState('');
     const [folderCuesToDisplay, setFolderCuesToDisplay] = useState<any[]>([]);
+    const [showExistingFolder, setShowExistingFolder] = useState(false);
 
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
@@ -951,9 +952,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             shadowRadius={10}
             elevation={500000}
             containerStyle={{
-                height: 'auto'
+                height: 'auto',
+                zIndex: 500001,
             }}
-        ><View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', backgroundColor: '#efefef', paddingVertical: 14, paddingHorizontal: 10 }}>
+        ><View style={{ zIndex: 500001, flex: 1, flexDirection: 'column', alignItems: 'center', backgroundColor: '#efefef', paddingVertical: 14, paddingHorizontal: 10 }}>
+
                 {/* Render Folder Title */}
 
                 <Text style={{ fontSize: 13, fontFamily: 'Inter', color: '#1F1F1F', paddingBottom: 10, width: '100%', maxWidth: 900 }}>
@@ -1919,7 +1922,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     * */
     const renderHeader = () => {
 
-        return <View style={{ width: '100%', backgroundColor: '#1f1f1f', flexDirection: 'column' }}>
+        return <View style={{ width: '100%', backgroundColor: '#1f1f1f', flexDirection: 'column', zIndex: 500000  }}>
             {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
             <View style={{
                 flexDirection: 'row',
@@ -1935,6 +1938,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowRadius: 10,
                 zIndex: 500000
             }}>
+                {folderId !== "" && folderCuesToDisplay.length !== 0 && !editFolder && !createNewFolder && showOriginal ? <TouchableOpacity onPress={() => setShowExistingFolder(!showExistingFolder)} style={{ position: 'absolute', zIndex: 500001, bottom: -17, left: '50%', width: 35, height: 35, borderRadius: '100%', backgroundColor: '#efefef', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', shadowColor: "#000",
+                shadowOffset: {
+                    width: 10,
+                    height: 10,
+                },
+                shadowOpacity: 0.10,
+                shadowRadius: 15, }}>
+                    <Ionicons name={showExistingFolder ? "chevron-up-outline" : "chevron-down-outline"} size={20} color="#1f1f1f"  />
+                </TouchableOpacity> : null}
                 <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#1f1f1f', }}>
 
                     {/* BACK BUTTON */}
@@ -2088,10 +2100,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </View>
             </View>
 
+            {/* These are the expanded menues with folders */}
+
             <View style={{
                 backgroundColor: '#efefef',
             }}>
-                {folderId !== "" && folderCuesToDisplay.length !== 0 && !editFolder && !createNewFolder && showOriginal ? renderExistingFolder() : null}
+                {folderId !== "" && folderCuesToDisplay.length !== 0 && !editFolder && !createNewFolder && showOriginal && showExistingFolder ? renderExistingFolder() : null}
             </View>
 
             <View style={{

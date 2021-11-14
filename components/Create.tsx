@@ -1420,7 +1420,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 height: 40,
                                 marginRight: 10,
                                 flexDirection: 'row',
-                                justifyContent: 'flex-end'
+                                justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                               }}
                             >
                               <Switch
@@ -1501,7 +1501,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 height: 40,
                                 marginRight: 10,
                                 flexDirection: 'row',
-                                justifyContent: 'flex-end'
+                                justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                               }}
                             >
                               <Switch
@@ -1687,7 +1687,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   height: 40,
                                   marginRight: 10,
                                   flexDirection: 'row',
-                                  justifyContent: 'flex-end'
+                                  justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                                 }}
                               >
                                 <Switch
@@ -1709,7 +1709,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     // width: "100%",
                                     // display: "flex",
                                     flexDirection: 'row',
-                                    justifyContent: 'flex-end',
+                                    justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                     backgroundColor: "white",
                                     alignItems: 'center'
                                   }}
@@ -1772,7 +1772,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   height: 40,
                                   marginRight: 10,
                                   flexDirection: 'row',
-                                  justifyContent: 'flex-end'
+                                  justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                                 }}
                               >
                                 <Switch
@@ -1885,7 +1885,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 height: 40,
                                 marginRight: 10,
                                 flexDirection: 'row',
-                                justifyContent: 'flex-end',
+                                justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                               }}
                             >
                               <Switch
@@ -1913,7 +1913,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   display: "flex",
                                   flexDirection: "row",
                                   backgroundColor: "white",
-                                  justifyContent: 'flex-end',
+                                  justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                   alignItems: 'center'
                                 }}
                               >
@@ -2082,7 +2082,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{
                             fontSize: 14,
                             color: '#000000',
-                            fontFamily: 'Inter'
+                            fontFamily: 'Inter',
+                            paddingBottom: 15,
                           }}
                         >
                           {PreferredLanguageText("priority")}
@@ -2210,7 +2211,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               height: 40,
                               marginRight: 10,
                               flexDirection: 'row',
-                              justifyContent: 'flex-end'
+                              justifyContent: width < 768 ? 'flex-start' : 'flex-end'
                             }}
                           >
                             <Switch
@@ -2418,7 +2419,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               backgroundColor: "white",
                               height: 40,
                               flexDirection: 'row',
-                              justifyContent: 'flex-end',
+                              justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                               marginRight: 10,
                             }}
                           >
@@ -2529,7 +2530,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             height: 40,
                             marginRight: 10,
                             flexDirection: 'row',
-                            justifyContent: 'flex-end',
+                            justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                           }}
                         >
                           <Switch
@@ -2671,7 +2672,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             backgroundColor: "white",
                             height: 40,
                             flexDirection: 'row',
-                            justifyContent: 'flex-end',
+                            justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                             marginRight: 10,
                           }}
                         >

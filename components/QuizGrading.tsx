@@ -369,8 +369,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 placeholderTextColor={'#1F1F1F'}
                                             />}
                                             {
-                                                !props.isOwner ? <Text style={{ fontSize: 14, marginTop: 5, marginBottom: 20, paddingTop: 12, paddingRight: 30, textAlign: 'right' }}>
-                                                    {Number(problemScores[index]).toFixed(1)} / {Number(problem.points).toFixed(1)}
+                                                !props.isOwner ? <Text style={{ fontSize: 16, marginTop: 5, marginBottom: 10, paddingTop: 12, paddingRight: 30, textAlign: 'right', fontFamily: "Inter" }}>
+                                                    {Number(problemScores[index]).toFixed(1).replace(/\.0+$/,'')} / {Number(problem.points).toFixed(1).replace(/\.0+$/,'')}
                                                 </Text> : null
                                             }
 

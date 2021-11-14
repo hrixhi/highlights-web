@@ -2269,7 +2269,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             paddingBottom: 12,
                             marginTop: 10,
                             marginBottom: 0,
-                            maxWidth: 210,
+                            maxWidth: 300,
                             borderBottom: '1px solid #efefef',
                             borderRadius: 1,
                             // fontWeight: "600",
@@ -2285,7 +2285,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingRight: 15,
                                 paddingTop: 20,
                                 marginBottom: 10,
-                                maxWidth: Dimensions.get('window').width < 768 ? '100%' : 210,
+                                maxWidth: Dimensions.get('window').width < 768 ? '100%' : 300,
                                 fontWeight: "600",
                                 width: '100%',
                                 fontFamily: 'Inter'
@@ -4677,8 +4677,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ) : null}
                         {
                             !isOwner && props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
-                                <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginLeft: 15, }}>
-                                    <Text style={{ color: '#f94144', fontSize: 12, textAlign: 'center' }}>
+                                <View style={{ marginTop: 20 }}>
+                                    <Text style={{ color: '#f94144', fontSize: 18, fontFamily: 'Inter', textAlign: 'center' }}>
                                         LATE
                                     </Text>
                                 </View>
