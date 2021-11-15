@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { Image, Dimensions } from 'react-native';
 import { Text, TouchableOpacity, View } from '../components/Themed';
 import SocialLogin from 'react-social-login';
 import { Ionicons } from '@expo/vector-icons';
+import facebookLogo from '../assets/images/facebookIcon.svg'
+import googleLogo from '../assets/images/googleIcon.svg'
 
 const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)=>{
     
@@ -13,9 +16,19 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
     let icon;
 
     if (children.toLowerCase().includes('facebook')) {
-        icon = <Ionicons name="ios-logo-facebook" size={20} color="fff" style={{ marginRight: 8 }} />
+        icon = <Image source={facebookLogo} style={{
+            width: 20,
+            height: 20,
+            marginRight: 8
+          }}
+          resizeMode={'contain'} />
     } else if (children.toLowerCase().includes('google')) {
-        icon = <Ionicons name="ios-logo-google" size={20} color="fff" style={{ marginRight: 8 }} />
+        icon = <Image source={googleLogo} style={{
+            width: 20,
+            height: 20,
+            marginRight: 8
+          }}
+          resizeMode={'contain'} />
     }
 
     return (
@@ -26,19 +39,21 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 overflow: 'hidden',
                 height: 35,
                 marginTop: 15,
-                width: '100%', justifyContent: 'center', flexDirection: 'row'
+                justifyContent: 'center', 
+                flexDirection: 'row'
             }} {...props}>
             <Text style={{
                     textAlign: 'center',
                     lineHeight: 34,
-                    color: 'white',
+                    color: '#006AFF',
                     fontSize: 12,
-                    backgroundColor: children.toLowerCase().includes('facebook') ? "#3b5998" : "#db3236",
+                    borderColor: "#006AFF",
+                    borderWidth: 1,
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
                     // width: 180,
-                    width: 230,
+                    width: Dimensions.get('window').width < 768 ? 130 : 150,
                     borderRadius: 15,
                     textTransform: 'uppercase',
                     justifyContent: 'center',
@@ -46,7 +61,7 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                     display: 'flex',
                     flexDirection: 'row'
                   }}>
-                {icon ? icon : null} { children }
+                {icon ? icon : null} Sign in
             </Text>
       </TouchableOpacity>
       

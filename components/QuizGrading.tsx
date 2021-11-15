@@ -321,11 +321,39 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     return <View style={{ borderBottomColor: '#efefef', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         <View style={{ flexDirection: 'column', width: '100%' }}>
-                                <View style={{ flexDirection: 'row', width: '100%' }}>
-                                    <Text style={{ color: '#000000', fontSize: 22, paddingBottom: Dimensions.get('window').width < 768 ? 0 : 25, width: 40, paddingTop: Dimensions.get('window').width < 768 ? 0 : 15, fontFamily: 'inter' }}>
+                                <View style={{  flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: '100%' }}>
+                                    <Text style={{ color: '#000000', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
                                         {index + 1}.
                                     </Text>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0, marginLeft: 'auto' }}>
+
+                                    {/* Question */}
+                                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+
+                                    {
+                                        (audioVideoQuestion ? <View style={{ width: '100%', marginBottom: 10, paddingTop: 10, flex: 1 }}>
+                                                {renderAudioVideoPlayer(url, type)}
+                                                <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
+                                                    {parser(content)}
+                                                </Text>
+                                            </View> : <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, width: '80%', lineHeight: 25, paddingTop: 10, flex: 1 }}>
+                                                {parser(problem.question)}
+                                            </Text>)
+                                    }
+                                    
+                                       
+
+                                       {/* Scoring */}
+                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0, marginBottom: Dimensions.get('window').width > 768 ? 20 : 0, marginLeft: 'auto', paddingTop: 7 }}>
+                                            <View style={{ flexDirection: 'row', marginRight: 20 }}>
+                                                {
+                                                    !problem.required ?
+                                                    (null)
+                                                        : 
+                                                        (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 10 }}>
+                                                        *
+                                                    </Text>)
+                                                }
+                                            </View>
                                             {!props.isOwner ? null : <TextInput
                                                 editable={props.isOwner ? true : false}
                                                 value={problemScores[index]}
@@ -374,33 +402,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 </Text> : null
                                             }
 
-                                            <View style={{ flexDirection: 'row' }}>
-                                                {
-                                                    !problem.required ?
-                                                    (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
-                                                            optional
-                                                        </Text>)
-                                                        : 
-                                                        (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 3, marginBottom: 5, paddingTop: 8, marginRight: 10 }}>
-                                                            required
-                                                        </Text>)
-                                                }
+                                            
                                             </View>
-                                        </View>
+                                        <View/>
+                                    </View>
                                 </View>
 
-                                <View>
-                                    {
-                                        (audioVideoQuestion ? <View style={{ width: '100%', marginBottom: 10 }}>
-                                                {renderAudioVideoPlayer(url, type)}
-                                                <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
-                                                    {parser(content)}
-                                                </Text>
-                                            </View> : <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, width: '80%', lineHeight: 25 }}>
-                                                {parser(problem.question)}
-                                            </Text>)
-                                    }
-                                </View>
+                                
                             
                             </View>
 

@@ -1092,7 +1092,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             paddingHorizontal: dimensions.window.width < 1024 ? 20 : 0
           }}
         >
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection:  Dimensions.get("window").width < 768 ? "column" : "row" }}>
             {
               props.option === 'Browse' && !showOptions ? null : <TouchableOpacity
                 style={{
@@ -1129,12 +1129,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textAlign: "center",
                       lineHeight: 28,
                       color: "#006AFF",
-                      // borderWidth: 1,
+                      borderColor: "#006AFF",
+                      borderWidth: 1,
                       marginTop: 2,
                       fontSize: 12,
-                      borderColor: "#006AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 20,
+                      paddingHorizontal: Dimensions.get("window").width < 768 ? 15 : 20,
+                      marginRight: Dimensions.get("window").width < 768 ? 15 : 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 30,
@@ -1164,12 +1165,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textAlign: "center",
                       lineHeight: 28,
                       color: "#006AFF",
-                      // borderWidth: 1,
+                      borderColor: "#006AFF",
+                      borderWidth: 1,
                       marginTop: 2,
                       fontSize: 12,
-                      borderColor: "#006AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 20,
+                      paddingHorizontal:  Dimensions.get("window").width < 768 ? 15 : 20,
+                      marginRight: Dimensions.get("window").width < 768 ? 15 : 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 30,
@@ -1210,13 +1212,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         textAlign: "center",
                         lineHeight: 28,
-                        color: "#006AFF",
-                        // borderWidth: 1,
+                        color: "#fff",
+                        backgroundColor: "#006AFF",
                         marginTop: 2,
                         fontSize: 12,
-                        borderColor: "#006AFF",
                         borderRadius: 15,
-                        paddingLeft: 20,
+                        paddingHorizontal: Dimensions.get("window").width < 768 ? 15 : 20,
                         fontFamily: "inter",
                         overflow: "hidden",
                         height: 30,
@@ -2785,6 +2786,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }}>
                           <View style={{
                             width: '100%',
+                            maxWidth: 600,
                             // paddingRight: Dimensions.get('window').width > 768 ? 15 : 0,
                             paddingTop: 15
                           }}>

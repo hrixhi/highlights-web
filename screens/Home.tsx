@@ -1626,7 +1626,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               horizontal={false}
               contentContainerStyle={{
                 height: '100%',
-                paddingVertical: 40
+                paddingVertical: 40,
+                justifyContent: 'center'
               }}
               nestedScrollEnabled={true}
             >
@@ -1641,31 +1642,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               />
             </View>
             <Text style={{ fontSize: 15, color: '#1F1F1F', fontFamily: 'overpass', paddingBottom: 20, textAlign: 'center' }}>
-              Streamline your workspace for free. 
+              Get started for free. 
             </Text>
-
-                {/* Social media buttons */}
-                <SocialMediaButton
-                  provider="facebook"
-                  appId={env === "DEV" ? "922882341942535" : "746023139417168"}
-                  onLoginSuccess={handleSocialAuth}
-                  onLoginFailure={handleSocialAuthFailure}
-                  scope="public_profile,email"
-                >
-                  Sign up with Facebook
-                </SocialMediaButton>
-
-                <SocialMediaButton
-                  provider='google'
-                  appId='39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com'
-                  onLoginSuccess={handleSocialAuth}
-                  onLoginFailure={handleSocialAuthFailure}
-                  key={'google'}
-                  scope={'https://www.googleapis.com/auth/userinfo.email, https://www.googleapis.com/auth/userinfo.profile, openid'}
-                >
-                  Sign up with Google
-                </SocialMediaButton>
-
 
             <View style={{
               maxWidth: 400,
@@ -1717,7 +1695,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               </View>
               <View>
                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
-                  Re-type Password
+                  Confirm Password
                 </Text>
                 <TextInput
                   secureTextEntry={true}
@@ -1756,8 +1734,24 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     Sign Up
                   </Text>
                 </TouchableOpacity>
+
+               <TouchableOpacity
+                        onPress={() => setShowSignupWindow(false)}
+                        style={{ backgroundColor: 'white',
+                        overflow: 'hidden',
+                        height: 35,
+                        marginTop: 15,
+                        marginBottom: 30,
+                        width: '100%', justifyContent: 'center', flexDirection: 'row' }}>
+                        <Text style={{
+                          fontSize: 14,
+                          color: '#006AFF'
+                        }}>
+                          Back to Sign In
+                        </Text>
+                      </TouchableOpacity>
               
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => setShowSignupWindow(false)}
                   style={{
                     backgroundColor: 'white',
@@ -1785,7 +1779,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}>
                     BACK
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                   
             </View>
             </ScrollView>
@@ -1823,7 +1817,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               horizontal={false}
               contentContainerStyle={{
                 height: '100%',
-                paddingVertical: 40
+                paddingVertical: 40,
+                justifyContent: 'center'
               }}
               nestedScrollEnabled={true}
             >
@@ -1842,38 +1837,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
             </Text>
-            {
-              showForgotPassword ? null :
-              <View style={{ 
-                maxWidth: 400,
-                width: '100%',
-                backgroundColor: 'white',
-                justifyContent: 'center',
-                alignSelf: 'center',
-                paddingBottom: 30 }}>
-                {/* Social media buttons */}
-                <SocialMediaButton
-                  provider="facebook"
-                  appId={env === "DEV" ? "922882341942535" : "746023139417168"}
-                  onLoginSuccess={handleSocialAuth}
-                  onLoginFailure={handleSocialAuthFailure}
-                  scope="public_profile,email"
-                >
-                  Sign in with Facebook
-                </SocialMediaButton>
-
-                <SocialMediaButton
-                  provider='google'
-                  appId='39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com'
-                  onLoginSuccess={handleSocialAuth}
-                  onLoginFailure={handleSocialAuthFailure}
-                  key={'google'}
-                  scope={'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid'}
-                >
-                  Sign in with Google
-                </SocialMediaButton>
-              </View>
-            }
+            
             <View style={{
               maxWidth: 400,
               width: '100%',
@@ -1894,9 +1858,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
-                      {PreferredLanguageText('password')}
-                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                      <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
+                        {PreferredLanguageText('password')}
+                      </Text>
+                      {showForgotPassword ? null : <TouchableOpacity
+                        onPress={() => {
+                          setShowForgotPassword(true)
+                        }}
+                        style={{ backgroundColor: 'white',
+                        flexDirection: 'row',
+                        justifyContent: 'center' }}>
+                        <Text style={{
+                          fontSize: 13,
+                          color: '#006AFF'
+                        }}>
+                          Forgot Password?
+                        </Text>
+                      </TouchableOpacity>}
+                    </View>
+                    
                     <TextInput
                       secureTextEntry={true}
                       value={password}
@@ -1950,37 +1931,65 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   </Text>
                 </TouchableOpacity>
                 {/* Sign up button */}
-                {showForgotPassword ? null : <TouchableOpacity
-                  onPress={() => {
-                    setShowSignupWindow(true);
-                  }}
-                  style={{
-                    backgroundColor: 'white',
-                    overflow: 'hidden',
-                    height: 35,
-                    marginTop: 15,
-                    width: '100%', justifyContent: 'center', flexDirection: 'row'
-                  }}>
-                  <Text style={{
-                    color: '#006aff',
-                    width: 175,
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    borderColor: '#006aff',
-                    backgroundColor: '#fff',
-                    fontSize: 12,
-                    textAlign: 'center',
-                    lineHeight: 34,
-                    paddingHorizontal: 20,
-                    fontFamily: 'inter',
-                    height: 35,
-                    // width: 200,
-                    textTransform: 'uppercase'
-                  }}>
-                    Sign Up
+                {showForgotPassword ? null : <View style={{
+                  backgroundColor: 'white',
+                  width: '100%', 
+                  marginTop: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'center'
+                }}>
+                  <Text>
+                    Not a member?
                   </Text>
-                </TouchableOpacity>}
-                <TouchableOpacity
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowSignupWindow(true);
+                    }}
+                    style={{ marginLeft: 5 }}>
+                    <Text style={{
+                      fontSize: 14,
+                      color: '#006AFF'
+                    }}>
+                      Sign up now
+                    </Text>
+                  </TouchableOpacity>
+                </View>}
+
+            {
+              showForgotPassword ? null :
+              <View style={{ 
+                maxWidth: 400,
+                width: '100%',
+                backgroundColor: 'white',
+                justifyContent: 'space-between',
+                alignSelf: 'center',
+                flexDirection: 'row',
+                marginTop: 20 }}>
+                {/* Social media buttons */}
+                <SocialMediaButton
+                  provider="facebook"
+                  appId={env === "DEV" ? "922882341942535" : "746023139417168"}
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  scope="public_profile,email"
+                >
+                  Sign in with Facebook
+                </SocialMediaButton>
+
+                <SocialMediaButton
+                  provider='google'
+                  appId='39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com'
+                  onLoginSuccess={handleSocialAuth}
+                  onLoginFailure={handleSocialAuthFailure}
+                  key={'google'}
+                  scope={'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid'}
+                >
+                  Sign in with Google
+                </SocialMediaButton>
+              </View>
+            }
+                  
+                {/* <TouchableOpacity
                   onPress={() => setShowForgotPassword(!showForgotPassword)}
                   style={{
                     backgroundColor: 'white',
@@ -1989,7 +1998,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     marginTop: 15,
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
-                  <Text style={{
+                  {showForgotPassword ? <Text style={{
                     color: '#006aff',
                     width: 175,
                     borderWidth: 1,
@@ -2006,10 +2015,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     textTransform: 'uppercase'
                   }}>
                     {
-                      showForgotPassword ? PreferredLanguageText('back') : PreferredLanguageText('forgotPassword')
+                      PreferredLanguageText('back')
                     }
-                  </Text>
-                </TouchableOpacity>
+                  </Text> : null}
+                </TouchableOpacity> */}
+                {
+                  showForgotPassword ? <TouchableOpacity
+                    onPress={() => setShowForgotPassword(false)}
+                    style={{ backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    marginBottom: 30,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row' }}>
+                    <Text style={{
+                      fontSize: 14,
+                      color: '#006AFF'
+                    }}>
+                      Back to Sign In
+                    </Text>
+                  </TouchableOpacity> : null
+                }
+
               </View>
             </View>
             <View style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>

@@ -2657,9 +2657,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{
                                             textAlign: "center",
                                             lineHeight: 34,
-                                            color: "#000000",
+                                            color: "#006AFF",
+                                            borderColor: "#006AFF",
+                                            borderWidth: 1,
                                             fontSize: 12,
-                                            backgroundColor: "#efefef",
+                                            backgroundColor: "#fff",
                                             paddingHorizontal: 20,
                                             fontFamily: "inter",
                                             height: 35,
