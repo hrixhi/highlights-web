@@ -292,7 +292,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return (<View style={{
             marginTop: 0,
             flexDirection: 'row',
-            // paddingTop: width < 1024 ? 20 : 0
+            // paddingTop: width < 768 ? 20 : 0
             // borderWidth: 1,
             // alignSelf: 'flex-start',
             // flex: 1
@@ -784,7 +784,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const width = Dimensions.get("window").width;
     const windowHeight =
-        width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
+        width < 768 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 
     const f: any = eventFrequencyOptions.find((item) => {
         return item.value === frequency
@@ -943,14 +943,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderMeetingOptions = () => {
         return channelId !== "" || editChannelName !== "" ? (
-            <DefaultView style={{ width: "100%", flexDirection: width < 1024 ? "column" : "row", paddingBottom: 15 }}>
+            <DefaultView style={{ width: "100%", flexDirection: width < 768 ? "column" : "row", paddingBottom: 15 }}>
                 {!editEvent ? <View
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        width: width < 1024 ? "100%" : "33.33%"
+                        width: width < 768 ? "100%" : "33.33%"
                     }}>
-                    <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 25, paddingBottom: 15, }}>
+                    <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 25, paddingBottom: 15, }}>
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
@@ -982,9 +982,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            width: width < 1024 ? "100%" : "33.33%"
+                            width: width < 768 ? "100%" : "33.33%"
                         }}>
-                        <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 30, paddingBottom: 15, backgroundColor: "#efefef" }}>
+                        <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "#efefef" }}>
                             <Text style={{ fontSize: 11, color: '#1F1F1F', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
                         </View>
                         <Switch
@@ -1580,31 +1580,25 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             style={{
                 opacity: modalAnimation,
                 width: "100%",
-                height: width < 1024 ? Dimensions.get("window").height - 104 : Dimensions.get("window").height - 52,
+                height: width < 768 ? Dimensions.get("window").height - 104 : Dimensions.get("window").height - 52,
                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
                 overflow: tab === 'Add' ? 'hidden' : 'scroll',
-                // display: 'flex',
-                // justifyContent: 'center'
             }}>
             <View style={{
-                width: '100%', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
+                width: '100%', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                 maxWidth: 900,
                 alignSelf: 'center'
-                // paddingTop: 20
             }}>
                 <View style={{
-                    width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
-                    // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
+                    width: Dimensions.get('window').width < 768 ? '100%' : '100%',
                     backgroundColor: tab === "Add" ? 'white' : '#efefef',
                 }}>
                     <View
                         style={{
                             width: "100%",
-                            // height: 620,
-                            // paddingBottom: 20,
                             backgroundColor: tab === "Add" ? 'white' : '#efefef',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
@@ -1629,43 +1623,19 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={{
                                     backgroundColor: tab === "Add" ? 'white' : '#efefef',
                                     width: "100%",
-                                    // height: "100%",
-                                    // paddingHorizontal: 20,
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
                                 }}>
-
-                                {/* {!showAddEvent ? <Calendar
-                                    onSelectEvent={(e: any) => onSelectEvent(e)}
-                                    localizer={localizer}
-                                    events={events}
-                                    startAccessor="start"
-                                    endAccessor="end"
-                                    style={{ height: 550, fontFamily: "overpass", color: "#000000" }}
-                                    components={{
-                                        event: EventComponent
-                                    }}
-                                /> : null} */}
                                 {renderTabs(tab)}
                                 {
                                     !showAddEvent ?
                                         <View
                                             style={{
                                                 borderRadius: 1,
-                                                // height: 'auto',
-                                                // overflow: 'hidden',
-                                                // marginTop: 20,
-                                                // borderBottomRightRadius: tab !== 'Add' && tab !== 'Activity' ? 8 : 1,
-                                                // borderBottomLeftRadius: tab !== 'Add' && tab !== 'Activity' ? 8 : 1,
-                                                marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                // borderBottomWidth: tab === 'Add' || tab === 'Activity' ? 0 : 1,
+                                                marginBottom: Dimensions.get('window').width < 768 ? 0 : 0,
                                                 borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
-                                                // borderRightWidth: tab === 'Activity' ? 0 : 1,
-                                                // borderLeftWidth: tab === 'Activity' ? 0 : 1,
                                                 borderColor: '#efefef',
                                                 overflow: 'hidden',
-                                                // maxHeight: 550,
-                                                // height: '100%',
                                                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                                                 shadowColor: "#000",
                                                 shadowOffset: {
@@ -1712,9 +1682,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     /> : (
                                                                         tab === tabs[3] ?
                                                                             <View style={{
-                                                                                width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
-                                                                                paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                                                paddingTop: Dimensions.get('window').width < 1024 ? 0 : 0,
+                                                                                width: Dimensions.get('window').width < 768 ? '100%' : '100%',
+                                                                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 0,
+                                                                                paddingTop: Dimensions.get('window').width < 768 ? 0 : 0,
                                                                                 backgroundColor: 'white'
                                                                             }}>
                                                                                 <View>
@@ -1838,10 +1808,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             </View> : (
                                                                                 <ScrollView
                                                                                     contentContainerStyle={{
-                                                                                        maxHeight: width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
+                                                                                        maxHeight: width < 768 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                                                         alignItems: 'center',
                                                                                         backgroundColor: 'white',
-                                                                                        paddingHorizontal: width < 1024 ? 20 : 0
+                                                                                        paddingHorizontal: width < 768 ? 20 : 0
                                                                                     }}
                                                                                 >
                                                                                     <View
@@ -2139,7 +2109,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         )}
                         {/* TEMPORARILY HIDDEN */}
                         <View style={{ backgroundColor: "#efefef", display: 'none' }}>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{

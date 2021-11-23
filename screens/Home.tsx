@@ -816,7 +816,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      // if (!init && dimensions.window.width >= 1024) {
+      // if (!init && dimensions.window.width >= 768) {
       //   // openModal('Calendar')
       // }
       // HANDLE PROFILE
@@ -1273,8 +1273,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setShowHome(false)
   }, [subscriptions])
 
-  console.log("")
-
   const reloadCueListAfterUpdate = useCallback(async () => {
     const unparsedCues = await AsyncStorage.getItem('cues')
     const u = await AsyncStorage.getItem('user')
@@ -1615,10 +1613,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            width: dimensions.window.width < 1024 ? '100%' : '100%',
-            height: dimensions.window.width < 1024 ? '100%' : '100%',
-            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
-            marginTop: dimensions.window.width < 1024 ? 0 : 0,
+            width: dimensions.window.width < 768 ? '100%' : '100%',
+            height: dimensions.window.width < 768 ? '100%' : '100%',
+            borderRadius: dimensions.window.width < 768 ? 0 : 0,
+            marginTop: dimensions.window.width < 768 ? 0 : 0,
             paddingHorizontal: 40
           }}>
             <ScrollView
@@ -1657,6 +1655,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
+                autoCompleteType="email"
+                textContentType="emailAddress"
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
@@ -1669,6 +1669,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   Full Name
                 </Text>
                 <TextInput
+                  autoCompleteType="name"
+                  textContentType="name"
                   value={fullName}
                   placeholder={''}
                   onChangeText={(val: any) => setFullname(val)}
@@ -1682,6 +1684,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </Text>
                 <TextInput
                   secureTextEntry={true}
+                  autoCompleteType={"password"}
+                  textContentType="newPassword"
                   value={password}
                   placeholder={''}
                   onChangeText={(val: any) => setPassword(val)}
@@ -1699,6 +1703,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </Text>
                 <TextInput
                   secureTextEntry={true}
+                  autoCompleteType={"off"}
                   value={confirmPassword}
                   placeholder={''}
                   onChangeText={(val: any) => setConfirmPassword(val)}
@@ -1749,38 +1754,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}>
                           Back to Sign In
                         </Text>
-                      </TouchableOpacity>
-              
-                {/* <TouchableOpacity
-                  onPress={() => setShowSignupWindow(false)}
-                  style={{
-                    backgroundColor: 'white',
-                    overflow: 'hidden',
-                    height: 35,
-                    marginTop: 15,
-                    marginBottom: 30,
-                    width: '100%', justifyContent: 'center', flexDirection: 'row'
-                  }}>
-                  <Text style={{
-                    color: '#006aff',
-                    width: 175,
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    borderColor: '#006aff',
-                    backgroundColor: '#fff',
-                    fontSize: 12,
-                    textAlign: 'center',
-                    lineHeight: 34,
-                    paddingHorizontal: 20,
-                    fontFamily: 'inter',
-                    height: 35,
-                    // width: 200,
-                    textTransform: 'uppercase'
-                  }}>
-                    BACK
-                  </Text>
-                </TouchableOpacity> */}
-                  
+                      </TouchableOpacity>                  
             </View>
             </ScrollView>
             
@@ -1806,10 +1780,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            width: dimensions.window.width < 1024 ? '100%' : '100%',
-            height: dimensions.window.width < 1024 ? '100%' : '100%',
-            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
-            marginTop: dimensions.window.width < 1024 ? 0 : 0,
+            width: dimensions.window.width < 768 ? '100%' : '100%',
+            height: dimensions.window.width < 768 ? '100%' : '100%',
+            borderRadius: dimensions.window.width < 768 ? 0 : 0,
+            marginTop: dimensions.window.width < 768 ? 0 : 0,
             paddingHorizontal: 40,
           }}>
             <ScrollView
@@ -1849,6 +1823,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
+                autoCompleteType="email"
+                textContentType="emailAddress"
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
@@ -1879,6 +1855,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                     
                     <TextInput
+                      autoCompleteType="password"
+                      textContentType="password"
                       secureTextEntry={true}
                       value={password}
                       placeholder={''}
@@ -2068,10 +2046,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               alignSelf: 'center',
               // justifyContent: 'center',
               backgroundColor: 'white',
-              width: dimensions.window.width < 1024 ? '100%' : '100%',
-              height: dimensions.window.width < 1024 ? '100%' : '100%',
-              borderRadius: dimensions.window.width < 1024 ? 0 : 0,
-              marginTop: dimensions.window.width < 1024 ? 0 : 0,
+              width: dimensions.window.width < 768 ? '100%' : '100%',
+              height: dimensions.window.width < 768 ? '100%' : '100%',
+              borderRadius: dimensions.window.width < 768 ? 0 : 0,
+              marginTop: dimensions.window.width < 768 ? 0 : 0,
               // paddingVertical: 20
             }}>
 
@@ -2264,21 +2242,21 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         {
-          (!menuCollapsed && dimensions.window.width < 1024) || showHome ? null :
+          (!menuCollapsed && dimensions.window.width < 768) || showHome ? null :
             (modalType === '' ? <View
               style={{
-                width: dimensions.window.width < 1024 ? 0 : dimensions.window.width,
-                marginTop: dimensions.window.width < 1024 ? (menuCollapsed ? 60 : 0) : 0,
+                width: dimensions.window.width < 768 ? 0 : dimensions.window.width,
+                marginTop: dimensions.window.width < 768 ? (menuCollapsed ? 60 : 0) : 0,
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
-                // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
+                // paddingHorizontal: dimensions.window.width < 768 ? 0 : 30,
                 paddingTop: 10,
                 // backgroundColor: '#efefef',
                 backgroundColor: '#fff',
-                position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
+                position: dimensions.window.width < 768 ? 'absolute' : 'relative'
               }}
             >
               {
-                dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
+                dimensions.window.width < 768 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
                   <Text style={{ fontSize: 20, color: '##000000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
@@ -2292,13 +2270,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   width: (dimensions.window.width),
                   alignSelf: 'center',
                   height: (dimensions.window.height),
-                  // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
+                  // paddingHorizontal: dimensions.window.width < 768 ? 0 : 30,
                   paddingTop: 0,
                   backgroundColor: '#fff',
                   position: 'relative'
                 }}>
                 {
-                  // dimensions.window.width < 1024 && !menuCollapsed ? null :
+                  // dimensions.window.width < 768 && !menuCollapsed ? null :
                   <View style={{
                     // flex: 1,
                     height: (menuCollapsed ? (dimensions.window.height) : 0),
@@ -2356,7 +2334,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             style={{
               position: 'absolute',
               marginRight: Dimensions.get('window').width >= 1100 ? (((Dimensions.get('window').width - 1100) / 2) - 25) : 20,
-              marginBottom: Dimensions.get('window').width < 1024 ? 77 : 25,
+              marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
               right: 0,
               justifyContent: 'center',
               bottom: 0,
@@ -2391,7 +2369,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           </TouchableOpacity> : null
       }
       {
-        Dimensions.get('window').width < 1024 && showHome ?
+        Dimensions.get('window').width < 768 && showHome ?
           <View style={{
             position: 'absolute',
             backgroundColor: '#000000',
@@ -2401,7 +2379,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             width: '100%',
             paddingTop: 14,
             paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+            paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
             flexDirection: 'row',
             justifyContent: 'center',
             height: Dimensions.get('window').width < 768 ? 54 : 68,

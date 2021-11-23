@@ -508,30 +508,27 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     }, [cueIds, folderId])
 
-    const handleSub = useCallback(async (cName) => {
-
-        const uString: any = await AsyncStorage.getItem('user')
-        const user = JSON.parse(uString)
+    const handleSub = useCallback(async (channelId) => {
 
         const server = fetchAPI('')
         server.query({
             query: checkChannelStatus,
             variables: {
-                name: cName
+                channelId
             }
         }).then(res => {
             if (res.data.channel && res.data.channel.getChannelStatus) {
                 const channelStatus = res.data.channel.getChannelStatus
                 switch (channelStatus) {
-                    case "public":
-                        handleSubscribe(cName, '')
+                    case "password-not-required":
+                        handleSubscribe(channelId, '')
                         break;
-                    case "private":
+                    case "password-required":
                         let pass: any = prompt('Enter Password')
                         if (!pass) {
                             pass = ''
                         }
-                        handleSubscribe(cName, pass)
+                        handleSubscribe(channelId, pass)
                         break;
                     case "non-existant":
                         Alert(doesNotExistAlert)
@@ -548,7 +545,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     }, [])
 
-    const handleSubscribe = useCallback(async (nm, pass) => {
+    const handleSubscribe = useCallback(async (channelId, pass) => {
 
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
@@ -558,7 +555,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             mutation: subscribe,
             variables: {
                 userId: user._id,
-                name: nm,
+                channelId,
                 password: pass
             }
         })
@@ -567,7 +564,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     const subscriptionStatus = res.data.subscription.subscribe
                     switch (subscriptionStatus) {
                         case "subscribed":
-                            alert('Subscribed to ' + nm + '!')
+                            alert('Subscribed successfully!')
                             setSearchTerm('')
                             props.reloadData()
                             break;
@@ -596,7 +593,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         key={cueMap.toString() + JSON.stringify(results)}
         style={{
             flexDirection: 'row',
-            height: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+            height: Dimensions.get("window").width < 768 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
             width: '100%',
             overflow: 'hidden',
             justifyContent: 'center',
@@ -605,7 +602,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View style={{
             width: '100%',
             maxWidth: 900,
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
+            paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
             backgroundColor: '#efefef'
         }}>
             {!loadingSearchResults && resultCount !== 0 ? <Text style={{
@@ -746,7 +743,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 colorCode={colorCode}
                                                 option={option}
                                                 subscribed={subscribed}
-                                                handleSub={() => handleSub(channelName)}
+                                                handleSub={() => handleSub(obj.channelId)}
                                                 onPress={async () => {
                                                     if (option === 'Classroom') {
                                                         props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
@@ -953,7 +950,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const width = Dimensions.get("window").width;
     const windowHeight =
-        width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
+        width < 768 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 
     const sortbyOptions = [
         {
@@ -1051,7 +1048,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         key={collapseMap.toString()}
         style={{
             flexDirection: 'row',
-            // height: width < 1024 ? Dimensions.get("window").height - 120 : Dimensions.get("window").height,
+            // height: width < 768 ? Dimensions.get("window").height - 120 : Dimensions.get("window").height,
             width: '100%',
             bottom: 0,
             // overflow: 'scroll'
@@ -1062,7 +1059,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             horizontal={false}
             contentContainerStyle={{
                 width: '100%',
-                maxHeight: width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+                maxHeight: width < 768 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
                 backgroundColor: '#fff'
             }}
             ref={scrollViewRef}
@@ -1104,7 +1101,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         flexDirection: 'row',
                                         borderColor: '#efefef',
                                         paddingTop: 10,
-                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                        paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
                                         borderTopWidth: ind === 0 || collapseMap[key] || collapseMap[Object.keys(cueMap)[ind - 1]] ? 0 : 1,
                                         paddingBottom: 0, maxWidth: 900, alignSelf: 'center', width: '100%',
                                     }}>
@@ -1184,7 +1181,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </View> : <View style={{
                                         backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
                                         flexDirection: 'row', paddingBottom: 0,
-                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                        paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
                                         maxWidth: 900, alignSelf: 'center', width: '100%'
                                     }}>
                                         <TouchableOpacity
@@ -1277,7 +1274,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     maxWidth: 900,
                                     backgroundColor: '#efefef',
-                                    paddingHorizontal: width < 1024 ? 20 : 0
+                                    paddingHorizontal: width < 768 ? 20 : 0
                                 }}>
                                     {
                                         (
@@ -1511,14 +1508,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View style={{
             height: windowHeight,
             backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff',
-            // flexDirection: width < 1024 ? 'column-reverse' : 'column'
+            // flexDirection: width < 768 ? 'column-reverse' : 'column'
         }}>
             <View style={{
                 backgroundColor: '#000000',
                 // borderColor: '#efefef',
                 borderBottomWidth: 2,
                 // overflow: 'hidden',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
+                paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 // paddingBottom: 0,
@@ -1544,7 +1541,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     height: 48
                 }}>
                     {
-                        Dimensions.get('window').width < 1024 ?
+                        Dimensions.get('window').width < 768 ?
                             null :
                             <View style={{
                                 flexDirection: 'row',
@@ -1617,13 +1614,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        // justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
+                        // justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
                         backgroundColor: '#000000',
-                        width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
+                        width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
                         margin: 0
                     }}>
                         {
-                            Dimensions.get('window').width < 1024 ? <Image
+                            Dimensions.get('window').width < 768 ? <Image
                                 source={logo}
                                 style={{
                                     width: 50,
@@ -1660,7 +1657,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             placeholderTextColor={"#fff"}
                         />
                         {
-                            Dimensions.get('window').width < 1024 ?
+                            Dimensions.get('window').width < 768 ?
                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#000000' }} />
                                 : null
                         }
@@ -1771,12 +1768,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     />
                         :
                         <View style={{
-                            // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                            maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" ? '100%' : 1000,
+                            // paddingBottom: Dimensions.get('window').width < 768 ? 15 : 30,
+                            maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" || props.option === "Channels" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
                             backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff',
-                            height: width < 1024 ? windowHeight - 104 : windowHeight - 52,
+                            height: width < 768 ? windowHeight - 104 : windowHeight - 52,
                             // overflow: 'scroll'
                         }}>
                             {

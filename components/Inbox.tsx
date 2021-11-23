@@ -1576,7 +1576,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                                                                             console.log("Other user", otherUser)
 
-                                                                            const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (otherUser.avatar && otherUser.avatar !== "" ? otherUser.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png')
+                                                                            const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (otherUser && otherUser.avatar && otherUser.avatar !== "" ? otherUser.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png')
 
                                                                             const { title } = htmlStringParser(chat.lastMessage)
                                                                             return (

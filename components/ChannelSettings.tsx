@@ -8,7 +8,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import Multiselect from 'multiselect-react-dropdown';
 import {
     doesChannelNameExist, findChannelById, getOrganisation, getSubscribers,
-    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel
+    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
 } from '../graphql/QueriesAndMutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CirclePicker } from "react-color";
@@ -24,6 +24,10 @@ import { Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import Alert from './Alert';
 
+import TextareaAutosize from 'react-textarea-autosize';
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
+
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -36,6 +40,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [password, setPassword] = useState('')
     const [temporary, setTemporary] = useState(false)
     const [isUpdatingChannel, setIsUpdatingChannel] = useState(false)
+
+    const [school, setSchool] = useState<any>(null)
+
+    const [accessCode, setAccessCode] = useState('')
+    const [description, setDescription] = useState('')
+    const [isPublic, setIsPublic] = useState(false)
+    const [tags, setTags] = useState('')
+    const [copied, setCopied] = useState(false);
 
 
     // Use to subscribe and unsubscribe users
@@ -115,14 +127,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     // Store all selected values for new mobiscroll multiselect
     const [selectedValues, setSelectedValues] = useState<any[]>([]);
-
-    // Used to find out if any moderators are removed
-    const [originalOwners, setOriginalOwners] = useState<any[]>([]);
-
     const [selectedModerators, setSelectedModerators] = useState<any[]>([]);
 
     // Used to keep all users to filter
-    const [allUsers, setAllUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState<any[]>([]);
 
     const [showDuplicateChannel, setShowDuplicateChannel] = useState(false);
     const [duplicateChannelName, setDuplicateChannelName] = useState("");
@@ -173,7 +181,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         let filteredOptions = filteredUsers.map((user: any) => {
             return {
                 group: user.fullName[0].toUpperCase(),
-                text: user.fullName,
+                text: user.fullName + ", " + user.email,
                 value: user._id
             }
         })
@@ -213,14 +221,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             const filterOutOwner = subscribers.filter((sub: any) => {
                 return sub !== channelCreator
             })
-
-            // Sort the values
-            // const sort = filterOutOwner.sort((a, b) => {
-            //     const one = options.find((o: any) => o.value === a);
-            //     const two = options.find((o: any) => o.value === b);
-
-            //     return one.text > two.text ? 1 : -1
-            // })
 
             setSelectedValues(filterOutOwner);
 
@@ -363,6 +363,31 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
         duplicateChannelModerators])
 
+    const handleResetCode = useCallback(() => {
+
+        setCopied(false)
+
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: resetAccessCode,
+            variables: {
+                channelId: props.channelId
+            }
+        }).then(async res => {
+            
+            if (res.data && res.data.channel.resetAccessCode) {
+                setAccessCode(res.data.channel.resetAccessCode)
+            } else {
+                Alert("Could not reset code.")
+            }
+
+        }).catch((e) => {
+            console.log(e);
+            Alert("Could not reset code.")
+        })
+        
+    }, [props.channelId])
+
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
             alert('Enter channel name.')
@@ -389,14 +414,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         setIsUpdatingChannel(true);
 
         const server = fetchAPI('')
-        server.query({
-            query: doesChannelNameExist,
-            variables: {
-                name: name.trim()
-            }
-        }).then(async res => {
-            if (res.data && (res.data.channel.doesChannelNameExist !== true || name.trim() === originalName.trim())) {
-
+        
                 server.mutate({
                     mutation: updateChannel,
                     variables: {
@@ -407,8 +425,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         owners: selectedModerators,
                         colorCode
                     }
-                }).then(res2 => {
-                    if (res2.data && res2.data.channel.update) {
+                }).then(res => {
+                    if (res.data && res.data.channel.update) {
                         // added subs
                         selectedValues.map((sub: any) => {
                             const og = originalSubs.find((o: any) => {
@@ -465,14 +483,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setIsUpdatingChannel(false);
                     alert("Something went wrong. Try again.")
                 })
-            } else {
-                alert("Channel name in use.")
-                setIsUpdatingChannel(false);
-            }
-        }).catch(err => {
-            alert("Something went wrong. Try again.")
-            setIsUpdatingChannel(false);
-        })
+            
     }, [name, password, props.channelId, options, originalSubs, owners,
         temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
 
@@ -497,10 +508,15 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         props.refreshSubscriptions()
     }, [props.channelId, originalSubs, owner])
 
+    // console.log("School", school);
+
     useEffect(() => {
         (
             async () => {
                 const u = await AsyncStorage.getItem('user')
+
+                let schoolObj: any;
+
                 if (u) {
                     const user = JSON.parse(u)
                     const server = fetchAPI('')
@@ -512,6 +528,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     }).then(res => {
                         if (res.data && res.data.school.findByUserId) {
+                            setSchool(res.data.school.findByUserId)
+                            schoolObj = res.data.school.findByUserId;
                             const schoolId = res.data.school.findByUserId._id
                             if (schoolId && schoolId !== '') {
                                 server.query({
@@ -534,8 +552,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         delete x.__typename
                                         tempUsers.push({
                                             group: item.fullName[0].toUpperCase(),
-                                            text: item.fullName,
-                                            value: item._id
+                                            text: item.fullName + ", " + item.email,
+                                            value: item._id 
                                         })
                                         return x
                                     })
@@ -554,6 +572,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
                                             setTemporary(res.data.channel.findById.temporary ? true : false)
                                             setChannelCreator(res.data.channel.findById.channelCreator)
+
+                                            setIsPublic(res.data.channel.findById.isPublic ? true : false)
+                                            setDescription(res.data.channel.findById.description)
+                                            setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : [])
+                                            setAccessCode(res.data.channel.findById.accessCode)
+
                                             if (res.data.channel.findById.owners) {
                                                 const ownerOptions: any[] = []
                                                 tempUsers.map((item: any) => {
@@ -574,8 +598,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                                                 const mod = filterOutMainOwner.map((user: any) => user.value)
 
-                                                setOriginalOwners(filterOutMainOwner)
-
                                                 setOwners(filterOutMainOwner)
 
                                                 console.log("Selected owners", filterOutMainOwner)
@@ -593,20 +615,76 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         return 0;
                                     })
 
-                                    console.log("Sort", sort)
-
-
                                     setOptions(sort)
 
-
-                                    // setOptions(tempUsers)
                                 })
                             }
+                        } else {
+
+
+                            // get channel details
+                            server.query({
+                                query: findChannelById,
+                                variables: {
+                                    channelId: props.channelId
+                                }
+                            }).then(res => {
+                                if (res.data && res.data.channel.findById) {
+
+                                    setName(res.data.channel.findById.name)
+                                    setOriginalName(res.data.channel.findById.name)
+                                    setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
+                                    setTemporary(res.data.channel.findById.temporary ? true : false)
+                                    setChannelCreator(res.data.channel.findById.channelCreator)
+
+                                    setIsPublic(res.data.channel.findById.isPublic ? true : false)
+                                    setDescription(res.data.channel.findById.description)
+                                    setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : [])
+                                    setAccessCode(res.data.channel.findById.accessCode)
+
+                                    server.query({
+                                        query: getChannelModerators,
+                                        variables: {
+                                            channelId: props.channelId
+                                        }
+                                    }).then(res => {
+                                        if (res.data && res.data.channel.getChannelModerators) {
+                                            const tempUsers: any[] = []
+                                            res.data.channel.getChannelModerators.map((item: any, index: any) => {
+                                                const x = { ...item, selected: false, index }
+                
+                                                delete x.__typename
+                                                tempUsers.push({
+                                                    name: item.fullName,
+                                                    id: item._id
+                                                })
+                
+                                                // add the user always 
+                                            })
+                
+                                            const tempSelectedValues: any[] = []
+                
+                                            res.data.channel.getChannelModerators.map((item: any, index: any) => {
+                                                tempSelectedValues.push(item._id)
+                                            })
+
+                                            setOwners(tempUsers)
+                                            setSelectedModerators(tempSelectedValues)
+            
+
+                                        }
+                                    })
+
+                                    setLoadingOrg(false)
+                                }
+                            })
+
+
                         }
                     })
-                        .catch(e => {
-                            alert("Could not Channel data. Check connection.")
-                        })
+                    .catch(e => {
+                        alert("Could not Channel data. Check connection.")
+                    })
 
                     // get subs
                     server.query({
@@ -628,6 +706,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                                 // add the user always 
                             })
+
+                            console.log("Options", tempUsers)
+
+                            if (!schoolObj) {
+                                setAllUsers(res.data.user.findByChannelId)
+                                setOptions(tempUsers)
+                            }
 
                             const tempSelectedValues: any[] = []
 
@@ -740,7 +825,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     >
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
+                                fontSize: 14,
                                 color: '#000000'
                             }}>
                                 {PreferredLanguageText('name')}
@@ -758,7 +843,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
+                                fontSize: 14, 
                                 color: '#000000'
                             }}>
                                 {PreferredLanguageText('enrolmentPassword')}
@@ -774,7 +859,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
+                                fontSize: 14, 
                                 color: '#000000'
                             }}>
                                 Theme
@@ -789,6 +874,89 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </View>
                             </View>
                         </View>
+                        {
+                            !school ? 
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        marginTop: 25
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            // paddingTop: 40,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white"
+                                        }}>
+                                        <Text style={{
+                                            fontSize: 14,
+                                            color: '#000000'
+                                        }}>Public</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: "white",
+                                            width: "100%",
+                                            height: 30,
+                                            // marginHorizontal: 10
+                                        }}>
+                                        <Switch
+                                            value={isPublic}
+                                            onValueChange={() => setIsPublic(!isPublic)}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: "#efefef",
+                                                true: "#006AFF"
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                        Makes your workspace visible to all users
+                                    </Text>
+                                </View>
+                                : null
+                        }
+                        {
+                            !school ? 
+                                <View
+                                style={{
+                                    width: "100%",
+                                    marginTop: 25
+                                }}>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        // paddingTop: 40,
+                                        paddingBottom: 15,
+                                        backgroundColor: "white"
+                                    }}>
+                                    <Text style={{
+                                        fontSize: 14,
+                                        color: '#000000'
+                                    }}>Tags</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        backgroundColor: "white",
+                                        width: "100%",
+                                        // height: 40,
+                                        // marginHorizontal: 10
+                                    }}>
+                                    <ReactTagInput 
+                                        tags={tags} 
+                                        placeholder=" "
+                                        removeOnBackspace={true}
+                                        maxTags={5}
+                                        onChange={(newTags) => setTags(newTags)}
+                                        />
+                                </View>
+                                <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>
+                                    Add up to 5
+                                </Text>
+                            </View>
+                            : null
+                        }
                         {/* Switch to copy Subscribers */}
                         {
                             selected.length > 0 ?
@@ -803,7 +971,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14, fontFamily: 'inter',
+                                                fontSize: 14,
                                                 color: '#000000'
                                             }}
                                         >
@@ -850,7 +1018,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14, fontFamily: 'inter',
+                                                fontSize: 14,
                                                 color: '#000000'
                                             }}
                                         >
@@ -919,7 +1087,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }
 
-    console.log("Options", selectedModerators);
+    console.log("Selected Moderators", selectedModerators);
 
     const moderatorOptions = selectedValues.map((value: any) => {
         const match = options.find((o: any) => {
@@ -954,7 +1122,58 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     >
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
+                                fontSize: 14, 
+                                color: '#000000'
+                            }}>
+                                Access Code
+                            </Text>
+
+                            
+                            
+                            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10,  }}>
+
+                                <Text style={{
+                                    fontSize: 30, fontFamily: 'inter', fontWeight: 'bold', 
+                                }}>
+                                    {accessCode}
+                                </Text>
+
+                                <View style={{ flexDirection: 'row', }}>
+
+                                    <TouchableOpacity style={{ 
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        marginRight: 10
+                                    }} onPress={() => {
+                                        navigator.clipboard.writeText(accessCode)
+                                        setCopied(true)
+                                    }}>
+                                        <Ionicons name={copied ? "checkmark-circle-outline" : "clipboard-outline"} size={18} color={copied ? "#35AC78" : "#006AFF"} />
+                                        <Text style={{ color: copied ? "#35AC78" : "#006AFF", fontSize: 10, paddingTop: 3 }}> {copied ? "Copied" : "Copy"} </Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity style={{ 
+                                        flexDirection: 'column',
+                                        alignItems: 'center'
+                                    }} onPress={() => handleResetCode()}>
+                                        <Ionicons name="refresh-outline" size={18} color={"#006AFF"} />
+                                        <Text style={{ color: '#006AFF', fontSize: 10, paddingTop: 3 }}> Reset </Text>
+                                    </TouchableOpacity>
+
+                                </View>
+
+                               
+
+                            </View>
+
+                            <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10, marginBottom: 20, }}>
+                                Share this code so people can join your workspace directly 
+                            </Text>
+                        </View>
+
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{
+                                fontSize: 14, 
                                 color: '#000000'
                             }}>
                                 {PreferredLanguageText('name')}
@@ -973,7 +1192,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
+                                fontSize: 14, 
                                 color: '#000000'
                             }}>
                                 {PreferredLanguageText('enrolmentPassword')}
@@ -991,7 +1210,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, fontFamily: 'inter',
                                 color: '#000000'
                             }}>
                                 Theme
@@ -1007,15 +1225,99 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                         </View>
 
+                        {
+                            !school ? 
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        marginTop: 25
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            // paddingTop: 40,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white"
+                                        }}>
+                                        <Text style={{
+                                            fontSize: 14,
+                                            color: '#000000'
+                                        }}>Public</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: "white",
+                                            width: "100%",
+                                            height: 30,
+                                            // marginHorizontal: 10
+                                        }}>
+                                        <Switch
+                                            value={isPublic}
+                                            onValueChange={() => setIsPublic(!isPublic)}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: "#efefef",
+                                                true: "#006AFF"
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                        Makes your workspace visible to all users
+                                    </Text>
+                                </View>
+                                : null
+                        }
+                        {
+                            !school ? 
+                                <View
+                                style={{
+                                    width: "100%",
+                                    marginTop: 25
+                                }}>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        // paddingTop: 40,
+                                        paddingBottom: 15,
+                                        backgroundColor: "white"
+                                    }}>
+                                    <Text style={{
+                                        fontSize: 14,
+                                        color: '#000000'
+                                    }}>Tags</Text>
+                                </View>
+                                <View
+                                    style={{
+                                        backgroundColor: "white",
+                                        width: "100%",
+                                        // height: 40,
+                                        // marginHorizontal: 10
+                                    }}>
+                                    <ReactTagInput 
+                                        tags={tags} 
+                                        placeholder=" "
+                                        removeOnBackspace={true}
+                                        maxTags={5}
+                                        onChange={(newTags) => setTags(newTags)}
+                                        />
+                                </View>
+                                <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>
+                                    Add up to 5
+                                </Text>
+                            </View>
+                            : null
+                        }
+
                         <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
+                            fontSize: 14,
                             paddingTop: 20,
                             color: '#000000'
                         }}>
                             Viewers
                         </Text>
 
-                        {renderSubscriberFilters()}
+                        {school ? renderSubscriberFilters() : null}
                         <View style={{
                             flexDirection: 'column', marginTop: 25,
                             // overflow: 'scroll'
@@ -1052,8 +1354,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 /> */}
 
-                                <div style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }} >
-                                    <label style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }}>
+                                <div style={{ width: '100%', maxWidth: 400 }} >
+                                    <label style={{ width: '100%', maxWidth: 400 }}>
                                         <Select
                                             themeVariant="light"
                                             selectMultiple={true}
@@ -1081,7 +1383,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     touchUi: false,
                                                 }
                                             }}
-                                            minWidth={[60, 320]}
+                                            // minWidth={[60, 320]}
                                         // minWidth={[60, 320]}
                                         />
                                     </label>
@@ -1089,8 +1391,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                         </View>
                         <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            //  fontFamily: 'inter',
+                            fontSize: 14,
                             color: '#000000', marginTop: 25, marginBottom: 20
                         }}>
                             Editors

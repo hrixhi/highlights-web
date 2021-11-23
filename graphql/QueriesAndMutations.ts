@@ -24,9 +24,9 @@ export const createUser = gql`
   }
 `;
 export const createChannel = gql`
-  mutation($name: String!, $password: String, $createdBy: String!, $temporary: Boolean, $colorCode: String) {
+  mutation($name: String!, $password: String, $createdBy: String!, $temporary: Boolean, $colorCode: String, $description: String, $tags: [String!], $isPublic: Boolean, $subscribers: [String!], $moderators: [String!] ) {
     channel {
-      create(name: $name, password: $password, createdBy: $createdBy, temporary: $temporary, colorCode: $colorCode)
+      create(name: $name, password: $password, createdBy: $createdBy, temporary: $temporary, colorCode: $colorCode, description: $description, tags: $tags, isPublic: $isPublic, subscribers: $subscribers, moderators: $moderators)
     }
   }
 `;
@@ -89,9 +89,9 @@ export const markAsRead = gql`
   }
 `;
 export const subscribe = gql`
-  mutation($name: String!, $userId: String!, $password: String) {
+  mutation($channelId: String!, $userId: String!, $password: String) {
     subscription {
-      subscribe(name: $name, userId: $userId, password: $password)
+      subscribe(channelId: $channelId, userId: $userId, password: $password)
     }
   }
 `;
@@ -636,9 +636,16 @@ export const getSubscriptions = gql`
   }
 `;
 export const checkChannelStatus = gql`
-  query($name: String!) {
+  query($channelId: String!) {
     channel {
-      getChannelStatus(name: $name)
+      getChannelStatus(channelId: $channelId)
+    }
+  }
+`;
+export const checkChannelStatusForCode = gql`
+  query($accessCode: String!) {
+    channel {
+      getChannelStatusForCode(accessCode: $accessCode)
     }
   }
 `;
@@ -725,6 +732,25 @@ export const getSubscribers = gql`
   query($channelId: String!) {
     user {
       findByChannelId(channelId: $channelId) {
+        _id
+        email
+        zoomInfo {
+          accountId
+        }
+        avatar
+        displayName
+        fullName
+        unreadMessages
+        groupId
+      }
+    }
+  }
+`;
+
+export const getChannelModerators = gql`
+  query($channelId: String!) {
+    channel {
+      getChannelModerators(channelId: $channelId) {
         _id
         email
         zoomInfo {
@@ -1102,6 +1128,13 @@ export const modifyActiveAttemptQuiz = gql`
     }
   }
 `
+export const resetAccessCode = gql`
+  mutation($channelId: String!) {
+    channel {
+      resetAccessCode(channelId: $channelId)
+    }
+  }
+`
 
 export const isSubInactive = gql`
   query($userId: String!, $channelId: String!) {
@@ -1186,6 +1219,10 @@ query($channelId: String!) {
       temporary
       channelCreator
       owners
+      description
+      accessCode
+      tags
+      isPublic
     }
   }
 }
@@ -1396,3 +1433,23 @@ query($url: String!, $title: String!) {
   }
 }
 `
+export const getChannelsOutside = gql`
+query($userId: String!) {
+  channel {
+    getChannelsOutside(userId: $userId) {
+      name
+             _id
+             password
+             createdBy
+             createdByUsername
+             channelCreator
+             createdByAvatar
+             numSubs
+             role
+             meetingOn
+             owners
+    }
+  }
+}
+`
+

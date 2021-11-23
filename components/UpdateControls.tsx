@@ -1983,16 +1983,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     text: "Yes",
                     onPress: () => {
-                        if (props.channelOwner) {
+                        // if (props.channelOwner) {
+                        if (props.showOriginal) {
                             handleUpdateContent()
+                        } else {
+                            handleUpdateDetails()
                         }
-                        handleUpdateDetails()
+
+                        
                     }
                 }
             ])
             props.setSave(false);
         }
-    }, [props.save, handleUpdateContent, handleUpdateDetails, props.channelOwner])
+    }, [props.save, handleUpdateContent, handleUpdateDetails, props.channelOwner, props.showOriginal])
 
     useEffect(() => {
         if (props.del) {
@@ -2822,8 +2826,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                           onAction: async () => {
                             const res = await handleFile(false);
 
-                            console.log("File upload result", res);
-
                             if (!res || res.url === "" || res.type === "") {
                               return;
                             }
@@ -3060,8 +3062,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                       tooltip: 'Import File (pdf, docx, media, etc.)',
                       onAction: async () => {
                         const res = await handleFile(false);
-
-                        console.log("File upload result", res);
 
                         if (!res || res.url === "" || res.type === "") {
                           return;

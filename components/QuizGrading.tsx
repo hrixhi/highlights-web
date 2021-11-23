@@ -372,7 +372,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     borderBottomWidth: 1,
                                                     fontSize: 14,
                                                     padding: 15,
-                                                    paddingTop: 12,
+                                                    paddingTop: props.isOwner ? 12 : 7,
                                                     paddingBottom: 12,
                                                     marginTop: 5,
                                                     height: 40
@@ -387,7 +387,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     width: 100,
                                                     fontSize: 14,
                                                     padding: 15,
-                                                    paddingTop: 12,
+                                                    paddingTop: props.isOwner ? 12 : 7,
                                                     paddingBottom: 12,
                                                     marginTop: 5,
                                                     paddingRight: 30,
@@ -397,7 +397,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 placeholderTextColor={'#1F1F1F'}
                                             />}
                                             {
-                                                !props.isOwner ? <Text style={{ fontSize: 16, marginTop: 5, marginBottom: 10, paddingTop: 12, paddingRight: 30, textAlign: 'right', fontFamily: "Inter" }}>
+                                                !props.isOwner ? <Text style={{ fontSize: 16, marginTop: 5, marginBottom: 10, paddingTop: props.isOwner ? 12 : 7, paddingRight: 30, textAlign: 'right', fontFamily: "Inter" }}>
                                                     {Number(problemScores[index]).toFixed(1).replace(/\.0+$/,'')} / {Number(problem.points).toFixed(1).replace(/\.0+$/,'')}
                                                 </Text> : null
                                             }

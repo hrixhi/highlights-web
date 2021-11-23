@@ -2703,8 +2703,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <View
                         style={{
-                          width: width < 1024 ? "100%" : "50%",
-                          maxWidth: 400,
+                          width: '100%',
                           borderRightWidth: 0,
                           borderColor: "#efefef",
                           // paddingRight: 15,
@@ -2718,7 +2717,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           value={title}
                           style={{
                             width: "100%",
-                            maxWidth: '100%',
+                            maxWidth: 400,
                             borderBottom: '1px solid #efefef',
                             fontSize: 14,
                             paddingTop: 13,
@@ -2737,17 +2736,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           !isQuiz ?
                             <TouchableOpacity
                               style={{
-                                marginLeft: 25,
+                                marginLeft: Dimensions.get('window').width < 768 ? 20 : 'auto',
                                 paddingTop: 15,
                               }}
                               onPress={() => clearAll()}
                             >
-                              {/* <Ionicons
-                              name="close-circle-outline"
-                              color="#1F1F1F"
-                              size={15}
-                              style={{ alignSelf: "center" }}
-                            /> */}
                               <Text
                                 style={{
                                   fontSize: 12,
