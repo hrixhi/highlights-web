@@ -270,15 +270,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             })
 
-            console.log("Active attempt", activeAttempt)
-
             if (!activeAttempt) {
                 return;
             }
 
             const { solutions = [], problemScores, problemComments } = activeAttempt;
-
-            console.log("Solutions", solutions)
 
             solutions.forEach((sol: any, i: number) => {
                 let response = ''
@@ -1080,7 +1076,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 {attempt.title}
                             </Text> : null}
-                            <ReactPlayer url={url} controls={true} />
+                            <ReactPlayer url={attempt.url} controls={true} width={"100%"}
+                            height={"100%"} />
                         </View>
                         :
                         <View style={{ width: '100%', marginTop: 25 }}>
@@ -1572,7 +1569,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             // if (subscr subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
                                                             //     return null
                                                             // }
-                                                            console.log("Subscriber", subscriber)
+
                                                             return <TouchableOpacity
                                                                 disabled={subscriber.fullName !== 'submitted' && subscriber.fullName !== 'graded'}
                                                                 onPress={() => {

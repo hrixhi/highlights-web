@@ -250,6 +250,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       {
         licenseKey: 'xswED5JutJBccg0DZhBM',
         initialDoc: url,
+        enableReadOnlyMode: true
       },
       RichText.current,
     ).then((instance) => {

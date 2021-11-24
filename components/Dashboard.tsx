@@ -1652,6 +1652,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // marginRight: 25,
                                 maxWidth: 225
                             }}
+                            autoCompleteType={"off"}
                             placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#fff"}
@@ -1723,7 +1724,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
                                         color: '#000000'
                                     }}>
-                                        &nbsp;{props.version !== 'read' ? "WORKSPACES" : 'SHELVES'}
+                                        &nbsp;{props.version !== 'read' ? "COURSES" : 'SHELVES'}
                                     </Text>
                                 </MenuOption>
                                 <MenuOption

@@ -570,15 +570,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             nestedScrollEnabled={true}
                         >
                             <View style={{ minHeight: 70, flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
-                                {/* {props.isOwner ? <View style={styles.col} key={'0,0'}>
+                                {props.isOwner ? <View style={styles.col} key={'0,0'}>
                                     <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
                                         placeholder={"Search"}
                                         placeholderTextColor={'#1F1F1F'}
                                     /> 
-                                </View> : null} */}
-                                {props.isOwner ? <View style={styles.col} key={'0,0'} /> : null}
+                                </View> : null}
+                                {/* {props.isOwner ? <View style={styles.col} key={'0,0'} /> : null} */}
                                 {
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
@@ -712,6 +712,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
                                                                     }
                                                                 </Text>}
+
+                                                            {
+                                                                scoreObject.score && scoreObject.graded && ((new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) || !scoreObject.submittedAt)) ? <Text style={{ textAlign: 'center', fontSize: 11, color: !scoreObject.submittedAt ? '#f94144' : '#f3722c', marginTop: 5, borderWidth: 0, borderColor: !scoreObject.submittedAt ? '#f94144' : '#f3722c', borderRadius: 10, width: 60, alignSelf: 'center' }}>
+                                                                    {!scoreObject.submittedAt ? "Missing" : "Late"}
+                                                                </Text> : null
+                                                            }
                                                         </TouchableOpacity>
                                                     })
                                                 }

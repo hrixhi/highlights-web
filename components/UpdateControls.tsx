@@ -867,7 +867,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             setSubmissionUrl(u);
         }
         setShowImportOptions(false);
-    }, [title, submissionTitle])
+    }, [title, submissionTitle, props.showOriginal])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h);

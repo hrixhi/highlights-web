@@ -1322,7 +1322,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             flexDirection: 'column', marginTop: 25,
                             // overflow: 'scroll'
                         }}>
-                            <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
+                            <View style={{ height: 'auto', maxWidth: 320, width: '100%' }}>
                                 {/* <Multiselect
                                     placeholder='Select...'
                                     displayValue='name'
@@ -1354,8 +1354,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 /> */}
 
-                                <div style={{ width: '100%', maxWidth: 400 }} >
-                                    <label style={{ width: '100%', maxWidth: 400 }}>
+                                <div style={{ width: '100%', maxWidth: 320 }} >
+                                    <label style={{ width: '100%', maxWidth: 320 }}>
                                         <Select
                                             themeVariant="light"
                                             selectMultiple={true}
@@ -1426,7 +1426,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                         </View> */}
 
-                        <label style={{ width: '100%', maxWidth: 400 }}>
+                        <label style={{ width: '100%', maxWidth: 320 }}>
                             <Select
                                 themeVariant="light"
                                 select="multiple"

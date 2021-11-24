@@ -968,7 +968,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 value={name}
                                 placeholder={''}
                                 textContentType={"none"}
-                                autoCompleteType={'off'}
+                                autoCompleteType={'xyz'}
                                 onChangeText={val => {
                                     setName(val)
                                     setPasswordRequired(false)
@@ -1017,7 +1017,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TextInput
                                 value={password}
                                 textContentType={"none"}
-                                autoCompleteType={'off'}
+                                // autoCompleteType={'off'}
+                                autoCompleteType={'xyz'}
                                 placeholder={PreferredLanguageText('optional')}
                                 onChangeText={val => setPassword(val)}
                                 placeholderTextColor={'#1F1F1F'}
@@ -1221,8 +1222,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 /> */}
 
-                                <div style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }} >
-                                    <label style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }}>
+                                <div style={{ width: '100%', }} >
+                                    <label style={{ width: '100%', }}>
                                         <Select
                                             themeVariant="light"
                                             selectMultiple={true}

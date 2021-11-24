@@ -20,6 +20,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [searchComplete, setSearchComplete] = useState(false)
     const [results, setResults] = useState<any[]>([])
     const [selectedBook, setSelectedBook] = useState<any>(null)
+    const [retrievingBook, setRetrievingBook] = useState<any>("")
 
     const handleSearch = useCallback(() => {
         if (!searchTerm || searchTerm === '') {
@@ -54,6 +55,9 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     }, [searchTerm])
 
     const retrieveBook = useCallback(() => {
+
+        setRetrievingBook(true)
+
         const server = fetchAPI('')
         server.query({
             query: retrievePDFFromArchive,
@@ -67,7 +71,6 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 const suffix = '.pdf"'
                 const re = new RegExp(prefix + ".*" + suffix, "i")
                 const matches = html.match(re)
-                console.log(matches)
                 let fileName = matches[0].split('.pdf')[0]
                 fileName = fileName.split('"')[(fileName.split('"')).length - 1]
 
@@ -96,17 +99,24 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 ).then((res2: any) => {
                     if (res2.data) {
                         console.log("res.data", res2.data)
+                        setRetrievingBook(false)
                         props.onUpload({
                             url: res2.data,
                             title: selectedBook.title,
                             type: 'pdf'
                         })
                     }
-                })
-
-                
-                
+                }).catch(e => {
+                    setRetrievingBook(false)
+                    alert("Could not fetch book.")
+                    console.log(e)
+                }) 
             }
+        })
+        .catch(e => {
+            setRetrievingBook(false)
+            alert("Could not fetch book.")
+            console.log(e);
         })
     }, [selectedBook])
 
@@ -280,13 +290,18 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     {
                         text: 'CLOSE',
                         handler: function (event: any) {
+                            if (retrievingBook) {
+                                return;
+                            }
                             setSelectedBook(null)
                         }
                     },
                     {
                         text: 'NEXT',
                         handler: function (event: any) {
-                            // setShowFilterPopup(false)
+                            if (retrievingBook) {
+                                return;
+                            }
                             retrieveBook()
                         }
                     },
@@ -304,7 +319,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 }}
             >
                 {
-                    selectedBook ? <View style={{ flexDirection: 'column', padding: 25, backgroundColor: 'none' }} className="mbsc-align-center mbsc-padding">
+                    !retrievingBook && selectedBook ? <View style={{ flexDirection: 'column', padding: 25, backgroundColor: 'none' }} className="mbsc-align-center mbsc-padding">
                         <View style={{
                             height: 245,
                             width: 175,
@@ -351,7 +366,19 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }}>
                             {selectedBook.description}
                         </Text>
-                    </View> : null
+                    </View> : (retrievingBook ? <View
+                        style={{
+                            padding: 25,
+                            justifyContent: "center",
+                            flexDirection: "column",
+                            backgroundColor: '#f2f2f7'
+                        }}>
+                            <View style={{ height: 245,
+                                width: 175, justifyContent: "center",
+                                flexDirection: "column", backgroundColor: '#f2f2f7'  }}>
+                                <ActivityIndicator color={"#1F1F1F"} style={{ alignSelf: 'center' }} />
+                            </View>
+                    </View> : null)
                 }
             </Popup>
         </View >

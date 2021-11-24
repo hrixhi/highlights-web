@@ -363,7 +363,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: '#efefef', flexDirection: 'row', paddingBottom: 20, width: '100%', justifyContent: 'flex-end' }}>
-                {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ backgroundColor: '#efefef' }} >
+                {channelAttendances.length === 0 ? null : <View style={{ backgroundColor: '#efefef' }} >
                     <View style={{
                         display: 'flex',
                         width: "100%",
