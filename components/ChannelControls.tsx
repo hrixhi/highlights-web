@@ -776,7 +776,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 fontFamily: 'Inter',
                                 color: '#000000'
                             }}>
-                                Join a workspace with a code
+                                Join a channel with a code
                             </Text>
                             <TextInput
                                 value={joinWithCode}
@@ -910,7 +910,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     {channel.createdByUsername}
                                                 </Text>
                                             </View>
-                                            <View style={{ padding: 10 }}>
+                                            <View style={{ padding: 20 }}>
                                                 {
                                                     !subscribed ? <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
                                                         <TouchableOpacity
@@ -1064,7 +1064,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Workspaces that are not temporary can only be deleted by the school administrator.
+                                        Channels that are not temporary can only be deleted by the school administrator.
                                     </Text>
                                 </View>
                                 : null
@@ -1106,7 +1106,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your workspace visible to all users
+                                        Makes your channel visible to all users
                                     </Text>
                                 </View>
                                 : null

@@ -843,12 +843,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     <View style={{
                         paddingVertical: 15,
                         paddingTop: 0,
-                        // paddingHorizontal: width < 1024 ? 0 : 20,
                         width: '100%',
-                        // marginTop: 10,
                         height: width < 1024 ? Dimensions.get('window').height - 104 : Dimensions.get('window').height - 52,
                         backgroundColor: 'white',
-                        overflow: 'scroll'
+                        // overflow: 'scroll'
                     }} key={1}>
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
                             <View style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}>
@@ -889,33 +887,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null
-                                            // <TouchableOpacity
-                                            //     onPress={() => reload()}
-                                            //     style={{
-                                            //         paddingRight: 20,
-                                            //         paddingTop: 9,
-                                            //         alignSelf: 'flex-start'
-                                            //     }}
-                                            // >
-                                            //     <Text
-                                            //         style={{
-                                            //             textAlign: 'center',
-                                            //             lineHeight: 34,
-                                            //             // color: '#000000',
-                                            //             fontSize: 10,
-                                            //             // backgroundColor: '#efefef',
-                                            //             // paddingHorizontal: 20,
-                                            //             // marginRight: 15,
-                                            //             // fontFamily: 'inter',
-                                            //             height: 35,
-                                            //             // width: 100,
-                                            //             borderRadius: 15,
-                                            //             textTransform: 'uppercase'
-                                            //         }}
-                                            //     >
-                                            //         <Ionicons name='reload-outline' size={22} color={'#006AFF'} />
-                                            //     </Text>
-                                            // </TouchableOpacity>
                                         }
                                         {
                                             props.showDirectory && !showChat && !showNewGroup ?
@@ -1463,7 +1434,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     maxHeight: width < 1024 ? windowHeight - 104 - 110 : windowHeight - 52 - 110,
                                                                     width: '100%',
                                                                     borderRadius: 1,
-                                                                    marginTop: 10
+                                                                    marginTop: 10,
+                                                                    paddingHorizontal: 10,
                                                                     // flex: 1
                                                                 }}>
                                                                     {
@@ -1525,7 +1497,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             :
                                                             <View style={{ backgroundColor: '#fff' }}>
                                                                 <ScrollView
-                                                                    showsVerticalScrollIndicator={false}
+                                                                    showsVerticalScrollIndicator={true}
                                                                     horizontal={false}
                                                                     // style={{ height: '100%' }}
                                                                     contentContainerStyle={{
@@ -1533,6 +1505,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         // borderRightWidth: 0,
                                                                         // borderLeftWidth: 0,
                                                                         borderColor: '#efefef',
+                                                                        paddingHorizontal: 10,
                                                                         borderRadius: 1,
                                                                         width: '100%',
                                                                         maxHeight: width < 1024 ? windowHeight - 104 : windowHeight - 52,
@@ -1568,13 +1541,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 })
                                                                             }
 
-                                                                            console.log("UserId", userId)
-
                                                                             const otherUser = chat.userNames.find((user: any) => {
                                                                                 return user._id !== userId
                                                                             })
-
-                                                                            console.log("Other user", otherUser)
 
                                                                             const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (otherUser && otherUser.avatar && otherUser.avatar !== "" ? otherUser.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png')
 

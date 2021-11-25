@@ -912,7 +912,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your workspace visible to all users
+                                        Makes your channel visible to all users
                                     </Text>
                                 </View>
                                 : null
@@ -1167,7 +1167,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
 
                             <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10, marginBottom: 20, }}>
-                                Share this code so people can join your workspace directly 
+                                Share this code so people can join your channel directly 
                             </Text>
                         </View>
 
@@ -1263,7 +1263,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your workspace visible to all users
+                                        Makes your channel visible to all users
                                     </Text>
                                 </View>
                                 : null

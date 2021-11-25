@@ -624,7 +624,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }
 
                             <ScrollView
-                                showsVerticalScrollIndicator={false}
+                                showsVerticalScrollIndicator={true}
                                 horizontal={props.isOwner || Dimensions.get('window').width < 768 ? false : true}
                                 contentContainerStyle={{
                                     height: '100%',
@@ -714,8 +714,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 </Text>}
 
                                                             {
-                                                                scoreObject.score && scoreObject.graded && ((new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) || !scoreObject.submittedAt)) ? <Text style={{ textAlign: 'center', fontSize: 11, color: !scoreObject.submittedAt ? '#f94144' : '#f3722c', marginTop: 5, borderWidth: 0, borderColor: !scoreObject.submittedAt ? '#f94144' : '#f3722c', borderRadius: 10, width: 60, alignSelf: 'center' }}>
-                                                                    {!scoreObject.submittedAt ? "Missing" : "Late"}
+                                                                scoreObject.score && scoreObject.graded && ((new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) || !scoreObject.submittedAt)) ? <Text style={{ textAlign: 'center', fontSize: 10, color: !scoreObject.submittedAt ? '#f94144' : '#f3722c', marginTop: 5, borderWidth: 0, borderColor: !scoreObject.submittedAt ? '#f94144' : '#f3722c', borderRadius: 10, width: 60, alignSelf: 'center' }}>
+                                                                    {!scoreObject.submittedAt ? "(Missing)" : "(Late)"}
                                                                 </Text> : null
                                                             }
                                                         </TouchableOpacity>

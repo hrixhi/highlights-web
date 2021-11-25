@@ -2043,14 +2043,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               position: 'absolute',
               zIndex: 525,
               display: 'flex',
-              alignSelf: 'center',
-              // justifyContent: 'center',
               backgroundColor: 'white',
-              width: dimensions.window.width < 768 ? '100%' : '100%',
-              height: dimensions.window.width < 768 ? '100%' : '100%',
-              borderRadius: dimensions.window.width < 768 ? 0 : 0,
-              marginTop: dimensions.window.width < 768 ? 0 : 0,
-              // paddingVertical: 20
+              width: '100%',
+              height: '100%',
+              borderRadius: 0,
+              marginTop: 0,
             }}>
 
             {

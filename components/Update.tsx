@@ -786,10 +786,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#efefef',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
+                    paddingBottom: 15
                     // marginTop: 10
                 }}
                 horizontal={true}
-                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={true}
+                // showsVerticalScrollIndicator={false}
             >
                 {items.map((value: any, index: number) => (
                     <SortableItem
@@ -815,10 +817,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#efefef',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
+                    paddingBottom: 15
                     // marginTop: 10
                 }}
                 horizontal={true}
-                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={true}
+                // showsVerticalScrollIndicator={false}
             >
                 {items.map((value: any, index: number) => (
                     <SortableItemUpdate
@@ -972,10 +976,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: '#efefef',
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
+                        paddingBottom: 15
                         // marginTop: 10
                     }}
                     horizontal={true}
-                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={true}
+                    // showsVerticalScrollIndicator={false}
                 >
                     {folderCuesToDisplay.map((cue: any) => {
 
@@ -1082,10 +1088,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#efefef',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
+                            paddingBottom: 15
                             // marginTop: 10
                         }}
                         horizontal={true}
-                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={true}
+                        // showsVerticalScrollIndicator={false}
                     >
                         {channelCues.map((cue: any) => {
                             const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
@@ -1231,10 +1239,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 backgroundColor: '#efefef',
                                 borderTopLeftRadius: 0,
                                 borderTopRightRadius: 0,
+                                paddingBottom: 15
                                 // marginTop: 10
                             }}
                             horizontal={true}
-                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={true}
+                            // showsVerticalScrollIndicator={false}
                         >
                             {channelCues.map((cue: any) => {
                                 const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
@@ -1359,7 +1369,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const ContentView = <Animated.View style={{
         width: '100%',
-        maxWidth: 900,
+        // maxWidth: 900,
         height: '100%',
         maxHeight: windowHeight,
         opacity: modalAnimation,
@@ -1371,46 +1381,50 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     >
         {!viewStatus ? <ScrollView
             nestedScrollEnabled={true}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
             horizontal={false}
             style={{
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
+                width: '100%'
             }}
             contentContainerStyle={{
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                maxHeight: windowHeight - 52
+                maxHeight: windowHeight - 52,
+                alignItems: 'center',
+                width: '100%'
             }}
         >
-            <UpdateControls
-                // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
-                channelId={props.channelId}
-                save={save}
-                del={del}
-                customCategories={props.customCategories}
-                cue={props.cue}
-                cueIndex={props.cueIndex}
-                cueKey={props.cueKey}
-                channelOwner={channelOwner}
-                createdBy={createdBy}
-                folderId={folderId}
-                closeModal={() => props.closeModal()}
-                reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
-                changeViewStatus={() => setViewStatus(true)}
-                viewStatus={viewStatus}
-                showOptions={showOptions}
-                showOriginal={showOriginal}
-                showFolder={showFolder}
-                setShowOptions={(op: boolean) => setShowOptions(op)}
-                setShowOriginal={(val: boolean) => setShowOriginal(val)}
-                showComments={showComments}
-                setShowComments={(s: any) => setShowComments(s)}
-                setShowFolder={(s: any) => setShowFolder(s)}
-                reloadStatuses={reloadStatuses}
-                setSave={(save: boolean) => setSave(save)}
-                setDelete={(del: boolean) => setDel(del)}
-            />
+            <View style={{ maxWidth: 900, width: '100%' }}>
+                <UpdateControls
+                    // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
+                    channelId={props.channelId}
+                    save={save}
+                    del={del}
+                    customCategories={props.customCategories}
+                    cue={props.cue}
+                    cueIndex={props.cueIndex}
+                    cueKey={props.cueKey}
+                    channelOwner={channelOwner}
+                    createdBy={createdBy}
+                    folderId={folderId}
+                    closeModal={() => props.closeModal()}
+                    reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                    changeViewStatus={() => setViewStatus(true)}
+                    viewStatus={viewStatus}
+                    showOptions={showOptions}
+                    showOriginal={showOriginal}
+                    showFolder={showFolder}
+                    setShowOptions={(op: boolean) => setShowOptions(op)}
+                    setShowOriginal={(val: boolean) => setShowOriginal(val)}
+                    showComments={showComments}
+                    setShowComments={(s: any) => setShowComments(s)}
+                    setShowFolder={(s: any) => setShowFolder(s)}
+                    reloadStatuses={reloadStatuses}
+                    setSave={(save: boolean) => setSave(save)}
+                    setDelete={(del: boolean) => setDel(del)}
+                />
             {
                 !Number.isNaN(Number(cueId))
                     || !props.channelId ? <View
@@ -1449,8 +1463,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </ScrollView> : null
                     )
             }
+            </View>
         </ScrollView>
-            : <View style={{ paddingTop: 10 }}>
+            : <View >
                 {
                     channelOwner ?
                         <View
@@ -1461,15 +1476,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0,
-                                paddingTop: 10
                             }}>
                             <ScrollView
                                 ref={scroll3}
                                 contentContainerStyle={{
                                     width: '100%',
-                                    height: windowHeight - 52
+                                    height: windowHeight - 52,
+                                    alignItems: 'center',
                                 }}
-                                showsVerticalScrollIndicator={false}
+                                showsVerticalScrollIndicator={true}
                                 contentOffset={{ x: 0, y: 1 }}
                                 key={channelOwner.toString()}
                                 overScrollMode={'always'}
@@ -1478,18 +1493,20 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 scrollEventThrottle={1}
                                 keyboardDismissMode={'on-drag'}
                             >
-                                <SubscribersList
-                                    key={JSON.stringify(subscribers)}
-                                    subscribers={subscribers}
-                                    cueId={cueId}
-                                    channelName={props.filterChoice}
-                                    channelId={props.channelId}
-                                    closeModal={() => props.closeModal()}
-                                    reload={() => loadThreadsAndStatuses()}
-                                    cue={props.cue}
-                                    updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
-                                    reloadStatuses={reloadStatuses}
-                                />
+                                <View style={{ maxWidth: 900, width: '100%' }}>
+                                    <SubscribersList
+                                        key={JSON.stringify(subscribers)}
+                                        subscribers={subscribers}
+                                        cueId={cueId}
+                                        channelName={props.filterChoice}
+                                        channelId={props.channelId}
+                                        closeModal={() => props.closeModal()}
+                                        reload={() => loadThreadsAndStatuses()}
+                                        cue={props.cue}
+                                        updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
+                                        reloadStatuses={reloadStatuses}
+                                    />
+                                 </View>
                             </ScrollView>
                         </View>
                         : null

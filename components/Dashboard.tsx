@@ -1052,10 +1052,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             width: '100%',
             bottom: 0,
             // overflow: 'scroll'
+            
         }}>
         {/* Add sort by filter here */}
         <ScrollView
-            showsVerticalScrollIndicator={false}
+            persistentScrollbar={true}
+            showsVerticalScrollIndicator={true}
             horizontal={false}
             contentContainerStyle={{
                 width: '100%',
@@ -1724,7 +1726,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
                                         color: '#000000'
                                     }}>
-                                        &nbsp;{props.version !== 'read' ? "COURSES" : 'SHELVES'}
+                                        &nbsp;{props.version !== 'read' ? "CHANNELS" : 'SHELVES'}
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
@@ -1770,7 +1772,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         :
                         <View style={{
                             // paddingBottom: Dimensions.get('window').width < 768 ? 15 : 30,
-                            maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" || props.option === "Channels" ? '100%' : 1000,
+                            // maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" || props.option === "Channels" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
                             backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff',

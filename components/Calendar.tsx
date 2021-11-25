@@ -1584,7 +1584,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                overflow: tab === 'Add' ? 'hidden' : 'scroll',
+                overflow: 'scroll',
             }}>
             <View style={{
                 width: '100%', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
@@ -1635,7 +1635,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 marginBottom: Dimensions.get('window').width < 768 ? 0 : 0,
                                                 borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
                                                 borderColor: '#efefef',
-                                                overflow: 'hidden',
+                                                // overflow: 'hidden',
                                                 backgroundColor: tab === "Add" ? 'white' : '#efefef',
                                                 shadowColor: "#000",
                                                 shadowOffset: {
@@ -1806,9 +1806,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     }
                                                                                 </View>
                                                                             </View> : (
-                                                                                <ScrollView
-                                                                                    contentContainerStyle={{
-                                                                                        maxHeight: width < 768 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
+                                                                                <View
+                                                                                    style={{
+                                                                                        // maxHeight: width < 768 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                                                         alignItems: 'center',
                                                                                         backgroundColor: 'white',
                                                                                         paddingHorizontal: width < 768 ? 20 : 0
@@ -2096,7 +2096,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         {editEvent ? renderEditEventOptions() : null}
                                                                                         {/* {editEvent ? renderDeleteEventOptions() : null} */}
                                                                                     </View>
-                                                                                </ScrollView>
+                                                                                </View>
                                                                             )
                                                                     )
                                                             )

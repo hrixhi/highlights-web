@@ -1518,7 +1518,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </View>
                                                 </ScrollView>
                                                 : <ScrollView
-                                                    showsVerticalScrollIndicator={false}
+                                                    showsVerticalScrollIndicator={true}
                                                     horizontal={false}
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
@@ -1526,11 +1526,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderRadius: 1,
                                                         borderWidth: 0,
                                                         borderColor: '#efefef',
-                                                        // maxHeight: props.cueId ? windowHeight - 00 : '100%',
-                                                        // marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 900,
                                                         marginBottom: 50,
-                                                        // alignSelf: 'center'
+                                                        paddingHorizontal: 10,
                                                     }}
                                                 >
                                                     {
@@ -1634,7 +1632,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         <Text style={{ fontSize: 11, padding: 5, color: '#006AFF', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                             {
                                                                                 subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
-                                                                                    <Text style={{ color: '#f94144', fontSize: 12 }}>
+                                                                                    <Text style={{ color: '#f94144', fontSize: 12, marginRight: 10 }}>
                                                                                         LATE
                                                                                     </Text>
                                                                                     :
@@ -1652,7 +1650,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
                                     <ScrollView
-                                        showsVerticalScrollIndicator={false}
+                                        showsVerticalScrollIndicator={true}
                                         keyboardDismissMode={'on-drag'}
                                         contentContainerStyle={{
                                             // height: windowHeight - 132
@@ -1740,10 +1738,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     :
                                     <View>
                                         <ScrollView
-                                            showsVerticalScrollIndicator={false}
+                                            showsVerticalScrollIndicator={true}
                                             keyboardDismissMode={'on-drag'}
                                             contentContainerStyle={{
-                                                // height: windowHeight - 132
+                                                paddingHorizontal: 10
                                             }}
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>

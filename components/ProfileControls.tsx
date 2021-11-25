@@ -331,10 +331,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       <ScrollView
         style={{
           width: "100%",
-          maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+          // maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
           backgroundColor: "white"
         }}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
       >
         <View style={{ width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
           <View style={{ maxWidth: 400, width: '100%' }}>
@@ -715,11 +715,9 @@ export default ProfileControls;
 const styles = StyleSheet.create({
   screen: {
     width: '100%',
-    height: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
     backgroundColor: 'white',
     justifyContent: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 10
   },
   outline: {
     borderRadius: 1,

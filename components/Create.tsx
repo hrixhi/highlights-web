@@ -1079,7 +1079,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         borderTopRightRadius: 0,
         overflow: "scroll",
       }}
-      showsVerticalScrollIndicator={false}
+      showsVerticalScrollIndicator={true}
     >
       <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
         <Animated.View

@@ -717,7 +717,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * @description Renders List of threads
      */
     const renderAllThreads = () => {
-        return (<View style={{ width: '100%', backgroundColor: threads.length === 0 ? '#efefef' : 'white', maxWidth: 900, paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10, borderRadius: 1 }}>
+        return (<View style={{ width: '100%', backgroundColor: threads.length === 0 ? '#efefef' : 'white', maxWidth: 900, borderRadius: 1 }}>
         {
             threads.length === 0 ?
                 <View style={{ flex: 1 }}>
@@ -728,7 +728,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </Text>
                 </View>
                 : <ScrollView
-                    showsVerticalScrollIndicator={false}
+                    showsVerticalScrollIndicator={true}
                     horizontal={false}
                     // style={{ height: '100%' }}
                     contentContainerStyle={{
@@ -736,6 +736,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         // borderRightWidth: 0,
                         // borderLeftWidth: 0,
                         // borderRightWidth: 1,
+                        paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
                         borderColor: '#efefef',
                         borderRadius: 1,
                         width: '100%',
