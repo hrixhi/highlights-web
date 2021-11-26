@@ -1,23 +1,28 @@
+// REACT
 import React, { useState, useEffect, useCallback } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+
+// API
+import { fetchAPI } from '../graphql/FetchAPI';
+import { checkChannelStatus, checkChannelStatusForCode, createChannel, findBySchoolId, getOrganisation, getRole, subscribe, getChannelsOutside, getUserCount,  } from '../graphql/QueriesAndMutations';
+
+// COMPONENTS
 import { TextInput } from "./CustomTextInput";
 import { Text, View, TouchableOpacity } from './Themed';
-import { fetchAPI } from '../graphql/FetchAPI';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { checkChannelStatus, checkChannelStatusForCode, createChannel, createUser, findBySchoolId, getOrganisation, getRole, subscribe, getChannelsOutside, getUserCount,  } from '../graphql/QueriesAndMutations';
 import Alert from '../components/Alert'
-import { uniqueNamesGenerator, colors } from 'unique-names-generator'
-import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { CirclePicker } from "react-color";
 import alert from '../components/Alert';
-import { Ionicons } from '@expo/vector-icons';
 import TextareaAutosize from 'react-textarea-autosize';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
+// HELPERS
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -28,33 +33,22 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [displayName, setDisplayName] = useState('')
     const [fullName, setFullName] = useState('')
     const [temporary, setTemporary] = useState(false)
-    const [userFound, setUserFound] = useState(false)
     const [description, setDescription] = useState('')
     const [isPublic, setIsPublic] = useState(true);
     const [tags, setTags] = useState<string[]>([])
-
     const [school, setSchool] = useState<any>(null)
     const [role, setRole] = useState('')
     const [colorCode, setColorCode] = useState("")
-
     const [channels, setChannels] = useState<any[]>([])
     const [allUsers, setAllUsers] = useState<any[]>([])
-
-    // Dropdown options for subscribers
     const [options, setOptions] = useState<any[]>([])
-
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const [joinWithCode, setJoinWithCode] = useState('');
-
     const [joinWithCodeDisabled, setJoinWithCodeDisabled] = useState(true);
-
-    // Filters
+    const [userId, setUserId] = useState('');
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
-    const roles = ['student', 'instructor']
- 
      const filterRoleOptions = [
          {
              value: 'All',
@@ -69,14 +63,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
              text: 'Instructor'
          }
      ]
- 
      const gradeOptions = grades.map((g: any) => {
          return {
              value: g,
              text: g
          }
      })
- 
      const filterGradeOptions = [
          {
              value: 'All',
@@ -84,14 +76,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
          },
          ...gradeOptions
      ]
- 
      const sectionOptions = sections.map((s: any) => {
          return {
              value: s,
              text: s
          }
      })
- 
      const filterSectionOptions = [
          {
              value: 'All',
@@ -99,16 +89,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
          },
          ...sectionOptions
      ]
- 
      const [activeRole, setActiveRole] = useState('All');
      const [activeGrade, setActiveGrade] = useState('All');
      const [activeSection, setActiveSection] = useState('All');
- 
-     // Store all selected values for new mobiscroll multiselect
     const [selectedValues, setSelectedValues] = useState<any[]>([]);
     const [selectedModerators, setSelectedModerators] = useState<any[]>([]);
-
-    // Alert messages
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
     const alreadySubscribedAlert = PreferredLanguageText('alreadySubscribed');
     const somethingWrongAlert = PreferredLanguageText('somethingWentWrong');
@@ -116,20 +101,37 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const doesNotExistAlert = PreferredLanguageText('doesNotExists');
     const invalidChannelNameAlert = PreferredLanguageText('invalidChannelName');
     const nameAlreadyInUseAlert = PreferredLanguageText('nameAlreadyInUse');
-    const changesNotSavedAlert = PreferredLanguageText('changesNotSaved')
-
-    const [userId, setUserId] = useState('');
-
-    console.log("Selected values", selectedValues);
-
     const moderatorOptions = selectedValues.map((value: any) => {
         const match = options.find((o: any) => {
             return o.value === value;
         })
 
         return match
+	})
+	const sortChannels = channels.sort((a: any, b: any) => {
+
+        const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
+
+        const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
+
+        if (aSubscribed && !bSubscribed) return -1;
+
+        return 1;
+
     })
 
+    // HOOKS 
+
+     /**
+     * @description Loads user on Init
+     */
+    useEffect(() => {
+        loadUser()
+    }, [])
+
+    /**
+     * @description Filter dropdown users based on Roles, Grades and Section
+     */
     useEffect(() => {
 
         let filteredUsers = [...allUsers];
@@ -153,14 +155,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         if (userId !== "") {
-
-            console.log("filtered users", filteredUsers)
-
             const filterOutMainOwner = filteredUsers.filter((user: any) => {
                 return user._id !== userId
             })
-
-            console.log("filterOutMainOwner", filterOutMainOwner)
 
             filteredUsers = filterOutMainOwner
         }
@@ -189,13 +186,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             return 0;
         })
 
-        console.log("Sort", sort)
-
         setOptions(sort)
 
     }, [activeRole, activeGrade, activeSection, userId])
 
-
+    /**
+     * @description Validate submit for new channel
+     */
     useEffect(() => {
         
         if (name !== "") {
@@ -207,6 +204,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [name, password, passwordRequired, props.showCreate, colorCode, school])
 
+    /**
+     * @description Validate submit for join channel with code
+     */
     useEffect(() => {
 
         if (joinWithCode !== "" && joinWithCode.length === 9) {
@@ -217,15 +217,49 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [joinWithCode])
 
-    // useEffect(() => {
-    //     (
-    //         async () => {
-    //             console.log("School", school)
-                
-    //         }
-    //     )
-    // }, [school])
+    /**
+    * @description Fetches channels for users
+    */
+    useEffect(() => {
+        if (school) {
+            const server = fetchAPI('')
+            server.query({
+                query: findBySchoolId,
+                variables: {
+                    schoolId: school._id
+                }
+            }).then((res: any) => {
+                if (res.data && res.data.channel.findBySchoolId) {
+                    res.data.channel.findBySchoolId.sort((a: any, b: any) => {
+                        if (a.name < b.name) { return -1; }
+                        if (a.name > b.name) { return 1; }
+                        return 0;
+                    })
+                    const c = res.data.channel.findBySchoolId.map((item: any, index: any) => {
+                        const x = { ...item, selected: false, index }
+                        delete x.__typename
+                        return x
+                    })
+                    const sortedChannels = c.sort((a: any, b: any) => {
+                        if (a.name < b.name) { return -1; }
+                        if (a.name > b.name) { return 1; }
+                        return 0;
+                    })
+                    setChannels(sortedChannels)
+                    setLoading(false)
+                }
+            }).catch(err => {
+                setLoading(false)
+            })
+        } else {
+            // Fetch all public channels here
+            loadOutsideChannels()
+        }
+    }, [role, school])
 
+    /**
+     * @description Fetch all users to allow selection for Users to create channel
+     */
     const fetchSchoolUsers = useCallback((schoolId) => {
        
             const server = fetchAPI('');
@@ -265,99 +299,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
     }, [])
 
-    useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
-                if (u) {
-                    const parsedUser: any = JSON.parse(u)
-                    setUserId(parsedUser._id)
-                }
-            }
-        )()
-    }, [])
-
-    const renderSubscriberFilters = () => {
-        return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
-            <View style={{ backgroundColor: 'white', }}>
-                <View style={{ backgroundColor: 'white', }}>
-                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                        <Select
-                            touchUi={true}
-                            value={activeRole}
-                            rows={3}
-                            themeVariant="light"
-                            onChange={(val: any) => {
-                                setActiveRole(val.value)
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble'
-                                },
-                                medium: {
-                                    touchUi: false
-                                }
-                            }}
-                            data={filterRoleOptions}
-                        />
-                    </label>
-                </View>
-            </View>
-
-            <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
-                    <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                            <Select
-                                touchUi={true}
-                                value={activeGrade}
-                                // rows={filterGradeOptions.length}
-                                themeVariant="light"
-                                onChange={(val: any) => {
-                                    setActiveGrade(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false
-                                    }
-                                }}
-                                data={filterGradeOptions}
-                            />
-                        </label>
-                    </View>
-                </View>
-                <View style={{ backgroundColor: 'white', }}>
-                    <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                            <Select
-                                touchUi={true}
-                                value={activeSection}
-                                themeVariant="light"
-                                onChange={(val: any) => {
-                                    setActiveSection(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false
-                                    }
-                                }}
-                                data={filterSectionOptions}
-                            />
-                        </label>
-                    </View>
-                </View>
-            </View>
-
-        </View>)
-    }
-
-    const handleSubscribe = useCallback(async (channelId, pass) => {
+	/**
+	 * @description Subscribes user to a channel
+	 */
+	const handleSubscribe = useCallback(async (channelId, pass) => {
 
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
@@ -401,6 +346,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [props.closeModal])
 
+	/**
+	 * @description Fetches status of channel and depending on that handles subscription to channel
+	 */
     const handleSub = useCallback(async (channelId) => {
 
         const server = fetchAPI('')
@@ -438,6 +386,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [props.closeModal, passwordRequired, displayName, fullName, temporary])
 
+	/**
+	 * @description Fetches status of channel using code and then handles subscription
+	 */
     const handleSubmitCode = useCallback(async () => {
         const server = fetchAPI('')
         server.query({
@@ -448,11 +399,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }).then(res => {
             if (res.data.channel && res.data.channel.getChannelStatusForCode) {
 
-                console.log("Res", res.data.channel.getChannelStatusForCode)
-
                 const channelStatus = res.data.channel.getChannelStatusForCode.split(":")
 
-                console.log("Channel id", channelStatus[1])
                 switch (channelStatus[0]) {
                     case "password-not-required":
                         handleSubscribe(channelStatus[1], '')
@@ -478,8 +426,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
     }, [joinWithCode])
 
-    console.log("School outside", school)
-
+	/**
+	 * @description Handle create new channel
+	 */
     const handleSubmit = useCallback(async () => {
 
         if (colorCode === '') {
@@ -544,14 +493,16 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
     }, [name, password, props.closeModal, passwordRequired, displayName, fullName, temporary, colorCode, description, isPublic, tags, selectedModerators, selectedValues])
 
+	/**
+	 * @description Loads user 
+	 */
     const loadUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
-        const server = fetchAPI('')
         if (u) {
             const parsedUser = JSON.parse(u)
+            setUserId(parsedUser._id)
             setDisplayName(parsedUser.displayName)
             setFullName(parsedUser.fullName)
-            setUserFound(true)
             const server = fetchAPI('')
             server.query({
                 query: getOrganisation,
@@ -575,37 +526,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setRole(res.data.user.getRole)
                 }
             })
-        } else {
-            const fullName = uniqueNamesGenerator({
-                dictionaries: [colors]
-            }) + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
-            const displayName = fullName
-            const notificationId = 'NOT_SET';
-            server.mutate({
-                mutation: createUser,
-                variables: {
-                    fullName,
-                    displayName,
-                    notificationId
-                }
-            })
-                .then(async res => {
-                    const u = res.data.user.create
-                    if (u.__typename) {
-                        delete u.__typename
-                    }
-                    const sU = JSON.stringify(u)
-                    await AsyncStorage.setItem('user', sU)
-                    setDisplayName(u.displayName)
-                    setFullName(u.fullName)
-                    setUserFound(true)
-                })
-                .catch(err => {
-                    Alert("Unable to register user.", "Check connection.")
-                })
-        }
+        } 
     }, [])
 
+	/**
+	 * @description Load outside channels for user without school id 
+	 */
     const loadOutsideChannels = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
             
@@ -623,7 +549,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             }).then((res: any) => {
                 if (res.data && res.data.channel.getChannelsOutside) {
 
-                    console.log("Outside channels", res.data.channel.getChannelsOutside)
                     res.data.channel.getChannelsOutside.sort((a: any, b: any) => {
                         if (a.name < b.name) { return -1; }
                         if (a.name > b.name) { return 1; }
@@ -649,46 +574,90 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [])
 
-    useEffect(() => {
-        loadUser()
-    }, [])
+	// FUNCTIONS
 
-    useEffect(() => {
-        if (school) {
-            const server = fetchAPI('')
-            server.query({
-                query: findBySchoolId,
-                variables: {
-                    schoolId: school._id
-                }
-            }).then((res: any) => {
-                if (res.data && res.data.channel.findBySchoolId) {
-                    res.data.channel.findBySchoolId.sort((a: any, b: any) => {
-                        if (a.name < b.name) { return -1; }
-                        if (a.name > b.name) { return 1; }
-                        return 0;
-                    })
-                    const c = res.data.channel.findBySchoolId.map((item: any, index: any) => {
-                        const x = { ...item, selected: false, index }
-                        delete x.__typename
-                        return x
-                    })
-                    const sortedChannels = c.sort((a: any, b: any) => {
-                        if (a.name < b.name) { return -1; }
-                        if (a.name > b.name) { return 1; }
-                        return 0;
-                    })
-                    setChannels(sortedChannels)
-                    setLoading(false)
-                }
-            }).catch(err => {
-                setLoading(false)
-            })
-        } else {
-            // Fetch all public channels here
-            loadOutsideChannels()
-        }
-    }, [role, school])
+   	/**
+	* @description Renders filters for Subscribers dropdown 
+	*/
+    const renderSubscriberFilters = () => {
+        return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
+            <View style={{ backgroundColor: 'white', }}>
+                <View style={{ backgroundColor: 'white', }}>
+                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                        <Select
+                            touchUi={true}
+                            value={activeRole}
+                            rows={3}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                setActiveRole(val.value)
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false
+                                }
+                            }}
+                            data={filterRoleOptions}
+                        />
+                    </label>
+                </View>
+            </View>
+
+            <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
+                    <View style={{ backgroundColor: 'white', }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeGrade}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveGrade(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterGradeOptions}
+                            />
+                        </label>
+                    </View>
+                </View>
+                <View style={{ backgroundColor: 'white', }}>
+                    <View style={{ backgroundColor: 'white', }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeSection}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveSection(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterSectionOptions}
+                            />
+                        </label>
+                    </View>
+                </View>
+            </View>
+
+        </View>)
+    }
+
 
     if (loading) {
         return <View style={{
@@ -705,20 +674,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <ActivityIndicator color={'#1F1F1F'} />
         </View>
     }
-
-    const width = Dimensions.get('window').width
-
-    const sortChannels = channels.sort((a: any, b: any) => {
-
-        const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
-
-        const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
-
-        if (aSubscribed && !bSubscribed) return -1;
-
-        return 1;
-
-    })
 
     return (
         <View style={{
@@ -841,7 +796,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 },
                                 shadowOpacity: 0.12,
                                 shadowRadius: 10, 
-                                // minHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 300,
                             }}
                         >
                             <ScrollView contentContainerStyle={{
@@ -1017,7 +971,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TextInput
                                 value={password}
                                 textContentType={"none"}
-                                // autoCompleteType={'off'}
                                 autoCompleteType={'xyz'}
                                 placeholder={PreferredLanguageText('optional')}
                                 onChangeText={val => setPassword(val)}
@@ -1036,7 +989,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <View
                                         style={{
                                             width: "100%",
-                                            // paddingTop: 40,
                                             paddingBottom: 15,
                                             backgroundColor: "white"
                                         }}>
@@ -1050,7 +1002,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             backgroundColor: "white",
                                             width: "100%",
                                             height: 30,
-                                            // marginHorizontal: 10
                                         }}>
                                         <Switch
                                             value={temporary}
@@ -1078,7 +1029,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <View
                                         style={{
                                             width: "100%",
-                                            // paddingTop: 40,
                                             paddingBottom: 15,
                                             backgroundColor: "white"
                                         }}>
@@ -1092,7 +1042,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             backgroundColor: "white",
                                             width: "100%",
                                             height: 30,
-                                            // marginHorizontal: 10
                                         }}>
                                         <Switch
                                             value={isPublic}
@@ -1121,7 +1070,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View
                                     style={{
                                         width: "100%",
-                                        // paddingTop: 40,
                                         paddingBottom: 15,
                                         backgroundColor: "white"
                                     }}>
@@ -1134,8 +1082,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: "white",
                                         width: "100%",
-                                        // height: 40,
-                                        // marginHorizontal: 10
                                     }}>
                                     <ReactTagInput 
                                         tags={tags} 
@@ -1188,39 +1134,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {school ? renderSubscriberFilters() : null}
                         {school ? <View style={{
                             flexDirection: 'column', marginTop: 25,
-                            // overflow: 'scroll'
                         }}>
                             <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
-                                {/* <Multiselect
-                                    placeholder='Select...'
-                                    displayValue='name'
-                                    // key={userDropdownOptions.toString()}
-                                    style={{
-                                        multiselectContainer: { // To change css for option container 
-                                            minHeight: 200
-                                        }
-                                    }}
-                                    options={options} // Options to display in the dropdown
-                                    selectedValues={selected} // Preselected value to persist in dropdown
-                                    onSelect={(e, f) => {
-                                        setSelected(e);
-                                        return true
-                                    }} // Function will trigger on select event
-                                    onRemove={(e, f) => {
-                                        // If remove as subscriber and user is part of moderators, then remove from moderators
-
-                                        const currModerators = [...owners];
-
-                                        const filterOutRemovedSubscriber = currModerators.filter((user: any) => {
-                                            return user.id !== f.id
-                                        })
-
-                                        setOwners(filterOutRemovedSubscriber)
-
-                                        setSelected(e);
-                                        return true
-                                    }}
-                                /> */}
 
                                 <div style={{ width: '100%', }} >
                                     <label style={{ width: '100%', }}>
@@ -1262,36 +1177,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                             Editors
                         </Text> : null}
-                        {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                            <View style={{ width: '90%', height: 'auto' }}>
-                                <Multiselect
-                                    placeholder='Select...'
-                                    displayValue='name'
-                                    // key={userDropdownOptions.toString()}
-                                    // style={{ width: '100%', color: '#202025', 
-                                    //     optionContainer: { // To change css for option container 
-                                    //         zIndex: 9999
-                                    //     }
-                                    // }}
-                                    style={{
-                                        multiselectContainer: { // To change css for option container 
-                                            minHeight: 100
-                                        }
-                                    }}
-                                    options={selected} // Options to display in the dropdown
-                                    selectedValues={owners} // Preselected value to persist in dropdown
-                                    onSelect={(e, f) => {
-                                        setOwners(e);
-                                        return true
-                                    }} // Function will trigger on select event
-                                    onRemove={(e, f) => {
-                                        setOwners(e);
-                                        return true
-                                    }}
-                                />
-                            </View>
-                        </View> */}
-
                         {school ? <label style={{ width: '100%', maxWidth: 400 }}>
                             <Select
                                 themeVariant="light"

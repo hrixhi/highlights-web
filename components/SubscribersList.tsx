@@ -1,86 +1,58 @@
+// REACT
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions, Switch, Image } from 'react-native';
-import { View, Text, TouchableOpacity } from './Themed';
-import _ from 'lodash'
+import { StyleSheet, ScrollView, TextInput, Dimensions, Image } from 'react-native';
+import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
-import SubscriberCard from './SubscriberCard';
-import {
-    RichEditor
-} from "react-native-pell-rich-editor";
-import { fetchAPI } from '../graphql/FetchAPI';
-import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe, getQuiz, gradeQuiz, editReleaseSubmission, personalMeetingRequest, updateAnnotation, modifyActiveAttemptQuiz } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Alert from './Alert';
-import NewMessage from './NewMessage';
-import MessageCard from './MessageCard';
-import { validateEmail } from '../helpers/emailCheck';
-import { PreferredLanguageText } from '../helpers/LanguageContext';
-import ReactPlayer from 'react-player'
-import moment from "moment"
-import alert from './Alert';
-import Webview from './Webview'
-import QuizGrading from './QuizGrading';
-import Annotation from 'react-image-annotation'
-import WebViewer from '@pdftron/pdfjs-express';
-import XLSX from "xlsx"
+import XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { htmlStringParser } from '../helpers/HTMLParser'
-import Multiselect from 'multiselect-react-dropdown';
+import moment from 'moment';
+
+// API
+import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
+    submitGrade,
+    getQuiz,
+    gradeQuiz,
+    editReleaseSubmission,
+    updateAnnotation,
+    modifyActiveAttemptQuiz
+} from '../graphql/QueriesAndMutations';
+
+// COMPONENTS
+import { View, Text, TouchableOpacity } from './Themed';
+import Alert from './Alert';
+import ReactPlayer from 'react-player';
+import alert from './Alert';
+import QuizGrading from './QuizGrading';
+import WebViewer from '@pdftron/pdfjs-express';
+import { htmlStringParser } from '../helpers/HTMLParser';
 import parser from 'html-react-parser';
-import { Select } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react';
 
-
+// HELPERS
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-    const [filterChoice, setFilterChoice] = useState('All')
-    const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
-    const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Delivered', 'Read']
-    const categoriesLanguageMap: { [label: string]: string } = {
-        All: 'all',
-        Read: 'read',
-        Delivered: 'delivered',
-        "Not Delivered": 'notDelivered',
-        "Submitted": 'submitted',
-        "Graded": "graded"
-    }
-    const [showSubmission, setShowSubmission] = useState(false)
-    const [showAddUsers, setShowAddUsers] = useState(false)
-    const [isOwner, setIsOwner] = useState(false)
-    const [submission, setSubmission] = useState<any>('')
-    const [score, setScore] = useState("0")
-    const [graded, setGraded] = useState(false)
-    const [status, setStatus] = useState("")
-    const [userId, setUserId] = useState("")
-    const [messages, setMessages] = useState<any[]>([])
-    const [showChat, setShowChat] = useState(false)
-    const [users, setUsers] = useState<any>([])
-    const [emails, setEmails] = useState('')
-    const [showNewGroup, setShowNewGroup] = useState(false)
-    const RichText: any = useRef()
+    const [filterChoice, setFilterChoice] = useState('All');
+    const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers));
+    const [subscribers] = useState<any[]>(unparsedSubs.reverse());
+    const categories = ['All', 'Delivered', 'Read'];
+    const [showSubmission, setShowSubmission] = useState(false);
+    const [submission, setSubmission] = useState<any>('');
+    const [score, setScore] = useState('0');
+    const [graded, setGraded] = useState(false);
+    const [userId, setUserId] = useState('');
+    const RichText: any = useRef();
     const submissionViewerRef: any = useRef();
-    const [selected, setSelected] = useState<any[]>([])
-    const [expandMenu, setExpandMenu] = useState(false)
-    const [comment, setComment] = useState('')
+    const [comment, setComment] = useState('');
     const [isQuiz, setIsQuiz] = useState(false);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
     const [initiatedAt, setInitiatedAt] = useState<any>({});
-    const [imported, setImported] = useState(false)
-    const [url, setUrl] = useState('')
-    const [type, setType] = useState('')
-    const [title, setTitle] = useState('')
-    const [loadedChatWithUser, setLoadedChatWithUser] = useState<any>({})
-    const [isLoadedUserInactive, setIsLoadedUserInactive] = useState(false)
-    const [user, setUser] = useState<any>({})
-    const [meetingOn, setMeetingOn] = useState(false)
-    const [meetingLink, setMeetingLink] = useState('')
+    const [imported, setImported] = useState(false);
+    const [url, setUrl] = useState('');
+    const [type, setType] = useState('');
+    const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(false);
     const [releaseSubmission, setReleaseSubmission] = useState(false);
     const [submissionAttempts, setSubmissionAttempts] = useState<any[]>([]);
@@ -88,105 +60,67 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
     const [activeQuizAttempt, setActiveQuizAttempt] = useState(0);
     const [currentQuizAttempt, setCurrentQuizAttempt] = useState(0);
-
-    // Quiz 
     const [problems, setProblems] = useState<any[]>([]);
     const [submittedAt, setSubmittedAt] = useState('');
     const [deadline, setDeadline] = useState('');
-    const [isV0Quiz, setIsV0Quiz] = useState(false)
-    const [isV1Quiz, setIsV1Quiz] = useState(false);
-    const [headers, setHeaders] = useState({})
-    const [exportAoa, setExportAoa] = useState<any[]>()
-
-    // Alerts
-    const usersAddedAlert = PreferredLanguageText('usersAdded')
-    const emailInviteSentAlert = PreferredLanguageText('emailInviteSent')
-    const unableToLoadMessagesAlert = PreferredLanguageText('unableToLoadMessages')
-    const checkConnectionAlert = PreferredLanguageText('checkConnection')
-    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
-    const userSubscriptionActivatedAlert = PreferredLanguageText('userSubscriptionActivated')
-    const userSubscriptionInactivatedAlert = PreferredLanguageText('userSubscriptionInactivated')
-    const userRemovedAlert = PreferredLanguageText('userRemoved');
-    const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
-
-    const [annotation, setAnnotation] = useState<any>({})
-    const [annotations, setAnnotations] = useState<any[]>([])
-
-    const onSubmit = useCallback((ann: any) => {
-        const { geometry, data }: any = ann
-        const updatedAnnot = annotations.concat({
-            geometry,
-            data: {
-                ...data,
-                id: Math.random()
-            }
-        })
-        setAnnotations(updatedAnnot)
-    }, [annotations])
-
-    useEffect(() => {
-        const comm = {
-            annotation,
-            annotations
-        }
-        setComment(JSON.stringify(comm))
-    }, [annotation, annotations])
-
+    const [headers, setHeaders] = useState({});
+    const [exportAoa, setExportAoa] = useState<any[]>();
     if (props.cue && props.cue.submission) {
-        categories.push('Submitted')
-        categories.push('Graded')
+        categories.push('Submitted');
+        categories.push('Graded');
     }
-    const styles = styleObject()
-    let filteredSubscribers: any = []
+    const styles = styleObject();
+    let filteredSubscribers: any = [];
     switch (filterChoice) {
         case 'All':
-            filteredSubscribers = subscribers
+            filteredSubscribers = subscribers;
             break;
         case 'Read':
             filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'read'
-            })
+                return item.fullName === 'read';
+            });
             break;
         case 'Delivered':
             filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'not-delivered' || item.fullName === 'delivered'
-            })
+                return item.fullName === 'not-delivered' || item.fullName === 'delivered';
+            });
             break;
         case 'Graded':
             filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'graded'
-            })
+                return item.fullName === 'graded';
+            });
             break;
         case 'Submitted':
             filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'submitted'
-            })
+                return item.fullName === 'submitted';
+            });
             break;
         default:
-            filteredSubscribers = subscribers
+            filteredSubscribers = subscribers;
             break;
     }
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
-    const key = JSON.stringify(filteredSubscribers)
+    const windowHeight =
+        Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
+    const key = JSON.stringify(filteredSubscribers);
     let options = filteredSubscribers.map((sub: any) => {
         return {
-            value: sub._id, text: sub.displayName, group: sub.displayName[0]
-        }
-    })
-
+            value: sub._id,
+            text: sub.displayName,
+            group: sub.displayName[0]
+        };
+    });
     options = options.sort((a: any, b: any) => {
         if (a > b) return -1;
         if (a < b) return 1;
         return 0;
-    })
+    });
 
-    const group = selected.map(s => {
-        return s.value
-    })
+    // HOOKS
 
-    // PREPARE EXPORT DATA 
+    /**
+     * @description prepares export data for Assignment grades
+     */
     useEffect(() => {
-
         if (problems.length === 0 || subscribers.length === 0) {
             return;
         }
@@ -194,67 +128,66 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         const exportAoa = [];
 
         // Add row 1 with Overall, problem Score, problem Comments,
-        let row1 = [""];
+        let row1 = [''];
 
-        // Add Graded 
-        row1.push("Status")
+        // Add Graded
+        row1.push('Status');
 
         // Add total
-        row1.push("Total score")
+        row1.push('Total score');
 
         problems.forEach((prob: any, index: number) => {
-            row1.push(`Question ${index + 1}: ${prob.points} points`)
-            row1.push("Score + Remark")
-        })
+            row1.push(`Question ${index + 1}: ${prob.points} points`);
+            row1.push('Score + Remark');
+        });
 
-        row1.push("Submission Date")
+        row1.push('Submission Date');
 
-        row1.push("Feedback")
+        row1.push('Feedback');
 
         exportAoa.push(row1);
 
         // Row 2 should be correct answers
-        const row2 = ["", "", ""];
+        const row2 = ['', '', ''];
 
         problems.forEach((prob: any, i: number) => {
-            const { questionType, required, options = [], } = prob;
-            let type = questionType === "" ? "MCQ" : "Free Response";
+            const { questionType, required, options = [] } = prob;
+            let type = questionType === '' ? 'MCQ' : 'Free Response';
 
-            let require = required ? "Required" : "Optional";
+            let require = required ? 'Required' : 'Optional';
 
-            let answer = "";
+            let answer = '';
 
-            if (questionType === "") {
-                answer += "Ans: "
+            if (questionType === '') {
+                answer += 'Ans: ';
                 options.forEach((opt: any, index: number) => {
                     if (opt.isCorrect) {
-                        answer += ((index + 1) + ", ");
+                        answer += index + 1 + ', ';
                     }
-                })
+                });
             }
 
-            row2.push(`${type} ${answer}`)
-            row2.push(`(${require})`)
-        })
+            row2.push(`${type} ${answer}`);
+            row2.push(`(${require})`);
+        });
 
-        exportAoa.push(row2)
+        exportAoa.push(row2);
 
         // Subscribers
         subscribers.forEach((sub: any) => {
-
             const subscriberRow: any[] = [];
 
             const { displayName, submission, submittedAt, comment, graded, score } = sub;
 
             subscriberRow.push(displayName);
-            subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
+            subscriberRow.push(graded ? 'Graded' : submittedAt !== null ? 'Submitted' : 'Not Submitted');
 
             if (!graded && !submittedAt) {
                 exportAoa.push(subscriberRow);
                 return;
             }
 
-            subscriberRow.push(`${score}`)
+            subscriberRow.push(`${score}`);
 
             const obj = JSON.parse(submission);
 
@@ -266,9 +199,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             attempts.map((attempt: any) => {
                 if (attempt.isActive) {
-                    activeAttempt = attempt
+                    activeAttempt = attempt;
                 }
-            })
+            });
 
             if (!activeAttempt) {
                 return;
@@ -277,79 +210,87 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             const { solutions = [], problemScores, problemComments } = activeAttempt;
 
             solutions.forEach((sol: any, i: number) => {
-                let response = ''
-                if ("selected" in sol) {
-                    const options = sol["selected"];
+                let response = '';
+                if ('selected' in sol) {
+                    const options = sol['selected'];
 
                     options.forEach((opt: any, index: number) => {
-                        if (opt.isSelected) response += ((index + 1) + " ")
-                    })
+                        if (opt.isSelected) response += index + 1 + ' ';
+                    });
                 }
 
                 subscriberRow.push(response);
 
-                if (problemScores && problemScores[i] !== "") {
-                    subscriberRow.push(`${problemScores[i]} ${problemComments && problemComments[i] !== "" ? "- Remark:" + problemComments[i] : ''}`)
+                if (problemScores && problemScores[i] !== '') {
+                    subscriberRow.push(
+                        `${problemScores[i]} ${
+                            problemComments && problemComments[i] !== '' ? '- Remark:' + problemComments[i] : ''
+                        }`
+                    );
                 } else {
-                    subscriberRow.push("Score not assigned")
+                    subscriberRow.push('Score not assigned');
                 }
+            });
 
+            subscriberRow.push(moment(new Date(Number(submittedAt))).format('MMMM Do YYYY, h:mm a'));
 
-            })
-
-            subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
-
-            subscriberRow.push(comment)
+            subscriberRow.push(comment);
 
             exportAoa.push(subscriberRow);
+        });
 
-        })
+        setExportAoa(exportAoa);
+    }, [problems, subscribers]);
 
-        setExportAoa(exportAoa)
-
-
-    }, [problems, subscribers])
-
+    /**
+     * @description Set release submission and Quiz from props
+     */
     useEffect(() => {
-
         if (!props.cue) {
-            return
+            return;
         }
         if (props.cue.releaseSubmission !== null && props.cue.releaseSubmission !== undefined) {
-            setReleaseSubmission(props.cue.releaseSubmission)
+            setReleaseSubmission(props.cue.releaseSubmission);
         } else {
-            setReleaseSubmission(false)
+            setReleaseSubmission(false);
         }
 
         // Set if quiz when cue loaded
-        if (props.cue && props.cue.original && props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
+        if (
+            props.cue &&
+            props.cue.original &&
+            props.cue.original[0] === '{' &&
+            props.cue.original[props.cue.original.length - 1] === '}'
+        ) {
             const obj = JSON.parse(props.cue.original);
 
             if (obj.quizId) {
                 setIsQuiz(true);
             }
         }
+    }, [props.cue]);
 
-
-
-    }, [props.cue])
-
+    /**
+     * @description Sets whether submission is a quiz and if submission is imported
+     */
     useEffect(() => {
         if (submission[0] === '{' && submission[submission.length - 1] === '}') {
-            const obj = JSON.parse(submission)
+            const obj = JSON.parse(submission);
             if (obj.solutions) {
-                setIsQuiz(true)
-                setQuizSolutions(obj)
+                setIsQuiz(true);
+                setQuizSolutions(obj);
 
                 // This is old schema for submission
             } else if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
-
-                setImported(true)
-                setUrl(obj.url)
-                setType(obj.type)
-                setTitle(obj.title)
-            } else if (obj.attempts !== undefined && obj.submissionDraft !== undefined && obj.quizResponses === undefined) {
-
+                setImported(true);
+                setUrl(obj.url);
+                setType(obj.type);
+                setTitle(obj.title);
+            } else if (
+                obj.attempts !== undefined &&
+                obj.submissionDraft !== undefined &&
+                obj.quizResponses === undefined
+            ) {
                 // Check if submission draft contains imported document
                 if (obj.submissionDraft[0] === '{' && obj.submissionDraft[obj.submissionDraft.length - 1] === '}') {
                     let parse = JSON.parse(obj.submissionDraft);
@@ -358,48 +299,43 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setImported(true);
                         setUrl(parse.url);
                         setType(parse.type);
-                        setTitle(parse.title)
+                        setTitle(parse.title);
                     }
-
                 }
 
-                setSubmissionAttempts(obj.attempts)
+                setSubmissionAttempts(obj.attempts);
             } else if (obj.attempts !== undefined && obj.quizResponses !== undefined) {
-
-                setIsQuiz(true)
-                setIsV1Quiz(true)
+                setIsQuiz(true);
                 setQuizAttempts(obj.attempts);
 
                 // Set solutions to the active quiz attempt
                 obj.attempts.map((attempt: any, index: number) => {
-
                     if (attempt.isActive) {
-                        setActiveQuizAttempt(index)
+                        setActiveQuizAttempt(index);
                         setCurrentQuizAttempt(index);
-                        setQuizSolutions(attempt)
-                        setInitiatedAt(attempt.initiatedAt)
-                        setSubmittedAt(attempt.submittedAt)
-                        setGraded(attempt.isFullyGraded)
-
+                        setQuizSolutions(attempt);
+                        setInitiatedAt(attempt.initiatedAt);
+                        setSubmittedAt(attempt.submittedAt);
+                        setGraded(attempt.isFullyGraded);
                     }
-                })
-
+                });
             }
 
             if (obj.initiatedAt) {
-                setInitiatedAt(obj.initiatedAt)
+                setInitiatedAt(obj.initiatedAt);
             }
-
         } else {
-            setImported(false)
-            setUrl('')
-            setType('')
-            setTitle('')
+            setImported(false);
+            setUrl('');
+            setType('');
+            setTitle('');
         }
-    }, [submission])
+    }, [submission]);
 
+    /**
+     * @description Setup PDFTRON Webviewer with Submission
+     */
     useEffect(() => {
-
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
@@ -412,16 +348,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
-                    initialDoc: (url),
+                    initialDoc: url
                 },
-                submissionViewerRef.current,
-            ).then(async (instance) => {
+                submissionViewerRef.current
+            ).then(async instance => {
                 const { documentViewer, annotationManager } = instance.Core;
 
-                const u = await AsyncStorage.getItem("user");
+                const u = await AsyncStorage.getItem('user');
                 if (u) {
                     const user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName)
+                    annotationManager.setCurrentUser(user.fullName);
                 }
 
                 documentViewer.addEventListener('documentLoaded', () => {
@@ -431,7 +367,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     const xfdfString = currAttempt.annotations;
 
-                    if (xfdfString !== "") {
+                    if (xfdfString !== '') {
                         annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
                             annotations.forEach((annotation: any) => {
                                 annotationManager.redrawAnnotation(annotation);
@@ -440,52 +376,42 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                 });
 
+                annotationManager.addEventListener(
+                    'annotationChanged',
+                    async (annotations: any, action: any, { imported }) => {
+                        // If the event is triggered by importing then it can be ignored
+                        // This will happen when importing the initial annotations
+                        // from the server or individual changes from other users
+                        if (imported) return;
 
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
 
-                annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
-                    // If the event is triggered by importing then it can be ignored
-                    // This will happen when importing the initial annotations
-                    // from the server or individual changes from other users
-                    if (imported) return;
+                        const currAttempt = submissionAttempts[submissionAttempts.length - 1];
 
-                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        currAttempt.annotations = xfdfString;
 
-                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+                        const allAttempts = [...submissionAttempts];
 
-                    currAttempt.annotations = xfdfString;
+                        allAttempts[allAttempts.length - 1] = currAttempt;
 
-                    const allAttempts = [...submissionAttempts];
-
-                    allAttempts[allAttempts.length - 1] = currAttempt;
-
-                    await handleAnnotationsUpdate(allAttempts);
-
-                });
-
+                        await handleAnnotationsUpdate(allAttempts);
+                    }
+                );
             });
         }
+    }, [submissionAttempts, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab]);
 
-    }, [submissionAttempts, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab])
-
-    useEffect(() => {
-        if (quizSolutions) {
-            if (quizSolutions.problemScores) {
-                setIsV0Quiz(false)
-            } else {
-                setIsV0Quiz(true)
-            }
-        }
-    }, [quizSolutions])
-
-
+    /**
+     * @description if submission is a quiz then fetch Quiz
+     */
     useEffect(() => {
         if (isQuiz) {
             const obj = JSON.parse(props.cue.original);
 
-            setLoading(true)
+            setLoading(true);
 
             if (obj.quizId) {
-                const server = fetchAPI("");
+                const server = fetchAPI('');
                 server
                     .query({
                         query: getQuiz,
@@ -496,394 +422,131 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     .then(res => {
                         if (res.data && res.data.quiz.getQuiz) {
                             setProblems(res.data.quiz.getQuiz.problems);
-                            setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {})
+                            setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {});
                             setLoading(false);
                         }
                     });
-
             }
         }
-    }, [isQuiz])
+    }, [isQuiz]);
 
-    const onChange = useCallback((value) => {
-        setSelected(value)
-    }, [subscribers])
+    /**
+     * @description If assingment has upload Url then setup Webviewer (not used since tabs are disabled rn)
+     */
+    useEffect(() => {
+        if (url === '' || !url) {
+            return;
+        }
+        console.log(url);
+        WebViewer(
+            {
+                licenseKey: 'xswED5JutJBccg0DZhBM',
+                initialDoc: url
+            },
+            RichText.current
+        ).then(instance => {
+            const { documentViewer } = instance.Core;
+            // you can now call WebViewer APIs here...
+            documentViewer.addEventListener('documentLoaded', () => {
+                // perform document operations
+            });
+        });
+    }, [url, RichText, imported, type, submissionAttempts, viewSubmissionTab]);
 
-    const handleAnnotationsUpdate = useCallback((attempts: any) => {
+    /**
+     * @description Save instructor annotations to cloud
+     */
+    const handleAnnotationsUpdate = useCallback(
+        (attempts: any) => {
+            const server = fetchAPI('');
+            server
+                .mutate({
+                    mutation: updateAnnotation,
+                    variables: {
+                        cueId: props.cueId,
+                        userId,
+                        attempts: JSON.stringify(attempts)
+                    }
+                })
+                .then(res => {
+                    if (res.data.cue.updateAnnotation) {
+                        // props.reload()
+                        // setShowSubmission(false)
+                    }
+                })
+                .catch(e => {
+                    console.log('Error', e);
+                    Alert('Could not save annotation.');
+                });
+        },
+        [userId, props.cueId]
+    );
 
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: updateAnnotation,
-            variables: {
-                cueId: props.cueId,
-                userId,
-                attempts: JSON.stringify(attempts)
-            }
-        }).then(res => {
-            if (res.data.cue.updateAnnotation) {
-                // props.reload()
-                // setShowSubmission(false)
-            }
-        })
-
-    }, [userId, props.cueId])
-
+    /**
+     * @description Called when instructor saves grade
+     */
     const handleGradeSubmit = useCallback(() => {
-
         if (Number.isNaN(Number(score))) {
-            Alert("Score must be a number")
-            return
+            Alert('Score must be a number');
+            return;
         }
 
-        const availableUntil = props.cue && props.cue.availableUntil && props.cue.availableUntil !== "" ? new Date(props.cue.availableUntil) : null;
+        const availableUntil =
+            props.cue && props.cue.availableUntil && props.cue.availableUntil !== ''
+                ? new Date(props.cue.availableUntil)
+                : null;
 
-        const deadline = props.cue && props.cue.deadline && props.cue.deadline !== "" ? new Date(props.cue.deadline) : null;
+        const deadline =
+            props.cue && props.cue.deadline && props.cue.deadline !== '' ? new Date(props.cue.deadline) : null;
 
-        let warning = "";
+        let warning = '';
 
         if (deadline && new Date() < deadline) {
-            warning = "Deadline has not passed. Students can still re-submit and may override current grading."
+            warning = 'Deadline has not passed. Students can still re-submit and may override current grading.';
         } else if (availableUntil && new Date() < availableUntil) {
-            warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
+            warning =
+                'Late submission deadline has not passed. Students will be unable to submit after releasing scores.';
         }
 
-        Alert("Save grade?", warning, [
+        Alert('Save grade?', warning, [
             {
-                text: "Cancel",
-                style: "cancel",
+                text: 'Cancel',
+                style: 'cancel',
                 onPress: () => {
                     return;
                 }
             },
             {
-                text: "Yes",
+                text: 'Yes',
                 onPress: async () => {
-
-                    const server = fetchAPI('')
-                    server.mutate({
-                        mutation: submitGrade,
-                        variables: {
-                            cueId: props.cueId,
-                            userId,
-                            score,
-                            comment
-                        }
-                    }).then(res => {
-                        if (res.data.cue.submitGrade) {
-                            props.reloadStatuses()
-                        }
-                    })
-                }
-            }
-        ])
-
-    }, [score, userId, props.cueId, comment, props])
-
-    useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
-                if (u) {
-                    const user = JSON.parse(u)
-                    setUser(user)
-                    if (user._id && props.channelCreatedBy && user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                        setIsOwner(true)
-                    }
-                }
-            }
-        )()
-    }, [props.channelCreatedBy])
-
-    useEffect(() => {
-        // get meeting status & set the meeting link accordingly
-        if (users && users.length > 0) {
-            const server = fetchAPI('')
-            server.query({
-                query: getPersonalMeetingLinkStatus,
-                variables: {
-                    users
-                }
-            }).then((res: any) => {
-                if (res.data && res.data.channel.getPersonalMeetingLinkStatus) {
-                    setMeetingOn(true)
-                    getMeetingLink()
-                }
-            })
-        }
-    }, [users])
-
-    const getMeetingLink = useCallback(() => {
-        const server = fetchAPI('')
-        server.query({
-            query: getPersonalMeetingLink,
-            variables: {
-                userId: user._id,
-                users: users
-            }
-        }).then((res: any) => {
-            if (res.data && res.data.channel.getPersonalMeetingLink && res.data.channel.getPersonalMeetingLink !== 'error') {
-                setMeetingLink(res.data.channel.getPersonalMeetingLink)
-            }
-        }).catch(err => {
-            console.log(err)
-            alert('Something went wrong')
-        })
-    }, [users, user])
-
-    const updateMeetingStatus = useCallback(() => {
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: editPersonalMeeting,
-            variables: {
-                users,
-                channelId: props.channelId,
-                meetingOn: !meetingOn
-            }
-        }).then((res: any) => {
-            if (res.data && res.data.channel.editPersonalMeeting) {
-                if (!meetingOn) {
-                    // meeting turned on
-                    getMeetingLink()
-                }
-                setMeetingOn(!meetingOn)
-            } else {
-                console.log(res)
-                alert('Something went wrong')
-            }
-        }).catch(err => {
-            console.log(err)
-            alert('Something went wrong')
-        })
-    }, [users, props.channelId, meetingOn, getMeetingLink])
-
-    const showError = useCallback(() => {
-        alert('Meeting is inactive.')
-    }, [])
-
-    const submitEmails = useCallback(async () => {
-        const lowerCaseEmails = emails.toLowerCase()
-        const parsedEmails: any[] = []
-        const unparsedEmails = lowerCaseEmails.split('\n')
-        unparsedEmails.map((email) => {
-            if (validateEmail(email)) {
-                parsedEmails.push(email)
-            }
-        })
-
-        if (parsedEmails.length === 0) return;
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: inviteByEmail,
-            variables: {
-                emails: parsedEmails,
-                channelId: props.channelId
-            }
-        }).then(res => {
-            if (res.data.user.inviteByEmail) {
-                setEmails('')
-                Alert(usersAddedAlert, emailInviteSentAlert)
-                props.reload()
-            }
-        }).catch(err => {
-            console.log(err)
-        })
-    }, [emails, props.channelId])
-
-    const loadChat = useCallback(async (userId, groupId) => {
-        const u = await AsyncStorage.getItem('user')
-        if (u) {
-            const parsedUser = JSON.parse(u)
-            setUsers([parsedUser._id, userId])
-            setMeetingOn(false)
-            const server = fetchAPI('')
-            server.query({
-                query: getMessages,
-                variables: {
-                    users: [parsedUser._id, userId]
-                }
-            })
-                .then(res => {
-                    setMessages(res.data.message.getMessagesThread)
-                    setShowChat(true)
-                })
-                .catch(err => {
-                    Alert(unableToLoadMessagesAlert, checkConnectionAlert)
-                })
-            // mark chat as read here
-            server.mutate({
-                mutation: markMessagesAsRead,
-                variables: {
-                    userId: parsedUser._id,
-                    groupId
-                }
-            }).then(res => {
-                props.refreshUnreadMessagesCount()
-            })
-                .catch(e => console.log(e))
-            // load the user
-            server.query({
-                query: findUserById,
-                variables: {
-                    id: userId
-                }
-            }).then(res => {
-                if (res.data && res.data.user.findById) {
-                    setLoadedChatWithUser(res.data.user.findById)
-                    server.query({
-                        query: isSubInactive,
-                        variables: {
-                            userId: res.data.user.findById._id,
-                            channelId: props.channelId
-                        }
-                    }).then((res2: any) => {
-                        if (res2.data && res2.data.subscription.isSubInactive) {
-                            setIsLoadedUserInactive(true)
-                        }
-                    }).catch((err) => console.log(err))
-                }
-            })
-        }
-    }, [props.channelId])
-
-    const loadGroupChat = useCallback(async (groupUsers, groupId) => {
-        const u = await AsyncStorage.getItem('user')
-        if (u) {
-            const parsedUser = JSON.parse(u)
-            setUsers(groupUsers)
-            setMeetingOn(false)
-            const server = fetchAPI('')
-            server.query({
-                query: getMessages,
-                variables: {
-                    users: groupUsers
-                }
-            })
-                .then(res => {
-                    setMessages(res.data.message.getMessagesThread)
-                    setShowChat(true)
-                })
-                .catch(err => {
-                    Alert(unableToLoadMessagesAlert, checkConnectionAlert)
-                })
-            // mark as read here
-            server.mutate({
-                mutation: markMessagesAsRead,
-                variables: {
-                    userId: parsedUser._id,
-                    groupId
-                }
-            }).then(res => console.log(res))
-                .catch(e => console.log(e))
-        }
-    }, [])
-
-    const handleDelete = useCallback(() => {
-
-        Alert("Remove user from channel?", "",
-            [
-                {
-                    text: "Cancel", style: "cancel", onPress: () => { return; }
-                },
-                {
-                    text: "Okay", onPress: async () => {
-                        const server = fetchAPI('')
-                        server.mutate({
-                            mutation: unsubscribe,
+                    const server = fetchAPI('');
+                    server
+                        .mutate({
+                            mutation: submitGrade,
                             variables: {
-                                userId: loadedChatWithUser._id,
-                                channelId: props.channelId,
-                                keepContent: false
-                            }
-                        }).then(async res => {
-                            if (res.data.subscription && res.data.subscription.unsubscribe) {
-                                Alert(userRemovedAlert)
-                                props.reload()
-                                setShowChat(false)
-                                setIsLoadedUserInactive(false)
-                                setLoadedChatWithUser({})
-                            } else {
-                                Alert(alreadyUnsubscribedAlert)
-                            }
-                        }).catch(err => {
-                            Alert(somethingWentWrongAlert, checkConnectionAlert)
-                        })
-                    }
-                }
-            ]
-        )
-
-    }, [loadedChatWithUser, props.channelId, props.reload])
-
-    const handleSubStatusChange = useCallback(() => {
-
-        const alertMessage = isLoadedUserInactive ? "Make user active?" : "Make user inactive?"
-
-        Alert(alertMessage, "",
-            [
-                {
-                    text: "Cancel", style: "cancel", onPress: () => { return; }
-                },
-                {
-                    text: "Okay", onPress: async () => {
-                        const server = fetchAPI('')
-                        server.mutate({
-                            mutation: isLoadedUserInactive ? makeSubActive : makeSubInactive,
-                            variables: {
-                                userId: loadedChatWithUser._id,
-                                channelId: props.channelId
-                            }
-                        }).then(res => {
-                            if (isLoadedUserInactive) {
-                                // changed to active
-                                if (res.data && res.data.subscription.makeActive) {
-                                    Alert(userSubscriptionActivatedAlert)
-                                    props.reload()
-                                    setShowChat(false)
-                                    setIsLoadedUserInactive(false)
-                                    setLoadedChatWithUser({})
-                                }
-                            } else {
-                                // changed to inactive
-                                if (res.data && res.data.subscription.makeInactive) {
-                                    Alert(userSubscriptionInactivatedAlert)
-                                    props.reload()
-                                    setShowChat(false)
-                                    setIsLoadedUserInactive(false)
-                                    setLoadedChatWithUser({})
-                                }
+                                cueId: props.cueId,
+                                userId,
+                                score,
+                                comment
                             }
                         })
-                    }
+                        .then(res => {
+                            if (res.data.cue.submitGrade) {
+                                props.reloadStatuses();
+                            }
+                        });
                 }
-            ]
-        )
-
-
-    }, [isLoadedUserInactive, loadedChatWithUser, props.channelId])
-
-    const handleEnterMeeting = useCallback(() => {
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: personalMeetingRequest,
-            variables: {
-                userId: user._id,
-                channelId: props.channelId,
-                users
             }
-        }).then(res => {
-            console.log(res)
-            if (res.data && res.data.channel.personalMeetingRequest !== 'error') {
-                window.open(res.data.channel.personalMeetingRequest, "_blank");
-            } else {
-                Alert("Classroom not in session. Waiting for instructor.")
-            }
-        }).catch(err => {
-            Alert("Something went wrong.")
-        })
-    }, [users, userId, props.channelId, user])
+        ]);
+    }, [score, userId, props.cueId, comment, props]);
 
+    // FUNCTIONS
+
+    /**
+     * @description Modify which attempt is active for Student
+     */
     const modifyActiveQuizAttempt = () => {
-        const server = fetchAPI("");
+        const server = fetchAPI('');
         server
             .mutate({
                 mutation: modifyActiveAttemptQuiz,
@@ -895,14 +558,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then(res => {
                 if (res.data && res.data.cue.modifyActiveAttemptQuiz) {
-                    props.reload()
+                    props.reload();
                 }
             });
+    };
 
-    }
-
+    /**
+     * @description On Save quiz scores
+     */
     const onGradeQuiz = (problemScores: string[], problemComments: string[], score: number, comment: string) => {
-        const server = fetchAPI("");
+        const server = fetchAPI('');
         server
             .mutate({
                 mutation: gradeQuiz,
@@ -913,117 +578,113 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     problemComments,
                     score,
                     comment,
-                    quizAttempt: isV1Quiz ? currentQuizAttempt : null
+                    quizAttempt: currentQuizAttempt
                 }
             })
             .then(res => {
                 if (res.data && res.data.cue.gradeQuiz) {
-                    props.reload()
-                    setShowSubmission(false)
+                    props.reload();
+                    setShowSubmission(false);
                 }
             });
-    }
+    };
 
+    /**
+     * @description Handles export of data to spreadsheet
+     */
     const exportScores = () => {
-
-        const { title } = htmlStringParser(props.cue.original)
+        const { title } = htmlStringParser(props.cue.original);
 
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
 
         if (!exportAoa) {
-            Alert("Export document being processed. Try again.")
+            Alert('Export document being processed. Try again.');
             return;
         }
 
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Scores ");
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+        XLSX.utils.book_append_sheet(wb, ws, 'Scores ');
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, `${title} scores` + fileExtension);
+    };
 
-    }
-
-
+    /**
+     * @description Handle release/hide grades
+     */
     const updateReleaseSubmission = useCallback(() => {
+        const availableUntil =
+            props.cue && props.cue.availableUntil && props.cue.availableUntil !== ''
+                ? new Date(props.cue.availableUntil)
+                : null;
 
+        const deadline =
+            props.cue && props.cue.deadline && props.cue.deadline !== '' ? new Date(props.cue.deadline) : null;
 
-        const availableUntil = props.cue && props.cue.availableUntil && props.cue.availableUntil !== "" ? new Date(props.cue.availableUntil) : null;
-
-        const deadline = props.cue && props.cue.deadline && props.cue.deadline !== "" ? new Date(props.cue.deadline) : null;
-
-        let warning = "";
+        let warning = '';
 
         if (deadline && new Date() < deadline) {
-            warning = "Deadline has not passed. Students will be unable to submit after releasing scores."
+            warning = 'Deadline has not passed. Students will be unable to submit after releasing scores.';
         } else if (availableUntil && new Date() < availableUntil) {
-            warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
+            warning =
+                'Late submission deadline has not passed. Students will be unable to submit after releasing scores.';
         }
 
-        Alert(releaseSubmission ? "Hide feedback? Feedback will be temporarily hidden from viewers." : "Share feedback? Feedback will be privately visible to viewers", releaseSubmission ? "" : warning, [
-            {
-                text: "Cancel",
-                style: "cancel",
-                onPress: () => {
-                    return;
+        Alert(
+            releaseSubmission
+                ? 'Hide feedback? Feedback will be temporarily hidden from viewers.'
+                : 'Share feedback? Feedback will be privately visible to viewers',
+            releaseSubmission ? '' : warning,
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: editReleaseSubmission,
+                                variables: {
+                                    cueId: props.cueId,
+                                    releaseSubmission: !releaseSubmission
+                                }
+                            })
+                            .then((res: any) => {
+                                if (res.data && res.data.cue.editReleaseSubmission) {
+                                    props.updateCueWithReleaseSubmission(!releaseSubmission);
+                                    setReleaseSubmission(!releaseSubmission);
+                                } else {
+                                    alert('Something went wrong');
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                alert('Something went wrong');
+                            });
+                    }
                 }
-            },
-            {
-                text: "Yes",
-                onPress: async () => {
-                    const server = fetchAPI("");
-                    server.mutate({
-                        mutation: editReleaseSubmission,
-                        variables: {
-                            cueId: props.cueId,
-                            releaseSubmission: !releaseSubmission,
-                        }
-                    }).then((res: any) => {
-                        if (res.data && res.data.cue.editReleaseSubmission) {
-                            props.updateCueWithReleaseSubmission(!releaseSubmission)
-                            setReleaseSubmission(!releaseSubmission)
-                        } else {
-                            alert('Something went wrong')
-                        }
-                    }).catch(err => {
-                        console.log(err)
-                        alert('Something went wrong')
-                    })
-                }
-            }
-        ])
+            ]
+        );
+    }, [releaseSubmission, props.cueId, props]);
 
-
-    }, [releaseSubmission, props.cueId, props])
-
-    useEffect(() => {
-        if (url === '' || !url) {
-            return
-        }
-        console.log(url)
-        WebViewer(
-            {
-                licenseKey: 'xswED5JutJBccg0DZhBM',
-                initialDoc: (url),
-            },
-            RichText.current,
-        ).then((instance) => {
-            const { documentViewer } = instance.Core;
-            // you can now call WebViewer APIs here...
-            documentViewer.addEventListener('documentLoaded', () => {
-                // perform document operations
-            });
-        });
-    }, [url, RichText, imported, type, submissionAttempts, viewSubmissionTab]);
-
-
+    /**
+     * @description Renders submission
+     */
     const renderViewSubmission = () => {
         const attempt = submissionAttempts[submissionAttempts.length - 1];
 
-        return (<View style={{ width: '100%', marginTop: 20 }}>
-            {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
-            {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
+        return (
+            <View style={{ width: '100%', marginTop: 20 }}>
+                {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
+                {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
                     style={{
                         justifyContent: "center",
@@ -1049,1007 +710,589 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </Text>
                 </TouchableOpacity>
             </View>} */}
-            {
-                attempt.url !== undefined ?
-                    (attempt.type === "mp4" ||
-                        attempt.type === "oga" ||
-                        attempt.type === "mov" ||
-                        attempt.type === "wmv" ||
-                        attempt.type === "mp3" ||
-                        attempt.type === "mov" ||
-                        attempt.type === "mpeg" ||
-                        attempt.type === "mp2" ||
-                        attempt.type === "wav" ?
+                {attempt.url !== undefined ? (
+                    attempt.type === 'mp4' ||
+                    attempt.type === 'oga' ||
+                    attempt.type === 'mov' ||
+                    attempt.type === 'wmv' ||
+                    attempt.type === 'mp3' ||
+                    attempt.type === 'mov' ||
+                    attempt.type === 'mpeg' ||
+                    attempt.type === 'mp2' ||
+                    attempt.type === 'wav' ? (
                         <View style={{ width: '100%', marginTop: 25 }}>
-                            {attempt.title !== "" ? <Text
-                                style={{
-                                    fontSize: 18,
-                                    paddingRight: 15,
-                                    paddingTop: 12,
-                                    paddingBottom: 12,
-                                    marginTop: 20,
-                                    marginBottom: 5,
-                                    maxWidth: "100%",
-                                    fontWeight: "600",
-                                    width: '100%'
-                                }}
-                            >
-                                {attempt.title}
-                            </Text> : null}
-                            <ReactPlayer url={attempt.url} controls={true} width={"100%"}
-                            height={"100%"} />
+                            {attempt.title !== '' ? (
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        paddingRight: 15,
+                                        paddingTop: 12,
+                                        paddingBottom: 12,
+                                        marginTop: 20,
+                                        marginBottom: 5,
+                                        maxWidth: '100%',
+                                        fontWeight: '600',
+                                        width: '100%'
+                                    }}>
+                                    {attempt.title}
+                                </Text>
+                            ) : null}
+                            <ReactPlayer url={attempt.url} controls={true} width={'100%'} height={'100%'} />
                         </View>
-                        :
+                    ) : (
                         <View style={{ width: '100%', marginTop: 25 }}>
-                            {attempt.title !== "" ? <Text
-                                style={{
-                                    fontSize: 18,
-                                    paddingRight: 15,
-                                    paddingTop: 12,
-                                    paddingBottom: 12,
-                                    marginTop: 20,
-                                    marginBottom: 5,
-                                    maxWidth: "100%",
-                                    fontWeight: "600",
-                                    width: '100%'
-                                }}
-                            >
-                                {attempt.title}
-                            </Text> : null}
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
-                        </View>)
-                    :
+                            {attempt.title !== '' ? (
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        paddingRight: 15,
+                                        paddingTop: 12,
+                                        paddingBottom: 12,
+                                        marginTop: 20,
+                                        marginBottom: 5,
+                                        maxWidth: '100%',
+                                        fontWeight: '600',
+                                        width: '100%'
+                                    }}>
+                                    {attempt.title}
+                                </Text>
+                            ) : null}
+                            <div
+                                className="webviewer"
+                                ref={submissionViewerRef}
+                                style={{ height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh' }}></div>
+                        </View>
+                    )
+                ) : (
                     <View style={{ width: '100%', marginTop: 25 }} key={viewSubmissionTab}>
-                        {viewSubmissionTab === "mySubmission" ?
+                        {viewSubmissionTab === 'mySubmission' ? (
                             <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
                                 {parser(attempt.html)}
-                            </div> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
-                        }
+                            </div>
+                        ) : (
+                            <div
+                                className="webviewer"
+                                ref={submissionViewerRef}
+                                style={{ height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh' }}></div>
+                        )}
                     </View>
-            }
-        </View>)
-
-
-    }
-
-    const renderQuizSubmissions = () => {
-
-        const { initiatedAt, solutions } = quizSolutions;
-
-        return (<View style={{ width: '100%', marginLeft: '5%', display: 'flex', flexDirection: 'column' }}>
-            {initiatedAt ? <Text style={{ width: '100%', height: 15, paddingBottom: 25 }}>
-                Quiz initiated at {moment(new Date(initiatedAt)).format('MMMM Do YYYY, h:mm a')}
-            </Text> :
-                null
-            }
-            <Text style={{ width: '100%', height: 15, marginTop: '20px', paddingBottom: 25, fontWeight: 'bold' }}>
-                Selected Answers:
-            </Text>
-            <View style={{ marginTop: '20px', display: 'flex', flexDirection: "column" }}>
-                {solutions.map((solution: any, index: number) => {
-
-                    if (solution.selected) {
-                        const answers: any[] = solution.selected;
-
-                        const selectedAnswers = answers.filter(ans => ans.isSelected);
-
-                        let selectedAnswersString: any[] = []
-
-                        selectedAnswers.forEach((ans: any) => {
-                            selectedAnswersString.push(ans.options)
-                        })
-
-                        return (<Text style={{ width: '100%', height: 15, marginTop: '10px', paddingBottom: 25 }}>
-                            Problem {index + 1} : {selectedAnswersString.join(", ")}
-                        </Text>)
-                    } else {
-                        return (<Text style={{ width: '100%', height: 15, marginTop: '10px', paddingBottom: 25 }}>
-                            Problem {index + 1} : {solution.response}
-                        </Text>)
-                    }
-
-                })}
+                )}
             </View>
-        </View>)
+        );
+    };
 
-    }
+    // MAIN RETURN
 
     return (
-        <View style={{
-            // borderWidth: 2,
-            backgroundColor: 'white',
-            width: '100%',
-            minHeight: windowHeight - 200,
-            // paddingHorizontal: 20,
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
-        }}>
-            {
-                props.cueId ? null : <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                </Text>
-            }
-            {
-                showSubmission || showChat || showAddUsers || showNewGroup ?
-                    <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 900 }}>
-                            {
-                                loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
-                                    <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
-                                        <Text>
-                                            {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
-                                        </Text>
-                                    </View> : null
-                            }
-                        </View>
-                        {
-                            showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1 }}>
-                                <View style={{ backgroundColor: 'white' }}>
-                                    <TouchableOpacity
-                                        onPress={handleEnterMeeting}
-                                        style={{
-                                            backgroundColor: 'white',
-                                            overflow: 'hidden',
-                                            height: 35,
-                                            marginTop: 15,
-                                            marginBottom: 20
-                                        }}>
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: '#fff',
-                                            fontSize: 12,
-                                            backgroundColor: '#006AFF',
-                                            paddingHorizontal: 20,
-                                            fontFamily: 'inter',
-                                            height: 35,
-                                            width: 175,
-                                            borderRadius: 15,
-                                            textTransform: 'uppercase'
-                                        }}>
-                                            Join
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                                : null
-                        }
-                    </View>
-                    :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, maxWidth: 500 }}>
-                        {
-                            props.cueId ?
-                                null :
-                                <Text
-                                    ellipsizeMode="tail"
-                                    style={{
-                                        fontSize: 14,
-                                        paddingBottom: 20,
-                                        fontFamily: 'inter',
-                                        // textTransform: "uppercase",
-                                        // paddingLeft: 10,
-                                        flex: 1,
-                                        lineHeight: 25
-                                    }}>
-                                    {PreferredLanguageText('inbox')}
-                                </Text>
-                        }
-                        {
-                            !props.cueId && isOwner ?
-                                <TouchableOpacity
-                                    key={Math.random()}
-                                    style={{
-                                        backgroundColor: 'white'
-                                    }}
-                                    onPress={() => setShowNewGroup(true)}>
-                                    <Text style={{
-                                        width: '100%',
-                                        textAlign: 'right',
-                                        lineHeight: 23,
-                                        marginRight: 20,
-                                        color: '#006AFF',
-                                        fontSize: 11,
-                                    }}>
-                                        NEW GROUP
-                                    </Text>
-                                </TouchableOpacity> : null
-                        }
-                    </View>
-            }
-            {
-                !showAddUsers ? (subscribers.length === 0 ?
-                    <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                            {
-                                props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
-                            }
-                        </Text>
-                    </View> :
-                    <View style={{
+        <View
+            style={{
+                backgroundColor: 'white',
+                width: '100%',
+                minHeight: windowHeight - 200,
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0
+            }}>
+            {subscribers.length === 0 ? (
+                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                    <Text
+                        style={{
+                            width: '100%',
+                            color: '#1F1F1F',
+                            fontSize: 20,
+                            paddingTop: 50,
+                            paddingHorizontal: 5,
+                            fontFamily: 'inter',
+                            flex: 1,
+                            textAlign: 'center'
+                        }}>
+                        {props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')}
+                    </Text>
+                </View>
+            ) : (
+                <View
+                    style={{
                         width: '100%',
                         maxWidth: 900,
-                        // alignSelf: 'center',
                         backgroundColor: 'white',
                         flex: 1
                     }}
-                        key={key}
-                    >
-                        {
-                            !props.cueId || showSubmission ? null :
-                                <View style={{
-                                    width: '100%',
-                                    backgroundColor: 'white',
-                                    flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
-                                    marginBottom: 20
-                                }}>
-                                    <label style={{ width: 160, marginTop: Dimensions.get('window').width < 768 ? 20 : 0 }}>
-                                        <Select
-                                            touchUi={true}
-                                            themeVariant="light"
-                                            value={filterChoice}
-                                            onChange={(val: any) => {
-                                                setFilterChoice(val.value)
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                            data={categories.map((category: any) => {
-                                                return {
-                                                    value: category,
-                                                    text: category
-                                                }
-                                            })}
-                                        />
-                                    </label>
-                                    {
-                                        !showAddUsers && props.cue && props.cue.submission ?
-                                            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: Dimensions.get('window').width < 768 ? 'space-between' : 'flex-end', marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto' }}>
-                                                <View style={{
-                                                    backgroundColor: 'white',
-                                                    flexDirection: 'row'
+                    key={key}>
+                    {!props.cueId || showSubmission ? null : (
+                        <View
+                            style={{
+                                width: '100%',
+                                backgroundColor: 'white',
+                                flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                                marginBottom: 20,
+                                paddingTop: 12
+                            }}>
+                            <label style={{ width: 160, marginTop: Dimensions.get('window').width < 768 ? 20 : 0 }}>
+                                <Select
+                                    touchUi={true}
+                                    themeVariant="light"
+                                    value={filterChoice}
+                                    onChange={(val: any) => {
+                                        setFilterChoice(val.value);
+                                    }}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false
+                                        }
+                                    }}
+                                    data={categories.map((category: any) => {
+                                        return {
+                                            value: category,
+                                            text: category
+                                        };
+                                    })}
+                                />
+                            </label>
+                            {props.cue && props.cue.submission ? (
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        flexDirection: 'row',
+                                        justifyContent:
+                                            Dimensions.get('window').width < 768 ? 'space-between' : 'flex-end',
+                                        marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto'
+                                    }}>
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            flexDirection: 'row'
+                                        }}>
+                                        {releaseSubmission ? (
+                                            <TouchableOpacity
+                                                onPress={() => updateReleaseSubmission()}
+                                                style={{
+                                                    borderRadius: 15,
+                                                    backgroundColor: 'white'
                                                 }}>
-                                                    {
-                                                        releaseSubmission ?
-                                                            <TouchableOpacity
-                                                                // value={releaseSubmission}
-                                                                onPress={() => updateReleaseSubmission()}
-                                                                style={{
-                                                                    borderRadius: 15,
-                                                                    backgroundColor: "white",
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        textAlign: "center",
-                                                                        lineHeight: 34,
-                                                                        color: "#006AFF",
-                                                                        fontSize: 12,
-                                                                        borderColor: "#006AFF",
-                                                                        borderWidth: 1,
-                                                                        borderRadius: 15,
-                                                                        paddingHorizontal: 20,
-                                                                        fontFamily: "inter",
-                                                                        overflow: "hidden",
-                                                                        height: 35,
-                                                                        textTransform: "uppercase",
-                                                                    }}
-                                                                >
-                                                                    Hide Feedback
-                                                                </Text>
-                                                            </TouchableOpacity> :
-                                                            <TouchableOpacity
-                                                                // value={releaseSubmission}
-                                                                onPress={() => updateReleaseSubmission()}
-                                                                style={{
-                                                                    borderRadius: 15,
-                                                                    backgroundColor: "white",
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        textAlign: "center",
-                                                                        lineHeight: 34,
-                                                                        color: "#006AFF",
-                                                                        fontSize: 12,
-                                                                        borderColor: "#006AFF",
-                                                                        borderRadius: 15,
-                                                                        backgroundColor: '#fff',
-                                                                        borderWidth: 1,
-                                                                        paddingHorizontal: 20,
-                                                                        fontFamily: "inter",
-                                                                        overflow: "hidden",
-                                                                        height: 35,
-                                                                        textTransform: "uppercase",
-                                                                    }}
-                                                                >
-                                                                    Share Feedback
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                    }
-                                                </View>
-                                                {isQuiz ? <Text
+                                                <Text
                                                     style={{
-                                                        textAlign: "center",
+                                                        textAlign: 'center',
                                                         lineHeight: 34,
-                                                        color: "#006AFF",
+                                                        color: '#006AFF',
                                                         fontSize: 12,
-                                                        borderColor: "#006AFF",
+                                                        borderColor: '#006AFF',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         paddingHorizontal: 20,
-                                                        fontFamily: "inter",
-                                                        overflow: "hidden",
+                                                        fontFamily: 'inter',
+                                                        overflow: 'hidden',
                                                         height: 35,
-                                                        textTransform: "uppercase",
-                                                        marginLeft: 20
-                                                    }}
-                                                    onPress={() => {
-                                                        exportScores()
+                                                        textTransform: 'uppercase'
                                                     }}>
-                                                    EXPORT
-                                                </Text> : null}
-                                            </View>
-                                            : null
-                                    }
-                                </View>
-                        }
-                        {
-                            !showSubmission ?
-                                (
-                                    showChat ?
-                                        <ScrollView
-                                            showsVerticalScrollIndicator={false}
-                                            keyboardDismissMode={'on-drag'}
-                                            style={{ flex: 1, paddingTop: 12 }}>
-                                            {
-                                                messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                        {PreferredLanguageText('noMessages')}
-                                                    </Text>
-                                                    : null
-                                            }
-                                            {
-                                                messages.map((message) => {
-                                                    return <View style={{ width: '100%', maxWidth: 500, paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
-                                                        <MessageCard
-                                                            user={user}
-                                                            message={message} />
-                                                    </View>
-                                                })
-                                            }
-                                            <View style={{ backgroundColor: 'white' }}>
-                                                <NewMessage
-                                                    cueId={props.cueId}
-                                                    channelId={props.channelId}
-                                                    parentId={null}
-                                                    users={users}
-                                                    back={() => {
-                                                        props.reload()
-                                                        setShowChat(false)
-                                                        setIsLoadedUserInactive(false)
-                                                        setLoadedChatWithUser({})
-                                                    }}
-                                                    placeholder={`${PreferredLanguageText('message')}...`}
-                                                />
-                                            </View>
-                                        </ScrollView>
-                                        :
-                                        (
-                                            showNewGroup ?
-                                                <ScrollView
-                                                    showsVerticalScrollIndicator={false}
-                                                    keyboardDismissMode={'on-drag'}
-                                                    style={{ flex: 1, paddingTop: 12 }}>
-                                                    {/* <Text
-                                                        ellipsizeMode="tail"
-                                                        style={{ fontSize: 11, color: '#1F1F1F', textTransform: 'uppercase' }}>
-                                                        {PreferredLanguageText('newGroup')}
-                                                    </Text> */}
-                                                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
-                                                        <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
-                                                            {/* <Multiselect
-                                                                placeholder='Select users'
-                                                                displayValue='label'
-                                                                // key={userDropdownOptions.toString()}
-                                                                // style={{ width: '100%', color: '#000000', 
-                                                                //     optionContainer: { // To change css for option container 
-                                                                //         zIndex: 9999
-                                                                //     }
-                                                                // }}
-                                                                options={options} // Options to display in the dropdown
-                                                                selectedValues={selected} // Preselected value to persist in dropdown
-                                                                onSelect={(e, f) => {
-                                                                    setSelected(e);
-                                                                    return true
-                                                                }} // Function will trigger on select event
-                                                                onRemove={(e, f) => {
-                                                                    setSelected(e);
-                                                                    return true
-                                                                }}
-                                                            /> */}
-                                                            <Select
-                                                                themeVariant="light"
-                                                                selectMultiple={true}
-                                                                group={true}
-                                                                groupLabel="&nbsp;"
-                                                                inputClass="mobiscrollCustomMultiInput"
-                                                                placeholder="Select..."
-                                                                touchUi={true}
-                                                                // minWidth={[60, 320]}
-                                                                value={selected}
-                                                                data={options}
-                                                                onChange={(val: any) => {
-                                                                    setSelected(val.value)
-                                                                }}
-                                                                responsive={{
-                                                                    small: {
-                                                                        display: 'bubble'
-                                                                    },
-                                                                    medium: {
-                                                                        touchUi: false,
-                                                                    }
-                                                                }}
-                                                                minWidth={[60, 320]}
-                                                            // minWidth={[60, 320]}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ backgroundColor: 'white' }}>
-                                                        <NewMessage
-                                                            cueId={props.cueId}
-                                                            channelId={props.channelId}
-                                                            parentId={null}
-                                                            users={group}
-                                                            addUserId={true}
-                                                            back={() => {
-                                                                props.reload()
-                                                                setShowChat(false)
-                                                                setIsLoadedUserInactive(false)
-                                                                setLoadedChatWithUser({})
-                                                                setShowNewGroup(false)
-                                                            }}
-                                                            placeholder={`${PreferredLanguageText('message')}...`}
-                                                        />
-                                                    </View>
-                                                </ScrollView>
-                                                : <ScrollView
-                                                    showsVerticalScrollIndicator={true}
-                                                    horizontal={false}
-                                                    key={filterChoice + key}
-                                                    contentContainerStyle={{
-                                                        width: '100%',
-                                                        borderRadius: 1,
-                                                        borderWidth: 0,
-                                                        borderColor: '#efefef',
-                                                        maxWidth: 900,
-                                                        marginBottom: 50,
-                                                        paddingHorizontal: 10,
-                                                    }}
-                                                >
-                                                    {
-                                                        !props.cueId || props.cueId === '' ?
-                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#efefef', marginBottom: 20 }}>
-                                                                {
-                                                                    props.groups.length > 0 ? (props.groups.map((group: any, index: any) => {
-                                                                        let displayName = ''
-                                                                        group.userNames.map((u: any) => { displayName += (u.displayName + ', ') })
-                                                                        return <View style={styles.col} key={filterChoice + key + index}>
-                                                                            <SubscriberCard
-                                                                                chat={!props.cueId || props.cueId === '' ? true : false}
-                                                                                fadeAnimation={props.fadeAnimation}
-                                                                                subscriber={{
-                                                                                    displayName,
-                                                                                    fullName: 'Team',
-                                                                                    unreadMessages: group.unreadMessages
-                                                                                }}
-                                                                                onPress={() => {
-                                                                                    loadGroupChat(group.users, group._id)
-                                                                                }}
-                                                                                status={!props.cueId ? false : true}
-                                                                            />
-                                                                        </View>
-                                                                    })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
-                                                                            {PreferredLanguageText('noGroups')}
-                                                                        </Text>
-                                                                    </View>
-                                                                }
-                                                            </View>
-                                                            : null
-                                                    }
-                                                    {
-                                                        filteredSubscribers.map((subscriber: any, index: any) => {
-                                                            // if (subscr subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
-                                                            //     return null
-                                                            // }
-
-                                                            return <TouchableOpacity
-                                                                disabled={subscriber.fullName !== 'submitted' && subscriber.fullName !== 'graded'}
-                                                                onPress={() => {
-                                                                    if (props.cueId && props.cueId !== null) {
-                                                                        if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
-                                                                            setSubmission(subscriber.submission)
-                                                                            setSubmittedAt(subscriber.submittedAt)
-                                                                            setDeadline(subscriber.deadline)
-                                                                            setShowSubmission(true)
-                                                                            setStatus(subscriber.fullName)
-                                                                            setScore(subscriber.score ? subscriber.score.toString() : '0')
-                                                                            setGraded(subscriber.graded)
-                                                                            setComment(subscriber.comment)
-                                                                            console.log(subscriber.comment)
-                                                                            try {
-                                                                                const comm = JSON.parse(subscriber.comment)
-                                                                                setAnnotation(comm.annotation)
-                                                                                setAnnotations(comm.annotations)
-                                                                            } catch (e) {
-                                                                                console.log('')
-                                                                            }
-                                                                            setUserId(subscriber.userId)
-                                                                        }
-                                                                    } else {
-                                                                        loadChat(subscriber._id, subscriber.groupId)
-                                                                    }
-                                                                }}
-                                                                style={{
-                                                                    backgroundColor: '#fff',
-                                                                    flexDirection: 'row',
-                                                                    borderColor: '#efefef',
-                                                                    paddingVertical: 5,
-                                                                    borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
-                                                                    // minWidth: 600, // flex: 1,
-                                                                    width: '100%',
-                                                                }}>
-                                                                <View style={{ backgroundColor: '#fff', padding: 5, }}>
-                                                                    <Image
-                                                                        style={{
-                                                                            height: 35,
-                                                                            width: 35,
-                                                                            marginTop: 5,
-                                                                            marginLeft: 5,
-                                                                            marginBottom: 5,
-                                                                            borderRadius: 75,
-                                                                            // marginTop: 20,
-                                                                            alignSelf: 'center'
-                                                                        }}
-                                                                        source={{ uri: subscriber.avatar ? subscriber.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                    />
-                                                                </View>
-                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
-                                                                        {subscriber.displayName ? subscriber.displayName : ''}
-                                                                    </Text>
-                                                                    <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
-                                                                        {subscriber.fullName === "delivered" || subscriber.fullName === "not-delivered" ? "delivered" : subscriber.fullName}
-                                                                    </Text>
-                                                                </View>
-                                                                <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
-                                                                    <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                        <Text style={{ fontSize: 11, padding: 5, color: '#006AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                            {
-                                                                                subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
-                                                                                    <Text style={{ color: '#f94144', fontSize: 12, marginRight: 10 }}>
-                                                                                        LATE
-                                                                                    </Text>
-                                                                                    :
-                                                                                    null
-                                                                            } {subscriber.fullName === 'submitted' || subscriber.fullName === 'graded' ? <Ionicons name='chevron-forward-outline' size={15} /> : null}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-
-                                                            </TouchableOpacity>
-                                                        })
-                                                    }
-                                                </ScrollView>)
-                                ) :
-                                // is Quiz then show the Quiz Grading Component and new version with problemScores
-                                isQuiz && !isV0Quiz ?
-                                    <ScrollView
-                                        showsVerticalScrollIndicator={true}
-                                        keyboardDismissMode={'on-drag'}
-                                        contentContainerStyle={{
-                                            // height: windowHeight - 132
-                                        }}
-                                        style={{ flex: 1, paddingTop: 12 }}>
-                                        {
-                                            submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
-                                                <View style={{ width: '100%', }}>
-                                                    <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                        <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
-                                                            LATE SUBMISSION
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                                :
-                                                null
-                                        }
-                                        {
-                                            <View style={{ width: 140, marginBottom: 20 }}>
-                                                <TouchableOpacity onPress={() => {
-                                                    if (showSubmission) {
-                                                        props.reloadStatuses()
-                                                    }
-                                                    setShowSubmission(false)
-                                                    setStatus("")
-                                                    setScore("0")
-                                                    setUserId("")
-                                                }
-                                                }
+                                                    Hide Feedback
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <TouchableOpacity
+                                                onPress={() => updateReleaseSubmission()}
+                                                style={{
+                                                    borderRadius: 15,
+                                                    backgroundColor: 'white'
+                                                }}>
+                                                <Text
                                                     style={{
-                                                        backgroundColor: "white", 
-                                                        borderRadius: 15, 
-                                                        marginTop: 5,
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center'
-                                                    }}>
-                                                    <Ionicons name="chevron-back-outline" color="#006AFF" size={23} />
-                                                    <Text style={{
-                                                        textAlign: "center",
+                                                        textAlign: 'center',
                                                         lineHeight: 34,
                                                         color: '#006AFF',
-                                                        fontSize: 14,
-                                                        paddingHorizontal: 4,
-                                                        fontFamily: "inter",
+                                                        fontSize: 12,
+                                                        borderColor: '#006AFF',
+                                                        borderRadius: 15,
+                                                        backgroundColor: '#fff',
+                                                        borderWidth: 1,
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: 'inter',
+                                                        overflow: 'hidden',
                                                         height: 35,
-                                                        textTransform: "uppercase"
+                                                        textTransform: 'uppercase'
                                                     }}>
-                                                        BACK
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
+                                                    Share Feedback
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                    {isQuiz ? (
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                lineHeight: 34,
+                                                color: '#006AFF',
+                                                fontSize: 12,
+                                                borderColor: '#006AFF',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                paddingHorizontal: 20,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35,
+                                                textTransform: 'uppercase',
+                                                marginLeft: 20
+                                            }}
+                                            onPress={() => {
+                                                exportScores();
+                                            }}>
+                                            EXPORT
+                                        </Text>
+                                    ) : null}
+                                </View>
+                            ) : null}
+                        </View>
+                    )}
+                    {!showSubmission ? (
+                        <ScrollView
+                            showsVerticalScrollIndicator={true}
+                            horizontal={false}
+                            key={filterChoice + key}
+                            contentContainerStyle={{
+                                width: '100%',
+                                borderRadius: 1,
+                                borderWidth: 0,
+                                borderColor: '#efefef',
+                                maxWidth: 900,
+                                marginBottom: 50,
+                                paddingHorizontal: 10
+                            }}>
+                            {filteredSubscribers.map((subscriber: any, index: any) => {
+                                return (
+                                    <TouchableOpacity
+                                        disabled={
+                                            subscriber.fullName !== 'submitted' && subscriber.fullName !== 'graded'
                                         }
-
-                                        <QuizGrading
-                                            loading={loading}
-                                            problems={problems}
-                                            solutions={quizSolutions}
-                                            partiallyGraded={!graded}
-                                            onGradeQuiz={onGradeQuiz}
-                                            comment={comment}
-                                            headers={headers}
-                                            isOwner={true}
-                                            initiatedAt={initiatedAt}
-                                            submittedAt={submittedAt}
-                                            attempts={quizAttempts}
-                                            activeQuizAttempt={activeQuizAttempt}
-                                            currentQuizAttempt={currentQuizAttempt}
-                                            modifyActiveQuizAttempt={modifyActiveQuizAttempt}
-                                            isV1Quiz={isV1Quiz}
-                                            onChangeQuizAttempt={(attempt: number) => {
-
-                                                setCurrentQuizAttempt(attempt);
-
-                                                quizAttempts.map((att: any, index: number) => {
-                                                    if (index === attempt) {
-                                                        setQuizSolutions(att)
-                                                        setGraded(att.isFullyGraded)
-                                                        setInitiatedAt(att.initiatedAt)
-                                                    }
-                                                })
-                                            }}
-                                        />
-                                    </ScrollView>
-                                    :
-                                    <View>
-                                        <ScrollView
-                                            showsVerticalScrollIndicator={true}
-                                            keyboardDismissMode={'on-drag'}
-                                            contentContainerStyle={{
-                                                paddingHorizontal: 10
-                                            }}
-                                            style={{ flex: 1, paddingTop: 12 }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                                                <View style={{
-                                                    flex: 1, flexDirection: 'row', alignItems: 'center'
+                                        onPress={() => {
+                                            if (
+                                                subscriber.fullName === 'submitted' ||
+                                                subscriber.fullName === 'graded'
+                                            ) {
+                                                setSubmission(subscriber.submission);
+                                                setSubmittedAt(subscriber.submittedAt);
+                                                setDeadline(subscriber.deadline);
+                                                setShowSubmission(true);
+                                                setScore(subscriber.score ? subscriber.score.toString() : '0');
+                                                setGraded(subscriber.graded);
+                                                setComment(subscriber.comment);
+                                                setUserId(subscriber.userId);
+                                            }
+                                        }}
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            flexDirection: 'row',
+                                            borderColor: '#efefef',
+                                            paddingVertical: 5,
+                                            borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
+                                            width: '100%'
+                                        }}>
+                                        <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                            <Image
+                                                style={{
+                                                    height: 35,
+                                                    width: 35,
+                                                    marginTop: 5,
+                                                    marginLeft: 5,
+                                                    marginBottom: 5,
+                                                    borderRadius: 75,
+                                                    alignSelf: 'center'
+                                                }}
+                                                source={{
+                                                    uri: subscriber.avatar
+                                                        ? subscriber.avatar
+                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                                                }}
+                                            />
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                            <Text
+                                                style={{
+                                                    fontSize: 15,
+                                                    padding: 5,
+                                                    fontFamily: 'inter',
+                                                    marginTop: 5
+                                                }}
+                                                ellipsizeMode="tail">
+                                                {subscriber.displayName ? subscriber.displayName : ''}
+                                            </Text>
+                                            <Text
+                                                style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
+                                                ellipsizeMode="tail">
+                                                {subscriber.fullName === 'delivered' ||
+                                                subscriber.fullName === 'not-delivered'
+                                                    ? 'delivered'
+                                                    : subscriber.fullName}
+                                            </Text>
+                                        </View>
+                                        <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    backgroundColor: '#fff',
+                                                    paddingLeft: 10
                                                 }}>
-                                                    <TouchableOpacity onPress={() => {
-                                                        if (showChat) {
-                                                            setShowChat(false)
-                                                            setIsLoadedUserInactive(false)
-                                                            setLoadedChatWithUser({})
-                                                            setUsers([])
-                                                            props.reload()
-                                                        } else {
-                                                            if (showSubmission) {
-                                                                props.reloadStatuses()
-                                                            }
-                                                            setShowSubmission(false)
-                                                            setStatus("")
-                                                            setScore("0")
-                                                            setUserId("")
-                                                        }
-                                                        setShowAddUsers(false)
-                                                        setShowNewGroup(false)
-                                                    }} style={{
-                                                        backgroundColor: "white",
-                                                        borderRadius: 15, marginRight: 15,
-                                                    }}>
-                                                        <Text>
-                                                            <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                    <View style={{ flexDirection: 'row', marginRight: 15 }}>
-                                                        <Text style={{ fontSize: 14, lineHeight: 34 }}>
-                                                            {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
-                                                        </Text>
-                                                    </View>
-                                                    {
-                                                        submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                                            <View>
-                                                                <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                                    <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
-                                                                        LATE
-                                                                    </Text>
-                                                                </View>
-                                                            </View>
-                                                            :
-                                                            null
-                                                    }
-                                                </View>
-                                                <View
+                                                <Text
                                                     style={{
-                                                        backgroundColor: "white",
-                                                        flexDirection: "row",
-                                                        alignItems: 'center'
-                                                    }}>
-                                                    <TextInput
-                                                        value={score}
-                                                        numberOfLines={1}
-                                                        style={{
-                                                            width: 75,
-                                                            borderBottomColor: '#efefef',
-                                                            borderBottomWidth: 1,
-                                                            fontSize: 14,
-                                                            // paddingTop: 13,
-                                                            padding: 10,
-                                                            marginRight: 20
-                                                        }}
-                                                        placeholder={'Score 0-100'}
-                                                        onChangeText={val => setScore(val)}
-                                                        placeholderTextColor={'#1F1F1F'}
-                                                    />
-                                                    <TouchableOpacity
-                                                        onPress={() => handleGradeSubmit()} style={{
-                                                            backgroundColor: "white",
-                                                            overflow: "hidden",
-                                                            height: 35,
-                                                            //  marginTop: 5
-                                                            // marginBottom: 20
-                                                        }}>
+                                                        fontSize: 11,
+                                                        padding: 5,
+                                                        color: '#006AFF',
+                                                        textAlign: 'center'
+                                                    }}
+                                                    ellipsizeMode="tail">
+                                                    {subscriber.submittedAt &&
+                                                    subscriber.submittedAt !== '' &&
+                                                    subscriber.deadline &&
+                                                    subscriber.deadline !== '' &&
+                                                    subscriber.submittedAt >= subscriber.deadline ? (
                                                         <Text
                                                             style={{
-                                                                textAlign: "center",
-                                                                lineHeight: 34,
-                                                                borderColor: '#006AFF',
+                                                                color: '#f94144',
                                                                 fontSize: 12,
-                                                                color: '#006AFF',
-                                                                borderWidth: 1,
-                                                                // borderColor: '#006AFF',
-                                                                paddingHorizontal: 20,
-                                                                fontFamily: "inter",
-                                                                height: 35,
-                                                                // paddingTop: 2
-                                                                // width: 125,
-                                                                borderRadius: 15,
-                                                                textTransform: "uppercase"
+                                                                marginRight: 10
                                                             }}>
-                                                            UPDATE
+                                                            LATE
                                                         </Text>
-                                                    </TouchableOpacity>
+                                                    ) : null}{' '}
+                                                    {subscriber.fullName === 'submitted' ||
+                                                    subscriber.fullName === 'graded' ? (
+                                                        <Ionicons name="chevron-forward-outline" size={15} />
+                                                    ) : null}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </ScrollView>
+                    ) : // is Quiz then show the Quiz Grading Component and new version with problemScores
+                    isQuiz ? (
+                        <ScrollView
+                            showsVerticalScrollIndicator={true}
+                            keyboardDismissMode={'on-drag'}
+                            style={{ flex: 1, paddingTop: 12 }}>
+                            {submittedAt !== '' &&
+                            deadline !== '' &&
+                            new Date(submittedAt) >= new Date(parseInt(deadline)) ? (
+                                <View style={{ width: '100%' }}>
+                                    <View
+                                        style={{
+                                            borderRadius: 1,
+                                            padding: 5,
+                                            borderWidth: 1,
+                                            borderColor: '#f94144',
+                                            marginVertical: 10,
+                                            width: 150,
+                                            marginLeft: 'auto'
+                                        }}>
+                                        <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
+                                            LATE SUBMISSION
+                                        </Text>
+                                    </View>
+                                </View>
+                            ) : null}
+                            {
+                                <View style={{ width: 140, marginBottom: 20 }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (showSubmission) {
+                                                props.reloadStatuses();
+                                            }
+                                            setShowSubmission(false);
+                                            setScore('0');
+                                            setUserId('');
+                                        }}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            borderRadius: 15,
+                                            marginTop: 5,
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                        <Ionicons name="chevron-back-outline" color="#006AFF" size={23} />
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                lineHeight: 34,
+                                                color: '#006AFF',
+                                                fontSize: 14,
+                                                paddingHorizontal: 4,
+                                                fontFamily: 'inter',
+                                                height: 35,
+                                                textTransform: 'uppercase'
+                                            }}>
+                                            BACK
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            }
+                            <QuizGrading
+                                loading={loading}
+                                problems={problems}
+                                solutions={quizSolutions}
+                                partiallyGraded={!graded}
+                                onGradeQuiz={onGradeQuiz}
+                                comment={comment}
+                                headers={headers}
+                                isOwner={true}
+                                initiatedAt={initiatedAt}
+                                submittedAt={submittedAt}
+                                attempts={quizAttempts}
+                                activeQuizAttempt={activeQuizAttempt}
+                                currentQuizAttempt={currentQuizAttempt}
+                                modifyActiveQuizAttempt={modifyActiveQuizAttempt}
+                                onChangeQuizAttempt={(attempt: number) => {
+                                    setCurrentQuizAttempt(attempt);
+
+                                    quizAttempts.map((att: any, index: number) => {
+                                        if (index === attempt) {
+                                            setQuizSolutions(att);
+                                            setGraded(att.isFullyGraded);
+                                            setInitiatedAt(att.initiatedAt);
+                                        }
+                                    });
+                                }}
+                            />
+                        </ScrollView>
+                    ) : (
+                        <View>
+                            <ScrollView
+                                showsVerticalScrollIndicator={true}
+                                keyboardDismissMode={'on-drag'}
+                                contentContainerStyle={{
+                                    paddingHorizontal: 10
+                                }}
+                                style={{ flex: 1, paddingTop: 12 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                if (showSubmission) {
+                                                    props.reloadStatuses();
+                                                }
+                                                setShowSubmission(false);
+                                                setScore('0');
+                                                setUserId('');
+                                            }}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                borderRadius: 15,
+                                                marginRight: 15
+                                            }}>
+                                            <Text>
+                                                <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', marginRight: 15 }}>
+                                            <Text style={{ fontSize: 14, lineHeight: 34 }}>
+                                                {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
+                                            </Text>
+                                        </View>
+                                        {submittedAt !== '' && deadline !== '' && submittedAt >= deadline ? (
+                                            <View>
+                                                <View
+                                                    style={{
+                                                        borderRadius: 1,
+                                                        padding: 5,
+                                                        borderWidth: 1,
+                                                        borderColor: '#f94144',
+                                                        marginVertical: 10,
+                                                        width: 150,
+                                                        marginLeft: 'auto'
+                                                    }}>
+                                                    <Text
+                                                        style={{
+                                                            color: '#f94144',
+                                                            fontSize: 13,
+                                                            textAlign: 'center'
+                                                        }}>
+                                                        LATE
+                                                    </Text>
                                                 </View>
                                             </View>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                {
-                                                    imported && !isQuiz ?
-                                                        <View style={{ flex: 1 }}>
-                                                            <TextInput
-                                                                editable={false}
-                                                                value={title}
-                                                                style={styles.input}
-                                                                placeholder={'Title'}
-                                                                onChangeText={val => setTitle(val)}
-                                                                placeholderTextColor={'#1F1F1F'}
-                                                            />
-                                                        </View> : null
-                                                }
-
-                                            </View>
-                                            {
-                                                isQuiz && Object.keys(quizSolutions).length > 0 ?
-                                                    renderQuizSubmissions() : null
-                                            }
-                                            {submissionAttempts.length > 0 && !isQuiz ? renderViewSubmission() : null}
-                                            {/* Old Schema */}
-                                            {
-                                                submissionAttempts.length > 0 ? null : !imported && !isQuiz ?
-                                                    <View style={{ position: 'relative', flex: 1, overflow: 'scroll', height: 20000 }}>
-                                                        <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 20000 }}>
-                                                            <RichEditor
-                                                                disabled={true}
-                                                                key={Math.random()}
-                                                                containerStyle={{
-                                                                    backgroundColor: '#efefef',
-                                                                    padding: 3,
-                                                                    paddingTop: 5,
-                                                                    paddingBottom: 10,
-                                                                    borderRadius: 15,
-                                                                }}
-                                                                ref={RichText}
-                                                                style={{
-                                                                    width: '100%',
-                                                                    backgroundColor: '#efefef',
-                                                                    borderRadius: 15,
-                                                                    height: 20000
-                                                                }}
-                                                                editorStyle={{
-                                                                    backgroundColor: '#efefef',
-                                                                    placeholderColor: '#1F1F1F',
-                                                                    color: '#000000',
-                                                                    contentCSSText: 'font-size: 13px;'
-                                                                }}
-                                                                initialContentHTML={submission}
-                                                                placeholder={"Title"}
-                                                                onChange={(text) => { }}
-                                                                allowFileAccess={true}
-                                                                allowFileAccessFromFileURLs={true}
-                                                                allowUniversalAccessFromFileURLs={true}
-                                                                allowsFullscreenVideo={true}
-                                                                allowsInlineMediaPlayback={true}
-                                                                allowsLinkPreview={true}
-                                                                allowsBackForwardNavigationGestures={true}
-                                                            />
-                                                        </View>
-                                                        <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
-                                                            <Annotation
-                                                                style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none' }}
-                                                                src={require('./default-images/transparent.png')}
-                                                                annotations={annotations}
-                                                                // type={this.state.type}
-                                                                value={annotation}
-                                                                onChange={(e: any) => setAnnotation(e)}
-                                                                onSubmit={onSubmit}
-                                                            />
-                                                        </View>
-                                                    </View>
-                                                    : (
-                                                        <View style={{
-                                                            width: '100%',
-                                                            minHeight: 500,
-                                                            backgroundColor: 'white'
-                                                        }}
-                                                        >
-                                                            {
-                                                                (
-                                                                    type === "mp4" ||
-                                                                        type === "oga" ||
-                                                                        type === "mov" ||
-                                                                        type === "wmv" ||
-                                                                        type === "mp3" ||
-                                                                        type === "mov" ||
-                                                                        type === "mpeg" ||
-                                                                        type === "mp2" ||
-                                                                        type === "wav" ?
-                                                                        <ReactPlayer url={url} controls={true} />
-                                                                        :
-                                                                        (!isQuiz ? <View
-                                                                            key={url}
-                                                                            style={{ flex: 1 }}
-                                                                        >
-                                                                            <View style={{ position: 'relative', flex: 1, height: 800 }}>
-                                                                                <View style={{ position: 'absolute', zIndex: 1, width: '100%' }}>
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#efefef', borderRadius: 1 }}></div>
-                                                                                </View>
-                                                                            </View>
-                                                                        </View> : null)
-                                                                )
-                                                            }
-                                                        </View>
-                                                    )
-                                            }
-                                        </ScrollView>
+                                        ) : null}
                                     </View>
-                        }
-                    </View>) :
-                    <View style={{ width: 500, maxWidth: '100%' }}>
-                        <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 10 }}>
-                            {PreferredLanguageText('inviteByEmail')}
-                        </Text>
-                        <TextInput
-                            value={emails}
-                            style={{
-                                height: 200,
-                                backgroundColor: '#efefef',
-                                borderRadius: 1,
-                                fontSize: 14,
-                                padding: 15,
-                                paddingTop: 13,
-                                paddingBottom: 13,
-                                marginTop: 5,
-                                marginBottom: 20
-                            }}
-                            placeholder={'Enter one email per line.'}
-                            onChangeText={val => setEmails(val)}
-                            placeholderTextColor={'#1F1F1F'}
-                            multiline={true}
-                        />
-                        <TouchableOpacity
-                            onPress={() => submitEmails()}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                marginTop: 15,
-                                width: '100%',
-                                justifyContent: 'center', flexDirection: 'row',
-                                marginBottom: 50
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 34,
-                                color: '#000000',
-                                fontSize: 12,
-                                backgroundColor: '#efefef',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                width: 150,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                {PreferredLanguageText("addUsers")}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 34,
-                            color: '#000000',
-                            fontSize: 12,
-                            paddingHorizontal: 20,
-                            width: "100%",
-                            fontFamily: 'inter',
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
-                        }}>
-                            {filteredSubscribers.length !== 0 ? PreferredLanguageText('existingUsers') : PreferredLanguageText('noExistingUsers')}
-                        </Text>
-                        <View style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}>
-                            {
-                                filteredSubscribers.map((sub: any) => {
-                                    return (<View style={{
-                                        backgroundColor: '#efefef',
-                                        width: '100%',
-                                        padding: 10,
-                                        borderRadius: 8,
-                                        marginBottom: 10
-                                    }}>
-                                        <Text>
-                                            {sub.fullName}
-                                        </Text>
-                                        <Text>
-                                            {sub.email}
-                                        </Text>
-                                    </View>)
-                                })
-                            }
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
+                                        }}>
+                                        <TextInput
+                                            value={score}
+                                            numberOfLines={1}
+                                            style={{
+                                                width: 75,
+                                                borderBottomColor: '#efefef',
+                                                borderBottomWidth: 1,
+                                                fontSize: 14,
+                                                // paddingTop: 13,
+                                                padding: 10,
+                                                marginRight: 20
+                                            }}
+                                            placeholder={'Score 0-100'}
+                                            onChangeText={val => setScore(val)}
+                                            placeholderTextColor={'#1F1F1F'}
+                                        />
+                                        <TouchableOpacity
+                                            onPress={() => handleGradeSubmit()}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    lineHeight: 34,
+                                                    borderColor: '#006AFF',
+                                                    fontSize: 12,
+                                                    color: '#006AFF',
+                                                    borderWidth: 1,
+                                                    paddingHorizontal: 20,
+                                                    fontFamily: 'inter',
+                                                    height: 35,
+                                                    borderRadius: 15,
+                                                    textTransform: 'uppercase'
+                                                }}>
+                                                UPDATE
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    {imported && !isQuiz ? (
+                                        <View style={{ flex: 1 }}>
+                                            <TextInput
+                                                editable={false}
+                                                value={title}
+                                                style={styles.input}
+                                                placeholder={'Title'}
+                                                onChangeText={val => setTitle(val)}
+                                                placeholderTextColor={'#1F1F1F'}
+                                            />
+                                        </View>
+                                    ) : null}
+                                </View>
+                                {submissionAttempts.length > 0 && !isQuiz ? renderViewSubmission() : null}
+                            </ScrollView>
                         </View>
-
-                    </View>
-            }
-        </View >
+                    )}
+                </View>
+            )}
+        </View>
     );
-}
+};
 
 export default React.memo(SubscribersList, (prev, next) => {
-    return _.isEqual(prev.threads, next.threads)
-})
-
+    return _.isEqual(prev.threads, next.threads);
+});
 
 const styleObject = () => {
     return StyleSheet.create({
@@ -2120,7 +1363,7 @@ const styleObject = () => {
             paddingHorizontal: 15,
             backgroundColor: '#efefef',
             lineHeight: 24,
-            fontFamily: 'inter',
+            fontFamily: 'inter'
             // textTransform: 'uppercase'
         },
         allGrayFill: {
@@ -2131,8 +1374,8 @@ const styleObject = () => {
             backgroundColor: '#000000',
             lineHeight: 24,
             height: 24,
-            fontFamily: 'inter',
+            fontFamily: 'inter'
             // textTransform: 'uppercase'
-        },
-    })
-}
+        }
+    });
+};

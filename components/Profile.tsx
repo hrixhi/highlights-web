@@ -1,38 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Animated, Dimensions, Keyboard, ScrollView } from 'react-native';
-import { Text, View } from './Themed';
+// REACT
+import React from 'react';
+import { Keyboard } from 'react-native';
+
+// COMPONENTS
+import { View } from './Themed';
 import ProfileControls from './ProfileControls';
 
 const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-    const [modalAnimation] = useState(new Animated.Value(0))
-
-    useEffect(() => {
-        Animated.timing(modalAnimation, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true
-        }).start();
-    }, [])
-
+    // MAIN RETURN
     return (
-        <View style={{
-            width: '100%',
-            backgroundColor: 'white',
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0,
-        }}
-            onTouchMove={() => Keyboard.dismiss()}
-        >
-            <View style={{
-                flex: 1,
-                paddingHorizontal: 0,
-                // minHeight: '100%',
+        <View
+            style={{
+                width: '100%',
                 backgroundColor: 'white',
-                //opacity: modalAnimation,
-                // alignSelf: 'center',
-                // paddingLeft: 20
-            }}>
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0
+            }}
+            onTouchMove={() => Keyboard.dismiss()}>
+            <View
+                style={{
+                    flex: 1,
+                    paddingHorizontal: 0,
+                    backgroundColor: 'white'
+                }}>
                 <ProfileControls
                     saveDataInCloud={() => props.saveDataInCloud()}
                     reOpenProfile={() => props.reOpenProfile()}
@@ -42,8 +32,8 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     showSavePassword={props.showSavePassword}
                 />
             </View>
-        </View >
+        </View>
     );
-}
+};
 
 export default Profile;

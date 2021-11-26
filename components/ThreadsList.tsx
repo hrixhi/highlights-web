@@ -3,7 +3,6 @@ import { StyleSheet, ActivityIndicator, ScrollView, Dimensions, Image, Platform,
 import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
-import ThreadCard from './ThreadCard';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { createMessage, deleteThread, getThreadWithReplies, markThreadsAsRead, getThreadCategories } from '../graphql/QueriesAndMutations';
@@ -11,12 +10,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Collapse } from 'react-collapse';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import moment from 'moment';
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
+// import {
+//     Menu,
+//     MenuOptions,
+//     MenuOption,
+//     MenuTrigger,
+// } from 'react-native-popup-menu';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
@@ -45,37 +44,22 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [isOwner, setIsOwner] = useState(false)
     const [userId, setUserId] = useState('')
     const [threadChat, setThreadChat] = useState<any[]>([])
-
-    // Local 
     const styles = styleObject()
     const categories: any[] = []
     const categoryObject: any = {}
     let filteredThreads: any[] = []
-
-    /**
-     * @description Error Messages
-     */
+    // ALERTS
     const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread')
     const checkConnectionAlert = PreferredLanguageText('checkConnection')
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
-    
-    /**
-     * @description Builds all categories
-     */
     threads.map((item) => {
         if (item.category !== '' && !categoryObject[item.category]) {
             categoryObject[item.category] = 'category'
         }
     })
-
     Object.keys(categoryObject).map((key) => {
         categories.push(key)
     })
-
-
-    /** 
-     * @description Filter threads using Category
-     */
     if (filterChoice === 'All') {
         filteredThreads = threads
     } else {
@@ -83,8 +67,27 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             return item.category === filterChoice
         })
     }
+    let categoriesOptions = [{
+        value: 'None', text: 'None'
+    }];
+    categories.map((category: any) => {
+        categoriesOptions.push({
+            value: category,
+            text: category
+        })
+    })
+    let categoryChoices = [{
+        value: 'All',
+        text: 'All'
+    }]
+    categories.map((cat: any) => {
+        categoryChoices.push({
+            value: cat,
+            text: cat
+        })
+    })
 
-    // ON INIT
+    // HOOKS
 
     /**
      * @description Load categories on init
@@ -92,7 +95,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     useEffect(() => {
         loadCategories()
     }, [props.channelId])
-
 
     /**
      * Set is Owner on init
@@ -119,6 +121,26 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     
 
     /**
+     * Load discussion from Search or Activity
+     */
+    useEffect(() => {
+        (
+            async () => {
+                const tId = await AsyncStorage.getItem('openThread')
+                if (tId && tId !== "" && threads.length !== 0) {
+
+                    // Clear the openChat
+
+                    await AsyncStorage.removeItem('openThread')
+
+                    loadCueDiscussions(tId)
+
+                }
+            }
+        )()
+    }, [threads])
+
+    /**
      * @description Fetches all the categories for that Channel
      */
     const loadCategories = useCallback(async () => {
@@ -140,27 +162,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             .catch(err => {
             })
     }, [props.channelId])
-
-
-    /**
-     * Load discussion from Search or Activity
-     */
-    useEffect(() => {
-        (
-            async () => {
-                const tId = await AsyncStorage.getItem('openThread')
-                if (tId && tId !== "" && threads.length !== 0) {
-
-                    // Clear the openChat
-
-                    await AsyncStorage.removeItem('openThread')
-
-                    loadCueDiscussions(tId)
-
-                }
-            }
-        )()
-    }, [threads])
 
     /**
      * @description Called from Modal for creating a new thread
@@ -197,7 +198,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * @description Send a Thread message
      */
     const onSend = useCallback(async (messages: any) => {
-        console.log("New Message", messages)
 
         let message = "";
 
@@ -206,8 +206,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         } else {
             message = messages[0].text;
         }
-
-        console.log("Message", message);
 
         messages[0] = {
             ...messages[0],
@@ -223,11 +221,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 message,
                 userId,
                 channelId: props.channelId,
-                isPrivate: showPost && !isOwner ? privatePost : false,
+                isPrivate: false,
                 anonymous: false,
                 cueId: props.cueId === null ? 'NULL' : props.cueId,
                 parentId: threadId === '' ? 'INIT' : threadId,
-                category: showPost ? (customCategory === "None" ? "" : customCategory) : ''
+                category: ''
             }
         }).then(res => {
             if (res.data.thread.writeMessage) {
@@ -341,30 +339,29 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }, [])
 
 
-    const deletePost = useCallback((threadId: string) => {
-        if (!isOwner) {
-            return;
-        }
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: deleteThread,
-            variables: {
-                threadId
-            }
-        }).then((res) => {
-            if (res.data && res.data.thread.delete) {
-                props.reload()
-            } else {
-                Alert(somethingWentWrongAlert)
-            }
-        }).catch(e => Alert(somethingWentWrongAlert))
-    }, [isOwner])
+    // const deletePost = useCallback((threadId: string) => {
+    //     if (!isOwner) {
+    //         return;
+    //     }
+    //     const server = fetchAPI('')
+    //     server.mutate({
+    //         mutation: deleteThread,
+    //         variables: {
+    //             threadId
+    //         }
+    //     }).then((res) => {
+    //         if (res.data && res.data.thread.delete) {
+    //             props.reload()
+    //         } else {
+    //             Alert(somethingWentWrongAlert)
+    //         }
+    //     }).catch(e => Alert(somethingWentWrongAlert))
+    // }, [isOwner])
 
 
     /**
-     * Renders Custom bubble for Gifted Chat
+     * @description Renders Custom bubble for Gifted Chat
      */
-
     const renderBubble = (props: any) => {
         return (
             <Bubble
@@ -378,6 +375,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         )
     }
 
+    /**
+     * @description Customize how Audio message appears
+     */
     const renderMessageAudio = (props: any) => {
 
         if (props.currentMessage.audio && props.currentMessage.audio !== "") {
@@ -399,6 +399,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     }
 
+    /**
+     * @description Customize how Video Message appears
+     */
     const renderMessageVideo = (props: any) => {
 
         if (props.currentMessage.video && props.currentMessage.video !== "") {
@@ -420,37 +423,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     }
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
-
-    /**
-     * @description Map categories for New Category Select dropdown
-     */
-    let categoriesOptions = [{
-        value: 'None', text: 'None'
-    }];
-
-    categories.map((category: any) => {
-        categoriesOptions.push({
-            value: category,
-            text: category
-        })
-    })
-
-    /**
-     * @description Map categories for Filter Category Select dropdown
-     */
-    let categoryChoices = [{
-        value: 'All',
-        text: 'All'
-    }]
-
-    categories.map((cat: any) => {
-        categoryChoices.push({
-            value: cat,
-            text: cat
-        })
-    })
-
+    // FUNCTIONS
 
     /**
      * @description Helper to display Time in email format
@@ -465,77 +438,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         else
             return date.format("MM/DD/YYYY");
     }
-
-    const customCategoryInput = (<View style={{ backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
-
-        <View style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 10, paddingLeft: 15 }}>
-                CATEGORY
-            </Text>
-            <View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
-                <View style={{ backgroundColor: 'white', marginRight: 10 }}>
-                    {
-                        addCustomCategory ?
-                            <View style={styles.colorBar}>
-                                <TextInput
-                                    value={customCategory}
-                                    style={{
-                                        borderRadius: 0,
-                                        borderColor: '#efefef',
-                                        borderBottomWidth: 1,
-                                        fontSize: 14,
-                                        height: '2.75em',
-                                        padding: '1em'
-                                    }}
-                                    placeholder={'Enter Category'}
-                                    onChangeText={val => {
-                                        setCustomCategory(val)
-                                    }}
-                                    placeholderTextColor={'#1F1F1F'}
-                                />
-                            </View> : <label style={{ width: 180, }}>
-                                <Select
-                                    themeVariant="light"
-                                    touchUi={true}
-                                    onChange={(val: any) => {
-                                        setCustomCategory(val.value)
-                                    }}
-                                    responsive={{
-                                        small: {
-                                            display: 'bubble',
-                                        },
-                                        medium: {
-                                            touchUi: false,
-                                        }
-                                    }}
-                                    value={customCategory}
-                                    rows={categories.length + 1}
-                                    data={categoriesOptions}
-                                />
-                            </label>
-
-                    }
-                </View>
-                <View style={{ backgroundColor: '#efefef' }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (addCustomCategory) {
-                                setCustomCategory("None");
-                                setAddCustomCategory(false)
-                            } else {
-                                setCustomCategory("");
-                                setAddCustomCategory(true)
-                            }
-                        }}
-                        style={{ backgroundColor: 'white' }}>
-                        <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#1F1F1F'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-    </View>)
 
     /**
      * @description Renders the Filter Dropdown and the New Post button
@@ -630,6 +532,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }}
         >
             <GiftedChat
+                renderMessageAudio={renderMessageAudio}
+                renderMessageVideo={renderMessageVideo}
                 renderUsernameOnMessage={true}
                 messages={threadChat}
                 onSend={messages => onSend(messages)}

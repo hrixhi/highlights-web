@@ -1,65 +1,148 @@
+// REACT
 import React, { useState, useEffect, useCallback } from "react";
-import { Dimensions, Image, Linking, Platform, StyleSheet } from "react-native";
-import { Text, View, TouchableOpacity } from "./Themed";
+import { Image, Linking, Platform, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
+
+// API
 import { fetchAPI } from "../graphql/FetchAPI";
 import {
-  signup,
   updatePassword,
   updateUser
 } from "../graphql/QueriesAndMutations";
-import { validateEmail } from "../helpers/emailCheck";
+
+// COMPONENTS
+import { Text, View, TouchableOpacity } from "./Themed";
+import { ScrollView } from "react-native-gesture-handler";
 import Alert from "../components/Alert";
 import { TextInput } from "./CustomTextInput";
-import { PreferredLanguageText } from "../helpers/LanguageContext";
-import { LanguageSelect } from '../helpers/LanguageContext';
 import OneSignal from 'react-onesignal';
 import FileUpload from "./UploadFiles";
-import { Ionicons } from "@expo/vector-icons";
+
+// HELPERS
+import { PreferredLanguageText } from "../helpers/LanguageContext";
+// import { LanguageSelect } from '../helpers/LanguageContext';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState('')
-  const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState<any>(undefined)
   const [zoomInfo, setZoomInfo] = useState<any>(undefined)
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [fullName, setFullName] = useState("");
   const [userFound, setUserFound] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
-  // Signup Validation
-  const [emailValidError, setEmailValidError] = useState("");
   const [passwordValidError, setPasswordValidError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  // Change Password Validation
   const [newPasswordValidError, setNewPasswordValidError] = useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
-
-  // Current Profile Change Validation
-  // Store existing fullname and displayname to see if anything has changed when updating profile
   const [currentFullName, setCurrentFullName] = useState("");
   const [currentDisplayName, setCurrentDisplayName] = useState("");
   const [currentAvatar, setCurrentAvatar] = useState<any>(undefined)
-
   // Alerts
   const passwordUpdatedAlert = PreferredLanguageText('passwordUpdated');
   const incorrectCurrentPasswordAlert = PreferredLanguageText('incorrectCurrentPassword');
   const passwordDoesNotMatchAlert = PreferredLanguageText('passwordDoesNotMatch');
   const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
   const profileUpdatedAlert = PreferredLanguageText('profileUpdated');
-  const enterValidEmailError = PreferredLanguageText('enterValidEmail')
   const passwordInvalidError = PreferredLanguageText('atleast8char')
 
+  // HOOKS
+
+  /**
+   * @description Fetch user on Init
+   */
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  /**
+   * @description Validate if submit is enabled after every state change
+   */
+  useEffect(() => {
+    // Reset Password state
+    if (
+      props.showSavePassword &&
+      currentPassword &&
+      newPassword &&
+      confirmNewPassword &&
+      !newPasswordValidError &&
+      !confirmNewPasswordError
+    ) {
+      setIsSubmitDisabled(false);
+      return;
+    }
+
+    // Logged in
+    if (
+      !props.showSavePassword &&
+      fullName &&
+      displayName &&
+      (fullName !== currentFullName || displayName !== currentDisplayName || avatar !== currentAvatar)
+    ) {
+      setIsSubmitDisabled(false);
+      return;
+    }
+
+    setIsSubmitDisabled(true);
+  }, [
+    email,
+    fullName,
+    displayName,
+    avatar,
+    currentAvatar,
+    confirmPassword,
+    passwordValidError,
+    confirmPasswordError,
+    props.showSavePassword,
+    currentPassword,
+    newPassword,
+    confirmNewPassword,
+    newPasswordValidError,
+    confirmNewPasswordError,
+    currentDisplayName,
+    currentFullName
+  ]);
+
+  /**
+   * @description Validates new password
+   */
+  useEffect(() => {
+    const validPasswrdRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+    if (newPassword && !validPasswrdRegex.test(newPassword)) {
+      setNewPasswordValidError(passwordInvalidError);
+      return;
+    }
+
+    setNewPasswordValidError("");
+  }, [newPassword]);
+
+  /**
+   * @description Verifies if confirm new password matches new password
+   */
+  useEffect(() => {
+    if (
+      newPassword &&
+      confirmNewPassword &&
+      newPassword !== confirmNewPassword
+    ) {
+      setConfirmNewPasswordError(passwordDoesNotMatchAlert);
+      return;
+    }
+
+    setConfirmNewPasswordError("");
+  }, [newPassword, confirmNewPassword]);
+
+  /**
+   * @description Handles submit new password or Update user profile
+   */
   const handleSubmit = useCallback(async () => {
     const u = await AsyncStorage.getItem("user");
     if (!u) {
@@ -119,9 +202,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       .catch(e => Alert(somethingWentWrongAlert));
     //}
   }, [
-    loggedIn,
     email,
-    password,
     avatar,
     displayName,
     fullName,
@@ -131,16 +212,18 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     currentPassword
   ]);
 
+  /**
+   * @description Loads User profile
+   */
   const getUser = useCallback(async () => {
     const u = await AsyncStorage.getItem("user");
     if (u) {
       const parsedUser = JSON.parse(u);
       if (parsedUser.email) {
-        setLoggedIn(true);
         setEmail(parsedUser.email);
         setDisplayName(parsedUser.displayName);
         setFullName(parsedUser.fullName);
-        setAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
+        setAvatar(parsedUser.avatar ? parsedUser.avatar : undefined);
         setCurrentAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
         setUserId(parsedUser._id);
         setZoomInfo(parsedUser.zoomInfo ? parsedUser.zoomInfo : undefined)
@@ -151,135 +234,18 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     }
   }, []);
 
+  /**
+   * @description Log out 
+   */
   const logout = useCallback(async () => {
     OneSignal.removeExternalUserId()
     await AsyncStorage.clear();
     window.location.reload();
   }, []);
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  //   Validate if submit is enabled after every state change
-  useEffect(() => {
-    // Reset Password state
-    if (
-      props.showSavePassword &&
-      currentPassword &&
-      newPassword &&
-      confirmNewPassword &&
-      !newPasswordValidError &&
-      !confirmNewPasswordError
-    ) {
-      setIsSubmitDisabled(false);
-      return;
-    }
-
-    // Logged in
-    if (
-      !props.showSavePassword &&
-      loggedIn &&
-      fullName &&
-      displayName &&
-      (fullName !== currentFullName || displayName !== currentDisplayName || avatar !== currentAvatar)
-    ) {
-      setIsSubmitDisabled(false);
-      return;
-    }
-
-    // Not logged in
-    if (
-      !loggedIn &&
-      email &&
-      fullName &&
-      displayName &&
-      password &&
-      confirmPassword &&
-      !emailValidError &&
-      !passwordValidError &&
-      !confirmPasswordError
-    ) {
-      setIsSubmitDisabled(false);
-      return;
-    }
-
-    setIsSubmitDisabled(true);
-  }, [
-    loggedIn,
-    email,
-    fullName,
-    displayName,
-    avatar,
-    currentAvatar,
-    password,
-    confirmPassword,
-    emailValidError,
-    passwordValidError,
-    confirmPasswordError,
-    props.showSavePassword,
-    currentPassword,
-    newPassword,
-    confirmNewPassword,
-    newPasswordValidError,
-    confirmNewPasswordError,
-    currentDisplayName,
-    currentFullName
-  ]);
-
-  useEffect(() => {
-    if (email && !validateEmail(email.toString().toLowerCase())) {
-      setEmailValidError(enterValidEmailError);
-      return;
-    }
-
-    setEmailValidError("");
-  }, [email]);
-
-  useEffect(() => {
-    const validPasswrdRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-    if (password && !validPasswrdRegex.test(password)) {
-      setPasswordValidError(passwordInvalidError);
-      return;
-    }
-
-    setPasswordValidError("");
-  }, [password]);
-
-  useEffect(() => {
-    if (password && confirmPassword && password !== confirmPassword) {
-      setConfirmPasswordError(passwordDoesNotMatchAlert);
-      return;
-    }
-
-    setConfirmPasswordError("");
-  }, [password, confirmPassword]);
-
-  useEffect(() => {
-    const validPasswrdRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-    if (newPassword && !validPasswrdRegex.test(newPassword)) {
-      setNewPasswordValidError(passwordInvalidError);
-      return;
-    }
-
-    setNewPasswordValidError("");
-  }, [newPassword]);
-
-  useEffect(() => {
-    if (
-      newPassword &&
-      confirmNewPassword &&
-      newPassword !== confirmNewPassword
-    ) {
-      setConfirmNewPasswordError(passwordDoesNotMatchAlert);
-      return;
-    }
-
-    setConfirmNewPasswordError("");
-  }, [newPassword, confirmNewPassword]);
-
+  /**
+   * @description Handles Zoom Auth => Connect user's zoom profile to Cues 
+   */
   const handleZoomAuth = useCallback(async () => {
 
     let url = ''
@@ -312,26 +278,13 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
 
   }, [zoomInfo, userId])
 
-  if (!userFound) {
-    return (
-      <View style={styles.screen} key={1}>
-        <View style={{ width: "100%", backgroundColor: "white" }}>
-          <View style={styles.colorBar}>
-            <Text style={{ fontSize: 20, color: "#1F1F1F" }}>
-              {PreferredLanguageText('internetRequiried')}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
+  // MAIN RETURN
+  
   return (
     <View style={styles.screen} key={1}>
       <ScrollView
         style={{
           width: "100%",
-          // maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
           backgroundColor: "white"
         }}
         showsVerticalScrollIndicator={true}
@@ -446,13 +399,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   {PreferredLanguageText('email')}
                 </Text>
                 <TextInput
-                  editable={!loggedIn}
+                  editable={false}
                   value={email}
                   placeholder={""}
                   onChangeText={val => setEmail(val)}
                   placeholderTextColor={"#1F1F1F"}
                   required={true}
-                  errorText={emailValidError}
                   style={{
                     borderBottomWidth: 0
                   }}
@@ -486,47 +438,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   placeholderTextColor={"#1F1F1F"}
                   required={true}
                 /> */}
-                {loggedIn ? null : (
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: '#000000'
-                      }}
-                    >
-                      {PreferredLanguageText('password')}
-                    </Text>
-                    <TextInput
-                      value={password}
-                      placeholder={""}
-                      onChangeText={val => setPassword(val)}
-                      placeholderTextColor={"#1F1F1F"}
-                      secureTextEntry={true}
-                      required={true}
-                      footerMessage={
-                        PreferredLanguageText('atleast8char')
-                      }
-                      errorText={passwordValidError}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: '#000000'
-                      }}
-                    >
-                      {PreferredLanguageText('confirmPassword')}
-                    </Text>
-                    <TextInput
-                      value={confirmPassword}
-                      placeholder={""}
-                      onChangeText={val => setConfirmPassword(val)}
-                      placeholderTextColor={"#1F1F1F"}
-                      secureTextEntry={true}
-                      required={true}
-                      errorText={confirmPasswordError}
-                    />
-                  </View>
-                )}
               </View>
             )}
             <View
@@ -534,8 +445,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 flex: 1,
                 backgroundColor: "white",
                 justifyContent: "center",
-                // flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row'
-                // paddingTop: 30
               }}
             >
               <TouchableOpacity
@@ -545,7 +454,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   overflow: "hidden",
                   height: 35,
                   marginTop: 15,
-                  // width: "100%",
                   justifyContent: "center",
                   flexDirection: "row"
                 }}
@@ -566,10 +474,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     textTransform: "uppercase"
                   }}
                 >
-                  {loggedIn ? (props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
+                  {(props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save'))}
                 </Text>
               </TouchableOpacity>
-              {loggedIn && !props.showSavePassword ? (
+              {!props.showSavePassword ? (
                 <TouchableOpacity
                   onPress={() => props.setShowSavePassword(!props.showSavePassword)}
                   style={{
@@ -577,7 +485,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     overflow: "hidden",
                     height: 35,
                     marginTop: 20,
-                    // width: "100%",
                     justifyContent: "center",
                     flexDirection: "row"
                   }}
@@ -603,48 +510,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   </Text>
                 </TouchableOpacity>
               ) : null}
-              {/* {
-                props.showSavePassword ? null :
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (loggedIn) {
-                        logout();
-                      } else {
-                        window.location.reload();
-                      }
-                    }}
-                    style={{
-                      backgroundColor: "white",
-                      overflow: "hidden",
-                      height: 35,
-                      marginTop: 15,
-                      // width: "100%",
-                      justifyContent: "center",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: '#006AFF',
-                        borderWidth: 1,
-                        borderRadius: 15,
-                        borderColor: '#006AFF',
-                        backgroundColor: '#fff',
-                        fontSize: 12,
-                        textAlign: "center",
-                        lineHeight: 34,
-                        paddingHorizontal: 20,
-                        fontFamily: "inter",
-                        height: 35,
-                        textTransform: 'uppercase',
-                        width: 175,
-                      }}
-                    >
-                      {PreferredLanguageText('logout')}
-                    </Text>
-                  </TouchableOpacity>
-              } */}
-              {loggedIn && !props.showSavePassword ? (
+              {!props.showSavePassword ? (
                 <TouchableOpacity
                   onPress={() => handleZoomAuth()}
                   style={{

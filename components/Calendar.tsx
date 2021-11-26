@@ -1,187 +1,206 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Animated, Dimensions, Switch, StyleSheet, ScrollView, View as DefaultView } from "react-native";
-import { TextInput } from "./CustomTextInput";
-import Alert from "./Alert";
-import { Text, View, TouchableOpacity } from "./Themed";
-import { fetchAPI } from "../graphql/FetchAPI";
-import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity, getOrganisation, markActivityAsRead } from "../graphql/QueriesAndMutations";
+// REACT
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Animated, Dimensions, Switch, StyleSheet, View as DefaultView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import Datetime from "react-datetime";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { htmlStringParser } from "../helpers/HTMLParser";
-import { Ionicons } from "@expo/vector-icons";
-import { PreferredLanguageText } from "../helpers/LanguageContext";
-import { eventFrequencyOptions } from "../helpers/FrequencyOptions";
+// API
+import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
-import ActivityCard from "./ActivityCard";
-import { Eventcalendar, Datepicker } from "@mobiscroll/react";
+    getChannels,
+    getEvents,
+    createDateV1,
+    editDateV1,
+    deleteDateV1,
+    meetingRequest,
+    markAttendance,
+    getActivity,
+    // getOrganisation,
+    markActivityAsRead
+} from '../graphql/QueriesAndMutations';
+
+// COMPONENTS
+import { TextInput } from './CustomTextInput';
+import Alert from './Alert';
+import { Text, View, TouchableOpacity } from './Themed';
+import moment from 'moment';
+import { htmlStringParser } from '../helpers/HTMLParser';
+import { Ionicons } from '@expo/vector-icons';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { eventFrequencyOptions } from '../helpers/FrequencyOptions';
+import { Eventcalendar, Datepicker } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
-// import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
-// import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
-import _ from 'lodash'
-
-// Try New Calendar
-// import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
-// import 'react-big-scheduler/lib/css/style.css';
-import { Select } from '@mobiscroll/react'
-
+import _ from 'lodash';
+import { Select } from '@mobiscroll/react';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-    const [tab, setTab] = useState(props.tab)
+    const [tab, setTab] = useState(props.tab);
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
-
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState('');
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60));
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [channels, setChannels] = useState<any[]>([]);
     const [showAddEvent, setShowAddEvent] = useState(false);
-    const [channelId, setChannelId] = useState("");
-    const [selectedChannel, setSelectedChannel] = useState("My Events");
-    const [calendarChoice, setCalendarChoice] = useState('Agenda')
-    // v1
-    const current = new Date();
-    const [description, setDescription] = useState("");
+    const [channelId, setChannelId] = useState('');
+    const [selectedChannel, setSelectedChannel] = useState('Home');
+    const [description, setDescription] = useState('');
     const [recurring, setRecurring] = useState(false);
-    const [frequency, setFrequency] = useState("1-W");
+    const [frequency, setFrequency] = useState('1-W');
     const [repeatTill, setRepeatTill] = useState(new Date());
     const [isMeeting, setIsMeeting] = useState(false);
     const [recordMeeting, setRecordMeeting] = useState(false);
     const [isCreatingEvents, setIsCreatingEvents] = useState(false);
     const [editEvent, setEditEvent] = useState<any>(null);
-    // Stores channel name of event being modified
-    const [editChannelName, setEditChannelName] = useState("")
+    const [editChannelName, setEditChannelName] = useState('');
     const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
-
-    // Used for filtering by channels
-    const [eventChannels, setEventChannels] = useState<any[]>([]);
-    const [allEvents, setAllEvents] = useState<any[]>([]);
-
     const [userId, setUserId] = useState('');
     const [allActivity, setAllActivity] = useState<any[]>([]);
+    const [activity, setActivity] = useState<any[]>([]);
+    const [unreadCount, setUnreadCount] = useState<any>(0);
+    const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add'];
+    const width = Dimensions.get('window').width;
 
+    const channelOptions = [
+        {
+            value: 'Home',
+            text: 'Home'
+        }
+    ];
+
+    channels.map((channel: any) => {
+        channelOptions.push({
+            value: channel._id,
+            text: channel.name
+        });
+    });
+
+    // HOOKS
+
+    /**
+     * @description Configure Mobiscroll calendar
+     */
     const viewAgenda: any = React.useMemo(() => {
         return {
-            agenda: { type: 'week' },
+            agenda: { type: 'week' }
         };
     }, []);
     const viewSchedule: any = React.useMemo(() => {
         return {
-            schedule: { type: 'week', startTime: '05:00', endTime: '24:00', startDay: 1, endDay: 0 },
+            schedule: { type: 'week', startTime: '05:00', endTime: '24:00', startDay: 1, endDay: 0 }
         };
     }, []);
     const viewCalendar: any = React.useMemo(() => {
         return {
-            calendar: { type: 'month' },
+            calendar: { type: 'month' }
         };
     }, []);
 
-    // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
-
-    const [school, setSchool] = useState<any>({})
-
-    const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add']
-    const tabOptions = ['Agenda', 'Schedule', 'Calendar', 'Activity']
-
+    /**
+     * @description Fetch data on Init
+     */
     useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
-                if (u) {
-                    const user = JSON.parse(u)
-                    const server = fetchAPI('')
-                    server.query({
-                        query: getOrganisation,
-                        variables: {
-                            userId: user._id
-                        }
-                    }).then(res => {
-                        if (res.data && res.data.school.findByUserId) {
-                            setSchool(res.data.school.findByUserId)
-                        }
-                    })
-                }
-            }
-        )()
+        loadEvents();
+        loadChannels();
+    }, []);
 
-    }, [])
-
-    const localizer = momentLocalizer(moment);
-
-    const EventComponent = (eventProps: any) => {
-
-        const { event } = eventProps;
-
-        let colorCode = "#202025";
-
-        const matchSubscription = props.subscriptions.find((sub: any) => {
-            return sub.channelName === event.channelName
-        })
-
-        if (matchSubscription && matchSubscription !== undefined) {
-            colorCode = matchSubscription.colorCode
-        }
-
-        return <span style={{ color: colorCode, backgroundColor: '#efefef', borderRadius: 1, padding: 20, overflow: 'hidden' }}>{event.title}</span>
-
-    }
-
-    const [activity, setActivity] = useState<any[]>([])
-    const [unreadCount, setUnreadCount] = useState<any>(0)
-
+    /**
+     * @description Fetch user activity
+     */
     useEffect(() => {
-        (
-            async () => {
+        (async () => {
+            const u = await AsyncStorage.getItem('user');
+            if (u) {
+                const user = JSON.parse(u);
 
-                const u = await AsyncStorage.getItem('user')
-                if (u) {
-                    const user = JSON.parse(u)
-
-                    setUserId(user._id);
-                    const server = fetchAPI(user._id)
-                    server.query({
+                setUserId(user._id);
+                const server = fetchAPI(user._id);
+                server
+                    .query({
                         query: getActivity,
                         variables: {
                             userId: user._id
                         }
-                    }).then(res => {
+                    })
+                    .then(res => {
                         if (res.data && res.data.activity.getActivity) {
-                            const tempActivity = res.data.activity.getActivity.reverse()
-                            let unread = 0
+                            const tempActivity = res.data.activity.getActivity.reverse();
+                            let unread = 0;
                             tempActivity.map((act: any) => {
                                 if (act.status === 'unread') {
-                                    unread++
+                                    unread++;
                                 }
-                            })
-                            setUnreadCount(unread)
-                            setActivity(tempActivity)
-                            setAllActivity(tempActivity)
+                            });
+                            setUnreadCount(unread);
+                            setActivity(tempActivity);
+                            setAllActivity(tempActivity);
                         }
-                    })
+                    });
+            }
+        })();
+    }, []);
+
+    /**
+     * @description Validate submit for creating events
+     */
+    useEffect(() => {
+        if (title !== '' && end > start) {
+            setIsSubmitDisabled(false);
+            return;
+        }
+        setIsSubmitDisabled(true);
+    }, [title, start, end]);
+
+    /**
+     * @description Filter activity by Channel
+     */
+    useEffect(() => {
+        const all = [...allActivity];
+        if (props.filterByChannel === 'All') {
+            setActivity(all);
+        } else {
+            const filter = all.filter((e: any) => props.filterByChannel === e.channelName);
+            setActivity(filter);
+        }
+    }, [props.filterByChannel]);
+
+    /**
+     * @description When an event is selected to edit, update state variables
+     */
+    useEffect(() => {
+        if (editEvent) {
+            setTitle(editEvent.originalTitle);
+            setDescription(editEvent.description);
+            setStart(new Date(editEvent.start));
+            setEnd(new Date(editEvent.end));
+            setEditChannelName(editEvent.channelName);
+
+            if (editEvent.dateId !== 'channel' && editEvent.createdBy) {
+                setIsMeeting(true);
+                if (editEvent.recordMeeting) {
+                    setRecordMeeting(true);
                 }
             }
-        )()
+        } else {
+            setTitle('');
+            setDescription('');
+            const current = new Date();
+            setStart(new Date());
+            setEnd(new Date(current.getTime() + 1000 * 60 * 60));
+            setEditChannelName('');
+        }
+    }, [editEvent]);
 
-    }, [])
-
-
+    /**
+     * @description Load all channels to filter data in Activity
+     */
     const loadChannels = useCallback(async () => {
-        const uString: any = await AsyncStorage.getItem("user");
+        const uString: any = await AsyncStorage.getItem('user');
         if (uString) {
             const user = JSON.parse(uString);
-            const server = fetchAPI("");
+            const server = fetchAPI('');
             server
                 .query({
                     query: getChannels,
@@ -194,245 +213,43 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setChannels(res.data.channel.findByUserId);
                     }
                 })
-                .catch(err => { });
+                .catch(err => {});
         }
     }, []);
 
-    useEffect(() => {
-        if (title !== "" && end > start) {
-            setIsSubmitDisabled(false);
-            return;
-        }
-        setIsSubmitDisabled(true);
-    }, [title, start, end]);
-
-    let resources = [
-        {
-            id: 'lectures',
-            name: 'Lectures',
-        },
-        {
-            id: 'submissions',
-            name: 'Submissions'
-        },
-        {
-            id: 'others',
-            name: 'Others',
-        },
-    ];
-
-    useEffect(() => {
-
-        let total = [...allEvents];
-
-        // Filter the meetings first 
-        if (props.filterEventsType === "Lectures") {
-            total = total.filter((e: any) => e.meeting)
-        } else if (props.filterEventsType === "Submissions") {
-            total = total.filter((e: any) => e.cueId !== "");
-        } else if (props.filterEventsType === "Events") {
-            total = total.filter((e: any) => e.cueId === "" && !e.meeting);
-        }
-
-        if (props.filterEnd && props.filterStart) {
-            const end = new Date(props.filterEnd)
-            total = total.filter((e: any) => {
-                if (!e.end) {
-                    const date = new Date(e.start)
-                    return date < end
-                }
-                const date = new Date(e.end)
-                return date < end
-            })
-            const start = new Date(props.filterStart)
-            total = total.filter((e: any) => {
-                const date = new Date(e.start)
-                return date > start
-            })
-        }
-
-        if (props.filterByChannel === "All") {
-            setEvents(total);
-        } else {
-            const all = [...total];
-            const filter = all.filter((e: any) => props.filterByChannel === (e.channelName));
-            setEvents(filter)
-        }
-
-    }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
-
-    useEffect(() => {
-
-        console.log("Filter by channel", props.filterByChannel);
-
-        const all = [...allActivity];
-        if (props.filterByChannel === "All") {
-            setActivity(all);
-        } else {
-            const filter = all.filter((e: any) => props.filterByChannel === e.channelName);
-            setActivity(filter);
-        }
-    }, [props.filterByChannel])
-
-
-
-    const renderFilterEvents = () => {
-
-        const channels = props.subscriptions.map((subscription: any) => {
-
-            return {
-                value: subscription.channelName,
-                text: subscription.channelName
-            }
-        })
-
-        const channelFilterData = [{ text: 'All', value: 'All' }, { text: 'My Events', value: 'My Events' }, ...channels]
-
-
-        return (<View style={{
-            marginTop: 0,
-            flexDirection: 'row',
-            // paddingTop: width < 768 ? 20 : 0
-            // borderWidth: 1,
-            // alignSelf: 'flex-start',
-            // flex: 1
-        }} key={JSON.stringify(eventChannels)}>
-            <View>
-                <View style={{ backgroundColor: '#efefef' }}>
-                    {/* <View style={{}}>
-                        <Menu
-                            onSelect={(choice: any) => {
-                                setFilterEventsType(choice);
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#000000' }}>
-                                    {filterEventsType}<Ionicons name='chevron-down-outline' size={15} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#efefef',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-                                <MenuOption
-                                    value={"All"}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            All
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={"Lectures"}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Lectures
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={"Submissions"}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Submissions
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={"Events"}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Events
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                            </MenuOptions>
-                        </Menu>
-                        <Text style={{ fontSize: 10, color: '#000000', paddingTop: 7 }}>
-                            Type
-                        </Text>
-                    </View> */}
-                </View>
-            </View>
-        </View>
-        )
-    }
-
-
-    // use effect for edit events
-    useEffect(() => {
-        if (editEvent) {
-            setTitle(editEvent.originalTitle);
-            setDescription(editEvent.description)
-            setStart(new Date(editEvent.start))
-            setEnd(new Date(editEvent.end))
-            setEditChannelName(editEvent.channelName)
-
-            if (editEvent.dateId !== "channel" && editEvent.createdBy) {
-                setIsMeeting(true)
-                if (editEvent.recordMeeting) {
-                    setRecordMeeting(true)
-                }
-            }
-
-        } else {
-
-            setTitle("");
-            setDescription("")
-            const current = new Date()
-            setStart(new Date())
-            setEnd(new Date(current.getTime() + 1000 * 60 * 60))
-            setEditChannelName("")
-        }
-    }, [editEvent])
-
-    const yesterday = moment().subtract(1, "day");
-    const disablePastDt = (current: any) => {
-        return current.isAfter(yesterday);
-    };
-    const roundSeconds = (time: Date) => {
-        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
-        time.setSeconds(0, 0)
-        return time
-    }
-
+    /**
+     * @description Handle Create event
+     */
     const handleCreate = useCallback(async () => {
-
-        if (title === "") {
-            Alert("A title must be set for the event. ");
+        if (title === '') {
+            Alert('A title must be set for the event. ');
             return;
         } else if (start < new Date()) {
-            Alert("Event must be set in the future.");
+            Alert('Event must be set in the future.');
             return;
         } else if (start > end) {
-            Alert("End time must be after than start time.");
-            return
+            Alert('End time must be after than start time.');
+            return;
         }
         if (recurring) {
             if (start > repeatTill) {
-                Alert("Repeat until must be set in the future.");
-                return
+                Alert('Repeat until must be set in the future.');
+                return;
             }
         }
 
         setIsCreatingEvents(true);
 
-        const meeting = channelId && channelId !== "" ? isMeeting : false;
+        const meeting = channelId && channelId !== '' ? isMeeting : false;
 
-        const freq = recurring ? frequency : ""
+        const freq = recurring ? frequency : '';
 
-        const repeat = recurring ? repeatTill.toUTCString() : ""
+        const repeat = recurring ? repeatTill.toUTCString() : '';
 
-        const u = await AsyncStorage.getItem("user");
+        const u = await AsyncStorage.getItem('user');
         if (u) {
             const user = JSON.parse(u);
-            const server = fetchAPI("");
+            const server = fetchAPI('');
             server
                 .mutate({
                     mutation: createDateV1,
@@ -450,34 +267,44 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 })
                 .then(res => {
-
-                    const updated = new Date();
-
                     loadEvents();
-                    setTitle("");
-                    setRepeatTill(new Date())
+                    setTitle('');
+                    setRepeatTill(new Date());
                     setIsMeeting(false);
-                    setDescription("");
-                    setFrequency("1-W");
+                    setDescription('');
+                    setFrequency('1-W');
                     setRecurring(false);
                     setRecordMeeting(false);
                     setIsCreatingEvents(false);
-                    setShowAddEvent(false)
-
-                    props.setTab('Agenda')
+                    setShowAddEvent(false);
+                    props.setTab('Agenda');
                 })
                 .catch(err => {
                     setIsCreatingEvents(false);
-                    console.log(err)
+                    console.log(err);
                 });
         }
-    }, [title, start, end, channelId, recordMeeting, isMeeting, repeatTill, frequency, recurring, isSubmitDisabled, isCreatingEvents]);
+    }, [
+        title,
+        start,
+        end,
+        channelId,
+        recordMeeting,
+        isMeeting,
+        repeatTill,
+        frequency,
+        recurring,
+        isSubmitDisabled,
+        isCreatingEvents
+    ]);
 
+    /**
+     * @description Handle Edit event
+     */
     const handleEdit = useCallback(async () => {
-
         setIsEditingEvents(true);
 
-        const server = fetchAPI("");
+        const server = fetchAPI('');
         server
             .mutate({
                 mutation: editDateV1,
@@ -487,78 +314,79 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     start: start.toUTCString(),
                     end: end.toUTCString(),
                     description,
-                    recordMeeting,
-                }
-            })
-            .then((res) => {
-
-                if (res.data.date.editV1) {
-
-                    loadEvents();
-                    Alert('Updated event successully.')
-                } else {
-                    Alert('Failed to edit event. Try again.')
-                }
-
-                setIsEditingEvents(false);
-
-            })
-            .catch(err => {
-                Alert('Failed to edit event. Try again.')
-                setIsEditingEvents(false);
-                console.log(err)
-            });
-
-    }, [editEvent, title, start, end, description, isMeeting, recordMeeting]);
-
-    const handleDelete = useCallback(async (deleteAll: boolean) => {
-
-        const { eventId, recurringId } = editEvent;
-
-        setIsDeletingEvents(true);
-
-        const server = fetchAPI("");
-        server
-            .mutate({
-                mutation: deleteDateV1,
-                variables: {
-                    id: !deleteAll ? eventId : recurringId,
-                    deleteAll
+                    recordMeeting
                 }
             })
             .then(res => {
-                if (res.data.date.deleteV1) {
+                if (res.data.date.editV1) {
                     loadEvents();
-                    setTitle("");
-                    setRepeatTill(new Date())
-                    setIsMeeting(false);
-                    setDescription("");
-                    setFrequency("1-W");
-                    setRecurring(false);
-                    setRecordMeeting(false);
-                    setEditEvent(null)
-                    setShowAddEvent(false)
-
-                    Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.')
-
+                    Alert('Updated event successully.');
                 } else {
-
-                    Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.')
-
+                    Alert('Failed to edit event. Try again.');
                 }
-                setIsDeletingEvents(false);
 
+                setIsEditingEvents(false);
             })
             .catch(err => {
-                setIsDeletingEvents(false);
-                Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.')
-                console.log(err)
+                Alert('Failed to edit event. Try again.');
+                setIsEditingEvents(false);
+                console.log(err);
             });
+    }, [editEvent, title, start, end, description, isMeeting, recordMeeting]);
 
-    }, [title, start, end, description, isMeeting, recordMeeting]);
+    /**
+     * @description Handle Delete event
+     */
+    const handleDelete = useCallback(
+        async (deleteAll: boolean) => {
+            const { eventId, recurringId } = editEvent;
 
+            setIsDeletingEvents(true);
+
+            const server = fetchAPI('');
+            server
+                .mutate({
+                    mutation: deleteDateV1,
+                    variables: {
+                        id: !deleteAll ? eventId : recurringId,
+                        deleteAll
+                    }
+                })
+                .then(res => {
+                    if (res.data.date.deleteV1) {
+                        loadEvents();
+                        setTitle('');
+                        setRepeatTill(new Date());
+                        setIsMeeting(false);
+                        setDescription('');
+                        setFrequency('1-W');
+                        setRecurring(false);
+                        setRecordMeeting(false);
+                        setEditEvent(null);
+                        setShowAddEvent(false);
+
+                        Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
+                    } else {
+                        Alert(
+                            !deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.'
+                        );
+                    }
+                    setIsDeletingEvents(false);
+                })
+                .catch(err => {
+                    setIsDeletingEvents(false);
+                    Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.');
+                    console.log(err);
+                });
+        },
+        [title, start, end, description, isMeeting, recordMeeting]
+    );
+
+    /**
+     * @description Load all events for Agenda
+     */
     const loadEvents = useCallback(async () => {
-        const u = await AsyncStorage.getItem("user");
+        const u = await AsyncStorage.getItem('user');
         let parsedUser: any = {};
         if (u) {
             parsedUser = JSON.parse(u);
@@ -587,20 +415,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                         channelsSet.add(e.channelName);
 
-                        let colorCode = "#202025";
+                        let colorCode = '#202025';
 
                         const matchSubscription = props.subscriptions.find((sub: any) => {
-                            return sub.channelName === e.channelName
-                        })
+                            return sub.channelName === e.channelName;
+                        });
 
                         if (matchSubscription && matchSubscription !== undefined) {
-                            colorCode = matchSubscription.colorCode
+                            colorCode = matchSubscription.colorCode;
                         }
 
                         parsedEvents.push({
-                            eventId: e.eventId ? e.eventId : "",
+                            eventId: e.eventId ? e.eventId : '',
                             originalTitle: title,
-                            title: e.channelName ? (title + ' - ' + e.channelName) : title,
+                            title: e.channelName ? title + ' - ' + e.channelName : title,
                             start: new Date(e.start),
                             end: datesEqual(e.start, e.end) ? null : new Date(e.end),
                             dateId: e.dateId,
@@ -615,11 +443,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: colorCode,
                             submitted: e.submitted
                         });
-
-
                     });
-                    setEventChannels(Array.from(channelsSet))
-                    setAllEvents(parsedEvents)
                     setEvents(parsedEvents);
                 } else {
                     setLoading(false);
@@ -634,7 +458,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
             .catch(err => {
                 console.log(err);
-                Alert("Unable to load calendar.", "Check connection.");
+                Alert('Unable to load calendar.', 'Check connection.');
                 setLoading(false);
                 modalAnimation.setValue(0);
                 Animated.timing(modalAnimation, {
@@ -645,57 +469,69 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             });
     }, [props.subscriptions, modalAnimation]);
 
-    useEffect(() => {
-        loadEvents();
-        loadChannels();
-    }, []);
+    // FUNCTIONS
 
+    /**
+     * @description Round time to nearest seconds
+     */
+    const roundSeconds = (time: Date) => {
+        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+        time.setSeconds(0, 0);
+        return time;
+    };
+
+    /**
+     * @description Check if two dates are equal for Agenda (e.g. for Assignments)
+     */
     const datesEqual = (date1: string, date2: string) => {
         const one = new Date(date1);
         const two = new Date(date2);
 
         if (one > two) return false;
         else if (one < two) return false;
-        else return true
-    }
+        else return true;
+    };
 
-    console.log('Edit event', editEvent);
-    console.log('Add event', showAddEvent);
-
-
+    /**
+     * @description On Select event in Agenda
+     */
     const onSelectEvent = async (data: any) => {
-
         const { event } = data;
 
-        const uString: any = await AsyncStorage.getItem("user");
+        const uString: any = await AsyncStorage.getItem('user');
         // Only allow edit if event is not past
         if (uString) {
-
             const user = JSON.parse(uString);
 
-            const timeString = datesEqual(event.start, event.end) ? moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") : moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") + " to " + moment(new Date(event.end)).format("MMMM Do YYYY, h:mm a")
+            const timeString = datesEqual(event.start, event.end)
+                ? moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a')
+                : moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a') +
+                  ' to ' +
+                  moment(new Date(event.end)).format('MMMM Do YYYY, h:mm a');
 
-            const descriptionString = event.description ? event.description + "- " + timeString : "" + timeString
+            const descriptionString = event.description ? event.description + '- ' + timeString : '' + timeString;
 
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
-
-                setEditEvent(event)
-                setTab('Add')
-                // setShowAddEvent(true)
-
-            } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
-                Alert("Delete " + event.title + "?", descriptionString, [
+                setEditEvent(event);
+                setTab('Add');
+            } else if (
+                user._id === event.createdBy &&
+                event.cueId === '' &&
+                new Date(event.end) < new Date() &&
+                event.eventId
+            ) {
+                Alert('Delete ' + event.title + '?', descriptionString, [
                     {
-                        text: "Cancel",
-                        style: "cancel",
+                        text: 'Cancel',
+                        style: 'cancel',
                         onPress: () => {
                             return;
                         }
                     },
                     {
-                        text: "Delete",
+                        text: 'Delete',
                         onPress: async () => {
-                            const server = fetchAPI("");
+                            const server = fetchAPI('');
                             server
                                 .mutate({
                                     mutation: deleteDateV1,
@@ -706,95 +542,78 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 })
                                 .then(res => {
                                     if (res.data && res.data.date.deleteV1) {
-                                        Alert("Event Deleted!");
+                                        Alert('Event Deleted!');
                                         loadEvents();
                                     }
                                 });
                         }
                     }
                 ]);
-
             } else {
-
                 const date = new Date();
 
                 if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
-                    Alert(
-                        event.title,
-                        "Enter classroom?",
-                        [
-                            {
-                                text: "No",
-                                style: "cancel",
-                                onPress: () => {
-                                    return;
-                                }
-                            },
-                            {
-                                text: "Yes",
-                                onPress: async () => {
-                                    const uString: any = await AsyncStorage.getItem("user");
+                    Alert(event.title, 'Enter classroom?', [
+                        {
+                            text: 'No',
+                            style: 'cancel',
+                            onPress: () => {
+                                return;
+                            }
+                        },
+                        {
+                            text: 'Yes',
+                            onPress: async () => {
+                                const uString: any = await AsyncStorage.getItem('user');
 
-                                    const user = JSON.parse(uString)
+                                const user = JSON.parse(uString);
 
-                                    const server = fetchAPI('')
-                                    server.mutate({
+                                const server = fetchAPI('');
+                                server
+                                    .mutate({
                                         mutation: meetingRequest,
                                         variables: {
                                             userId: user._id,
                                             channelId: event.channelId,
                                             isOwner: false
                                         }
-                                    }).then(res => {
-                                        if (res.data && res.data.channel.meetingRequest !== 'error') {
-                                            server
-                                                .mutate({
-                                                    mutation: markAttendance,
-                                                    variables: {
-                                                        userId: user._id,
-                                                        channelId: event.channelId
-                                                    }
-                                                })
-                                            window.open(res.data.channel.meetingRequest, "_blank");
-                                        } else {
-                                            Alert("Classroom not in session. Waiting for instructor.")
-                                        }
-                                    }).catch(err => {
-                                        Alert("Something went wrong.")
                                     })
-                                }
+                                    .then(res => {
+                                        if (res.data && res.data.channel.meetingRequest !== 'error') {
+                                            server.mutate({
+                                                mutation: markAttendance,
+                                                variables: {
+                                                    userId: user._id,
+                                                    channelId: event.channelId
+                                                }
+                                            });
+                                            window.open(res.data.channel.meetingRequest, '_blank');
+                                        } else {
+                                            Alert('Classroom not in session. Waiting for instructor.');
+                                        }
+                                    })
+                                    .catch(err => {
+                                        Alert('Something went wrong.');
+                                    });
                             }
-                        ]
-                    );
-                } else if (event.cueId !== "") {
-                    props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy)
+                        }
+                    ]);
+                } else if (event.cueId !== '') {
+                    props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy);
                 } else {
-                    Alert(
-                        event.title,
-                        descriptionString
-                    );
+                    Alert(event.title, descriptionString);
                 }
-
             }
-
         }
+    };
 
-
-    }
-
-    const width = Dimensions.get("window").width;
-    const windowHeight =
-        width < 768 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
-
-    const f: any = eventFrequencyOptions.find((item) => {
-        return item.value === frequency
-    })
-    const freq = f.label
-
+    /**
+     * @description Allows selection of recurring option for creating events
+     */
     const renderRecurringOptions = () => (
         <View style={{}}>
-            <View style={{ width: '100%', maxWidth: 400, display: "flex", paddingTop: 40, paddingBottom: 5 }}>
-                <View style={{ width: "100%", }}>
+            <View style={{ width: '100%', maxWidth: 400, display: 'flex', paddingTop: 40, paddingBottom: 5 }}>
+                <View style={{ width: '100%' }}>
                     <Text style={styles.text}>Repeat</Text>
                 </View>
                 <View
@@ -809,690 +628,539 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: "#efefef",
-                            true: "#006AFF"
+                            false: '#efefef',
+                            true: '#006AFF'
                         }}
                         activeThumbColor="white"
                     />
                 </View>
             </View>
 
-            {recurring ? <View style={{ width: '100%', maxWidth: 400, display: "flex", paddingVertical: 15, }}>
-                <View style={{ width: "100%", }}>
-                    <Text
-                        style={styles.text}>
-                        Interval
-                    </Text>
+            {recurring ? (
+                <View style={{ width: '100%', maxWidth: 400, display: 'flex', paddingVertical: 15 }}>
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.text}>Interval</Text>
+                    </View>
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            marginLeft: 0
+                        }}>
+                        <label style={{ width: '100%', maxWidth: 400, backgroundColor: 'white' }}>
+                            <Select
+                                themeVariant="light"
+                                touchUi={true}
+                                value={frequency}
+                                onChange={(val: any) => {
+                                    setFrequency(val.value);
+                                }}
+                                rows={eventFrequencyOptions.length}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={eventFrequencyOptions.map((item: any, index: number) => {
+                                    return {
+                                        value: item.value,
+                                        text: item.label
+                                    };
+                                })}
+                            />
+                        </label>
+                    </View>
                 </View>
-                <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        marginLeft: 0
-                    }}>
+            ) : null}
 
-                    <label style={{ width: '100%', maxWidth: 400, backgroundColor: 'white' }}>
-                        <Select
-                            themeVariant="light"
+            {recurring ? (
+                <View style={{ width: '100%', maxWidth: 400, display: 'flex' }}>
+                    <View style={{ width: '100%', backgroundColor: 'white', paddingVertical: 15 }}>
+                        <Text style={styles.text}>End</Text>
+                        <Datepicker
+                            controls={['date', 'time']}
                             touchUi={true}
-                            value={frequency}
-                            onChange={(val: any) => {
-                                setFrequency(val.value)
+                            theme="ios"
+                            value={repeatTill}
+                            themeVariant="light"
+                            inputProps={{
+                                placeholder: 'Repeat till...'
                             }}
-                            rows={eventFrequencyOptions.length}
+                            onChange={(event: any) => {
+                                const date = new Date(event.value);
+                                const roundOffDate = roundSeconds(date);
+                                setRepeatTill(roundOffDate);
+                            }}
                             responsive={{
-                                small: {
-                                    display: 'bubble',
+                                xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true
                                 },
                                 medium: {
-                                    touchUi: false,
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false
                                 }
                             }}
-                            data={eventFrequencyOptions.map((item: any, index: number) => {
-                                return {
-                                    value: item.value,
-                                    text: item.label
-                                }
-                            })}
                         />
-                    </label>
+                    </View>
                 </View>
-            </View> : null}
-
-            {recurring ? <View style={{ width: '100%', maxWidth: 400, display: "flex" }}>
-                <View style={{ width: "100%", backgroundColor: "white", paddingVertical: 15 }}>
-                    <Text style={styles.text}>End</Text>
-                    {/* <DatePicker
-                        format="YYYY-MM-DD HH:mm"
-                        preventOverflow={true}
-                        appearance={'subtle'}
-                        value={repeatTill}
-                        onChange={(event: any) => {
-                            const date = new Date(event);
-                            if (date < new Date()) return;
-                            const roundOffDate = roundSeconds(date)
-                            setRepeatTill(roundOffDate);
-                        }}
-                        size={'xs'}
-                    // isValidDate={disablePastDt}
-                    /> */}
-                    <Datepicker
-                        controls={['date', 'time']}
-                        touchUi={true}
-                        theme="ios"
-                        value={repeatTill}
-                        themeVariant="light"
-                        // inputComponent="input"
-                        inputProps={{
-                            placeholder: 'Repeat till...'
-                        }}
-                        onChange={(event: any) => {
-                            const date = new Date(event.value);
-                            const roundOffDate = roundSeconds(date)
-                            setRepeatTill(roundOffDate);
-                        }}
-                        responsive={{
-                            xsmall: {
-                                controls: ['date', 'time'],
-                                display: 'bottom',
-                                touchUi: true
-                            },
-                            // small: {
-                            //     controls: ['date', 'time'],
-                            //     display: 'anchored',
-                            //     touchUi: true
-                            // },
-                            medium: {
-                                controls: ['date', 'time'],
-                                display: 'anchored',
-                                touchUi: false
-                            },
-                        }}
-                    />
-                </View>
-                {/* <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        marginLeft: 0
-                    }}>
-                    
-                </View> */}
-                {/* <View
-                    style={{
-                        backgroundColor: "#efefef",
-                        height: 40,
-                        marginRight: 10
-                    }}>
-                    <Datetime
-                            value={repeatTill}
-                            onChange={(event: any) => {
-                                const date = new Date(event);
-                                if (date < new Date()) return;
-
-                                setRepeatTill(date);
-                            }}
-                            isValidDate={disablePastDt}
-                    />
-                </View> */}
-            </View> : null}
-
-
+            ) : null}
         </View>
-    )
+    );
 
+    /**
+     * @description Allows selection of whether event is a lecture
+     */
     const renderMeetingOptions = () => {
-        return channelId !== "" || editChannelName !== "" ? (
-            <DefaultView style={{ width: "100%", flexDirection: width < 768 ? "column" : "row", paddingBottom: 15 }}>
-                {!editEvent ? <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: width < 768 ? "100%" : "33.33%"
-                    }}>
-                    <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 25, paddingBottom: 15, }}>
-                        <Text style={{
-                            fontSize: 14,
-                            // fontFamily: 'inter',
-                            color: '#000000'
-                        }}>Lecture</Text>
-                    </View>
+        return channelId !== '' || editChannelName !== '' ? (
+            <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 15 }}>
+                {!editEvent ? (
                     <View
                         style={{
-                            height: 40,
-                            marginRight: 10
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: width < 768 ? '100%' : '33.33%'
                         }}>
-                        <Switch
-                            value={isMeeting}
-                            onValueChange={() => {
-                                setIsMeeting(!isMeeting);
-                            }}
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: "#efefef",
-                                true: "#006AFF"
-                            }}
-                            disabled={editEvent}
-                            activeThumbColor="white"
-                        />
-                    </View>
-                </View> : null}
-                {/* {isMeeting ? (
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: width < 768 ? "100%" : "33.33%"
-                        }}>
-                        <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "#efefef" }}>
-                            <Text style={{ fontSize: 11, color: '#1F1F1F', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
+                        <View style={{ width: '100%', paddingTop: width < 768 ? 40 : 25, paddingBottom: 15 }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    // fontFamily: 'inter',
+                                    color: '#000000'
+                                }}>
+                                Lecture
+                            </Text>
                         </View>
-                        <Switch
-                            value={recordMeeting}
-                            onValueChange={() => {
-                                setRecordMeeting(!recordMeeting);
-                            }}
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: "#efefef",
-                                true: "#1F1F1F"
-                            }}
-                            activeThumbColor="white"
-                        />
+                        <View
+                            style={{
+                                height: 40,
+                                marginRight: 10
+                            }}>
+                            <Switch
+                                value={isMeeting}
+                                onValueChange={() => {
+                                    setIsMeeting(!isMeeting);
+                                }}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                    false: '#efefef',
+                                    true: '#006AFF'
+                                }}
+                                disabled={editEvent}
+                                activeThumbColor="white"
+                            />
+                        </View>
                     </View>
-                ) : null} */}
+                ) : null}
             </DefaultView>
         ) : null;
     };
 
+    /**
+     * @description When editing event, shows the name of channel
+     */
     const renderEditChannelName = () => {
-
-        return editChannelName && (
-            <View style={{}}>
-                <TouchableOpacity
-                    key={Math.random()}
-                    disabled={true}
-                    // style={styles.allOutline}
-                    onPress={() => {
-                        return;
-                    }}>
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            // fontFamily: 'inter',
-                            color: '#000000'
-                        }}>
-                        Shared with {editChannelName}
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-        );
-    }
-
-    const renderEditEventOptions = () => {
-
-        const { recurringId, start, end, channelId } = editEvent;
-
-        const date = new Date();
-
-        return (<View
-            style={{
-                flex: 1,
-                backgroundColor: "white",
-                justifyContent: "center",
-                display: "flex",
-                paddingTop: 30
-            }}
-        >
-            {
-                (date > new Date(start) && date < new Date(end)) ?
+        return (
+            editChannelName && (
+                <View style={{}}>
                     <TouchableOpacity
-                        style={{
-                            backgroundColor: "white",
-                            overflow: "hidden",
-                            height: 35,
-                            marginTop: 15,
-                            width: "100%",
-                            justifyContent: "center",
-                            flexDirection: "row"
-                        }}
-                        onPress={async () => {
-
-                            const uString: any = await AsyncStorage.getItem("user");
-
-                            const user = JSON.parse(uString)
-
-                            const server = fetchAPI('')
-                            server.mutate({
-                                mutation: meetingRequest,
-                                variables: {
-                                    userId: user._id,
-                                    channelId,
-                                    isOwner: true
-                                }
-                            }).then(res => {
-                                if (res.data && res.data.channel.meetingRequest !== 'error') {
-                                    window.open(res.data.channel.meetingRequest, "_blank");
-                                } else {
-                                    Alert("Classroom not in session. Waiting for instructor.")
-                                }
-                            }).catch(err => {
-                                Alert("Something went wrong.")
-                            })
+                        key={Math.random()}
+                        disabled={true}
+                        onPress={() => {
+                            return;
                         }}>
                         <Text
                             style={{
-                                textAlign: "center",
+                                fontSize: 14,
+                                color: '#000000'
+                            }}>
+                            Shared with {editChannelName}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        );
+    };
+
+    /**
+     * @description Renders edit event buttons
+     */
+    const renderEditEventOptions = () => {
+        const { recurringId, start, end, channelId } = editEvent;
+
+        // const date = new Date();
+
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    justifyContent: 'center',
+                    display: 'flex',
+                    paddingTop: 30
+                }}>
+                {/* {date > new Date(start) && date < new Date(end) ? (
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            marginTop: 15,
+                            width: '100%',
+                            justifyContent: 'center',
+                            flexDirection: 'row'
+                        }}
+                        onPress={async () => {
+                            const uString: any = await AsyncStorage.getItem('user');
+
+                            const user = JSON.parse(uString);
+
+                            const server = fetchAPI('');
+                            server
+                                .mutate({
+                                    mutation: meetingRequest,
+                                    variables: {
+                                        userId: user._id,
+                                        channelId,
+                                        isOwner: true
+                                    }
+                                })
+                                .then(res => {
+                                    if (res.data && res.data.channel.meetingRequest !== 'error') {
+                                        window.open(res.data.channel.meetingRequest, '_blank');
+                                    } else {
+                                        Alert('Classroom not in session. Waiting for instructor.');
+                                    }
+                                })
+                                .catch(err => {
+                                    Alert('Something went wrong.');
+                                });
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
                                 lineHeight: 34,
                                 color: 'white',
                                 fontSize: 12,
                                 backgroundColor: '#006AFF',
                                 paddingHorizontal: 20,
-                                fontFamily: "inter",
+                                fontFamily: 'inter',
                                 height: 35,
                                 width: 200,
                                 borderRadius: 15,
-                                textTransform: "uppercase"
+                                textTransform: 'uppercase'
                             }}>
                             Enter Classroom
                         </Text>
                     </TouchableOpacity>
-                    : null
-            }
-            <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    overflow: "hidden",
-                    height: 35,
-                    marginTop: 15,
-                    width: "100%",
-                    justifyContent: "center",
-                    flexDirection: "row"
-                }}
-                onPress={() => {
-                    Alert("Update event?", "", [
-                        {
-                            text: "Cancel",
-                            style: "cancel",
-                            onPress: () => {
-                                return;
-                            }
-                        },
-                        {
-                            text: "Yes",
-                            onPress: () => {
-                                handleEdit()
-                            }
-                        }
-                    ])
-                }}
-                disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
-                <Text
+                ) : null} */}
+                <TouchableOpacity
                     style={{
-                        textAlign: "center",
-                        lineHeight: 34,
-                        color: 'white',
-                        fontSize: 12,
-                        backgroundColor: '#006AFF',
-                        paddingHorizontal: 20,
-                        fontFamily: "inter",
+                        backgroundColor: 'white',
+                        overflow: 'hidden',
                         height: 35,
-                        borderRadius: 15,
-                        textTransform: "uppercase"
-                    }}>
-                    {isEditingEvents ? "EDITING..." : "EDIT"}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    overflow: "hidden",
-                    height: 35,
-                    marginTop: 15,
-                    width: "100%",
-                    justifyContent: "center",
-                    flexDirection: "row"
-                }}
-                onPress={() => {
-                    Alert("Delete event?", "", [
-                        {
-                            text: "Cancel",
-                            style: "cancel",
-                            onPress: () => {
-                                return;
+                        marginTop: 15,
+                        width: '100%',
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                    }}
+                    onPress={() => {
+                        Alert('Update event?', '', [
+                            {
+                                text: 'Cancel',
+                                style: 'cancel',
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: 'Yes',
+                                onPress: () => {
+                                    handleEdit();
+                                }
                             }
-                        },
-                        {
-                            text: "Yes",
-                            onPress: () => {
-                                handleDelete(false)
-                            }
-                        }
-                    ])
-                }}
-                disabled={isEditingEvents || isDeletingEvents}>
-                <Text
+                        ]);
+                    }}
+                    disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            lineHeight: 34,
+                            color: 'white',
+                            fontSize: 12,
+                            backgroundColor: '#006AFF',
+                            paddingHorizontal: 20,
+                            fontFamily: 'inter',
+                            height: 35,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                        {isEditingEvents ? 'EDITING...' : 'EDIT'}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={{
-                        textAlign: "center",
-                        lineHeight: 34,
-                        color: "#006AFF",
-                        borderWidth: 1,
-                        borderColor: '#006AFF',
-                        borderRadius: 15,
-                        fontSize: 12,
-                        backgroundColor: "white",
-                        paddingHorizontal: 20,
-                        fontFamily: "inter",
+                        backgroundColor: 'white',
+                        overflow: 'hidden',
                         height: 35,
-                        textTransform: "uppercase"
-                    }}>
-                    {isDeletingEvents ? "DELETING..." : "DELETE"}
-                </Text>
-            </TouchableOpacity>
-
-            {recurringId && recurringId !== "" ? <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    overflow: "hidden",
-                    height: 35,
-                    marginTop: 15,
-                    width: "100%",
-                    justifyContent: "center",
-                    flexDirection: "row"
-                }}
-                onPress={() => {
-                    Alert("Delete events?", "", [
-                        {
-                            text: "Cancel",
-                            style: "cancel",
-                            onPress: () => {
-                                return;
+                        marginTop: 15,
+                        width: '100%',
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                    }}
+                    onPress={() => {
+                        Alert('Delete event?', '', [
+                            {
+                                text: 'Cancel',
+                                style: 'cancel',
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: 'Yes',
+                                onPress: () => {
+                                    handleDelete(false);
+                                }
                             }
-                        },
-                        {
-                            text: "Yes",
-                            onPress: () => {
-                                handleDelete(true)
-                            }
-                        }
-                    ])
-                }}
-                disabled={isEditingEvents || isDeletingEvents}>
-                <Text
-                    style={{
-                        textAlign: "center",
-                        lineHeight: 34,
-                        color: "#006AFF",
-                        borderWidth: 1,
-                        borderColor: '#006AFF',
-                        borderRadius: 15,
-                        fontSize: 12,
-                        backgroundColor: "white",
-                        paddingHorizontal: 20,
-                        fontFamily: "inter",
-                        height: 35,
-                        textTransform: "uppercase"
-                    }}>
-                    {isDeletingEvents ? "DELETING..." : "DELETE ALL"}
-                </Text>
-            </TouchableOpacity> : null
-            }
-        </View>)
-    }
+                        ]);
+                    }}
+                    disabled={isEditingEvents || isDeletingEvents}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            lineHeight: 34,
+                            color: '#006AFF',
+                            borderWidth: 1,
+                            borderColor: '#006AFF',
+                            borderRadius: 15,
+                            fontSize: 12,
+                            backgroundColor: 'white',
+                            paddingHorizontal: 20,
+                            fontFamily: 'inter',
+                            height: 35,
+                            textTransform: 'uppercase'
+                        }}>
+                        {isDeletingEvents ? 'DELETING...' : 'DELETE'}
+                    </Text>
+                </TouchableOpacity>
 
-    const onChangeVal = useCallback((val: any) => {
-        switch (val.value) {
-            case tabs[0]:
-                setEditEvent(null)
-                setTab(tabs[0])
-                break;
-            case tabs[1]:
-                setEditEvent(null)
-                setTab(tabs[1])
-                break;
-            case tabs[2]:
-                setEditEvent(null)
-                setTab(tabs[2])
-                break;
-            case tabs[3]:
-                setEditEvent(null)
-                setTab(tabs[3])
-                break;
-            default:
-                setEditEvent(null)
-                setTab(tabs[4])
-                break;
-        }
-    }, [tabs])
+                {recurringId && recurringId !== '' ? (
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            marginTop: 15,
+                            width: '100%',
+                            justifyContent: 'center',
+                            flexDirection: 'row'
+                        }}
+                        onPress={() => {
+                            Alert('Delete events?', '', [
+                                {
+                                    text: 'Cancel',
+                                    style: 'cancel',
+                                    onPress: () => {
+                                        return;
+                                    }
+                                },
+                                {
+                                    text: 'Yes',
+                                    onPress: () => {
+                                        handleDelete(true);
+                                    }
+                                }
+                            ]);
+                        }}
+                        disabled={isEditingEvents || isDeletingEvents}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                lineHeight: 34,
+                                color: '#006AFF',
+                                borderWidth: 1,
+                                borderColor: '#006AFF',
+                                borderRadius: 15,
+                                fontSize: 12,
+                                backgroundColor: 'white',
+                                paddingHorizontal: 20,
+                                fontFamily: 'inter',
+                                height: 35,
+                                textTransform: 'uppercase'
+                            }}>
+                            {isDeletingEvents ? 'DELETING...' : 'DELETE ALL'}
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+            </View>
+        );
+    };
 
-    const renderEventContent = ((data: any) => {
+    /**
+     * @description Custom content for Mobiscroll Agenda
+     */
+    const renderEventContent = (data: any) => {
+        const assingmentDue = new Date() > new Date(data.original.start);
 
-        // Add buttons to view event, edit event, join meeting, etc
+        return (
+            <React.Fragment>
+                <div>{data.title}</div>
+                <div className="md-custom-event-cont">
+                    <div style={{ color: '#1F1F1F', fontSize: 14 }}>{data.original.description}</div>
+                    {data.original.submitted !== null && userId !== '' && userId !== data.original.createdBy ? (
+                        <div>
+                            <div
+                                style={{
+                                    color: data.original.submitted ? '#35AC78' : !assingmentDue ? '#006AFF' : '#F94144',
+                                    borderRadius: 12,
+                                    padding: 4,
+                                    fontSize: 12,
+                                    borderWidth: 1
+                                }}>
+                                {data.original.submitted ? 'SUBMITTED' : assingmentDue ? 'MISSING' : 'PENDING'}
+                            </div>
+                        </div>
+                    ) : null}
+                </div>
+            </React.Fragment>
+        );
+    };
 
-        const assingmentDue = new Date() > new Date(data.original.start)
-
-
-        return <React.Fragment>
-            <div>{data.title}</div>
-            <div className="md-custom-event-cont">
-                <div style={{ color: '#1F1F1F', fontSize: 14 }}>{data.original.description}</div>
-                {data.original.submitted !== null && userId !== "" && userId !== data.original.createdBy ? (<div><div style={{
-                    color: data.original.submitted ? '#35AC78' : (!assingmentDue ? '#006AFF' : '#F94144'),
-                    borderRadius: 12,
-                    padding: 4,
-                    fontSize: 12,
-                    borderWidth: 1,
-                }}>
-                    {data.original.submitted ? "SUBMITTED" : (assingmentDue ? "MISSING" : "PENDING")}
-                </div></div>) : null}
-                {/* <Button className="md-custom-event-btn" color="secondary" variant="outline" onClick={(domEvent) => add(domEvent, data.original)}>Add participant</Button> */}
-            </div>
-        </React.Fragment>;
-    });
-
+    /**
+     * @description Formats time in email format
+     */
     function emailTimeDisplay(dbDate: string) {
         let date = moment(dbDate);
         var currentDate = moment();
-        if (currentDate.isSame(date, 'day'))
-            return date.format('h:mm a');
-        else if (currentDate.isSame(date, 'year'))
-            return date.format("MMM DD");
-        else
-            return date.format("MM/DD/YYYY");
+        if (currentDate.isSame(date, 'day')) return date.format('h:mm a');
+        else if (currentDate.isSame(date, 'year')) return date.format('MMM DD');
+        else return date.format('MM/DD/YYYY');
     }
 
-
-    console.log("Tab", tab);
-
+    /**
+     * @description Renders tabs for Agenda
+     */
     const renderTabs = (activeTab: any) => {
-        return (<View style={{ flexDirection: "column", flex: 1, marginBottom: 20, marginTop: 10, paddingVertical: 10, backgroundColor: tab === "Add" ? 'white' : '#efefef', }}>
-            {
-                tab !== 'Add' ? null : (
+        return (
+            <View
+                style={{
+                    flexDirection: 'column',
+                    flex: 1,
+                    marginBottom: 20,
+                    marginTop: 10,
+                    paddingVertical: 10,
+                    backgroundColor: tab === 'Add' ? 'white' : '#efefef'
+                }}>
+                {tab !== 'Add' ? null : (
                     <TouchableOpacity
                         onPress={() => {
-                            setEditEvent(null)
-                            props.setTab(tabs[0])
-                            setTab(tabs[0])
+                            setEditEvent(null);
+                            props.setTab(tabs[0]);
+                            setTab(tabs[0]);
                         }}
                         style={{
                             paddingHorizontal: 20,
                             // paddingTop: 5,
                             backgroundColor: 'white',
                             alignSelf: 'flex-start'
-                        }}
-                    >
+                        }}>
                         <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
+                            <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
                         </Text>
                     </TouchableOpacity>
-                )
-            }
-            {
-                tab !== 'Add' ? <View style={{
-                    flexDirection: "row",
-                    // marginBottom: 15,
-                    paddingTop: 10,
-                    backgroundColor: '#efefef',
-                    flex: 1, justifyContent: 'center'
-                    //paddingVertical: 20 
-                }}>
-                    <TouchableOpacity
+                )}
+                {tab !== 'Add' ? (
+                    <View
                         style={{
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            backgroundColor: '#efefef'
-                        }}
-                        onPress={() => {
-                            setTab('Agenda')
-                            // const temp = JSON.parse(JSON.stringify(indexMap))
-                            // temp[key] = 0
-                            // setIndexMap(temp)
+                            flexDirection: 'row',
+                            paddingTop: 10,
+                            backgroundColor: '#efefef',
+                            flex: 1,
+                            justifyContent: 'center'
                         }}>
-                        <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='list-outline' size={18} style={{ marginBottom: 5 }} />
-                        </Text>
-                        <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>
-                            {
-                                'To-do'
-                            }
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            backgroundColor: '#efefef'
-                        }}
-                        onPress={() => {
-                            setTab('Schedule')
-                        }}>
-                        <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='map-outline' size={18} />
-                        </Text>
-                        <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>
-                            Schedule
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            backgroundColor: '#efefef'
-                        }}
-                        onPress={() => {
-                            setTab('Calendar')
-                            // const temp = JSON.parse(JSON.stringify(indexMap))
-                            // temp[key] = 2
-                            // setIndexMap(temp)
-                        }}>
-                        <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name="calendar-sharp" size={18} />
-                        </Text>
-                        <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>
-                            Planner
-                        </Text>
-                    </TouchableOpacity>
-                    {
-                        props.version === 'read' ? null :
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                backgroundColor: '#efefef'
+                            }}
+                            onPress={() => {
+                                setTab('Agenda');
+                            }}>
+                            <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name="list-outline" size={18} style={{ marginBottom: 5 }} />
+                            </Text>
+                            <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>{'To-do'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                backgroundColor: '#efefef'
+                            }}
+                            onPress={() => {
+                                setTab('Schedule');
+                            }}>
+                            <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name="map-outline" size={18} />
+                            </Text>
+                            <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>Schedule</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                backgroundColor: '#efefef'
+                            }}
+                            onPress={() => {
+                                setTab('Calendar');
+                            }}>
+                            <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name="calendar-sharp" size={18} />
+                            </Text>
+                            <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>Planner</Text>
+                        </TouchableOpacity>
+                        {props.version === 'read' ? null : (
                             <TouchableOpacity
                                 style={{
-                                    justifyContent: "center",
-                                    flexDirection: "column",
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
                                     backgroundColor: '#efefef'
                                 }}
                                 onPress={() => {
-                                    setTab('Activity')
-                                    // const temp = JSON.parse(JSON.stringify(indexMap))
-                                    // temp[key] = 3
-                                    // setIndexMap(temp)
+                                    setTab('Activity');
                                 }}>
                                 {/* Alert  */}
-                                <View style={{
-                                    width: 7,
-                                    height: 7,
-                                    borderRadius: '100%',
-                                    backgroundColor: '#f94144',
-                                    position: 'absolute',
-                                    top: -3,
-                                    right: 5
-                                }} />
+                                <View
+                                    style={{
+                                        width: 7,
+                                        height: 7,
+                                        borderRadius: '100%',
+                                        backgroundColor: '#f94144',
+                                        position: 'absolute',
+                                        top: -3,
+                                        right: 5
+                                    }}
+                                />
                                 <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                                    <Ionicons name='notifications-outline' size={18} />
+                                    <Ionicons name="notifications-outline" size={18} />
                                 </Text>
-                                <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                                    Alerts
-                                </Text>
+                                <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>Alerts</Text>
                             </TouchableOpacity>
-                    }
-                </View> : null
-            }
-            {/* {
-                tab !== 'Add' ? <label style={{ width: 150, backgroundColor: '#efefef' }}>
-                    <Select
-                        touchUi={true}
-                        themeVariant="light"
-                        value={tab}
-                        onChange={(val: any) => onChangeVal(val)}
-                        responsive={{
-                            small: {
-                                display: 'bubble'
-                            },
-                            medium: {
-                                touchUi: false,
-                            }
-                        }}
-                        data={tabOptions.map((t: any) => {
-                            return {
-                                value: t,
-                                text: t === 'Agenda' ? 'To-do' : (
-                                    t === 'Calendar' ? 'Planner' : t
-                                )
-                            }
-                        })}
-                    />
+                        )}
+                    </View>
+                ) : null}
 
-                </label> : null
-            } */}
-            {/* <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#efefef' }} /> */}
-            {/* {
-                tab !== 'Add' && tab !== 'Activity' ? <TouchableOpacity
-                    onPress={() => {
-                        props.setTab(tabs[4])
-                    }}
-                    disabled={isCreatingEvents}
-                    style={{
-                        backgroundColor: "#efefef",
-                        overflow: "hidden",
-                        height: 35,
-                        marginTop: 5
-                        // marginBottom: 20
-                    }}>
-                    <Text
-                        style={{
-                            textAlign: "center",
-                            lineHeight: 34,
-                            color: '#006AFF',
-                            fontSize: 12,
-                            borderWidth: 1,
-                            borderColor: '#006AFF',
-                            paddingHorizontal: 20,
-                            fontFamily: "inter",
-                            height: 35,
-                            // paddingTop: 2
-                            // width: 125,
-                            borderRadius: 15,
-                            textTransform: "uppercase"
-                        }}>
-                        ADD
-                    </Text>
-                </TouchableOpacity> : null
-            } */}
-            {
-                tab === tabs[3] && unreadCount !== 0 ?
+                {tab === tabs[3] && unreadCount !== 0 ? (
                     <TouchableOpacity
                         onPress={async () => {
-                            const uString: any = await AsyncStorage.getItem("user");
+                            const uString: any = await AsyncStorage.getItem('user');
                             if (uString) {
                                 const user = JSON.parse(uString);
                                 const server = fetchAPI(user._id);
@@ -1506,473 +1174,495 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     })
                                     .then(res => {
                                         if (res.data.activity.markActivityAsRead) {
-                                            // setChannels(res.data.channel.findByUserId);
-                                            console.log("Mark as read", res.data.activity.markActivityAsRead);
-
-                                            server.query({
-                                                query: getActivity,
-                                                variables: {
-                                                    userId: user._id
-                                                }
-                                            }).then(res => {
-                                                if (res.data && res.data.activity.getActivity) {
-                                                    const tempActivity = res.data.activity.getActivity.reverse()
-                                                    let unread = 0
-                                                    tempActivity.map((act: any) => {
-                                                        if (act.status === 'unread') {
-                                                            unread++
-                                                        }
-                                                    })
-                                                    setUnreadCount(unread)
-                                                    setActivity(tempActivity)
-                                                }
-                                            })
-
+                                            server
+                                                .query({
+                                                    query: getActivity,
+                                                    variables: {
+                                                        userId: user._id
+                                                    }
+                                                })
+                                                .then(res => {
+                                                    if (res.data && res.data.activity.getActivity) {
+                                                        const tempActivity = res.data.activity.getActivity.reverse();
+                                                        let unread = 0;
+                                                        tempActivity.map((act: any) => {
+                                                            if (act.status === 'unread') {
+                                                                unread++;
+                                                            }
+                                                        });
+                                                        setUnreadCount(unread);
+                                                        setActivity(tempActivity);
+                                                    }
+                                                });
                                         }
                                     })
-                                    .catch(err => { });
+                                    .catch(err => {});
                             }
                         }}
                         style={{
-                            backgroundColor: "#efefef",
-                            overflow: "hidden",
+                            backgroundColor: '#efefef',
+                            overflow: 'hidden',
                             height: 35,
                             marginTop: 20,
                             alignSelf: 'center'
                         }}>
                         <Text
                             style={{
-                                textAlign: "center",
+                                textAlign: 'center',
                                 lineHeight: 34,
                                 color: '#006AFF',
                                 fontSize: 12,
                                 borderWidth: 1,
                                 borderColor: '#006AFF',
                                 paddingHorizontal: 20,
-                                fontFamily: "inter",
+                                fontFamily: 'inter',
                                 height: 35,
                                 width: 150,
                                 borderRadius: 15,
-                                textTransform: "uppercase"
+                                textTransform: 'uppercase'
                             }}>
                             Mark as Read
                         </Text>
                     </TouchableOpacity>
-                    : null
-            }
-        </View>)
-    }
+                ) : null}
+            </View>
+        );
+    };
 
-    const channelOptions = [{
-        value: 'My Events',
-        text: 'My Events'
-    }]
-
-    channels.map((channel: any) => {
-        channelOptions.push({
-            value: channel._id,
-            text: channel.name
-        })
-    })
-
+    // MAIN RETURN
     return (
         <Animated.View
             style={{
                 opacity: modalAnimation,
-                width: "100%",
-                height: width < 768 ? Dimensions.get("window").height - 104 : Dimensions.get("window").height - 52,
-                backgroundColor: tab === "Add" ? 'white' : '#efefef',
+                width: '100%',
+                height: width < 768 ? Dimensions.get('window').height - 104 : Dimensions.get('window').height - 52,
+                backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                overflow: 'scroll',
+                overflow: 'scroll'
             }}>
-            <View style={{
-                width: '100%', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                backgroundColor: tab === "Add" ? 'white' : '#efefef',
-                maxWidth: 900,
-                alignSelf: 'center'
-            }}>
-                <View style={{
-                    width: Dimensions.get('window').width < 768 ? '100%' : '100%',
-                    backgroundColor: tab === "Add" ? 'white' : '#efefef',
+            <View
+                style={{
+                    width: '100%',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                    maxWidth: 900,
+                    alignSelf: 'center'
                 }}>
+                <View
+                    style={{
+                        width: Dimensions.get('window').width < 768 ? '100%' : '100%',
+                        backgroundColor: tab === 'Add' ? 'white' : '#efefef'
+                    }}>
                     <View
                         style={{
-                            width: "100%",
-                            backgroundColor: tab === "Add" ? 'white' : '#efefef',
+                            width: '100%',
+                            backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
-                        }}
-                    >
+                        }}>
                         {loading ? (
                             <View
                                 style={{
-                                    width: "100%",
+                                    width: '100%',
                                     flex: 1,
-                                    justifyContent: "center",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    backgroundColor: tab === "Add" ? 'white' : '#efefef',
+                                    justifyContent: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                                     marginTop: 50,
                                     marginBottom: 50
                                 }}>
-                                <ActivityIndicator color={"#1F1F1F"} />
+                                <ActivityIndicator color={'#1F1F1F'} />
                             </View>
                         ) : (
                             <View
                                 style={{
-                                    backgroundColor: tab === "Add" ? 'white' : '#efefef',
-                                    width: "100%",
+                                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                                    width: '100%',
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
                                 }}>
                                 {renderTabs(tab)}
-                                {
-                                    !showAddEvent ?
-                                        <View
-                                            style={{
-                                                borderRadius: 1,
-                                                marginBottom: Dimensions.get('window').width < 768 ? 0 : 0,
-                                                borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
-                                                borderColor: '#efefef',
-                                                // overflow: 'hidden',
-                                                backgroundColor: tab === "Add" ? 'white' : '#efefef',
-                                                shadowColor: "#000",
-                                                shadowOffset: {
-                                                    width: tab === 'Add' ? 0 : 2,
-                                                    height: tab === 'Add' ? 0 : 2,
-                                                },
-                                                shadowOpacity: 0.1,
-                                                shadowRadius: tab === 'Add' ? 0 : 10,
-                                                zIndex: 500000,
-                                            }}
-                                        >
-                                            {
-                                                tab === tabs[0] ?
-                                                    <Eventcalendar
-                                                        key={Math.random()}
-                                                        view={viewAgenda}
-                                                        data={events}
-                                                        themeVariant="light"
-                                                        // height={}
+                                {!showAddEvent ? (
+                                    <View
+                                        style={{
+                                            borderRadius: 1,
+                                            marginBottom: Dimensions.get('window').width < 768 ? 0 : 0,
+                                            borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
+                                            borderColor: '#efefef',
+                                            backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                                            shadowColor: '#000',
+                                            shadowOffset: {
+                                                width: tab === 'Add' ? 0 : 2,
+                                                height: tab === 'Add' ? 0 : 2
+                                            },
+                                            shadowOpacity: 0.1,
+                                            shadowRadius: tab === 'Add' ? 0 : 10,
+                                            zIndex: 500000
+                                        }}>
+                                        {tab === tabs[0] ? (
+                                            <Eventcalendar
+                                                key={Math.random()}
+                                                view={viewAgenda}
+                                                data={events}
+                                                themeVariant="light"
+                                                onEventClick={onSelectEvent}
+                                                renderEventContent={renderEventContent}
+                                            />
+                                        ) : tab === tabs[1] ? (
+                                            <Eventcalendar
+                                                key={Math.random()}
+                                                view={viewSchedule}
+                                                data={events}
+                                                themeVariant="light"
+                                                onEventClick={onSelectEvent}
+                                                renderEventContent={renderEventContent}
+                                                star
+                                            />
+                                        ) : tab === tabs[2] ? (
+                                            <Eventcalendar
+                                                key={Math.random()}
+                                                view={viewCalendar}
+                                                data={events}
+                                                themeVariant="light"
+                                                onEventClick={onSelectEvent}
+                                                renderEventContent={renderEventContent}
+                                            />
+                                        ) : tab === tabs[3] ? (
+                                            <View
+                                                style={{
+                                                    width: Dimensions.get('window').width < 768 ? '100%' : '100%',
+                                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 0,
+                                                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 0,
+                                                    backgroundColor: 'white'
+                                                }}>
+                                                <View>
+                                                    {activity.map((act: any, index) => {
+                                                        const { cueId, channelId, createdBy, target, threadId } = act;
 
-                                                        onEventClick={onSelectEvent}
-                                                        renderEventContent={renderEventContent}
-                                                    /> : (
-                                                        tab === tabs[1] ?
-                                                            <Eventcalendar
-                                                                key={Math.random()}
-                                                                view={viewSchedule}
-                                                                data={events}
-                                                                themeVariant="light"
-                                                                // height={}
-                                                                onEventClick={onSelectEvent}
-                                                                renderEventContent={renderEventContent}
-                                                                star
-                                                            /> : (
-                                                                tab === tabs[2] ?
-                                                                    <Eventcalendar
-                                                                        key={Math.random()}
-                                                                        view={viewCalendar}
-                                                                        data={events}
-                                                                        themeVariant="light"
-                                                                        // height={}
-                                                                        onEventClick={onSelectEvent}
-                                                                        renderEventContent={renderEventContent}
-                                                                    /> : (
-                                                                        tab === tabs[3] ?
-                                                                            <View style={{
-                                                                                width: Dimensions.get('window').width < 768 ? '100%' : '100%',
-                                                                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 0,
-                                                                                paddingTop: Dimensions.get('window').width < 768 ? 0 : 0,
-                                                                                backgroundColor: 'white'
-                                                                            }}>
-                                                                                <View>
-                                                                                    {
-                                                                                        activity.map((act: any, index) => {
+                                                        if (props.activityChannelId !== '') {
+                                                            if (props.activityChannelId !== act.channelId) {
+                                                                return;
+                                                            }
+                                                        }
 
-                                                                                            const { cueId, channelId, createdBy, target, threadId } = act;
+                                                        const date = new Date(act.date);
 
-                                                                                            if (props.activityChannelId !== '') {
-                                                                                                if (props.activityChannelId !== act.channelId) {
-                                                                                                    return
-                                                                                                }
-                                                                                            }
+                                                        if (props.filterStart && props.filterEnd) {
+                                                            const start = new Date(props.filterStart);
+                                                            if (date < start) {
+                                                                return;
+                                                            }
+                                                            const end = new Date(props.filterEnd);
+                                                            if (date > end) {
+                                                                return;
+                                                            }
+                                                        }
 
-                                                                                            const date = new Date(act.date)
+                                                        return (
+                                                            <TouchableOpacity
+                                                                onPress={async () => {
+                                                                    const uString: any = await AsyncStorage.getItem(
+                                                                        'user'
+                                                                    );
+                                                                    if (uString) {
+                                                                        const user = JSON.parse(uString);
+                                                                        const server = fetchAPI('');
+                                                                        server.mutate({
+                                                                            mutation: markActivityAsRead,
+                                                                            variables: {
+                                                                                activityId: act._id,
+                                                                                userId: user._id,
+                                                                                markAllRead: false
+                                                                            }
+                                                                        });
+                                                                    }
 
-                                                                                            if (props.filterStart && props.filterEnd) {
-                                                                                                const start = new Date(props.filterStart)
-                                                                                                if (date < start) {
-                                                                                                    return
-                                                                                                }
-                                                                                                const end = new Date(props.filterEnd)
-                                                                                                if (date > end) {
-                                                                                                    return
-                                                                                                }
-                                                                                            }
+                                                                    // Opens the cue from the activity
+                                                                    if (
+                                                                        cueId !== null &&
+                                                                        cueId !== '' &&
+                                                                        channelId !== '' &&
+                                                                        createdBy !== '' &&
+                                                                        target === 'CUE'
+                                                                    ) {
+                                                                        props.openCueFromCalendar(
+                                                                            channelId,
+                                                                            cueId,
+                                                                            createdBy
+                                                                        );
+                                                                    }
 
+                                                                    if (target === 'DISCUSSION') {
+                                                                        if (threadId && threadId !== '') {
+                                                                            await AsyncStorage.setItem(
+                                                                                'openThread',
+                                                                                threadId
+                                                                            );
+                                                                        }
 
-                                                                                            return <TouchableOpacity
-                                                                                                onPress={async () => {
-                                                                                                    const uString: any = await AsyncStorage.getItem("user");
-                                                                                                    if (uString) {
-                                                                                                        const user = JSON.parse(uString);
-                                                                                                        const server = fetchAPI("");
-                                                                                                        server
-                                                                                                            .mutate({
-                                                                                                                mutation: markActivityAsRead,
-                                                                                                                variables: {
-                                                                                                                    activityId: act._id,
-                                                                                                                    userId: user._id,
-                                                                                                                    markAllRead: false
-                                                                                                                }
-                                                                                                            })
-                                                                                                            .then(res => {
-                                                                                                                if (res.data.activity.markActivityAsRead) {
-                                                                                                                    // setChannels(res.data.channel.findByUserId);
-                                                                                                                    console.log("Mark as read", res.data.activity.markActivityAsRead);
-                                                                                                                }
-                                                                                                            })
-                                                                                                            .catch(err => { });
-                                                                                                    }
+                                                                        props.openDiscussion(channelId);
+                                                                    }
 
-                                                                                                    // Opens the cue from the activity
-                                                                                                    if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
-                                                                                                        props.openCueFromCalendar(channelId, cueId, createdBy)
-                                                                                                    }
+                                                                    if (
+                                                                        target === 'CHANNEL_SUBSCRIBED' ||
+                                                                        target === 'CHANNEL_MODERATOR_ADDED' ||
+                                                                        target === 'CHANNEL_MODERATOR_REMOVED'
+                                                                    ) {
+                                                                        props.openChannel(channelId);
+                                                                    }
 
-                                                                                                    if (target === "DISCUSSION") {
+                                                                    if (target === 'Q&A') {
+                                                                        if (threadId && threadId !== '') {
+                                                                            await AsyncStorage.setItem(
+                                                                                'openThread',
+                                                                                threadId
+                                                                            );
+                                                                        }
 
-                                                                                                        if (threadId && threadId !== "") {
-                                                                                                            await AsyncStorage.setItem("openThread", threadId)
-                                                                                                        }
-
-
-                                                                                                        props.openDiscussion(channelId)
-
-
-                                                                                                    }
-
-                                                                                                    if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
-                                                                                                        props.openChannel(channelId)
-
-                                                                                                    }
-
-                                                                                                    if (target === "Q&A") {
-
-                                                                                                        if (threadId && threadId !== "") {
-                                                                                                            await AsyncStorage.setItem("openThread", threadId)
-                                                                                                        }
-
-                                                                                                        props.openQA(channelId, cueId, createdBy)
-                                                                                                    }
-
-                                                                                                }}
-                                                                                                style={{
-                                                                                                    flexDirection: 'row',
-                                                                                                    borderColor: '#efefef',
-                                                                                                    // borderRightWidth: 1,
-                                                                                                    borderBottomWidth: index === activity.length - 1 ? 0 : 1,
-                                                                                                    // minWidth: 600, // flex: 1,
-                                                                                                    width: '100%',
-                                                                                                    paddingVertical: 5,
-                                                                                                    backgroundColor: 'white',
-                                                                                                    borderLeftWidth: 3,
-                                                                                                    borderLeftColor: act.colorCode
-                                                                                                }}>
-                                                                                                <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 20 }}>
-                                                                                                    <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
-                                                                                                        {act.channelName}
-                                                                                                    </Text>
-                                                                                                    <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
-                                                                                                        {act.title} - {act.subtitle}
-                                                                                                    </Text>
-                                                                                                </View>
-                                                                                                <View style={{ backgroundColor: 'white', padding: 0, flexDirection: 'row', alignSelf: 'center', paddingRight: 10, alignItems: 'center' }} >
-                                                                                                    <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                        {act.status === 'unread' ?
-                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={18} /> : null}
-                                                                                                    </Text>
-                                                                                                    <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, fontWeight: 'bold' }} ellipsizeMode='tail'>
-                                                                                                        {emailTimeDisplay(act.date)}
-                                                                                                    </Text>
-                                                                                                    <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                        <Ionicons name='chevron-forward-outline' size={18} color='#006AFF' />
-                                                                                                    </Text>
-                                                                                                </View>
-                                                                                            </TouchableOpacity>
-                                                                                        })
-                                                                                    }
-                                                                                </View>
-                                                                            </View> : (
-                                                                                <View
-                                                                                    style={{
-                                                                                        // maxHeight: width < 768 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
-                                                                                        alignItems: 'center',
-                                                                                        backgroundColor: 'white',
-                                                                                        paddingHorizontal: width < 768 ? 20 : 0
-                                                                                    }}
-                                                                                >
-                                                                                    <View
-                                                                                        style={{
-                                                                                            width: '100%', maxWidth: 400, alignSelf: 'center'
-                                                                                        }}>
-                                                                                        <View style={{ width: '100%', maxWidth: 400 }}>
-                                                                                            <Text
-                                                                                                style={{
-                                                                                                    fontSize: 14,
-                                                                                                    // fontFamily: 'inter',
-                                                                                                    color: '#000000'
-                                                                                                }}>
-                                                                                                Name
-                                                                                            </Text>
-                                                                                            <TextInput
-                                                                                                value={title}
-                                                                                                placeholder={
-                                                                                                    ''
-                                                                                                }
-                                                                                                onChangeText={val => setTitle(val)}
-                                                                                                placeholderTextColor={"#1F1F1F"}
-                                                                                                required={true}
-                                                                                            />
-                                                                                        </View>
-                                                                                        <View style={{ width: '100%', maxWidth: 400 }}>
-                                                                                            <Text
-                                                                                                style={{
-                                                                                                    fontSize: 14,
-                                                                                                    // fontFamily: 'inter',
-                                                                                                    color: '#000000'
-                                                                                                }}>
-                                                                                                Description
-                                                                                            </Text>
-                                                                                            <TextInput
-                                                                                                value={description}
-                                                                                                placeholder=""
-                                                                                                onChangeText={val => setDescription(val)}
-                                                                                                placeholderTextColor={"#1F1F1F"}
-                                                                                            />
-                                                                                        </View>
-                                                                                    </View>
-                                                                                    {/* Put time here */}
-                                                                                    <View style={{ display: 'flex', width: '100%', maxWidth: 400 }} >
-                                                                                        <View
-                                                                                            style={{
-                                                                                                width: '100%',
-                                                                                                maxWidth: 400,
-                                                                                                paddingVertical: 15
-                                                                                            }}>
-                                                                                            <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
-                                                                                            {/* <DatePicker
-                                                                                                appearance={'subtle'}
-                                                                                                format="YYYY-MM-DD HH:mm"
-                                                                                                preventOverflow={true}
-                                                                                                value={start}
-                                                                                                onChange={(event: any) => {
-                                                                                                    const date = new Date(event);
-                                                                                                    const roundOffDate = roundSeconds(date)
-                                                                                                    setStart(roundOffDate);
-                                                                                                }}
-                                                                                                size={'xs'}
-                                                                                            /> */}
-                                                                                            <Datepicker
-                                                                                                controls={['date', 'time']}
-                                                                                                touchUi={true}
-                                                                                                theme="ios"
-                                                                                                value={start}
-                                                                                                themeVariant="light"
-                                                                                                // inputComponent="input"
-                                                                                                inputProps={{
-                                                                                                    placeholder: 'Select start...'
-                                                                                                }}
-                                                                                                onChange={(event: any) => {
-                                                                                                    const date = new Date(event.value);
-                                                                                                    const roundOffDate = roundSeconds(date)
-                                                                                                    setStart(roundOffDate);
-                                                                                                }}
-                                                                                                responsive={{
-                                                                                                    xsmall: {
-                                                                                                        controls: ['date', 'time'],
-                                                                                                        display: 'bottom',
-                                                                                                        touchUi: true
-                                                                                                    },
-                                                                                                    medium: {
-                                                                                                        controls: ['date', 'time'],
-                                                                                                        display: 'anchored',
-                                                                                                        touchUi: false
-                                                                                                    },
-                                                                                                }}
-                                                                                            />
-                                                                                        </View>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                width: '100%', maxWidth: 400,
-                                                                                                paddingVertical: 15
-                                                                                            }}>
-                                                                                            <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
-                                                                                            {/* <DatePicker
-                                                                                                format="YYYY-MM-DD HH:mm"
-                                                                                                preventOverflow={true}
-                                                                                                value={end}
-                                                                                                appearance={'subtle'}
-                                                                                                onChange={(event: any) => {
-                                                                                                    const date = new Date(event);
-                                                                                                    const roundOffDate = roundSeconds(date)
-                                                                                                    setEnd(roundOffDate);
-                                                                                                }}
-                                                                                                size={'xs'}
-                                                                                            /> */}
-                                                                                            <Datepicker
-                                                                                                controls={['date', 'time']}
-                                                                                                touchUi={true}
-                                                                                                theme="ios"
-                                                                                                value={end}
-                                                                                                themeVariant="light"
-                                                                                                // inputComponent="input"
-                                                                                                inputProps={{
-                                                                                                    placeholder: 'Select end...'
-                                                                                                }}
-                                                                                                onChange={(event: any) => {
-                                                                                                    const date = new Date(event.value);
-                                                                                                    const roundOffDate = roundSeconds(date)
-                                                                                                    setEnd(roundOffDate);
-                                                                                                }}
-                                                                                                responsive={{
-                                                                                                    xsmall: {
-                                                                                                        controls: ['date', 'time'],
-                                                                                                        display: 'bottom',
-                                                                                                        touchUi: true
-                                                                                                    },
-                                                                                                    medium: {
-                                                                                                        controls: ['date', 'time'],
-                                                                                                        display: 'anchored',
-                                                                                                        touchUi: false
-                                                                                                    },
-                                                                                                }}
-                                                                                            />
-                                                                                        </View>
-                                                                                    </View>
-                                                                                    <View
-                                                                                        style={{
-                                                                                            // borderBottomWidth: 1,
-                                                                                            paddingTop: 20,
-                                                                                            width: '100%', maxWidth: 400
-                                                                                        }}>
-                                                                                        {channels.length > 0 && !editEvent ? (
-                                                                                            <View>
-                                                                                                <View
-                                                                                                    style={{ width: "100%", paddingBottom: 10, }}>
-                                                                                                    <Text
-                                                                                                        style={{
-                                                                                                            fontSize: 14,
-                                                                                                            // fontFamily: 'inter',
-                                                                                                            color: '#000000'
-                                                                                                        }}>
-                                                                                                        Workspace
-                                                                                                    </Text>
-                                                                                                </View>
-                                                                                                <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#efefef' }}>
-                                                                                                    {/* <Menu
+                                                                        props.openQA(channelId, cueId, createdBy);
+                                                                    }
+                                                                }}
+                                                                style={{
+                                                                    flexDirection: 'row',
+                                                                    borderColor: '#efefef',
+                                                                    borderBottomWidth:
+                                                                        index === activity.length - 1 ? 0 : 1,
+                                                                    width: '100%',
+                                                                    paddingVertical: 5,
+                                                                    backgroundColor: 'white',
+                                                                    borderLeftWidth: 3,
+                                                                    borderLeftColor: act.colorCode
+                                                                }}>
+                                                                <View
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        backgroundColor: 'white',
+                                                                        paddingLeft: 20
+                                                                    }}>
+                                                                    <Text
+                                                                        style={{
+                                                                            fontSize: 15,
+                                                                            padding: 5,
+                                                                            fontFamily: 'inter',
+                                                                            marginTop: 5
+                                                                        }}
+                                                                        ellipsizeMode="tail">
+                                                                        {act.channelName}
+                                                                    </Text>
+                                                                    <Text
+                                                                        style={{
+                                                                            fontSize: 12,
+                                                                            padding: 5,
+                                                                            fontWeight: 'bold'
+                                                                        }}
+                                                                        ellipsizeMode="tail">
+                                                                        {act.title} - {act.subtitle}
+                                                                    </Text>
+                                                                </View>
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: 'white',
+                                                                        padding: 0,
+                                                                        flexDirection: 'row',
+                                                                        alignSelf: 'center',
+                                                                        paddingRight: 10,
+                                                                        alignItems: 'center'
+                                                                    }}>
+                                                                    <Text
+                                                                        style={{
+                                                                            fontSize: 13,
+                                                                            padding: 5,
+                                                                            lineHeight: 13
+                                                                        }}
+                                                                        ellipsizeMode="tail">
+                                                                        {act.status === 'unread' ? (
+                                                                            <Ionicons
+                                                                                name="alert-circle-outline"
+                                                                                color="#f94144"
+                                                                                size={18}
+                                                                            />
+                                                                        ) : null}
+                                                                    </Text>
+                                                                    <Text
+                                                                        style={{
+                                                                            fontSize: 12,
+                                                                            padding: 5,
+                                                                            lineHeight: 13,
+                                                                            fontWeight: 'bold'
+                                                                        }}
+                                                                        ellipsizeMode="tail">
+                                                                        {emailTimeDisplay(act.date)}
+                                                                    </Text>
+                                                                    <Text
+                                                                        style={{
+                                                                            fontSize: 13,
+                                                                            padding: 5,
+                                                                            lineHeight: 13
+                                                                        }}
+                                                                        ellipsizeMode="tail">
+                                                                        <Ionicons
+                                                                            name="chevron-forward-outline"
+                                                                            size={18}
+                                                                            color="#006AFF"
+                                                                        />
+                                                                    </Text>
+                                                                </View>
+                                                            </TouchableOpacity>
+                                                        );
+                                                    })}
+                                                </View>
+                                            </View>
+                                        ) : (
+                                            <View
+                                                style={{
+                                                    alignItems: 'center',
+                                                    backgroundColor: 'white',
+                                                    paddingHorizontal: width < 768 ? 20 : 0
+                                                }}>
+                                                <View
+                                                    style={{
+                                                        width: '100%',
+                                                        maxWidth: 400,
+                                                        alignSelf: 'center'
+                                                    }}>
+                                                    <View style={{ width: '100%', maxWidth: 400 }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                // fontFamily: 'inter',
+                                                                color: '#000000'
+                                                            }}>
+                                                            Name
+                                                        </Text>
+                                                        <TextInput
+                                                            value={title}
+                                                            placeholder={''}
+                                                            onChangeText={val => setTitle(val)}
+                                                            placeholderTextColor={'#1F1F1F'}
+                                                            required={true}
+                                                        />
+                                                    </View>
+                                                    <View style={{ width: '100%', maxWidth: 400 }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                // fontFamily: 'inter',
+                                                                color: '#000000'
+                                                            }}>
+                                                            Description
+                                                        </Text>
+                                                        <TextInput
+                                                            value={description}
+                                                            placeholder=""
+                                                            onChangeText={val => setDescription(val)}
+                                                            placeholderTextColor={'#1F1F1F'}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                {/* Put time here */}
+                                                <View style={{ display: 'flex', width: '100%', maxWidth: 400 }}>
+                                                    <View
+                                                        style={{
+                                                            width: '100%',
+                                                            maxWidth: 400,
+                                                            paddingVertical: 15
+                                                        }}>
+                                                        <Text style={styles.text}>
+                                                            {PreferredLanguageText('start')}
+                                                        </Text>
+                                                        <Datepicker
+                                                            controls={['date', 'time']}
+                                                            touchUi={true}
+                                                            theme="ios"
+                                                            value={start}
+                                                            themeVariant="light"
+                                                            // inputComponent="input"
+                                                            inputProps={{
+                                                                placeholder: 'Select start...'
+                                                            }}
+                                                            onChange={(event: any) => {
+                                                                const date = new Date(event.value);
+                                                                const roundOffDate = roundSeconds(date);
+                                                                setStart(roundOffDate);
+                                                            }}
+                                                            responsive={{
+                                                                xsmall: {
+                                                                    controls: ['date', 'time'],
+                                                                    display: 'bottom',
+                                                                    touchUi: true
+                                                                },
+                                                                medium: {
+                                                                    controls: ['date', 'time'],
+                                                                    display: 'anchored',
+                                                                    touchUi: false
+                                                                }
+                                                            }}
+                                                        />
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            width: '100%',
+                                                            maxWidth: 400,
+                                                            paddingVertical: 15
+                                                        }}>
+                                                        <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
+                                                        <Datepicker
+                                                            controls={['date', 'time']}
+                                                            touchUi={true}
+                                                            theme="ios"
+                                                            value={end}
+                                                            themeVariant="light"
+                                                            // inputComponent="input"
+                                                            inputProps={{
+                                                                placeholder: 'Select end...'
+                                                            }}
+                                                            onChange={(event: any) => {
+                                                                const date = new Date(event.value);
+                                                                const roundOffDate = roundSeconds(date);
+                                                                setEnd(roundOffDate);
+                                                            }}
+                                                            responsive={{
+                                                                xsmall: {
+                                                                    controls: ['date', 'time'],
+                                                                    display: 'bottom',
+                                                                    touchUi: true
+                                                                },
+                                                                medium: {
+                                                                    controls: ['date', 'time'],
+                                                                    display: 'anchored',
+                                                                    touchUi: false
+                                                                }
+                                                            }}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        paddingTop: 20,
+                                                        width: '100%',
+                                                        maxWidth: 400
+                                                    }}>
+                                                    {channels.length > 0 && !editEvent ? (
+                                                        <View>
+                                                            <View style={{ width: '100%', paddingBottom: 10 }}>
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 14,
+                                                                        // fontFamily: 'inter',
+                                                                        color: '#000000'
+                                                                    }}>
+                                                                    Workspace
+                                                                </Text>
+                                                            </View>
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: 'row',
+                                                                    display: 'flex',
+                                                                    backgroundColor: '#efefef'
+                                                                }}>
+                                                                {/* <Menu
                                                                                                         onSelect={(channelId: any) => {
                                                                                                             setChannelId(channelId)
                                                                                                         }}>
@@ -2012,104 +1702,115 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                             }
                                                                                                         </MenuOptions>
                                                                                                     </Menu> */}
-                                                                                                    <label style={{
-                                                                                                        width: '100%', maxWidth: 400, backgroundColor: 'white'
-                                                                                                    }}>
-                                                                                                        <Select
-                                                                                                            touchUi={true}
-                                                                                                            themeVariant="light"
-                                                                                                            value={selectedChannel}
-                                                                                                            onChange={(val: any) => {
+                                                                <label
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        maxWidth: 400,
+                                                                        backgroundColor: 'white'
+                                                                    }}>
+                                                                    <Select
+                                                                        touchUi={true}
+                                                                        themeVariant="light"
+                                                                        value={selectedChannel}
+                                                                        onChange={(val: any) => {
+                                                                            setSelectedChannel(val.value);
 
-                                                                                                                setSelectedChannel(val.value);
-
-                                                                                                                if (val.value === "My Events") {
-                                                                                                                    setChannelId('')
-                                                                                                                } else {
-                                                                                                                    setChannelId(val.value)
-                                                                                                                }
-                                                                                                            }}
-                                                                                                            responsive={{
-                                                                                                                small: {
-                                                                                                                    display: 'bubble'
-                                                                                                                },
-                                                                                                                medium: {
-                                                                                                                    touchUi: false,
-                                                                                                                }
-                                                                                                            }}
-                                                                                                            style={{
-                                                                                                                backgroundColor: '#efefef',
-                                                                                                            }}
-                                                                                                            data={channelOptions}
-                                                                                                        />
-                                                                                                    </label>
-                                                                                                </View>
-                                                                                            </View>
-                                                                                        ) : null}
-                                                                                        {renderEditChannelName()}
-                                                                                        {!editEvent && renderRecurringOptions()}
-                                                                                        {renderMeetingOptions()}
-                                                                                        {channelId !== "" && <Text style={{ fontSize: 11, color: '#000000', textTransform: 'uppercase', lineHeight: 20 }}>
-                                                                                            Attendances will only be captured for scheduled lectures.
-                                                                                        </Text>}
-                                                                                        {tab === 'Add' && !editEvent ? <View
-                                                                                            style={{
-                                                                                                width: '100%',
-                                                                                                flexDirection: "row",
-                                                                                                display: "flex",
-                                                                                                marginBottom: 10,
-                                                                                                paddingVertical: 25,
-                                                                                                // paddingLeft: 7
-                                                                                                justifyContent: 'center',
-                                                                                            }}>
-                                                                                            <TouchableOpacity
-                                                                                                style={{
-                                                                                                    backgroundColor: 'white',
-                                                                                                    overflow: 'hidden',
-                                                                                                    height: 35,
-                                                                                                    // marginTop: 15,
-                                                                                                    justifyContent: 'center',
-                                                                                                    flexDirection: 'row',
-                                                                                                }}
-                                                                                                onPress={() => handleCreate()}
-                                                                                                disabled={isCreatingEvents}>
-                                                                                                <Text
-                                                                                                    style={{
-                                                                                                        textAlign: 'center',
-                                                                                                        lineHeight: 34,
-                                                                                                        backgroundColor: '#006AFF',
-                                                                                                        color: 'white',
-                                                                                                        fontSize: 12,
-                                                                                                        borderColor: '#006AFF',
-                                                                                                        paddingHorizontal: 20,
-                                                                                                        borderWidth: 1,
-                                                                                                        fontFamily: 'inter',
-                                                                                                        height: 35,
-                                                                                                        // width: 100,
-                                                                                                        borderRadius: 15,
-                                                                                                        textTransform: 'uppercase'
-                                                                                                    }}>
-                                                                                                    {isCreatingEvents ? "..." : "CREATE"}
-                                                                                                </Text>
-                                                                                            </TouchableOpacity>
-                                                                                        </View> : null}
-                                                                                        {editEvent ? renderEditEventOptions() : null}
-                                                                                        {/* {editEvent ? renderDeleteEventOptions() : null} */}
-                                                                                    </View>
-                                                                                </View>
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            }
-                                        </View>
-                                        : null
-                                }
+                                                                            if (val.value === 'Home') {
+                                                                                setChannelId('');
+                                                                            } else {
+                                                                                setChannelId(val.value);
+                                                                            }
+                                                                        }}
+                                                                        responsive={{
+                                                                            small: {
+                                                                                display: 'bubble'
+                                                                            },
+                                                                            medium: {
+                                                                                touchUi: false
+                                                                            }
+                                                                        }}
+                                                                        style={{
+                                                                            backgroundColor: '#efefef'
+                                                                        }}
+                                                                        data={channelOptions}
+                                                                    />
+                                                                </label>
+                                                            </View>
+                                                        </View>
+                                                    ) : null}
+                                                    {renderEditChannelName()}
+                                                    {!editEvent && renderRecurringOptions()}
+                                                    {renderMeetingOptions()}
+                                                    {channelId !== '' && (
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 11,
+                                                                color: '#000000',
+                                                                textTransform: 'uppercase',
+                                                                lineHeight: 20
+                                                            }}>
+                                                            Attendances will only be captured for scheduled lectures.
+                                                        </Text>
+                                                    )}
+                                                    {tab === 'Add' && !editEvent ? (
+                                                        <View
+                                                            style={{
+                                                                width: '100%',
+                                                                flexDirection: 'row',
+                                                                display: 'flex',
+                                                                marginBottom: 10,
+                                                                paddingVertical: 25,
+                                                                // paddingLeft: 7
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    backgroundColor: 'white',
+                                                                    overflow: 'hidden',
+                                                                    height: 35,
+                                                                    // marginTop: 15,
+                                                                    justifyContent: 'center',
+                                                                    flexDirection: 'row'
+                                                                }}
+                                                                onPress={() => handleCreate()}
+                                                                disabled={isCreatingEvents}>
+                                                                <Text
+                                                                    style={{
+                                                                        textAlign: 'center',
+                                                                        lineHeight: 34,
+                                                                        backgroundColor: '#006AFF',
+                                                                        color: 'white',
+                                                                        fontSize: 12,
+                                                                        borderColor: '#006AFF',
+                                                                        paddingHorizontal: 20,
+                                                                        borderWidth: 1,
+                                                                        fontFamily: 'inter',
+                                                                        height: 35,
+                                                                        // width: 100,
+                                                                        borderRadius: 15,
+                                                                        textTransform: 'uppercase'
+                                                                    }}>
+                                                                    {isCreatingEvents ? '...' : 'CREATE'}
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    ) : null}
+                                                    {editEvent ? renderEditEventOptions() : null}
+                                                </View>
+                                            </View>
+                                        )}
+                                    </View>
+                                ) : null}
                             </View>
                         )}
                         {/* TEMPORARILY HIDDEN */}
-                        <View style={{ backgroundColor: "#efefef", display: 'none' }}>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
+                        {/* <View style={{ backgroundColor: '#efefef', display: 'none' }}>
+                            <View
+                                style={{
+                                    flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                    flex: 1,
+                                    paddingTop: 40
+                                }}>
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
@@ -2134,30 +1835,29 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     // borderWidth: 1,
                                     borderRadius: 1,
                                     borderColor: '#efefef',
-                                    marginBottom: 25,
+                                    marginBottom: 25
                                 }}
                                 height="450"
                                 src="https://www.youtube.com/embed/live_stream?channel=UC-Tkz11V97prOm8hJTSRMHw"
                                 frameBorder="0"
                                 allowFullScreen={true}
                             />
-                        </View>
+                        </View> */}
                     </View>
                 </View>
             </View>
-        </Animated.View >
+        </Animated.View>
     );
 };
 
 export default React.memo(CalendarX, (prev, next) => {
-    return _.isEqual(prev.cues, next.cues)
-})
-
+    return _.isEqual(prev.cues, next.cues);
+});
 
 const styles: any = StyleSheet.create({
     input: {
-        width: "100%",
-        borderBottomColor: "#efefef",
+        width: '100%',
+        borderBottomColor: '#efefef',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,
@@ -2166,25 +1866,22 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        // fontFamily: 'inter',
         color: '#000000',
         marginBottom: 10
     },
     allBlack: {
         fontSize: 12,
-        color: "#000000",
+        color: '#000000',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: "#efefef"
+        backgroundColor: '#efefef'
     },
     all1: {
         fontSize: 10,
         color: '#1F1F1F',
         height: 20,
-        // fontWeight: 'bold',
         paddingHorizontal: 7,
         backgroundColor: '#efefef',
-        // textTransform: 'uppercase',
         lineHeight: 20,
         fontFamily: 'inter',
         textAlign: 'center'
@@ -2193,11 +1890,7 @@ const styles: any = StyleSheet.create({
         fontSize: 10,
         color: '#006AFF',
         height: 20,
-        // borderRadius: 15,
-        // fontWeight: 'bold',
         paddingHorizontal: 7,
-        // backgroundColor: '#006AFF',
-        // textTransform: 'uppercase',
         lineHeight: 20,
         fontFamily: 'inter',
         textAlign: 'center'
@@ -2210,23 +1903,23 @@ const styles: any = StyleSheet.create({
     },
     allOutline: {
         fontSize: 12,
-        color: "#FFF",
+        color: '#FFF',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1,
-        backgroundColor: "#000000"
+        backgroundColor: '#000000'
     },
     picker: {
-        display: "flex",
-        justifyContent: "flex-start",
-        backgroundColor: "#efefef",
-        overflow: "hidden",
+        display: 'flex',
+        justifyContent: 'flex-start',
+        backgroundColor: '#efefef',
+        overflow: 'hidden',
         fontSize: 12,
-        textAlign: "center",
+        textAlign: 'center',
         borderWidth: 1,
         width: 150,
         height: 20,
-        alignSelf: "center",
+        alignSelf: 'center',
         marginTop: 0,
         borderRadius: 3
     }

@@ -1,81 +1,60 @@
+// REACT
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Dimensions, Keyboard, ActivityIndicator, Switch } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+
+// API
+import { fetchAPI } from '../graphql/FetchAPI';
+import {
+    doesChannelNameExist, findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
+} from '../graphql/QueriesAndMutations';
+
+// COMPONENTS
 import { Text, TouchableOpacity, View } from './Themed';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { TextInput } from './CustomTextInput';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fetchAPI } from '../graphql/FetchAPI';
-import Multiselect from 'multiselect-react-dropdown';
-import {
-    doesChannelNameExist, findChannelById, getOrganisation, getSubscribers,
-    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
-} from '../graphql/QueriesAndMutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CirclePicker } from "react-color";
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from 'react-native-popup-menu';
-import { Ionicons } from '@expo/vector-icons';
-
+// import {
+//     Menu,
+//     MenuOptions,
+//     MenuOption,
+//     MenuTrigger,
+// } from 'react-native-popup-menu';
 import { Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import Alert from './Alert';
-
 import TextareaAutosize from 'react-textarea-autosize';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
-
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [loadingOrg, setLoadingOrg] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [loadingChannelColor, setLoadingChannelColor] = useState(true);
-
     const [name, setName] = useState('')
     const [originalName, setOriginalName] = useState('')
     const [password, setPassword] = useState('')
     const [temporary, setTemporary] = useState(false)
     const [isUpdatingChannel, setIsUpdatingChannel] = useState(false)
-
     const [school, setSchool] = useState<any>(null)
-
     const [accessCode, setAccessCode] = useState('')
     const [description, setDescription] = useState('')
     const [isPublic, setIsPublic] = useState(false)
     const [tags, setTags] = useState('')
     const [copied, setCopied] = useState(false);
-
-
-    // Use to subscribe and unsubscribe users
     const [originalSubs, setOriginalSubs] = useState<any[]>([])
-
-    // Dropdown options for subscribers
     const [options, setOptions] = useState<any[]>([])
-
-    // Selected Subscribers
     const [selected, setSelected] = useState<any[]>([])
-
     const [owner, setOwner] = useState<any>({})
-
-    // Selected Moderators
     const [owners, setOwners] = useState<any[]>([])
-
-    // The Main channel owner (Hide from all lists)
     const [channelCreator, setChannelCreator] = useState('')
-
-    // Channel color
     const [colorCode, setColorCode] = useState("")
     const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
-
-    // Filters
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
-    const roles = ['student', 'instructor']
-
     const filterRoleOptions = [
         {
             value: 'All',
@@ -90,14 +69,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             text: 'Instructor'
         }
     ]
-
     const gradeOptions = grades.map((g: any) => {
         return {
             value: g,
             text: g
         }
     })
-
     const filterGradeOptions = [
         {
             value: 'All',
@@ -105,14 +82,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         },
         ...gradeOptions
     ]
-
     const sectionOptions = sections.map((s: any) => {
         return {
             value: s,
             text: s
         }
     })
-
     const filterSectionOptions = [
         {
             value: 'All',
@@ -120,18 +95,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         },
         ...sectionOptions
     ]
-
     const [activeRole, setActiveRole] = useState('All');
     const [activeGrade, setActiveGrade] = useState('All');
     const [activeSection, setActiveSection] = useState('All');
-
-    // Store all selected values for new mobiscroll multiselect
     const [selectedValues, setSelectedValues] = useState<any[]>([]);
     const [selectedModerators, setSelectedModerators] = useState<any[]>([]);
-
-    // Used to keep all users to filter
     const [allUsers, setAllUsers] = useState<any[]>([]);
-
     const [showDuplicateChannel, setShowDuplicateChannel] = useState(false);
     const [duplicateChannelName, setDuplicateChannelName] = useState("");
     const [duplicateChannelPassword, setDuplicateChannelPassword] = useState("");
@@ -139,12 +108,22 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [duplicateChannelTemporary, setDuplicateChannelTemporary] = useState(false);
     const [duplicateChannelSubscribers, setDuplicateChannelSubscribers] = useState(true);
     const [duplicateChannelModerators, setDuplicateChannelModerators] = useState(true);
+    const moderatorOptions = selectedValues.map((value: any) => {
+        const match = options.find((o: any) => {
+            return o.value === value;
+        })
 
+        return match
+    })
+
+    // HOOKS
+
+    /**
+     * @description Filter dropdown users based on Roles, Grades and Section
+     */
     useEffect(() => {
 
         let filteredUsers = [...allUsers];
-
-        // First filter by role
 
         if (activeRole !== "All") {
             const filterRoles = filteredUsers.filter((user: any) => {
@@ -192,28 +171,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             return 0;
         })
 
-        console.log("Sort", sort)
-
         setOptions(sort)
 
     }, [activeRole, activeGrade, activeSection, channelCreator])
 
-    // Main owner is filtered out with this useEffect
-    // useEffect(() => {
-    //     if (channelCreator !== "") {
-    //         const subscribers = [...selected]
-
-    //         const filterOutMainOwner = subscribers.filter((sub: any) => {
-    //             return sub.id !== channelCreator
-    //         })
-
-
-    //         setSelectedValues(filterOutOwner);
-
-    //         setSelected(filterOutMainOwner)
-    //     }
-    // }, [channelCreator])
-
+    /**
+     * @description Filter out channel Creator from the Subscribers dropdown
+     */
     useEffect(() => {
         if (channelCreator !== "") {
             const subscribers = [...selectedValues]
@@ -227,289 +191,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [channelCreator])
 
-    // Selected needs to hold all the values in an array 
-
-    const renderSubscriberFilters = () => {
-        return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
-            <View style={{ backgroundColor: 'white', }}>
-                <View style={{ backgroundColor: 'white', }}>
-                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                        <Select
-                            touchUi={true}
-                            value={activeRole}
-                            rows={3}
-                            themeVariant="light"
-                            onChange={(val: any) => {
-                                setActiveRole(val.value)
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble'
-                                },
-                                medium: {
-                                    touchUi: false
-                                }
-                            }}
-                            data={filterRoleOptions}
-                        />
-                    </label>
-                </View>
-            </View>
-
-            <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
-                    <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                            <Select
-                                touchUi={true}
-                                value={activeGrade}
-                                // rows={filterGradeOptions.length}
-                                themeVariant="light"
-                                onChange={(val: any) => {
-                                    setActiveGrade(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false
-                                    }
-                                }}
-                                data={filterGradeOptions}
-                            />
-                        </label>
-                    </View>
-                </View>
-                <View style={{ backgroundColor: 'white', }}>
-                    <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
-                            <Select
-                                touchUi={true}
-                                value={activeSection}
-                                // rows={sectionOptions.length}
-                                themeVariant="light"
-                                onChange={(val: any) => {
-                                    setActiveSection(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false
-                                    }
-                                }}
-                                data={filterSectionOptions}
-                            />
-                        </label>
-                    </View>
-                </View>
-            </View>
-
-        </View>)
-    }
-
-    const handleDuplicate = useCallback(() => {
-
-        if (duplicateChannelName.toString().trim() === '') {
-            alert('Enter duplicate channel name.')
-            return
-        }
-
-        if (duplicateChannelColor === "") {
-            alert('Pick duplicate channel color.')
-            return
-        }
-
-        const server = fetchAPI('')
-        server.query({
-            query: doesChannelNameExist,
-            variables: {
-                name: duplicateChannelName.trim()
-            }
-        }).then(async res => {
-            if (res.data && (res.data.channel.doesChannelNameExist !== true)) {
-                server.mutate({
-                    mutation: duplicateChannel,
-                    variables: {
-                        channelId: props.channelId,
-                        name: duplicateChannelName.trim(),
-                        password: duplicateChannelPassword,
-                        colorCode: duplicateChannelColor,
-                        temporary: duplicateChannelTemporary,
-                        duplicateSubscribers: duplicateChannelSubscribers,
-                        duplicateOwners: duplicateChannelModerators
-                    }
-                }).then((res2) => {
-                    if (res2.data && res2.data.channel.duplicate === "created") {
-                        alert("Channel duplicated successfully.")
-                        // Refresh Subscriptions for user
-                        props.refreshSubscriptions()
-                        props.closeModal()
-                    }
-                })
-            }
-        })
-            .catch((e) => {
-                alert("Something went wrong. Try again.")
-            })
-
-
-
-
-
-    }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId,
-        duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
-        duplicateChannelModerators])
-
-    const handleResetCode = useCallback(() => {
-
-        setCopied(false)
-
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: resetAccessCode,
-            variables: {
-                channelId: props.channelId
-            }
-        }).then(async res => {
-            
-            if (res.data && res.data.channel.resetAccessCode) {
-                setAccessCode(res.data.channel.resetAccessCode)
-            } else {
-                Alert("Could not reset code.")
-            }
-
-        }).catch((e) => {
-            console.log(e);
-            Alert("Could not reset code.")
-        })
-        
-    }, [props.channelId])
-
-    const handleSubmit = useCallback(() => {
-        if (name.toString().trim() === '') {
-            alert('Enter channel name.')
-            return
-        }
-
-        let moderatorsPresentAsSubscribers = true;
-
-        selectedModerators.map((owner: any) => {
-            const presentInSubscriber = selectedValues.find((sub: any) => {
-                return owner === sub;
-            })
-
-            if (!presentInSubscriber) {
-                moderatorsPresentAsSubscribers = false
-            }
-        })
-
-        if (!moderatorsPresentAsSubscribers) {
-            alert("A moderator must be a subscriber");
-            return;
-        }
-
-        setIsUpdatingChannel(true);
-
-        const server = fetchAPI('')
-        
-                server.mutate({
-                    mutation: updateChannel,
-                    variables: {
-                        name: name.trim(),
-                        password,
-                        channelId: props.channelId,
-                        temporary,
-                        owners: selectedModerators,
-                        colorCode
-                    }
-                }).then(res => {
-                    if (res.data && res.data.channel.update) {
-                        // added subs
-                        selectedValues.map((sub: any) => {
-                            const og = originalSubs.find((o: any) => {
-                                return o.id === sub
-                            })
-                            if (!og) {
-
-                                console.log("To Add User", sub)
-                                server.mutate({
-                                    mutation: subscribe,
-                                    variables: {
-                                        name: name.trim(),
-                                        password: password,
-                                        userId: sub
-                                    }
-                                })
-                            }
-                        })
-                        // removed subs
-                        originalSubs.map((o: any) => {
-
-                            if (o.id === channelCreator) return;
-
-                            const og = selectedValues.find((sub: any) => {
-                                return o.id === sub
-                            })
-
-                            if (!og) {
-                                console.log("To Remove User", o.id)
-                                server.mutate({
-                                    mutation: unsubscribe,
-                                    variables: {
-                                        channelId: props.channelId,
-                                        keepContent: true,
-                                        userId: o.id
-                                    }
-                                })
-                            }
-                        })
-                        setIsUpdatingChannel(false);
-
-                        alert("Channel updated successfully.")
-                        setOriginalSubs([])
-
-                        // need to refresh channel subscriptions since name will be updated
-
-                        props.closeModal()
-                    } else {
-                        setIsUpdatingChannel(false);
-                        alert("Something went wrong. Try again.")
-                    }
-                }).catch(err => {
-                    newFunction()(err)
-                    setIsUpdatingChannel(false);
-                    alert("Something went wrong. Try again.")
-                })
-            
-    }, [name, password, props.channelId, options, originalSubs, owners,
-        temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
-
-    const handleDelete = useCallback(() => {
-        const server = fetchAPI('')
-        const subs = JSON.parse(JSON.stringify(originalSubs))
-        subs.push(owner)
-        subs.map((o: any) => {
-            server.mutate({
-                mutation: unsubscribe,
-                variables: {
-                    channelId: props.channelId,
-                    keepContent: false,
-                    userId: o.id
-                }
-            })
-        })
-        Alert("Deleted Channel successfully.")
-        props.closeModal()
-        // Force reload
-        // window.location.reload();
-        props.refreshSubscriptions()
-    }, [props.channelId, originalSubs, owner])
-
-    // console.log("School", school);
-
+    /**
+     * @description Fetches all the data for the channel 
+     */
     useEffect(() => {
         (
             async () => {
@@ -572,7 +256,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
                                             setTemporary(res.data.channel.findById.temporary ? true : false)
                                             setChannelCreator(res.data.channel.findById.channelCreator)
-
                                             setIsPublic(res.data.channel.findById.isPublic ? true : false)
                                             setDescription(res.data.channel.findById.description)
                                             setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : [])
@@ -595,12 +278,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     return user.value !== res.data.channel.findById.channelCreator
                                                 })
 
-
                                                 const mod = filterOutMainOwner.map((user: any) => user.value)
 
                                                 setOwners(filterOutMainOwner)
-
-                                                console.log("Selected owners", filterOutMainOwner)
 
                                                 setSelectedModerators(mod)
 
@@ -704,7 +384,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     id: item._id
                                 })
 
-                                // add the user always 
                             })
 
                             console.log("Options", tempUsers)
@@ -744,6 +423,294 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [props.channelId, props.user])
 
+    /**
+     * @description Handles duplicating channel
+     */
+    const handleDuplicate = useCallback(() => {
+
+        if (duplicateChannelName.toString().trim() === '') {
+            alert('Enter duplicate channel name.')
+            return
+        }
+
+        if (duplicateChannelColor === "") {
+            alert('Pick duplicate channel color.')
+            return
+        }
+
+        const server = fetchAPI('')
+        server.query({
+            query: doesChannelNameExist,
+            variables: {
+                name: duplicateChannelName.trim()
+            }
+        }).then(async res => {
+            if (res.data && (res.data.channel.doesChannelNameExist !== true)) {
+                server.mutate({
+                    mutation: duplicateChannel,
+                    variables: {
+                        channelId: props.channelId,
+                        name: duplicateChannelName.trim(),
+                        password: duplicateChannelPassword,
+                        colorCode: duplicateChannelColor,
+                        temporary: duplicateChannelTemporary,
+                        duplicateSubscribers: duplicateChannelSubscribers,
+                        duplicateOwners: duplicateChannelModerators
+                    }
+                }).then((res2) => {
+                    if (res2.data && res2.data.channel.duplicate === "created") {
+                        alert("Channel duplicated successfully.")
+                        // Refresh Subscriptions for user
+                        props.refreshSubscriptions()
+                        props.closeModal()
+                    }
+                })
+            }
+        })
+            .catch((e) => {
+                alert("Something went wrong. Try again.")
+            })
+
+    }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId,
+        duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
+        duplicateChannelModerators])
+
+    /**
+     * @description Reset access code for channel
+     */
+    const handleResetCode = useCallback(() => {
+
+        setCopied(false)
+
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: resetAccessCode,
+            variables: {
+                channelId: props.channelId
+            }
+        }).then(async res => {
+            
+            if (res.data && res.data.channel.resetAccessCode) {
+                setAccessCode(res.data.channel.resetAccessCode)
+            } else {
+                Alert("Could not reset code.")
+            }
+
+        }).catch((e) => {
+            console.log(e);
+            Alert("Could not reset code.")
+        })
+        
+    }, [props.channelId])
+
+    /**
+     * @description Handle updating channel
+     */
+    const handleSubmit = useCallback(() => {
+        if (name.toString().trim() === '') {
+            alert('Enter channel name.')
+            return
+        }
+
+        let moderatorsPresentAsSubscribers = true;
+
+        selectedModerators.map((owner: any) => {
+            const presentInSubscriber = selectedValues.find((sub: any) => {
+                return owner === sub;
+            })
+
+            if (!presentInSubscriber) {
+                moderatorsPresentAsSubscribers = false
+            }
+        })
+
+        if (!moderatorsPresentAsSubscribers) {
+            alert("A moderator must be a subscriber");
+            return;
+        }
+
+        setIsUpdatingChannel(true);
+
+        const server = fetchAPI('')
+        
+                server.mutate({
+                    mutation: updateChannel,
+                    variables: {
+                        name: name.trim(),
+                        password,
+                        channelId: props.channelId,
+                        temporary,
+                        owners: selectedModerators,
+                        colorCode
+                    }
+                }).then(res => {
+                    if (res.data && res.data.channel.update) {
+                        // added subs
+                        selectedValues.map((sub: any) => {
+                            const og = originalSubs.find((o: any) => {
+                                return o.id === sub
+                            })
+                            if (!og) {
+
+                                console.log("To Add User", sub)
+                                server.mutate({
+                                    mutation: subscribe,
+                                    variables: {
+                                        name: name.trim(),
+                                        password: password,
+                                        userId: sub
+                                    }
+                                })
+                            }
+                        })
+                        // removed subs
+                        originalSubs.map((o: any) => {
+
+                            if (o.id === channelCreator) return;
+
+                            const og = selectedValues.find((sub: any) => {
+                                return o.id === sub
+                            })
+
+                            if (!og) {
+                                console.log("To Remove User", o.id)
+                                server.mutate({
+                                    mutation: unsubscribe,
+                                    variables: {
+                                        channelId: props.channelId,
+                                        keepContent: true,
+                                        userId: o.id
+                                    }
+                                })
+                            }
+                        })
+                        setIsUpdatingChannel(false);
+
+                        alert("Channel updated successfully.")
+                        setOriginalSubs([])
+
+                        // need to refresh channel subscriptions since name will be updated
+
+                        props.closeModal()
+                    } else {
+                        setIsUpdatingChannel(false);
+                        alert("Something went wrong. Try again.")
+                    }
+                }).catch(err => {
+                    setIsUpdatingChannel(false);
+                    alert("Something went wrong. Try again.")
+                })
+            
+    }, [name, password, props.channelId, options, originalSubs, owners,
+        temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
+
+    /**
+     * @description Handle delete channel (Note: Only temporary channels can be deleted)
+     */
+    const handleDelete = useCallback(() => {
+        const server = fetchAPI('')
+        const subs = JSON.parse(JSON.stringify(originalSubs))
+        subs.push(owner)
+        subs.map((o: any) => {
+            server.mutate({
+                mutation: unsubscribe,
+                variables: {
+                    channelId: props.channelId,
+                    keepContent: false,
+                    userId: o.id
+                }
+            })
+        })
+        Alert("Deleted Channel successfully.")
+        props.closeModal()
+        // Force reload
+        props.refreshSubscriptions()
+    }, [props.channelId, originalSubs, owner])
+
+    // FUNCTIONS 
+
+    /**
+	* @description Renders filters for Subscribers dropdown 
+	*/
+    const renderSubscriberFilters = () => {
+        return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
+            <View style={{ backgroundColor: 'white', }}>
+                <View style={{ backgroundColor: 'white', }}>
+                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                        <Select
+                            touchUi={true}
+                            value={activeRole}
+                            rows={3}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                setActiveRole(val.value)
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false
+                                }
+                            }}
+                            data={filterRoleOptions}
+                        />
+                    </label>
+                </View>
+            </View>
+
+            <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
+                    <View style={{ backgroundColor: 'white', }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeGrade}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveGrade(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterGradeOptions}
+                            />
+                        </label>
+                    </View>
+                </View>
+                <View style={{ backgroundColor: 'white', }}>
+                    <View style={{ backgroundColor: 'white', }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeSection}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveSection(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterSectionOptions}
+                            />
+                        </label>
+                    </View>
+                </View>
+            </View>
+
+        </View>)
+    }
+
     if (loadingOrg || loadingUsers || loadingChannelColor) {
         return <View
             style={{
@@ -759,6 +726,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>
     }
 
+
+    // RENDER VIEW FOR CHANNEL DUPLICATION
 
     if (showDuplicateChannel) {
         return (<View style={{
@@ -805,8 +774,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             fontSize: 20,
                             paddingBottom: 20,
                             fontFamily: 'inter',
-                            // textTransform: "uppercase",
-                            // paddingLeft: 10,
                             flex: 1,
                             lineHeight: 25
                         }}>
@@ -841,6 +808,36 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 footerMessage={'case sensitive'}
                             />
                         </View>
+                        {
+                            !school ?
+                            (<View style={{ backgroundColor: 'white' }}>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: '#000000'
+                                }}>
+                                    Description
+                                </Text>
+                                <TextareaAutosize
+                                value={description}
+                                style={{
+                                    width: "100%",
+                                    maxWidth: 500,
+                                    borderBottom: '1px solid #efefef',
+                                    fontSize: 14,
+                                    paddingTop: 13,
+                                    paddingBottom: 13,
+                                    marginTop: 12,
+                                    marginBottom: 20,
+                                    borderRadius: 1,
+
+                                }}
+                                minRows={2}
+                                placeholder={""}
+                                onChange={(e: any) => setDescription(e.target.value)}
+                                />
+                            </View>
+                            ) : null
+                        }
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14, 
@@ -927,7 +924,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View
                                     style={{
                                         width: "100%",
-                                        // paddingTop: 40,
                                         paddingBottom: 15,
                                         backgroundColor: "white"
                                     }}>
@@ -940,8 +936,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: "white",
                                         width: "100%",
-                                        // height: 40,
-                                        // marginHorizontal: 10
                                     }}>
                                     <ReactTagInput 
                                         tags={tags} 
@@ -1051,8 +1045,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 : null
                         }
 
-
-
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                             <TouchableOpacity
                                 onPress={() => handleDuplicate()}
@@ -1087,16 +1079,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }
 
-    console.log("Selected Moderators", selectedModerators);
-
-    const moderatorOptions = selectedValues.map((value: any) => {
-        const match = options.find((o: any) => {
-            return o.value === value;
-        })
-
-        return match
-    })
-
+    // MAIN RETURN 
     return (
         <View style={{
             borderLeftWidth: 3,
@@ -1128,8 +1111,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 Access Code
                             </Text>
 
-                            
-                            
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10,  }}>
 
                                 <Text style={{
@@ -1161,8 +1142,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </TouchableOpacity>
 
                                 </View>
-
-                               
 
                             </View>
 
@@ -1278,7 +1257,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View
                                     style={{
                                         width: "100%",
-                                        // paddingTop: 40,
                                         paddingBottom: 15,
                                         backgroundColor: "white"
                                     }}>
@@ -1291,8 +1269,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: "white",
                                         width: "100%",
-                                        // height: 40,
-                                        // marginHorizontal: 10
                                     }}>
                                     <ReactTagInput 
                                         tags={tags} 
@@ -1320,40 +1296,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {school ? renderSubscriberFilters() : null}
                         <View style={{
                             flexDirection: 'column', marginTop: 25,
-                            // overflow: 'scroll'
                         }}>
                             <View style={{ height: 'auto', maxWidth: 320, width: '100%' }}>
-                                {/* <Multiselect
-                                    placeholder='Select...'
-                                    displayValue='name'
-                                    // key={userDropdownOptions.toString()}
-                                    style={{
-                                        multiselectContainer: { // To change css for option container 
-                                            minHeight: 200
-                                        }
-                                    }}
-                                    options={options} // Options to display in the dropdown
-                                    selectedValues={selected} // Preselected value to persist in dropdown
-                                    onSelect={(e, f) => {
-                                        setSelected(e);
-                                        return true
-                                    }} // Function will trigger on select event
-                                    onRemove={(e, f) => {
-                                        // If remove as subscriber and user is part of moderators, then remove from moderators
-
-                                        const currModerators = [...owners];
-
-                                        const filterOutRemovedSubscriber = currModerators.filter((user: any) => {
-                                            return user.id !== f.id
-                                        })
-
-                                        setOwners(filterOutRemovedSubscriber)
-
-                                        setSelected(e);
-                                        return true
-                                    }}
-                                /> */}
-
                                 <div style={{ width: '100%', maxWidth: 320 }} >
                                     <label style={{ width: '100%', maxWidth: 320 }}>
                                         <Select
@@ -1364,7 +1308,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             inputClass="mobiscrollCustomMultiInput"
                                             placeholder="Select..."
                                             touchUi={true}
-                                            // minWidth={[60, 320]}
                                             value={selectedValues}
                                             data={options}
                                             onChange={(val: any) => {
@@ -1383,8 +1326,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     touchUi: false,
                                                 }
                                             }}
-                                            // minWidth={[60, 320]}
-                                        // minWidth={[60, 320]}
                                         />
                                     </label>
                                 </div>
@@ -1396,44 +1337,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                             Editors
                         </Text>
-                        {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                            <View style={{ width: '90%', height: 'auto' }}>
-                                <Multiselect
-                                    placeholder='Select...'
-                                    displayValue='name'
-                                    // key={userDropdownOptions.toString()}
-                                    // style={{ width: '100%', color: '#202025', 
-                                    //     optionContainer: { // To change css for option container 
-                                    //         zIndex: 9999
-                                    //     }
-                                    // }}
-                                    style={{
-                                        multiselectContainer: { // To change css for option container 
-                                            minHeight: 100
-                                        }
-                                    }}
-                                    options={selected} // Options to display in the dropdown
-                                    selectedValues={owners} // Preselected value to persist in dropdown
-                                    onSelect={(e, f) => {
-                                        setOwners(e);
-                                        return true
-                                    }} // Function will trigger on select event
-                                    onRemove={(e, f) => {
-                                        setOwners(e);
-                                        return true
-                                    }}
-                                />
-                            </View>
-                        </View> */}
 
                         <label style={{ width: '100%', maxWidth: 320 }}>
                             <Select
                                 themeVariant="light"
                                 select="multiple"
                                 selectMultiple={true}
-                                // group={true}
-                                // groupLabel="&nbsp;"
-                                // minWidth={[60, 320]}
                                 placeholder="Select..."
                                 inputClass="mobiscrollCustomMultiInput"
                                 value={selectedModerators}
@@ -1654,6 +1563,3 @@ const styles = StyleSheet.create({
     },
 });
 
-function newFunction() {
-    return console.log;
-}

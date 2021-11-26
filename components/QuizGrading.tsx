@@ -22,38 +22,40 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [comment, setComment] = useState(props.comment ? props.comment : "");
     const [headers, setHeaders] = useState<any>(props.headers)
 
+    // HOOKS
 
+    /**
+     * @description Set headers from Props
+     */
     useEffect(() => {
-
         setHeaders(props.headers);
-        // setInstructions(props.instructions);
-
     }, [props.headers])
 
 
+    /**
+     * @description Loads Scores and Comments from props
+     */
     useEffect(() => {
         let currentScore = 0;
         props.solutions.problemScores.forEach((score: any) => {
             currentScore += Number(score)
         })
         setCurrentScore(currentScore);
-
         setSolutions(props.solutions.solutions)
         setProblemScores(props.solutions.problemScores)
         setProblemComments(props.solutions.problemComments ? props.solutions.problemComments : [])
 
         if (props.solutions.solutions && !props.solutions.problemComments) {
             let comments: any[] = [];
-
             props.solutions.solutions.forEach((sol: any) => comments.push(""));
-
             setProblemComments(comments);
-
         }
-       
 
     }, [props.solutions])
 
+    /**
+     * @description Calculates total possible score for quiz
+     */
     useEffect(() => {
         let total = 0;
         props.problems.forEach((problem: any) => {
@@ -62,6 +64,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setTotalPossible(total);
     }, [props.problems])
 
+    /**
+     * @description Sets current score and calculates percentage
+     */
     useEffect(() => {
         let currentScore = 0;
         problemScores.forEach((score: any) => {
@@ -76,6 +81,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     }, [problemScores, totalPossible])
 
+    // FUNCTIONS 
+
+    /**
+     * @description Helper method to calculate time difference between two times
+     */
     const diff_seconds = (dt2: any, dt1: any) => {
 
         const diff = dt2.getTime() - dt1.getTime();
@@ -84,6 +94,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         return Math.abs(Seconds_from_T1_to_T2);
     };
 
+    /**
+     * @description Renders Audio/Video player
+     */
     const renderAudioVideoPlayer = (url: string, type: string) => {
         return <ReactPlayer
         url={url}
@@ -97,7 +110,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       />
     }
 
-
+    /**
+     * @description Renders Attempt history for Quiz
+     */
     const renderAttemptHistory = () => {
 
         return (<View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '60%', marginTop: 40, marginBottom: 80 }}>
@@ -189,6 +204,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         </View>)
     }
 
+    /**
+     * @description Renders Header for question at index
+     */
     const renderHeader = (index: number) => {
         if (index in headers) {
             return (<Text style={{ width: '100%', marginBottom: 30, marginTop: 70, fontSize: 14, fontWeight: "600" }}>
@@ -197,12 +215,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
         return null;
     }
-
-    let totalPoints = 0;
-
-    problems.map((problem: any) => {
-        totalPoints += Number(problem.points)
-    })
 
     if (props.loading) return (<View
         style={{
@@ -216,6 +228,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <ActivityIndicator color={"#1F1F1F"} />
     </View>)
 
+    // MAIN RETURN
+    
     return (
         <View style={{
             width: '100%',
@@ -542,7 +556,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }}>
 
                 {
-                    props.isOwner && props.isV1Quiz  && props.currentQuizAttempt !== props.activeQuizAttempt ?
+                    props.isOwner && props.currentQuizAttempt !== props.activeQuizAttempt ?
                     <TouchableOpacity
                     onPress={() => props.modifyActiveQuizAttempt()}
                     style={{

@@ -1,39 +1,40 @@
+// REACT
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, Dimensions, TextInput } from 'react-native';
-import { View, Text, TouchableOpacity } from './Themed';
+import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
+import * as FileSaver from 'file-saver';
+import XLSX from "xlsx"
+
+// COMPONENTS
+import { View, Text, TouchableOpacity } from './Themed';
+import { TextInput as CustomTextInput } from "../components/CustomTextInput"
+
+// HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-import XLSX from "xlsx"
-import * as FileSaver from 'file-saver';
-// import { PieChart } from 'react-native-svg-charts'
-import { Chart } from "react-google-charts";
 
-import {
-    LineChart,
-    BarChart,
-    PieChart
-} from "react-native-chart-kit";
-import { Ionicons } from '@expo/vector-icons';
-import { TextInput as CustomTextInput } from "../components/CustomTextInput"
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores))
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
-    const unparsedSubmissionStatistics: any[] = JSON.parse(JSON.stringify(props.submissionStatistics))
     const [scores, setScores] = useState<any[]>(unparsedScores)
     const [cues] = useState<any[]>(unparsedCues.sort((a: any, b: any) => {
         return a.deadline < b.deadline ? -1 : 1
     }))
     const styles = stylesObject(props.isOwner)
-    const [submissionStatistics, setSubmissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
     const [exportAoa, setExportAoa] = useState<any[]>()
     const [activeCueId, setActiveCueId] = useState("")
     const [activeUserId, setActiveUserId] = useState("")
     const [activeScore, setActiveScore] = useState("");
     const [studentSearch, setStudentSearch] = useState("");
 
+    // HOOKS 
+
+    /**
+     * @description Filter users by search
+     */
     useEffect(() => {
         if (studentSearch === "") {
             setScores(JSON.parse(JSON.stringify(props.scores)))
@@ -50,32 +51,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
     }, [studentSearch])
 
-    useEffect(() => {
-
-        const filterUnreleased = submissionStatistics.filter((stat: any) => {
-            const { cueId } = stat;
-
-            const findCue = cues.find((u: any) => {
-                return u._id.toString() === cueId.toString();
-            })
-
-            const { cue, releaseSubmission } = findCue;
-
-            if (!releaseSubmission) {
-                return false;
-            }
-
-            return true
-
-        })
-
-        setSubmissionStatistics(filterUnreleased)
-
-    }, [cues, props.submissionStatistics])
-
-    // Statistics
-    const [showStatistics, setShowStatistics] = useState(false);
-
+    /**
+     * @description Prepare export data for Grades
+     */
     useEffect(() => {
 
         if (props.scores.length === 0 || cues.length === 0) {
@@ -141,6 +119,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }, [scores, cues])
 
+    /**
+     * @description Handles exporting of grades into Spreadsheet
+     */
     const exportGrades = () => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
@@ -154,6 +135,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
+    /**
+     * @description Handles modifying grade
+     */
     const modifyGrade = () => {
         props.modifyGrade(activeCueId, activeUserId, activeScore);
         setActiveCueId('')
@@ -161,30 +145,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setActiveScore('')
     }
 
-    const renderGradeStatsTabs = () => {
+    /**
+     * @description Renders export button
+     */
+    const renderExportButton = () => {
         return (<View style={{ flexDirection: "row", backgroundColor: '#efefef' }}>
-            {/* <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowStatistics(false);
-                }}>
-                <Text style={!showStatistics ? styles.allGrayFill : styles.all}>
-                    Scores
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowStatistics(true);
-                }}>
-                <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
-            </TouchableOpacity> */}
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%', backgroundColor: '#efefef', marginBottom: 20 }}>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
                     <TouchableOpacity
@@ -195,7 +160,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             backgroundColor: '#efefef',
                             overflow: 'hidden',
                             height: 35,
-                            // marginTop: 15,
                             justifyContent: 'center',
                             flexDirection: 'row'
                         }}>
@@ -209,11 +173,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             fontFamily: 'inter',
                             height: 35,
                             borderWidth: 1,
-                            // width: 100,
                             borderRadius: 15,
                             textTransform: 'uppercase'
                         }}>
-                            DOWNLOAD
+                            EXPORT
                         </Text>
                     </TouchableOpacity>
                 }
@@ -221,167 +184,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         </View>)
     }
 
-    const screenWidth = Dimensions.get("window").width;
-
-    const renderStatistics = () => {
-
-
-        const mapCuesData: any = {};
-
-        const mapCuesCounts: any = {};
-
-        const mapCuesStatistics: any = {};
-
-
-        cues.map((cue: any) => {
-
-            const filteredStatistic = submissionStatistics.filter((stat: any) => stat.cueId === cue._id)
-
-            if (filteredStatistic.length === 0) return;
-
-            const { min, max, mean, median, std, submissionCount } = filteredStatistic[0];
-
-            mapCuesStatistics[cue._id] = filteredStatistic[0]
-            mapCuesData[cue._id] = [max, min, mean, median, std]
-            mapCuesCounts[cue._id] = submissionCount
-
-        })
-
-
-        const statisticsLabels = ["Max", "Min", "Mean", "Median", "Std Dev"]
-
-
-        const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7)
-
-        // PIE CHART FOR GRADE WEIGHTS
-
-        // ADD MORE COLORS HERE LATER
-        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#35AC78", "#f95d6a", "#ff7c43", "#ffa600"]
-
-        const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
-
-        const pieChartData = nonZeroGradeWeight.map((cue: any, index: number) => {
-
-            const { title } = htmlStringParser(cue.cue)
-
-            let color = "";
-
-            if (index < colors.length) {
-                color = colors[index]
-            } else {
-                // Fallack
-                color = randomColor()
-            }
-
-            return {
-                gradeWeight: cue.gradeWeight,
-                name: title,
-                color,
-                legendFontColor: "#7F7F7F",
-                legendfontSize: 14,
-
-            }
-        })
-
-        const data = [["", "Min", "Max", "Mean", "Median", "Standard Deviation"]];
-
-        const chartData = submissionStatistics.map((stat: any) => {
-            const { cueId, min, max, mean, median, std } = stat;
-
-            const cue = cues.filter((cue: any) => {
-                return cueId === cue._id
-            })
-
-            const { title } = htmlStringParser(cue[0].cue);
-
-            let cueStats = [title, min, max, mean, median, std];
-
-            data.push(cueStats)
-        })
-
-        const chartConfig = {
-            backgroundColor: '#000000',
-            backgroundGradientFrom: '#1E2923',
-            backgroundGradientTo: '#08130D',
-            fontFamily: "inter",
-            color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-            style: {
-                borderRadius: 16,
-            },
-            propsForLabels: {
-                fontFamily: 'overpass; Arial',
-            },
-        }
-
-
-        return (<View style={{
-            width: '100%',
-            backgroundColor: 'white',
-            flex: 1,
-            paddingLeft: Dimensions.get("window").width < 1024 ? 0 : 50,
-            paddingTop: 30
-        }}
-            key={JSON.stringify(props.scores)}
-        >
-            <ScrollView
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-                contentContainerStyle={{
-                    height: '100%',
-                    flexDirection: 'column'
-                }}
-                nestedScrollEnabled={true}
-            >
-                <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#000000', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 150 }}>
-                        Grade Weightage
-                    </Text>
-                    <PieChart
-                        data={pieChartData}
-                        width={Dimensions.get('window').width < 1024 ? 350 : 500}
-                        height={Dimensions.get('window').width < 1024 ? 150 : 200}
-                        chartConfig={chartConfig}
-                        accessor={"gradeWeight"}
-                        backgroundColor={"transparent"}
-                        paddingLeft={Dimensions.get('window').width < 1024 ? "10" : "50"}
-                        // center={[10, 50]}
-                        hasLegend={true}
-                    />
-                </View>
-
-                {submissionStatistics.length > 0 ? <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#000000', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 150 }}>
-                        Submissions
-                    </Text>
-                    <Chart
-                        width={Dimensions.get('window').width < 1024 ? '350px' : '600px'}
-                        height={Dimensions.get('window').width < 1024 ? '300px' : '400px'}
-                        chartType="Bar"
-                        loader={<div>Loading Chart</div>}
-                        data={data}
-                        options={{
-                            // Material design options
-                            fontName: 'overpass'
-                        }}
-                    />
-                </View> : null}
-            </ScrollView>
-
-            <View style={{ height: 20 }} />
-        </View>)
-
-
-    }
-
+    // MAIN RETURN
     return (
         <View style={{
             backgroundColor: '#efefef',
             width: '100%',
             height: '100%',
-            // paddingRight: 20,
-            // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         }}>
-            {renderGradeStatsTabs()}
+            {renderExportButton()}
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: '#efefef' }}>
@@ -395,7 +205,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     (props.activeTab === "scores" ? <View style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        // flex: 1,
                         paddingTop: 10,
                         maxHeight: 650,
                         paddingHorizontal: 10,
@@ -416,7 +225,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         key={JSON.stringify(props.scores)}
                     >
                         {/* Performance report */}
-
                         {props.isOwner ? null : <View style={{ display: 'flex', flexDirection: 'column', maxWidth: 300, width: Dimensions.get('window').width < 768 ? '100%' : '50%', alignSelf: 'center', paddingTop: 0, paddingBottom: 25 }}>
                             <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20, backgroundColor: 'white', }}>
                                 <View style={{ flex: 1, backgroundColor: 'white', paddingLeft: 10 }}>
@@ -578,7 +386,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         placeholderTextColor={'#1F1F1F'}
                                     /> 
                                 </View> : null}
-                                {/* {props.isOwner ? <View style={styles.col} key={'0,0'} /> : null} */}
                                 {
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
@@ -729,9 +536,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </ScrollView>
                         </ScrollView>
                         </View>
-                    </View> :
-                        renderStatistics()
-                    )
+                    </View> : null
+                	)
             }
         </View >
     );
@@ -745,33 +551,4 @@ export default React.memo(GradesList, (prev, next) => {
 const stylesObject: any = (isOwner: any) => StyleSheet.create({
     row: { minHeight: 70, flexDirection: isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column',  borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
     col: { height: isOwner || Dimensions.get('window').width < 768 ? 'auto' : 80, paddingBottom: isOwner ? 0 : 10, width: isOwner || Dimensions.get('window').width < 768 ? (Dimensions.get('window').width < 768 ? 90 : 120) : 180, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, borderBottomColor: '#efefef', borderBottomWidth: isOwner || Dimensions.get('window').width < 768 ? 0 : 1,  },
-    all: {
-        fontSize: 14,
-        color: '#006AFF',
-        height: 22,
-        paddingHorizontal: 20,
-        backgroundColor: '#fff',
-        lineHeight: 22,
-        fontFamily: 'inter'
-    },
-    allGrayFill: {
-        fontSize: 14,
-        color: '#fff',
-        paddingHorizontal: 20,
-        borderRadius: 12,
-        backgroundColor: '#000000',
-        lineHeight: 22,
-        fontFamily: 'inter'
-    },
-    allGrayOutline: {
-        fontSize: 12,
-        color: "#1F1F1F",
-        height: 22,
-        paddingHorizontal: 10,
-        backgroundColor: "white",
-        borderRadius: 1,
-        borderWidth: 1,
-        borderColor: "#1F1F1F",
-        lineHeight: 20
-    }
 })

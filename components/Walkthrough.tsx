@@ -5,14 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getRole } from '../graphql/QueriesAndMutations';
-import Collapse from 'react-collapse'
+import Collapse from 'react-collapse';
 import { Ionicons } from '@expo/vector-icons';
 import Profile from './Profile';
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-    const [modalAnimation] = useState(new Animated.Value(0))
-    const [isInstructor, setIsInstructor] = useState(false)
+    const [modalAnimation] = useState(new Animated.Value(0));
+    const [isInstructor, setIsInstructor] = useState(false);
     const [showSavePassword, setShowSavePassword] = useState(false);
     const [options, setOptions] = useState<any[]>([
         // instructors
@@ -21,7 +20,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             steps: [
                 'Cues (content) are organised by channel & category.',
                 'Cues are sorted by priority, with red indicating a higher priority than green.',
-                'Cues can also be filtered by date.',
+                'Cues can also be filtered by date.'
             ],
             instructorOnly: true,
             isOpen: false
@@ -29,11 +28,11 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             question: 'Set up a channel',
             steps: [
-                'Click on the \'Channels\' option on your home screen.',
-                'Click on the \'Create\' option within channels.',
+                "Click on the 'Channels' option on your home screen.",
+                "Click on the 'Create' option within channels.",
                 'Enter a name and password (optional).',
                 'Color code your channel.',
-                'Temporary channels can be deleted by instructors. All other channels can only be deleted by the school administrator.',
+                'Temporary channels can be deleted by instructors. All other channels can only be deleted by the school administrator.'
             ],
             instructorOnly: true,
             isOpen: false
@@ -54,9 +53,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             question: 'Add students to a channel',
             steps: [
-                'Students can subscribe to your channel using it\'s name and password.',
+                "Students can subscribe to your channel using it's name and password.",
                 'To add subscribers directly instead, select the channel on your home screen.',
-                'Pick \'Settings\' from channel options.',
+                "Pick 'Settings' from channel options.",
                 'Use the dropdown to add/remove subscribers.',
                 'You can also add/remove moderators or edit channel details.'
             ],
@@ -66,7 +65,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             question: 'Share content with channel',
             steps: [
-                'Click \'+\' on your home screen to create a new cue.',
+                "Click '+' on your home screen to create a new cue.",
                 'Create or import a file.',
                 'In the cue options, select channel to share cue with, category, priority, etc.',
                 'Share cue with channel. Subscribers will be notified.'
@@ -91,7 +90,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Testing',
             steps: [
                 'Tests can be created as cues that require submissions or as quizzes.',
-                'Follow aforementioned instructions to create a cue and turn on the \'submission\' switch.',
+                "Follow aforementioned instructions to create a cue and turn on the 'submission' switch."
             ],
             instructorOnly: true,
             isOpen: false
@@ -99,12 +98,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             question: 'Grading',
             steps: [
-                'Responses to tests can be viewed by first clicking on the cue and then selecting the \'Responses\' options.',
-                'Use the filter to and select \'submitted\'.',
-                'Click on a subscriber\'s name to view the response.',
+                "Responses to tests can be viewed by first clicking on the cue and then selecting the 'Responses' options.",
+                "Use the filter to and select 'submitted'.",
+                "Click on a subscriber's name to view the response.",
                 'Enter a score. To add remarks, click and drag on the submission to pick region and enter annotation.',
                 'Use the release grade option to make scrores visibile to students.',
-                'The \'Grades\' channel option provides a comprehensive list of all scores and performance metrics.',
+                "The 'Grades' channel option provides a comprehensive list of all scores and performance metrics.",
                 'Instructors can use this option to also directly add/modify scores.'
             ],
             instructorOnly: true,
@@ -114,7 +113,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Classroom meetings',
             steps: [
                 'Select a channel on your home screen to display channel options.',
-                'Select the \'Classroom\' channel option.',
+                "Select the 'Classroom' channel option.",
                 'Meetings can only be joined if the instructor is present.',
                 'Subscribers can also view lecture recordings or attendances.',
                 'Use the planner to schedule lecture meetings.',
@@ -127,12 +126,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Notes & reminders',
             steps: [
                 'Users can take personal notes directly on content or create their personal cues.',
-                'Personal notes are stored in the \'My Cues\' channel and are not shared.',
+                "Personal notes are stored in the 'My Cues' channel and are not shared.",
                 'For content-wise notes, first select the cue which you want to take notes on.',
-                'Select the \'Notes\' channel option.',
+                "Select the 'Notes' channel option.",
                 'Add your personal notes.',
                 'To add a reminder to a cue, first click on the cue.',
-                'Select the \'Details\' cue option.',
+                "Select the 'Details' cue option.",
                 'Use the reminder switch to enable alerts.'
             ],
             instructorOnly: true,
@@ -142,9 +141,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Planner',
             steps: [
                 'The planner displays submissions, lectures & other channel/personal events.',
-                'Click on the \'Planner\' option within channels.',
+                "Click on the 'Planner' option within channels.",
                 'Use the filter to view specific events.',
-                'To create a new event/lecture click on \'Add\'',
+                "To create a new event/lecture click on 'Add'",
                 'Pick a channel to share with and select event type.',
                 'Create event.'
             ],
@@ -157,7 +156,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             steps: [
                 'Cues (content) are organised by channel & category.',
                 'Cues are sorted by priority, with red indicating a higher priority than green.',
-                'Cues can also be filtered by date.',
+                'Cues can also be filtered by date.'
             ],
             instructorOnly: false,
             isOpen: false
@@ -165,14 +164,15 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         {
             question: 'Join a channel',
             steps: [
-                'Click on the \'Channels\' option on your home screen.',
-                'Click on the \'Subscribe\' option within channels.',
+                "Click on the 'Channels' option on your home screen.",
+                "Click on the 'Subscribe' option within channels.",
                 'Enter given channel name and password (optional).',
                 'Subscribe to channel.'
             ],
             instructorOnly: false,
             isOpen: false
-        }, {
+        },
+        {
             question: 'Channel options',
             steps: [
                 'Select a channel on your home screen to display channel options.',
@@ -202,7 +202,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Testing',
             steps: [
                 'Students will have to provide submissions to Cues as required.',
-                'Select the \'Submission\' channel option (if visible) to enter submission.',
+                "Select the 'Submission' channel option (if visible) to enter submission.",
                 'For quizzes, users must directly provide answers.',
                 'Submissions can be created directly or imported.',
                 'Click on submit.',
@@ -216,7 +216,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             steps: [
                 'Click on a graded cue on your home screen to view it.',
                 'Scores and remarks will be visible over the given submission.',
-                'The \'Grades\' channel option provides a comprehensive list of all scores and performance metrics pertaining to the channel.',
+                "The 'Grades' channel option provides a comprehensive list of all scores and performance metrics pertaining to the channel."
             ],
             instructorOnly: false,
             isOpen: false
@@ -225,7 +225,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Classroom meetings',
             steps: [
                 'Select a channel on your home screen to display channel options.',
-                'Select the \'Classroom\' channel option.',
+                "Select the 'Classroom' channel option.",
                 'Meetings can only be joined if the instructor is present.',
                 'Subscribers can also view lecture recordings or attendances.',
                 'Use the planner to schedule lecture meetings.',
@@ -238,12 +238,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Notes & reminders',
             steps: [
                 'Users can take personal notes directly on content or create their personal cues.',
-                'Personal notes are stored in the \'My Cues\' channel and are not shared.',
+                "Personal notes are stored in the 'My Cues' channel and are not shared.",
                 'For content-wise notes, first select the cue which you want to take notes on.',
-                'Select the \'Notes\' channel option.',
+                "Select the 'Notes' channel option.",
                 'Add your personal notes.',
                 'To add a reminder to a cue, first click on the cue.',
-                'Select the \'Details\' cue option.',
+                "Select the 'Details' cue option.",
                 'Use the reminder switch to enable alerts.'
             ],
             instructorOnly: false,
@@ -253,58 +253,64 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             question: 'Planner',
             steps: [
                 'The planner displays submissions, lectures & other channel/personal events.',
-                'Click on the \'Planner\' option within channels.',
+                "Click on the 'Planner' option within channels.",
                 'Use the filter to view specific events.',
-                'To create a new event/lecture click on \'Add\'',
+                "To create a new event/lecture click on 'Add'",
                 'Pick a channel to share with and select event type.',
                 'Create event.'
             ],
             instructorOnly: false,
             isOpen: false
         }
-    ])
+    ]);
 
     const loadIsInstructor = useCallback(async () => {
-        const u = await AsyncStorage.getItem("user")
+        const u = await AsyncStorage.getItem('user');
         if (u) {
-            const user = JSON.parse(u)
-            const server = fetchAPI('')
-            server.query({
-                query: getRole,
-                variables: {
-                    userId: user._id
-                }
-            }).then(res => {
-                if (res.data && res.data.user.getRole) {
-                    if (res.data.user.getRole === 'instructor') {
-                        setIsInstructor(true)
+            const user = JSON.parse(u);
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getRole,
+                    variables: {
+                        userId: user._id
                     }
-                }
-            })
+                })
+                .then(res => {
+                    if (res.data && res.data.user.getRole) {
+                        if (res.data.user.getRole === 'instructor') {
+                            setIsInstructor(true);
+                        }
+                    }
+                });
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
-        loadIsInstructor()
+        loadIsInstructor();
         Animated.timing(modalAnimation, {
             toValue: 1,
             duration: 150,
             useNativeDriver: true
         }).start();
-    }, [])
+    }, []);
 
     const windowHeight = Dimensions.get('window').height;
 
     return (
-        <View style={{
-            width: '100%',
-            height: '100%',
-            maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
-            backgroundColor: '#fff',
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-            overflow: 'hidden'
-        }}>
+        <View
+            style={{
+                width: '100%',
+                height: '100%',
+                maxHeight:
+                    Dimensions.get('window').width < 1024
+                        ? Dimensions.get('window').height - 115
+                        : Dimensions.get('window').height - 52,
+                backgroundColor: '#fff',
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                overflow: 'hidden'
+            }}>
             <View
                 style={{
                     width: '100%',
@@ -313,42 +319,50 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}>
-                {
-                    showSavePassword ?
-                        <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, marginTop: 20 }}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        props.setShowHelp(false)
-                                        setShowSavePassword(false)
-                                    }}
-                                    style={{
-                                        paddingRight: 20,
-                                        paddingTop: 5,
-                                        alignSelf: 'flex-start'
-                                    }}
-                                >
-                                    <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='chevron-back-outline' size={30} color={'#1F1F1F'} />
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        : null
-                }
-                <View style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    // paddingTop: 30
-                }}>
-                    {
-                        !props.showHelp ? <View style={{
+                {showSavePassword ? (
+                    <View
+                        style={{
+                            flexDirection: 'row',
                             width: '100%',
-                            // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
-                            // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
-                            // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
-                            borderColor: '#efefef'
+                            alignSelf: 'center',
+                            maxWidth: 400,
+                            height: 50,
+                            marginBottom: 10,
+                            marginTop: 20
                         }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    props.setShowHelp(false);
+                                    setShowSavePassword(false);
+                                }}
+                                style={{
+                                    paddingRight: 20,
+                                    paddingTop: 5,
+                                    alignSelf: 'flex-start'
+                                }}>
+                                <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
+                                    <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ) : null}
+                <View
+                    style={{
+                        width: '100%',
+                        flexDirection: 'row'
+                        // paddingTop: 30
+                    }}>
+                    {!props.showHelp ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
+                                // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
+                                // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
+                                borderColor: '#efefef'
+                            }}>
                             <Profile
                                 closeModal={() => props.closeModal()}
                                 saveDataInCloud={() => props.saveDataInCloud()}
@@ -357,46 +371,49 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 setShowSavePassword={(val: any) => setShowSavePassword(val)}
                                 showSavePassword={showSavePassword}
                             />
-                        </View> :
-                            <View style={{
-                                width: '100%',
+                        </View>
+                    ) : (
+                        <View
+                            style={{
+                                width: '100%'
                             }}>
-                                <ScrollView
-                                    contentContainerStyle={{
-                                        backgroundColor: '#fff',
-                                        maxHeight: Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
-                                        // paddingBottom: 75,
-                                        width: '100%',
-                                        maxWidth: 900,
-                                    }}
-                                >
-                                    {
-                                        options.map((item: any, index: any) => {
-                                            if (isInstructor && !item.instructorOnly) {
-                                                return null;
-                                            } else if (!isInstructor && item.instructorOnly) {
-                                                return null;
-                                            }
-                                            return <TouchableOpacity
-                                                onPress={() => {
-                                                    const updatedOptions = JSON.parse(JSON.stringify(options))
-                                                    updatedOptions[index] = {
-                                                        ...options[index],
-                                                        isOpen: !options[index].isOpen
-                                                    }
-                                                    setOptions(updatedOptions)
-                                                }}
-                                                style={{
-                                                    backgroundColor: '#fff',
-                                                    borderColor: '#efefef',
-                                                    borderBottomWidth: item.question === 'Planner' ? 0 : 1,
-                                                    width: '100%',
-                                                    paddingBottom: 10,
-                                                    marginTop: 10,
-                                                    // paddingTop: item.question === 'Home' ? 40 : 0,
-                                                }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{
+                            <ScrollView
+                                contentContainerStyle={{
+                                    backgroundColor: '#fff',
+                                    maxHeight:
+                                        Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
+                                    // paddingBottom: 75,
+                                    width: '100%',
+                                    maxWidth: 900
+                                }}>
+                                {options.map((item: any, index: any) => {
+                                    if (isInstructor && !item.instructorOnly) {
+                                        return null;
+                                    } else if (!isInstructor && item.instructorOnly) {
+                                        return null;
+                                    }
+                                    return (
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                const updatedOptions = JSON.parse(JSON.stringify(options));
+                                                updatedOptions[index] = {
+                                                    ...options[index],
+                                                    isOpen: !options[index].isOpen
+                                                };
+                                                setOptions(updatedOptions);
+                                            }}
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                borderColor: '#efefef',
+                                                borderBottomWidth: item.question === 'Planner' ? 0 : 1,
+                                                width: '100%',
+                                                paddingBottom: 10,
+                                                marginTop: 10
+                                                // paddingTop: item.question === 'Home' ? 40 : 0,
+                                            }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text
+                                                    style={{
                                                         fontSize: 16,
                                                         paddingBottom: 10,
                                                         paddingTop: 10,
@@ -405,52 +422,56 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         lineHeight: 16,
                                                         color: item.isOpen ? '#006AFF' : '#000000'
                                                     }}>
-                                                        {item.question}
-                                                    </Text>
-                                                    <Text>
-                                                        <Ionicons
-                                                            name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                                                            color={item.isOpen ? '#1F1F1F' : '#006AFF'}
-                                                            size={18}
-                                                        />
-                                                    </Text>
-                                                </View>
-                                                <Collapse isOpened={item.isOpen}>
-                                                    {
-                                                        item.steps.map((step: string) => {
+                                                    {item.question}
+                                                </Text>
+                                                <Text>
+                                                    <Ionicons
+                                                        name={
+                                                            item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'
+                                                        }
+                                                        color={item.isOpen ? '#1F1F1F' : '#006AFF'}
+                                                        size={18}
+                                                    />
+                                                </Text>
+                                            </View>
+                                            <Collapse isOpened={item.isOpen}>
+                                                {item.steps.map((step: string) => {
+                                                    let renderContent = null;
 
-                                                            let renderContent = null;
+                                                    const split = step.split(':');
 
-                                                            const split = step.split(":");
-
-                                                            if (split.length === 1) {
-                                                                renderContent = <View>• {step}</View>
-                                                            } else {
-                                                                renderContent = (<View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                    • <strong>{split[0]}:</strong>
-                                                                    {split[1]}
-                                                                </View>)
-                                                            }
-
-                                                            return <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
-                                                                <Text style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                    {renderContent}
-                                                                </Text>
+                                                    if (split.length === 1) {
+                                                        renderContent = <View>• {step}</View>;
+                                                    } else {
+                                                        renderContent = (
+                                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                                • <strong>{split[0]}:</strong>
+                                                                {split[1]}
                                                             </View>
-                                                        })
+                                                        );
                                                     }
-                                                </Collapse>
-                                            </TouchableOpacity>
-                                        })
-                                    }
-                                </ScrollView>
-                            </View>}
+
+                                                    return (
+                                                        <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
+                                                            <Text style={{ display: 'flex', flexDirection: 'row' }}>
+                                                                {renderContent}
+                                                            </Text>
+                                                        </View>
+                                                    );
+                                                })}
+                                            </Collapse>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </ScrollView>
+                        </View>
+                    )}
                 </View>
             </View>
             <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" />
-        </View >
+        </View>
     );
-}
+};
 
 export default Walkthrough;
 
@@ -460,10 +481,10 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 900,
-        paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 50,
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
-        zIndex: -1,
-    },
+        zIndex: -1
+    }
 });

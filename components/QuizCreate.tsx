@@ -1,50 +1,33 @@
-import React, { useEffect, useState, useCallback, useRef, createRef } from 'react';
-import { StyleSheet, Image, Dimensions, Keyboard, TextInput as DefaultTextInput } from 'react-native';
-import { TextInput } from "./CustomTextInput";
-import { Text, TouchableOpacity, View } from '../components/Themed';
-import { Ionicons } from '@expo/vector-icons';
-import { PreferredLanguageText } from '../helpers/LanguageContext';
-import EquationEditor from 'equation-editor-react';
+// REACT
+import React, { useEffect, useState, useCallback, useRef, } from 'react';
+import { Dimensions, TextInput as DefaultTextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Picker } from "@react-native-picker/picker";
 import TeXToSVG from "tex-to-svg";
-
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger,
-} from "react-native-popup-menu";
-
-import { WebView } from 'react-native-webview';
-import parser from 'html-react-parser';
-
-import TextareaAutosize from 'react-textarea-autosize';
-
-import {
-    actions,
-    RichEditor,
-    RichToolbar,
-} from "react-native-pell-rich-editor";
-
-import Alert from "../components/Alert";
-
-import FileUpload from "./UploadFiles";
-
-import ReactPlayer from "react-player";
-
-import { Select } from '@mobiscroll/react';
-
-import FormulaGuide from './FormulaGuide';
-
-import useDynamicRefs from 'use-dynamic-refs';
-
-import { Editor } from '@tinymce/tinymce-react';
-
 import lodash from "lodash";
+import { Ionicons } from '@expo/vector-icons';
 
+// COMPONENTS
+import parser from 'html-react-parser';
+import TextareaAutosize from 'react-textarea-autosize';
+import { Text, TouchableOpacity, View } from '../components/Themed';
+import Alert from "../components/Alert";
+import ReactPlayer from "react-player";
+import { Select } from '@mobiscroll/react';
+import FormulaGuide from './FormulaGuide';
+import useDynamicRefs from 'use-dynamic-refs';
+import { Editor } from '@tinymce/tinymce-react';
+// import {
+//     Menu,
+//     MenuOptions,
+//     MenuOption,
+//     MenuTrigger,
+// } from "react-native-popup-menu";
+
+// HELPER
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { handleFile } from '../helpers/FileUpload';
 
+// CONSTANTS
 const questionTypeOptions = [
     {
         text: "MCQ",
@@ -71,25 +54,25 @@ const requiredOptions = [
     }
 ]
 
-
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [problems, setProblems] = useState<any[]>(props.problems ? props.problems : [])
     const [headers, setHeaders] = useState<any>(props.headers ? props.headers : {});
     const [editQuestionNumber, setEditQuestionNumber] = useState(0);
     const [editQuestion, setEditQuestion] = useState<any>({});
-    const [height, setHeight] = useState(100);
     const [equation, setEquation] = useState("");
     const [showEquationEditor, setShowEquationEditor] = useState(false);
-    const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
-    const [showImportOptions, setShowImportOptions] = useState(false);
     const [showFormulaGuide, setShowFormulaGuide] = useState(false);
     const [getRef, setRef] = useDynamicRefs();
     const [optionEquations, setOptionEquations] = useState<any[]>([]);
     const [showOptionFormulas, setShowOptionFormulas] = useState<any[]>([]);
-
     let RichText: any = useRef();
 
+    // HOOKS
+
+    /**
+     * @description Reset formulas when edit question changes
+     */
     useEffect(() => {
 
         if (editQuestionNumber === 0) {
@@ -99,6 +82,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }, [editQuestionNumber])
 
+    /**
+     * @description Inserts equation into problem
+     */
     const insertEquation = useCallback(() => {
 
         if (equation === "") {
@@ -110,14 +96,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
         currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
-
         RichText.current.setContent(currentContent)
 
-        // Update problem
-        // const newProbs = [...problems];
-        // newProbs[editQuestionNumber - 1].question = RichText.current.getContent();
-        // setProblems(newProbs)
-        // props.setProblems(newProbs)
         let audioVideoQuestion = problems[editQuestionNumber - 1].question[0] === "{" && problems[editQuestionNumber - 1].question[problems[editQuestionNumber - 1].question.length - 1] === "}";
 
         if (audioVideoQuestion) {
@@ -142,9 +122,48 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
         setShowEquationEditor(false);
         setEquation("");
-        // setReloadEditorKey(Math.random())
     }, [equation, RichText, RichText.current, showEquationEditor, editQuestionNumber, problems]);
 
+    /**
+     * @description Inserts equation for MCQ options 
+     */
+    const insertOptionEquation = (index: number) => {
+
+        if (optionEquations[index] === "") {
+            Alert('Equation cannot be empty.')
+            return;
+        }
+
+        const ref: any = getRef(index.toString())
+
+        if (!ref || !ref.current) return;
+
+        let currentContent = ref.current.getContent();
+
+        const SVGEquation = TeXToSVG(optionEquations[index], { width: 100 }); // returns svg in html format
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
+
+        ref.current.setContent(currentContent)
+
+        // Update problem in props
+        const newProbs = [...problems];
+        newProbs[editQuestionNumber - 1].options[index].option = ref.current.getContent();
+
+        setProblems(newProbs)
+        props.setProblems(newProbs)
+
+        const updateShowFormulas = [...showOptionFormulas];
+        updateShowFormulas[index] = false;
+        setShowOptionFormulas(updateShowFormulas);
+
+        const updateOptionEquations = [...optionEquations];
+        updateOptionEquations[index] = "";
+        setOptionEquations(updateOptionEquations)
+    }
+
+    /**
+     * @description Renders Audio/Video player 
+     */
     const renderAudioVideoPlayer = (url: string, type: string) => {
         return <ReactPlayer
             url={url}
@@ -158,6 +177,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         />
     }
 
+    /**
+     * @description Renders Question editor
+     */
     const renderQuestionEditor = (index: number) => {
 
         if (editQuestionNumber === 0) return null;
@@ -177,68 +199,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
 
         return (<View >
-            {/* {audioVideoQuestion || !showImportOptions ? null : (
-                <View style={{ paddingVertical: 10 }}>
-                    <FileUpload
-                        action={"audio/video"}
-                        back={() => setShowImportOptions(false)}
-                        onUpload={(u: any, t: any) => {
-                            const obj = { url: u, type: t, content: problems[index].question };
-                            const newProbs = [...problems];
-                            newProbs[index].question = JSON.stringify(obj);
-                            setProblems(newProbs)
-                            props.setProblems(newProbs)
-                            setShowImportOptions(false);
-                        }}
-                    />
-                </View>
-            )} */}
             {audioVideoQuestion ?
                 <View style={{ marginBottom: 20 }}>
                     {renderAudioVideoPlayer(url, type)}
                 </View>
                 : null
             }
-            {/* {
-                (showEquationEditor ?
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{
-                            borderColor: '#C1C9D2',
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            padding: 10,
-                            width: '70%',
-                            marginVertical: 20
-                        }}>
-                            <EquationEditor
-                                value={equation}
-                                onChange={setEquation}
-                                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                autoOperatorNames="sin cos tan arccos arcsin arctan"
-                            />
-                        </View>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: "center",
-                                paddingLeft: 20,
-                                maxWidth: "10%",
-                            }}
-                            onPress={() => insertEquation()}
-                        >
-                            <Ionicons name="add-circle-outline" color="#000000" size={15} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: "center",
-                                paddingLeft: 10,
-                                maxWidth: "10%",
-                            }}
-                            onPress={() => setShowFormulaGuide(true)}
-                        >
-                            <Ionicons name="help-circle-outline" color="#000000" size={18} />
-                        </TouchableOpacity>
-                    </View> : null)
-            } */}
             <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation}  />
             <Editor
                 onInit={(evt, editor) => RichText.current = editor}
@@ -306,7 +272,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 newProbs[index].question = JSON.stringify(obj);
                                 setProblems(newProbs)
                                 props.setProblems(newProbs)
-                                setShowImportOptions(false);
                               
                             }
                         })
@@ -354,86 +319,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         </View>)
     }
 
-    const cameraCallback = useCallback(async () => {
-        const cameraSettings = await ImagePicker.getCameraPermissionsAsync();
-        if (!cameraSettings.granted) {
-            await ImagePicker.requestCameraPermissionsAsync();
-            const updatedCameraSettings =
-                await ImagePicker.getCameraPermissionsAsync();
-            if (!updatedCameraSettings.granted) {
-                return;
-            }
-        }
-        let result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
-            base64: true,
-        });
-        if (!result.cancelled) {
-            RichText.current.insertImage(
-                result.uri,
-                "border-radius: 8px; max-width: 400px; width: 100%;"
-            );
-        }
-    }, [RichText, RichText.current]);
-
-    const galleryCallback = useCallback(async () => {
-        const gallerySettings = await ImagePicker.getMediaLibraryPermissionsAsync();
-        if (!gallerySettings.granted) {
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-            const updatedGallerySettings =
-                await ImagePicker.getMediaLibraryPermissionsAsync();
-            if (!updatedGallerySettings.granted) {
-                return;
-            }
-        }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
-            base64: true,
-        });
-
-        if (!result.cancelled) {
-            RichText.current.insertImage(
-                result.uri,
-                "border-radius: 8px; max-width: 400px; width: 100%;"
-            );
-        }
-    }, [RichText, RichText.current]);
-
-
-    const optionGalleryCallback = useCallback(async (index: any, i: any) => {
-        const gallerySettings = await ImagePicker.getMediaLibraryPermissionsAsync()
-        if (!gallerySettings.granted) {
-            await ImagePicker.requestMediaLibraryPermissionsAsync()
-            const updatedGallerySettings = await ImagePicker.getMediaLibraryPermissionsAsync()
-            if (!updatedGallerySettings.granted) {
-                return;
-            }
-        }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
-            base64: true
-        });
-
-        if (!result.cancelled) {
-            if (i !== null) {
-                const newProbs = [...problems];
-                newProbs[index].options[i].option = "image:" + result.uri;
-                setProblems(newProbs)
-                props.setProblems(newProbs)
-            } else {
-                const newProbs = [...problems];
-                newProbs[index].question = "image:" + result.uri;
-                setProblems(newProbs)
-                props.setProblems(newProbs)
-            }
-        }
-    }, [problems, props.setProblems])
-
+    /**
+     * @description Remove header associated with question when the question is removed
+     */
     const removeHeadersOnDeleteProblem = (index: number) => {
 
         const headerPositions = Object.keys(headers);
@@ -462,7 +350,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
-
+    /**
+     * @description Add a header to a question
+     */
     const addHeader = (index: number) => {
 
         // Use headers as an object with key as index values
@@ -473,6 +363,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
+    /**
+     * @description Remove header from a question
+     */
     const removeHeader = (index: number) => {
 
         const currentHeaders = JSON.parse(JSON.stringify(headers));
@@ -482,6 +375,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
+    /**
+     * @description Renders the Header for question at index
+     */
     const renderHeaderOption = (index: number) => {
         return <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }} >
             {index in headers
@@ -557,6 +453,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         </View>
     }
 
+    /**
+     * @description Checks if current question is valid before proceeding to modifying different question
+     */
     const isCurrentQuestionValid = (index: number) => {
 
         if (editQuestionNumber === 0) return true;
@@ -617,44 +516,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
-
-
-    const insertOptionEquation = (index: number) => {
-
-        if (optionEquations[index] === "") {
-            Alert('Equation cannot be empty.')
-            return;
-        }
-
-        const ref: any = getRef(index.toString())
-
-        if (!ref || !ref.current) return;
-
-        let currentContent = ref.current.getContent();
-
-        const SVGEquation = TeXToSVG(optionEquations[index], { width: 100 }); // returns svg in html format
-        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
-
-        ref.current.setContent(currentContent)
-
-        // Update problem in props
-        const newProbs = [...problems];
-        newProbs[editQuestionNumber - 1].options[index].option = ref.current.getContent();
-
-        setProblems(newProbs)
-        props.setProblems(newProbs)
-
-        const updateShowFormulas = [...showOptionFormulas];
-        updateShowFormulas[index] = false;
-        setShowOptionFormulas(updateShowFormulas);
-
-        const updateOptionEquations = [...optionEquations];
-        updateOptionEquations[index] = "";
-        setOptionEquations(updateOptionEquations)
-    }
-
-
-
     // Create refs for current question options
     let optionRefs: any[] = []
 
@@ -664,14 +525,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         })
     }
 
+    // MAIN RETURN 
+    
     return (
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
             maxWidth: 900,
             borderTopRightRadius: 0,
-            // borderTopColor: '#efefef',
-            // borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
             flexDirection: 'column',
@@ -719,7 +580,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <View style={{ flexDirection: Dimensions.get('window').width < 768 || editQuestionNumber === (index + 1) ? (editQuestionNumber === (index + 1) ? 'column-reverse' : 'column') : 'row', flex: 1 }}>
                                 
                                 <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingRight: Dimensions.get('window').width < 768 ? 0 : 20 }}>
-                                    <View key={reloadEditorKey} style={{ width: '100%', }}>
+                                    <View style={{ width: '100%', }}>
                                         {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
                                             {audioVideoQuestion ? 
                                                 <TouchableOpacity onPress={() => {
@@ -782,7 +643,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     data={questionTypeOptions}
                                                     themeVariant="light"
                                                     onChange={(val: any) => {
-                                                        // setCustomCategory(val.value)
                                                         const updatedProblems = [...problems]
                                                         if (val.value === "mcq") {
                                                             updatedProblems[index].questionType = "";
@@ -974,7 +834,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                 paddingBottom: 40,
                                 width: '100%',
-                                // maxWidth: Dimensions.get("window").width < 768 ? "100%" : "60%",
                                 color: "#a2a2ac",
                                 marginBottom: 20,
                             }}>
@@ -1175,9 +1034,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 height: 35,
                                 marginTop: 15,
                                 alignSelf: 'center'
-                                // width: "100%",
-                                // justifyContent: "center",
-                                // flexDirection: "row",
                             }}
                         >
                             <Text
@@ -1206,8 +1062,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'center',
-                // paddingLeft: 12,
-                // paddingTop: 25,
                 paddingBottom: 25, 
             }}>
                 <TouchableOpacity
@@ -1251,28 +1105,3 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 }
 
 export default QuizCreate;
-
-const styles = StyleSheet.create({
-    input: {
-        width: '50%',
-        borderBottomColor: '#efefef',
-        borderBottomWidth: 1,
-        fontSize: 14,
-        paddingTop: 12,
-        paddingBottom: 12,
-        marginTop: 5,
-        marginBottom: 20
-    },
-    picker: {
-        display: "flex",
-        justifyContent: "flex-start",
-        backgroundColor: "white",
-        overflow: "hidden",
-        fontSize: 12,
-        borderWidth: 1,
-        width: 100,
-        height: 20,
-        marginTop: 10,
-        borderRadius: 3
-    }
-});
