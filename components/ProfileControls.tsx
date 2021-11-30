@@ -22,6 +22,7 @@ import FileUpload from "./UploadFiles";
 // HELPERS
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 // import { LanguageSelect } from '../helpers/LanguageContext';
+import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -250,10 +251,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
 
     let url = ''
 
-    // LIVE
-    // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
-    // DEV
-    const clientId = 'PAfnxrFcSd2HkGnn9Yq96A'
 
     if (zoomInfo) {
       // de-auth
@@ -261,13 +258,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       url = ''
     } else {
       // auth
-
-      // LIVE
-      // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
-      // DEV      
-      const redirectUri = 'http://localhost:19006/zoom_auth'
-
-      url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`
+      url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(zoomRedirectUri)}&state=${userId}`
     }
 
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -510,7 +501,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   </Text>
                 </TouchableOpacity>
               ) : null}
-              {!props.showSavePassword ? (
+              {!props.showSavePassword && !zoomInfo ? (
                 <TouchableOpacity
                   onPress={() => handleZoomAuth()}
                   style={{
@@ -540,7 +531,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase"
                     }}
                   >
-                    {zoomInfo ? 'Disconnect Zoom' : 'Connect Zoom'}
+                    Connect Zoom
                   </Text>
                 </TouchableOpacity>
               ) : null}

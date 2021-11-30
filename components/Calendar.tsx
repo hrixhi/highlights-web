@@ -1,6 +1,15 @@
 // REACT
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions, Switch, StyleSheet, View as DefaultView } from 'react-native';
+import {
+    ActivityIndicator,
+    Animated,
+    Dimensions,
+    Switch,
+    Linking,
+    StyleSheet,
+    View as DefaultView,
+    Platform
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API
@@ -15,7 +24,8 @@ import {
     markAttendance,
     getActivity,
     // getOrganisation,
-    markActivityAsRead
+    markActivityAsRead,
+    regenZoomMeeting
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -31,6 +41,7 @@ import { Eventcalendar, Datepicker } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import _ from 'lodash';
 import { Select } from '@mobiscroll/react';
+import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [tab, setTab] = useState(props.tab);
@@ -56,13 +67,24 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [editChannelName, setEditChannelName] = useState('');
     const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
+    const [copiedMeetingLink, setCopiedMeetingLink] = useState(false);
     const [userId, setUserId] = useState('');
     const [allActivity, setAllActivity] = useState<any[]>([]);
     const [activity, setActivity] = useState<any[]>([]);
     const [unreadCount, setUnreadCount] = useState<any>(0);
     const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add'];
     const width = Dimensions.get('window').width;
-
+    const weekDays = {
+        '1': 'Sun',
+        '2': 'Mon',
+        '3': 'Tue',
+        '4': 'Wed',
+        '5': 'Thu',
+        '6': 'Fri',
+        '7': 'Sat'
+    };
+    const [selectedStartDay, setSelectedStartDay] = useState<any>(`${start.getDay() + 1}`);
+    const [selectedDays, setSelectedDays] = useState<any[]>([selectedStartDay]);
     const channelOptions = [
         {
             value: 'Home',
@@ -76,6 +98,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: channel.name
         });
     });
+    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
 
     // HOOKS
 
@@ -116,6 +139,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const user = JSON.parse(u);
 
                 setUserId(user._id);
+                if (user.zoomInfo) {
+                    setUserZoomInfo(user.zoomInfo);
+                }
                 const server = fetchAPI(user._id);
                 server
                     .query({
@@ -190,8 +216,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             setStart(new Date());
             setEnd(new Date(current.getTime() + 1000 * 60 * 60));
             setEditChannelName('');
+            setCopiedMeetingLink(false);
         }
     }, [editEvent]);
+
+    /**
+     * @description Updated selected start day for recurring days selection (start day is disabled by default)
+     */
+    useEffect(() => {
+        const startDay = start.getDay() + 1;
+
+        setSelectedStartDay(startDay.toString());
+        setSelectedDays([startDay.toString()]);
+
+        // }
+    }, [start]);
 
     /**
      * @description Load all channels to filter data in Activity
@@ -233,7 +272,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
         if (recurring) {
             if (start > repeatTill) {
-                Alert('Repeat until must be set in the future.');
+                Alert('Repeat until date must be set in the future.');
                 return;
             }
         }
@@ -245,6 +284,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const freq = recurring ? frequency : '';
 
         const repeat = recurring ? repeatTill.toUTCString() : '';
+
+        const repeatDays = recurring && frequency === '1-W' ? selectedDays : '';
 
         const u = await AsyncStorage.getItem('user');
         if (u) {
@@ -263,21 +304,42 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         description,
                         recordMeeting,
                         frequency: freq,
-                        repeatTill: repeat
+                        repeatTill: repeat,
+                        repeatDays
                     }
                 })
                 .then(res => {
-                    loadEvents();
-                    setTitle('');
-                    setRepeatTill(new Date());
-                    setIsMeeting(false);
-                    setDescription('');
-                    setFrequency('1-W');
-                    setRecurring(false);
-                    setRecordMeeting(false);
-                    setIsCreatingEvents(false);
-                    setShowAddEvent(false);
-                    props.setTab('Agenda');
+                    if (res.data && res.data.date.createV1 === 'SUCCESS') {
+                        loadEvents();
+                        setTitle('');
+                        setRepeatTill(new Date());
+                        setIsMeeting(false);
+                        setDescription('');
+                        setFrequency('1-W');
+                        setRecurring(false);
+                        setRecordMeeting(false);
+                        setIsCreatingEvents(false);
+                        setShowAddEvent(false);
+                        setSelectedDays([]);
+                        setSelectedStartDay('');
+                        props.setTab('Agenda');
+                    } else if (res.data && res.data.date.createV1 === 'ZOOM_MEETING_CREATE_FAILED') {
+                        Alert('Event scheduled but Zoom meeting could not be created.');
+                        loadEvents();
+                        setTitle('');
+                        setRepeatTill(new Date());
+                        setIsMeeting(false);
+                        setDescription('');
+                        setFrequency('1-W');
+                        setRecurring(false);
+                        setRecordMeeting(false);
+                        setIsCreatingEvents(false);
+                        setShowAddEvent(false);
+                        setSelectedDays([]);
+                        setSelectedStartDay('');
+                    } else {
+                        Alert('Failed to create event. Try again.');
+                    }
                 })
                 .catch(err => {
                     setIsCreatingEvents(false);
@@ -295,7 +357,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         frequency,
         recurring,
         isSubmitDisabled,
-        isCreatingEvents
+        isCreatingEvents,
+        selectedDays
     ]);
 
     /**
@@ -320,6 +383,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             .then(res => {
                 if (res.data.date.editV1) {
                     loadEvents();
+                    props.setTab('Agenda');
                     Alert('Updated event successully.');
                 } else {
                     Alert('Failed to edit event. Try again.');
@@ -333,6 +397,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 console.log(err);
             });
     }, [editEvent, title, start, end, description, isMeeting, recordMeeting]);
+
+    console.log('Selected days', selectedDays);
 
     /**
      * @description Handle Delete event
@@ -353,7 +419,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 })
                 .then(res => {
-                    if (res.data.date.deleteV1) {
+                    if (res.data && res.data.date.deleteV1 === 'SUCCESS') {
                         loadEvents();
                         setTitle('');
                         setRepeatTill(new Date());
@@ -364,18 +430,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setRecordMeeting(false);
                         setEditEvent(null);
                         setShowAddEvent(false);
-
+                        props.setTab('Agenda');
                         Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
+                    } else if (res.data && res.data.date.deleteV1 === 'ZOOM_MEETING_DELETE_FAILED') {
+                        Alert('Event deleted successfully. Failed to delete Zoom meeting.');
                     } else {
                         Alert(
-                            !deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.'
+                            !deleteAll ? 'Failed to delete event. Try again.' : 'Failed to delete events. Try again.'
                         );
                     }
                     setIsDeletingEvents(false);
                 })
                 .catch(err => {
                     setIsDeletingEvents(false);
-                    Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.');
+                    Alert(!deleteAll ? 'Failed to delete event. Try again.' : 'Failed to delete events. Try again.');
                     console.log(err);
                 });
         },
@@ -441,7 +509,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             channelId: e.channelId,
                             cueId: e.cueId,
                             color: colorCode,
-                            submitted: e.submitted
+                            submitted: e.submitted,
+                            zoomMeetingId: e.zoomMeetingId,
+                            zoomStartUrl: e.zoomStartUrl,
+                            zoomJoinUrl: e.zoomJoinUrl,
+                            zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
+                            zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile
                         });
                     });
                     setEvents(parsedEvents);
@@ -492,6 +565,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         else return true;
     };
 
+    console.log('Edit event', editEvent);
     /**
      * @description On Select event in Agenda
      */
@@ -553,51 +627,63 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const date = new Date();
 
                 if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
-                    Alert(event.title, 'Enter classroom?', [
-                        {
-                            text: 'No',
-                            style: 'cancel',
-                            onPress: () => {
-                                return;
-                            }
-                        },
-                        {
-                            text: 'Yes',
-                            onPress: async () => {
-                                const uString: any = await AsyncStorage.getItem('user');
+                    Alert(
+                        'Join meeting?',
+                        !userZoomInfo || !userZoomInfo.accountId
+                            ? 'WARNING- To mark attendance as Present, you must Connect to Zoom under Account.'
+                            : '',
+                        [
+                            {
+                                text: 'No',
+                                style: 'cancel',
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: 'Yes',
+                                onPress: async () => {
+                                    if (Platform.OS == 'web') {
+                                        window.open(event.zoomJoinUrl, '_blank');
+                                    } else {
+                                        Linking.openURL(event.zoomJoinUrl);
+                                    }
 
-                                const user = JSON.parse(uString);
+                                    // const uString: any = await AsyncStorage.getItem('user');
 
-                                const server = fetchAPI('');
-                                server
-                                    .mutate({
-                                        mutation: meetingRequest,
-                                        variables: {
-                                            userId: user._id,
-                                            channelId: event.channelId,
-                                            isOwner: false
-                                        }
-                                    })
-                                    .then(res => {
-                                        if (res.data && res.data.channel.meetingRequest !== 'error') {
-                                            server.mutate({
-                                                mutation: markAttendance,
-                                                variables: {
-                                                    userId: user._id,
-                                                    channelId: event.channelId
-                                                }
-                                            });
-                                            window.open(res.data.channel.meetingRequest, '_blank');
-                                        } else {
-                                            Alert('Classroom not in session. Waiting for instructor.');
-                                        }
-                                    })
-                                    .catch(err => {
-                                        Alert('Something went wrong.');
-                                    });
+                                    // const user = JSON.parse(uString);
+
+                                    // const server = fetchAPI('');
+                                    // server
+                                    //     .mutate({
+                                    //         mutation: meetingRequest,
+                                    //         variables: {
+                                    //             userId: user._id,
+                                    //             channelId: event.channelId,
+                                    //             isOwner: false
+                                    //         }
+                                    //     })
+                                    //     .then(res => {
+                                    //         if (res.data && res.data.channel.meetingRequest !== 'error') {
+                                    //             server.mutate({
+                                    //                 mutation: markAttendance,
+                                    //                 variables: {
+                                    //                     userId: user._id,
+                                    //                     channelId: event.channelId
+                                    //                 }
+                                    //             });
+                                    //             window.open(res.data.channel.meetingRequest, '_blank');
+                                    //         } else {
+                                    //             Alert('Classroom not in session. Waiting for instructor.');
+                                    //         }
+                                    //     })
+                                    //     .catch(err => {
+                                    //         Alert('Something went wrong.');
+                                    //     });
+                                }
                             }
-                        }
-                    ]);
+                        ]
+                    );
                 } else if (event.cueId !== '') {
                     props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy);
                 } else {
@@ -612,9 +698,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      */
     const renderRecurringOptions = () => (
         <View style={{}}>
-            <View style={{ width: '100%', maxWidth: 400, display: 'flex', paddingTop: 40, paddingBottom: 5 }}>
+            <View
+                style={{
+                    width: '100%',
+                    maxWidth: 400,
+                    display: 'flex',
+                    paddingTop: channels.length > 0 ? 40 : 20,
+                    paddingBottom: 5
+                }}>
                 <View style={{ width: '100%' }}>
-                    <Text style={styles.text}>Repeat</Text>
+                    <Text style={styles.text}>Recurring</Text>
                 </View>
                 <View
                     style={{
@@ -676,10 +769,54 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
             ) : null}
 
+            {recurring && frequency === '1-W' ? (
+                <View style={{ width: '100%', maxWidth: 400, display: 'flex' }}>
+                    <View style={{ width: '100%', backgroundColor: 'white', paddingVertical: 15 }}>
+                        <Text style={styles.text}>Occurs on</Text>
+                        {
+                            <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap' }}>
+                                {Object.keys(weekDays).map((day: any) => {
+                                    const label = weekDays[day];
+
+                                    return (
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                marginRight: 10,
+                                                padding: 5
+                                            }}>
+                                            <input
+                                                disabled={day === selectedStartDay}
+                                                style={{ marginRight: 5 }}
+                                                type="checkbox"
+                                                checked={selectedDays.includes(day)}
+                                                onChange={(e: any) => {
+                                                    if (selectedDays.includes(day)) {
+                                                        const filterDays = selectedDays.filter(
+                                                            (sel: any) => sel !== day
+                                                        );
+                                                        setSelectedDays(filterDays);
+                                                    } else {
+                                                        const updatedSelectDays = [...selectedDays, day];
+                                                        setSelectedDays(updatedSelectDays);
+                                                    }
+                                                }}
+                                            />
+                                            <Text>{label}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        }
+                    </View>
+                </View>
+            ) : null}
+
             {recurring ? (
                 <View style={{ width: '100%', maxWidth: 400, display: 'flex' }}>
                     <View style={{ width: '100%', backgroundColor: 'white', paddingVertical: 15 }}>
-                        <Text style={styles.text}>End</Text>
+                        <Text style={styles.text}>End date</Text>
                         <Datepicker
                             controls={['date', 'time']}
                             touchUi={true}
@@ -713,12 +850,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     );
 
+    console.log('Zoom profile', userZoomInfo);
+
     /**
      * @description Allows selection of whether event is a lecture
      */
     const renderMeetingOptions = () => {
         return channelId !== '' || editChannelName !== '' ? (
-            <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 15 }}>
+            <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 5 }}>
                 {!editEvent ? (
                     <View
                         style={{
@@ -733,7 +872,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     // fontFamily: 'inter',
                                     color: '#000000'
                                 }}>
-                                Lecture
+                                Meeting
                             </Text>
                         </View>
                         <View
@@ -743,6 +882,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                             <Switch
                                 value={isMeeting}
+                                disabled={
+                                    editEvent ||
+                                    !userZoomInfo ||
+                                    !userZoomInfo.accountId ||
+                                    userZoomInfo.accountId === ''
+                                }
                                 onValueChange={() => {
                                     setIsMeeting(!isMeeting);
                                 }}
@@ -751,7 +896,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     false: '#efefef',
                                     true: '#006AFF'
                                 }}
-                                disabled={editEvent}
                                 activeThumbColor="white"
                             />
                         </View>
@@ -767,24 +911,194 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditChannelName = () => {
         return (
             editChannelName && (
-                <View style={{}}>
+                <View style={{ marginBottom: 15 }}>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontFamily: 'Inter',
+                            color: '#000000'
+                        }}>
+                        {editEvent && editEvent.meeting ? 'Meeting' : 'Event'} for {editChannelName}
+                    </Text>
+                </View>
+            )
+        );
+    };
+
+    /**
+     * @description Display zoom meeting info
+     */
+    const renderEditMeetingInfo = () => {
+        return editEvent && editEvent.zoomMeetingId && editEvent.zoomMeetingId !== '' ? (
+            <View style={{}}>
+                <View
+                    style={{
+                        width: '100%',
+                        maxWidth: 400,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 20
+                    }}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            // fontFamily: 'inter',
+                            marginRight: 5,
+                            color: '#000000'
+                        }}>
+                        Zoom Meeting ID
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontFamily: 'inter',
+                            color: '#000000'
+                        }}>
+                        {editEvent.zoomMeetingId}
+                    </Text>
+                </View>
+
+                <View style={{ width: '100%', maxWidth: 400, marginBottom: 10 }}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            // fontFamily: 'inter',
+                            marginRight: 10,
+                            color: '#000000',
+                            marginBottom: 5
+                        }}>
+                        Invite Link
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontFamily: 'inter',
+                            color: '#000000'
+                        }}>
+                        {editEvent.zoomJoinUrl}
+                    </Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
-                        key={Math.random()}
-                        disabled={true}
+                        style={{ marginRight: 15 }}
                         onPress={() => {
-                            return;
+                            if (Platform.OS == 'web') {
+                                window.open(editEvent.zoomStartUrl, '_blank');
+                            } else {
+                                Linking.openURL(editEvent.zoomStartUrl);
+                            }
                         }}>
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                fontFamily: 'inter',
+                                color: '#006AFF'
                             }}>
-                            Shared with {editChannelName}
+                            Start meeting
                         </Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{ marginRight: 15 }}
+                        onPress={async () => {
+                            await navigator.clipboard.writeText(editEvent.zoomJoinUrl);
+                            Alert('Invite link copied!');
+                            // setCopiedMeetingLink(true);
+                        }}>
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                fontFamily: 'inter',
+                                color: '#006AFF'
+                            }}>
+                            Copy Invite
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity style={{}}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    fontFamily: 'inter',
+                                    color: '#F94144'
+                                }}>
+                                Delete Meeting
+                            </Text>
+                        </TouchableOpacity> */}
                 </View>
-            )
-        );
+            </View>
+        ) : editEvent ? (
+            <View
+                style={{
+                    marginVertical: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 10,
+                    backgroundColor: '#f3f3f3',
+                    borderRadius: 1
+                }}>
+                <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
+                <Text style={{ paddingLeft: 10 }}>Zoom meeting has been deleted or has expired</Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: regenZoomMeeting,
+                                variables: {
+                                    userId,
+                                    dateId: editEvent.eventId
+                                }
+                            })
+                            .then(res => {
+                                if (res.data && res.data.date.regenZoomMeeting) {
+                                    const e = res.data.date.regenZoomMeeting;
+                                    setEditEvent({
+                                        eventId: e.eventId ? e.eventId : '',
+                                        originalTitle: title,
+                                        title: e.channelName ? title + ' - ' + e.channelName : title,
+                                        start: new Date(e.start),
+                                        end: datesEqual(e.start, e.end) ? null : new Date(e.end),
+                                        dateId: e.dateId,
+                                        description: e.description,
+                                        createdBy: e.createdBy,
+                                        channelName: e.channelName,
+                                        recurringId: e.recurringId,
+                                        recordMeeting: e.recordMeeting ? true : false,
+                                        meeting: e.meeting,
+                                        channelId: e.channelId,
+                                        cueId: e.cueId,
+                                        submitted: e.submitted,
+                                        zoomMeetingId: e.zoomMeetingId,
+                                        zoomStartUrl: e.zoomStartUrl,
+                                        zoomJoinUrl: e.zoomJoinUrl,
+                                        zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
+                                        zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile
+                                    });
+                                } else {
+                                    Alert('Failed to create zoom meeting.');
+                                }
+                            })
+                            .catch(err => {
+                                Alert('Something went wrong.');
+                            });
+                    }}
+                    style={{
+                        backgroundColor: '#f3f3f3',
+                        paddingHorizontal: 10
+                    }}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontFamily: 'inter',
+                            color: '#006AFF',
+                            backgroundColor: '#f3f3f3'
+                        }}>
+                        Create New
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        ) : null;
     };
 
     /**
@@ -802,7 +1116,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     backgroundColor: 'white',
                     justifyContent: 'center',
                     display: 'flex',
-                    paddingTop: 30
+                    paddingTop: 30,
+                    paddingBottom: 30
                 }}>
                 {/* {date > new Date(start) && date < new Date(end) ? (
                     <TouchableOpacity
@@ -898,6 +1213,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             fontFamily: 'inter',
                             height: 35,
                             borderRadius: 15,
+                            width: 120,
                             textTransform: 'uppercase'
                         }}>
                         {isEditingEvents ? 'EDITING...' : 'EDIT'}
@@ -940,6 +1256,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             borderColor: '#006AFF',
                             borderRadius: 15,
                             fontSize: 12,
+                            width: 120,
                             backgroundColor: 'white',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
@@ -990,6 +1307,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 fontSize: 12,
                                 backgroundColor: 'white',
                                 paddingHorizontal: 20,
+                                width: 120,
                                 fontFamily: 'inter',
                                 height: 35,
                                 textTransform: 'uppercase'
@@ -1008,11 +1326,24 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEventContent = (data: any) => {
         const assingmentDue = new Date() > new Date(data.original.start);
 
+        const isMeeting = data.original.meeting;
+
+        const startTime = new Date(data.original.start);
+        const endTime = new Date(data.original.end);
+        // console.log('Data', data);
+
         return (
             <React.Fragment>
                 <div>{data.title}</div>
                 <div className="md-custom-event-cont">
-                    <div style={{ color: '#1F1F1F', fontSize: 14 }}>{data.original.description}</div>
+                    <div
+                        style={{
+                            color: '#1F1F1F',
+                            fontSize: 14,
+                            paddingTop: isMeeting && new Date() > startTime && new Date() < endTime ? 5 : 0
+                        }}>
+                        {data.original.description}
+                    </div>
                     {data.original.submitted !== null && userId !== '' && userId !== data.original.createdBy ? (
                         <div>
                             <div
@@ -1024,6 +1355,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderWidth: 1
                                 }}>
                                 {data.original.submitted ? 'SUBMITTED' : assingmentDue ? 'MISSING' : 'PENDING'}
+                            </div>
+                        </div>
+                    ) : null}
+                    {isMeeting && new Date() > startTime && new Date() < endTime ? (
+                        <div>
+                            <div
+                                style={{
+                                    color: '#006AFF',
+                                    borderRadius: 12,
+                                    padding: 4,
+                                    fontSize: 12,
+                                    borderWidth: 1
+                                }}>
+                                {'IN PROGRESS'}
                             </div>
                         </div>
                     ) : null}
@@ -1521,6 +1866,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: 'white',
                                                     paddingHorizontal: width < 768 ? 20 : 0
                                                 }}>
+                                                {renderEditChannelName()}
                                                 <View
                                                     style={{
                                                         width: '100%',
@@ -1534,7 +1880,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 // fontFamily: 'inter',
                                                                 color: '#000000'
                                                             }}>
-                                                            Name
+                                                            Topic
                                                         </Text>
                                                         <TextInput
                                                             value={title}
@@ -1653,7 +1999,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // fontFamily: 'inter',
                                                                         color: '#000000'
                                                                     }}>
-                                                                    Workspace
+                                                                    Channel
                                                                 </Text>
                                                             </View>
                                                             <View
@@ -1738,20 +2084,78 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             </View>
                                                         </View>
                                                     ) : null}
-                                                    {renderEditChannelName()}
+
+                                                    {renderEditMeetingInfo()}
                                                     {!editEvent && renderRecurringOptions()}
                                                     {renderMeetingOptions()}
-                                                    {channelId !== '' && (
+                                                    {channelId !== '' && userZoomInfo && userZoomInfo.accountId && (
                                                         <Text
                                                             style={{
                                                                 fontSize: 11,
                                                                 color: '#000000',
-                                                                textTransform: 'uppercase',
-                                                                lineHeight: 20
+                                                                // textTransform: 'uppercase',
+                                                                lineHeight: 20,
+                                                                fontFamily: 'Inter',
+                                                                paddingBottom: 15
                                                             }}>
-                                                            Attendances will only be captured for scheduled lectures.
+                                                            Zoom meeting will be automatically created and attendances
+                                                            will be captured for online meetings.
                                                         </Text>
                                                     )}
+
+                                                    {channelId !== '' && (!userZoomInfo || !userZoomInfo.accountId) ? (
+                                                        <View
+                                                            style={{
+                                                                marginVertical: 10,
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                padding: 10,
+                                                                backgroundColor: '#f3f3f3',
+                                                                borderRadius: 1
+                                                            }}>
+                                                            <Ionicons
+                                                                name="warning-outline"
+                                                                size={22}
+                                                                color={'#f3722c'}
+                                                            />
+                                                            <Text style={{ paddingLeft: 10 }}>
+                                                                To schedule online meetings connect your account to
+                                                                Zoom.
+                                                            </Text>
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    // ZOOM OAUTH
+
+                                                                    const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                                                                        zoomRedirectUri
+                                                                    )}&state=${userId}`;
+
+                                                                    if (
+                                                                        Platform.OS === 'ios' ||
+                                                                        Platform.OS === 'android'
+                                                                    ) {
+                                                                        Linking.openURL(url);
+                                                                    } else {
+                                                                        window.open(url);
+                                                                    }
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: '#f3f3f3',
+                                                                    paddingHorizontal: 10
+                                                                }}>
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 14,
+                                                                        fontFamily: 'inter',
+                                                                        color: '#006AFF',
+                                                                        backgroundColor: '#f3f3f3'
+                                                                    }}>
+                                                                    Connect
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    ) : null}
+
                                                     {tab === 'Add' && !editEvent ? (
                                                         <View
                                                             style={{

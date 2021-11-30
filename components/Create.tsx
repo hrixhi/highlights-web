@@ -1100,7 +1100,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}>
                                         <View
                                             style={{
-                                                flexDirection: width < 1024 ? 'column' : 'row',
+                                                flexDirection: width < 768 ? 'column' : 'row',
                                                 borderRightWidth: 0,
                                                 borderColor: '#efefef',
                                                 paddingTop: 40
@@ -1184,7 +1184,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    flexDirection: width < 1024 ? 'column' : 'row',
+                                                    flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40
                                                 }}>
                                                 <View
@@ -1271,7 +1271,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    flexDirection: width < 1024 ? 'column' : 'row',
+                                                    flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40
                                                 }}>
                                                 <View
@@ -1416,7 +1416,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    flexDirection: width < 1024 ? 'column' : 'row',
+                                                    flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40
                                                 }}>
                                                 <View
@@ -1503,7 +1503,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    flexDirection: width < 1024 ? 'column' : 'row',
+                                                    flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40
                                                 }}>
                                                 <View
@@ -1600,7 +1600,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    flexDirection: width < 1024 ? 'column' : 'row',
+                                                    flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40
                                                 }}>
                                                 <View
@@ -1696,7 +1696,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 width: '100%',
                                                 backgroundColor: 'white',
-                                                flexDirection: width < 1024 ? 'column' : 'row',
+                                                flexDirection: width < 768 ? 'column' : 'row',
                                                 paddingTop: 40
                                             }}>
                                             <View
@@ -1800,7 +1800,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             width: '100%',
                                             borderRightWidth: 0,
                                             borderColor: '#efefef',
-                                            flexDirection: width < 1024 ? 'column' : 'row',
+                                            flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40,
                                             alignItems: width < 1024 ? 'flex-start' : 'center',
                                             paddingBottom: 15
@@ -1867,7 +1867,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View
                                         style={{
                                             width: '100%',
-                                            flexDirection: width < 1024 ? 'column' : 'row',
+                                            flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40
                                         }}>
                                         <View
@@ -1916,7 +1916,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View
                                             style={{
                                                 width: '100%',
-                                                flexDirection: width < 1024 ? 'column' : 'row',
+                                                flexDirection: width < 768 ? 'column' : 'row',
                                                 paddingTop: 40
                                             }}>
                                             <View
@@ -2058,7 +2058,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View
                                             style={{
                                                 width: '100%',
-                                                flexDirection: width < 1024 ? 'column' : 'row',
+                                                flexDirection: width < 768 ? 'column' : 'row',
                                                 paddingTop: 40
                                             }}>
                                             <View
@@ -2148,7 +2148,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View
                                         style={{
                                             width: '100%',
-                                            flexDirection: width < 1024 ? 'column' : 'row',
+                                            flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40
                                         }}>
                                         <View
@@ -2298,7 +2298,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View
                                         style={{
                                             width: '100%',
-                                            flexDirection: width < 1024 ? 'column' : 'row',
+                                            flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40
                                         }}>
                                         <View
@@ -2346,7 +2346,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 {imported || isQuiz ? (
                                     <View
                                         style={{
-                                            flexDirection: width < 1024 ? 'column' : 'row'
+                                            flexDirection: width < 768 ? 'column' : 'row'
                                         }}>
                                         <View
                                             style={{

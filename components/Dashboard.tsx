@@ -1,20 +1,31 @@
 // REACT
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView, Platform } from 'react-native';
+import {
+    ActivityIndicator,
+    StyleSheet,
+    Image,
+    Dimensions,
+    Linking,
+    ScrollView,
+    Switch,
+    Platform,
+    TextInput as DefaultInput
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
+import moment from 'moment';
 
 // API
 import axios from 'axios';
 import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    creatFolder,
-    updateFolder,
     checkChannelStatus,
     subscribe,
     markAttendance,
-    meetingRequest
+    meetingRequest,
+    startInstantMeeting,
+    getOngoingMeetings
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -32,7 +43,6 @@ import Inbox from './Inbox';
 import Card from './Card';
 import Alert from '../components/Alert';
 import Discussion from './Discussion';
-import Meeting from './Meeting';
 import ChannelSettings from './ChannelSettings';
 import { Datepicker, Select, Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
@@ -42,6 +52,7 @@ import InsetShadow from 'react-native-inset-shadow';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { htmlStringParser } from '../helpers/HTMLParser';
+import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
@@ -63,11 +74,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [sortBy, setSortBy] = useState('Date ↑');
     const [cueMap, setCueMap] = useState<any>({});
     const [categoryMap, setCategoryMap] = useState<any>({});
-    const [selectedCategories, setSelectedCategories] = useState<any>({});
     const [editFolderChannelId, setEditFolderChannelId] = useState('');
     const [cueIds, setCueIds] = useState<any[]>([]);
-    const [folderIdsMap, setFolderIdsMap] = useState<any>({});
-    const [folderId, setFolderId] = useState('');
     const [filterByChannel, setFilterByChannel] = useState('All');
     const [indexMap, setIndexMap] = useState<any>({});
     const [channelKeyList, setChannelKeyList] = useState<any[]>([]);
@@ -95,6 +103,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: 'Priority'
         }
     ];
+    const [showInstantMeeting, setShowInstantMeeting] = useState(false);
+    const [instantMeetingChannelId, setInstantMeetingChannelId] = useState<any>('');
+    const [instantMeetingCreatedBy, setInstantMeetingCreatedBy] = useState<any>('');
+    const [instantMeetingTitle, setInstantMeetingTitle] = useState<any>('');
+    const [instantMeetingDescription, setInstantMeetingDescription] = useState<any>('');
+    const [instantMeetingStart, setInstantMeetingStart] = useState<any>('');
+    const [instantMeetingEnd, setInstantMeetingEnd] = useState<any>('');
+    const [instantMeetingAlertUsers, setInstantMeetingAlertUsers] = useState<any>(true);
+    const [ongoingMeetings, setOngoingMeetings] = useState<any[]>([]);
+    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
+
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
     const alreadySubscribedAlert = PreferredLanguageText('alreadySubscribed');
@@ -275,6 +294,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (u) {
                 const user = JSON.parse(u);
                 setUserId(user._id);
+
+                if (user.zoomInfo) {
+                    setUserZoomInfo(user.zoomInfo);
+                }
             }
         })();
 
@@ -284,10 +307,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         temp['Home'] = [];
         const tempCollapse: any = {};
         tempCollapse['Home'] = false;
-        const tempSelected: any = {};
-
-        const tempFolders: any = {};
-
         const tempIndexes: any = {};
 
         let dateFilteredCues: any[] = [];
@@ -329,16 +348,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 });
             }
 
-            tempCues.map((cue: any, ind: any) => {
-                if (cue.folderId) {
-                    if (tempFolders[cue.folderId]) {
-                        tempFolders[cue.folderId].push(ind);
-                    } else {
-                        tempFolders[cue.folderId] = [ind];
-                    }
-                }
-            });
-
             const key =
                 sub.channelName +
                 '-SPLIT-' +
@@ -354,7 +363,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 delete cat[''];
             }
             tempCat[key] = Object.keys(cat);
-            tempSelected[key] = '';
         });
         const cat: any = { '': [] };
         props.cues.map((cue: any) => {
@@ -381,31 +389,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             });
         }
 
-        mycues.map((cue: any, ind: any) => {
-            if (cue.folderId) {
-                if (tempFolders[cue.folderId]) {
-                    tempFolders[cue.folderId].push(ind);
-                } else {
-                    tempFolders[cue.folderId] = [ind];
-                }
-            }
-        });
-
         temp['Home'] = mycues;
         if (!cat['']) {
             delete cat[''];
         }
         tempCat['Home'] = Object.keys(cat);
-        tempSelected['Home'] = '';
         tempIndexes['Home'] = 0;
 
         setCueMap(temp);
         setCollapseMap(tempCollapse);
         setCategoryMap(tempCat);
         setIndexMap(tempIndexes);
-        setFolderIdsMap(tempFolders);
-        setSelectedCategories(tempSelected);
     }, [sortBy, filterStart, filterEnd]);
+
+    /**
+     * @description Calls method to fetch any ongoing meetings
+     */
+    useEffect(() => {
+        getCurrentMeetings();
+    }, [userId, collapseMap]);
 
     /**
      * @description Fetches search results for search term
@@ -464,6 +466,133 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [searchTerm, userId]);
 
     /**
+     * @description API call to start instant meeting
+     */
+    const createInstantMeeting = useCallback(() => {
+        if (instantMeetingTitle === '') {
+            Alert('Enter topic for meeting');
+            return;
+        }
+
+        const startDate = new Date();
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: startInstantMeeting,
+                variables: {
+                    userId: instantMeetingCreatedBy,
+                    channelId: instantMeetingChannelId,
+                    title: instantMeetingTitle,
+                    description: instantMeetingDescription,
+                    start: startDate.toUTCString(),
+                    end: instantMeetingEnd.toUTCString(),
+                    notifyUsers: instantMeetingAlertUsers
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.channel.startInstantMeeting !== 'error') {
+                    setShowInstantMeeting(false);
+                    setInstantMeetingChannelId('');
+                    setInstantMeetingCreatedBy('');
+                    setInstantMeetingTitle('');
+                    setInstantMeetingDescription('');
+                    setInstantMeetingStart('');
+                    setInstantMeetingEnd('');
+                    setInstantMeetingAlertUsers(true);
+
+                    window.open(res.data.channel.startInstantMeeting, '_blank');
+
+                    getCurrentMeetings();
+                } else {
+                    Alert('Something went wrong. Try again.');
+                }
+            })
+            .catch(err => {
+                Alert('Something went wrong.');
+            });
+    }, [
+        instantMeetingTitle,
+        instantMeetingDescription,
+        instantMeetingStart,
+        instantMeetingEnd,
+        instantMeetingChannelId,
+        instantMeetingCreatedBy,
+        instantMeetingAlertUsers
+    ]);
+
+    /**
+     * @description Handle create instant meeting for channel owners
+     */
+    const getCurrentMeetings = useCallback(async () => {
+        // console.log('Collapse map', collapseMap);
+
+        let channelId = '';
+
+        Object.keys(collapseMap).map((key: any) => {
+            if (collapseMap[key] && key.split('-SPLIT-')[0] !== 'Home') {
+                console.log('Active', collapseMap[key]);
+                console.log('Key', key.split('-SPLIT-')[1]);
+                channelId = key.split('-SPLIT-')[1];
+            }
+        });
+
+        if (userId !== '' && channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getOngoingMeetings,
+                    variables: {
+                        userId,
+                        channelId
+                    }
+                })
+                .then(res => {
+                    if (res.data && res.data.channel.ongoingMeetings) {
+                        setOngoingMeetings(res.data.channel.ongoingMeetings);
+                    }
+                })
+                .catch(err => {
+                    Alert('Something went wrong.');
+                });
+        }
+    }, [userId, collapseMap]);
+
+    /**
+     * @description Handle create instant meeting for channel owners
+     */
+    const handleStartMeeting = async (channelId: string, channelCreatedBy: string) => {
+        const u = await AsyncStorage.getItem('user');
+
+        if (u) {
+            const user = JSON.parse(u);
+            if (user.zoomInfo) {
+                setInstantMeetingChannelId(channelId);
+                setInstantMeetingCreatedBy(channelCreatedBy);
+                const current = new Date();
+                setInstantMeetingStart(current);
+                setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
+                setShowInstantMeeting(true);
+            } else {
+                Alert('You must connect with Zoom to start a meeting.');
+
+                // ZOOM OATH
+
+                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                    zoomRedirectUri
+                )}&state=${userId}`;
+
+                if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                    Linking.openURL(url);
+                } else {
+                    window.open(url);
+                }
+            }
+        } else {
+            return;
+        }
+    };
+
+    /**
      * @description Call to enter classroom
      */
     const handleEnterClassroom = useCallback(async () => {
@@ -479,12 +608,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         mutation: meetingRequest,
                         variables: {
                             userId,
-                            channelId: props.channelId,
-                            isOwner: user._id.toString().trim() === props.channelCreatedBy
+                            channelId: instantMeetingChannelId,
+                            isOwner: user._id.toString().trim() === instantMeetingCreatedBy
                         }
                     })
                     .then(res => {
-                        console.log(res);
                         if (res.data && res.data.channel.meetingRequest !== 'error') {
                             server.mutate({
                                 mutation: markAttendance,
@@ -501,30 +629,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     .catch(err => {
                         Alert('Something went wrong.');
                     });
-            } else {
-                Alert('Connect with Zoom to enter meeting.');
-
-                // LIVE
-                // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
-                // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
-                // DEV
-                const redirectUri = 'http://localhost:19006/zoom_auth';
-                const clientId = 'PAfnxrFcSd2HkGnn9Yq96A';
-
-                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
-                    redirectUri
-                )}&state=${userId}`;
-
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    Linking.openURL(url);
-                } else {
-                    window.open(url);
-                }
             }
-        } else {
-            return;
         }
-    }, [userId, props.channelId, props.channelCreatedBy]);
+    }, [userId, instantMeetingChannelId, instantMeetingCreatedBy]);
 
     /**
      * @description Fetches status of channel and depending on that handles subscription to channel
@@ -672,7 +779,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                             <Ionicons name="chatbubbles-outline" size={18} />
                         </Text>
-                        <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>Discuss</Text>
+                        <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>Discussion</Text>
                     </TouchableOpacity>
                     {/* <TouchableOpacity
                     style={{
@@ -703,7 +810,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                                 <Ionicons name="videocam-outline" size={18} />
                             </Text>
-                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>Meet</Text>
+                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>Meetings</Text>
                         </TouchableOpacity>
                     ) : null}
                     {props.version !== 'read' ? (
@@ -1075,6 +1182,456 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 
     /**
+     * @description Round time to nearest seconds
+     */
+    const roundSeconds = (time: Date) => {
+        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+        time.setSeconds(0, 0);
+        return time;
+    };
+
+    const renderOngoingMeetings = (createdBy: string, colorCode: string) => {
+        // console.log('Ongoing meetings', ongoingMeetings);
+        return (
+            <View style={{ width: '100%', maxWidth: 900, backgroundColor: '#efefef', paddingBottom: 30 }}>
+                <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
+                    In Progress
+                </Text>
+
+                <View
+                    style={{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        // paddingTop: 10,
+                        maxHeight: 500,
+                        paddingHorizontal: 10,
+                        borderRadius: 1,
+                        borderLeftColor: colorCode,
+                        borderLeftWidth: 3,
+                        shadowOffset: {
+                            width: 2,
+                            height: 2
+                        },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 10,
+                        zIndex: 5000000
+                    }}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={true}
+                        horizontal={false}
+                        // style={{ height: '100%' }}
+                        contentContainerStyle={{
+                            // borderWidth: 1,
+                            // borderRightWidth: 0,
+                            // borderLeftWidth: 0,
+                            // borderRightWidth: 1,
+                            paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
+                            borderColor: '#efefef',
+                            borderRadius: 1,
+                            width: '100%',
+                            maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500
+                        }}>
+                        {ongoingMeetings.map((meeting: any, ind: number) => {
+                            let startTime = emailTimeDisplay(meeting.start);
+                            let endTime = emailTimeDisplay(meeting.end);
+
+                            return (
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        borderColor: '#efefef',
+                                        paddingVertical: 8,
+                                        borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
+                                        // minWidth: 600, // flex: 1,
+                                        width: '100%',
+                                        alignItems: 'center'
+                                    }}>
+                                    <View style={{}}>
+                                        <Text
+                                            style={{
+                                                fontSize: 13,
+                                                padding: 5,
+                                                fontFamily: 'inter',
+                                                maxWidth: 300
+                                            }}>
+                                            {meeting.title}
+                                        </Text>
+                                        {/* {meeting.description ? ( */}
+                                        <Text
+                                            style={{
+                                                fontSize: 12,
+                                                padding: 5,
+                                                maxWidth: 300
+                                            }}>
+                                            {/* {meeting.description} */}
+                                            This is a sample description
+                                        </Text>
+                                        {/* ) : null} */}
+                                    </View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                                        <View style={{ marginRight: 20 }}>
+                                            <Text
+                                                style={{
+                                                    fontSize: 12,
+                                                    padding: 5,
+                                                    lineHeight: 13
+                                                }}>
+                                                {startTime} to {endTime}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    if (!userZoomInfo || userZoomInfo.accountId === '') {
+                                                        Alert(
+                                                            'Join Meeting?',
+                                                            'WARNING- To mark attendance as present, you must Connect to Zoom under Account.',
+                                                            [
+                                                                {
+                                                                    text: 'Cancel',
+                                                                    style: 'cancel',
+                                                                    onPress: () => {
+                                                                        return;
+                                                                    }
+                                                                },
+                                                                {
+                                                                    text: 'Okay',
+                                                                    onPress: () => {
+                                                                        if (createdBy === userId) {
+                                                                            if (Platform.OS == 'web') {
+                                                                                window.open(meeting.startUrl, '_blank');
+                                                                            } else {
+                                                                                Linking.openURL(meeting.startUrl);
+                                                                            }
+                                                                        } else {
+                                                                            if (Platform.OS == 'web') {
+                                                                                window.open(meeting.joinUrl, '_blank');
+                                                                            } else {
+                                                                                Linking.openURL(meeting.joinUrl);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        );
+                                                    } else {
+                                                        if (createdBy === userId) {
+                                                            if (Platform.OS == 'web') {
+                                                                window.open(meeting.startUrl, '_blank');
+                                                            } else {
+                                                                Linking.openURL(meeting.startUrl);
+                                                            }
+                                                        } else {
+                                                            if (Platform.OS == 'web') {
+                                                                window.open(meeting.joinUrl, '_blank');
+                                                            } else {
+                                                                Linking.openURL(meeting.joinUrl);
+                                                            }
+                                                        }
+                                                    }
+                                                }}
+                                                style={{}}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 12,
+                                                        fontFamily: 'inter',
+                                                        color: '#006AFF',
+                                                        marginRight: 20
+                                                    }}>
+                                                    JOIN {createdBy === userId ? '' : 'MEETING'}
+                                                </Text>
+                                            </TouchableOpacity>
+
+                                            {createdBy === userId ? (
+                                                <TouchableOpacity
+                                                    onPress={async () => {
+                                                        await navigator.clipboard.writeText(meeting.joinUrl);
+                                                        Alert('Invite link copied!');
+                                                    }}
+                                                    style={{}}>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 12,
+                                                            fontFamily: 'inter',
+                                                            color: '#006AFF',
+                                                            marginRight: 20
+                                                        }}>
+                                                        COPY INVITE
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ) : null}
+                                        </View>
+                                    </View>
+                                </View>
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+            </View>
+        );
+    };
+
+    const renderInstantMeetingPopup = () => {
+        return (
+            <Popup
+                isOpen={showInstantMeeting}
+                buttons={[
+                    {
+                        text: 'START',
+                        handler: function(event) {
+                            createInstantMeeting();
+                        }
+                    },
+                    {
+                        text: 'CANCEL',
+                        handler: function(event) {
+                            setShowInstantMeeting(false);
+                            setInstantMeetingChannelId('');
+                            setInstantMeetingCreatedBy('');
+                            setInstantMeetingTitle('');
+                            setInstantMeetingDescription('');
+                            setInstantMeetingStart('');
+                            setInstantMeetingEnd('');
+                        }
+                    }
+                ]}
+                themeVariant="light"
+                onClose={() => {
+                    setShowInstantMeeting(false);
+                    setInstantMeetingChannelId('');
+                    setInstantMeetingCreatedBy('');
+                }}
+                responsive={{
+                    small: {
+                        display: 'bottom'
+                    },
+                    medium: {
+                        // Custom breakpoint
+                        display: 'center'
+                    }
+                }}>
+                <View
+                    style={{ flexDirection: 'column', paddingHorizontal: 25, backgroundColor: '#f2f2f7' }}
+                    className="mbsc-align-center mbsc-padding">
+                    {/* <ScrollView
+                        showsVerticalScrollIndicator={true}
+                        horizontal={false}
+                        contentContainerStyle={{
+                            width: '100%'
+                        }}> */}
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            paddingHorizontal: 20,
+                            marginVertical: 20,
+                            minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
+                            maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                            backgroundColor: '#f2f2f7'
+                        }}>
+                        <Text
+                            style={{
+                                fontSize: 13,
+                                textTransform: 'uppercase',
+                                fontFamily: 'inter',
+                                marginBottom: 20
+                            }}>
+                            Start an instant meeting
+                        </Text>
+
+                        <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    // fontFamily: 'inter',
+                                    color: '#000000'
+                                }}>
+                                Topic
+                            </Text>
+                            <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                <DefaultInput
+                                    style={{ paddingTop: 10, paddingBottom: 10, fontSize: 14 }}
+                                    value={instantMeetingTitle}
+                                    placeholder={''}
+                                    onChangeText={val => setInstantMeetingTitle(val)}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    // required={true}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f2f2f7' }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    // fontFamily: 'inter',
+                                    color: '#000000'
+                                }}>
+                                Description
+                            </Text>
+                            <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                <DefaultInput
+                                    style={{ paddingTop: 10, paddingBottom: 10, fontSize: 14 }}
+                                    value={instantMeetingDescription}
+                                    placeholder={''}
+                                    onChangeText={val => setInstantMeetingDescription(val)}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    // required={true}
+                                />
+                            </View>
+                        </View>
+                        {/* <View
+                            style={{
+                                width: '100%',
+                                maxWidth: 400,
+                                // paddingVertical: 15,
+                                backgroundColor: '#f2f2f7'
+                            }}>
+                            <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
+                            <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                <Datepicker
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
+                                    value={instantMeetingStart}
+                                    themeVariant="light"
+                                    // inputComponent="input"
+                                    inputProps={{
+                                        placeholder: 'Select start...',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onChange={(event: any) => {
+                                        const date = new Date(event.value);
+                                        const roundOffDate = roundSeconds(date);
+                                        setInstantMeetingStart(roundOffDate);
+                                    }}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true
+                                        },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false
+                                        }
+                                    }}
+                                />
+                            </View>
+                        </View> */}
+                        <View
+                            style={{
+                                width: '100%',
+                                maxWidth: 400,
+                                // paddingVertical: 15,
+                                backgroundColor: '#f2f2f7'
+                            }}>
+                            <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
+                            <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                <Datepicker
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
+                                    value={instantMeetingEnd}
+                                    themeVariant="light"
+                                    // inputComponent="input"
+                                    inputProps={{
+                                        placeholder: 'Select end...',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onChange={(event: any) => {
+                                        const date = new Date(event.value);
+                                        const roundOffDate = roundSeconds(date);
+                                        setInstantMeetingEnd(roundOffDate);
+                                    }}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true
+                                        },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false
+                                        }
+                                    }}
+                                />
+                            </View>
+                        </View>
+                        <View
+                            style={{
+                                width: '100%',
+                                paddingTop: 10,
+                                paddingBottom: 15,
+                                backgroundColor: '#f2f2f7'
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    // fontFamily: 'inter',
+                                    color: '#000000'
+                                }}>
+                                Notify Users
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                height: 40,
+                                marginRight: 10,
+                                backgroundColor: '#f2f2f7'
+                            }}>
+                            <Switch
+                                value={instantMeetingAlertUsers}
+                                onValueChange={() => {
+                                    setInstantMeetingAlertUsers(!instantMeetingAlertUsers);
+                                }}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                    false: '#efefef',
+                                    true: '#006AFF'
+                                }}
+                                activeThumbColor="white"
+                            />
+                        </View>
+                        <View
+                            style={{
+                                width: '100%',
+                                maxWidth: 400,
+                                // paddingVertical: 15,
+
+                                backgroundColor: '#f2f2f7'
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: '#000000',
+                                    textTransform: 'uppercase',
+                                    lineHeight: 20
+                                }}>
+                                NOTE: You can schedule future meetings under Agenda
+                            </Text>
+                        </View>
+                    </View>
+
+                    {/* </ScrollView> */}
+                </View>
+            </Popup>
+        );
+    };
+
+    /**
+     * @description Formats time in email format
+     */
+    function emailTimeDisplay(dbDate: string) {
+        let date = moment(dbDate);
+        var currentDate = moment();
+        if (currentDate.isSame(date, 'day')) return date.format('h:mm a');
+        else if (currentDate.isSame(date, 'year')) return date.format('MMM DD');
+        else return date.format('MM/DD/YYYY');
+    }
+
+    /**
      * @description Renders all the channels under workspace
      */
     const overview = (
@@ -1371,25 +1928,79 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         />
                                                     ) : // Meet
                                                     indexMap[key] === 2 ? (
-                                                        <Performance
-                                                            channelName={key.split('-SPLIT-')[0]}
-                                                            onPress={(name: any, id: any, createdBy: any) => {
-                                                                props.setChannelFilterChoice('All');
-                                                                props.handleFilterChange(name);
-                                                                props.setChannelId(id);
-                                                                props.setChannelCreatedBy(createdBy);
-                                                                props.openGrades();
-                                                                props.hideHome();
-                                                            }}
-                                                            filterStart={filterStart}
-                                                            filterEnd={filterEnd}
-                                                            channelId={key.split('-SPLIT-')[1]}
-                                                            channelCreatedBy={key.split('-SPLIT-')[2]}
-                                                            subscriptions={props.subscriptions}
-                                                            openCueFromGrades={props.openCueFromCalendar}
-                                                            colorCode={key.split('-SPLIT-')[3]}
-                                                            activeTab={'attendance'}
-                                                        />
+                                                        <View
+                                                            style={{
+                                                                alignItems: 'center',
+                                                                backgroundColor: '#efefef'
+                                                            }}>
+                                                            <View
+                                                                style={{
+                                                                    width: '100%',
+                                                                    marginBottom: 20,
+                                                                    backgroundColor: '#efefef'
+                                                                }}>
+                                                                <TouchableOpacity
+                                                                    onPress={() =>
+                                                                        handleStartMeeting(
+                                                                            key.split('-SPLIT-')[1],
+                                                                            key.split('-SPLIT-')[2]
+                                                                        )
+                                                                    }
+                                                                    style={{
+                                                                        backgroundColor: '#efefef',
+                                                                        overflow: 'hidden',
+                                                                        height: 35,
+                                                                        marginTop: 20,
+                                                                        justifyContent: 'center',
+                                                                        flexDirection: 'row',
+                                                                        marginLeft: 'auto'
+                                                                    }}>
+                                                                    <Text
+                                                                        style={{
+                                                                            textAlign: 'center',
+                                                                            lineHeight: 34,
+                                                                            color: '#fff',
+                                                                            borderRadius: 15,
+                                                                            backgroundColor: '#006AFF',
+                                                                            fontSize: 12,
+                                                                            paddingHorizontal: 20,
+                                                                            fontFamily: 'inter',
+                                                                            height: 35,
+                                                                            width: 175,
+                                                                            textTransform: 'uppercase'
+                                                                        }}>
+                                                                        Start Meeting
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+
+                                                            {ongoingMeetings.length > 0
+                                                                ? renderOngoingMeetings(
+                                                                      key.split('-SPLIT-')[2],
+                                                                      key.split('-SPLIT-')[3]
+                                                                  )
+                                                                : null}
+
+                                                            <Performance
+                                                                channelName={key.split('-SPLIT-')[0]}
+                                                                onPress={(name: any, id: any, createdBy: any) => {
+                                                                    props.setChannelFilterChoice('All');
+                                                                    props.handleFilterChange(name);
+                                                                    props.setChannelId(id);
+                                                                    props.setChannelCreatedBy(createdBy);
+                                                                    props.openGrades();
+                                                                    props.hideHome();
+                                                                }}
+                                                                filterStart={filterStart}
+                                                                filterEnd={filterEnd}
+                                                                channelId={key.split('-SPLIT-')[1]}
+                                                                channelCreatedBy={key.split('-SPLIT-')[2]}
+                                                                subscriptions={props.subscriptions}
+                                                                openCueFromGrades={props.openCueFromCalendar}
+                                                                colorCode={key.split('-SPLIT-')[3]}
+                                                                activeTab={'meetings'}
+                                                            />
+                                                        </View>
                                                     ) : // Scores
                                                     indexMap[key] === 3 ? (
                                                         <Performance
@@ -1618,6 +2229,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 height: windowHeight,
                 backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff'
             }}>
+            {renderInstantMeetingPopup()}
             <View
                 style={{
                     backgroundColor: '#000000',
@@ -1764,7 +2376,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginRight: 2,
                                 maxWidth: 225
                             }}
-                            autoCompleteType={'off'}
+                            autoCompleteType={'xyz'}
                             placeholder={'Search'}
                             onChangeText={val => setSearchTerm(val)}
                             placeholderTextColor={'#fff'}

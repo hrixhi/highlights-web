@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
-import { TextInput as CustomTextInput } from './CustomTextInput'
+// import { TextInput as CustomTextInput } from './CustomTextInput'
 import { Text, View } from './Themed';
-import EquationEditor from 'equation-editor-react';
+// import EquationEditor from 'equation-editor-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { RadioButton } from "./RadioButton";
 import parser from 'html-react-parser';
@@ -21,6 +21,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [percentage, setPercentage] = useState("");
     const [comment, setComment] = useState(props.comment ? props.comment : "");
     const [headers, setHeaders] = useState<any>(props.headers)
+
+    console.log("PROPS SOLUTIONS", props.solutions)
+
+    if (!props.solutions) {
+        return null;
+    }
 
     // HOOKS
 

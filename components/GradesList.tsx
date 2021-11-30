@@ -502,6 +502,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             </View>
                                                         }
 
+                                                        console.log("Score object", scoreObject)
+
                                                         return <TouchableOpacity disabled={!props.isOwner} style={styles.col} key={row.toString() + '-' + col.toString()} onPress={() => {
 
                                                             if (!scoreObject) return;
@@ -511,17 +513,17 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             setActiveScore(scoreObject.score);
                                                         }}>
                                                             {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#f94144', }}>
-                                                                {scoreObject && scoreObject.graded ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
+                                                                {scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
                                                             </Text>
                                                                 :
                                                                 <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#000000', }}>
                                                                     {
-                                                                        scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
+                                                                        scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score : (scoreObject && (new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline))) ? "Late" : '-')
                                                                     }
                                                                 </Text>}
 
                                                             {
-                                                                scoreObject.score && scoreObject.graded && ((new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) || !scoreObject.submittedAt)) ? <Text style={{ textAlign: 'center', fontSize: 10, color: !scoreObject.submittedAt ? '#f94144' : '#f3722c', marginTop: 5, borderWidth: 0, borderColor: !scoreObject.submittedAt ? '#f94144' : '#f3722c', borderRadius: 10, width: 60, alignSelf: 'center' }}>
+                                                                scoreObject && scoreObject !== undefined && scoreObject.score && scoreObject.graded && ((new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) || !scoreObject.submittedAt)) ? <Text style={{ textAlign: 'center', fontSize: 10, color: !scoreObject.submittedAt ? '#f94144' : '#f3722c', marginTop: 5, borderWidth: 0, borderColor: !scoreObject.submittedAt ? '#f94144' : '#f3722c', borderRadius: 10, width: 60, alignSelf: 'center' }}>
                                                                     {!scoreObject.submittedAt ? "(Missing)" : "(Late)"}
                                                                 </Text> : null
                                                             }

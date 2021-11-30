@@ -180,7 +180,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: 'white',
+                    backgroundColor: '#efefef',
                     alignSelf: 'center',
                     marginTop: 100
                 }}>
@@ -200,14 +200,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 backgroundColor: '#efefef',
                 paddingBottom: 50
             }}>
-            {props.activeTab === 'attendance' ? (
+            {props.activeTab === 'meetings' ? (
                 <AttendanceList
                     channelId={props.channelId}
                     channelCreatedBy={props.channelCreatedBy}
                     channelColor={props.colorCode}
                 />
             ) : null}
-            {props.activeTab === 'attendance' ? null : (
+            {props.activeTab === 'meetings' ? null : (
                 <Grades
                     channelId={props.channelId}
                     channelCreatedBy={props.channelCreatedBy}

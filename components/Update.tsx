@@ -36,6 +36,7 @@ import InsetShadow from 'react-native-inset-shadow';
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { TextInput } from './CustomTextInput';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(1));
@@ -830,14 +831,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 20,
                 flexDirection: 'row',
                 flex: 1,
-                backgroundColor: '#1f1f1f',
+                backgroundColor: '#000',
                 paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
                 height: 48,
                 justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
             }}>
             <TouchableOpacity
                 style={{
-                    backgroundColor: '#1f1f1f'
+                    backgroundColor: '#000'
                 }}
                 onPress={() => {
                     setShowOptions(false);
@@ -849,7 +850,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
-                    backgroundColor: '#1f1f1f'
+                    backgroundColor: '#000'
                 }}
                 onPress={() => {
                     setShowOptions(true);
@@ -862,7 +863,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#1f1f1f'
+                        backgroundColor: '#000'
                     }}
                     onPress={() => {
                         setViewStatus(false);
@@ -876,7 +877,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 ? styles.allGrayFill
                                 : styles.all
                         }>
-                        SUBMIT
+                        SUBMISSION
                     </Text>
                 </TouchableOpacity>
             )}
@@ -884,7 +885,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {props.channelId === '' || !channelOwner || props.version === 'read' ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#1f1f1f'
+                        backgroundColor: '#000'
                     }}
                     onPress={() => {
                         setViewStatus(true);
@@ -1579,7 +1580,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setEditFolder(true);
                         }}
                         style={{
-                            backgroundColor: '#1f1f1f',
+                            backgroundColor: '#000',
                             paddingLeft: 0
                         }}>
                         <Text
@@ -1606,7 +1607,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setChannelCues(filter);
                         }}
                         style={{
-                            backgroundColor: '#1f1f1f',
+                            backgroundColor: '#000',
                             paddingLeft: 0
                         }}>
                         <Text
@@ -1663,7 +1664,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <MenuTrigger>
                             <View
                                 style={{
-                                    backgroundColor: '#1f1f1f',
+                                    backgroundColor: '#000',
                                     paddingLeft: 0
                                 }}>
                                 <Text
@@ -1747,7 +1748,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             disabled={selectedCues.length < 2 || creatingFolder}
                             style={{
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 paddingLeft: 0
                             }}>
                             <Text
@@ -1769,7 +1770,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setSelectedCues([]);
                             }}
                             style={{
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 paddingLeft: 0
                             }}>
                             <Text
@@ -1836,7 +1837,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             disabled={folderCuesToDisplay.length < 2 || updatingFolder}
                             style={{
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 paddingLeft: 0
                             }}>
                             <Text
@@ -1884,7 +1885,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     });
                             }}
                             style={{
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 paddingLeft: 0
                             }}>
                             <Text
@@ -1912,7 +1913,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setFolderCuesToDisplay(cuesInOrder);
                             }}
                             style={{
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 paddingLeft: 0
                             }}>
                             <Text
@@ -1940,7 +1941,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * */
     const renderHeader = () => {
         return (
-            <View style={{ width: '100%', backgroundColor: '#1f1f1f', flexDirection: 'column', zIndex: 500000 }}>
+            <View style={{ width: '100%', backgroundColor: '#000', flexDirection: 'column', zIndex: 500000 }}>
                 {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
                 <View
                     style={{
@@ -1948,7 +1949,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: '100%',
                         justifyContent: 'center',
                         height: 52,
-                        backgroundColor: '#1f1f1f',
+                        backgroundColor: '#000',
                         paddingHorizontal: 10,
                         shadowColor: '#000',
                         shadowOffset: {
@@ -1993,13 +1994,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             />
                         </TouchableOpacity>
                     ) : null}
-                    <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#1f1f1f' }}>
+                    <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#000' }}>
                         {/* BACK BUTTON */}
                         <TouchableOpacity
                             style={{
                                 flexDirection: 'row',
-                                paddingTop: 6,
-                                backgroundColor: '#1f1f1f'
+                                paddingTop: 7,
+                                backgroundColor: '#000'
                             }}
                             onPress={() => {
                                 props.closeModal();
@@ -2015,46 +2016,46 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {/* Render Folder Title input if Create / Edit */}
 
                         {createNewFolder ? (
-                            <TextareaAutosize
+                            <TextInput
                                 value={newFolderTitle}
                                 style={{
-                                    width: 210,
-                                    marginRight: 20,
-                                    maxWidth: '100%',
-                                    borderBottom: '1px solid #efefef',
-                                    fontSize: 14,
-                                    paddingTop: 8,
-                                    paddingBottom: 8,
-                                    borderRadius: 1,
-                                    marginTop: 8,
-                                    marginBottom: 5,
-                                    // height: 35,
-                                    marginLeft: 15
+                                    color: '#fff',
+                                    backgroundColor: '#1F1F1F',
+                                    borderRadius: 15,
+                                    fontSize: 12,
+                                    paddingBottom: 5,
+                                    paddingTop: 4,
+                                    paddingHorizontal: 16,
+                                    marginTop: 2,
+                                    marginLeft: 10,
+                                    marginRight: 2,
+                                    maxWidth: 225
                                 }}
-                                // style={styles.input}
-                                rows={1}
+                                autoCompleteType={'xyz'}
+                                placeholderTextColor={'#fff'}
                                 placeholder={'Folder Title'}
                                 onChange={(e: any) => setNewFolderTitle(e.target.value)}
                             />
                         ) : null}
 
                         {editFolder ? (
-                            <TextareaAutosize
+                            <TextInput
                                 value={updateFolderTitle}
                                 style={{
-                                    width: 210,
-                                    marginRight: 20,
-                                    maxWidth: '100%',
-                                    borderBottom: '1px solid #efefef',
-                                    fontSize: 14,
-                                    paddingTop: 8,
-                                    paddingBottom: 8,
-                                    borderRadius: 1,
-                                    marginTop: 8,
-                                    marginBottom: 5,
-                                    marginLeft: 15
+                                    color: '#fff',
+                                    backgroundColor: '#1F1F1F',
+                                    borderRadius: 15,
+                                    fontSize: 12,
+                                    paddingBottom: 5,
+                                    paddingTop: 4,
+                                    paddingHorizontal: 16,
+                                    marginTop: 2,
+                                    marginLeft: 10,
+                                    marginRight: 2,
+                                    maxWidth: 225
                                 }}
-                                rows={1}
+                                autoCompleteType={'xyz'}
+                                placeholderTextColor={'#fff'}
                                 placeholder={'Folder Title'}
                                 onChange={(e: any) => setUpdateFolderTitle(e.target.value)}
                             />
@@ -2065,7 +2066,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View
                                 style={{
                                     flex: 1,
-                                    backgroundColor: '#1f1f1f',
+                                    backgroundColor: '#000',
                                     justifyContent: 'flex-end',
                                     flexDirection: 'row',
                                     paddingTop: 8
@@ -2079,13 +2080,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         style={{
                                             paddingLeft: 0,
-                                            backgroundColor: '#1f1f1f',
+                                            backgroundColor: '#000',
                                             marginLeft: 20
                                         }}>
                                         <Text
                                             style={{
                                                 lineHeight: 34,
-                                                backgroundColor: '#1f1f1f',
+                                                backgroundColor: '#000',
                                                 fontWeight: 'bold',
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
@@ -2108,12 +2109,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             paddingLeft: 0,
                                             marginLeft: 20,
-                                            backgroundColor: '#1f1f1f'
+                                            backgroundColor: '#000'
                                         }}>
                                         <Text
                                             style={{
                                                 lineHeight: 34,
-                                                backgroundColor: '#1f1f1f',
+                                                backgroundColor: '#000',
                                                 fontWeight: 'bold',
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
@@ -2207,7 +2208,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 position: 'absolute',
                                 zIndex: 1000,
-                                backgroundColor: '#1f1f1f',
+                                backgroundColor: '#000',
                                 bottom: 0,
                                 width: '100%',
                                 paddingTop: 5,
@@ -2242,7 +2243,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         height: 25,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
-        backgroundColor: '#1f1f1f',
+        backgroundColor: '#000',
         lineHeight: 25,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
@@ -2254,7 +2255,7 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
         borderRadius: 12,
         backgroundColor: '#006AFF',
-        lineHeight: 25,
+        lineHeight: 24,
         height: 25,
         fontFamily: 'inter',
         textTransform: 'uppercase'

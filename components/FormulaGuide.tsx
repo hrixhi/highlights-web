@@ -1,5 +1,5 @@
 // REACT
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ScrollView } from 'react-native';
 
 // COMPONENTS

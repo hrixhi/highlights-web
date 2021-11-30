@@ -284,9 +284,9 @@ export const markMessagesAsRead = gql`
 `;
 
 export const createDateV1 = gql`
-  mutation($title: String!, $userId: String!, $start: String!, $end: String!, $channelId: String, $meeting: Boolean, $description: String, $recordMeeting: Boolean, $frequency: String, $repeatTill: String) {
+  mutation($title: String!, $userId: String!, $start: String!, $end: String!, $channelId: String, $meeting: Boolean, $description: String, $recordMeeting: Boolean, $frequency: String, $repeatTill: String, $repeatDays: [String!]) {
     date {
-      createV1(title: $title, userId: $userId, start: $start, end: $end, channelId: $channelId,  meeting: $meeting, description: $description, recordMeeting: $recordMeeting, frequency: $frequency, repeatTill: $repeatTill)
+      createV1(title: $title, userId: $userId, start: $start, end: $end, channelId: $channelId,  meeting: $meeting, description: $description, recordMeeting: $recordMeeting, frequency: $frequency, repeatTill: $repeatTill, repeatDays: $repeatDays)
     }
   }
 `
@@ -534,6 +534,14 @@ mutation($groupId: String!, $users: [String!]!, $groupName: String!, $groupImage
   }
 }
 `
+export const startInstantMeeting = gql`
+mutation($channelId: String!, $userId: String!, $title: String!, $description: String!, $start: String!, $end: String!, $notifyUsers: Boolean!) {
+  channel {
+    startInstantMeeting(channelId: $channelId, userId: $userId, title: $title, description: $description, start: $start, end: $end, notifyUsers: $notifyUsers)
+  }
+}
+`
+
 /**
  * ALL
  * QUERIES
@@ -906,6 +914,11 @@ export const getEvents = gql`
         channelId
         cueId
         submitted
+        zoomMeetingId
+        zoomStartUrl
+        zoomJoinUrl
+        zoomMeetingScheduledBy
+        zoomMeetingCreatorProfile
       }
     }
   }
@@ -1118,6 +1131,33 @@ export const resetAccessCode = gql`
   mutation($channelId: String!) {
     channel {
       resetAccessCode(channelId: $channelId)
+    }
+  }
+`
+export const regenZoomMeeting = gql`
+  mutation($userId: String!, $dateId: String!) {
+    date {
+      regenZoomMeeting(userId: $userId, dateId: $dateId) {
+        eventId
+        dateId
+        title
+        start
+        end
+        channelName
+        description
+        createdBy
+        recurringId
+        recordMeeting
+        meeting
+        channelId
+        cueId
+        submitted
+        zoomMeetingId
+        zoomStartUrl
+        zoomJoinUrl
+        zoomMeetingScheduledBy
+        zoomMeetingCreatorProfile
+      }
     }
   }
 `
@@ -1426,6 +1466,21 @@ query($userId: String!) {
              role
              meetingOn
              owners
+    }
+  }
+}
+`
+export const getOngoingMeetings = gql`
+query($userId: String!, $channelId: String!) {
+  channel {
+    ongoingMeetings(userId: $userId, channelId: $channelId) {
+      title
+      description
+      startUrl
+      joinUrl
+      start
+      end
+      error
     }
   }
 }

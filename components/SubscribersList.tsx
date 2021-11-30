@@ -243,7 +243,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [problems, subscribers]);
 
     /**
-     * @description Set release submission and Quiz from props
+     * @description Set if submission released from props
      */
     useEffect(() => {
         if (!props.cue) {
@@ -254,20 +254,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         } else {
             setReleaseSubmission(false);
         }
-
-        // Set if quiz when cue loaded
-        if (
-            props.cue &&
-            props.cue.original &&
-            props.cue.original[0] === '{' &&
-            props.cue.original[props.cue.original.length - 1] === '}'
-        ) {
-            const obj = JSON.parse(props.cue.original);
-
-            if (obj.quizId) {
-                setIsQuiz(true);
-            }
-        }
     }, [props.cue]);
 
     /**
@@ -276,12 +262,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
         if (submission[0] === '{' && submission[submission.length - 1] === '}') {
             const obj = JSON.parse(submission);
-            if (obj.solutions) {
-                setIsQuiz(true);
-                setQuizSolutions(obj);
-
-                // This is old schema for submission
-            } else if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
+            if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
                 setImported(true);
                 setUrl(obj.url);
                 setType(obj.type);

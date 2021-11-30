@@ -257,6 +257,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 backgroundColor: '#efefef',
                 width: '100%'
             }}>
+            {channelAttendances.length === 0 || fixedPastMeetings.length === 0 ? null : (
+                <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
+                    Past meetings
+                </Text>
+            )}
             <Text style={{ width: '100%', textAlign: 'center' }}>
                 {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
             </Text>
@@ -268,7 +273,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: '100%',
                     justifyContent: 'flex-end'
                 }}>
-                {channelAttendances.length === 0 ? null : (
+                {channelAttendances.length === 0 || fixedPastMeetings.length === 0 ? null : (
                     <View style={{ backgroundColor: '#efefef' }}>
                         <View
                             style={{
@@ -321,7 +326,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 textAlign: 'center',
-                                lineHeight: 35,
+                                lineHeight: 34,
                                 color: '#006AFF',
                                 fontSize: 12,
                                 borderColor: '#006AFF',
@@ -332,7 +337,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
                             }}>
-                            DOWNLOAD
+                            EXPORT
                         </Text>
                     </TouchableOpacity>
                 )}
