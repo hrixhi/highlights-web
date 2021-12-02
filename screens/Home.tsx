@@ -855,7 +855,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [cues]);
 
     useEffect(() => {
-        OneSignal.initialize('51db5230-f2f3-491a-a5b9-e4fba0f23c76', {
+        OneSignal.initialize('78cd253e-262d-4517-a710-8719abf3ee55', {
             notifyButton: {
                 enable: false
             },
