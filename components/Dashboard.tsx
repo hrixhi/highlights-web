@@ -1449,7 +1449,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                             <View style={{ marginTop: 10, marginBottom: 10 }}>
                                 <DefaultInput
-                                    style={{ paddingTop: 10, paddingBottom: 10, fontSize: 14 }}
+                                    style={{ padding: 10, fontSize: 14 }}
                                     value={instantMeetingTitle}
                                     placeholder={''}
                                     onChangeText={val => setInstantMeetingTitle(val)}
@@ -1470,7 +1470,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                             <View style={{ marginTop: 10, marginBottom: 10 }}>
                                 <DefaultInput
-                                    style={{ paddingTop: 10, paddingBottom: 10, fontSize: 14 }}
+                                    style={{ padding: 10, fontSize: 14 }}
                                     value={instantMeetingDescription}
                                     placeholder={''}
                                     onChangeText={val => setInstantMeetingDescription(val)}
@@ -1607,7 +1607,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     fontSize: 11,
                                     color: '#000000',
                                     textTransform: 'uppercase',
-                                    lineHeight: 20
+                                    lineHeight: 20,
+                                    fontFamily: 'Inter'
                                 }}>
                                 NOTE: You can schedule future meetings under Agenda
                             </Text>
@@ -1933,46 +1934,48 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 alignItems: 'center',
                                                                 backgroundColor: '#efefef'
                                                             }}>
-                                                            <View
-                                                                style={{
-                                                                    width: '100%',
-                                                                    marginBottom: 20,
-                                                                    backgroundColor: '#efefef'
-                                                                }}>
-                                                                <TouchableOpacity
-                                                                    onPress={() =>
-                                                                        handleStartMeeting(
-                                                                            key.split('-SPLIT-')[1],
-                                                                            key.split('-SPLIT-')[2]
-                                                                        )
-                                                                    }
+                                                            {key.split('-SPLIT-')[2] === userId ? (
+                                                                <View
                                                                     style={{
-                                                                        backgroundColor: '#efefef',
-                                                                        overflow: 'hidden',
-                                                                        height: 35,
-                                                                        marginTop: 20,
-                                                                        justifyContent: 'center',
-                                                                        flexDirection: 'row',
-                                                                        marginLeft: 'auto'
+                                                                        width: '100%',
+                                                                        marginBottom: 20,
+                                                                        backgroundColor: '#efefef'
                                                                     }}>
-                                                                    <Text
+                                                                    <TouchableOpacity
+                                                                        onPress={() =>
+                                                                            handleStartMeeting(
+                                                                                key.split('-SPLIT-')[1],
+                                                                                key.split('-SPLIT-')[2]
+                                                                            )
+                                                                        }
                                                                         style={{
-                                                                            textAlign: 'center',
-                                                                            lineHeight: 34,
-                                                                            color: '#fff',
-                                                                            borderRadius: 15,
-                                                                            backgroundColor: '#006AFF',
-                                                                            fontSize: 12,
-                                                                            paddingHorizontal: 20,
-                                                                            fontFamily: 'inter',
+                                                                            backgroundColor: '#efefef',
+                                                                            overflow: 'hidden',
                                                                             height: 35,
-                                                                            width: 175,
-                                                                            textTransform: 'uppercase'
+                                                                            marginTop: 20,
+                                                                            justifyContent: 'center',
+                                                                            flexDirection: 'row',
+                                                                            marginLeft: 'auto'
                                                                         }}>
-                                                                        Start Meeting
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            </View>
+                                                                        <Text
+                                                                            style={{
+                                                                                textAlign: 'center',
+                                                                                lineHeight: 34,
+                                                                                color: '#fff',
+                                                                                borderRadius: 15,
+                                                                                backgroundColor: '#006AFF',
+                                                                                fontSize: 12,
+                                                                                paddingHorizontal: 20,
+                                                                                fontFamily: 'inter',
+                                                                                height: 35,
+                                                                                width: 175,
+                                                                                textTransform: 'uppercase'
+                                                                            }}>
+                                                                            Start Meeting
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                </View>
+                                                            ) : null}
 
                                                             {ongoingMeetings.length > 0
                                                                 ? renderOngoingMeetings(
@@ -2553,6 +2556,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setShowDirectory={(val: any) => props.setShowDirectory(val)}
                                 subscriptions={props.subscriptions}
                                 refreshUnreadInbox={props.refreshUnreadInbox}
+                                hideNewChatButton={props.hideNewChatButton}
                             />
                         ) : null}
                     </View>
@@ -2581,10 +2585,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 ]}
                 themeVariant="light"
+                theme="ios"
                 onClose={() => setShowFilterPopup(false)}
                 responsive={{
                     small: {
-                        display: 'bottom'
+                        display: 'center'
                     },
                     medium: {
                         display: 'center'

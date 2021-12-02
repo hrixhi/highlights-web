@@ -556,7 +556,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 server.mutate({
                                     mutation: subscribe,
                                     variables: {
-                                        name: name.trim(),
+                                        channelId: props.channelId,
                                         password: password,
                                         userId: sub
                                     }

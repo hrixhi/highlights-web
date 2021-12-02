@@ -194,6 +194,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 if (res.data && res.data.group.getChats) {
                     setChats(res.data.group.getChats.reverse());
                     setShowChat(false);
+                    props.hideNewChatButton(false);
                     setShowNewGroup(false);
                     setLoadingChats(false);
                 }
@@ -300,6 +301,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.reverse();
                         setChat(tempChat);
                         setShowChat(true);
+                        props.hideNewChatButton(true);
                     })
                     .catch(err => {
                         console.log('Error', err);
@@ -589,6 +591,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.reverse();
                         setChat(tempChat);
                         setShowChat(true);
+                        props.hideNewChatButton(true);
                     })
                     .catch(err => {
                         console.log(err);
@@ -657,6 +660,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                 if (!res || !res.data.message.getGroupId || res.data.message.getGroupId === '') {
                     setShowChat(true);
+                    props.hideNewChatButton(true);
                     return;
                 }
 
@@ -733,6 +737,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.reverse();
                         setChat(tempChat);
                         setShowChat(true);
+                        props.hideNewChatButton(true);
                     })
                     .catch(err => {
                         console.log(err);
@@ -866,6 +871,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         props.setShowDirectory(false);
                                                     }
                                                     setShowChat(false);
+                                                    props.hideNewChatButton(false);
                                                 }
                                                 setGroupId('');
                                                 setChatName('');
@@ -963,7 +969,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 backgroundColor: 'white',
                                                 overflow: 'hidden',
                                                 height: 35,
-                                                marginTop: width < 1024 ? 10 : 20
+                                                marginTop: 10,
+                                                marginRight: 10
                                             }}>
                                             <Text
                                                 style={{
@@ -985,7 +992,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     )}
                                 </View>
                                 {viewGroup ? (
-                                    <View style={{ marginTop: 20 }}>
+                                    <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
                                         {/*  */}
                                         {userId === groupCreatedBy ? (
                                             <View>

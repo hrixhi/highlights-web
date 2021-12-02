@@ -328,7 +328,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             maxWidth: 400,
                             height: 50,
                             marginBottom: 10,
-                            marginTop: 20
+                            marginTop: 20,
+                            paddingHorizontal: 10
                         }}>
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity
@@ -375,7 +376,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     ) : (
                         <View
                             style={{
-                                width: '100%'
+                                width: '100%',
+                                alignSelf: 'center',
+                                flexDirection: 'row',
+                                paddingHorizontal: 20
                             }}>
                             <ScrollView
                                 contentContainerStyle={{
@@ -384,7 +388,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
                                     // paddingBottom: 75,
                                     width: '100%',
-                                    maxWidth: 900
+                                    maxWidth: 900,
+                                    alignSelf: 'center',
+                                    paddingHorizontal: 10
                                 }}>
                                 {options.map((item: any, index: any) => {
                                     if (isInstructor && !item.instructorOnly) {

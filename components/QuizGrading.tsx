@@ -504,6 +504,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '100%',
                                     maxWidth: "100%",
                                     borderBottom: '1px solid #efefef',
+                                    paddingLeft: 10,
+                                    paddingRight: 10
                                 }}
                                 onChange={(e: any) => {
                                     const updateProblemComments = [...problemComments];

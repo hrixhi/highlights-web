@@ -108,6 +108,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     );
 
     const [showHome, setShowHome] = useState(true);
+    const [hideNewChatButton, setHideNewChatButton] = useState(false);
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -1115,6 +1116,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flex: 1,
                         position: 'absolute',
                         zIndex: 50,
+                        overflow: 'hidden',
                         backgroundColor: 'rgba(16,16,16, 0.7)'
                     }}>
                     <View
@@ -1463,7 +1465,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </TouchableOpacity>
                                     {/* Sign up button */}
-                                    {showForgotPassword ? null : (
+                                    {/* {showForgotPassword ? null : (
                                         <View
                                             style={{
                                                 backgroundColor: 'white',
@@ -1487,9 +1489,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
-                                    )}
+                                    )} */}
 
-                                    {showForgotPassword ? null : (
+                                    {/* {showForgotPassword ? null : (
                                         <View
                                             style={{
                                                 maxWidth: 400,
@@ -1500,7 +1502,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 flexDirection: 'row',
                                                 marginTop: 20
                                             }}>
-                                            {/* Social media buttons */}
                                             <SocialMediaButton
                                                 provider="facebook"
                                                 appId={env === 'DEV' ? '922882341942535' : '746023139417168'}
@@ -1522,7 +1523,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 Sign in with Google
                                             </SocialMediaButton>
                                         </View>
-                                    )}
+                                    )} */}
 
                                     {showForgotPassword ? (
                                         <TouchableOpacity
@@ -1566,7 +1567,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             !reLoading &&
             ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
-                (option === 'Inbox' && !showDirectory) ||
+                (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
                 (option === 'Channels' && !showCreate) ||
                 (option === 'Settings' && !showHelp)) ? (
                 <TouchableOpacity
@@ -1645,7 +1646,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         position: 'absolute',
                         // overflow: 'scroll',
                         zIndex: 50,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
+                        overflow: 'hidden'
                     }}>
                     <View
                         key={option}
@@ -1786,6 +1788,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}
                                 unreadMessages={unreadMessages}
                                 refreshUnreadInbox={refreshUnreadInbox}
+                                hideNewChatButton={(hide: boolean) => setHideNewChatButton(hide)}
                             />
                         )}
                     </View>

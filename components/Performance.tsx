@@ -182,7 +182,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     flexDirection: 'column',
                     backgroundColor: '#efefef',
                     alignSelf: 'center',
-                    marginTop: 100
+                    paddingVertical: 100
                 }}>
                 <ActivityIndicator color={'#1F1F1F'} />
             </View>

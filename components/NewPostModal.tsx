@@ -119,6 +119,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     }
                 }
             ]}
+            theme="ios"
             themeVariant="light"
             onClose={() => props.onClose()}
             responsive={{

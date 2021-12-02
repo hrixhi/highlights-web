@@ -62,6 +62,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     }
                 }
             ]}
+            theme="ios"
             themeVariant="light"
             onClose={() => props.onClose()}
             responsive={{

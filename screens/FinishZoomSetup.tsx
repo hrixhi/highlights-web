@@ -6,6 +6,7 @@ import OneSignal from 'react-onesignal';
 import alert from '../components/Alert';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { connectZoom } from '../graphql/QueriesAndMutations';
+import { origin } from '../constants/zoomCredentials';
 
 export default function FinishZoomSetup({ navigation, route }: StackScreenProps<any, 'zoom_auth'>) {
     React.useEffect(() => {
@@ -15,11 +16,11 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
             const code = route?.params?.code;
             const userId = route?.params?.state;
 
+            console.log('Code', code);
+            console.log('User id', userId);
+
             if (!code || !userId) {
-                // DEV
-                window.location.href = 'http://localhost:19006';
-                // LIVE
-                // window.location.href = 'https://web.cuesapp.co';
+                window.location.href = origin;
             }
 
             const server = fetchAPI('');
@@ -33,6 +34,7 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                 })
                 .then(async res => {
                     if (res.data && res.data.user.connectZoom) {
+                        console.log('Connect with zoom', res.data.user.connectZoom);
                         const u = await AsyncStorage.getItem('user');
                         if (!u) {
                             return;

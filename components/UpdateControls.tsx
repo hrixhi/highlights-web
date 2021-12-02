@@ -2453,7 +2453,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: '100%',
                     minHeight: 475,
-                    paddingTop: 10,
+                    paddingTop: 25,
                     backgroundColor: 'white'
                 }}>
                 {!props.showOriginal || loading ? null : isQuiz ? (
