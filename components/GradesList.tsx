@@ -370,7 +370,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             marginLeft: props.isOwner || Dimensions.get('window').width < 768 ? 0 : 100,
                         }}>
                         <ScrollView
-                            showsHorizontalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={props.isOwner || Dimensions.get('window').width < 768 ? true : false}
                             horizontal={props.isOwner || Dimensions.get('window').width < 768 ? true : false}
                             contentContainerStyle={{
                                 flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'column' : 'row'

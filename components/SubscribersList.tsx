@@ -803,11 +803,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             style={{
                                 width: '100%',
                                 backgroundColor: 'white',
-                                flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
                                 marginBottom: 20,
-                                paddingTop: 12
+                                paddingTop: 30,
+                                paddingHorizontal: 10
                             }}>
-                            <label style={{ width: 160, marginTop: Dimensions.get('window').width < 768 ? 20 : 0 }}>
+                            <label style={{ width: Dimensions.get('window').width < 768 ? 140 : 160 }}>
                                 <Select
                                     touchUi={true}
                                     themeVariant="light"
@@ -1145,12 +1147,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 10
                                 }}
                                 style={{ flex: 1, paddingTop: 12 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                <View
+                                    style={{
+                                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                        alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center',
+                                        flex: 1
+                                    }}>
                                     <View
                                         style={{
                                             flex: 1,
                                             flexDirection: 'row',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto'
                                         }}>
                                         <TouchableOpacity
                                             onPress={() => {
@@ -1176,15 +1184,19 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </Text>
                                         </View>
                                         {submittedAt !== '' && deadline !== '' && submittedAt >= deadline ? (
-                                            <View>
+                                            <View
+                                                style={{
+                                                    marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 0
+                                                }}>
                                                 <View
                                                     style={{
                                                         borderRadius: 1,
-                                                        padding: 5,
+                                                        paddingVertical: 5,
+                                                        paddingHorizontal: 20,
                                                         borderWidth: 1,
                                                         borderColor: '#f94144',
                                                         marginVertical: 10,
-                                                        width: 150,
+                                                        // width: 150,
                                                         marginLeft: 'auto'
                                                     }}>
                                                     <Text
@@ -1203,7 +1215,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             backgroundColor: 'white',
                                             flexDirection: 'row',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            marginTop: Dimensions.get('window').width < 768 ? 20 : 0,
+                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto'
                                         }}>
                                         <TextInput
                                             value={score}
@@ -1214,6 +1228,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderBottomWidth: 1,
                                                 fontSize: 14,
                                                 // paddingTop: 13,
+                                                marginLeft: 10,
                                                 padding: 10,
                                                 marginRight: 20
                                             }}
@@ -1226,7 +1241,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 backgroundColor: 'white',
                                                 overflow: 'hidden',
-                                                height: 35
+                                                height: 35,
+                                                marginLeft: Dimensions.get('window').width < 768 ? 20 : 0
                                             }}>
                                             <Text
                                                 style={{

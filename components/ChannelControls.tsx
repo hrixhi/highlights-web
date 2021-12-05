@@ -687,7 +687,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {/* Back Button */}
                 {
                     props.showCreate ?
-                        <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
+                        <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, paddingLeft: 10 }}>
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <TouchableOpacity
                                     onPress={() => {
@@ -909,7 +909,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         backgroundColor: 'white',
                         width: '100%',
                         maxWidth: 500,
-                        alignSelf: 'center'
+                        alignSelf: 'center',
+                        paddingTop: Dimensions.get('window').width < 768 ? 20 : 0,
+                        paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0
                     }}>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
@@ -1222,6 +1224,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         marginTop: 15,
                                         marginBottom: 50
                                     }}
+
                                     disabled={isSubmitDisabled || isSubmitting}
                                 >
                                     <Text style={{
@@ -1233,6 +1236,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
+                                        borderRadius: 15,
+                                        width: 120,
                                         textTransform: 'uppercase'
                                     }}>
                                         {isSubmitting ? "Creating" : PreferredLanguageText('create')}

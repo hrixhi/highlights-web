@@ -51,6 +51,7 @@ import FormulaGuide from './FormulaGuide';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { handleFile } from '../helpers/FileUpload';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { htmlStringParser } from '../helpers/HTMLParser';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -918,6 +919,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [starred]);
 
     /**
+     * @description Update submission response in Editor on Tab change
+     */
+    useEffect(() => {
+        setInitialSubmissionDraft(submissionDraft);
+    }, [props.showOriginal, props.showComments, props.showOptions]);
+
+    /**
+     * @description Update original value in Editor on Tab change
+     */
+    useEffect(() => {
+        setInitialOriginal(original);
+    }, [props.showOriginal, props.showComments, props.showOptions]);
+
+    /**
      * @description Loads all the channel categories and list of people cue has been shared with
      */
     const loadChannelsAndSharedWith = useCallback(async () => {
@@ -1474,7 +1489,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Handle delete cue
      */
     const handleDelete = useCallback(async () => {
-        Alert('Delete cue?', '', [
+        const { title } = htmlStringParser(original);
+
+        Alert(`Delete '${title}'?`, '', [
             {
                 text: 'Cancel',
                 style: 'cancel',
@@ -1496,7 +1513,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             })
                             .then(res => {
                                 if (res.data.cue.deleteForEveryone) {
-                                    Alert(cueDeletedAlert);
+                                    Alert('Deleted successfully.');
                                 }
                             });
                     }
@@ -1533,7 +1550,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
             }
         ]);
-    }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner]);
+    }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner, original]);
 
     /**
      * @description Submit quiz when time gets over
@@ -3020,7 +3037,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 flexDirection: 'column',
                                 overflow: 'scroll',
-                                maxWidth: 400
+                                maxWidth: 400,
+                                height: 120
                             }}>
                             <View
                                 key={JSON.stringify(selected)}
@@ -4382,9 +4400,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View
                         style={{
                             width: '100%',
-                            flexDirection: 'row',
-                            marginBottom: 5,
-                            marginTop: 20
+                            flexDirection: 'row'
                         }}>
                         {!isOwner &&
                         props.cue.graded &&
@@ -4402,13 +4418,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     borderRadius: 15,
                                     backgroundColor: '#006AFF',
                                     lineHeight: 20,
-                                    paddingTop: 1
+                                    paddingTop: 1,
+                                    marginBottom: 5,
+                                    marginTop: 20
                                 }}>
                                 {props.cue.score}%
                             </Text>
                         ) : null}
                         {!isOwner && props.cue.submittedAt !== '' && new Date(props.cue.submittedAt) >= deadline ? (
-                            <View style={{ marginTop: 20 }}>
+                            <View style={{ marginTop: 20, marginBottom: 5 }}>
                                 <Text
                                     style={{
                                         color: '#f94144',
@@ -4640,7 +4658,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {renderForwardOptions()}
                             {renderCategoryOptions()}
                             {renderPriorityOptions()}
-                            {renderReminderOptions()}
+                            {/* {renderReminderOptions()} */}
                         </Collapse>
                     </View>
                 </ScrollView>

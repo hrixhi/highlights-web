@@ -1433,8 +1433,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 maxHeight: windowHeight,
                 opacity: modalAnimation,
                 borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
+                borderTopRightRadius: 0
             }}
             key={JSON.stringify(threads)}>
             {!viewStatus ? (
@@ -1454,7 +1453,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         width: '100%'
                     }}>
-                    <View style={{ maxWidth: 900, width: '100%' }}>
+                    <View
+                        style={{
+                            maxWidth: 900,
+                            width: '100%',
+                            paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
+                        }}>
                         <UpdateControls
                             // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
                             channelId={props.channelId}
@@ -1620,7 +1624,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 color: '#fff',
                                 fontWeight: 'bold'
                             }}>
-                            Create Folder
+                            New Folder
                         </Text>
                     </TouchableOpacity>
                 ) : null}

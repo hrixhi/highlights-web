@@ -431,6 +431,31 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                   placeholderTextColor={"#1F1F1F"}
                   required={true}
                 /> */}
+
+                        {!props.showSavePassword && zoomInfo ? (
+                            // <TouchableOpacity
+                            //     // onPress={() => handleZoomAuth()}
+                            //     disabled={true}
+                            //     style={{
+                            //         backgroundColor: 'white',
+                            //         overflow: 'hidden',
+                            //         height: 35,
+                            //         marginTop: 20,
+                            //         width: '100%',
+                            //         justifyContent: 'center',
+                            //         flexDirection: 'row',
+                            //         alignItems: 'center'
+                            //     }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    marginBottom: 10
+                                    // color: '#006AFF'
+                                }}>
+                                Zoom account linked
+                            </Text>
+                        ) : // </TouchableOpacity>
+                        null}
                     </View>
                 )}
                 <View
@@ -534,6 +559,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                     ) : null}
+
                     {props.showSavePassword ? null : (
                         <TouchableOpacity
                             onPress={() => logout()}

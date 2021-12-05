@@ -685,7 +685,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             style={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
-                                                paddingTop: 15,
+                                                paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
                                                 paddingLeft: 20,
                                                 alignItems: 'flex-start',
                                                 paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,

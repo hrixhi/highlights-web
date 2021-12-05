@@ -1238,13 +1238,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             return (
                                 <View
                                     style={{
-                                        flexDirection: 'row',
+                                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                                         borderColor: '#efefef',
                                         paddingVertical: 8,
                                         borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
                                         // minWidth: 600, // flex: 1,
                                         width: '100%',
-                                        alignItems: 'center'
+                                        alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center'
                                     }}>
                                     <View style={{}}>
                                         <Text
@@ -1268,7 +1268,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text>
                                         {/* ) : null} */}
                                     </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 'auto' }}>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginLeft: Dimensions.get('window').width < 768 ? 0 : 'auto',
+                                            marginTop: Dimensions.get('window').width < 768 ? 5 : 0
+                                        }}>
                                         <View style={{ marginRight: 20 }}>
                                             <Text
                                                 style={{
@@ -1395,6 +1401,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }
                     }
                 ]}
+                theme="ios"
                 themeVariant="light"
                 onClose={() => {
                     setShowInstantMeeting(false);
@@ -1411,75 +1418,79 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 }}>
                 <View
-                    style={{ flexDirection: 'column', paddingHorizontal: 25, backgroundColor: '#f2f2f7' }}
+                    style={{
+                        flexDirection: 'column',
+                        paddingHorizontal: Dimensions.get('window').width > 768 ? 25 : 0,
+                        backgroundColor: '#f2f2f7'
+                    }}
                     className="mbsc-align-center mbsc-padding">
-                    {/* <ScrollView
+                    <ScrollView
                         showsVerticalScrollIndicator={true}
                         horizontal={false}
                         contentContainerStyle={{
                             width: '100%'
-                        }}> */}
-                    <View
-                        style={{
-                            flexDirection: 'column',
-                            paddingHorizontal: 20,
-                            marginVertical: 20,
-                            minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
-                            maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                            backgroundColor: '#f2f2f7'
                         }}>
-                        <Text
+                        <View
                             style={{
-                                fontSize: 13,
-                                textTransform: 'uppercase',
-                                fontFamily: 'inter',
-                                marginBottom: 20
+                                flexDirection: 'column',
+                                paddingHorizontal: 20,
+                                marginVertical: 20,
+                                minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
+                                maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                                backgroundColor: '#f2f2f7'
                             }}>
-                            Start an instant meeting
-                        </Text>
-
-                        <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
-                                    // fontFamily: 'inter',
-                                    color: '#000000'
+                                    fontSize: 13,
+                                    textTransform: 'uppercase',
+                                    fontFamily: 'inter',
+                                    marginBottom: 20
                                 }}>
-                                Topic
+                                Start an instant meeting
                             </Text>
-                            <View style={{ marginTop: 10, marginBottom: 10 }}>
-                                <DefaultInput
-                                    style={{ padding: 10, fontSize: 14 }}
-                                    value={instantMeetingTitle}
-                                    placeholder={''}
-                                    onChangeText={val => setInstantMeetingTitle(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    // required={true}
-                                />
-                            </View>
-                        </View>
 
-                        <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f2f2f7' }}>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    // fontFamily: 'inter',
-                                    color: '#000000'
-                                }}>
-                                Description
-                            </Text>
-                            <View style={{ marginTop: 10, marginBottom: 10 }}>
-                                <DefaultInput
-                                    style={{ padding: 10, fontSize: 14 }}
-                                    value={instantMeetingDescription}
-                                    placeholder={''}
-                                    onChangeText={val => setInstantMeetingDescription(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    // required={true}
-                                />
+                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
+                                        color: '#000000'
+                                    }}>
+                                    Topic
+                                </Text>
+                                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                    <DefaultInput
+                                        style={{ padding: 10, fontSize: 14 }}
+                                        value={instantMeetingTitle}
+                                        placeholder={''}
+                                        onChangeText={val => setInstantMeetingTitle(val)}
+                                        placeholderTextColor={'#1F1F1F'}
+                                        // required={true}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                        {/* <View
+
+                            <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f2f2f7' }}>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
+                                        color: '#000000'
+                                    }}>
+                                    Description
+                                </Text>
+                                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                    <DefaultInput
+                                        style={{ padding: 10, fontSize: 14 }}
+                                        value={instantMeetingDescription}
+                                        placeholder={''}
+                                        onChangeText={val => setInstantMeetingDescription(val)}
+                                        placeholderTextColor={'#1F1F1F'}
+                                        // required={true}
+                                    />
+                                </View>
+                            </View>
+                            {/* <View
                             style={{
                                 width: '100%',
                                 maxWidth: 400,
@@ -1519,103 +1530,102 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 />
                             </View>
                         </View> */}
-                        <View
-                            style={{
-                                width: '100%',
-                                maxWidth: 400,
-                                // paddingVertical: 15,
-                                backgroundColor: '#f2f2f7'
-                            }}>
-                            <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
-                            <View style={{ marginTop: 10, marginBottom: 10 }}>
-                                <Datepicker
-                                    controls={['date', 'time']}
-                                    touchUi={true}
-                                    theme="ios"
-                                    value={instantMeetingEnd}
-                                    themeVariant="light"
-                                    // inputComponent="input"
-                                    inputProps={{
-                                        placeholder: 'Select end...',
-                                        backgroundColor: 'white'
+                            <View
+                                style={{
+                                    width: '100%',
+                                    maxWidth: 400,
+                                    // paddingVertical: 15,
+                                    backgroundColor: '#f2f2f7'
+                                }}>
+                                <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
+                                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                    <Datepicker
+                                        controls={['date', 'time']}
+                                        touchUi={true}
+                                        theme="ios"
+                                        value={instantMeetingEnd}
+                                        themeVariant="light"
+                                        // inputComponent="input"
+                                        inputProps={{
+                                            placeholder: 'Select end...',
+                                            backgroundColor: 'white'
+                                        }}
+                                        onChange={(event: any) => {
+                                            const date = new Date(event.value);
+                                            const roundOffDate = roundSeconds(date);
+                                            setInstantMeetingEnd(roundOffDate);
+                                        }}
+                                        responsive={{
+                                            xsmall: {
+                                                controls: ['date', 'time'],
+                                                display: 'bottom',
+                                                touchUi: true
+                                            },
+                                            medium: {
+                                                controls: ['date', 'time'],
+                                                display: 'anchored',
+                                                touchUi: false
+                                            }
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    paddingTop: 10,
+                                    paddingBottom: 15,
+                                    backgroundColor: '#f2f2f7'
+                                }}>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
+                                        color: '#000000'
+                                    }}>
+                                    Notify Users
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    height: 40,
+                                    marginRight: 10,
+                                    backgroundColor: '#f2f2f7'
+                                }}>
+                                <Switch
+                                    value={instantMeetingAlertUsers}
+                                    onValueChange={() => {
+                                        setInstantMeetingAlertUsers(!instantMeetingAlertUsers);
                                     }}
-                                    onChange={(event: any) => {
-                                        const date = new Date(event.value);
-                                        const roundOffDate = roundSeconds(date);
-                                        setInstantMeetingEnd(roundOffDate);
+                                    style={{ height: 20 }}
+                                    trackColor={{
+                                        false: '#efefef',
+                                        true: '#006AFF'
                                     }}
-                                    responsive={{
-                                        xsmall: {
-                                            controls: ['date', 'time'],
-                                            display: 'bottom',
-                                            touchUi: true
-                                        },
-                                        medium: {
-                                            controls: ['date', 'time'],
-                                            display: 'anchored',
-                                            touchUi: false
-                                        }
-                                    }}
+                                    activeThumbColor="white"
                                 />
                             </View>
-                        </View>
-                        <View
-                            style={{
-                                width: '100%',
-                                paddingTop: 10,
-                                paddingBottom: 15,
-                                backgroundColor: '#f2f2f7'
-                            }}>
-                            <Text
+                            <View
                                 style={{
-                                    fontSize: 14,
-                                    // fontFamily: 'inter',
-                                    color: '#000000'
-                                }}>
-                                Notify Users
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                height: 40,
-                                marginRight: 10,
-                                backgroundColor: '#f2f2f7'
-                            }}>
-                            <Switch
-                                value={instantMeetingAlertUsers}
-                                onValueChange={() => {
-                                    setInstantMeetingAlertUsers(!instantMeetingAlertUsers);
-                                }}
-                                style={{ height: 20 }}
-                                trackColor={{
-                                    false: '#efefef',
-                                    true: '#006AFF'
-                                }}
-                                activeThumbColor="white"
-                            />
-                        </View>
-                        <View
-                            style={{
-                                width: '100%',
-                                maxWidth: 400,
-                                // paddingVertical: 15,
+                                    width: '100%',
+                                    maxWidth: 400,
+                                    // paddingVertical: 15,
 
-                                backgroundColor: '#f2f2f7'
-                            }}>
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    color: '#000000',
-                                    textTransform: 'uppercase',
-                                    lineHeight: 20,
-                                    fontFamily: 'Inter'
+                                    backgroundColor: '#f2f2f7'
                                 }}>
-                                NOTE: You can schedule future meetings under Agenda
-                            </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 11,
+                                        color: '#000000',
+                                        textTransform: 'uppercase',
+                                        lineHeight: 20,
+                                        fontFamily: 'Inter'
+                                    }}>
+                                    NOTE: You can schedule future meetings under Agenda
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-
-                    {/* </ScrollView> */}
+                    </ScrollView>
                 </View>
             </Popup>
         );
@@ -2636,6 +2646,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                         <label style={{ width: 200, backgroundColor: 'white' }}>
                             <Datepicker
+                                theme="ios"
                                 themeVariant="light"
                                 controls={['calendar']}
                                 select="range"
@@ -2671,14 +2682,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 export default React.memo(Dashboard, (prev, next) => {
     return _.isEqual(
         {
-            ...prev.cues,
+            // ...prev.cues,
             ...prev.tab,
             ...prev.showDirectory,
             ...prev.showHelp,
             ...prev.modalType
         },
         {
-            ...next.cues,
+            // ...next.cues,
             ...next.tab,
             ...next.showDirectory,
             ...next.showHelp,

@@ -127,7 +127,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, []);
+    }, [props.subscriptions]);
 
     /**
      * @description Fetch user activity
@@ -1027,7 +1027,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </TouchableOpacity> */}
                 </View>
             </View>
-        ) : editEvent ? (
+        ) : editEvent && userZoomInfo && userZoomInfo.accountId ? (
             <View
                 style={{
                     marginVertical: 10,
@@ -1038,7 +1038,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     borderRadius: 1
                 }}>
                 <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
-                <Text style={{ paddingLeft: 10 }}>Zoom meeting has been deleted or has expired</Text>
+                <Text style={{ paddingLeft: 20 }}>Zoom meeting has been deleted or has expired</Text>
                 <TouchableOpacity
                     onPress={() => {
                         const server = fetchAPI('');
@@ -1410,7 +1410,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setTab(tabs[0]);
                         }}
                         style={{
-                            paddingHorizontal: 20,
+                            paddingHorizontal: 10,
                             // paddingTop: 5,
                             backgroundColor: 'white',
                             alignSelf: 'flex-start'
@@ -2103,7 +2103,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </Text>
                                                     )}
 
-                                                    {channelId !== '' && (!userZoomInfo || !userZoomInfo.accountId) ? (
+                                                    {(channelId !== '' && (!userZoomInfo || !userZoomInfo.accountId)) ||
+                                                    (editEvent &&
+                                                        !editEvent.zoomMeetingId &&
+                                                        (!userZoomInfo || !userZoomInfo.accountId)) ? (
                                                         <View
                                                             style={{
                                                                 marginVertical: 10,
@@ -2118,9 +2121,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 size={22}
                                                                 color={'#f3722c'}
                                                             />
-                                                            <Text style={{ paddingLeft: 10 }}>
-                                                                To schedule online meetings connect your account to
-                                                                Zoom.
+                                                            <Text style={{ paddingLeft: 20 }}>
+                                                                {editEvent
+                                                                    ? 'To schedule online meeting connect your Zoom account'
+                                                                    : 'To schedule online meetings connect your account to Zoom'}
                                                             </Text>
                                                             <TouchableOpacity
                                                                 onPress={() => {
@@ -2182,16 +2186,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     style={{
                                                                         textAlign: 'center',
                                                                         lineHeight: 34,
-                                                                        backgroundColor: '#006AFF',
                                                                         color: 'white',
                                                                         fontSize: 12,
-                                                                        borderColor: '#006AFF',
+                                                                        backgroundColor: '#006AFF',
                                                                         paddingHorizontal: 20,
-                                                                        borderWidth: 1,
                                                                         fontFamily: 'inter',
                                                                         height: 35,
-                                                                        // width: 100,
                                                                         borderRadius: 15,
+                                                                        width: 120,
                                                                         textTransform: 'uppercase'
                                                                     }}>
                                                                     {isCreatingEvents ? '...' : 'CREATE'}

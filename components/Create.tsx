@@ -929,7 +929,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height: '100%',
                         maxWidth: 900,
                         paddingTop: 10,
-                        paddingHorizontal: dimensions.window.width < 1024 ? 20 : 0
+                        paddingHorizontal: dimensions.window.width < 1024 ? 10 : 0
                     }}>
                     <View
                         style={{
@@ -1103,7 +1103,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flexDirection: width < 768 ? 'column' : 'row',
                                                 borderRightWidth: 0,
                                                 borderColor: '#efefef',
-                                                paddingTop: 40
+                                                paddingTop: width < 768 ? 0 : 40
                                             }}>
                                             <View
                                                 style={{
@@ -1118,7 +1118,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         color: '#000000',
                                                         fontFamily: 'Inter'
                                                     }}>
-                                                    Workspace
+                                                    Channel
                                                 </Text>
                                             </View>
                                             <View
@@ -1697,7 +1697,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 width: '100%',
                                                 backgroundColor: 'white',
                                                 flexDirection: width < 768 ? 'column' : 'row',
-                                                paddingTop: 40
+                                                paddingTop: channels.length === 0 && width < 768 ? 0 : 40
                                             }}>
                                             <View
                                                 style={{
@@ -1859,7 +1859,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </View>
                                     </View>
                                 </View>
-                                <View
+                                {/* <View
                                     style={{
                                         width: '100%',
                                         flexDirection: 'column'
@@ -2142,7 +2142,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </View>
                                         </View>
                                     ) : null}
-                                </View>
+                                </View> */}
                                 {/* Timed Quiz */}
                                 {isQuiz ? (
                                     <View
