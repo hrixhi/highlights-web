@@ -3579,6 +3579,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         borderBottomColor: '#F8F9FA',
                                         borderBottomWidth: 1,
                                         fontSize: 14,
+                                        marginLeft: 10,
                                         padding: 15,
                                         paddingVertical: 12,
                                         marginTop: 0

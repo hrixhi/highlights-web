@@ -1063,13 +1063,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         if (modalType === 'Update') {
             setChannelId('');
+            loadData();
+        } else {
+            loadData(true);
         }
 
         if (modalType === 'Create') {
             setModalType('');
         }
-
-        loadData(true);
     }, [fadeAnimation, modalType]);
 
     const cuesArray: any[] = [];

@@ -2682,14 +2682,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 export default React.memo(Dashboard, (prev, next) => {
     return _.isEqual(
         {
-            // ...prev.cues,
+            ...prev.cues,
             ...prev.tab,
             ...prev.showDirectory,
             ...prev.showHelp,
             ...prev.modalType
         },
         {
-            // ...next.cues,
+            ...next.cues,
             ...next.tab,
             ...next.showDirectory,
             ...next.showHelp,
