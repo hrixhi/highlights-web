@@ -431,7 +431,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         try {
             axios
                 .post(
-                    `https://api.cuesapp.co/search`,
+                    `https://api.learnwithcues.com/search`,
                     {
                         term: searchTerm,
                         userId

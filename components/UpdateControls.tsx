@@ -2680,7 +2680,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         placeholder: 'Content...',
                         min_height: 500,
                         paste_data_images: true,
-                        images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                        images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
                         mobile: {
                             plugins:
                                 !isOwner && props.cue.channelId && props.cue.channelId !== ''
@@ -2904,7 +2904,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         (allowLateSubmission && new Date() > availableUntil),
                     min_height: 500,
                     paste_data_images: true,
-                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                    images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
                     mobile: {
                         plugins:
                             'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'

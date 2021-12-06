@@ -1,16 +1,18 @@
 // REACT
-import React from 'react';
-import { ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, Touchable, Text } from 'react-native';
 
 // COMPONENTS
-import { View } from './Themed';
+import { View, TouchableOpacity } from './Themed';
 import { Popup } from '@mobiscroll/react';
 import EquationEditor from 'equation-editor-react';
 
 const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const [addElementFromButton, setAddElementFromButton] = useState('');
+
     const symbols = [
         {
-            symbol: 'Superscript',
+            symbol: '',
             howTo: '^     (shift + 6)'
         },
         {
@@ -43,6 +45,79 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         }
     ];
 
+    const symbolsMap = {
+        Superscript: '^',
+        Subscript: '_',
+        'Bar over letter': 'bar',
+        'Sum Σ': 'sum',
+        'Product ∏': 'prod',
+        'Integral ∫': 'int',
+        'Degree °': `\circ`,
+        Fraction: '/',
+        '√': 'sqrt',
+        '<': `<`,
+        '≤': `\leq`,
+        '>': `>`,
+        '≥': `\geq`,
+        Α: `A`,
+        α: 'alpha',
+        Β: 'B',
+        β: 'beta',
+        Γ: `\Gamma`,
+        γ: 'gamma',
+        Δ: 'Delta',
+        δ: 'delta',
+        Ε: `E`,
+        ε: 'epsilon',
+        Ζ: `Z`,
+        ζ: 'zeta',
+        Η: `H`,
+        η: 'eta',
+        Θ: `\Theta`,
+        θ: 'theta',
+        Ι: `I`,
+        ι: 'iota',
+        Κ: `K`,
+        κ: 'kappa',
+        Λ: `\Lambda`,
+        λ: 'lambda',
+        Μ: `M`,
+        μ: 'mu',
+        Ν: 'N',
+        ν: 'nu',
+        Ξ: 'Xi',
+        ξ: 'xi',
+        Ο: 'O',
+        o: 'o',
+        Π: 'Pi',
+        π: 'pi',
+        Ρ: 'P',
+        ρ: 'rho',
+        Σ: 'Sigma',
+        σ: 'sigma',
+        Τ: 'T',
+        τ: 'tau',
+        Υ: 'Upsilon',
+        υ: 'upsilon',
+        Φ: 'Phi',
+        φ: 'phi',
+        Χ: 'X',
+        χ: 'chi',
+        Ψ: 'Psi',
+        ψ: 'psi',
+        Ω: 'Omega',
+        ω: 'omega',
+        sin: 'sin',
+        cos: 'cos',
+        tan: 'tan',
+        sec: 'sec',
+        cosec: 'cosec',
+        arccos: 'arccos',
+        arcsin: 'arcsin',
+        arctan: 'arctan'
+    };
+
+    console.log('Add element to button', addElementFromButton);
     // MAIN RETURN
     return (
         <Popup
@@ -82,9 +157,10 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     horizontal={false}
                     contentContainerStyle={{
                         width: '100%',
-                        maxHeight: 500
+                        maxHeight: 600
                     }}>
                     {/* Formula Input */}
+                    <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f7' }}>Enter formula</View>
                     <View
                         style={{
                             width: '100%',
@@ -102,13 +178,15 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             <EquationEditor
                                 value={props.equation}
                                 onChange={props.onChange}
-                                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega Delta"
-                                autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Delta Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omicron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega lt lte gt gte"
+                                autoOperatorNames="sin cos tan sec cosec arccos arcsin arctan lt lte gt gte"
+                                addElementFromButton={addElementFromButton}
+                                clearAddElementField={() => setAddElementFromButton('')}
                             />
                         </View>
                     </View>
                     {/* Guide */}
-                    <View
+                    {/* <View
                         style={{
                             width: '100%',
                             flexDirection: 'row',
@@ -130,7 +208,40 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f7' }}>{s.howTo}</View>
                             </View>
                         );
-                    })}
+                    })} */}
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            backgroundColor: '#f2f2f7'
+                        }}>
+                        {Object.keys(symbolsMap).map((sym: string) => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setAddElementFromButton(symbolsMap[sym]);
+                                    }}
+                                    style={{
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        marginRight: 10,
+                                        marginBottom: 10
+                                    }}>
+                                    <Text
+                                        style={{
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 5,
+                                            backgroundColor: 'white',
+                                            // marginRight: 10,
+                                            fontFamily: 'inter'
+                                        }}>
+                                        {sym}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
                 </ScrollView>
             </View>
         </Popup>

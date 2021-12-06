@@ -224,7 +224,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     height: 250,
                     min_height: 250,
                     paste_data_images: true,
-                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                    images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
                     mobile: {
                         plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                     },
@@ -907,7 +907,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 height: 150,
                                                                 min_height: 150,
                                                                 paste_data_images: true,
-                                                                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                                                                images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
                                                                 mobile: {
                                                                     plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                                                                 },

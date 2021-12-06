@@ -366,7 +366,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 color: '#1F1F1F',
                                 fontSize: 20,
-                                paddingVertical: 100,
+                                paddingVertical: 50,
                                 paddingHorizontal: 5,
                                 fontFamily: 'inter'
                             }}>

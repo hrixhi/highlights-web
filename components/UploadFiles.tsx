@@ -96,7 +96,7 @@ const FileUpload: React.FC<any> = (props: any) => {
 
     const fileUpload = useCallback((file, type) => {
         // LIVE
-        const url = 'https://api.cuesapp.co/api/upload';
+        const url = 'https://api.learnwithcues.com/api/upload';
         // DEV
         // const url = "http://localhost:8081/api/upload";
         const formData = new FormData();

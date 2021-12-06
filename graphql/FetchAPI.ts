@@ -2,9 +2,8 @@ import ApolloClient from 'apollo-boost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const fetchAPI = (userId: any) => {
-    const uri = 'https://api.cuesapp.co/';
     // const uri = 'http://localhost:8081/';
-    // const uri = 'https://api.learnwithcues.com';
+    const uri = 'https://api.learnwithcues.com';
 
     return new ApolloClient({
         uri,

@@ -93,7 +93,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     fileName = fileName.split('"')[fileName.split('"').length - 1];
 
                     axios
-                        .post(`https://api.cuesapp.co/uploadPdfToS3`, {
+                        .post(`https://api.learnwithcues.com/uploadPdfToS3`, {
                             url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
                             title: selectedBook.title + '.pdf'
                         })

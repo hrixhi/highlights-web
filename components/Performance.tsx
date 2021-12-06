@@ -198,7 +198,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 maxWidth: 900,
                 alignSelf: 'center',
                 backgroundColor: '#efefef',
-                paddingBottom: 50
+                paddingBottom: 25
             }}>
             {props.activeTab === 'meetings' ? (
                 <AttendanceList
