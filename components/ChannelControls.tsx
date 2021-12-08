@@ -731,7 +731,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 fontFamily: 'Inter',
                                 color: '#000000'
                             }}>
-                                Join a channel with a code
+                                Join a course with a code
                             </Text>
                             <TextInput
                                 value={joinWithCode}

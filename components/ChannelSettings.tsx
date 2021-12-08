@@ -586,7 +586,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         })
                         setIsUpdatingChannel(false);
 
-                        alert("Channel updated successfully.")
+                        alert("Course updated successfully.")
                         setOriginalSubs([])
 
                         // need to refresh channel subscriptions since name will be updated
@@ -1366,7 +1366,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    Alert("Update channel?", "", [
+                                    Alert("Update course?", "", [
                                         {
                                             text: "Cancel",
                                             style: "cancel",

@@ -4426,7 +4426,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {props.cue.score}%
                             </Text>
                         ) : null}
-                        {!isOwner && props.cue.submittedAt !== '' && new Date(props.cue.submittedAt) >= deadline ? (
+                        {!isOwner &&
+                        props.cue.submittedAt !== '' &&
+                        new Date(props.cue.submittedAt) >= deadline &&
+                        props.showOriginal ? (
                             <View style={{ marginTop: 20, marginBottom: 5 }}>
                                 <Text
                                     style={{

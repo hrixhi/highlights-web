@@ -2465,7 +2465,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             fontWeight: 'bold',
                                             color: '#000000'
                                         }}>
-                                        &nbsp;{props.version !== 'read' ? 'CHANNELS' : 'SHELVES'}
+                                        &nbsp;{props.version !== 'read' ? 'COURSES' : 'SHELVES'}
                                     </Text>
                                 </MenuOption>
                                 <MenuOption value={'Settings'}>
@@ -2481,7 +2481,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </MenuOption>
                             </MenuOptions>
                         </Menu>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{ backgroundColor: 'none', marginLeft: 15 }}
                             onPress={() => {
                                 props.setShowHelp(true);
@@ -2500,7 +2500,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#efefef'}
                                 />
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
             </View>
