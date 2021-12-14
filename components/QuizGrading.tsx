@@ -355,7 +355,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
                                                     {parser(content)}
                                                 </Text>
-                                            </View> : <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, width: '80%', lineHeight: 25, paddingTop: 10, flex: 1 }}>
+                                            </View> : <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, width: window.screen.width < 1024 ? '100%' : '80%' , lineHeight: 25, paddingTop: 10, flex: 1 }}>
                                                 {parser(problem.question)}
                                             </Text>)
                                     }
@@ -489,7 +489,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 null
                         }
 
-                        {!props.isOwner && problemComments[index] === '' ? null : <View style={{ width: '80%', maxWidth: 400, marginLeft: 40, marginBottom: 40 }}>
+                        {!props.isOwner && problemComments[index] === '' ? null : <View style={{ width: window.screen.width < 1024 ? '100%' : '80%' , maxWidth: 400, marginLeft: 40, marginBottom: 40 }}>
                             {props.isOwner ? <TextareaAutosize
                                 value={problemComments[index]}
                                 placeholder='Remark'
@@ -526,7 +526,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 {!props.isOwner ? <Text style={{ width: '100%', textAlign: 'left' }}>
                     Feedback
                 </Text> : null}
-                {props.isOwner ? <View style={{ width: '80%', maxWidth: 400 }}>
+                {props.isOwner ? <View style={{ width: window.screen.width < 1024 ? '100%' : '80%' , maxWidth: 400 }}>
                     <TextareaAutosize
                         style={{ 
                             marginTop: 20,

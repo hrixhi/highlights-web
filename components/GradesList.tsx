@@ -372,6 +372,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <ScrollView
                             showsHorizontalScrollIndicator={props.isOwner || Dimensions.get('window').width < 768 ? true : false}
                             horizontal={props.isOwner || Dimensions.get('window').width < 768 ? true : false}
+                            showsVerticalScrollIndicator={props.isOwner || Dimensions.get('window').width < 768 ? false : true}
                             contentContainerStyle={{
                                 flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'column' : 'row'
                             }}
@@ -393,9 +394,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: props.isOwner || Dimensions.get('window').width < 768 ? 35 : 'auto', }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
+                                            {/* <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
                                                 100%
-                                            </Text>
+                                            </Text> */}
                                         </View>
                                 }
                                 {

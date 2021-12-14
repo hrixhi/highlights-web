@@ -1256,17 +1256,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }}>
                                             {meeting.title}
                                         </Text>
-                                        {/* {meeting.description ? ( */}
-                                        <Text
-                                            style={{
-                                                fontSize: 12,
-                                                padding: 5,
-                                                maxWidth: 300
-                                            }}>
-                                            {/* {meeting.description} */}
-                                            This is a sample description
-                                        </Text>
-                                        {/* ) : null} */}
+                                        {meeting.description ? (
+                                            <Text
+                                                style={{
+                                                    fontSize: 12,
+                                                    padding: 5,
+                                                    maxWidth: 300
+                                                }}>
+                                                {meeting.description}
+                                                {/* This is a sample description */}
+                                            </Text>
+                                        ) : null}
                                     </View>
                                     <View
                                         style={{

@@ -1629,7 +1629,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         ) : option === 'To Do' ? (
                             <Ionicons name="add-outline" size={35} />
                         ) : option === 'Channels' ? (
-                            <Ionicons name="create-outline" size={21} />
+                            <Ionicons name="add-outline" size={35} />
                         ) : option === 'Inbox' ? (
                             <Ionicons name="person-add-outline" size={21} />
                         ) : (

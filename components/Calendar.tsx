@@ -1867,6 +1867,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     paddingHorizontal: width < 768 ? 20 : 0
                                                 }}>
                                                 {renderEditChannelName()}
+                                                {!editChannelName ? (
+                                                    <View style={{ marginBottom: 15 }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter',
+                                                                color: '#000000'
+                                                            }}>
+                                                            Create an event
+                                                        </Text>
+                                                    </View>
+                                                ) : null}
                                                 <View
                                                     style={{
                                                         width: '100%',
@@ -1999,7 +2011,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // fontFamily: 'inter',
                                                                         color: '#000000'
                                                                     }}>
-                                                                    Channel
+                                                                    For
                                                                 </Text>
                                                             </View>
                                                             <View

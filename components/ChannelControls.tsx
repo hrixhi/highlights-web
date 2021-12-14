@@ -714,62 +714,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         width: '100%',
                         minHeight: Dimensions.get("window").height - 52
                     }}>
-                        {/* Join channel with code */}
-                        <View style={{ padding: 30, 
-                            maxWidth: 400, 
-                            marginTop: 20, 
-                            marginBottom: Dimensions.get("window").width < 768 ? 25 : 40,
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 4,
-                                height: 4,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 10,  }}>
-                            <Text style={{
-                                fontSize: 18,
-                                fontFamily: 'Inter',
-                                color: '#000000'
-                            }}>
-                                Join a course with a code
-                            </Text>
-                            <TextInput
-                                value={joinWithCode}
-                                placeholder={'9 characters'}
-                                textContentType={"none"}
-                                autoCompleteType={'off'}
-                                onChangeText={val => {
-                                    setJoinWithCode(val)
-                                }}
-                                placeholderTextColor={'#7d7f7c'}
-                            />
-                            <TouchableOpacity
-                                onPress={() => handleSubmitCode()}
-                                disabled={joinWithCodeDisabled}
-                                style={{
-                                    backgroundColor: 'white',
-                                    overflow: 'hidden',
-                                    height: 35,
-                                    width: '100%', justifyContent: 'center', flexDirection: 'row'
-                                }}>
-                                <Text style={{
-                                    textAlign: 'center',
-                                    lineHeight: 34,
-                                    color: 'white',
-                                    fontSize: 12,
-                                    backgroundColor: '#006aff',
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    // width: 180,
-                                    width: 130,
-                                    borderRadius: 15,
-                                    textTransform: 'uppercase'
-                                }}>
-                                    Join
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
 
                         {/* */}
                         {sortChannels.length === 0 ? <View
@@ -799,7 +743,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         >
                             <ScrollView contentContainerStyle={{
-                                maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 300 : Dimensions.get("window").height - 350,
+                                maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
                                 width: '100%',
                                 shadowColor: "#000",
                                 shadowOffset: {
@@ -885,7 +829,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             }}
                                                         >
                                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#006AFF', marginRight: 10 }} ellipsizeMode='tail'>
-                                                                <Ionicons name='duplicate-outline' size={18} />
+                                                                <Ionicons name='enter-outline' size={18} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
@@ -913,6 +857,71 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         paddingTop: Dimensions.get('window').width < 768 ? 20 : 0,
                         paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0
                     }}>
+
+                        {/* Join channel with code */}
+                        <View style={{ padding: 15, 
+                            width: '100%', 
+                            marginBottom: Dimensions.get("window").width < 768 ? 40 : 60,
+                            }}>
+                            <Text style={{
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                color: '#000000',
+                                textAlign: 'center',
+                                marginBottom: 10
+                            }}>
+                                Join a course with a code
+                            </Text>
+                            <TextInput
+                                value={joinWithCode}
+                                placeholder={'9 characters'}
+                                textContentType={"none"}
+                                autoCompleteType={'off'}
+                                onChangeText={val => {
+                                    setJoinWithCode(val)
+                                }}
+                                placeholderTextColor={'#7d7f7c'}
+                            />
+                            <TouchableOpacity
+                                onPress={() => handleSubmitCode()}
+                                disabled={joinWithCodeDisabled}
+                                style={{
+                                    marginTop: 10,
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                                }}>
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 34,
+                                    color: 'white',
+                                    fontSize: 12,
+                                    backgroundColor: '#006aff',
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    // width: 180,
+                                    width: 130,
+                                    borderRadius: 15,
+                                    textTransform: 'uppercase'
+                                }}>
+                                    Join
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{ marginBottom: 15, width: '100%', alignSelf: 'center' }}>
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    fontFamily: 'Inter',
+                                    color: '#000000',
+                                    textAlign: 'center'
+                                }}>
+                                Create a course
+                            </Text>
+                        </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14,
@@ -931,7 +940,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 placeholderTextColor={'#1F1F1F'}
                                 required={true}
-                                footerMessage={'case sensitive'}
+                                // footerMessage={'case sensitive'}
                             />
                         </View>
 
@@ -1017,7 +1026,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Channels that are not temporary can only be deleted by the school administrator.
+                                        Courses that are not temporary can only be deleted by the school administrator.
                                     </Text>
                                 </View>
                                 : null

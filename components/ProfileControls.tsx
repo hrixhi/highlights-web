@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
-import { updatePassword, updateUser } from '../graphql/QueriesAndMutations';
+import { updatePassword, updateUser, removeZoom } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
 import { Text, View, TouchableOpacity } from './Themed';
@@ -250,6 +250,42 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [zoomInfo, userId]);
 
+    const handleZoomRemove = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user');
+        if (!u) {
+            return;
+        }
+        const user = JSON.parse(u);
+        const server = fetchAPI('');
+
+        if (zoomInfo) {
+            // reset password
+            server
+                .mutate({
+                    mutation: removeZoom,
+                    variables: {
+                        userId: user._id
+                    }
+                })
+                .then(async res => {
+                    if (res.data && res.data.user.removeZoom) {
+                        const user = JSON.parse(u);
+                        user.zoomInfo = undefined;
+                        const updatedUser = JSON.stringify(user);
+                        await AsyncStorage.setItem('user', updatedUser);
+                        Alert('Zoom account disconnected!');
+                        setZoomInfo(null);
+                    } else {
+                        Alert('Failed to disconnect Zoom. Try again.');
+                    }
+                })
+                .catch(err => {
+                    Alert(somethingWentWrongAlert);
+                });
+            return;
+        }
+    }, [zoomInfo, userId]);
+
     // MAIN RETURN
 
     return (
@@ -432,7 +468,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                   required={true}
                 /> */}
 
-                        {!props.showSavePassword && zoomInfo ? (
+                        {/* {!props.showSavePassword && zoomInfo ? (
                             // <TouchableOpacity
                             //     // onPress={() => handleZoomAuth()}
                             //     disabled={true}
@@ -455,7 +491,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 Zoom account linked
                             </Text>
                         ) : // </TouchableOpacity>
-                        null}
+                        null} */}
                     </View>
                 )}
                 <View
@@ -558,7 +594,38 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 Connect Zoom
                             </Text>
                         </TouchableOpacity>
-                    ) : null}
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => handleZoomRemove()}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 20,
+                                // width: "100%",
+                                justifyContent: 'center',
+                                flexDirection: 'row'
+                            }}>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    lineHeight: 34,
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    color: '#006AFF',
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    borderColor: '#006AFF',
+                                    backgroundColor: '#fff',
+                                    fontSize: 12,
+                                    width: 175,
+                                    textTransform: 'uppercase'
+                                }}>
+                                Disconnect Zoom
+                            </Text>
+                        </TouchableOpacity>
+                    )}
 
                     {props.showSavePassword ? null : (
                         <TouchableOpacity

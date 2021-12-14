@@ -541,6 +541,13 @@ mutation($channelId: String!, $userId: String!, $title: String!, $description: S
   }
 }
 `
+export const removeZoom = gql`
+mutation($userId: String!) {
+  user {
+    removeZoom(userId: $userId) 
+  }
+}
+`
 
 /**
  * ALL

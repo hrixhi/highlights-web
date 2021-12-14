@@ -1118,7 +1118,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         color: '#000000',
                                                         fontFamily: 'Inter'
                                                     }}>
-                                                    Channel
+                                                    For
                                                 </Text>
                                             </View>
                                             <View
