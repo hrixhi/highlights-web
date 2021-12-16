@@ -391,7 +391,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
                                             <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: props.isOwner || Dimensions.get('window').width < 768 ? 35 : 'auto', }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5,  }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
                                             {/* <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
@@ -410,7 +410,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     (new Date(cue.deadline)).toString().split(' ')[2]
                                                 }
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, height: props.isOwner || Dimensions.get('window').width < 768 ? 35 : 'auto', textAlignVertical: 'center' }} numberOfLines={2}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#000000', fontFamily: 'inter', marginBottom: 5, textAlignVertical: 'center' }} numberOfLines={2} ellipsizeMode="tail">
                                                 {title}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>

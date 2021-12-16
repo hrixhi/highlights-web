@@ -1146,7 +1146,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
 
                             <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10, marginBottom: 20, }}>
-                                Share this code so people can join your channel directly 
+                                Share this code so people can join your course directly 
                             </Text>
                         </View>
 

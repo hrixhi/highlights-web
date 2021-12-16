@@ -563,7 +563,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                     ) : null}
-                    {!props.showSavePassword && !zoomInfo ? (
+                    {props.showSavePassword ? null : !zoomInfo ? (
                         <TouchableOpacity
                             onPress={() => handleZoomAuth()}
                             style={{

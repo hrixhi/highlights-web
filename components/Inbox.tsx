@@ -1675,8 +1675,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 {fName}
                                                             </Text>
                                                             <Text
-                                                                style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
-                                                                ellipsizeMode="tail">
+                                                                style={{ fontSize: 12, margin: 5, fontWeight: 'bold' }}
+                                                                ellipsizeMode="tail"
+                                                                numberOfLines={2}>
                                                                 {title}
                                                             </Text>
                                                         </View>
