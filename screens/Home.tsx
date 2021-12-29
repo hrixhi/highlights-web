@@ -83,6 +83,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [openChannelId, setOpenChannelId] = useState('');
     const [passwordValidError, setPasswordValidError] = useState('');
 
+    console.log('loadDiscussionForChannelId HOME', loadDiscussionForChannelId);
+
     const [tab, setTab] = useState('Agenda');
     const [showDirectory, setShowDirectory] = useState<any>(false);
     const [showCreate, setShowCreate] = useState(false);
@@ -1119,7 +1121,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         zIndex: 50,
                         overflow: 'hidden',
                         backgroundColor: 'rgba(16,16,16, 0.7)'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             position: 'absolute',
@@ -1133,7 +1136,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             borderRadius: dimensions.window.width < 768 ? 0 : 0,
                             marginTop: dimensions.window.width < 768 ? 0 : 0,
                             paddingHorizontal: 40
-                        }}>
+                        }}
+                    >
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             horizontal={false}
@@ -1142,14 +1146,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 paddingVertical: 40,
                                 justifyContent: 'center'
                             }}
-                            nestedScrollEnabled={true}>
+                            nestedScrollEnabled={true}
+                        >
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: 'center',
                                     display: 'flex',
                                     paddingBottom: 20
-                                }}>
+                                }}
+                            >
                                 <Image
                                     source={logo}
                                     style={{
@@ -1166,7 +1172,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     fontFamily: 'overpass',
                                     paddingBottom: 20,
                                     textAlign: 'center'
-                                }}>
+                                }}
+                            >
                                 Get started for free.
                             </Text>
 
@@ -1178,7 +1185,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     backgroundColor: 'white',
                                     justifyContent: 'center',
                                     alignSelf: 'center'
-                                }}>
+                                }}
+                            >
                                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                                     {PreferredLanguageText('email')}
                                 </Text>
@@ -1247,7 +1255,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         width: '100%',
                                         justifyContent: 'center',
                                         flexDirection: 'row'
-                                    }}>
+                                    }}
+                                >
                                     <Text
                                         style={{
                                             textAlign: 'center',
@@ -1262,7 +1271,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             width: 175,
                                             borderRadius: 15,
                                             textTransform: 'uppercase'
-                                        }}>
+                                        }}
+                                    >
                                         Sign Up
                                     </Text>
                                 </TouchableOpacity>
@@ -1278,12 +1288,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         width: '100%',
                                         justifyContent: 'center',
                                         flexDirection: 'row'
-                                    }}>
+                                    }}
+                                >
                                     <Text
                                         style={{
                                             fontSize: 14,
                                             color: '#006AFF'
-                                        }}>
+                                        }}
+                                    >
                                         Back to Sign In
                                     </Text>
                                 </TouchableOpacity>
@@ -1303,7 +1315,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         zIndex: 50,
                         backgroundColor: 'rgba(16,16,16, 0.7)',
                         overflow: 'hidden'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             position: 'absolute',
@@ -1317,7 +1330,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             borderRadius: dimensions.window.width < 768 ? 0 : 0,
                             marginTop: dimensions.window.width < 768 ? 0 : 0,
                             paddingHorizontal: 40
-                        }}>
+                        }}
+                    >
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             horizontal={false}
@@ -1326,14 +1340,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 paddingVertical: 40,
                                 justifyContent: 'center'
                             }}
-                            nestedScrollEnabled={true}>
+                            nestedScrollEnabled={true}
+                        >
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: 'center',
                                     display: 'flex',
                                     paddingBottom: 30
-                                }}>
+                                }}
+                            >
                                 <Image
                                     source={logo}
                                     style={{
@@ -1350,7 +1366,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     fontFamily: 'overpass',
                                     paddingBottom: 20,
                                     textAlign: 'center'
-                                }}>
+                                }}
+                            >
                                 {showForgotPassword
                                     ? PreferredLanguageText('temporaryPassword')
                                     : PreferredLanguageText('continueLeftOff')}
@@ -1363,7 +1380,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     backgroundColor: 'white',
                                     justifyContent: 'center',
                                     alignSelf: 'center'
-                                }}>
+                                }}
+                            >
                                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                                     {PreferredLanguageText('email')}
                                 </Text>
@@ -1383,7 +1401,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 flexDirection: 'row',
                                                 justifyContent: 'space-between',
                                                 alignItems: 'center'
-                                            }}>
+                                            }}
+                                        >
                                             <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
                                                 {PreferredLanguageText('password')}
                                             </Text>
@@ -1396,12 +1415,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         backgroundColor: 'white',
                                                         flexDirection: 'row',
                                                         justifyContent: 'center'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
                                                             color: '#006AFF'
-                                                        }}>
+                                                        }}
+                                                    >
                                                         Forgot Password?
                                                     </Text>
                                                 </TouchableOpacity>
@@ -1426,7 +1447,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         display: 'flex',
                                         flexDirection: 'column',
                                         paddingBottom: 10
-                                    }}>
+                                    }}
+                                >
                                     <TouchableOpacity
                                         disabled={isSubmitDisabled}
                                         onPress={() => {
@@ -1444,7 +1466,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             width: '100%',
                                             justifyContent: 'center',
                                             flexDirection: 'row'
-                                        }}>
+                                        }}
+                                    >
                                         <Text
                                             style={{
                                                 textAlign: 'center',
@@ -1459,7 +1482,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 width: 175,
                                                 borderRadius: 15,
                                                 textTransform: 'uppercase'
-                                            }}>
+                                            }}
+                                        >
                                             {showForgotPassword
                                                 ? PreferredLanguageText('reset')
                                                 : PreferredLanguageText('login')}
@@ -1538,12 +1562,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 width: '100%',
                                                 justifyContent: 'center',
                                                 flexDirection: 'row'
-                                            }}>
+                                            }}
+                                        >
                                             <Text
                                                 style={{
                                                     fontSize: 14,
                                                     color: '#006AFF'
-                                                }}>
+                                                }}
+                                            >
                                                 Back to Sign In
                                             </Text>
                                         </TouchableOpacity>
@@ -1557,7 +1583,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     paddingLeft: 5,
                                     paddingBottom: 5,
                                     marginTop: 20
-                                }}>
+                                }}
+                            >
                                 {/* <LanguageSelect /> */}
                             </View>
                         </ScrollView>
@@ -1622,7 +1649,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         shadowOpacity: 0.12,
                         shadowRadius: 10,
                         zIndex: showLoginWindow ? 40 : 500000
-                    }}>
+                    }}
+                >
                     <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
                         {option === 'Classroom' ? (
                             <Ionicons name="pencil-outline" size={25} />
@@ -1649,7 +1677,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         zIndex: 50,
                         backgroundColor: '#fff',
                         overflow: 'hidden'
-                    }}>
+                    }}
+                >
                     <View
                         key={option}
                         style={{
@@ -1661,7 +1690,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             height: '100%',
                             borderRadius: 0,
                             marginTop: 0
-                        }}>
+                        }}
+                    >
                         {reLoading ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
@@ -1806,7 +1836,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     borderTopRightRadius: 0,
                     maxWidth: dimensions.window.width,
                     overflow: 'hidden'
-                }}>
+                }}
+            >
                 {modalType === 'Update' ? (
                     <Update
                         version={version}
@@ -1850,7 +1881,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         shadowOpacity: 0.12,
                         shadowRadius: 10,
                         zIndex: showLoginWindow ? 40 : 500000
-                    }}>
+                    }}
+                >
                     {options.map((op: any) => {
                         if (op === 'Settings' || op === 'Channels') {
                             return;
@@ -1880,7 +1912,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         setModalType('');
                                         setPageNumber(0);
                                     }
-                                }}>
+                                }}
+                            >
                                 <Text style={op === option ? styles('').allGrayFill : styles('').all}>
                                     {op === 'Classroom'
                                         ? version === 'read'

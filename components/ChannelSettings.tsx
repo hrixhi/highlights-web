@@ -820,6 +820,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <TextareaAutosize
                                 value={description}
                                 style={{
+                                    fontFamily: 'overpass',
                                     width: "100%",
                                     maxWidth: 500,
                                     borderBottom: '1px solid #efefef',

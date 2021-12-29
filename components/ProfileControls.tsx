@@ -308,7 +308,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             ? Dimensions.get('window').height - 104
                             : Dimensions.get('window').height - 52
                 }}
-                showsVerticalScrollIndicator={true}>
+                showsVerticalScrollIndicator={true}
+            >
                 {/* <View style={{ overflow: 'scroll', width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}> */}
                 {/* <View style={{ overflow: 'scroll', maxWidth: 400, width: '100%' }}> */}
                 {props.showSavePassword ? (
@@ -321,12 +322,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             flex: 1,
                             maxWidth: 400,
                             alignSelf: 'center'
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 fontSize: 14,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {PreferredLanguageText('currentPassword')}
                         </Text>
                         <TextInput
@@ -342,7 +345,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             style={{
                                 fontSize: 14,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {PreferredLanguageText('newPassword')}
                         </Text>
                         <TextInput
@@ -360,7 +364,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             style={{
                                 fontSize: 14,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {PreferredLanguageText('confirmNewPassword')}
                         </Text>
                         <TextInput
@@ -382,7 +387,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             maxWidth: 400,
                             alignSelf: 'center'
                             // flex: 1
-                        }}>
+                        }}
+                    >
                         <Image
                             style={{
                                 height: 100,
@@ -405,7 +411,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         // marginTop: 15,
                                         justifyContent: 'center',
                                         flexDirection: 'row'
-                                    }}>
+                                    }}
+                                >
                                     <Text>
                                         <Ionicons name={'close-circle-outline'} size={18} color={'#1F1F1F'} />
                                     </Text>
@@ -423,7 +430,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 marginTop: 20,
                                 fontSize: 14,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {PreferredLanguageText('email')}
                         </Text>
                         <TextInput
@@ -441,7 +449,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             style={{
                                 fontSize: 14,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {PreferredLanguageText('fullName')}
                         </Text>
                         <TextInput
@@ -501,7 +510,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         justifyContent: 'center',
                         maxWidth: 400,
                         alignSelf: 'center'
-                    }}>
+                    }}
+                >
                     <TouchableOpacity
                         onPress={() => handleSubmit()}
                         style={{
@@ -512,7 +522,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             justifyContent: 'center',
                             flexDirection: 'row'
                         }}
-                        disabled={isSubmitDisabled}>
+                        disabled={isSubmitDisabled}
+                    >
                         <Text
                             style={{
                                 textAlign: 'center',
@@ -526,7 +537,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 width: 175,
                                 textTransform: 'uppercase'
-                            }}>
+                            }}
+                        >
                             {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
                         </Text>
                     </TouchableOpacity>
@@ -540,7 +552,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 marginTop: 20,
                                 justifyContent: 'center',
                                 flexDirection: 'row'
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     textAlign: 'center',
@@ -556,7 +569,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     height: 35,
                                     width: 175,
                                     textTransform: 'uppercase'
-                                }}>
+                                }}
+                            >
                                 {props.showSavePassword
                                     ? PreferredLanguageText('back')
                                     : PreferredLanguageText('password')}
@@ -574,7 +588,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // width: "100%",
                                 justifyContent: 'center',
                                 flexDirection: 'row'
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     textAlign: 'center',
@@ -590,13 +605,28 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     fontSize: 12,
                                     width: 175,
                                     textTransform: 'uppercase'
-                                }}>
+                                }}
+                            >
                                 Connect Zoom
                             </Text>
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity
-                            onPress={() => handleZoomRemove()}
+                            onPress={() => {
+                                Alert('Disconnect your Zoom account from Cues?', '', [
+                                    {
+                                        text: 'Cancel',
+                                        style: 'cancel',
+                                        onPress: () => {
+                                            return;
+                                        }
+                                    },
+                                    {
+                                        text: 'Yes',
+                                        onPress: () => handleZoomRemove()
+                                    }
+                                ]);
+                            }}
                             style={{
                                 backgroundColor: 'white',
                                 overflow: 'hidden',
@@ -605,7 +635,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // width: "100%",
                                 justifyContent: 'center',
                                 flexDirection: 'row'
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     textAlign: 'center',
@@ -621,7 +652,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     fontSize: 12,
                                     width: 175,
                                     textTransform: 'uppercase'
-                                }}>
+                                }}
+                            >
                                 Disconnect Zoom
                             </Text>
                         </TouchableOpacity>
@@ -640,13 +672,15 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: 'center',
                                 flexDirection: 'row',
                                 alignItems: 'center'
-                            }}>
+                            }}
+                        >
                             <Ionicons name="log-out-outline" color="#006AFF" style={{ marginRight: 10 }} size={18} />
                             <Text
                                 style={{
                                     fontSize: 14,
                                     color: '#006AFF'
-                                }}>
+                                }}
+                            >
                                 Log Out
                             </Text>
                         </TouchableOpacity>

@@ -2119,6 +2119,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <TextareaAutosize
                             value={title}
                             style={{
+                                fontFamily: 'overpass',
                                 fontSize: 14,
                                 padding: 15,
                                 paddingTop: 12,

@@ -5,6 +5,11 @@ export const fetchAPI = (userId: any) => {
     // const uri = 'http://localhost:8081/';
     const uri = 'https://api.learnwithcues.com';
 
+    const logoutUser = async () => {
+        await AsyncStorage.clear();
+        window.location.reload();
+    };
+
     return new ApolloClient({
         uri,
         headers: {
@@ -26,8 +31,7 @@ export const fetchAPI = (userId: any) => {
                 for (let err of graphQLErrors) {
                     if (err.message === 'NOT_AUTHENTICATED') {
                         alert('Session Timed out. You will be logged out.');
-                        AsyncStorage.clear();
-                        window.location.reload();
+                        logoutUser();
                         return;
                     }
                 }

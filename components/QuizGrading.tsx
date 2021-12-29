@@ -495,6 +495,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 placeholder='Remark'
                                 minRows={3}
                                 style={{ 
+                                    fontFamily: 'overpass',
                                     marginTop: 20,
                                     marginBottom: 20,
                                     fontSize: 14,
@@ -529,6 +530,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 {props.isOwner ? <View style={{ width: window.screen.width < 1024 ? '100%' : '80%' , maxWidth: 400 }}>
                     <TextareaAutosize
                         style={{ 
+                            fontFamily: 'overpass',
                             marginTop: 20,
                             marginBottom: 20,
                             fontSize: 14,

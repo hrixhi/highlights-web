@@ -386,6 +386,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View style={{ width: Dimensions.get('window').width < 768 ? '80%' : '50%' }}>
                         <TextareaAutosize
                             style={{
+                                fontFamily: 'overpass',
                                 maxWidth: '100%', marginBottom: 10, marginTop: 10,
                                 borderRadius: 1,
                                 paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',

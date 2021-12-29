@@ -17,7 +17,9 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                 onPress={() => {
                     props.onPress();
                 }}
-                style={styleObject.card}>
+                disabled={props.option === 'Channels' && !props.subscribed}
+                style={styleObject.card}
+            >
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
                         {props.channelName !== '' && props.option !== 'Channels' ? (
@@ -32,7 +34,8 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             flex: 1,
                             height: '100%',
                             flexDirection: 'row'
-                        }}>
+                        }}
+                    >
                         <View style={{ flex: 1, flexDirection: 'row' }}>
                             <Text
                                 ellipsizeMode={'tail'}
@@ -44,7 +47,8 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     flex: 1,
                                     marginTop: 5,
                                     color: '#000000'
-                                }}>
+                                }}
+                            >
                                 {props.title}
                             </Text>
                             {props.option === 'Channels' && !props.subscribed ? (

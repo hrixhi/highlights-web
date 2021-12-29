@@ -8,37 +8,38 @@ import { RootStackParamList } from '../types';
 import Home from '../screens/Home';
 import LinkingConfiguration from './Linking';
 import FinishZoomSetup from '../screens/FinishZoomSetup';
+import PDFViewerCues from '../screens/PDFViewerCues';
 
-
-// Main stack navigator 
+// Main stack navigator
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+    return (
+        <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                {/* Main app is in here */}
+                <Stack.Screen
+                    name="Root"
+                    options={{ title: 'Cues' }}
+                    component={() => (
+                        <View
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                backgroundColor: 'white'
+                            }}>
+                            <Home />
+                        </View>
+                    )}
+                />
 
-        {/* Main app is in here */}
-        <Stack.Screen
-          name="Root"
-          options={{ title: 'Cues' }}
-          component={() => <View style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            backgroundColor: 'white'
-          }}>
-            <Home />
-          </View>} />
-
-        {/* In case navigation ends up at a wrong location */}
-        <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
-        <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+                {/* In case navigation ends up at a wrong location */}
+                <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
+                <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
+                <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
 // A root stack navigator is often used for displaying modals on top of all other content

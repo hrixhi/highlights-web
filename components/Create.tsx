@@ -2359,6 +2359,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <TextareaAutosize
                                                 value={title}
                                                 style={{
+                                                    fontFamily: 'overpass',
                                                     width: '100%',
                                                     maxWidth: 400,
                                                     borderBottom: '1px solid #efefef',

@@ -549,6 +549,14 @@ mutation($userId: String!) {
 }
 `
 
+export const updateAnnotationsFromViewer = gql`
+  mutation($userId: String!, $cueId: String!, $annotations: String!, $source: String!) {
+    user {
+      updateAnnotationsFromViewer(userId: $userId, cueId: $cueId, annotations: $annotations, source: $source)
+    }
+  }
+`
+
 /**
  * ALL
  * QUERIES
@@ -1491,5 +1499,23 @@ query($userId: String!, $channelId: String!) {
     }
   }
 }
+`
+
+// PDF Viewer stuff;
+
+export const fetchAnnotationsForViewer = gql`
+  query($userId: String!, $cueId: String!) {
+    user {
+      fetchAnnotationsForViewer(userId: $userId, cueId: $cueId) {
+        _id
+        cue
+        date
+        original
+        submission
+        releaseSubmission
+        annotations
+      }
+    }
+  }
 `
 

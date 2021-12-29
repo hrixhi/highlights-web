@@ -469,6 +469,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <TextareaAutosize
                     value={headers[index]}
                     style={{
+                        fontFamily: 'overpass',
                         marginBottom: 30,
                         marginTop: 50,
                         fontSize: 14,
@@ -1537,7 +1538,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 height: 350,
                                                 min_height: 350,
                                                 paste_data_images: true,
-                                                images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                images_upload_url:
+                                                    'https://api.learnwithcues.com/api/imageUploadEditor',
                                                 mobile: {
                                                     plugins:
                                                         'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'

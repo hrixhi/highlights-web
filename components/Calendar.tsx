@@ -112,7 +112,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, []);
     const viewSchedule: any = React.useMemo(() => {
         return {
-            schedule: { type: 'week', startTime: '05:00', endTime: '24:00', startDay: 1, endDay: 0 }
+            schedule: { type: 'week', startDay: 1, endDay: 0 }
         };
     }, []);
     const viewCalendar: any = React.useMemo(() => {
@@ -398,8 +398,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             });
     }, [editEvent, title, start, end, description, isMeeting, recordMeeting]);
 
-    console.log('Selected days', selectedDays);
-
     /**
      * @description Handle Delete event
      */
@@ -565,7 +563,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         else return true;
     };
 
-    console.log('Edit event', editEvent);
     /**
      * @description On Select event in Agenda
      */
@@ -648,38 +645,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     } else {
                                         Linking.openURL(event.zoomJoinUrl);
                                     }
-
-                                    // const uString: any = await AsyncStorage.getItem('user');
-
-                                    // const user = JSON.parse(uString);
-
-                                    // const server = fetchAPI('');
-                                    // server
-                                    //     .mutate({
-                                    //         mutation: meetingRequest,
-                                    //         variables: {
-                                    //             userId: user._id,
-                                    //             channelId: event.channelId,
-                                    //             isOwner: false
-                                    //         }
-                                    //     })
-                                    //     .then(res => {
-                                    //         if (res.data && res.data.channel.meetingRequest !== 'error') {
-                                    //             server.mutate({
-                                    //                 mutation: markAttendance,
-                                    //                 variables: {
-                                    //                     userId: user._id,
-                                    //                     channelId: event.channelId
-                                    //                 }
-                                    //             });
-                                    //             window.open(res.data.channel.meetingRequest, '_blank');
-                                    //         } else {
-                                    //             Alert('Classroom not in session. Waiting for instructor.');
-                                    //         }
-                                    //     })
-                                    //     .catch(err => {
-                                    //         Alert('Something went wrong.');
-                                    //     });
                                 }
                             }
                         ]
@@ -705,7 +670,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     display: 'flex',
                     paddingTop: channels.length > 0 ? 40 : 20,
                     paddingBottom: 5
-                }}>
+                }}
+            >
                 <View style={{ width: '100%' }}>
                     <Text style={styles.text}>Recurring</Text>
                 </View>
@@ -715,7 +681,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         marginRight: 10,
                         paddingLeft: 5,
                         marginTop: 10
-                    }}>
+                    }}
+                >
                     <Switch
                         value={recurring}
                         onValueChange={() => setRecurring(!recurring)}
@@ -739,7 +706,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             width: '100%',
                             flexDirection: 'row',
                             marginLeft: 0
-                        }}>
+                        }}
+                    >
                         <label style={{ width: '100%', maxWidth: 400, backgroundColor: 'white' }}>
                             <Select
                                 themeVariant="light"
@@ -785,7 +753,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 alignItems: 'center',
                                                 marginRight: 10,
                                                 padding: 5
-                                            }}>
+                                            }}
+                                        >
                                             <input
                                                 disabled={day === selectedStartDay}
                                                 style={{ marginRight: 5 }}
@@ -850,8 +819,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     );
 
-    console.log('Zoom profile', userZoomInfo);
-
     /**
      * @description Allows selection of whether event is a lecture
      */
@@ -864,14 +831,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             display: 'flex',
                             flexDirection: 'column',
                             width: width < 768 ? '100%' : '33.33%'
-                        }}>
+                        }}
+                    >
                         <View style={{ width: '100%', paddingTop: width < 768 ? 40 : 25, paddingBottom: 15 }}>
                             <Text
                                 style={{
                                     fontSize: 14,
                                     // fontFamily: 'inter',
                                     color: '#000000'
-                                }}>
+                                }}
+                            >
                                 Meeting
                             </Text>
                         </View>
@@ -879,7 +848,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 height: 40,
                                 marginRight: 10
-                            }}>
+                            }}
+                        >
                             <Switch
                                 value={isMeeting}
                                 disabled={
@@ -917,7 +887,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             fontSize: 16,
                             fontFamily: 'Inter',
                             color: '#000000'
-                        }}>
+                        }}
+                    >
                         {editEvent && editEvent.meeting ? 'Meeting' : 'Event'} for {editChannelName}
                     </Text>
                 </View>
@@ -938,14 +909,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: 'row',
                         alignItems: 'center',
                         marginBottom: 20
-                    }}>
+                    }}
+                >
                     <Text
                         style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
                             marginRight: 5,
                             color: '#000000'
-                        }}>
+                        }}
+                    >
                         Zoom Meeting ID
                     </Text>
                     <Text
@@ -953,7 +926,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             fontSize: 14,
                             fontFamily: 'inter',
                             color: '#000000'
-                        }}>
+                        }}
+                    >
                         {editEvent.zoomMeetingId}
                     </Text>
                 </View>
@@ -966,7 +940,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             marginRight: 10,
                             color: '#000000',
                             marginBottom: 5
-                        }}>
+                        }}
+                    >
                         Invite Link
                     </Text>
                     <Text
@@ -974,7 +949,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             fontSize: 14,
                             fontFamily: 'inter',
                             color: '#000000'
-                        }}>
+                        }}
+                    >
                         {editEvent.zoomJoinUrl}
                     </Text>
                 </View>
@@ -987,13 +963,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             } else {
                                 Linking.openURL(editEvent.zoomStartUrl);
                             }
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#006AFF'
-                            }}>
+                            }}
+                        >
                             Start meeting
                         </Text>
                     </TouchableOpacity>
@@ -1004,13 +982,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             await navigator.clipboard.writeText(editEvent.zoomJoinUrl);
                             Alert('Invite link copied!');
                             // setCopiedMeetingLink(true);
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#006AFF'
-                            }}>
+                            }}
+                        >
                             Copy Invite
                         </Text>
                     </TouchableOpacity>
@@ -1036,7 +1016,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     padding: 10,
                     backgroundColor: '#f3f3f3',
                     borderRadius: 1
-                }}>
+                }}
+            >
                 <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
                 <Text style={{ paddingLeft: 20 }}>Zoom meeting has been deleted or has expired</Text>
                 <TouchableOpacity
@@ -1086,14 +1067,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         backgroundColor: '#f3f3f3',
                         paddingHorizontal: 10
-                    }}>
+                    }}
+                >
                     <Text
                         style={{
                             fontSize: 14,
                             fontFamily: 'inter',
                             color: '#006AFF',
                             backgroundColor: '#f3f3f3'
-                        }}>
+                        }}
+                    >
                         Create New
                     </Text>
                 </TouchableOpacity>
@@ -1118,7 +1101,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     display: 'flex',
                     paddingTop: 30,
                     paddingBottom: 30
-                }}>
+                }}
+            >
                 {/* {date > new Date(start) && date < new Date(end) ? (
                     <TouchableOpacity
                         style={{
@@ -1201,7 +1185,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                         ]);
                     }}
-                    disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
+                    disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}
+                >
                     <Text
                         style={{
                             textAlign: 'center',
@@ -1215,7 +1200,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             borderRadius: 15,
                             width: 120,
                             textTransform: 'uppercase'
-                        }}>
+                        }}
+                    >
                         {isEditingEvents ? 'EDITING...' : 'EDIT'}
                     </Text>
                 </TouchableOpacity>
@@ -1246,7 +1232,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                         ]);
                     }}
-                    disabled={isEditingEvents || isDeletingEvents}>
+                    disabled={isEditingEvents || isDeletingEvents}
+                >
                     <Text
                         style={{
                             textAlign: 'center',
@@ -1262,7 +1249,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             fontFamily: 'inter',
                             height: 35,
                             textTransform: 'uppercase'
-                        }}>
+                        }}
+                    >
                         {isDeletingEvents ? 'DELETING...' : 'DELETE'}
                     </Text>
                 </TouchableOpacity>
@@ -1295,7 +1283,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }
                             ]);
                         }}
-                        disabled={isEditingEvents || isDeletingEvents}>
+                        disabled={isEditingEvents || isDeletingEvents}
+                    >
                         <Text
                             style={{
                                 textAlign: 'center',
@@ -1311,7 +1300,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 fontFamily: 'inter',
                                 height: 35,
                                 textTransform: 'uppercase'
-                            }}>
+                            }}
+                        >
                             {isDeletingEvents ? 'DELETING...' : 'DELETE ALL'}
                         </Text>
                     </TouchableOpacity>
@@ -1330,7 +1320,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const startTime = new Date(data.original.start);
         const endTime = new Date(data.original.end);
-        // console.log('Data', data);
 
         return (
             <React.Fragment>
@@ -1341,7 +1330,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: '#1F1F1F',
                             fontSize: 14,
                             paddingTop: isMeeting && new Date() > startTime && new Date() < endTime ? 5 : 0
-                        }}>
+                        }}
+                    >
                         {data.original.description}
                     </div>
                     {data.original.submitted !== null && userId !== '' && userId !== data.original.createdBy ? (
@@ -1353,7 +1343,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     padding: 4,
                                     fontSize: 12,
                                     borderWidth: 1
-                                }}>
+                                }}
+                            >
                                 {data.original.submitted ? 'SUBMITTED' : assingmentDue ? 'MISSING' : 'PENDING'}
                             </div>
                         </div>
@@ -1367,7 +1358,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     padding: 4,
                                     fontSize: 12,
                                     borderWidth: 1
-                                }}>
+                                }}
+                            >
                                 {'IN PROGRESS'}
                             </div>
                         </div>
@@ -1401,7 +1393,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     marginTop: 10,
                     paddingVertical: 10,
                     backgroundColor: tab === 'Add' ? 'white' : '#efefef'
-                }}>
+                }}
+            >
                 {tab !== 'Add' ? null : (
                     <TouchableOpacity
                         onPress={() => {
@@ -1414,7 +1407,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             // paddingTop: 5,
                             backgroundColor: 'white',
                             alignSelf: 'flex-start'
-                        }}>
+                        }}
+                    >
                         <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
                             <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
                         </Text>
@@ -1428,7 +1422,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             backgroundColor: '#efefef',
                             flex: 1,
                             justifyContent: 'center'
-                        }}>
+                        }}
+                    >
                         <TouchableOpacity
                             style={{
                                 justifyContent: 'center',
@@ -1437,7 +1432,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             onPress={() => {
                                 setTab('Agenda');
-                            }}>
+                            }}
+                        >
                             <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>
                                 <Ionicons name="list-outline" size={18} style={{ marginBottom: 5 }} />
                             </Text>
@@ -1451,7 +1447,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             onPress={() => {
                                 setTab('Schedule');
-                            }}>
+                            }}
+                        >
                             <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>
                                 <Ionicons name="map-outline" size={18} />
                             </Text>
@@ -1465,7 +1462,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             onPress={() => {
                                 setTab('Calendar');
-                            }}>
+                            }}
+                        >
                             <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>
                                 <Ionicons name="calendar-sharp" size={18} />
                             </Text>
@@ -1480,7 +1478,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}
                                 onPress={() => {
                                     setTab('Activity');
-                                }}>
+                                }}
+                            >
                                 {/* Alert  */}
                                 <View
                                     style={{
@@ -1550,7 +1549,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             height: 35,
                             marginTop: 20,
                             alignSelf: 'center'
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 textAlign: 'center',
@@ -1565,7 +1565,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 width: 150,
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
-                            }}>
+                            }}
+                        >
                             Mark as Read
                         </Text>
                     </TouchableOpacity>
@@ -1585,7 +1586,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
                 overflow: 'scroll'
-            }}>
+            }}
+        >
             <View
                 style={{
                     width: '100%',
@@ -1593,19 +1595,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                     maxWidth: 900,
                     alignSelf: 'center'
-                }}>
+                }}
+            >
                 <View
                     style={{
                         width: Dimensions.get('window').width < 768 ? '100%' : '100%',
                         backgroundColor: tab === 'Add' ? 'white' : '#efefef'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             width: '100%',
                             backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
-                        }}>
+                        }}
+                    >
                         {loading ? (
                             <View
                                 style={{
@@ -1617,7 +1622,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     backgroundColor: tab === 'Add' ? 'white' : '#efefef',
                                     marginTop: 50,
                                     marginBottom: 50
-                                }}>
+                                }}
+                            >
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
                         ) : (
@@ -1627,7 +1633,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
-                                }}>
+                                }}
+                            >
                                 {renderTabs(tab)}
                                 {!showAddEvent ? (
                                     <View
@@ -1645,7 +1652,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             shadowOpacity: 0.1,
                                             shadowRadius: tab === 'Add' ? 0 : 10,
                                             zIndex: 500000
-                                        }}>
+                                        }}
+                                    >
                                         {tab === tabs[0] ? (
                                             <Eventcalendar
                                                 key={Math.random()}
@@ -1681,7 +1689,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     paddingLeft: Dimensions.get('window').width < 768 ? 0 : 0,
                                                     paddingTop: Dimensions.get('window').width < 768 ? 0 : 0,
                                                     backgroundColor: 'white'
-                                                }}>
+                                                }}
+                                            >
                                                 <View>
                                                     {activity.map((act: any, index) => {
                                                         const { cueId, channelId, createdBy, target, threadId } = act;
@@ -1779,13 +1788,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     backgroundColor: 'white',
                                                                     borderLeftWidth: 3,
                                                                     borderLeftColor: act.colorCode
-                                                                }}>
+                                                                }}
+                                                            >
                                                                 <View
                                                                     style={{
                                                                         flex: 1,
                                                                         backgroundColor: 'white',
                                                                         paddingLeft: 20
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     <Text
                                                                         style={{
                                                                             fontSize: 15,
@@ -1793,7 +1804,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             fontFamily: 'inter',
                                                                             marginTop: 5
                                                                         }}
-                                                                        ellipsizeMode="tail">
+                                                                        ellipsizeMode="tail"
+                                                                    >
                                                                         {act.channelName}
                                                                     </Text>
                                                                     <Text
@@ -1802,7 +1814,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             padding: 5,
                                                                             fontWeight: 'bold'
                                                                         }}
-                                                                        ellipsizeMode="tail">
+                                                                        ellipsizeMode="tail"
+                                                                    >
                                                                         {act.title} - {act.subtitle}
                                                                     </Text>
                                                                 </View>
@@ -1814,14 +1827,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         alignSelf: 'center',
                                                                         paddingRight: 10,
                                                                         alignItems: 'center'
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     <Text
                                                                         style={{
                                                                             fontSize: 13,
                                                                             padding: 5,
                                                                             lineHeight: 13
                                                                         }}
-                                                                        ellipsizeMode="tail">
+                                                                        ellipsizeMode="tail"
+                                                                    >
                                                                         {act.status === 'unread' ? (
                                                                             <Ionicons
                                                                                 name="alert-circle-outline"
@@ -1837,7 +1852,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             lineHeight: 13,
                                                                             fontWeight: 'bold'
                                                                         }}
-                                                                        ellipsizeMode="tail">
+                                                                        ellipsizeMode="tail"
+                                                                    >
                                                                         {emailTimeDisplay(act.date)}
                                                                     </Text>
                                                                     <Text
@@ -1846,7 +1862,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             padding: 5,
                                                                             lineHeight: 13
                                                                         }}
-                                                                        ellipsizeMode="tail">
+                                                                        ellipsizeMode="tail"
+                                                                    >
                                                                         <Ionicons
                                                                             name="chevron-forward-outline"
                                                                             size={18}
@@ -1865,7 +1882,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     alignItems: 'center',
                                                     backgroundColor: 'white',
                                                     paddingHorizontal: width < 768 ? 20 : 0
-                                                }}>
+                                                }}
+                                            >
                                                 {renderEditChannelName()}
                                                 {!editChannelName ? (
                                                     <View style={{ marginBottom: 15 }}>
@@ -1874,7 +1892,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 fontSize: 16,
                                                                 fontFamily: 'Inter',
                                                                 color: '#000000'
-                                                            }}>
+                                                            }}
+                                                        >
                                                             Create an event
                                                         </Text>
                                                     </View>
@@ -1884,14 +1903,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         width: '100%',
                                                         maxWidth: 400,
                                                         alignSelf: 'center'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <View style={{ width: '100%', maxWidth: 400 }}>
                                                         <Text
                                                             style={{
                                                                 fontSize: 14,
                                                                 // fontFamily: 'inter',
                                                                 color: '#000000'
-                                                            }}>
+                                                            }}
+                                                        >
                                                             Topic
                                                         </Text>
                                                         <TextInput
@@ -1908,7 +1929,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 fontSize: 14,
                                                                 // fontFamily: 'inter',
                                                                 color: '#000000'
-                                                            }}>
+                                                            }}
+                                                        >
                                                             Description
                                                         </Text>
                                                         <TextInput
@@ -1926,7 +1948,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             width: '100%',
                                                             maxWidth: 400,
                                                             paddingVertical: 15
-                                                        }}>
+                                                        }}
+                                                    >
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('start')}
                                                         </Text>
@@ -1964,7 +1987,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             width: '100%',
                                                             maxWidth: 400,
                                                             paddingVertical: 15
-                                                        }}>
+                                                        }}
+                                                    >
                                                         <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
                                                         <Datepicker
                                                             controls={['date', 'time']}
@@ -2001,7 +2025,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         paddingTop: 20,
                                                         width: '100%',
                                                         maxWidth: 400
-                                                    }}>
+                                                    }}
+                                                >
                                                     {channels.length > 0 && !editEvent ? (
                                                         <View>
                                                             <View style={{ width: '100%', paddingBottom: 10 }}>
@@ -2010,7 +2035,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         fontSize: 14,
                                                                         // fontFamily: 'inter',
                                                                         color: '#000000'
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     For
                                                                 </Text>
                                                             </View>
@@ -2019,7 +2045,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     flexDirection: 'row',
                                                                     display: 'flex',
                                                                     backgroundColor: '#efefef'
-                                                                }}>
+                                                                }}
+                                                            >
                                                                 {/* <Menu
                                                                                                         onSelect={(channelId: any) => {
                                                                                                             setChannelId(channelId)
@@ -2065,7 +2092,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         width: '100%',
                                                                         maxWidth: 400,
                                                                         backgroundColor: 'white'
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     <Select
                                                                         touchUi={true}
                                                                         themeVariant="light"
@@ -2109,7 +2137,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 20,
                                                                 fontFamily: 'Inter',
                                                                 paddingBottom: 15
-                                                            }}>
+                                                            }}
+                                                        >
                                                             Zoom meeting will be automatically created and attendances
                                                             will be captured for online meetings.
                                                         </Text>
@@ -2127,7 +2156,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 padding: 10,
                                                                 backgroundColor: '#f3f3f3',
                                                                 borderRadius: 1
-                                                            }}>
+                                                            }}
+                                                        >
                                                             <Ionicons
                                                                 name="warning-outline"
                                                                 size={22}
@@ -2158,14 +2188,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 style={{
                                                                     backgroundColor: '#f3f3f3',
                                                                     paddingHorizontal: 10
-                                                                }}>
+                                                                }}
+                                                            >
                                                                 <Text
                                                                     style={{
                                                                         fontSize: 14,
                                                                         fontFamily: 'inter',
                                                                         color: '#006AFF',
                                                                         backgroundColor: '#f3f3f3'
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     Connect
                                                                 </Text>
                                                             </TouchableOpacity>
@@ -2182,7 +2214,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 paddingVertical: 25,
                                                                 // paddingLeft: 7
                                                                 justifyContent: 'center'
-                                                            }}>
+                                                            }}
+                                                        >
                                                             <TouchableOpacity
                                                                 style={{
                                                                     backgroundColor: 'white',
@@ -2193,7 +2226,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     flexDirection: 'row'
                                                                 }}
                                                                 onPress={() => handleCreate()}
-                                                                disabled={isCreatingEvents}>
+                                                                disabled={isCreatingEvents}
+                                                            >
                                                                 <Text
                                                                     style={{
                                                                         textAlign: 'center',
@@ -2207,7 +2241,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         borderRadius: 15,
                                                                         width: 120,
                                                                         textTransform: 'uppercase'
-                                                                    }}>
+                                                                    }}
+                                                                >
                                                                     {isCreatingEvents ? '...' : 'CREATE'}
                                                                 </Text>
                                                             </TouchableOpacity>

@@ -153,6 +153,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     placeholder="Message..."
                     minRows={3}
                     style={{
+                        fontFamily: 'overpass',
                         marginTop: 20,
                         fontSize: 14,
                         borderRadius: 1,

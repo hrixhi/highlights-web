@@ -1,25 +1,26 @@
 import * as Linking from 'expo-linking';
 
 export default {
-  prefixes: [Linking.makeUrl('/')],
-  config: {
-    screens: {
-      Root: {
+    prefixes: [Linking.makeUrl('/')],
+    config: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: 'one',
+            Root: {
+                screens: {
+                    TabOne: {
+                        screens: {
+                            TabOneScreen: 'one'
+                        }
+                    },
+                    TabTwo: {
+                        screens: {
+                            TabTwoScreen: 'two'
+                        }
+                    }
+                }
             },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
-        },
-      },
-      zoom_auth: 'zoom_auth',
-      NotFound: '*',
-    },
-  },
+            zoom_auth: 'zoom_auth',
+            pdfviewer: 'pdfviewer',
+            NotFound: '*'
+        }
+    }
 };
