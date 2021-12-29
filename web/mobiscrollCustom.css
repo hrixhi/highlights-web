@@ -3,7 +3,7 @@
     border: 0px;
     font-weight: bold;
     cursor: pointer;
-    font-family: "inter";
+    font-family: 'inter';
     padding-top: 13px;
     padding-bottom: 13px;
 }
@@ -15,7 +15,7 @@
     padding-top: 13px;
     padding-bottom: 8px;
     font-weight: bold;
-    font-family: "inter";
+    font-family: 'inter';
     cursor: pointer;
 }
 
@@ -23,7 +23,7 @@
     border: 0px;
     /* border-bottom: 1px solid #efefef; */
     font-weight: bold;
-    font-family: "inter";
+    font-family: 'inter';
     cursor: pointer;
 }
 
@@ -32,7 +32,7 @@
     /* border-bottom: 1px solid #efefef; */
     width: 150px;
     font-weight: bold;
-    font-family: "inter";
+    font-family: 'inter';
     cursor: pointer;
 }
 
@@ -41,7 +41,7 @@
     /* border-bottom: 1px solid #efefef; */
     width: 90px;
     font-weight: bold;
-    font-family: "inter";
+    font-family: 'inter';
     cursor: pointer;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .mbsc-ios {
-    font-family: "Inter";
+    font-family: 'Inter';
 }
 
 .mbsc-select {
@@ -86,22 +86,45 @@
 }
 
 .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-    color: #1F1F1F !important; 
+    color: #1f1f1f !important;
 }
 
 .tox-tinymce {
     border: 1px solid #efefef !important;
 }
 
-.mbsc-ios.mbsc-select, .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-box, .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-outline {
+.mbsc-ios.mbsc-select,
+.mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-box,
+.mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-outline {
     background: transparent !important;
 }
 
 .mbsc-ios.mbsc-textfield-wrapper-underline {
     background: transparent !important;
-
 }
 
+.react-tag-input {
+    border: none;
+    border-bottom: 1px solid #efefef;
+}
+
+.react-tag-input__input {
+    font-family: 'overpass';
+    font-size: 14px;
+}
+
+.react-tag-input__tag {
+    background: #dedede;
+}
+
+.react-tag-input__tag__content {
+    font-family: 'Inter';
+    font-size: 12px;
+}
+
+.mbsc-textfield.mbsc-textfield-tags.mbsc-textarea {
+    max-height: 10em;
+}
 /* .dropdown {
     position: relative;
     display: inline-block;
@@ -114,3 +137,7 @@
     height: 20px;
     width: 20px;
 } */
+
+.mbsc-popup-padding {
+    overflow: scroll;
+}
