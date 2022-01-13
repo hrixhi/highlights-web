@@ -12,3 +12,5 @@ NOTE - Repeat steps 5-9 after every "expo install xxx" that you perform.
 5. Go to node_modules/react-native-gifted-chat and open MessageImage.js. Comment out the <LightBox> wrapper around the <Image> tag
 6. Run: expo start
 7. Click on run in browser.
+
+DEPLOYMENT:

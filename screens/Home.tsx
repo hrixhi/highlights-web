@@ -32,6 +32,7 @@ import Dashboard from '../components/Dashboard';
 import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 import { defaultCues } from '../helpers/DefaultData';
+import { origin } from '../constants/zoomCredentials';
 
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
@@ -43,7 +44,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // Dev/Prod
     const env = 'DEV';
 
-    const window = Dimensions.get('window');
+    const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
 
     // Categories for Home
@@ -53,7 +54,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // All cues
     const [cues, setCues] = useState<any>({});
 
-    const [reLoading, setReLoading] = useState(true);
+    const [reLoading, setReLoading] = useState(false);
     const [fadeAnimation] = useState(new Animated.Value(0));
 
     // Open an existing Cue
@@ -77,13 +78,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [isSignupSubmitDisabled, setIsSignupSubmitDisabled] = useState(true);
     const [signingUp, setSigningUp] = useState(false);
     const [saveDataInProgress, setSaveDataInProgress] = useState(false);
-    const [dimensions, setDimensions] = useState({ window, screen });
+    const [dimensions, setDimensions] = useState({ window: win, screen });
     const [target, setTarget] = useState('');
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
     const [openChannelId, setOpenChannelId] = useState('');
     const [passwordValidError, setPasswordValidError] = useState('');
-
-    console.log('loadDiscussionForChannelId HOME', loadDiscussionForChannelId);
 
     const [tab, setTab] = useState('Agenda');
     const [showDirectory, setShowDirectory] = useState<any>(false);
@@ -111,6 +110,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const [showHome, setShowHome] = useState(true);
     const [hideNewChatButton, setHideNewChatButton] = useState(false);
+
+    const [loadingCues, setLoadingCues] = useState(true);
+    const [loadingSubs, setLoadingSubs] = useState(true);
+    const [loadingUser, setLoadingUser] = useState(true);
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -177,13 +180,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             const u = await AsyncStorage.getItem('user');
             if (u) {
                 const parsedUser: any = JSON.parse(u);
-                if (parsedUser.email && parsedUser.email !== '') {
-                    // do nothing
+                if (parsedUser._id && parsedUser._id !== '') {
+                    await loadDataFromCloud();
                 } else {
-                    setShowLoginWindow(true);
+                    // setShowLoginWindow(true);
+                    window.location.href = `${origin}/login`;
                 }
             } else {
-                setShowLoginWindow(true);
+                // setShowLoginWindow(true);
+                window.location.href = `${origin}/login`;
             }
         })();
     }, []);
@@ -243,7 +248,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, []);
 
     // imp
-    const loadNewChannelCues = useCallback(async () => {
+    const refreshChannelCues = useCallback(async () => {
         let user = await AsyncStorage.getItem('user');
         const unparsedCues = await AsyncStorage.getItem('cues');
         if (user && unparsedCues) {
@@ -316,7 +321,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         duration: 150,
                         useNativeDriver: true
                     }).start();
-                    setReLoading(false);
                 }
             } catch (err) {
                 Alert(unableToRefreshCuesAlert, checkConnectionAlert);
@@ -399,111 +403,34 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // FETCH NEW DATA
     const loadData = useCallback(
         async (saveData?: boolean) => {
-            setReLoading(true);
             try {
-                const version = 'v0.9';
-                const fO = await AsyncStorage.getItem(version);
+                // const version = 'v0.9';
+                // const fO = await AsyncStorage.getItem(version);
 
                 // LOAD FIRST OPENED
-                if (fO === undefined || fO === null) {
-                    try {
-                        await AsyncStorage.clear();
-                        await AsyncStorage.setItem(version, 'SET');
-                    } catch (e) {}
-                }
+                // if (fO === undefined || fO === null) {
+                //     try {
+                //         await AsyncStorage.clear();
+                //         await AsyncStorage.setItem(version, 'SET');
+                //     } catch (e) {}
+                // }
 
                 let u = await AsyncStorage.getItem('user');
                 const sC = await AsyncStorage.getItem('cues');
-                const sub = await AsyncStorage.getItem('subscriptions');
 
-                // LOAD SUBSCRIPTIONS
-                if (sub) {
-                    const parsedSubscriptions = JSON.parse(sub);
-                    if (u) {
-                        const parsedUser = JSON.parse(u);
-                        const server2 = fetchAPI(parsedUser._id);
-                        server2
-                            .query({
-                                query: getSubscriptions,
-                                variables: {
-                                    userId: parsedUser._id
-                                }
-                            })
-                            .then(async res => {
-                                if (res.data.subscription.findByUserId) {
-                                    const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
-                                        if (a.channelName < b.channelName) {
-                                            return -1;
-                                        }
-                                        if (a.channelName > b.channelName) {
-                                            return 1;
-                                        }
-                                        return 0;
-                                    });
-                                    setSubscriptions(sortedSubs);
-                                    const stringSub = JSON.stringify(sortedSubs);
-                                    await AsyncStorage.setItem('subscriptions', stringSub);
-                                } else {
-                                    setSubscriptions(parsedSubscriptions);
-                                }
-                            })
-                            .catch(res => {
-                                // no message needed here
-                                // No internet connection, use existing subscription categories
-                                setSubscriptions(parsedSubscriptions);
-                            });
-                    } else {
-                        // no user,
-                        setSubscriptions(parsedSubscriptions);
-                    }
-                } else {
-                    const stringSub = JSON.stringify(subscriptions);
-                    await AsyncStorage.setItem('subscriptions', stringSub);
-                }
-                // LOAD CUES
-                if (sC) {
-                    await loadNewChannelCues();
-                } else {
-                    const custom: any = {};
-                    let allCues: any = {};
-                    allCues['local'] = [...defaultCues];
-                    const stringSC = JSON.stringify(allCues);
-                    await AsyncStorage.setItem('cues', stringSC);
-                    allCues['local'].map((item: any) => {
-                        if (item.customCategory !== '') {
-                            if (!custom[item.customCategory]) {
-                                custom[item.customCategory] = 0;
-                            }
-                        }
-                    });
-                    const customC: any[] = [];
-                    Object.keys(custom).map(item => {
-                        customC.push(item);
-                    });
-                    customC.sort();
-                    setCues(allCues);
-                    setCustomCategories(customC);
-                    // START ANIMATION
-                    Animated.timing(fadeAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start();
-                }
+                // if (sC) {
+                //     await refreshChannelCues();
+                // }
                 // HANDLE PROFILE
                 if (u) {
                     const parsedUser = JSON.parse(u);
                     if (parsedUser.email) {
                         if (saveData) {
                             await saveDataInCloud();
-                        } else {
-                            loadDataFromCloud();
                         }
+
+                        loadDataFromCloud();
                     }
-                }
-                // LOADED
-                if (!sC) {
-                    setReLoading(false);
                 }
             } catch (e) {
                 console.log(e);
@@ -653,7 +580,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // imp
     const loadDataFromCloud = useCallback(async () => {
         const u = await AsyncStorage.getItem('user');
+
         if (u) {
+            setLoadingCues(true);
+            setLoadingSubs(true);
+            setLoadingUser(true);
+
             const user = JSON.parse(u);
             const server = fetchAPI(user._id);
             // Get User info
@@ -672,6 +604,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         delete u.__typename;
                         const sU = JSON.stringify(u);
                         await AsyncStorage.setItem('user', sU);
+                        setLoadingUser(false);
                     }
                 })
                 .catch(err => console.log(err));
@@ -716,6 +649,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setCustomCategories(customC);
                         const stringCues = JSON.stringify(allCues);
                         await AsyncStorage.setItem('cues', stringCues);
+                        setLoadingCues(false);
                     }
                 })
                 .catch(err => console.log(err));
@@ -741,6 +675,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setSubscriptions(sortedSubs);
                         const stringSub = JSON.stringify(sortedSubs);
                         await AsyncStorage.setItem('subscriptions', stringSub);
+                        setLoadingSubs(false);
                     }
                 })
                 .catch(err => console.log(err));
@@ -855,18 +790,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             })
             .catch(err => console.log(err));
     }, [cues]);
-
-    useEffect(() => {
-        OneSignal.initialize('78cd253e-262d-4517-a710-8719abf3ee55', {
-            notifyButton: {
-                enable: false
-            },
-            allowLocalhostAsSecureOrigin: true
-        });
-
-        // Called when component is loaded
-        loadData();
-    }, []);
 
     const openModal = useCallback(
         type => {
@@ -1592,7 +1515,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
             ) : null}
             {showHome &&
-            !reLoading &&
+            !loadingCues &&
+            !loadingUser &&
+            !loadingSubs &&
             ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
@@ -1692,7 +1617,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0
                         }}
                     >
-                        {reLoading ? (
+                        {loadingCues || loadingUser || loadingSubs ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
@@ -1855,7 +1780,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
                         target={target}
                         openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
-                        refreshCues={loadNewChannelCues}
+                        refreshCues={refreshChannelCues}
                     />
                 ) : null}
             </View>

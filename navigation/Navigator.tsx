@@ -9,6 +9,7 @@ import Home from '../screens/Home';
 import LinkingConfiguration from './Linking';
 import FinishZoomSetup from '../screens/FinishZoomSetup';
 import PDFViewerCues from '../screens/PDFViewerCues';
+import Auth from '../screens/Auth';
 
 // Main stack navigator
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -27,15 +28,17 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                                 justifyContent: 'center',
                                 flexDirection: 'row',
                                 backgroundColor: 'white'
-                            }}>
+                            }}
+                        >
                             <Home />
                         </View>
                     )}
                 />
 
-                {/* In case navigation ends up at a wrong location */}
+                <Stack.Screen name="login" component={Auth} options={{ title: 'Login to Cues' }} />
                 <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
                 <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
+                {/* In case navigation ends up at a wrong location */}
                 <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
             </Stack.Navigator>
         </NavigationContainer>

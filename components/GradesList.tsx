@@ -81,9 +81,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             let totalPoints = 0;
             let totalScore = 0;
             score.scores.map((s: any) => {
-                if (s.graded) {
-                    totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                    totalScore += Number(s.gradeWeight)
+                if (s.releaseSubmission) {
+                    if (!s.submittedAt || !s.graded) {
+                        // totalPoints += (Number(s.gradeWeight) * Number(s.score))
+                        totalScore += Number(s.gradeWeight)
+                    } else {
+                        totalPoints += (Number(s.gradeWeight) * Number(s.score))
+                        totalScore += Number(s.gradeWeight)
+                    }
+                   
                 }
             })
 
@@ -447,9 +453,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             let totalPoints = 0;
                                             let totalScore = 0;
                                             score.scores.map((s: any) => {
-                                                if (s.graded) {
-                                                    totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                                                    totalScore += Number(s.gradeWeight)
+                                                if (s.releaseSubmission) {
+                                                    if (!s.submittedAt || !s.graded) {
+                                                        // totalPoints += (Number(s.gradeWeight) * Number(s.score))
+                                                        totalScore += Number(s.gradeWeight)
+                                                    } else {
+                                                        totalPoints += (Number(s.gradeWeight) * Number(s.score))
+                                                        totalScore += Number(s.gradeWeight)
+                                                    }
+                                                   
                                                 }
                                             })
 
@@ -463,7 +475,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     cues.length === 0 ? null :
                                                         <View style={styles.col} key={'total'}>
                                                             <Text style={{ textAlign: 'center', fontSize: 11, color: '#000000', textTransform: 'uppercase' }}>
-                                                                {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
+                                                                {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '') : '0'}%
                                                             </Text>
                                                         </View>
                                                 }
@@ -514,12 +526,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             setActiveScore(scoreObject.score);
                                                         }}>
                                                             {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#f94144', }}>
-                                                                {scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
+                                                                {scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score.replace(/\.0+$/, '') ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
                                                             </Text>
                                                                 :
                                                                 <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#000000', }}>
                                                                     {
-                                                                        scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score : (scoreObject && (new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline))) ? "Late" : '-')
+                                                                        scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score.replace(/\.0+$/, '') : (scoreObject && (new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline))) ? "Late" : '-')
                                                                     }
                                                                 </Text>}
 

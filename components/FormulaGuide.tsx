@@ -45,20 +45,255 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         }
     ];
 
+    const categoriesMap = {
+        Frequent: [
+            'Superscript',
+            'Subscript',
+            'Degree °',
+            'Bar over letter',
+            'Sum Σ',
+            'Product ∏',
+            'Integral ∫',
+            'Fraction',
+            '√'
+        ],
+        Mathematical: [
+            'ƒ',
+            '∞',
+            '∼',
+            '≅',
+            '≈',
+            '≠',
+            '≡',
+            '∈',
+            '∉',
+            '∋',
+            '∧',
+            '∨',
+            '¬',
+            '∩',
+            '∪',
+            '∂',
+            '∀',
+            '∃',
+            '∅',
+            '∇',
+            '∗',
+            '∝',
+            '∠',
+            '<',
+            '≤',
+            '>',
+            '≥',
+            '‹',
+            '›',
+            '«',
+            '»',
+            '‘',
+            '’',
+            '“',
+            '”',
+            '–',
+            '—',
+            '¤',
+            '¦',
+            '¨',
+            '¡',
+            '¿',
+            'ˆ',
+            '˜',
+            '−',
+            '±',
+            '÷',
+            '⁄',
+            '×',
+            '¼',
+            '½',
+            '¾'
+        ],
+        Latin: [
+            'Α',
+            'α',
+            'Β',
+            'β',
+            'Γ',
+            'γ',
+            'Δ',
+            'δ',
+            'Ε',
+            'ε',
+            'Ζ',
+            'ζ',
+            'Η',
+            'η',
+            'Θ',
+            'θ',
+            'Ι',
+            'ι',
+            'Κ',
+            'κ',
+            'Λ',
+            'λ',
+            'M',
+            'μ',
+            'Ν',
+            'ν',
+            'Ξ',
+            'ξ',
+            'Ο',
+            'o',
+            'Π',
+            'π',
+            'Ρ',
+            'ρ',
+            'Σ',
+            'σ',
+            'Τ',
+            'τ',
+            'Υ',
+            'υ',
+            'Φ',
+            'φ',
+            'Χ',
+            'χ',
+            'Ψ',
+            'ψ',
+            'Ω',
+            'ω'
+        ],
+        Arrows: [
+            '←',
+            '↑',
+            '→',
+            '↓',
+            '↔',
+            '↵',
+            '⇐',
+            '⇑',
+            '⇒',
+            '⇓',
+            '⇔',
+            '∴',
+            '⊂',
+            '⊃',
+            '⊄',
+            '⊆',
+            '⊇',
+            '⊕',
+            '⊗',
+            '⊥',
+            '⋅',
+            '⌈',
+            '⌉',
+            '⌊',
+            '⌋',
+            '〈',
+            '〉',
+            '◊'
+        ],
+        Trigonometry: ['sin', 'cos', 'tan', 'sec', 'cosec', 'arccos', 'arcsin', 'arctan', 'θ', 'φ']
+    };
+
     const symbolsMap = {
+        // MATHEMATICAL
+        ƒ: 'ƒ',
+        '∞': '∞',
+        '∼': '∼',
+        '≅': '≅',
+        '≈': '≈',
+        '≠': '≠',
+        '≡': '≡',
+        '∈': '∈',
+        '∉': '∉',
+        '∋': '∋',
+        '∧': '∧',
+        '∨': '∨',
+        '¬': '¬',
+        '∩': '∩',
+        '∪': '∪',
+        '∂': '∂',
+        '∀': '∀',
+        '∃': '∃',
+        '∅': '∅',
+        '∇': '∇',
+        '∗': '∗',
+        '∝': '∝',
+        '∠': '∠',
+        '√': 'sqrt',
+
+        // QUOTATIONS
+
+        '<': `<`,
+        '≤': `\leq`,
+        '>': `>`,
+        '≥': `\geq`,
+        '‹': '‹',
+        '›': '›',
+        '«': '«',
+        '»': '»',
+        '‘': '‘',
+        '’': '’',
+        '“': '“',
+        '”': '”',
+        '–': '–',
+        '—': '—',
+        '¤': '¤',
+        '¦': '¦',
+        '¨': '¨',
+        '¡': '¡',
+        '¿': '¿',
+        ˆ: 'ˆ',
+        '˜': '˜',
+        '−': '−',
+        '±': '±',
+        '÷': '÷',
+        '⁄': '⁄',
+        '×': '×',
+        '¼': '¼',
+        '½': '½',
+        '¾': '¾',
+
+        // FUNCTIONS
+        'Degree °': `\circ`,
         Superscript: '^',
         Subscript: '_',
         'Bar over letter': 'bar',
         'Sum Σ': 'sum',
         'Product ∏': 'prod',
         'Integral ∫': 'int',
-        'Degree °': `\circ`,
         Fraction: '/',
-        '√': 'sqrt',
-        '<': `<`,
-        '≤': `\leq`,
-        '>': `>`,
-        '≥': `\geq`,
+
+        // ARROWS
+        '←': '←',
+        '↑': '↑',
+        '→': '→',
+        '↓': '↓',
+        '↔': '↔',
+        '↵': '↵',
+        '⇐': '⇐',
+        '⇑': '⇑',
+        '⇒': '⇒',
+        '⇓': '⇓',
+        '⇔': '⇔',
+        '∴': '∴',
+        '⊂': '⊂',
+        '⊃': '⊃',
+        '⊄': '⊄',
+        '⊆': '⊆',
+        '⊇': '⊇',
+        '⊕': '⊕',
+        '⊗': '⊗',
+        '⊥': '⊥',
+        '⋅': '⋅',
+        '⌈': '⌈',
+        '⌉': '⌉',
+        '⌊': '⌊',
+        '⌋': '⌋',
+        '〈': '〈',
+        '〉': '〉',
+        '◊': '◊',
+
+        // LATIN
         Α: `A`,
         α: 'alpha',
         Β: 'B',
@@ -148,17 +383,18 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     // Custom breakpoint
                     display: 'center'
                 }
-            }}>
+            }}
+        >
             <View
                 style={{ flexDirection: 'column', padding: 25, backgroundColor: '#f2f2f7' }}
-                className="mbsc-align-center mbsc-padding">
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    horizontal={false}
-                    contentContainerStyle={{
+                className="mbsc-align-center mbsc-padding"
+            >
+                <View
+                    style={{
                         width: '100%',
-                        maxHeight: 600
-                    }}>
+                        backgroundColor: '#f2f2f7'
+                    }}
+                >
                     {/* Formula Input */}
                     <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f7' }}>Enter formula</View>
                     <View
@@ -166,7 +402,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             width: '100%',
                             marginBottom: 20,
                             backgroundColor: '#f2f2f7'
-                        }}>
+                        }}
+                    >
                         <View
                             style={{
                                 borderColor: '#efefef',
@@ -174,7 +411,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 borderRadius: 15,
                                 padding: 10,
                                 minWidth: 200
-                            }}>
+                            }}
+                        >
                             <EquationEditor
                                 value={props.equation}
                                 onChange={props.onChange}
@@ -209,40 +447,70 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             </View>
                         );
                     })} */}
-                    <View
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            backgroundColor: '#f2f2f7'
-                        }}>
-                        {Object.keys(symbolsMap).map((sym: string) => {
+                    <View>
+                        {Object.keys(categoriesMap).map((cat: any) => {
                             return (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setAddElementFromButton(symbolsMap[sym]);
-                                    }}
+                                <View
                                     style={{
-                                        borderColor: '#000',
-                                        borderWidth: 1,
-                                        marginRight: 10,
-                                        marginBottom: 10
-                                    }}>
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        backgroundColor: '#f2f2f7',
+                                        paddingBottom: 20
+                                    }}
+                                >
                                     <Text
                                         style={{
-                                            paddingHorizontal: 10,
-                                            paddingVertical: 5,
-                                            backgroundColor: 'white',
-                                            // marginRight: 10,
-                                            fontFamily: 'inter'
-                                        }}>
-                                        {sym}
+                                            fontSize: 14,
+                                            fontFamily: 'Inter',
+                                            color: '#1f1f1f',
+                                            backgroundColor: '#f2f2f7',
+                                            marginBottom: 10
+                                        }}
+                                    >
+                                        {cat}
                                     </Text>
-                                </TouchableOpacity>
+
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            flexDirection: 'row',
+                                            flexWrap: 'wrap',
+                                            backgroundColor: '#f2f2f7'
+                                        }}
+                                    >
+                                        {categoriesMap[cat].map((sym: string) => {
+                                            return (
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setAddElementFromButton(symbolsMap[sym]);
+                                                    }}
+                                                    style={{
+                                                        borderColor: '#000',
+                                                        borderWidth: 1,
+                                                        marginRight: 10,
+                                                        marginBottom: 10
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            paddingHorizontal: 10,
+                                                            paddingVertical: 5,
+                                                            backgroundColor: 'white'
+                                                            // marginRight: 10,
+                                                            // fontFamily: 'inter'
+                                                        }}
+                                                    >
+                                                        {sym}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            );
+                                        })}
+                                    </View>
+                                </View>
                             );
                         })}
                     </View>
-                </ScrollView>
+                </View>
             </View>
         </Popup>
     );

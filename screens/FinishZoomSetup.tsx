@@ -1,55 +1,82 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import OneSignal from 'react-onesignal';
 import alert from '../components/Alert';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { connectZoom } from '../graphql/QueriesAndMutations';
-import { origin } from '../constants/zoomCredentials';
+import { origin, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 export default function FinishZoomSetup({ navigation, route }: StackScreenProps<any, 'zoom_auth'>) {
     React.useEffect(() => {
-        if (Platform.OS === 'web') {
-            // check URL over here
+        (async () => {
+            if (Platform.OS === 'web') {
+                // check URL over here
 
-            const code = route?.params?.code;
-            const userId = route?.params?.state;
+                const code = route?.params?.code;
+                const userId = route?.params?.state;
 
-            console.log('Code', code);
-            console.log('User id', userId);
+                console.log('Code', code);
+                console.log('User id', userId);
 
-            if (!code || !userId) {
-                window.location.href = origin;
+                if (code && userId) {
+                    const server = fetchAPI('');
+                    server
+                        .mutate({
+                            mutation: connectZoom,
+                            variables: {
+                                code,
+                                userId
+                            }
+                        })
+                        .then(async res => {
+                            if (res.data && res.data.user.connectZoom) {
+                                console.log('Connect with zoom', res.data.user.connectZoom);
+                                const u = await AsyncStorage.getItem('user');
+                                if (!u) {
+                                    return;
+                                }
+                                const user = JSON.parse(u);
+                                user.zoomInfo = res.data.user.connectZoom;
+                                const updatedUser = JSON.stringify(user);
+                                await AsyncStorage.setItem('user', updatedUser);
+                                alert('Zoom account connected!');
+
+                                // Redirect back to /
+                                window.location.href = origin;
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                } else {
+                    // Need to redirect to Zoom integration page if user is authenticated
+                    const u = await AsyncStorage.getItem('user');
+
+                    if (!u) {
+                        window.location.href = `${origin}/login?redirect=zoom`;
+                        return;
+                    }
+
+                    const user = JSON.parse(u);
+
+                    if (!user._id) {
+                        window.location.href = `${origin}/login?redirect=zoom`;
+                    } else if (user.zoomInfo) {
+                        alert('Your Zoom account is already connected!');
+                        window.location.href = origin;
+                    } else {
+                        // Redirect to Zoom integration
+                        const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                            zoomRedirectUri
+                        )}&state=${user._id}`;
+
+                        window.open(url);
+                    }
+                }
             }
-
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: connectZoom,
-                    variables: {
-                        code,
-                        userId
-                    }
-                })
-                .then(async res => {
-                    if (res.data && res.data.user.connectZoom) {
-                        console.log('Connect with zoom', res.data.user.connectZoom);
-                        const u = await AsyncStorage.getItem('user');
-                        if (!u) {
-                            return;
-                        }
-                        const user = JSON.parse(u);
-                        user.zoomInfo = res.data.user.connectZoom;
-                        const updatedUser = JSON.stringify(user);
-                        await AsyncStorage.setItem('user', updatedUser);
-                        alert('Zoom connected!');
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
+        })();
     }, []);
 
     return null;

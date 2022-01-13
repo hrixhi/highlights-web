@@ -911,92 +911,175 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{ marginBottom: 15, width: '100%', alignSelf: 'center' }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    fontFamily: 'Inter',
-                                    color: '#000000',
-                                    textAlign: 'center'
+
+                        {role === "instructor" ? <View style={{ width: '100%' }}>
+                            <View style={{ marginBottom: 15, width: '100%', alignSelf: 'center' }}>
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        fontFamily: 'Inter',
+                                        color: '#000000',
+                                        textAlign: 'center'
+                                    }}>
+                                    Create a new course
+                                </Text>
+                            </View>
+                            <View style={{ backgroundColor: 'white' }}>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: '#000000'
                                 }}>
-                                Create a course
-                            </Text>
-                        </View>
-                        <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{
-                                fontSize: 14,
-                                color: '#000000'
-                            }}>
-                                {PreferredLanguageText('name')}
-                            </Text>
-                            <TextInput
-                                value={name}
-                                placeholder={''}
-                                textContentType={"none"}
-                                autoCompleteType={'xyz'}
-                                onChangeText={val => {
-                                    setName(val)
-                                    setPasswordRequired(false)
+                                    {PreferredLanguageText('name')}
+                                </Text>
+                                <TextInput
+                                    value={name}
+                                    placeholder={''}
+                                    textContentType={"none"}
+                                    autoCompleteType={'xyz'}
+                                    onChangeText={val => {
+                                        setName(val)
+                                        setPasswordRequired(false)
+                                    }}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    required={true}
+                                    // footerMessage={'case sensitive'}
+                                />
+                            </View>
+
+                            <View style={{ backgroundColor: 'white' }}>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: '#000000'
+                                }}>
+                                    Description
+                                </Text>
+                                <TextareaAutosize
+                                value={description}
+                                style={{
+                                    fontFamily: 'overpass',
+                                    width: "100%",
+                                    maxWidth: 500,
+                                    borderBottom: '1px solid #efefef',
+                                    fontSize: 14,
+                                    paddingTop: 13,
+                                    paddingBottom: 13,
+                                    marginTop: 12,
+                                    marginBottom: 20,
+                                    borderRadius: 1,
+                                    // height: 80
                                 }}
-                                placeholderTextColor={'#1F1F1F'}
-                                required={true}
-                                // footerMessage={'case sensitive'}
-                            />
-                        </View>
-
-                        <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{
-                                fontSize: 14,
-                                color: '#000000'
-                            }}>
-                                Description
-                            </Text>
-                            <TextareaAutosize
-                            value={description}
-                            style={{
-                                fontFamily: 'overpass',
-                                width: "100%",
-                                maxWidth: 500,
-                                borderBottom: '1px solid #efefef',
-                                fontSize: 14,
-                                paddingTop: 13,
-                                paddingBottom: 13,
-                                marginTop: 12,
-                                marginBottom: 20,
-                                borderRadius: 1,
-                                // height: 80
-                            }}
-                            minRows={2}
-                            placeholder={""}
-                            onChange={(e: any) => setDescription(e.target.value)}
-                            />
-                        </View>
+                                minRows={2}
+                                placeholder={""}
+                                onChange={(e: any) => setDescription(e.target.value)}
+                                />
+                            </View>
 
 
-                        <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{
-                                fontSize: 14,
-                                color: '#000000'
-                            }}>
-                                {PreferredLanguageText('enrolmentPassword')}
-                            </Text>
-                            <TextInput
-                                value={password}
-                                textContentType={"none"}
-                                autoCompleteType={'xyz'}
-                                placeholder={PreferredLanguageText('optional')}
-                                onChangeText={val => setPassword(val)}
-                                placeholderTextColor={'#1F1F1F'}
-                                secureTextEntry={true}
-                                required={false}
-                            />
-                        </View>
+                            <View style={{ backgroundColor: 'white' }}>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: '#000000'
+                                }}>
+                                    {PreferredLanguageText('enrolmentPassword')}
+                                </Text>
+                                <TextInput
+                                    value={password}
+                                    textContentType={"none"}
+                                    autoCompleteType={'xyz'}
+                                    placeholder={PreferredLanguageText('optional')}
+                                    onChangeText={val => setPassword(val)}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    secureTextEntry={true}
+                                    required={false}
+                                />
+                            </View>
 
-                        {
-                            school ?
-                                <View
+                            {
+                                school ?
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                        }}>
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                paddingBottom: 15,
+                                                backgroundColor: "white"
+                                            }}>
+                                            <Text style={{
+                                                fontSize: 14,
+                                                color: '#000000'
+                                            }}>Temporary</Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                backgroundColor: "white",
+                                                width: "100%",
+                                                height: 30,
+                                            }}>
+                                            <Switch
+                                                value={temporary}
+                                                onValueChange={() => setTemporary(!temporary)}
+                                                style={{ height: 20 }}
+                                                trackColor={{
+                                                    false: "#efefef",
+                                                    true: "#006AFF"
+                                                }}
+                                                activeThumbColor="white"
+                                            />
+                                        </View>
+                                        <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                            Courses that are not temporary can only be deleted by the school administrator.
+                                        </Text>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                !school ? 
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                        }}>
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                paddingBottom: 15,
+                                                backgroundColor: "white"
+                                            }}>
+                                            <Text style={{
+                                                fontSize: 14,
+                                                color: '#000000'
+                                            }}>Public</Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                backgroundColor: "white",
+                                                width: "100%",
+                                                height: 30,
+                                            }}>
+                                            <Switch
+                                                value={isPublic}
+                                                onValueChange={() => setIsPublic(!isPublic)}
+                                                style={{ height: 20 }}
+                                                trackColor={{
+                                                    false: "#efefef",
+                                                    true: "#006AFF"
+                                                }}
+                                                activeThumbColor="white"
+                                            />
+                                        </View>
+                                        <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                            Makes your channel visible to all users
+                                        </Text>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                !school ? 
+                                    <View
                                     style={{
                                         width: "100%",
+                                        marginTop: 25
                                     }}>
                                     <View
                                         style={{
@@ -1007,253 +1090,173 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             fontSize: 14,
                                             color: '#000000'
-                                        }}>Temporary</Text>
+                                        }}>Tags</Text>
                                     </View>
                                     <View
                                         style={{
                                             backgroundColor: "white",
                                             width: "100%",
-                                            height: 30,
                                         }}>
-                                        <Switch
-                                            value={temporary}
-                                            onValueChange={() => setTemporary(!temporary)}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: "#efefef",
-                                                true: "#006AFF"
-                                            }}
-                                            activeThumbColor="white"
-                                        />
+                                        <ReactTagInput 
+                                            tags={tags} 
+                                            placeholder=" "
+                                            removeOnBackspace={true}
+                                            maxTags={5}
+                                            onChange={(newTags) => setTags(newTags)}
+                                            />
                                     </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Courses that are not temporary can only be deleted by the school administrator.
+                                    <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>
+                                        Add up to 5
                                     </Text>
                                 </View>
                                 : null
-                        }
-                        {
-                            !school ? 
-                                <View
-                                    style={{
-                                        width: "100%",
-                                    }}>
-                                    <View
-                                        style={{
-                                            width: "100%",
-                                            paddingBottom: 15,
-                                            backgroundColor: "white"
-                                        }}>
-                                        <Text style={{
-                                            fontSize: 14,
-                                            color: '#000000'
-                                        }}>Public</Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            backgroundColor: "white",
-                                            width: "100%",
-                                            height: 30,
-                                        }}>
-                                        <Switch
-                                            value={isPublic}
-                                            onValueChange={() => setIsPublic(!isPublic)}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: "#efefef",
-                                                true: "#006AFF"
-                                            }}
-                                            activeThumbColor="white"
-                                        />
-                                    </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your channel visible to all users
-                                    </Text>
-                                </View>
-                                : null
-                        }
-                        {
-                            !school ? 
-                                <View
+                            }
+
+                            <View
                                 style={{
                                     width: "100%",
-                                    marginTop: 25
+                                    paddingVertical: 15,
                                 }}>
                                 <View
                                     style={{
                                         width: "100%",
+                                        paddingTop: 20,
                                         paddingBottom: 15,
                                         backgroundColor: "white"
                                     }}>
                                     <Text style={{
                                         fontSize: 14,
                                         color: '#000000'
-                                    }}>Tags</Text>
+                                    }}>Theme</Text>
                                 </View>
-                                <View
-                                    style={{
-                                        backgroundColor: "white",
-                                        width: "100%",
-                                    }}>
-                                    <ReactTagInput 
-                                        tags={tags} 
-                                        placeholder=" "
-                                        removeOnBackspace={true}
-                                        maxTags={5}
-                                        onChange={(newTags) => setTags(newTags)}
-                                        />
+                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                    <CirclePicker
+                                        color={colorCode}
+                                        onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                    />
                                 </View>
-                                <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>
-                                    Add up to 5
-                                </Text>
                             </View>
-                            : null
-                        }
 
-                        <View
-                            style={{
-                                width: "100%",
-                                paddingVertical: 15,
+                            {school ? <Text style={{
+                                fontSize: 14,
+                                paddingTop: 20,
+                                color: '#000000'
                             }}>
+                                Viewers
+                            </Text> : null}
+
+                            {school ? renderSubscriberFilters() : null}
+                            {school ? <View style={{
+                                flexDirection: 'column', marginTop: 25,
+                            }}>
+                                <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
+
+                                    <div style={{ width: '100%', }} >
+                                        <label style={{ width: '100%', }}>
+                                            <Select
+                                                themeVariant="light"
+                                                selectMultiple={true}
+                                                group={true}
+                                                groupLabel="&nbsp;"
+                                                inputClass="mobiscrollCustomMultiInput"
+                                                placeholder="Select..."
+                                                touchUi={true}
+                                                value={selectedValues}
+                                                data={options}
+                                                onChange={(val: any) => {
+                                                    setSelectedValues(val.value)
+                                                    // Filter out any moderator if not part of the selected values
+
+                                                    let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
+
+                                                    setSelectedModerators(filterRemovedModerators)
+                                                }}
+                                                responsive={{
+                                                    small: {
+                                                        display: 'bubble'
+                                                    },
+                                                    medium: {
+                                                        touchUi: false,
+                                                    }
+                                                }}
+                                                minWidth={[60, 320]}
+                                            />
+                                        </label>
+                                    </div>
+                                </View>
+                            </View> : null}
+                            {school ? <Text style={{
+                                fontSize: 14,
+                                color: '#000000', marginTop: 25, marginBottom: 20
+                            }}>
+                                Editors
+                            </Text> : null}
+                            {school ? <label style={{ width: '100%', maxWidth: 400 }}>
+                                <Select
+                                    themeVariant="light"
+                                    select="multiple"
+                                    selectMultiple={true}
+                                    placeholder="Select..."
+                                    inputClass="mobiscrollCustomMultiInput"
+                                    value={selectedModerators}
+                                    data={moderatorOptions}
+                                    onChange={(val: any) => {
+                                        setSelectedModerators(val.value)
+                                    }}
+                                    touchUi={true}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false,
+                                        }
+                                    }}
+                                />
+                            </label> : null}
+
                             <View
                                 style={{
-                                    width: "100%",
-                                    paddingTop: 20,
-                                    paddingBottom: 15,
-                                    backgroundColor: "white"
+                                    flex: 1,
+                                    backgroundColor: 'white',
+                                    justifyContent: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: 50,
+                                    paddingTop: 25
                                 }}>
-                                <Text style={{
-                                    fontSize: 14,
-                                    color: '#000000'
-                                }}>Theme</Text>
-                            </View>
-                            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                <CirclePicker
-                                    color={colorCode}
-                                    onChangeComplete={(color: any) => setColorCode(color.hex)}
-                                />
-                            </View>
-                        </View>
+                                
+                                    <TouchableOpacity
+                                        onPress={() => handleSubmit()}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            borderRadius: 15,
+                                            overflow: 'hidden',
+                                            height: 35,
+                                            marginTop: 15,
+                                            marginBottom: 50
+                                        }}
 
-                        {school ? <Text style={{
-                            fontSize: 14,
-                            paddingTop: 20,
-                            color: '#000000'
-                        }}>
-                            Viewers
-                        </Text> : null}
-
-                        {school ? renderSubscriberFilters() : null}
-                        {school ? <View style={{
-                            flexDirection: 'column', marginTop: 25,
-                        }}>
-                            <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
-
-                                <div style={{ width: '100%', }} >
-                                    <label style={{ width: '100%', }}>
-                                        <Select
-                                            themeVariant="light"
-                                            selectMultiple={true}
-                                            group={true}
-                                            groupLabel="&nbsp;"
-                                            inputClass="mobiscrollCustomMultiInput"
-                                            placeholder="Select..."
-                                            touchUi={true}
-                                            value={selectedValues}
-                                            data={options}
-                                            onChange={(val: any) => {
-                                                setSelectedValues(val.value)
-                                                // Filter out any moderator if not part of the selected values
-
-                                                let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
-
-                                                setSelectedModerators(filterRemovedModerators)
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                            minWidth={[60, 320]}
-                                        />
-                                    </label>
-                                </div>
+                                        disabled={isSubmitDisabled || isSubmitting}
+                                    >
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 34,
+                                            color: 'white',
+                                            fontSize: 12,
+                                            backgroundColor: '#006AFF',
+                                            paddingHorizontal: 20,
+                                            fontFamily: 'inter',
+                                            height: 35,
+                                            borderRadius: 15,
+                                            width: 120,
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            {isSubmitting ? "Creating" : PreferredLanguageText('create')}
+                                        </Text>
+                                    </TouchableOpacity>
                             </View>
                         </View> : null}
-                        {school ? <Text style={{
-                            fontSize: 14,
-                            color: '#000000', marginTop: 25, marginBottom: 20
-                        }}>
-                            Editors
-                        </Text> : null}
-                        {school ? <label style={{ width: '100%', maxWidth: 400 }}>
-                            <Select
-                                themeVariant="light"
-                                select="multiple"
-                                selectMultiple={true}
-                                placeholder="Select..."
-                                inputClass="mobiscrollCustomMultiInput"
-                                value={selectedModerators}
-                                data={moderatorOptions}
-                                onChange={(val: any) => {
-                                    setSelectedModerators(val.value)
-                                }}
-                                touchUi={true}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    }
-                                }}
-                            />
-                        </label> : null}
-
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                height: 50,
-                                paddingTop: 25
-                            }}>
-                            
-                                <TouchableOpacity
-                                    onPress={() => handleSubmit()}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: 15,
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        marginTop: 15,
-                                        marginBottom: 50
-                                    }}
-
-                                    disabled={isSubmitDisabled || isSubmitting}
-                                >
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        lineHeight: 34,
-                                        color: 'white',
-                                        fontSize: 12,
-                                        backgroundColor: '#006AFF',
-                                        paddingHorizontal: 20,
-                                        fontFamily: 'inter',
-                                        height: 35,
-                                        borderRadius: 15,
-                                        width: 120,
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        {isSubmitting ? "Creating" : PreferredLanguageText('create')}
-                                    </Text>
-                                </TouchableOpacity>
-                        </View>
                     </View>
                 }
             </View>

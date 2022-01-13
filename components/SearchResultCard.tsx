@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 // COMPONENTS
 import { Text, View, TouchableOpacity } from '../components/Themed';
+import Alert from './Alert';
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorScheme = 'dark';
@@ -53,7 +54,24 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             </Text>
                             {props.option === 'Channels' && !props.subscribed ? (
                                 <View style={{ paddingLeft: 10 }}>
-                                    <TouchableOpacity onPress={() => props.handleSub()} style={{ marginTop: 1 }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            Alert('Subscribe to ' + props.channelName + '?', '', [
+                                                {
+                                                    text: 'Cancel',
+                                                    style: 'cancel',
+                                                    onPress: () => {
+                                                        return;
+                                                    }
+                                                },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: () => props.handleSub()
+                                                }
+                                            ]);
+                                        }}
+                                        style={{ marginTop: 1 }}
+                                    >
                                         <Text style={{}}>
                                             <Ionicons name="enter-outline" size={18} color="#006AFF" />
                                         </Text>

@@ -371,6 +371,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }
                     }
                 ]}
+                theme="ios"
                 themeVariant="light"
                 onClose={() => setSelectedBook(null)}
                 responsive={{

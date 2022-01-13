@@ -583,7 +583,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     shadowRadius: 7,
                     zIndex: 500000,
                     marginRight: 15
-                }}>
+                }}
+            >
                 <View
                     key={'textPage'}
                     style={{
@@ -593,7 +594,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         padding: 7,
                         paddingHorizontal: 10,
                         backgroundColor: '#fff'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             height: '30%',
@@ -601,7 +603,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }}>
+                        }}
+                    >
                         <Text style={styles.date2}>
                             {new Date(value.date).toString().split(' ')[1] +
                                 ' ' +
@@ -617,7 +620,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                     const sCues = selectedCues.filter((c: any) => c._id !== value._id);
                                     setSelectedCues(sCues);
-                                }}>
+                                }}
+                            >
                                 <Text style={{ color: '#f94144' }}>
                                     <Ionicons name="remove-circle-outline" size={16} />
                                 </Text>
@@ -633,7 +637,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             height: '70%',
                             alignItems: 'center'
-                        }}>
+                        }}
+                    >
                         <DragHandle />
 
                         <Text
@@ -646,7 +651,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 flex: 1,
                                 marginTop: 5,
                                 color: '#000000'
-                            }}>
+                            }}
+                        >
                             {title}
                         </Text>
                     </View>
@@ -686,7 +692,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     shadowRadius: 7,
                     zIndex: 500000,
                     marginRight: 15
-                }}>
+                }}
+            >
                 <View
                     key={'textPage'}
                     style={{
@@ -696,7 +703,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         padding: 7,
                         paddingHorizontal: 10,
                         backgroundColor: '#fff'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             height: '30%',
@@ -704,7 +712,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center'
-                        }}>
+                        }}
+                    >
                         <Text style={styles.date2}>
                             {new Date(value.date).toString().split(' ')[1] +
                                 ' ' +
@@ -720,7 +729,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                     const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id);
                                     setFolderCuesToDisplay(sCues);
-                                }}>
+                                }}
+                            >
                                 <Text style={{ color: '#f94144' }}>
                                     <Ionicons name="remove-circle-outline" size={16} />
                                 </Text>
@@ -736,7 +746,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             height: '70%',
                             alignItems: 'center'
-                        }}>
+                        }}
+                    >
                         <DragHandle />
 
                         <Text
@@ -749,7 +760,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 flex: 1,
                                 marginTop: 5,
                                 color: value._id === props.cue._id ? '#006AFF' : '#000000'
-                            }}>
+                            }}
+                        >
                             {title}
                         </Text>
                     </View>
@@ -773,7 +785,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     paddingBottom: 15
                 }}
                 horizontal={true}
-                showsHorizontalScrollIndicator={true}>
+                showsHorizontalScrollIndicator={true}
+            >
                 {items.map((value: any, index: number) => (
                     <SortableItem key={`item-${index}`} index={index} sortIndex={index} value={value} />
                 ))}
@@ -796,7 +809,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     paddingBottom: 15
                 }}
                 horizontal={true}
-                showsHorizontalScrollIndicator={true}>
+                showsHorizontalScrollIndicator={true}
+            >
                 {items.map((value: any, index: number) => (
                     <SortableItemUpdate key={`item-${index}`} index={index} sortIndex={index} value={value} />
                 ))}
@@ -835,7 +849,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
                 height: 48,
                 justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
-            }}>
+            }}
+        >
             <TouchableOpacity
                 style={{
                     backgroundColor: '#000'
@@ -845,7 +860,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setViewStatus(false);
                     setShowOriginal(true);
                     setShowComments(false);
-                }}>
+                }}
+            >
                 <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -857,7 +873,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setViewStatus(false);
                     setShowOriginal(false);
                     setShowComments(false);
-                }}>
+                }}
+            >
                 <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text>
             </TouchableOpacity>
             {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
@@ -870,13 +887,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                    }}>
+                    }}
+                >
                     <Text
                         style={
                             !showOriginal && !viewStatus && !showOptions && !showComments
                                 ? styles.allGrayFill
                                 : styles.all
-                        }>
+                        }
+                    >
                         SUBMISSION
                     </Text>
                 </TouchableOpacity>
@@ -892,7 +911,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                    }}>
+                    }}
+                >
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text>
                 </TouchableOpacity>
             )}
@@ -913,7 +933,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 containerStyle={{
                     height: 'auto',
                     zIndex: 500001
-                }}>
+                }}
+            >
                 <View
                     style={{
                         zIndex: 500001,
@@ -923,7 +944,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: '#efefef',
                         paddingVertical: 14,
                         paddingHorizontal: 10
-                    }}>
+                    }}
+                >
                     {/* Render Folder Title */}
 
                     <Text
@@ -934,7 +956,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             paddingBottom: 10,
                             width: '100%',
                             maxWidth: 900
-                        }}>
+                        }}
+                    >
                         {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
                     </Text>
 
@@ -949,7 +972,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             paddingBottom: 15
                         }}
                         horizontal={true}
-                        showsHorizontalScrollIndicator={true}>
+                        showsHorizontalScrollIndicator={true}
+                    >
                         {folderCuesToDisplay.map((cue: any) => {
                             if (!cue || !cue.channelId) return;
 
@@ -987,7 +1011,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         shadowRadius: 7,
                                         zIndex: 500000,
                                         marginRight: 15
-                                    }}>
+                                    }}
+                                >
                                     <TouchableOpacity
                                         onPress={() => props.openCue(cue._id)}
                                         key={'textPage'}
@@ -999,7 +1024,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             padding: 7,
                                             paddingHorizontal: 10,
                                             backgroundColor: '#fff'
-                                        }}>
+                                        }}
+                                    >
                                         <View style={styles.dateContainer}>
                                             <Text style={styles.date2}>
                                                 {new Date(props.cue.date).toString().split(' ')[1] +
@@ -1014,7 +1040,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flexDirection: 'row',
                                                 flex: 1,
                                                 height: '70%'
-                                            }}>
+                                            }}
+                                        >
                                             <Text
                                                 ellipsizeMode={'tail'}
                                                 numberOfLines={1}
@@ -1026,7 +1053,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     marginTop: 5,
                                                     color: cue._id === props.cue._id ? '#006AFF' : '#000000'
-                                                }}>
+                                                }}
+                                            >
                                                 {title}
                                             </Text>
                                         </View>
@@ -1054,7 +1082,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 elevation={500000}
                 containerStyle={{
                     height: 'auto'
-                }}>
+                }}
+            >
                 <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
                     {/* Section 1: Shows all cues from Channel */}
                     <View
@@ -1065,7 +1094,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#efefef',
                             paddingTop: 14,
                             paddingBottom: 7
-                        }}>
+                        }}
+                    >
                         {channelCues.length !== 0 ? (
                             <ScrollView
                                 style={{
@@ -1077,7 +1107,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     paddingBottom: 15
                                 }}
                                 horizontal={true}
-                                showsHorizontalScrollIndicator={true}>
+                                showsHorizontalScrollIndicator={true}
+                            >
                                 {channelCues.map((cue: any) => {
                                     const { title } = htmlStringParser(
                                         cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
@@ -1113,7 +1144,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 shadowRadius: 7,
                                                 zIndex: 500000,
                                                 marginRight: 15
-                                            }}>
+                                            }}
+                                        >
                                             <View
                                                 key={'textPage'}
                                                 style={{
@@ -1124,7 +1156,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     padding: 7,
                                                     paddingHorizontal: 10,
                                                     backgroundColor: '#fff'
-                                                }}>
+                                                }}
+                                            >
                                                 <View
                                                     style={{
                                                         height: '30%',
@@ -1132,7 +1165,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         display: 'flex',
                                                         flexDirection: 'row',
                                                         alignItems: 'center'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <Text style={styles.date2}>
                                                         {new Date(props.cue.date).toString().split(' ')[1] +
                                                             ' ' +
@@ -1153,7 +1187,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }}
                                                         style={{
                                                             marginLeft: 'auto'
-                                                        }}>
+                                                        }}
+                                                    >
                                                         <Text style={{ color: '#006AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
@@ -1167,7 +1202,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flexDirection: 'row',
                                                         flex: 1,
                                                         height: '70%'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <Text
                                                         ellipsizeMode={'tail'}
                                                         numberOfLines={1}
@@ -1178,7 +1214,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             flex: 1,
                                                             marginTop: 5,
                                                             color: '#000000'
-                                                        }}>
+                                                        }}
+                                                    >
                                                         {title}
                                                     </Text>
                                                 </View>
@@ -1197,7 +1234,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         fontFamily: 'inter',
                                         backgroundColor: '#efefef',
                                         paddingVertical: 20
-                                    }}>
+                                    }}
+                                >
                                     No Content to select.
                                 </Text>
                             </View>
@@ -1215,7 +1253,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 backgroundColor: '#efefef',
                                 paddingTop: 7,
                                 paddingBottom: 14
-                            }}>
+                            }}
+                        >
                             <SortableList
                                 axis={'x'}
                                 lockAxis={'x'}
@@ -1244,7 +1283,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 elevation={500000}
                 containerStyle={{
                     height: 'auto'
-                }}>
+                }}
+            >
                 <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
                     {/* Section 1: Shows all cues from Channel */}
                     <View
@@ -1255,7 +1295,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#efefef',
                             paddingTop: 14,
                             paddingBottom: 7
-                        }}>
+                        }}
+                    >
                         {channelCues.length !== 0 ? (
                             <ScrollView
                                 style={{
@@ -1306,7 +1347,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 shadowRadius: 7,
                                                 zIndex: 500000,
                                                 marginRight: 15
-                                            }}>
+                                            }}
+                                        >
                                             <View
                                                 key={'textPage'}
                                                 style={{
@@ -1317,7 +1359,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     padding: 7,
                                                     paddingHorizontal: 10,
                                                     backgroundColor: '#fff'
-                                                }}>
+                                                }}
+                                            >
                                                 <View
                                                     style={{
                                                         height: '30%',
@@ -1325,7 +1368,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         display: 'flex',
                                                         flexDirection: 'row',
                                                         alignItems: 'center'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <Text style={styles.date2}>
                                                         {new Date(props.cue.date).toString().split(' ')[1] +
                                                             ' ' +
@@ -1346,7 +1390,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }}
                                                         style={{
                                                             marginLeft: 'auto'
-                                                        }}>
+                                                        }}
+                                                    >
                                                         <Text style={{ color: '#006AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
@@ -1360,7 +1405,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flexDirection: 'row',
                                                         flex: 1,
                                                         height: '70%'
-                                                    }}>
+                                                    }}
+                                                >
                                                     <Text
                                                         ellipsizeMode={'tail'}
                                                         numberOfLines={1}
@@ -1371,7 +1417,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             flex: 1,
                                                             marginTop: 5,
                                                             color: '#000000'
-                                                        }}>
+                                                        }}
+                                                    >
                                                         {title}
                                                     </Text>
                                                 </View>
@@ -1390,7 +1437,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         fontFamily: 'inter',
                                         backgroundColor: '#efefef',
                                         paddingVertical: 20
-                                    }}>
+                                    }}
+                                >
                                     No Content to select.
                                 </Text>
                             </View>
@@ -1407,7 +1455,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#efefef',
                             paddingTop: 7,
                             paddingBottom: 14
-                        }}>
+                        }}
+                    >
                         <SortableListUpdate
                             items={folderCuesToDisplay}
                             onSortEnd={onSortEndUpdate}
@@ -1435,7 +1484,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0
             }}
-            key={JSON.stringify(threads)}>
+            key={JSON.stringify(threads)}
+        >
             {!viewStatus ? (
                 <ScrollView
                     nestedScrollEnabled={true}
@@ -1452,13 +1502,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         maxHeight: windowHeight - 52,
                         alignItems: 'center',
                         width: '100%'
-                    }}>
+                    }}
+                >
                     <View
                         style={{
                             maxWidth: 900,
                             width: '100%',
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
-                        }}>
+                        }}
+                    >
                         <UpdateControls
                             // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
                             channelId={props.channelId}
@@ -1505,7 +1557,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 alwaysBounceVertical={true}
                                 scrollEnabled={true}
                                 scrollEventThrottle={1}
-                                keyboardDismissMode={'on-drag'}>
+                                keyboardDismissMode={'on-drag'}
+                            >
                                 <ThreadsList
                                     channelCreatedBy={props.channelCreatedBy}
                                     key={JSON.stringify(threads)}
@@ -1533,7 +1586,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0
-                            }}>
+                            }}
+                        >
                             <ScrollView
                                 ref={scroll3}
                                 contentContainerStyle={{
@@ -1548,7 +1602,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 alwaysBounceVertical={true}
                                 scrollEnabled={true}
                                 scrollEventThrottle={1}
-                                keyboardDismissMode={'on-drag'}>
+                                keyboardDismissMode={'on-drag'}
+                            >
                                 <View style={{ maxWidth: 900, width: '100%' }}>
                                     <SubscribersList
                                         key={JSON.stringify(subscribers)}
@@ -1586,7 +1641,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{
                             backgroundColor: '#000',
                             paddingLeft: 0
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 lineHeight: 34,
@@ -1596,7 +1652,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontFamily: 'overpass',
                                 color: '#fff',
                                 fontWeight: 'bold'
-                            }}>
+                            }}
+                        >
                             Edit Folder
                         </Text>
                     </TouchableOpacity>
@@ -1613,7 +1670,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{
                             backgroundColor: '#000',
                             paddingLeft: 0
-                        }}>
+                        }}
+                    >
                         <Text
                             style={{
                                 lineHeight: 34,
@@ -1623,7 +1681,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontFamily: 'overpass',
                                 color: '#fff',
                                 fontWeight: 'bold'
-                            }}>
+                            }}
+                        >
                             New Folder
                         </Text>
                     </TouchableOpacity>
@@ -1664,13 +1723,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     Alert('Could not add to list. Try again.');
                                     setAddingToFolder(false);
                                 });
-                        }}>
+                        }}
+                    >
                         <MenuTrigger>
                             <View
                                 style={{
                                     backgroundColor: '#000',
                                     paddingLeft: 0
-                                }}>
+                                }}
+                            >
                                 <Text
                                     style={{
                                         lineHeight: 34,
@@ -1680,7 +1741,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         fontFamily: 'overpass',
                                         color: '#fff',
                                         fontWeight: 'bold'
-                                    }}>
+                                    }}
+                                >
                                     Add to Folder
                                 </Text>
                             </View>
@@ -1696,7 +1758,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
-                            }}>
+                            }}
+                        >
                             {channelFolders.map((folder: any) => {
                                 return (
                                     <MenuOption key={folder._id} value={folder._id}>
@@ -1754,7 +1817,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#000',
                                 paddingLeft: 0
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     lineHeight: 34,
@@ -1763,7 +1827,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     fontFamily: 'overpass',
                                     color: '#fff'
-                                }}>
+                                }}
+                            >
                                 {creatingFolder ? '...' : 'Create'}
                             </Text>
                         </TouchableOpacity>
@@ -1776,7 +1841,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#000',
                                 paddingLeft: 0
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     lineHeight: 34,
@@ -1786,7 +1852,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontFamily: 'overpass',
                                     color: '#fff',
                                     fontWeight: 'bold'
-                                }}>
+                                }}
+                            >
                                 Cancel
                             </Text>
                         </TouchableOpacity>
@@ -1843,7 +1910,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#000',
                                 paddingLeft: 0
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     lineHeight: 34,
@@ -1853,7 +1921,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontFamily: 'overpass',
                                     color: '#fff',
                                     fontWeight: 'bold'
-                                }}>
+                                }}
+                            >
                                 {creatingFolder ? '...' : 'Update '}
                             </Text>
                         </TouchableOpacity>
@@ -1891,7 +1960,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#000',
                                 paddingLeft: 0
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     lineHeight: 34,
@@ -1901,7 +1971,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontFamily: 'overpass',
                                     color: '#fff',
                                     fontWeight: 'bold'
-                                }}>
+                                }}
+                            >
                                 {deletingFolder ? '...' : 'Delete'}
                             </Text>
                         </TouchableOpacity>
@@ -1919,7 +1990,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#000',
                                 paddingLeft: 0
-                            }}>
+                            }}
+                        >
                             <Text
                                 style={{
                                     lineHeight: 34,
@@ -1929,7 +2001,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontFamily: 'overpass',
                                     color: '#fff',
                                     fontWeight: 'bold'
-                                }}>
+                                }}
+                            >
                                 {deletingFolder ? '...' : 'Cancel'}
                             </Text>
                         </TouchableOpacity>
@@ -1963,7 +2036,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         shadowOpacity: 0.12,
                         shadowRadius: 10,
                         zIndex: 500000
-                    }}>
+                    }}
+                >
                     {folderId !== '' &&
                     folderCuesToDisplay.length !== 0 &&
                     !editFolder &&
@@ -1990,7 +2064,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 },
                                 shadowOpacity: 0.1,
                                 shadowRadius: 15
-                            }}>
+                            }}
+                        >
                             <Ionicons
                                 name={showExistingFolder ? 'chevron-up-outline' : 'chevron-down-outline'}
                                 size={20}
@@ -2008,7 +2083,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             onPress={() => {
                                 props.closeModal();
-                            }}>
+                            }}
+                        >
                             <Text>
                                 <Ionicons name="arrow-back-outline" size={30} color={'#fff'} />
                             </Text>
@@ -2074,7 +2150,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     justifyContent: 'flex-end',
                                     flexDirection: 'row',
                                     paddingTop: 8
-                                }}>
+                                }}
+                            >
                                 {((channelOwner && showOriginal && !isQuiz) || showOptions || !props.channelId) &&
                                 !editFolder &&
                                 !createNewFolder ? (
@@ -2086,7 +2163,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             paddingLeft: 0,
                                             backgroundColor: '#000',
                                             marginLeft: 20
-                                        }}>
+                                        }}
+                                    >
                                         <Text
                                             style={{
                                                 lineHeight: 34,
@@ -2096,7 +2174,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
                                                 color: '#fff'
-                                            }}>
+                                            }}
+                                        >
                                             SAVE
                                         </Text>
                                     </TouchableOpacity>
@@ -2114,7 +2193,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             paddingLeft: 0,
                                             marginLeft: 20,
                                             backgroundColor: '#000'
-                                        }}>
+                                        }}
+                                    >
                                         <Text
                                             style={{
                                                 lineHeight: 34,
@@ -2124,7 +2204,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
                                                 color: '#fff'
-                                            }}>
+                                            }}
+                                        >
                                             DELETE
                                         </Text>
                                     </TouchableOpacity>
@@ -2140,7 +2221,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <View
                     style={{
                         backgroundColor: '#efefef'
-                    }}>
+                    }}
+                >
                     {folderId !== '' &&
                     folderCuesToDisplay.length !== 0 &&
                     !editFolder &&
@@ -2154,14 +2236,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <View
                     style={{
                         backgroundColor: '#efefef'
-                    }}>
+                    }}
+                >
                     {createNewFolder ? renderNewFolderOptions() : null}
                 </View>
 
                 <View
                     style={{
                         backgroundColor: '#efefef'
-                    }}>
+                    }}
+                >
                     {editFolder ? renderEditFolderOptions() : null}
                 </View>
             </View>
@@ -2176,7 +2260,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0
-            }}>
+            }}
+        >
             {loading ? (
                 <View
                     style={{
@@ -2188,7 +2273,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: 'white',
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0
-                    }}>
+                    }}
+                >
                     <ActivityIndicator color={'#000000'} />
                 </View>
             ) : (
@@ -2203,7 +2289,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flexDirection: 'row',
                             justifyContent: 'center',
                             flex: 1
-                        }}>
+                        }}
+                    >
                         {ContentView}
                     </View>
                     {/* Mobile tabs */}
@@ -2229,7 +2316,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 shadowOpacity: 0.12,
                                 shadowRadius: 10,
                                 zIndex: 500000
-                            }}>
+                            }}
+                        >
                             {options}
                         </View>
                     ) : null}

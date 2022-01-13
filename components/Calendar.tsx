@@ -48,6 +48,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
+    const [allEvents, setAllEvents] = useState<any[]>([]);
     const [title, setTitle] = useState('');
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60));
@@ -180,17 +181,48 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [title, start, end]);
 
     /**
-     * @description Filter activity by Channel
+     * @description Filter events and activity
      */
     useEffect(() => {
         const all = [...allActivity];
         if (props.filterByChannel === 'All') {
             setActivity(all);
         } else {
-            const filter = all.filter((e: any) => props.filterByChannel === e.channelName);
+            const filter = all.filter((e: any) => props.filterByChannel === e.channelId);
             setActivity(filter);
         }
-    }, [props.filterByChannel]);
+
+        let total = [...allEvents];
+
+        if (props.filterEventsType !== 'All') {
+            if (props.filterEventsType === 'Meetings') {
+                total = total.filter((e: any) => e.meeting);
+            } else if (props.filterEventsType === 'Submissions') {
+                total = total.filter((e: any) => e.cueId !== '');
+            } else if (props.filterEventsType === 'Events') {
+                total = total.filter((e: any) => e.cueId === '' && !e.meeting);
+            }
+        }
+
+        if (props.filterByChannel !== 'All') {
+            total = total.filter((e: any) => {
+                if (props.filterByChannel === 'Home') {
+                    return e.channelId === '';
+                } else {
+                    return props.filterByChannel === e.channelId;
+                }
+            });
+        }
+
+        if (props.filterStart && props.filterEnd) {
+            total = total.filter(
+                (e: any) =>
+                    new Date(e.start) > new Date(props.filterStart) && new Date(e.end) < new Date(props.filterEnd)
+            );
+        }
+
+        setEvents(total);
+    }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd]);
 
     /**
      * @description When an event is selected to edit, update state variables
@@ -516,6 +548,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         });
                     });
                     setEvents(parsedEvents);
+                    setAllEvents(parsedEvents);
                 } else {
                     setLoading(false);
                 }
@@ -1695,11 +1728,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     {activity.map((act: any, index) => {
                                                         const { cueId, channelId, createdBy, target, threadId } = act;
 
-                                                        if (props.activityChannelId !== '') {
-                                                            if (props.activityChannelId !== act.channelId) {
-                                                                return;
-                                                            }
-                                                        }
+                                                        // if (props.filterByChannel !== 'All') {
+                                                        //     if (props.filterByChannel !== act.channelId) {
+                                                        //         return;
+                                                        //     }
+                                                        // }
 
                                                         const date = new Date(act.date);
 
@@ -2303,9 +2336,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 };
 
-export default React.memo(CalendarX, (prev, next) => {
-    return _.isEqual(prev.cues, next.cues);
-});
+export default CalendarX;
 
 const styles: any = StyleSheet.create({
     input: {

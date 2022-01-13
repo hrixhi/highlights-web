@@ -355,7 +355,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
                                                     {parser(content)}
                                                 </Text>
-                                            </View> : <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, width: window.screen.width < 1024 ? '100%' : '80%' , lineHeight: 25, paddingTop: 10, flex: 1 }}>
+                                            </View> : <Text style={{ marginTop: 3, marginBottom: 20, marginLeft: 20, fontSize: 14, width: window.screen.width < 1024 ? '100%' : '80%' , lineHeight: 25, flex: 1 }}>
                                                 {parser(problem.question)}
                                             </Text>)
                                     }
@@ -394,7 +394,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     padding: 15,
                                                     paddingTop: props.isOwner ? 12 : 7,
                                                     paddingBottom: 12,
-                                                    marginTop: 5,
+                                                    // marginTop: 5,
                                                     height: 40
                                                 }}
                                                 placeholder={'Enter points'}
@@ -409,7 +409,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     padding: 15,
                                                     paddingTop: props.isOwner ? 12 : 7,
                                                     paddingBottom: 12,
-                                                    marginTop: 5,
+                                                    // marginTop: 5,
                                                     paddingRight: 30,
                                                     height: 40
                                                 }}
@@ -464,10 +464,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         style={{
                                             width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
                                             fontSize: 14,
-                                            padding: 15,
-                                            paddingTop: 12,
-                                            paddingBottom: 12,
-                                            marginTop: 5,
+                                            paddingHorizontal: 15,
+                                            // paddingTop: 12,
+                                            // paddingBottom: 12,
+                                            marginTop: 3,
                                             marginBottom: 20,
                                             color,
                                             lineHeight: 25

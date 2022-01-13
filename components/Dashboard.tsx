@@ -283,7 +283,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             setLoadDiscussionForChannelId('');
         }
-    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap]);
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap, collapseMap]);
 
     /**
      * @description Prepares all the data to be displayed in workspace
@@ -863,19 +863,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEventFilters = () => {
         const channelOptions = [
             { value: 'All', text: 'All' },
-            { value: 'My Events', text: 'My Events' }
+            { value: 'Home', text: 'Home' }
         ];
 
         props.subscriptions.map((sub: any) => {
             channelOptions.push({
-                value: sub.channelName,
+                value: sub.channelId,
                 text: sub.channelName
             });
         });
 
         const typeOptions = [
             { value: 'All', text: 'All' },
-            { value: 'Lectures', text: 'Lectures' },
+            { value: 'Meetings', text: 'Meetings' },
             { value: 'Submissions', text: 'Submissions' },
             { value: 'Events', text: 'Events' }
         ];
@@ -962,19 +962,41 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
             >
                 {!loadingSearchResults && resultCount !== 0 ? (
-                    <Text
+                    <View
                         style={{
-                            fontSize: 20,
-                            paddingVertical: 30,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            lineHeight: 23,
-                            color: '#006AFF',
-                            backgroundColor: '#efefef'
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            backgroundColor: '#efefef',
+                            alignItems: 'center'
                         }}
                     >
-                        {resultCount} Results
-                    </Text>
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                paddingVertical: 30,
+                                fontFamily: 'inter',
+                                // flex: 1,
+                                lineHeight: 23,
+                                color: '#006AFF',
+                                backgroundColor: '#efefef'
+                            }}
+                        >
+                            {resultCount} Results
+                        </Text>
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#efefef',
+                                overflow: 'hidden',
+                                height: 30,
+                                alignSelf: 'center'
+                            }}
+                            onPress={() => {
+                                setSearchTerm('');
+                            }}
+                        >
+                            <Ionicons name="close-outline" size={24} />
+                        </TouchableOpacity>
+                    </View>
                 ) : null}
                 <ScrollView
                     showsVerticalScrollIndicator={false}
@@ -1129,7 +1151,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         colorCode={colorCode}
                                                         option={option}
                                                         subscribed={subscribed}
-                                                        handleSub={() => handleSub(obj.channelId)}
+                                                        handleSub={() => handleSub(obj._id)}
                                                         onPress={async () => {
                                                             if (option === 'Classroom') {
                                                                 props.openCueFromCalendar(
@@ -1941,7 +1963,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             setCollapseMap(tempCollapse);
                                                         }}
                                                         style={{
-                                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                            paddingTop: 5,
+                                                            paddingLeft: 15
                                                         }}
                                                     >
                                                         <Text
@@ -2674,7 +2698,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 openChannel={props.openChannelFromActivity}
                                 openQA={props.openQAFromActivity}
                                 filterByChannel={filterByChannel}
-                                activityChannelId={activityChannelId}
                                 filterEventsType={filterEventsType}
                             />
                         ) : null}

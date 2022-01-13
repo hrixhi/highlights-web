@@ -610,7 +610,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
                                                     {parser(content)}
                                                 </Text>
-                                            </View> : <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                            </View> : <Text style={{ marginTop: 3, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
                                                 {parser(problem.question)}
                                             </Text>))
                                         }
@@ -726,7 +726,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15, marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 'none' }}>
                                         {editQuestionNumber === (index + 1) ? null : (!problem.required ?
                                             null
-                                            : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
+                                            : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 10 }}>
                                                 *
                                             </Text>))}
                                         <DefaultTextInput
@@ -735,7 +735,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             style={{
                                                 fontSize: 14,
                                                 padding: 15,
-                                                paddingTop: 12,
+                                                paddingTop: 8,
                                                 paddingBottom: 12,
                                                 width: 120,
                                                 marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
@@ -790,7 +790,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     name='cog-outline'
                                                     color={'#006AFF'}
                                                     style={{
-                                                        paddingTop: 4
+                                                        // paddingTop: 4
                                                     }}
                                                     onPress={() => {
                                                         if (isCurrentQuestionValid(editQuestionNumber - 1)) {
@@ -868,7 +868,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         {
                                             <View style={{ width: '100%', marginBottom: 10 }}>
                                                 {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?
-                                                    <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                    <Text style={{ marginTop: 7, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
                                                         {parser(option.option)}
                                                     </Text>
                                                     :

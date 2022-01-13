@@ -2,8 +2,8 @@ import ApolloClient from 'apollo-boost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const fetchAPI = (userId: any) => {
-    // const uri = 'http://localhost:8081/';
-    const uri = 'https://api.learnwithcues.com';
+    const uri = 'http://localhost:8081/';
+    // const uri = 'https://api.learnwithcues.com';
 
     const logoutUser = async () => {
         await AsyncStorage.clear();
@@ -20,6 +20,7 @@ export const fetchAPI = (userId: any) => {
         },
         request: async operation => {
             const token = await AsyncStorage.getItem('jwt_token');
+            console.log('Token', token);
             operation.setContext({
                 headers: {
                     authorization: token || ''
@@ -27,6 +28,9 @@ export const fetchAPI = (userId: any) => {
             });
         },
         onError: ({ graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+                console.log('Graphql Errors', graphQLErrors);
+            }
             if (graphQLErrors) {
                 for (let err of graphQLErrors) {
                     if (err.message === 'NOT_AUTHENTICATED') {

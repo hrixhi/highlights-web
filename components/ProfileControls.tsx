@@ -238,9 +238,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             url = '';
         } else {
             // auth
-            url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                zoomRedirectUri
-            )}&state=${userId}`;
+            url = `https://app.learnwithcues.com/zoom_auth`;
         }
 
         if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -442,7 +440,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
                             style={{
-                                borderBottomWidth: 0
+                                borderBottomWidth: 0,
+                                paddingTop: 5
                             }}
                         />
                         <Text
@@ -454,13 +453,16 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {PreferredLanguageText('fullName')}
                         </Text>
                         <TextInput
-                            textContentType="name"
-                            autoCompleteType="off"
+                            editable={false}
                             value={fullName}
                             placeholder={''}
                             onChangeText={val => setFullName(val)}
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
+                            style={{
+                                borderBottomWidth: 0,
+                                paddingTop: 5
+                            }}
                         />
                         {/* <Text style={{
                   fontSize: 14,
@@ -512,36 +514,38 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         alignSelf: 'center'
                     }}
                 >
-                    <TouchableOpacity
-                        onPress={() => handleSubmit()}
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }}
-                        disabled={isSubmitDisabled}
-                    >
-                        <Text
+                    {props.showSavePassword ? (
+                        <TouchableOpacity
+                            onPress={() => handleSubmit()}
                             style={{
-                                textAlign: 'center',
-                                lineHeight: 34,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#006AFF',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
                                 height: 35,
-                                borderRadius: 15,
-                                width: 175,
-                                textTransform: 'uppercase'
+                                marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row'
                             }}
+                            disabled={isSubmitDisabled}
                         >
-                            {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
-                        </Text>
-                    </TouchableOpacity>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    lineHeight: 34,
+                                    color: 'white',
+                                    fontSize: 12,
+                                    backgroundColor: '#006AFF',
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    borderRadius: 15,
+                                    width: 175,
+                                    textTransform: 'uppercase'
+                                }}
+                            >
+                                {PreferredLanguageText('update')}
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
                     {!props.showSavePassword ? (
                         <TouchableOpacity
                             onPress={() => props.setShowSavePassword(!props.showSavePassword)}
