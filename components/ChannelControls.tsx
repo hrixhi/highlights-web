@@ -934,6 +934,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <TextInput
                                     value={name}
                                     placeholder={''}
+                                    id={"channel-name"}
+                                    name={"channel-name"}
                                     textContentType={"none"}
                                     autoCompleteType={'xyz'}
                                     onChangeText={val => {
@@ -946,7 +948,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 />
                             </View>
 
-                            <View style={{ backgroundColor: 'white' }}>
+                            {!school ? <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
                                     color: '#000000'
@@ -972,8 +974,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 placeholder={""}
                                 onChange={(e: any) => setDescription(e.target.value)}
                                 />
-                            </View>
-
+                            </View> : null}
 
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
@@ -985,6 +986,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <TextInput
                                     value={password}
                                     textContentType={"none"}
+                                    id={"channel-password"}
+                                    name={"channel-password"}
                                     autoCompleteType={'xyz'}
                                     placeholder={PreferredLanguageText('optional')}
                                     onChangeText={val => setPassword(val)}

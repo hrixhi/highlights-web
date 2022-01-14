@@ -41,7 +41,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const categories = ['All', 'Delivered', 'Read'];
     const [showSubmission, setShowSubmission] = useState(false);
     const [submission, setSubmission] = useState<any>('');
-    const [score, setScore] = useState('0');
+    const [score, setScore] = useState('');
     const [graded, setGraded] = useState(false);
     const [userId, setUserId] = useState('');
     const RichText: any = useRef();
@@ -1125,7 +1125,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 props.reloadStatuses();
                                             }
                                             setShowSubmission(false);
-                                            setScore('0');
+                                            setScore('');
                                             setUserId('');
                                         }}
                                         style={{
@@ -1214,7 +1214,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     props.reloadStatuses();
                                                 }
                                                 setShowSubmission(false);
-                                                setScore('0');
+                                                setScore('');
                                                 setUserId('');
                                             }}
                                             style={{

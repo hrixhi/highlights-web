@@ -2500,25 +2500,27 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 resizeMode={'contain'}
                             />
                         ) : null}
-                        <TextInput
-                            value={searchTerm}
-                            style={{
-                                color: '#fff',
-                                backgroundColor: '#1F1F1F',
-                                borderRadius: 15,
-                                fontSize: 12,
-                                paddingBottom: 5,
-                                paddingTop: 4,
-                                paddingHorizontal: 16,
-                                marginTop: 10,
-                                marginRight: 2,
-                                maxWidth: 225
-                            }}
-                            autoCompleteType={'xyz'}
-                            placeholder={'Search'}
-                            onChangeText={val => setSearchTerm(val)}
-                            placeholderTextColor={'#fff'}
-                        />
+                        {props.option === 'Settings' || props.option === 'Channels' ? null : (
+                            <TextInput
+                                value={searchTerm}
+                                style={{
+                                    color: '#fff',
+                                    backgroundColor: '#1F1F1F',
+                                    borderRadius: 15,
+                                    fontSize: 12,
+                                    paddingBottom: 5,
+                                    paddingTop: 4,
+                                    paddingHorizontal: 16,
+                                    marginTop: 10,
+                                    marginRight: 2,
+                                    maxWidth: 225
+                                }}
+                                autoCompleteType={'xyz'}
+                                placeholder={'Search'}
+                                onChangeText={val => setSearchTerm(val)}
+                                placeholderTextColor={'#fff'}
+                            />
+                        )}
                         {Dimensions.get('window').width < 768 ? (
                             <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#000000' }} />
                         ) : null}

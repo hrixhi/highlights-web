@@ -42,7 +42,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             const url =
                 'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads&q=';
             const response = await axios.get(
-                url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=2000'
+                url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=1000'
             );
             const items = response.data.items;
             const filteredItems = items.filter((item: any) => {
@@ -192,6 +192,16 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     }}
                 >
                     <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />
+                    <Text
+                        style={{
+                            marginTop: 15,
+                            textAlign: 'center',
+                            fontSize: 18,
+                            fontFamily: 'Inter'
+                        }}
+                    >
+                        Fetching results...
+                    </Text>
                 </View>
             ) : (
                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
@@ -473,6 +483,16 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />
+                            <Text
+                                style={{
+                                    marginTop: 15,
+                                    textAlign: 'center',
+                                    fontSize: 18,
+                                    fontFamily: 'Inter'
+                                }}
+                            >
+                                Retrieving text...
+                            </Text>
                         </View>
                     </View>
                 ) : null}

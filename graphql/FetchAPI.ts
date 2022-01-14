@@ -20,7 +20,6 @@ export const fetchAPI = (userId: any) => {
         },
         request: async operation => {
             const token = await AsyncStorage.getItem('jwt_token');
-            console.log('Token', token);
             operation.setContext({
                 headers: {
                     authorization: token || ''
