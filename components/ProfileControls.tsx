@@ -41,6 +41,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [currentFullName, setCurrentFullName] = useState('');
     const [currentDisplayName, setCurrentDisplayName] = useState('');
     const [currentAvatar, setCurrentAvatar] = useState<any>(undefined);
+    const [meetingProvider, setMeetingProvider] = useState('');
     // Alerts
     const passwordUpdatedAlert = PreferredLanguageText('passwordUpdated');
     const incorrectCurrentPasswordAlert = PreferredLanguageText('incorrectCurrentPassword');
@@ -50,6 +51,21 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const passwordInvalidError = PreferredLanguageText('atleast8char');
 
     // HOOKS
+
+    /**
+     * @description Fetch meeting provider for org
+     */
+    useEffect(() => {
+        (async () => {
+            const org = await AsyncStorage.getItem('school');
+
+            if (org) {
+                const school = JSON.parse(org);
+
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+            }
+        })();
+    }, []);
 
     /**
      * @description Fetch user on Init
@@ -579,7 +595,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                     ) : null}
-                    {props.showSavePassword ? null : !zoomInfo ? (
+                    {props.showSavePassword || meetingProvider !== '' ? null : !zoomInfo ? (
                         <TouchableOpacity
                             onPress={() => handleZoomAuth()}
                             style={{

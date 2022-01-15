@@ -658,7 +658,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         if (props.del) {
             handleDelete();
-            props.setDelete(false);
+            // props.setDelete(false);
         }
     }, [props.del]);
 
@@ -1497,6 +1497,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 text: 'Cancel',
                 style: 'cancel',
                 onPress: () => {
+                    props.setDelete(false);
                     return;
                 }
             },

@@ -100,6 +100,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         });
     });
     const [userZoomInfo, setUserZoomInfo] = useState<any>('');
+    const [meetingProvider, setMeetingProvider] = useState('');
 
     // HOOKS
 
@@ -120,6 +121,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return {
             calendar: { type: 'month' }
         };
+    }, []);
+
+    /**
+     * @description Fetch meeting provider for org
+     */
+    useEffect(() => {
+        (async () => {
+            const org = await AsyncStorage.getItem('school');
+
+            if (org) {
+                const school = JSON.parse(org);
+
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+            }
+        })();
     }, []);
 
     /**
@@ -153,7 +169,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                     .then(res => {
                         if (res.data && res.data.activity.getActivity) {
-                            const tempActivity = res.data.activity.getActivity.reverse();
+                            const tempActivity = res.data.activity.getActivity;
                             let unread = 0;
                             tempActivity.map((act: any) => {
                                 if (act.status === 'unread') {
@@ -544,7 +560,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             zoomStartUrl: e.zoomStartUrl,
                             zoomJoinUrl: e.zoomJoinUrl,
                             zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
-                            zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile
+                            zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile,
+                            meetingLink: e.meetingLink ? e.meetingLink : null
                         });
                     });
                     setEvents(parsedEvents);
@@ -657,9 +674,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const date = new Date();
 
                 if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
+                    const meetingLink = !meetingProvider ? event.zoomJoinUrl : event.meetingLink;
+
+                    if (!meetingLink) {
+                        Alert('No meeting link set. Contact your instructor.');
+                        return;
+                    }
+
                     Alert(
                         'Join meeting?',
-                        !userZoomInfo || !userZoomInfo.accountId
+                        (!userZoomInfo || !userZoomInfo.accountId) && !meetingProvider
                             ? 'WARNING- To mark attendance as Present, you must Connect to Zoom under Account.'
                             : '',
                         [
@@ -674,9 +698,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 text: 'Yes',
                                 onPress: async () => {
                                     if (Platform.OS == 'web') {
-                                        window.open(event.zoomJoinUrl, '_blank');
+                                        window.open(meetingLink, '_blank');
                                     } else {
-                                        Linking.openURL(event.zoomJoinUrl);
+                                        Linking.openURL(meetingLink);
                                     }
                                 }
                             }
@@ -887,9 +911,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 value={isMeeting}
                                 disabled={
                                     editEvent ||
-                                    !userZoomInfo ||
-                                    !userZoomInfo.accountId ||
-                                    userZoomInfo.accountId === ''
+                                    ((!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') &&
+                                        !meetingProvider)
                                 }
                                 onValueChange={() => {
                                     setIsMeeting(!isMeeting);
@@ -1087,7 +1110,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         zoomStartUrl: e.zoomStartUrl,
                                         zoomJoinUrl: e.zoomJoinUrl,
                                         zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
-                                        zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile
+                                        zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile,
+                                        meetingLink: e.meetingLink ? e.meetingLink : null
                                     });
                                 } else {
                                     Alert('Failed to create zoom meeting.');
@@ -2161,7 +2185,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     {renderEditMeetingInfo()}
                                                     {!editEvent && renderRecurringOptions()}
                                                     {renderMeetingOptions()}
-                                                    {channelId !== '' && userZoomInfo && userZoomInfo.accountId && (
+                                                    {channelId !== '' && meetingProvider !== '' && isMeeting ? (
                                                         <Text
                                                             style={{
                                                                 fontSize: 11,
@@ -2172,13 +2196,34 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 paddingBottom: 15
                                                             }}
                                                         >
-                                                            Zoom meeting will be automatically created and attendances
-                                                            will be captured for online meetings.
+                                                            The meeting link will be same as the one in the Course
+                                                            Settings. Ensure you have a working link set at all times.
                                                         </Text>
-                                                    )}
+                                                    ) : null}
+                                                    {channelId !== '' &&
+                                                        userZoomInfo &&
+                                                        userZoomInfo.accountId &&
+                                                        !meetingProvider && (
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 11,
+                                                                    color: '#000000',
+                                                                    // textTransform: 'uppercase',
+                                                                    lineHeight: 20,
+                                                                    fontFamily: 'Inter',
+                                                                    paddingBottom: 15
+                                                                }}
+                                                            >
+                                                                Zoom meeting will be automatically created and
+                                                                attendances will be captured for online meetings.
+                                                            </Text>
+                                                        )}
 
-                                                    {(channelId !== '' && (!userZoomInfo || !userZoomInfo.accountId)) ||
+                                                    {(channelId !== '' &&
+                                                        (!userZoomInfo || !userZoomInfo.accountId) &&
+                                                        !meetingProvider) ||
                                                     (editEvent &&
+                                                        !meetingProvider &&
                                                         !editEvent.zoomMeetingId &&
                                                         (!userZoomInfo || !userZoomInfo.accountId)) ? (
                                                         <View

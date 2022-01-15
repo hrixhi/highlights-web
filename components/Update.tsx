@@ -50,7 +50,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const scroll3: any = useRef();
     const [channelOwner, setChannelOwner] = useState(false);
     const [viewStatus, setViewStatus] = useState(false);
-    const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
+    const [submission, setSubmission] = useState(props.cue && props.cue.submission ? props.cue.submission : false);
     const [showOriginal, setShowOriginal] = useState(true);
     const [isQuiz, setIsQuiz] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
@@ -62,7 +62,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [newFolderTitle, setNewFolderTitle] = useState('');
     const [channelCues, setChannelCues] = useState<any[]>([]);
     const [selectedCues, setSelectedCues] = useState<any[]>([]);
-    const [folderId, setFolderId] = useState(props.cue.folderId && props.cue.folderId !== '' ? props.cue.folderId : '');
+    const [folderId, setFolderId] = useState(
+        props.cue && props.cue.folderId && props.cue.folderId !== '' ? props.cue.folderId : ''
+    );
     const [creatingFolder, setCreatingFolder] = useState(false);
     const [channelFolders, setChannelFolders] = useState<any[]>([]);
     const [editFolder, setEditFolder] = useState(false);
@@ -1469,6 +1471,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             </InsetShadow>
         );
     };
+
+    if (!props.cue) return null;
 
     /**
      * @description Content view

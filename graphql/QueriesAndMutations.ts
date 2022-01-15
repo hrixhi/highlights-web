@@ -467,6 +467,7 @@ export const updateChannel = gql`
         $temporary: Boolean
         $owners: [String!]!
         $colorCode: String
+        $meetingUrl: String
     ) {
         channel {
             update(
@@ -476,6 +477,7 @@ export const updateChannel = gql`
                 temporary: $temporary
                 owners: $owners
                 colorCode: $colorCode
+                meetingUrl: $meetingUrl
             )
         }
     }
@@ -1028,6 +1030,7 @@ export const getEvents = gql`
                 zoomJoinUrl
                 zoomMeetingScheduledBy
                 zoomMeetingCreatorProfile
+                meetingLink
             }
         }
     }
@@ -1342,6 +1345,7 @@ export const getOrganisation = gql`
                 _id
                 allowStudentChannelCreation
                 streamId
+                meetingProvider
             }
         }
     }
@@ -1373,6 +1377,7 @@ export const findChannelById = gql`
                 accessCode
                 tags
                 isPublic
+                meetingUrl
             }
         }
     }

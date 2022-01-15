@@ -115,8 +115,27 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         return match
     })
-
+    const [meetingProvider, setMeetingProvider] = useState('');
+    const [meetingUrl, setMeetingUrl] = useState('');
+    
     // HOOKS
+
+    /**
+     * @description Fetch meeting provider for org
+     */
+    useEffect(() => {
+        (async () => {
+
+            const org = await AsyncStorage.getItem('school');
+
+            if (org) {
+                const school = JSON.parse(org);
+
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '')
+            }
+
+        })()
+    }, [])
 
     /**
      * @description Filter dropdown users based on Roles, Grades and Section
@@ -260,6 +279,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             setDescription(res.data.channel.findById.description)
                                             setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : [])
                                             setAccessCode(res.data.channel.findById.accessCode)
+                                            setMeetingUrl(res.data.channel.findById.meetingUrl ? res.data.channel.findById.meetingUrl : '')
 
                                             if (res.data.channel.findById.owners) {
                                                 const ownerOptions: any[] = []
@@ -541,7 +561,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         channelId: props.channelId,
                         temporary,
                         owners: selectedModerators,
-                        colorCode
+                        colorCode,
+                        meetingUrl
                     }
                 }).then(res => {
                     if (res.data && res.data.channel.update) {
@@ -602,7 +623,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 })
             
     }, [name, password, props.channelId, options, originalSubs, owners,
-        temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
+        temporary, selected, originalName, colorCode, selectedValues, selectedModerators, meetingUrl])
 
     /**
      * @description Handle delete channel (Note: Only temporary channels can be deleted)
@@ -1187,6 +1208,27 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 required={false}
                             />
                         </View>
+
+                        {
+                            meetingProvider && meetingProvider !== "" ?
+                            (<View style={{ backgroundColor: 'white' }}>
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: '#000000'
+                                }}>
+                                    Meeting link
+                                </Text>
+                                <TextInput
+                                    value={meetingUrl}
+                                    autoCompleteType='off'
+                                    placeholder={''}
+                                    onChangeText={val => setMeetingUrl(val)}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    required={false}
+                                />
+                            </View>
+                            ) : null
+                        }
 
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{

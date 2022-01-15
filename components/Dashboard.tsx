@@ -113,6 +113,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [instantMeetingAlertUsers, setInstantMeetingAlertUsers] = useState<any>(true);
     const [ongoingMeetings, setOngoingMeetings] = useState<any[]>([]);
     const [userZoomInfo, setUserZoomInfo] = useState<any>('');
+    const [meetingProvider, setMeetingProvider] = useState('');
 
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -170,6 +171,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     // );
 
     // HOOKS
+
+    /**
+     * @description Fetch meeting provider for org
+     */
+    useEffect(() => {
+        (async () => {
+            const org = await AsyncStorage.getItem('school');
+
+            if (org) {
+                const school = JSON.parse(org);
+
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+            }
+        })();
+    }, []);
 
     /**
      * @description Open discussion from Activity using loadDiscussionForChannelId => It will open that Channel in ScrollView
@@ -489,6 +505,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
             .then(res => {
                 if (res.data && res.data.channel.startInstantMeeting !== 'error') {
+                    if (meetingProvider !== '' && res.data.channel.startInstantMeeting === 'MEETING_LINK_NOT_SET') {
+                        Alert(
+                            'No meeting link has been set for the course. Go to Course settings and add a meeting link.'
+                        );
+                        return;
+                    }
+
                     setShowInstantMeeting(false);
                     setInstantMeetingChannelId('');
                     setInstantMeetingCreatedBy('');
@@ -515,7 +538,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         instantMeetingEnd,
         instantMeetingChannelId,
         instantMeetingCreatedBy,
-        instantMeetingAlertUsers
+        instantMeetingAlertUsers,
+        meetingProvider
     ]);
 
     /**
@@ -543,6 +567,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 .then(res => {
                     if (res.data && res.data.channel.ongoingMeetings) {
                         setOngoingMeetings(res.data.channel.ongoingMeetings);
+                        console.log('Ongoing meetings', res.data.channel.ongoingMeetings);
                     }
                 })
                 .catch(err => {
@@ -559,7 +584,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         if (u) {
             const user = JSON.parse(u);
-            if (user.zoomInfo) {
+            if (user.zoomInfo || (meetingProvider && meetingProvider !== '')) {
                 setInstantMeetingChannelId(channelId);
                 setInstantMeetingCreatedBy(channelCreatedBy);
                 const current = new Date();
@@ -1273,7 +1298,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                                         borderColor: '#efefef',
-                                        paddingVertical: 8,
+                                        paddingVertical: meeting.description ? 8 : 16,
                                         borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
                                         // minWidth: 600, // flex: 1,
                                         width: '100%',
@@ -1326,7 +1351,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    if (!userZoomInfo || userZoomInfo.accountId === '') {
+                                                    if (meetingProvider !== '' && meeting.joinUrl) {
+                                                        if (Platform.OS == 'web') {
+                                                            window.open(meeting.joinUrl, '_blank');
+                                                        } else {
+                                                            Linking.openURL(meeting.joinUrl);
+                                                        }
+                                                    } else if (meetingProvider !== '' && !meeting.joinUrl) {
+                                                        Alert('No meeting link found. Contact your instructor.');
+                                                        return;
+                                                    } else if (!userZoomInfo || userZoomInfo.accountId === '') {
                                                         Alert(
                                                             'Join Meeting?',
                                                             'WARNING- To mark attendance as present, you must Connect to Zoom under Account.',

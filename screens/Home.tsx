@@ -16,7 +16,8 @@ import {
     resetPassword,
     totalInboxUnread,
     signup,
-    authWithProvider
+    authWithProvider,
+    getOrganisation
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -114,6 +115,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [loadingCues, setLoadingCues] = useState(true);
     const [loadingSubs, setLoadingSubs] = useState(true);
     const [loadingUser, setLoadingUser] = useState(true);
+    const [loadingOrg, setLoadingOrg] = useState(true);
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -585,6 +587,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setLoadingCues(true);
             setLoadingSubs(true);
             setLoadingUser(true);
+            setLoadingOrg(true);
 
             const user = JSON.parse(u);
             const server = fetchAPI(user._id);
@@ -676,6 +679,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         const stringSub = JSON.stringify(sortedSubs);
                         await AsyncStorage.setItem('subscriptions', stringSub);
                         setLoadingSubs(false);
+                    }
+                })
+                .catch(err => console.log(err));
+            server
+                .query({
+                    query: getOrganisation,
+                    variables: {
+                        userId: user._id
+                    }
+                })
+                .then(async res => {
+                    if (res.data && res.data.school.findByUserId) {
+                        const stringOrg = JSON.stringify(res.data.school.findByUserId);
+                        await AsyncStorage.setItem('school', stringOrg);
+                        setLoadingOrg(false);
+                    } else {
+                        setLoadingOrg(false);
                     }
                 })
                 .catch(err => console.log(err));
@@ -977,6 +997,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [cues, updateModalKey, updateModalIndex]);
 
     const closeModal = useCallback(async () => {
+        setModalType('');
+
         // Mark as read
         if (modalType === 'Update') {
             await markCueAsRead();
@@ -991,10 +1013,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             loadData();
         } else {
             loadData(true);
-        }
-
-        if (modalType === 'Create') {
-            setModalType('');
         }
     }, [fadeAnimation, modalType]);
 
@@ -1518,6 +1536,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             !loadingCues &&
             !loadingUser &&
             !loadingSubs &&
+            !loadingOrg &&
             ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
@@ -1617,7 +1636,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0
                         }}
                     >
-                        {loadingCues || loadingUser || loadingSubs ? (
+                        {loadingCues || loadingUser || loadingSubs || loadingOrg ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
