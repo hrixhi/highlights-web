@@ -2696,9 +2696,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         if (!isOwner && props.cue.channelId && props.cue.channelId !== '') {
             return (
-                // <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
-                //     {parser(initialOriginal)}
-                // </div>
                 <RichEditor
                     initialContentHTML={initialOriginal}
                     disabled={true}

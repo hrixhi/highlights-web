@@ -485,7 +485,7 @@ export const updateChannel = gql`
 export const updateUser = gql`
     mutation($userId: String!, $displayName: String!, $fullName: String!, $avatar: String) {
         user {
-            updateUserAdmin(userId: $userId, displayName: $displayName, fullName: $fullName, avatar: $avatar)
+            update(userId: $userId, displayName: $displayName, fullName: $fullName, avatar: $avatar)
         }
     }
 `;

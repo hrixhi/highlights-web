@@ -1156,7 +1156,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         ) : (
                                             <Text
                                                 style={{
-                                                    marginVertical: 3,
+                                                    marginTop: 15,
                                                     fontSize: 14,
                                                     width: Dimensions.get('window').width < 768 ? '100%' : '80%',
                                                     marginBottom: 25,
@@ -1505,7 +1505,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 15,
                                                     // paddingTop: 12,
                                                     // paddingBottom: 12,
-                                                    marginTop: 3,
+                                                    marginTop: 15,
                                                     marginBottom: 20,
                                                     color,
                                                     lineHeight: 25

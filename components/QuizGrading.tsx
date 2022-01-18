@@ -355,7 +355,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text style={{ marginTop: 10, marginBottom: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
                                                     {parser(content)}
                                                 </Text>
-                                            </View> : <Text style={{ marginTop: 3, marginBottom: 20, marginLeft: 20, fontSize: 14, width: window.screen.width < 1024 ? '100%' : '80%' , lineHeight: 25, flex: 1 }}>
+                                            </View> : <Text style={{ marginTop: 15, marginBottom: 20, marginLeft: 20, fontSize: 14, width: window.screen.width < 1024 ? '100%' : '80%' , lineHeight: 25, flex: 1 }}>
                                                 {parser(problem.question)}
                                             </Text>)
                                     }
@@ -443,7 +443,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }
 
                                 return <View style={{ flexDirection: 'row' }} key={solutions.toString() + i.toString()}>
-                                    <View style={{ paddingLeft: 40, paddingRight: 10, paddingTop: 21 }}>
+                                    <View style={{ paddingRight: 10, paddingTop: 21 }}>
                                         {onlyOneCorrect ?
                                         <TouchableOpacity
                                             style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', }}
@@ -467,7 +467,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             paddingHorizontal: 15,
                                             // paddingTop: 12,
                                             // paddingBottom: 12,
-                                            marginTop: 3,
+                                            marginTop: 15,
                                             marginBottom: 20,
                                             color,
                                             lineHeight: 25

@@ -42,7 +42,11 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             const url =
                 'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads&q=';
             const response = await axios.get(
-                url + encodeURIComponent(searchTerm) + '&sorts=' + encodeURIComponent('downloads desc') + '&count=1000'
+                url +
+                    encodeURIComponent(searchTerm) +
+                    '&sorts=' +
+                    encodeURIComponent('downloads desc') +
+                    '&count=1000&and[]=lending___status%3A"is_readable"'
             );
             const items = response.data.items;
             const filteredItems = items.filter((item: any) => {
@@ -109,14 +113,14 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         })
                         .catch(e => {
                             setRetrievingBook(false);
-                            alert('Could not fetch book.');
+                            alert('This text is currently not available for free. Try another result.');
                             console.log(e);
                         });
                 }
             })
             .catch(e => {
                 setRetrievingBook(false);
-                alert('Could not fetch book.');
+                alert('This text is currently not available for free. Try another result.');
                 console.log(e);
             });
     }, [selectedBook]);
