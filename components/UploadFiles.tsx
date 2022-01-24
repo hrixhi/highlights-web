@@ -44,7 +44,7 @@ const FileUpload: React.FC<any> = (props: any) => {
         }
 
         if (type === 'wma' || type === 'avi') {
-            alert('This video format is not supported. Uplaod mp4 or ogg.');
+            alert('This video format is not supported. Upload mp4 or ogg.');
             setUploading(false);
             return;
         }
@@ -125,7 +125,8 @@ const FileUpload: React.FC<any> = (props: any) => {
                         fontSize: 12,
                         fontFamily: 'overpass'
                     }}
-                    onPress={() => handleFile()}>
+                    onPress={() => handleFile()}
+                >
                     Media
                 </Text>
             ) : (
@@ -139,7 +140,8 @@ const FileUpload: React.FC<any> = (props: any) => {
                         textTransform: 'uppercase',
                         paddingLeft: 10
                     }}
-                    onPress={() => handleFile()}>
+                    onPress={() => handleFile()}
+                >
                     {props.chat ? (
                         <Ionicons name="document-attach-outline" size={18} />
                     ) : (

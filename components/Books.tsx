@@ -40,7 +40,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             setLoading(true);
             setSearchComplete(false);
             const url =
-                'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads&q=';
+                'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads,rights,licenseurl,source&q=';
             const response = await axios.get(
                 url +
                     encodeURIComponent(searchTerm) +
@@ -49,6 +49,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     '&count=1000&and[]=lending___status%3A"is_readable"'
             );
             const items = response.data.items;
+            console.log('All items');
             const filteredItems = items.filter((item: any) => {
                 if (item.mediatype !== 'texts') {
                     return false;
@@ -66,6 +67,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 }
                 return pdfExists;
             });
+            console.log('Search results', filteredItems);
             setResults(filteredItems);
             setSearchComplete(true);
             setLoading(false);
@@ -139,7 +141,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     value={searchTerm}
                     style={{
                         width: 300,
-                        backgroundColor: '#efefef',
+                        backgroundColor: '#f2f2f2',
                         fontSize: 20,
                         padding: 15,
                         borderRadius: 25,

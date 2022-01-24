@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    doesChannelNameExist, findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
+    findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -406,8 +406,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                             })
 
-                            console.log("Options", tempUsers)
-
                             if (!schoolObj) {
                                 setAllUsers(res.data.user.findByChannelId)
                                 setOptions(tempUsers)
@@ -459,37 +457,29 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         const server = fetchAPI('')
-        server.query({
-            query: doesChannelNameExist,
+        
+        server.mutate({
+            mutation: duplicateChannel,
             variables: {
-                name: duplicateChannelName.trim()
+                channelId: props.channelId,
+                name: duplicateChannelName.trim(),
+                password: duplicateChannelPassword,
+                colorCode: duplicateChannelColor,
+                temporary: duplicateChannelTemporary,
+                duplicateSubscribers: duplicateChannelSubscribers,
+                duplicateOwners: duplicateChannelModerators
             }
-        }).then(async res => {
-            if (res.data && (res.data.channel.doesChannelNameExist !== true)) {
-                server.mutate({
-                    mutation: duplicateChannel,
-                    variables: {
-                        channelId: props.channelId,
-                        name: duplicateChannelName.trim(),
-                        password: duplicateChannelPassword,
-                        colorCode: duplicateChannelColor,
-                        temporary: duplicateChannelTemporary,
-                        duplicateSubscribers: duplicateChannelSubscribers,
-                        duplicateOwners: duplicateChannelModerators
-                    }
-                }).then((res2) => {
-                    if (res2.data && res2.data.channel.duplicate === "created") {
-                        alert("Channel duplicated successfully.")
-                        // Refresh Subscriptions for user
-                        props.refreshSubscriptions()
-                        props.closeModal()
-                    }
-                })
+        }).then((res2) => {
+            if (res2.data && res2.data.channel.duplicate === "created") {
+                alert("Channel duplicated successfully.")
+                // Refresh Subscriptions for user
+                props.refreshSubscriptions()
+                props.closeModal()
             }
         })
-            .catch((e) => {
-                alert("Something went wrong. Try again.")
-            })
+        .catch((e) => {
+            alert("Something went wrong. Try again.")
+        })
 
     }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId,
         duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
@@ -566,6 +556,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                 }).then(res => {
                     if (res.data && res.data.channel.update) {
+
                         // added subs
                         selectedValues.map((sub: any) => {
                             const og = originalSubs.find((o: any) => {
@@ -573,7 +564,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             })
                             if (!og) {
 
-                                console.log("To Add User", sub)
                                 server.mutate({
                                     mutation: subscribe,
                                     variables: {
@@ -594,7 +584,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             })
 
                             if (!og) {
-                                console.log("To Remove User", o.id)
                                 server.mutate({
                                     mutation: unsubscribe,
                                     variables: {
@@ -608,7 +597,23 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setIsUpdatingChannel(false);
 
                         alert("Course updated successfully.")
-                        setOriginalSubs([])
+
+                        const updatedOriginalSubs: any[] = []
+
+                        allUsers.map((item: any) => {
+
+                            if (selectedValues.includes(item._id)) {
+                                updatedOriginalSubs.push({
+                                    name: item.fullName,
+                                    id: item._id
+                                })
+                            }
+                            
+                        })
+
+
+                        // Set updated subs as new subs
+                        setOriginalSubs(updatedOriginalSubs)
 
                         // need to refresh channel subscriptions since name will be updated
 
@@ -826,7 +831,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 placeholderTextColor={'#1F1F1F'}
                                 required={true}
-                                footerMessage={'case sensitive'}
                             />
                         </View>
                         {
@@ -872,7 +876,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 placeholder={`(${PreferredLanguageText('optional')})`}
                                 onChangeText={val => setDuplicateChannelPassword(val)}
                                 placeholderTextColor={'#1F1F1F'}
-                                secureTextEntry={true}
                                 required={false}
                             />
                         </View>
@@ -1188,7 +1191,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 placeholderTextColor={'#1F1F1F'}
                                 required={true}
-                                footerMessage={'case sensitive'}
                             />
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
@@ -1204,7 +1206,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 placeholder={`(${PreferredLanguageText('optional')})`}
                                 onChangeText={val => setPassword(val)}
                                 placeholderTextColor={'#1F1F1F'}
-                                secureTextEntry={true}
                                 required={false}
                             />
                         </View>

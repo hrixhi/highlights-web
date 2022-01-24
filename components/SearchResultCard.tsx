@@ -122,14 +122,14 @@ const styles: any = (colorScheme: any, col: any) =>
         dateContainer: {
             fontSize: 10,
             marginBottom: 5,
-            color: '#efefef',
+            color: '#f2f2f2',
             backgroundColor: 'white',
             display: 'flex',
             flexDirection: 'row'
         },
         date: {
             fontSize: 9,
-            color: colorScheme === 'light' ? '#efefef' : '#1F1F1F',
+            color: colorScheme === 'light' ? '#f2f2f2' : '#1F1F1F',
             lineHeight: 10
         },
         title: {

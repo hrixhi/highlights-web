@@ -679,11 +679,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={{
             width: '100%',
             maxHeight: Dimensions.get("window").width < 768 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
-            backgroundColor: props.showCreate ? "#fff" : '#efefef',
+            backgroundColor: props.showCreate ? "#fff" : '#f2f2f2',
             justifyContent: 'center',
             flexDirection: 'row'
         }} key={1}>
-            <View style={{ width: '100%', maxWidth: 900, paddingBottom: 25, backgroundColor: props.showCreate ? '#fff' : '#efefef' }}>
+            <View style={{ width: '100%', maxWidth: 900, paddingBottom: 25, backgroundColor: props.showCreate ? '#fff' : '#f2f2f2' }}>
                 {/* Back Button */}
                 {
                     props.showCreate ?
@@ -710,7 +710,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {/* Main Content */}
                 {!props.showCreate ?
                     <View style={{
-                        backgroundColor: '#efefef',
+                        backgroundColor: '#f2f2f2',
                         width: '100%',
                         minHeight: Dimensions.get("window").height - 52
                     }}>
@@ -723,14 +723,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: "center",
                                 display: "flex",
                                 flexDirection: "column",
-                                backgroundColor: "#efefef",
+                                backgroundColor: "#f2f2f2",
                                 paddingVertical: 100
                             }}>
                             <ActivityIndicator color={"#1F1F1F"} />
                         </View> : <View
                             style={{
-                                borderColor: '#efefef',
-                                backgroundColor: '#efefef',
+                                borderColor: '#f2f2f2',
+                                backgroundColor: '#f2f2f2',
                                 overflow: 'hidden',
                                 borderRadius: 1,
                                 shadowColor: "#000",
@@ -781,7 +781,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 backgroundColor: '#fff',
                                                 flexDirection: 'row',
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%',
                                                 paddingVertical: 5
@@ -961,7 +961,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     fontFamily: 'overpass',
                                     width: "100%",
                                     maxWidth: 500,
-                                    borderBottom: '1px solid #efefef',
+                                    borderBottom: '1px solid #f2f2f2',
                                     fontSize: 14,
                                     paddingTop: 13,
                                     paddingBottom: 13,
@@ -992,7 +992,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     placeholder={PreferredLanguageText('optional')}
                                     onChangeText={val => setPassword(val)}
                                     placeholderTextColor={'#1F1F1F'}
-                                    secureTextEntry={true}
                                     required={false}
                                 />
                             </View>
@@ -1025,7 +1024,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onValueChange={() => setTemporary(!temporary)}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: "#efefef",
+                                                    false: "#f2f2f2",
                                                     true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
@@ -1065,7 +1064,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onValueChange={() => setIsPublic(!isPublic)}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: "#efefef",
+                                                    false: "#f2f2f2",
                                                     true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
@@ -1300,7 +1299,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#efefef',
+        borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 13,

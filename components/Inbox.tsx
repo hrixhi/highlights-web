@@ -934,7 +934,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 width: '100%',
                                                 paddingVertical: 10,
                                                 borderBottomWidth: 1,
-                                                borderBottomColor: '#efefef',
+                                                borderBottomColor: '#f2f2f2',
                                                 paddingHorizontal: 10
                                             }}>
                                             <Image
@@ -1032,7 +1032,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     lineHeight: 34,
                                                                     color: '#000000',
                                                                     fontSize: 12,
-                                                                    backgroundColor: '#efefef',
+                                                                    backgroundColor: '#f2f2f2',
                                                                     paddingHorizontal: 20,
                                                                     fontFamily: 'inter',
                                                                     height: 35,
@@ -1120,7 +1120,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 paddingVertical: 7,
                                                                 borderBottomWidth:
                                                                     ind === Object.keys(groupUsers).length - 1 ? 0 : 1,
-                                                                borderBottomColor: '#efefef',
+                                                                borderBottomColor: '#f2f2f2',
                                                                 paddingHorizontal: 10
                                                             }}>
                                                             <Image
@@ -1200,7 +1200,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     ? windowHeight - 104 - 80
                                                     : windowHeight - 52 - 80,
                                             zIndex: 5000,
-                                            borderColor: '#efefef'
+                                            borderColor: '#f2f2f2'
                                         }}>
                                         <GiftedChat
                                             renderMessageAudio={renderMessageAudio}
@@ -1318,7 +1318,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 style={{
                                                     flexDirection: 'column',
                                                     marginTop: 25,
-                                                    overflow: 'scroll',
+                                                    // overflow: 'scroll',
                                                     marginBottom: 25,
                                                     alignItems: 'center'
                                                 }}>
@@ -1465,7 +1465,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             flex: 1,
                                             width: '100%',
                                             borderRadius: 1,
-                                            borderColor: '#efefef',
+                                            borderColor: '#f2f2f2',
                                             overflow: 'hidden'
                                         }}>
                                         <ScrollView
@@ -1496,7 +1496,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         style={{
                                                             backgroundColor: '#fff',
                                                             flexDirection: 'row',
-                                                            borderColor: '#efefef',
+                                                            borderColor: '#f2f2f2',
                                                             paddingVertical: 5,
                                                             borderBottomWidth: ind === users.length - 1 ? 0 : 1,
                                                             width: '100%'
@@ -1570,7 +1570,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             showsVerticalScrollIndicator={true}
                                             horizontal={false}
                                             contentContainerStyle={{
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 paddingHorizontal: 10,
                                                 borderRadius: 1,
                                                 width: '100%',
@@ -1639,7 +1639,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         style={{
                                                             backgroundColor: '#fff',
                                                             flexDirection: 'row',
-                                                            borderColor: '#efefef',
+                                                            borderColor: '#f2f2f2',
                                                             paddingVertical: 5,
                                                             borderBottomWidth: index === chats.length - 1 ? 0 : 1,
                                                             width: '100%'

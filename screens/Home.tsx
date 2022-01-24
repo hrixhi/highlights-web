@@ -421,17 +421,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 const sC = await AsyncStorage.getItem('cues');
 
                 // if (sC) {
-                //     await refreshChannelCues();
+                // await refreshChannelCues();
                 // }
                 // HANDLE PROFILE
                 if (u) {
                     const parsedUser = JSON.parse(u);
                     if (parsedUser.email) {
                         if (saveData) {
+                            // Used for local cues since they are stored in Async Storage first and then saved to cloud // ALLOW OFFLINE
                             await saveDataInCloud();
+                        } else {
+                            // REFRESH LOCAL STORAGE (USED FOR EXISTING CUES)
+                            console.log('Call load Data from cloud');
+                            await loadDataFromCloud();
                         }
-
-                        loadDataFromCloud();
                     }
                 }
             } catch (e) {
@@ -857,7 +860,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const openUpdate = useCallback(
         (key, index, pageNumber, _id, by, channId) => {
-            console.log('Open update');
             setUpdateModalKey(key);
             setUpdateModalIndex(index);
             setPageNumber(pageNumber);
@@ -1010,10 +1012,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         if (modalType === 'Update') {
             setChannelId('');
-            loadData();
-        } else {
-            loadData(true);
         }
+
+        loadData();
     }, [fadeAnimation, modalType]);
 
     const cuesArray: any[] = [];
@@ -1533,83 +1534,79 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
             ) : null}
             {showHome &&
-            !loadingCues &&
-            !loadingUser &&
-            !loadingSubs &&
-            !loadingOrg &&
-            ((option === 'Classroom' && modalType !== 'Create') ||
+                !loadingCues &&
+                !loadingUser &&
+                !loadingSubs &&
+                !loadingOrg &&
+                !saveDataInProgress &&
+                ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
-                (option === 'Channels' && !showCreate) ||
-                (option === 'Settings' && !showHelp)) ? (
-                <TouchableOpacity
-                    onPress={() => {
-                        if (option === 'Classroom') {
-                            setCueId('');
-                            setModalType('');
-                            setCreatedBy('');
-                            // setChannelFilterChoice('All')
-                            if (modalType === 'Update') {
-                                fadeAnimation.setValue(0);
+                (option === 'Channels' && !showCreate) ? (
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (option === 'Classroom') {
+                                setCueId('');
+                                setModalType('');
+                                setCreatedBy('');
+                                // setChannelFilterChoice('All')
                                 if (modalType === 'Update') {
-                                    setChannelId('');
+                                    fadeAnimation.setValue(0);
+                                    if (modalType === 'Update') {
+                                        setChannelId('');
+                                    }
+                                    loadData(true);
                                 }
-                                loadData(true);
+                                openModal('Create');
+                                // setShowHome(false)
+                                // setMenuCollapsed(true)
+                            } else if (option === 'To Do') {
+                                setTab('Add');
+                            } else if (option === 'Channels') {
+                                setShowCreate(true);
+                            } else {
+                                setShowDirectory(true);
                             }
-                            openModal('Create');
-                            // setShowHome(false)
-                            // setMenuCollapsed(true)
-                        } else if (option === 'To Do') {
-                            setTab('Add');
-                        } else if (option === 'Channels') {
-                            setShowCreate(true);
-                        } else if (option === 'Settings') {
-                            setShowHelp(true);
-                        } else {
-                            setShowDirectory(true);
-                        }
-                    }}
-                    style={{
-                        position: 'absolute',
-                        marginRight:
-                            Dimensions.get('window').width >= 1100
-                                ? (Dimensions.get('window').width - 1100) / 2 - 25
-                                : 20,
-                        marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
-                        right: 0,
-                        justifyContent: 'center',
-                        bottom: 0,
-                        width: 58,
-                        height: 58,
-                        borderRadius: 29,
-                        backgroundColor: '#006aff',
-                        borderColor: '#efefef',
-                        borderWidth: 0,
-                        shadowColor: '#000',
-                        shadowOffset: {
-                            width: 4,
-                            height: 4
-                        },
-                        shadowOpacity: 0.12,
-                        shadowRadius: 10,
-                        zIndex: showLoginWindow ? 40 : 500000
-                    }}
-                >
-                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                        {option === 'Classroom' ? (
-                            <Ionicons name="pencil-outline" size={25} />
-                        ) : option === 'To Do' ? (
-                            <Ionicons name="add-outline" size={35} />
-                        ) : option === 'Channels' ? (
-                            <Ionicons name="add-outline" size={35} />
-                        ) : option === 'Inbox' ? (
-                            <Ionicons name="person-add-outline" size={21} />
-                        ) : (
-                            <Ionicons name="help-outline" size={21} />
-                        )}
-                    </Text>
-                </TouchableOpacity>
-            ) : null}
+                        }}
+                        style={{
+                            position: 'absolute',
+                            marginRight:
+                                Dimensions.get('window').width >= 1100
+                                    ? (Dimensions.get('window').width - 1100) / 2 - 25
+                                    : 20,
+                            marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
+                            right: 0,
+                            justifyContent: 'center',
+                            bottom: 0,
+                            width: 58,
+                            height: 58,
+                            borderRadius: 29,
+                            backgroundColor: '#006aff',
+                            borderColor: '#f2f2f2',
+                            borderWidth: 0,
+                            shadowColor: '#000',
+                            shadowOffset: {
+                                width: 4,
+                                height: 4
+                            },
+                            shadowOpacity: 0.12,
+                            shadowRadius: 10,
+                            zIndex: showLoginWindow ? 40 : 500000
+                        }}
+                    >
+                        <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+                            {option === 'Classroom' ? (
+                                <Ionicons name="pencil-outline" size={25} />
+                            ) : option === 'To Do' ? (
+                                <Ionicons name="add-outline" size={35} />
+                            ) : option === 'Channels' ? (
+                                <Ionicons name="add-outline" size={35} />
+                            ) : option === 'Inbox' ? (
+                                <Ionicons name="person-add-outline" size={21} />
+                            ) : null}
+                        </Text>
+                    </TouchableOpacity>
+                ) : null)}
             {showHome && !showLoginWindow ? (
                 <View
                     style={{
@@ -1636,7 +1633,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0
                         }}
                     >
-                        {loadingCues || loadingUser || loadingSubs || loadingOrg ? (
+                        {loadingCues || loadingUser || loadingSubs || loadingOrg || saveDataInProgress ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
@@ -1931,7 +1928,7 @@ const styles = (channelId: string) =>
             height: '100%',
             width: '100%',
             justifyContent: 'center',
-            backgroundColor: '#efefef'
+            backgroundColor: '#f2f2f2'
         },
         horizontal: {
             flexDirection: 'row',
@@ -1939,7 +1936,7 @@ const styles = (channelId: string) =>
         },
         input: {
             width: '100%',
-            borderBottomColor: '#efefef',
+            borderBottomColor: '#f2f2f2',
             borderBottomWidth: 1,
             fontSize: 14,
             paddingTop: 13,

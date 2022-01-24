@@ -1,13 +1,15 @@
 import ApolloClient from 'apollo-boost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { origin } from '../constants/zoomCredentials';
+
 export const fetchAPI = (userId: any) => {
     // const uri = 'http://localhost:8081/';
     const uri = 'https://api.learnwithcues.com';
 
     const logoutUser = async () => {
         await AsyncStorage.clear();
-        window.location.reload();
+        window.location.href = `${origin}/login`;
     };
 
     return new ApolloClient({

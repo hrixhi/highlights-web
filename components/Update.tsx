@@ -613,22 +613,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {value._id === props.cue._id ? null : (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    const temp = [...channelCues];
-                                    temp.push(value);
-                                    setChannelCues(temp);
+                        {/* {value._id === props.cue._id ? null : ( */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                const temp = [...channelCues];
+                                temp.push(value);
+                                setChannelCues(temp);
 
-                                    const sCues = selectedCues.filter((c: any) => c._id !== value._id);
-                                    setSelectedCues(sCues);
-                                }}
-                            >
-                                <Text style={{ color: '#f94144' }}>
-                                    <Ionicons name="remove-circle-outline" size={16} />
-                                </Text>
-                            </TouchableOpacity>
-                        )}
+                                const sCues = selectedCues.filter((c: any) => c._id !== value._id);
+                                setSelectedCues(sCues);
+                            }}
+                        >
+                            <Text style={{ color: '#f94144' }}>
+                                <Ionicons name="remove-circle-outline" size={16} />
+                            </Text>
+                        </TouchableOpacity>
+                        {/* )} */}
                     </View>
 
                     <View
@@ -722,22 +722,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {value._id === props.cue._id ? null : (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    const temp = [...channelCues];
-                                    temp.push(value);
-                                    setChannelCues(temp);
+                        {/* {value._id === props.cue._id ? null : ( */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                const temp = [...channelCues];
+                                temp.push(value);
+                                setChannelCues(temp);
 
-                                    const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id);
-                                    setFolderCuesToDisplay(sCues);
-                                }}
-                            >
-                                <Text style={{ color: '#f94144' }}>
-                                    <Ionicons name="remove-circle-outline" size={16} />
-                                </Text>
-                            </TouchableOpacity>
-                        )}
+                                const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id);
+                                setFolderCuesToDisplay(sCues);
+                            }}
+                        >
+                            <Text style={{ color: '#f94144' }}>
+                                <Ionicons name="remove-circle-outline" size={16} />
+                            </Text>
+                        </TouchableOpacity>
+                        {/* )} */}
                     </View>
 
                     <View
@@ -781,7 +781,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     width: '100%',
                     maxWidth: 900,
-                    backgroundColor: '#efefef',
+                    backgroundColor: '#f2f2f2',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     paddingBottom: 15
@@ -805,7 +805,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     width: '100%',
                     maxWidth: 900,
-                    backgroundColor: '#efefef',
+                    backgroundColor: '#f2f2f2',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     paddingBottom: 15
@@ -943,7 +943,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         flex: 1,
                         flexDirection: 'column',
                         alignItems: 'center',
-                        backgroundColor: '#efefef',
+                        backgroundColor: '#f2f2f2',
                         paddingVertical: 14,
                         paddingHorizontal: 10
                     }}
@@ -968,7 +968,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{
                             width: '100%',
                             maxWidth: 900,
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
                             paddingBottom: 15
@@ -1093,7 +1093,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             paddingTop: 14,
                             paddingBottom: 7
                         }}
@@ -1103,7 +1103,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     width: '100%',
                                     maxWidth: 900,
-                                    backgroundColor: '#efefef',
+                                    backgroundColor: '#f2f2f2',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
                                     paddingBottom: 15
@@ -1227,14 +1227,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })}
                             </ScrollView>
                         ) : (
-                            <View style={{ backgroundColor: '#efefef' }}>
+                            <View style={{ backgroundColor: '#f2f2f2' }}>
                                 <Text
                                     style={{
                                         fontSize: 14,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
-                                        backgroundColor: '#efefef',
+                                        backgroundColor: '#f2f2f2',
                                         paddingVertical: 20
                                     }}
                                 >
@@ -1252,7 +1252,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 flex: 1,
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                backgroundColor: '#efefef',
+                                backgroundColor: '#f2f2f2',
                                 paddingTop: 7,
                                 paddingBottom: 14
                             }}
@@ -1294,7 +1294,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             paddingTop: 14,
                             paddingBottom: 7
                         }}
@@ -1304,7 +1304,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     width: '100%',
                                     maxWidth: 900,
-                                    backgroundColor: '#efefef',
+                                    backgroundColor: '#f2f2f2',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
                                     paddingBottom: 15
@@ -1430,14 +1430,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })}
                             </ScrollView>
                         ) : (
-                            <View style={{ backgroundColor: '#efefef' }}>
+                            <View style={{ backgroundColor: '#f2f2f2' }}>
                                 <Text
                                     style={{
                                         fontSize: 14,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
-                                        backgroundColor: '#efefef',
+                                        backgroundColor: '#f2f2f2',
                                         paddingVertical: 20
                                     }}
                                 >
@@ -1454,7 +1454,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             paddingTop: 7,
                             paddingBottom: 14
                         }}
@@ -1498,86 +1498,92 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
-                        width: '100%'
+                        width: '100%',
+                        height:
+                            Dimensions.get('window').width < 1024
+                                ? Dimensions.get('window').height - 104
+                                : Dimensions.get('window').height - 52
                     }}
                     contentContainerStyle={{
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
-                        maxHeight: windowHeight - 52,
+                        // maxHeight: windowHeight - 52,
                         alignItems: 'center',
-                        width: '100%'
+                        width: '100%',
+                        // maxWidth: 900,
+                        alignSelf: 'center'
                     }}
                 >
-                    <View
+                    {/* <View
                         style={{
-                            maxWidth: 900,
+                            // maxWidth: 900,
                             width: '100%',
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
                         }}
-                    >
-                        <UpdateControls
-                            // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
-                            channelId={props.channelId}
-                            save={save}
-                            del={del}
-                            customCategories={props.customCategories}
-                            cue={props.cue}
-                            cueIndex={props.cueIndex}
-                            cueKey={props.cueKey}
-                            channelOwner={channelOwner}
-                            createdBy={createdBy}
-                            folderId={folderId}
-                            closeModal={() => props.closeModal()}
-                            reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
-                            changeViewStatus={() => setViewStatus(true)}
-                            viewStatus={viewStatus}
-                            showOptions={showOptions}
-                            showOriginal={showOriginal}
-                            showFolder={showFolder}
-                            setShowOptions={(op: boolean) => setShowOptions(op)}
-                            setShowOriginal={(val: boolean) => setShowOriginal(val)}
-                            showComments={showComments}
-                            setShowComments={(s: any) => setShowComments(s)}
-                            setShowFolder={(s: any) => setShowFolder(s)}
-                            reloadStatuses={reloadStatuses}
-                            setSave={(save: boolean) => setSave(save)}
-                            setDelete={(del: boolean) => setDel(del)}
-                        />
-                        {!Number.isNaN(Number(cueId)) || !props.channelId ? (
-                            <View style={{ flex: 1, backgroundColor: 'white' }} />
-                        ) : showComments ? (
-                            <ScrollView
-                                // key={Math.random()}
-                                ref={scroll2}
-                                contentContainerStyle={{
-                                    width: '100%',
-                                    maxWidth: 900,
-                                    alignSelf: 'center',
-                                    height: '100%'
-                                }}
-                                contentOffset={{ x: 0, y: 1 }}
-                                showsVerticalScrollIndicator={false}
-                                overScrollMode={'always'}
-                                alwaysBounceVertical={true}
-                                scrollEnabled={true}
-                                scrollEventThrottle={1}
-                                keyboardDismissMode={'on-drag'}
-                            >
-                                <ThreadsList
-                                    channelCreatedBy={props.channelCreatedBy}
-                                    key={JSON.stringify(threads)}
-                                    threads={threads}
-                                    cueId={cueId}
-                                    channelId={props.channelId}
-                                    channelName={props.filterChoice}
-                                    closeModal={() => props.closeModal()}
-                                    reload={() => loadThreadsAndStatuses()}
-                                    updateQAUnreadCount={() => updateQAUnreadCount()}
-                                    type={'Q&A'}
-                                />
-                            </ScrollView>
-                        ) : null}
-                    </View>
+                    > */}
+                    <UpdateControls
+                        // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
+                        channelId={props.channelId}
+                        save={save}
+                        del={del}
+                        customCategories={props.customCategories}
+                        cue={props.cue}
+                        cueIndex={props.cueIndex}
+                        cueKey={props.cueKey}
+                        channelOwner={channelOwner}
+                        createdBy={createdBy}
+                        folderId={folderId}
+                        closeModal={() => props.closeModal()}
+                        reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                        changeViewStatus={() => setViewStatus(true)}
+                        viewStatus={viewStatus}
+                        showOptions={showOptions}
+                        showOriginal={showOriginal}
+                        showFolder={showFolder}
+                        setShowOptions={(op: boolean) => setShowOptions(op)}
+                        setShowOriginal={(val: boolean) => setShowOriginal(val)}
+                        showComments={showComments}
+                        setShowComments={(s: any) => setShowComments(s)}
+                        setShowFolder={(s: any) => setShowFolder(s)}
+                        reloadStatuses={reloadStatuses}
+                        setSave={(save: boolean) => setSave(save)}
+                        setDelete={(del: boolean) => setDel(del)}
+                    />
+                    {!Number.isNaN(Number(cueId)) || !props.channelId ? (
+                        <View style={{ flex: 1, backgroundColor: 'white' }} />
+                    ) : showComments ? (
+                        <ScrollView
+                            // key={Math.random()}
+                            ref={scroll2}
+                            contentContainerStyle={{
+                                width: '100%',
+                                maxWidth: 900,
+                                alignSelf: 'center',
+                                height: '100%'
+                            }}
+                            contentOffset={{ x: 0, y: 1 }}
+                            showsVerticalScrollIndicator={false}
+                            overScrollMode={'always'}
+                            alwaysBounceVertical={true}
+                            scrollEnabled={true}
+                            scrollEventThrottle={1}
+                            keyboardDismissMode={'on-drag'}
+                        >
+                            <ThreadsList
+                                channelCreatedBy={props.channelCreatedBy}
+                                key={JSON.stringify(threads)}
+                                threads={threads}
+                                cueId={cueId}
+                                channelId={props.channelId}
+                                channelName={props.filterChoice}
+                                closeModal={() => props.closeModal()}
+                                reload={() => loadThreadsAndStatuses()}
+                                updateQAUnreadCount={() => updateQAUnreadCount()}
+                                type={'Q&A'}
+                            />
+                        </ScrollView>
+                    ) : null}
+                    {/* </View> */}
                 </ScrollView>
             ) : (
                 <View>
@@ -1668,7 +1674,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         onPress={() => {
                             setCreateNewFolder(true);
                             setSelectedCues([props.cue]);
-                            const filter = props.channelCues.filter((cue: any) => cue._id !== props.cue._id);
+                            const filter = props.channelCues.filter(
+                                (cue: any) => cue._id !== props.cue._id && (!cue.folderId || cue.folderId === '')
+                            );
                             setChannelCues(filter);
                         }}
                         style={{
@@ -1759,7 +1767,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     shadowOpacity: 0,
                                     borderWidth: 1,
                                     borderColor: '#e9e9ec',
-                                    overflow: 'scroll',
+                                    // overflowY: 'scroll',
                                     maxHeight: '100%'
                                 }
                             }}
@@ -1870,45 +1878,63 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <React.Fragment>
                         <TouchableOpacity
                             onPress={async () => {
-                                const server = fetchAPI('');
-
-                                setUpdatingFolder(true);
-
-                                const cueIds = folderCuesToDisplay.map((cue: any) => cue._id);
-
-                                server
-                                    .mutate({
-                                        mutation: updateFolder,
-                                        variables: {
-                                            title: updateFolderTitle,
-                                            cueIds,
-                                            folderId
-                                        }
-                                    })
-                                    .then(async res => {
-                                        // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                                        if (res.data.folder.update === null || res.data.folder.update === undefined) {
-                                            Alert('Could not create folder. Try again.');
-                                            setUpdatingFolder(false);
+                                // Add alert first
+                                Alert('Update folder?', '', [
+                                    {
+                                        text: 'Cancel',
+                                        style: 'cancel',
+                                        onPress: () => {
                                             return;
                                         }
+                                    },
+                                    {
+                                        text: 'Yes',
+                                        onPress: () => {
+                                            const server = fetchAPI('');
 
-                                        // Check if current cue was removed from the list then set folder id to ""
-                                        if (!cueIds.includes(props.cue._id)) {
-                                            setFolderId('');
-                                        } else {
-                                            await fetchFolderCues();
+                                            setUpdatingFolder(true);
+
+                                            const cueIds = folderCuesToDisplay.map((cue: any) => cue._id);
+
+                                            server
+                                                .mutate({
+                                                    mutation: updateFolder,
+                                                    variables: {
+                                                        title: updateFolderTitle,
+                                                        cueIds,
+                                                        folderId
+                                                    }
+                                                })
+                                                .then(async res => {
+                                                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                                                    if (
+                                                        res.data.folder.update === null ||
+                                                        res.data.folder.update === undefined
+                                                    ) {
+                                                        Alert('Could not create folder. Try again.');
+                                                        setUpdatingFolder(false);
+                                                        return;
+                                                    }
+
+                                                    // Check if current cue was removed from the list then set folder id to ""
+                                                    if (!cueIds.includes(props.cue._id)) {
+                                                        setFolderId('');
+                                                    } else {
+                                                        await fetchFolderCues();
+                                                    }
+
+                                                    setUpdatingFolder(false);
+                                                    setEditFolder(false);
+
+                                                    props.refreshCues();
+                                                })
+                                                .catch(e => {
+                                                    Alert('Could not create folder. Try again.');
+                                                    setUpdatingFolder(false);
+                                                });
                                         }
-
-                                        setUpdatingFolder(false);
-                                        setEditFolder(false);
-
-                                        props.refreshCues();
-                                    })
-                                    .catch(e => {
-                                        Alert('Could not create folder. Try again.');
-                                        setUpdatingFolder(false);
-                                    });
+                                    }
+                                ]);
                             }}
                             disabled={folderCuesToDisplay.length < 2 || updatingFolder}
                             style={{
@@ -1932,34 +1958,52 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={async () => {
-                                const server = fetchAPI('');
-
-                                setDeletingFolder(true);
-
-                                server
-                                    .mutate({
-                                        mutation: deleteFolder,
-                                        variables: {
-                                            folderId
-                                        }
-                                    })
-                                    .then(async res => {
-                                        // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                                        if (!res.data.folder.delete) {
-                                            Alert('Could not delete list. Try again.');
-                                            setDeletingFolder(false);
+                                // Add alert first
+                                Alert('Delete folder?', '', [
+                                    {
+                                        text: 'Cancel',
+                                        style: 'cancel',
+                                        onPress: () => {
                                             return;
                                         }
+                                    },
+                                    {
+                                        text: 'Yes',
+                                        onPress: () => {
+                                            const server = fetchAPI('');
 
-                                        setDeletingFolder(false);
-                                        setFolderId('');
+                                            setDeletingFolder(true);
 
-                                        props.refreshCues();
-                                    })
-                                    .catch(e => {
-                                        Alert('Could not create folder. Try again.');
-                                        setDeletingFolder(false);
-                                    });
+                                            server
+                                                .mutate({
+                                                    mutation: deleteFolder,
+                                                    variables: {
+                                                        folderId
+                                                    }
+                                                })
+                                                .then(async res => {
+                                                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                                                    if (!res.data.folder.delete) {
+                                                        Alert('Could not delete list. Try again.');
+                                                        setDeletingFolder(false);
+                                                        return;
+                                                    }
+
+                                                    setDeletingFolder(false);
+                                                    setEditFolder(false);
+                                                    setFolderId('');
+
+                                                    fetchChannelFolders();
+
+                                                    props.refreshCues();
+                                                })
+                                                .catch(e => {
+                                                    Alert('Could not create folder. Try again.');
+                                                    setDeletingFolder(false);
+                                                });
+                                        }
+                                    }
+                                ]);
                             }}
                             style={{
                                 backgroundColor: '#000',
@@ -2057,7 +2101,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 width: 35,
                                 height: 35,
                                 borderRadius: '100%',
-                                backgroundColor: '#efefef',
+                                backgroundColor: '#f2f2f2',
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -2224,7 +2268,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#f2f2f2'
                     }}
                 >
                     {folderId !== '' &&
@@ -2239,7 +2283,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#f2f2f2'
                     }}
                 >
                     {createNewFolder ? renderNewFolderOptions() : null}
@@ -2247,7 +2291,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#f2f2f2'
                     }}
                 >
                     {editFolder ? renderEditFolderOptions() : null}

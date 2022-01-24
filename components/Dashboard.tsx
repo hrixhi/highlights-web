@@ -753,7 +753,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: 'row',
                     marginBottom: 30,
                     paddingTop: 10,
-                    backgroundColor: '#efefef',
+                    backgroundColor: '#f2f2f2',
                     flex: 1,
                     justifyContent: 'center'
                     //paddingVertical: 20
@@ -765,14 +765,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         justifyContent: 'center',
                         maxWidth: 900,
                         flex: 1,
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#f2f2f2'
                     }}
                 >
                     <TouchableOpacity
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#efefef'
+                            backgroundColor: '#f2f2f2'
                         }}
                         onPress={() => {
                             const temp = JSON.parse(JSON.stringify(indexMap));
@@ -791,7 +791,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#efefef'
+                            backgroundColor: '#f2f2f2'
                         }}
                         onPress={() => {
                             const temp = JSON.parse(JSON.stringify(indexMap));
@@ -808,7 +808,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         justifyContent: "center",
                         flexDirection: "column",
-                        backgroundColor: '#efefef'
+                        backgroundColor: '#f2f2f2'
                     }}
                     onPress={() => handleEnterClassroom()}>
                     <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
@@ -823,7 +823,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -842,7 +842,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -861,7 +861,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -975,7 +975,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 width: '100%',
                 overflow: 'hidden',
                 justifyContent: 'center',
-                backgroundColor: '#efefef'
+                backgroundColor: '#f2f2f2'
             }}
         >
             <View
@@ -983,7 +983,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     width: '100%',
                     maxWidth: 900,
                     paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
-                    backgroundColor: '#efefef'
+                    backgroundColor: '#f2f2f2'
                 }}
             >
                 {!loadingSearchResults && resultCount !== 0 ? (
@@ -991,7 +991,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             alignItems: 'center'
                         }}
                     >
@@ -1003,14 +1003,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // flex: 1,
                                 lineHeight: 23,
                                 color: '#006AFF',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             {resultCount} Results
                         </Text>
                         <TouchableOpacity
                             style={{
-                                backgroundColor: '#efefef',
+                                backgroundColor: '#f2f2f2',
                                 overflow: 'hidden',
                                 height: 30,
                                 alignSelf: 'center'
@@ -1045,7 +1045,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 paddingVertical: 50,
                                 fontFamily: 'inter',
                                 flex: 1,
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             No results.
@@ -1059,20 +1059,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 justifyContent: 'center',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} />
                         </View>
                     ) : null}
-                    <View style={{ flexDirection: 'row', backgroundColor: '#efefef' }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2' }}>
                         {searchOptions.map((option: any) => {
                             if (results[option].length === 0 || loadingSearchResults) {
                                 return null;
                             }
 
                             return (
-                                <View style={{ marginRight: 20, backgroundColor: '#efefef' }}>
+                                <View style={{ marginRight: 20, backgroundColor: '#f2f2f2' }}>
                                     <Text
                                         style={{
                                             flexDirection: 'row',
@@ -1163,7 +1163,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         marginBottom: 15,
                                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                         // maxWidth: 150,
-                                                        backgroundColor: '#efefef',
+                                                        backgroundColor: '#f2f2f2',
                                                         width: '100%',
                                                         maxWidth: 150
                                                     }}
@@ -1249,7 +1249,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderOngoingMeetings = (createdBy: string, colorCode: string) => {
         return (
-            <View style={{ width: '100%', maxWidth: 900, backgroundColor: '#efefef', paddingBottom: 30 }}>
+            <View style={{ width: '100%', maxWidth: 900, backgroundColor: '#f2f2f2', paddingBottom: 30 }}>
                 <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
                     In Progress
                 </Text>
@@ -1283,7 +1283,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             // borderLeftWidth: 0,
                             // borderRightWidth: 1,
                             paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
-                            borderColor: '#efefef',
+                            borderColor: '#f2f2f2',
                             borderRadius: 1,
                             width: '100%',
                             maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500
@@ -1297,7 +1297,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <View
                                     style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                                        borderColor: '#efefef',
+                                        borderColor: '#f2f2f2',
                                         paddingVertical: meeting.description ? 8 : 16,
                                         borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
                                         // minWidth: 600, // flex: 1,
@@ -1686,7 +1686,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#efefef',
+                                        false: '#f2f2f2',
                                         true: '#006AFF'
                                     }}
                                     activeThumbColor="white"
@@ -1783,8 +1783,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             >
                                 <View
                                     style={{
-                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                        borderColor: '#efefef',
+                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
+                                        borderColor: '#f2f2f2',
                                         borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0
                                         // paddingBottom: 10,
                                     }}
@@ -1792,9 +1792,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     {ind !== 0 ? (
                                         <View
                                             style={{
-                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                 flexDirection: 'row',
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 paddingTop: 10,
                                                 paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
                                                 borderTopWidth:
@@ -1813,7 +1813,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{
                                                     flex: 1,
                                                     flexDirection: 'row',
-                                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                 }}
                                                 onPress={() => {
                                                     const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
@@ -1834,7 +1834,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         paddingTop: 9,
                                                         fontFamily: 'inter',
                                                         flex: 1,
-                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                         lineHeight: 18,
                                                         color: collapseMap[key] ? '#000000' : '#1a3026'
                                                     }}
@@ -1854,7 +1854,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             </TouchableOpacity>
                                             <View
                                                 style={{
-                                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                     paddingTop: 5,
                                                     paddingLeft: 15
                                                 }}
@@ -1864,7 +1864,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         flexDirection: 'row',
                                                         justifyContent: 'center',
                                                         display: 'flex',
-                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                     }}
                                                 >
                                                     <TouchableOpacity
@@ -1884,14 +1884,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             setCollapseMap(tempCollapse);
                                                         }}
                                                         style={{
-                                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                            backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                         }}
                                                     >
                                                         <Text
                                                             style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 30,
-                                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                             }}
                                                         >
                                                             <Ionicons
@@ -1911,7 +1911,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ) : (
                                         <View
                                             style={{
-                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                 flexDirection: 'row',
                                                 paddingBottom: 0,
                                                 paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
@@ -1924,7 +1924,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{
                                                     flex: 1,
                                                     flexDirection: 'row',
-                                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                 }}
                                                 onPress={() => {
                                                     const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
@@ -1943,7 +1943,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         fontSize: 18,
                                                         paddingBottom: 15,
-                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                         paddingTop: 19,
                                                         fontFamily: 'inter',
                                                         flex: 1,
@@ -1967,7 +1967,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{
                                                     flexDirection: 'row',
                                                     justifyContent: 'space-evenly',
-                                                    backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                     paddingTop: 5
                                                 }}
                                             >
@@ -1977,7 +1977,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         paddingLeft: 7,
                                                         justifyContent: 'center',
                                                         display: 'flex',
-                                                        backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                     }}
                                                 >
                                                     <TouchableOpacity
@@ -1997,7 +1997,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             setCollapseMap(tempCollapse);
                                                         }}
                                                         style={{
-                                                            backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
+                                                            backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
                                                             paddingTop: 5,
                                                             paddingLeft: 15
                                                         }}
@@ -2006,7 +2006,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 30,
-                                                                backgroundColor: collapseMap[key] ? '#efefef' : '#fff'
+                                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
                                                             }}
                                                         >
                                                             <Ionicons
@@ -2029,8 +2029,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         style={{
                                             flexDirection: 'row',
                                             justifyContent: 'center',
-                                            backgroundColor: '#efefef',
-                                            borderColor: '#efefef',
+                                            backgroundColor: '#f2f2f2',
+                                            borderColor: '#f2f2f2',
                                             borderBottomWidth:
                                                 collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0
                                         }}
@@ -2040,7 +2040,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             style={{
                                                 width: '100%',
                                                 maxWidth: 900,
-                                                backgroundColor: '#efefef',
+                                                backgroundColor: '#f2f2f2',
                                                 paddingHorizontal: width < 768 ? 20 : 0
                                             }}
                                         >
@@ -2049,7 +2049,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         width: '100%',
                                                         paddingBottom: 25,
-                                                        backgroundColor: '#efefef'
+                                                        backgroundColor: '#f2f2f2'
                                                     }}
                                                     key={
                                                         editFolderChannelId.toString() +
@@ -2073,7 +2073,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             <View
                                                                 style={{
                                                                     alignItems: 'center',
-                                                                    backgroundColor: '#efefef'
+                                                                    backgroundColor: '#f2f2f2'
                                                                 }}
                                                             >
                                                                 {key.split('-SPLIT-')[2] === userId ? (
@@ -2081,7 +2081,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         style={{
                                                                             width: '100%',
                                                                             marginBottom: 20,
-                                                                            backgroundColor: '#efefef'
+                                                                            backgroundColor: '#f2f2f2'
                                                                         }}
                                                                     >
                                                                         <TouchableOpacity
@@ -2092,7 +2092,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 )
                                                                             }
                                                                             style={{
-                                                                                backgroundColor: '#efefef',
+                                                                                backgroundColor: '#f2f2f2',
                                                                                 overflow: 'hidden',
                                                                                 height: 35,
                                                                                 marginTop: 20,
@@ -2212,7 +2212,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             horizontal={true}
                                                             contentContainerStyle={{
                                                                 maxWidth: '100%',
-                                                                backgroundColor: '#efefef'
+                                                                backgroundColor: '#f2f2f2'
                                                             }}
                                                             showsHorizontalScrollIndicator={false}
                                                             key={
@@ -2237,13 +2237,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         style={{
                                                                             width: '100%',
                                                                             maxWidth: 130,
-                                                                            backgroundColor: '#efefef',
+                                                                            backgroundColor: '#f2f2f2',
                                                                             marginRight: 15
                                                                         }}
                                                                     >
                                                                         <View
                                                                             style={{
-                                                                                backgroundColor: '#efefef',
+                                                                                backgroundColor: '#f2f2f2',
                                                                                 paddingLeft: 5
                                                                             }}
                                                                         >
@@ -2256,7 +2256,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     fontSize: 12,
                                                                                     lineHeight: 25,
                                                                                     fontFamily: 'inter',
-                                                                                    backgroundColor: '#efefef'
+                                                                                    backgroundColor: '#f2f2f2'
                                                                                 }}
                                                                                 ellipsizeMode="tail"
                                                                             >
@@ -2268,7 +2268,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 // borderWidth: 1,
                                                                                 maxWidth: 130,
                                                                                 paddingLeft: 5,
-                                                                                backgroundColor: '#efefef',
+                                                                                backgroundColor: '#f2f2f2',
                                                                                 width: '100%'
                                                                                 // height: 190
                                                                             }}
@@ -2287,7 +2287,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     <View
                                                                                         style={{
                                                                                             marginBottom: 15,
-                                                                                            backgroundColor: '#efefef',
+                                                                                            backgroundColor: '#f2f2f2',
                                                                                             width: '100%',
                                                                                             maxWidth: 130
                                                                                         }}
@@ -2392,7 +2392,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View
             style={{
                 height: windowHeight,
-                backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff'
+                backgroundColor: props.option === 'To Do' ? '#f2f2f2' : '#fff'
             }}
         >
             {renderInstantMeetingPopup()}
@@ -2568,7 +2568,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text
                                     style={{
                                         fontSize: 11,
-                                        color: '#efefef',
+                                        color: '#f2f2f2',
                                         textAlign: 'right'
                                     }}
                                 >
@@ -2615,7 +2615,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             (props.option === 'Settings' && !props.showHelp) ||
                                             props.option === 'Channels'
                                                 ? '#006AFF'
-                                                : '#efefef'
+                                                : '#f2f2f2'
                                         }
                                     />
                                 </Text>
@@ -2627,7 +2627,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#efefef',
+                                        borderColor: '#f2f2f2',
                                         maxWidth: 150
                                     }
                                 }}
@@ -2674,7 +2674,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={18}
-                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#efefef'}
+                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
                                 />
                             </Text>
                         </TouchableOpacity> */}
@@ -2686,7 +2686,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Create
                         key={JSON.stringify(props.customCategories)}
                         customCategories={props.customCategories}
-                        closeModal={() => props.closeCreateModal()}
+                        closeModal={() => props.closeModal()}
                         closeOnCreate={() => props.closeOnCreate()}
                         option={props.option}
                         version={props.version}
@@ -2696,7 +2696,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             alignSelf: 'center',
                             width: '100%',
-                            backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff',
+                            backgroundColor: props.option === 'To Do' ? '#f2f2f2' : '#fff',
                             height: width < 768 ? windowHeight - 104 : windowHeight - 52
                         }}
                     >
@@ -2907,7 +2907,7 @@ const styleObject: any = () =>
             color: '#1F1F1F',
             height: 20,
             paddingHorizontal: 7,
-            backgroundColor: '#efefef',
+            backgroundColor: '#f2f2f2',
             lineHeight: 20,
             fontFamily: 'inter',
             textAlign: 'center'

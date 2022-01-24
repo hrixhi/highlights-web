@@ -352,7 +352,6 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         arctan: 'arctan'
     };
 
-    console.log('Add element to button', addElementFromButton);
     // MAIN RETURN
     return (
         <Popup
@@ -406,7 +405,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     >
                         <View
                             style={{
-                                borderColor: '#efefef',
+                                borderColor: '#f2f2f2',
                                 borderWidth: 1,
                                 borderRadius: 15,
                                 padding: 10,
@@ -430,7 +429,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             flexDirection: 'row',
                             backgroundColor: '#f2f2f7',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#efefef'
+                            borderBottomColor: '#f2f2f2'
                         }}>
                         <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f7' }}>Symbol</View>
                         <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f7' }}>Keyboard command</View>

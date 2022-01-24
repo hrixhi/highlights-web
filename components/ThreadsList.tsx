@@ -473,7 +473,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         return (
             <View
                 style={{
-                    backgroundColor: '#efefef',
+                    backgroundColor: '#f2f2f2',
                     flexDirection: 'row',
                     paddingBottom: 20,
                     width: '100%',
@@ -484,10 +484,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {props.cueId === null && categoryChoices.length > 1 ? (
                     <View
                         style={{
-                            backgroundColor: '#efefef'
+                            backgroundColor: '#f2f2f2'
                         }}
                     >
-                        <label style={{ width: 150, backgroundColor: '#efefef', borderBottom: '1px solid #d9dcdf' }}>
+                        <label style={{ width: 150, backgroundColor: '#f2f2f2', borderBottom: '1px solid #d9dcdf' }}>
                             <Select
                                 touchUi={true}
                                 themeVariant="light"
@@ -514,7 +514,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flex: 1,
                             justifyContent: 'flex-end',
                             flexDirection: 'row',
-                            backgroundColor: '#efefef'
+                            backgroundColor: '#f2f2f2'
                         }}
                     >
                         <TouchableOpacity
@@ -685,7 +685,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View
                 style={{
                     width: '100%',
-                    backgroundColor: threads.length === 0 ? '#efefef' : 'white',
+                    backgroundColor: threads.length === 0 ? '#f2f2f2' : 'white',
                     maxWidth: 900,
                     borderRadius: 1
                 }}
@@ -700,7 +700,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 paddingVertical: 50,
                                 fontFamily: 'inter',
                                 flex: 1,
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             {!props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')}
@@ -717,7 +717,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // borderLeftWidth: 0,
                             // borderRightWidth: 1,
                             paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
-                            borderColor: '#efefef',
+                            borderColor: '#f2f2f2',
                             borderRadius: 1,
                             width: '100%',
                             maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500
@@ -738,9 +738,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <TouchableOpacity
                                     onPress={() => loadCueDiscussions(thread._id)}
                                     style={{
-                                        // backgroundColor: '#efefef',
+                                        // backgroundColor: '#f2f2f2',
                                         flexDirection: 'row',
-                                        borderColor: '#efefef',
+                                        borderColor: '#f2f2f2',
                                         paddingVertical: 5,
                                         // borderRightWidth: 1,
                                         borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
@@ -856,7 +856,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     return (
         <View
             style={{
-                backgroundColor: '#efefef',
+                backgroundColor: '#f2f2f2',
                 width: '100%',
                 paddingTop: 0,
                 justifyContent: 'center',
@@ -874,7 +874,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 style={{
                     width: '100%',
                     maxWidth: 900,
-                    backgroundColor: '#efefef',
+                    backgroundColor: '#f2f2f2',
                     borderRadius: 1
                 }}
             >
@@ -888,7 +888,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 justifyContent: 'center',
                                 flex: 1,
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} />

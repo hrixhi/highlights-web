@@ -50,9 +50,32 @@ import { RichEditor } from 'react-native-pell-rich-editor';
 
 // HELPERS
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
-import { handleFile } from '../helpers/FileUpload';
+import { handleFileUploadEditor } from '../helpers/FileUpload';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { htmlStringParser } from '../helpers/HTMLParser';
+
+// NEW EDITOR
+// Require Editor JS files.
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+
+// import 'froala-editor/css/froala_editor.pkgd.min.css';
+// import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/js/plugins.pkgd.min.js';
+
+// Require Editor CSS files.
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+
+// Require Font Awesome.
+import 'font-awesome/css/font-awesome.css';
+
+import FroalaEditor from 'react-froala-wysiwyg';
+
+import Froalaeditor from 'froala-editor';
+
+import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from '../constants/Froala';
+
+import { renderMathjax } from '../helpers/FormulaHelpers';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -186,14 +209,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const fillMissingOptionsAlert = PreferredLanguageText('fillMissingOptions');
     const eachOptionOneCorrectAlert = PreferredLanguageText('eachOptionOneCorrect');
 
+    Froalaeditor.DefineIcon('insertFormula', {
+        NAME: 'formula',
+        PATH:
+            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+    });
+    Froalaeditor.RegisterCommand('insertFormula', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function() {
+            editorRef.current.editor.selection.save();
+            setShowEquationEditor(true);
+        }
+    });
+
     // HOOKS
 
     /**
      * @description Load User on Init
      */
-    // useEffect(() => {
-    //     loadUser();
-    // }, []);
+    useEffect(() => {
+        loadUser();
+    }, []);
 
     // SHARE WITH ANY OTHER CHANNEL IN INSTITUTE
     // useEffect(() => {
@@ -616,6 +655,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
     }, [cue, props.cue.channelId]);
+
+    /**
+     * @description Update submissionDraft when the Submission title is updated
+     */
+    useEffect(() => {
+        const existingSubmissionDraft: any = submissionDraft;
+
+        if (existingSubmissionDraft !== '') {
+            const parsedSubmissionDraft = JSON.parse(existingSubmissionDraft);
+
+            parsedSubmissionDraft.title = submissionTitle;
+
+            setSubmissionDraft(JSON.stringify(parsedSubmissionDraft));
+        }
+    }, [submissionTitle]);
 
     /**
      * @description Update cue status as Read on opening
@@ -1078,54 +1132,45 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     );
 
     /**
-     * @description Insert equation into Cue
+     * @description Used to insert equation into Editor HTML
      */
     const insertEquation = useCallback(() => {
-        let currentContent = editorRef.current.getContent();
+        if (equation === '') {
+            Alert('Equation cannot be empty.');
+            return;
+        }
 
-        const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '<br/></div>';
+        renderMathjax(equation).then((res: any) => {
+            const random = Math.random();
 
-        editorRef.current.setContent(currentContent);
-        setShowEquationEditor(false);
-        setEquation('');
-    }, [equation, RichText, RichText.current, cue]);
+            editorRef.current.editor.selection.restore();
+
+            editorRef.current.editor.html.insert(
+                '<img class="rendered-math-jax" id="' +
+                    random +
+                    '" data-eq="' +
+                    encodeURIComponent(equation) +
+                    '" src="' +
+                    res.imgSrc +
+                    '"></img>'
+            );
+            editorRef.current.editor.events.trigger('contentChanged');
+
+            setShowEquationEditor(false);
+            setEquation('');
+        });
+    }, [equation, editorRef, editorRef.current]);
 
     /**
      * @description Fetch user organization and role
      */
-    // const loadUser = useCallback(async () => {
-    //     const u = await AsyncStorage.getItem('user');
-    //     if (u) {
-    //         const parsedUser = JSON.parse(u);
-    //         setUserId(parsedUser._id);
-    //         const server = fetchAPI('');
-    //         server
-    //             .query({
-    //                 query: getOrganisation,
-    //                 variables: {
-    //                     userId: parsedUser._id
-    //                 }
-    //             })
-    //             .then(res => {
-    //                 if (res.data && res.data.school.findByUserId) {
-    //                     setSchool(res.data.school.findByUserId);
-    //                 }
-    //             });
-    //         server
-    //             .query({
-    //                 query: getRole,
-    //                 variables: {
-    //                     userId: parsedUser._id
-    //                 }
-    //             })
-    //             .then(res => {
-    //                 if (res.data && res.data.user.getRole) {
-    //                     setRole(res.data.user.getRole);
-    //                 }
-    //             });
-    //     }
-    // }, []);
+    const loadUser = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user');
+        if (u) {
+            const parsedUser = JSON.parse(u);
+            setUserId(parsedUser._id);
+        }
+    }, []);
 
     /**
      * @description Initialize the quiz (Timed quiz)
@@ -1174,6 +1219,64 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // quiz gets triggered
         }
     }, [props.cue._id, solutions, deadline, availableUntil, allowLateSubmission]);
+
+    const fileUploadEditor = useCallback(
+        async (files: any, forSubmission: boolean) => {
+            const res = await handleFileUploadEditor(false, files.item(0), userId);
+
+            console.log('On upload', res);
+
+            if (!res || res.url === '' || res.type === '') {
+                return false;
+            }
+            setUploadResult(res.url, res.type, forSubmission);
+        },
+        [userId]
+    );
+
+    const videoUploadEditor = useCallback(
+        async (files: any, forSubmission: boolean) => {
+            const res = await handleFileUploadEditor(true, files.item(0), userId);
+
+            console.log('On upload', res);
+
+            if (!res || res.url === '' || res.type === '') {
+                return false;
+            }
+            setUploadResult(res.url, res.type, forSubmission);
+        },
+        [userId]
+    );
+
+    const setUploadResult = useCallback(
+        (uploadURL: string, uploadType: string, forSubmission: boolean) => {
+            if (!forSubmission) {
+                setImported(true);
+
+                setOriginal(
+                    JSON.stringify({
+                        url: uploadURL,
+                        type: uploadType,
+                        title
+                    })
+                );
+            } else {
+                setSubmissionImported(true);
+                setSubmissionType(uploadType);
+                setSubmissionUrl(uploadURL);
+
+                setSubmissionDraft(
+                    JSON.stringify({
+                        url: uploadURL,
+                        type: uploadType,
+                        title: submissionTitle,
+                        annotations: ''
+                    })
+                );
+            }
+        },
+        [title, submissionTitle]
+    );
 
     /**
      * @description Handle cue content for Submissions and Quiz responses
@@ -1597,6 +1700,92 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions]);
 
+    const submitResponse = useCallback(() => {
+        let now = new Date();
+        // one minute of extra time to submit
+        now.setMinutes(now.getMinutes() - 1);
+
+        Alert(
+            now >= deadline ? 'Submit Late?' : 'Submit?',
+            now >= deadline ? 'The deadline for this submission has already passed' : '',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
+                    text: 'Okay',
+                    onPress: async () => {
+                        setIsSubmitting(true);
+                        const u: any = await AsyncStorage.getItem('user');
+                        if (u) {
+                            const parsedUser = JSON.parse(u);
+                            if (!parsedUser.email || parsedUser.email === '') {
+                                // cannot submit
+                                return;
+                            }
+                            let saveCue = '';
+                            if (isQuiz) {
+                                saveCue = JSON.stringify({
+                                    solutions,
+                                    initiatedAt
+                                });
+                            } else {
+                                saveCue = submissionDraft;
+                            }
+
+                            const server = fetchAPI('');
+                            server
+                                .mutate({
+                                    mutation: submit,
+                                    variables: {
+                                        cue: saveCue,
+                                        cueId: props.cue._id,
+                                        userId: parsedUser._id,
+                                        quizId: isQuiz ? quizId : null
+                                    }
+                                })
+                                .then((res: any) => {
+                                    if (res.data.cue.submitModification) {
+                                        setIsSubmitting(false);
+                                        Alert(submissionCompleteAlert, new Date().toString(), [
+                                            {
+                                                text: 'Okay',
+                                                onPress: () => window.location.reload()
+                                            }
+                                        ]);
+                                    } else {
+                                        Alert('Submission failed. Try again. ');
+                                        setIsSubmitting(false);
+                                    }
+                                })
+                                .catch((err: any) => {
+                                    setIsSubmitting(false);
+                                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+                                });
+                        }
+                    }
+                }
+            ]
+        );
+    }, [
+        props.cue,
+        cue,
+        submissionTitle,
+        submissionType,
+        submissionUrl,
+        submissionImported,
+        isQuiz,
+        quizId,
+        initiatedAt,
+        solutions,
+        deadline,
+        submissionDraft
+    ]);
+
     /**
      * @description Handle Submit for Submissions and Quizzes
      */
@@ -1645,18 +1834,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
 
         if (requiredMissing) {
-            Alert('A required question is missing a response.');
-            return;
-        }
-
-        let now = new Date();
-        // one minute of extra time to submit
-        now.setMinutes(now.getMinutes() - 1);
-
-        Alert(
-            now >= deadline ? 'Submit Late?' : 'Submit?',
-            now >= deadline ? 'The deadline for this submission has already passed' : '',
-            [
+            Alert('A required question is missing a response.', 'Would you still like to submit?', [
                 {
                     text: 'Cancel',
                     style: 'cancel',
@@ -1665,60 +1843,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 },
                 {
-                    text: 'Okay',
-                    onPress: async () => {
-                        setIsSubmitting(true);
-                        const u: any = await AsyncStorage.getItem('user');
-                        if (u) {
-                            const parsedUser = JSON.parse(u);
-                            if (!parsedUser.email || parsedUser.email === '') {
-                                // cannot submit
-                                return;
-                            }
-                            let saveCue = '';
-                            if (isQuiz) {
-                                saveCue = JSON.stringify({
-                                    solutions,
-                                    initiatedAt
-                                });
-                            } else {
-                                saveCue = submissionDraft;
-                            }
-
-                            const server = fetchAPI('');
-                            server
-                                .mutate({
-                                    mutation: submit,
-                                    variables: {
-                                        cue: saveCue,
-                                        cueId: props.cue._id,
-                                        userId: parsedUser._id,
-                                        quizId: isQuiz ? quizId : null
-                                    }
-                                })
-                                .then(res => {
-                                    if (res.data.cue.submitModification) {
-                                        setIsSubmitting(false);
-                                        Alert(submissionCompleteAlert, new Date().toString(), [
-                                            {
-                                                text: 'Okay',
-                                                onPress: () => window.location.reload()
-                                            }
-                                        ]);
-                                    } else {
-                                        Alert('Submission failed. Try again. ');
-                                        setIsSubmitting(false);
-                                    }
-                                })
-                                .catch(err => {
-                                    setIsSubmitting(false);
-                                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
-                                });
-                        }
+                    text: 'Yes',
+                    onPress: () => {
+                        submitResponse();
                     }
                 }
-            ]
-        );
+            ]);
+        } else {
+            submitResponse();
+        }
     }, [
         props.cue,
         cue,
@@ -2130,7 +2263,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginTop: 10,
                                 marginBottom: 0,
                                 maxWidth: 300,
-                                borderBottom: '1px solid #efefef',
+                                borderBottom: '1px solid #f2f2f2',
                                 borderRadius: 1,
                                 width: '100%'
                             }}
@@ -2312,7 +2445,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const renderSubmissionHistory = () => {
         return (
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View
+                style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    maxWidth: 900,
+                    alignSelf: 'center'
+                }}
+            >
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && viewSubmission ? (
                     <View
                         style={{
@@ -2499,6 +2640,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View
                 style={{
                     width: '100%',
+                    maxWidth: 900,
+                    alignSelf: 'center',
                     minHeight: 475,
                     paddingTop: 25,
                     backgroundColor: 'white'
@@ -2527,6 +2670,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     duration={duration}
                                     remainingAttempts={remainingAttempts}
                                     quizAttempts={quizAttempts}
+                                    userId={userId}
                                 />
                                 {renderFooter()}
                             </View>
@@ -2586,6 +2730,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 duration={duration}
                                 remainingAttempts={remainingAttempts}
                                 quizAttempts={quizAttempts}
+                                userId={userId}
                             />
                             {renderFooter()}
                         </View>
@@ -2709,7 +2854,67 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (
             <View style={{ width: '100%' }}>
-                <Editor
+                <View key={userId.toString() + isOwner.toString()}>
+                    <FroalaEditor
+                        ref={editorRef}
+                        model={original}
+                        onModelChange={(model: any) => setOriginal(model)}
+                        config={{
+                            key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                            attribution: false,
+                            placeholderText: 'Enter Title',
+                            charCounterCount: true,
+                            zIndex: 2003,
+                            // immediateReactModelUpdate: true,
+                            heightMin: 500,
+                            // FILE UPLOAD
+                            // fileUploadURL: 'https://api.learnwithcues.com/upload',
+                            fileMaxSize: 25 * 1024 * 1024,
+                            fileAllowedTypes: ['*'],
+                            fileUploadParams: { userId },
+                            // IMAGE UPLOAD
+                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                            imageUploadParam: 'file',
+                            imageUploadParams: { userId },
+                            imageUploadMethod: 'POST',
+                            imageMaxSize: 5 * 1024 * 1024,
+                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                            // VIDEO UPLOAD
+                            videoMaxSize: 50 * 1024 * 1024,
+                            videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                            paragraphFormatSelection: true,
+                            // Default Font Size
+                            spellcheck: true,
+                            tabSpaces: 4,
+
+                            // TOOLBAR
+                            toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                            toolbarSticky: true,
+                            events: {
+                                'froalaEditor.initialized': function(e: any, editor: any) {
+                                    if (!isOwner && props.cue.channelId && props.cue.channelId !== '') {
+                                        editor.edit.off();
+                                    }
+                                },
+                                'file.beforeUpload': function(files: any) {
+                                    // Return false if you want to stop the file upload.
+                                    console.log('Before upload');
+                                    console.log('File', files.item(0));
+
+                                    fileUploadEditor(files, false);
+
+                                    return false;
+                                },
+                                'video.beforeUpload': function(videos: any) {
+                                    videoUploadEditor(videos, false);
+
+                                    return false;
+                                }
+                            }
+                        }}
+                    />
+                </View>
+                {/* <Editor
                     onInit={(evt, editor) => (editorRef.current = editor)}
                     initialValue={initialOriginal}
                     disabled={!isOwner && props.cue.channelId && props.cue.channelId !== ''}
@@ -2795,7 +3000,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // content_css: useDarkMode ? 'dark' : 'default',
                     }}
                     onChange={(e: any) => setOriginal(e.target.getContent())}
-                />
+                /> */}
                 {/* {renderSaveCueButton()} */}
             </View>
         );
@@ -2932,97 +3137,157 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const renderRichEditorModified = () => {
         return (
-            <Editor
-                onInit={(evt, editor) => (editorRef.current = editor)}
-                initialValue={initialSubmissionDraft}
-                disabled={
-                    props.cue.releaseSubmission ||
-                    (!allowLateSubmission && new Date() > deadline) ||
-                    (allowLateSubmission && new Date() > availableUntil)
-                }
-                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                init={{
-                    skin: 'snow',
-                    branding: false,
-                    placeholder: 'Content...',
-                    readonly:
-                        props.cue.releaseSubmission ||
-                        (!allowLateSubmission && new Date() > deadline) ||
-                        (allowLateSubmission && new Date() > availableUntil),
-                    min_height: 500,
-                    paste_data_images: true,
-                    images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                    mobile: {
-                        plugins:
-                            'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                    },
-                    plugins:
-                        'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                    menu: {
-                        // this is the complete default configuration
-                        file: { title: 'File', items: 'newdocument' },
-                        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                        insert: { title: 'Insert', items: 'link media | template hr' },
-                        view: { title: 'View', items: 'visualaid' },
-                        format: {
-                            title: 'Format',
-                            items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                        },
-                        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                        tools: { title: 'Tools', items: 'spellchecker code' }
-                    },
-                    setup: (editor: any) => {
-                        const equationIcon =
-                            '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                        editor.ui.registry.addIcon('formula', equationIcon);
+            // <Editor
+            //     onInit={(evt, editor) => (editorRef.current = editor)}
+            //     initialValue={initialSubmissionDraft}
+            //     disabled={
+            //         props.cue.releaseSubmission ||
+            //         (!allowLateSubmission && new Date() > deadline) ||
+            //         (allowLateSubmission && new Date() > availableUntil)
+            //     }
+            //     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+            //     init={{
+            //         skin: 'snow',
+            //         branding: false,
+            //         placeholder: 'Content...',
+            //         readonly:
+            //             props.cue.releaseSubmission ||
+            //             (!allowLateSubmission && new Date() > deadline) ||
+            //             (allowLateSubmission && new Date() > availableUntil),
+            //         min_height: 500,
+            //         paste_data_images: true,
+            //         images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
+            //         mobile: {
+            //             plugins:
+            //                 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+            //         },
+            //         plugins:
+            //             'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+            //         menu: {
+            //             // this is the complete default configuration
+            //             file: { title: 'File', items: 'newdocument' },
+            //             edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+            //             insert: { title: 'Insert', items: 'link media | template hr' },
+            //             view: { title: 'View', items: 'visualaid' },
+            //             format: {
+            //                 title: 'Format',
+            //                 items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'
+            //             },
+            //             table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+            //             tools: { title: 'Tools', items: 'spellchecker code' }
+            //         },
+            //         setup: (editor: any) => {
+            //             const equationIcon =
+            //                 '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
+            //             editor.ui.registry.addIcon('formula', equationIcon);
 
-                        editor.ui.registry.addButton('formula', {
-                            icon: 'formula',
-                            // text: "Upload File",
-                            tooltip: 'Insert equation',
-                            onAction: () => {
-                                setShowEquationEditor(!showEquationEditor);
-                            }
-                        });
+            //             editor.ui.registry.addButton('formula', {
+            //                 icon: 'formula',
+            //                 // text: "Upload File",
+            //                 tooltip: 'Insert equation',
+            //                 onAction: () => {
+            //                     setShowEquationEditor(!showEquationEditor);
+            //                 }
+            //             });
 
-                        editor.ui.registry.addButton('upload', {
-                            icon: 'upload',
-                            tooltip: 'Import File (pdf, docx, media, etc.)',
-                            onAction: async () => {
-                                const res = await handleFile(false);
+            //             editor.ui.registry.addButton('upload', {
+            //                 icon: 'upload',
+            //                 tooltip: 'Import File (pdf, docx, media, etc.)',
+            //                 onAction: async () => {
+            //                     const res = await handleFile(false);
 
-                                if (!res || res.url === '' || res.type === '') {
-                                    return;
+            //                     if (!res || res.url === '' || res.type === '') {
+            //                         return;
+            //                     }
+
+            //                     updateAfterFileImport(res.url, res.type);
+            //                 }
+            //             });
+            //         },
+            //         // menubar: 'file edit view insert format tools table tc help',
+            //         menubar: false,
+            //         toolbar:
+            //             props.cue.releaseSubmission ||
+            //             (!allowLateSubmission && new Date() > deadline) ||
+            //             (allowLateSubmission && new Date() > availableUntil)
+            //                 ? false
+            //                 : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
+            //         importcss_append: true,
+            //         image_caption: true,
+            //         quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+            //         noneditable_noneditable_class: 'mceNonEditable',
+            //         toolbar_mode: 'sliding',
+            //         tinycomments_mode: 'embedded',
+            //         content_style: '.mymention{ color: gray; }',
+            //         // contextmenu: 'link image imagetools table configurepermanentpen',
+            //         a11y_advanced_options: true,
+            //         extended_valid_elements:
+            //             'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
+            //         // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+            //         // content_css: useDarkMode ? 'dark' : 'default',
+            //     }}
+            //     onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
+            // />
+            <View key={userId.toString() + isOwner.toString()}>
+                <FroalaEditor
+                    ref={editorRef}
+                    model={submissionDraft}
+                    onModelChange={(model: any) => setSubmissionDraft(model)}
+                    config={{
+                        key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                        attribution: false,
+                        placeholderText: 'Submission',
+                        charCounterCount: true,
+                        zIndex: 2003,
+                        // immediateReactModelUpdate: true,
+                        heightMin: 500,
+                        // FILE UPLOAD
+                        // fileUploadURL: 'https://api.learnwithcues.com/upload',
+                        fileMaxSize: 25 * 1024 * 1024,
+                        fileAllowedTypes: ['*'],
+                        fileUploadParams: { userId },
+                        // IMAGE UPLOAD
+                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                        imageUploadParam: 'file',
+                        imageUploadParams: { userId },
+                        imageUploadMethod: 'POST',
+                        imageMaxSize: 5 * 1024 * 1024,
+                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                        // VIDEO UPLOAD
+                        videoMaxSize: 50 * 1024 * 1024,
+                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                        paragraphFormatSelection: true,
+                        // Default Font Size
+                        spellcheck: true,
+                        tabSpaces: 4,
+
+                        // TOOLBAR
+                        toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                        toolbarSticky: true,
+                        events: {
+                            'froalaEditor.initialized': function(e: any, editor: any) {
+                                if (!isOwner && props.cue.channelId && props.cue.channelId !== '') {
+                                    editor.edit.off();
                                 }
+                            },
+                            'file.beforeUpload': function(files: any) {
+                                // Return false if you want to stop the file upload.
+                                console.log('Before upload');
+                                console.log('File', files.item(0));
 
-                                updateAfterFileImport(res.url, res.type);
+                                fileUploadEditor(files, true);
+
+                                return false;
+                            },
+                            'video.beforeUpload': function(videos: any) {
+                                videoUploadEditor(videos, true);
+
+                                return false;
                             }
-                        });
-                    },
-                    // menubar: 'file edit view insert format tools table tc help',
-                    menubar: false,
-                    toolbar:
-                        props.cue.releaseSubmission ||
-                        (!allowLateSubmission && new Date() > deadline) ||
-                        (allowLateSubmission && new Date() > availableUntil)
-                            ? false
-                            : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
-                    importcss_append: true,
-                    image_caption: true,
-                    quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-                    noneditable_noneditable_class: 'mceNonEditable',
-                    toolbar_mode: 'sliding',
-                    tinycomments_mode: 'embedded',
-                    content_style: '.mymention{ color: gray; }',
-                    // contextmenu: 'link image imagetools table configurepermanentpen',
-                    a11y_advanced_options: true,
-                    extended_valid_elements:
-                        'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                    // content_css: useDarkMode ? 'dark' : 'default',
-                }}
-                onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
-            />
+                        }
+                    }}
+                />
+            </View>
         );
     };
 
@@ -3163,7 +3428,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}
                                         style={{ height: 20 }}
                                         trackColor={{
-                                            false: '#efefef',
+                                            false: '#f2f2f2',
                                             true: '#006AFF'
                                         }}
                                         activeThumbColor="white"
@@ -3353,7 +3618,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setGraded(!graded)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#efefef',
+                                        false: '#f2f2f2',
                                         true: '#006AFF'
                                     }}
                                     activeThumbColor="white"
@@ -3377,7 +3642,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     value={gradeWeight}
                                     style={{
                                         width: '25%',
-                                        borderBottomColor: '#efefef',
+                                        borderBottomColor: '#f2f2f2',
                                         borderBottomWidth: 1,
                                         fontSize: 14,
                                         padding: 15,
@@ -3459,7 +3724,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#efefef',
+                                        false: '#f2f2f2',
                                         true: '#006AFF'
                                     }}
                                     activeThumbColor="white"
@@ -3636,7 +3901,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: '#efefef',
+                                    false: '#f2f2f2',
                                     true: '#006AFF'
                                 }}
                                 activeThumbColor="white"
@@ -3699,7 +3964,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
                     paddingBottom: 15,
-                    borderColor: '#efefef'
+                    borderColor: '#f2f2f2'
                 }}
             >
                 <View
@@ -3763,7 +4028,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             value={customCategory}
                                             style={{
                                                 borderRadius: 0,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 borderBottomWidth: 1,
                                                 fontSize: 14,
                                                 height: '2.75em',
@@ -3796,7 +4061,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     //             borderRadius: 15,
                                     //             shadowOpacity: 0,
                                     //             borderWidth: 1,
-                                    //             borderColor: '#efefef',
+                                    //             borderColor: '#f2f2f2',
                                     //             overflow: 'scroll',
                                     //             maxHeight: '100%'
                                     //         }
@@ -3890,7 +4155,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     flexDirection: width < 768 ? 'column' : 'row',
                     alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
-                    borderColor: '#efefef'
+                    borderColor: '#f2f2f2'
                 }}
             >
                 <View
@@ -3965,7 +4230,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     flexDirection: width < 768 ? 'column' : 'row',
                     alignItems: width < 768 ? 'flex-start' : 'center',
                     borderRightWidth: 0,
-                    borderColor: '#efefef',
+                    borderColor: '#f2f2f2',
                     paddingTop: 40
                 }}
             >
@@ -4113,7 +4378,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: '#efefef',
+                                false: '#f2f2f2',
                                 true: '#006AFF'
                             }}
                             activeThumbColor="white"
@@ -4154,7 +4419,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setShuffle(!shuffle)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#efefef',
+                                        false: '#f2f2f2',
                                         true: '#006AFF'
                                     }}
                                     activeThumbColor="white"
@@ -4228,7 +4493,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -4343,7 +4608,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#efefef',
+                                        false: '#f2f2f2',
                                         true: '#006AFF'
                                     }}
                                     activeThumbColor="white"
@@ -4512,65 +4777,57 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 paddingBottom: 50
             }}
         >
-            <Animated.View
-                style={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    opacity: 1,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    height: '100%'
-                }}
-            >
-                {props.cue.channelId && props.cue.channelId !== '' ? (
-                    <View
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row'
-                        }}
-                    >
-                        {!isOwner &&
-                        props.cue.graded &&
-                        props.cue.score !== undefined &&
-                        props.cue.score !== null &&
-                        !isQuiz &&
-                        props.cue.releaseSubmission &&
-                        (props.showOriginal || props.showOptions) ? (
+            {props.cue.channelId && props.cue.channelId !== '' ? (
+                <View
+                    style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        maxWidth: 900,
+                        alignSelf: 'center'
+                    }}
+                >
+                    {!isOwner &&
+                    props.cue.graded &&
+                    props.cue.score !== undefined &&
+                    props.cue.score !== null &&
+                    !isQuiz &&
+                    props.cue.releaseSubmission &&
+                    (props.showOriginal || props.showOptions) ? (
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                color: 'white',
+                                height: 22,
+                                paddingHorizontal: 10,
+                                borderRadius: 15,
+                                backgroundColor: '#006AFF',
+                                lineHeight: 20,
+                                paddingTop: 1,
+                                marginBottom: 5,
+                                marginTop: 20
+                            }}
+                        >
+                            {props.cue.score}%
+                        </Text>
+                    ) : null}
+                    {!isOwner &&
+                    props.cue.submittedAt !== '' &&
+                    new Date(props.cue.submittedAt) >= deadline &&
+                    props.showOriginal ? (
+                        <View style={{ marginTop: 20, marginBottom: 5 }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
-                                    color: 'white',
-                                    height: 22,
-                                    paddingHorizontal: 10,
-                                    borderRadius: 15,
-                                    backgroundColor: '#006AFF',
-                                    lineHeight: 20,
-                                    paddingTop: 1,
-                                    marginBottom: 5,
-                                    marginTop: 20
+                                    color: '#f94144',
+                                    fontSize: 18,
+                                    fontFamily: 'Inter',
+                                    textAlign: 'center'
                                 }}
                             >
-                                {props.cue.score}%
+                                LATE
                             </Text>
-                        ) : null}
-                        {!isOwner &&
-                        props.cue.submittedAt !== '' &&
-                        new Date(props.cue.submittedAt) >= deadline &&
-                        props.showOriginal ? (
-                            <View style={{ marginTop: 20, marginBottom: 5 }}>
-                                <Text
-                                    style={{
-                                        color: '#f94144',
-                                        fontSize: 18,
-                                        fontFamily: 'Inter',
-                                        textAlign: 'center'
-                                    }}
-                                >
-                                    LATE
-                                </Text>
-                            </View>
-                        ) : null}
-                        {/* <TouchableOpacity
+                        </View>
+                    ) : null}
+                    {/* <TouchableOpacity
                             onPress={() => setStarred(!starred)}
                             style={{
                                 backgroundColor: "white",
@@ -4587,71 +4844,69 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons name="bookmark" size={40} color={starred ? "#f94144" : "#1F1F1F"} />
                             </Text>
                         </TouchableOpacity> */}
-                    </View>
-                ) : null}
-                {props.showOptions ||
-                props.showComments ||
-                isOwner ||
-                props.showOriginal ||
-                props.viewStatus ||
-                !submission ||
-                isQuiz
-                    ? null
-                    : renderSubmissionHistory()}
-                {props.showOptions || props.showComments || viewSubmission ? null : (
+                </View>
+            ) : null}
+            {props.showOptions ||
+            props.showComments ||
+            isOwner ||
+            props.showOriginal ||
+            props.viewStatus ||
+            !submission ||
+            isQuiz
+                ? null
+                : renderSubmissionHistory()}
+            {/* {props.showOptions || props.showComments || viewSubmission ? null : (
+                <View
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                        marginBottom: 5,
+                        backgroundColor: 'white',
+                        borderBottomColor: '#f2f2f2'
+                    }}
+                    onTouchStart={() => Keyboard.dismiss()}
+                >
                     <View
                         style={{
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
-                            marginBottom: 5,
-                            backgroundColor: 'white',
-                            borderBottomColor: '#efefef'
+                            flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                            flex: 1
                         }}
-                        onTouchStart={() => Keyboard.dismiss()}
                     >
-                        <View
-                            style={{
-                                flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                                flex: 1
-                            }}
-                        >
-                            {(!props.showOriginal &&
-                                props.cue.submission &&
-                                !submissionImported &&
-                                showImportOptions) ||
-                            (props.showOriginal && showImportOptions && (isOwner || !props.cue.channelId)) ? (
-                                <FileUpload
-                                    back={() => setShowImportOptions(false)}
-                                    onUpload={(u: any, t: any) => {
-                                        if (props.showOriginal) {
-                                            setOriginal(
-                                                JSON.stringify({
-                                                    url: u,
-                                                    type: t,
-                                                    title
-                                                })
-                                            );
-                                        } else {
-                                            setSubmissionDraft(
-                                                JSON.stringify({
-                                                    url: u,
-                                                    type: t,
-                                                    title: submissionTitle,
-                                                    annotations: ''
-                                                })
-                                            );
-                                            setSubmissionImported(true);
-                                            setSubmissionType(t);
-                                            setSubmissionUrl(u);
-                                        }
-                                        setShowImportOptions(false);
-                                    }}
-                                />
-                            ) : null}
-                        </View>
+                        {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions) ||
+                        (props.showOriginal && showImportOptions && (isOwner || !props.cue.channelId)) ? (
+                            <FileUpload
+                                back={() => setShowImportOptions(false)}
+                                onUpload={(u: any, t: any) => {
+                                    if (props.showOriginal) {
+                                        setOriginal(
+                                            JSON.stringify({
+                                                url: u,
+                                                type: t,
+                                                title
+                                            })
+                                        );
+                                    } else {
+                                        setSubmissionDraft(
+                                            JSON.stringify({
+                                                url: u,
+                                                type: t,
+                                                title: submissionTitle,
+                                                annotations: ''
+                                            })
+                                        );
+                                        setSubmissionImported(true);
+                                        setSubmissionType(t);
+                                        setSubmissionUrl(u);
+                                    }
+                                    setShowImportOptions(false);
+                                }}
+                            />
+                        ) : null}
                     </View>
-                )}
+                </View>
+            )} */}
+            {showEquationEditor ? (
                 <FormulaGuide
                     value={equation}
                     onChange={setEquation}
@@ -4659,153 +4914,162 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     onClose={() => setShowEquationEditor(false)}
                     onInsertEquation={insertEquation}
                 />
-                <ScrollView
-                    style={{
-                        paddingBottom: 25,
-                        height: '100%'
-                    }}
-                    showsVerticalScrollIndicator={false}
-                    scrollEnabled={true}
-                    scrollEventThrottle={1}
-                    keyboardDismissMode={'on-drag'}
-                    overScrollMode={'always'}
-                    nestedScrollEnabled={true}
-                >
-                    {props.showOptions || props.showComments ? null : (
-                        <View>
-                            <View style={{ flexDirection: 'column', width: '100%' }}>
-                                {renderQuizTimerOrUploadOptions()}
-                            </View>
-                            {!props.showOriginal && submissionImported && !isQuiz && !viewSubmission ? (
-                                <View style={{ flexDirection: 'row' }}>
+            ) : null}
+            <ScrollView
+                style={{
+                    paddingBottom: 25,
+                    height:
+                        Dimensions.get('window').width < 1024
+                            ? Dimensions.get('window').height - 104
+                            : Dimensions.get('window').height - 52
+                }}
+                contentContainerStyle={{
+                    maxWidth: 900,
+                    width: '100%',
+                    alignSelf: 'center'
+                }}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={true}
+                scrollEventThrottle={1}
+                keyboardDismissMode={'on-drag'}
+                overScrollMode={'always'}
+                nestedScrollEnabled={true}
+            >
+                {props.showOptions || props.showComments ? null : (
+                    <View>
+                        <View style={{ flexDirection: 'column', width: '100%' }}>
+                            {renderQuizTimerOrUploadOptions()}
+                        </View>
+                        {!props.showOriginal && submissionImported && !isQuiz && !viewSubmission ? (
+                            <View style={{ flexDirection: 'row' }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignSelf: 'flex-start',
+                                        marginLeft: 0,
+                                        marginTop: 5
+                                    }}
+                                >
+                                    <TextInput
+                                        value={submissionTitle}
+                                        style={styles.input}
+                                        placeholder={'Title'}
+                                        onChangeText={val => setSubmissionTitle(val)}
+                                        placeholderTextColor={'#1F1F1F'}
+                                    />
+                                </View>
+                                {props.cue.submittedAt && props.cue.submittedAt !== '' ? (
                                     <View
                                         style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            alignSelf: 'flex-start',
-                                            marginLeft: 0
+                                            marginLeft: 15,
+                                            marginTop: 20,
+                                            alignSelf: 'flex-end'
                                         }}
                                     >
-                                        <TextInput
-                                            value={submissionTitle}
-                                            style={styles.input}
-                                            placeholder={'Title'}
-                                            onChangeText={val => setSubmissionTitle(val)}
-                                            placeholderTextColor={'#1F1F1F'}
-                                        />
-                                    </View>
-                                    {props.cue.submittedAt && props.cue.submittedAt !== '' ? (
-                                        <View
-                                            style={{
-                                                marginLeft: 15,
-                                                marginTop: 20,
-                                                alignSelf: 'flex-end'
-                                            }}
-                                        >
-                                            {props.cue.graded || currentDate > deadline ? null : (
-                                                <TouchableOpacity
-                                                    onPress={() => clearAll()}
-                                                    style={{
-                                                        backgroundColor: 'white',
-                                                        borderRadius: 15,
-                                                        marginTop: 5
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            lineHeight: 34,
-                                                            textTransform: 'uppercase',
-                                                            fontSize: 12,
-                                                            fontFamily: 'overpass',
-                                                            color: '#006AFF'
-                                                        }}
-                                                    >
-                                                        Erase
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                        </View>
-                                    ) : (
-                                        <TouchableOpacity
-                                            onPress={() => clearAll()}
-                                            style={{
-                                                backgroundColor: 'white',
-                                                borderRadius: 15,
-                                                marginLeft: 15,
-                                                marginTop: 5
-                                            }}
-                                        >
-                                            <Text
+                                        {props.cue.graded || currentDate > deadline ? null : (
+                                            <TouchableOpacity
+                                                onPress={() => clearAll()}
                                                 style={{
-                                                    lineHeight: 34,
-                                                    textTransform: 'uppercase',
-                                                    fontSize: 12,
-                                                    fontFamily: 'overpass',
-                                                    color: '#006AFF'
+                                                    backgroundColor: 'white',
+                                                    borderRadius: 15,
+                                                    marginTop: 5
                                                 }}
                                             >
-                                                Erase
-                                            </Text>
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-                            ) : null}
-                            {isQuiz && !isOwner && !initiatedAt ? renderQuizSubmissionHistory() : null}
-                            {isQuiz && cueGraded && props.cue.releaseSubmission ? (
-                                <QuizGrading
-                                    problems={problems}
-                                    solutions={quizSolutions}
-                                    partiallyGraded={false}
-                                    comment={comment}
-                                    isOwner={false}
-                                    headers={headers}
-                                    attempts={quizAttempts}
-                                />
-                            ) : (remainingAttempts === 0 ||
-                                  props.cue.releaseSubmission ||
-                                  (!allowLateSubmission && new Date() > deadline) ||
-                                  (allowLateSubmission && new Date() > availableUntil)) &&
-                              !isOwner &&
-                              isQuiz ? (
-                                renderQuizEndedMessage()
-                            ) : (
-                                renderMainCueContent()
-                            )}
-                        </View>
-                    )}
-                    <View
-                        style={{
-                            width: '100%',
-                            maxWidth: 900,
-                            alignSelf: 'center',
-                            paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
-                        }}
-                    >
-                        <Collapse isOpened={props.showOptions}>
-                            <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                {props.cue.channelId ? (
-                                    <View
+                                                <Text
+                                                    style={{
+                                                        lineHeight: 34,
+                                                        textTransform: 'uppercase',
+                                                        fontSize: 12,
+                                                        fontFamily: 'overpass',
+                                                        color: '#006AFF'
+                                                    }}
+                                                >
+                                                    Erase
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                ) : (
+                                    <TouchableOpacity
+                                        onPress={() => clearAll()}
                                         style={{
-                                            display: 'flex',
-                                            flexDirection: 'column'
+                                            backgroundColor: 'white',
+                                            borderRadius: 15,
+                                            marginLeft: 15,
+                                            marginTop: 5
                                         }}
                                     >
-                                        {renderShareWithOptions()}
-                                        {renderSubmissionRequiredOptions()}
-                                        {renderGradeOptions()}
-                                        {renderLateSubmissionOptions()}
-                                        {renderAttemptsOptions()}
-                                    </View>
-                                ) : null}
+                                        <Text
+                                            style={{
+                                                lineHeight: 34,
+                                                textTransform: 'uppercase',
+                                                fontSize: 12,
+                                                fontFamily: 'overpass',
+                                                color: '#006AFF'
+                                            }}
+                                        >
+                                            Erase
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
                             </View>
-                            {renderForwardOptions()}
-                            {renderCategoryOptions()}
-                            {renderPriorityOptions()}
-                            {/* {renderReminderOptions()} */}
-                        </Collapse>
+                        ) : null}
+                        {isQuiz && !isOwner && !initiatedAt ? renderQuizSubmissionHistory() : null}
+                        {isQuiz && cueGraded && props.cue.releaseSubmission && !isOwner ? (
+                            <QuizGrading
+                                problems={problems}
+                                solutions={quizSolutions}
+                                partiallyGraded={false}
+                                comment={comment}
+                                isOwner={false}
+                                headers={headers}
+                                attempts={quizAttempts}
+                            />
+                        ) : (remainingAttempts === 0 ||
+                              props.cue.releaseSubmission ||
+                              (!allowLateSubmission && new Date() > deadline) ||
+                              (allowLateSubmission && new Date() > availableUntil)) &&
+                          !isOwner &&
+                          isQuiz ? (
+                            renderQuizEndedMessage()
+                        ) : (
+                            renderMainCueContent()
+                        )}
                     </View>
-                </ScrollView>
-            </Animated.View>
+                )}
+                <View
+                    style={{
+                        width: '100%',
+                        maxWidth: 900,
+                        alignSelf: 'center',
+                        paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
+                    }}
+                >
+                    <Collapse isOpened={props.showOptions}>
+                        <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            {props.cue.channelId ? (
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                >
+                                    {renderShareWithOptions()}
+                                    {renderSubmissionRequiredOptions()}
+                                    {renderGradeOptions()}
+                                    {renderLateSubmissionOptions()}
+                                    {renderAttemptsOptions()}
+                                </View>
+                            ) : null}
+                        </View>
+                        {renderForwardOptions()}
+                        {renderCategoryOptions()}
+                        {renderPriorityOptions()}
+                        {/* {renderReminderOptions()} */}
+                    </Collapse>
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -4845,7 +5109,7 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#efefef',
+        borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,

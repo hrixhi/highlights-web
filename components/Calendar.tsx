@@ -745,7 +745,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: '#efefef',
+                            false: '#f2f2f2',
                             true: '#006AFF'
                         }}
                         activeThumbColor="white"
@@ -919,7 +919,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: '#efefef',
+                                    false: '#f2f2f2',
                                     true: '#006AFF'
                                 }}
                                 activeThumbColor="white"
@@ -1449,7 +1449,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     marginBottom: 20,
                     marginTop: 10,
                     paddingVertical: 10,
-                    backgroundColor: tab === 'Add' ? 'white' : '#efefef'
+                    backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2'
                 }}
             >
                 {tab !== 'Add' ? null : (
@@ -1476,7 +1476,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             flexDirection: 'row',
                             paddingTop: 10,
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             flex: 1,
                             justifyContent: 'center'
                         }}
@@ -1485,7 +1485,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 setTab('Agenda');
@@ -1500,7 +1500,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 setTab('Schedule');
@@ -1515,7 +1515,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#efefef'
+                                backgroundColor: '#f2f2f2'
                             }}
                             onPress={() => {
                                 setTab('Calendar');
@@ -1531,7 +1531,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={{
                                     justifyContent: 'center',
                                     flexDirection: 'column',
-                                    backgroundColor: '#efefef'
+                                    backgroundColor: '#f2f2f2'
                                 }}
                                 onPress={() => {
                                     setTab('Activity');
@@ -1601,7 +1601,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                         }}
                         style={{
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             overflow: 'hidden',
                             height: 35,
                             marginTop: 20,
@@ -1639,7 +1639,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 opacity: modalAnimation,
                 width: '100%',
                 height: width < 768 ? Dimensions.get('window').height - 104 : Dimensions.get('window').height - 52,
-                backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
                 overflow: 'scroll'
@@ -1649,7 +1649,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 style={{
                     width: '100%',
                     flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                    backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                     maxWidth: 900,
                     alignSelf: 'center'
                 }}
@@ -1657,13 +1657,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View
                     style={{
                         width: Dimensions.get('window').width < 768 ? '100%' : '100%',
-                        backgroundColor: tab === 'Add' ? 'white' : '#efefef'
+                        backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2'
                     }}
                 >
                     <View
                         style={{
                             width: '100%',
-                            backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                            backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
                         }}
@@ -1676,7 +1676,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     justifyContent: 'center',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                                    backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                                     marginTop: 50,
                                     marginBottom: 50
                                 }}
@@ -1686,7 +1686,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         ) : (
                             <View
                                 style={{
-                                    backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                                    backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                                     width: '100%',
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
@@ -1699,8 +1699,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 1,
                                             marginBottom: Dimensions.get('window').width < 768 ? 0 : 0,
                                             borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
-                                            borderColor: '#efefef',
-                                            backgroundColor: tab === 'Add' ? 'white' : '#efefef',
+                                            borderColor: '#f2f2f2',
+                                            backgroundColor: tab === 'Add' ? 'white' : '#f2f2f2',
                                             shadowColor: '#000',
                                             shadowOffset: {
                                                 width: tab === 'Add' ? 0 : 2,
@@ -1837,7 +1837,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 }}
                                                                 style={{
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#efefef',
+                                                                    borderColor: '#f2f2f2',
                                                                     borderBottomWidth:
                                                                         index === activity.length - 1 ? 0 : 1,
                                                                     width: '100%',
@@ -2101,7 +2101,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 style={{
                                                                     flexDirection: 'row',
                                                                     display: 'flex',
-                                                                    backgroundColor: '#efefef'
+                                                                    backgroundColor: '#f2f2f2'
                                                                 }}
                                                             >
                                                                 {/* <Menu
@@ -2119,7 +2119,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                                 borderRadius: 15,
                                                                                                                 shadowOpacity: 0,
                                                                                                                 borderWidth: 1,
-                                                                                                                borderColor: '#efefef'
+                                                                                                                borderColor: '#f2f2f2'
                                                                                                             }
                                                                                                         }}>
                                                                                                             <MenuOption
@@ -2173,7 +2173,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             }
                                                                         }}
                                                                         style={{
-                                                                            backgroundColor: '#efefef'
+                                                                            backgroundColor: '#f2f2f2'
                                                                         }}
                                                                         data={channelOptions}
                                                                     />
@@ -2335,7 +2335,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </View>
                         )}
                         {/* TEMPORARILY HIDDEN */}
-                        {/* <View style={{ backgroundColor: '#efefef', display: 'none' }}>
+                        {/* <View style={{ backgroundColor: '#f2f2f2', display: 'none' }}>
                             <View
                                 style={{
                                     flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
@@ -2365,7 +2365,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     // borderWidth: 1,
                                     borderRadius: 1,
-                                    borderColor: '#efefef',
+                                    borderColor: '#f2f2f2',
                                     marginBottom: 25
                                 }}
                                 height="450"
@@ -2386,7 +2386,7 @@ export default CalendarX;
 const styles: any = StyleSheet.create({
     input: {
         width: '100%',
-        borderBottomColor: '#efefef',
+        borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,
@@ -2403,14 +2403,14 @@ const styles: any = StyleSheet.create({
         color: '#000000',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#efefef'
+        backgroundColor: '#f2f2f2'
     },
     all1: {
         fontSize: 10,
         color: '#1F1F1F',
         height: 20,
         paddingHorizontal: 7,
-        backgroundColor: '#efefef',
+        backgroundColor: '#f2f2f2',
         lineHeight: 20,
         fontFamily: 'inter',
         textAlign: 'center'
@@ -2428,7 +2428,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         height: 80,
         marginBottom: 15,
-        backgroundColor: '#efefef'
+        backgroundColor: '#f2f2f2'
     },
     allOutline: {
         fontSize: 12,
@@ -2441,7 +2441,7 @@ const styles: any = StyleSheet.create({
     picker: {
         display: 'flex',
         justifyContent: 'flex-start',
-        backgroundColor: '#efefef',
+        backgroundColor: '#f2f2f2',
         overflow: 'hidden',
         fontSize: 12,
         textAlign: 'center',

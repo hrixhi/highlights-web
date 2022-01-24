@@ -19,7 +19,35 @@ import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
 
 // HELPERS
-import { handleFile } from '../helpers/FileUpload';
+import { handleFileUploadEditor } from '../helpers/FileUpload';
+
+// NEW EDITOR
+// Require Editor JS files.
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+
+// import 'froala-editor/css/froala_editor.pkgd.min.css';
+// import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/js/plugins.pkgd.min.js';
+
+// Require Editor CSS files.
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+
+// Require Font Awesome.
+import 'font-awesome/css/font-awesome.css';
+
+import FroalaEditor from 'react-froala-wysiwyg';
+
+import Froalaeditor from 'froala-editor';
+
+import {
+    QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
+    QUIZ_QUESTION_TOOLBAR_BUTTONS,
+    QUIZ_OPTION_TOOLBAR_BUTTONS,
+    QUIZ_SOLUTION_TOOLBAR_BUTTONS
+} from '../constants/Froala';
+
+import { renderMathjax } from '../helpers/FormulaHelpers';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems, setProblems] = useState<any[]>(props.problems.slice());
@@ -37,6 +65,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     });
     const [editQuestionNumber, setEditQuestionNumber] = useState(0);
     const [editQuestion, setEditQuestion] = useState<any>({});
+    const [editQuestionContent, setEditQuestionContent] = useState('');
     const [modifiedCorrectAnswerProblems, setModifiedCorrectAnswerProblems] = useState<any[]>([]);
     const [regradeChoices, setRegradeChoices] = useState<any[]>([]);
     const [timer, setTimer] = useState(false);
@@ -45,6 +74,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [showImportOptions, setShowImportOptions] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(props.shuffleQuiz);
     const [problemRefs, setProblemRefs] = useState<any[]>(props.problems.map(() => createRef(null)));
+    const [optionRefs, setOptionRefs] = useState<any[]>([]);
     const [showFormulas, setShowFormulas] = useState<any[]>(props.problems.map((prob: any) => false));
     const [responseEquations, setResponseEquations] = useState<any[]>(props.problems.map((prob: any) => ''));
     const [showFormulaGuide, setShowFormulaGuide] = useState(false);
@@ -58,6 +88,69 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         noRegrading: 'Update question without regrading.'
     };
     let RichText: any = useRef();
+    const [equationEditorFor, setEquationEditorFor] = useState('');
+    const [equationOptionId, setEquationOptionId] = useState('');
+    const [equationSolutionId, setEquationSolutionId] = useState('');
+
+    Froalaeditor.DefineIcon('insertFormulaQuestion', {
+        NAME: 'formula',
+        PATH:
+            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+    });
+    Froalaeditor.RegisterCommand('insertFormulaQuestion', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function() {
+            RichText.current.editor.selection.save();
+
+            setEquationEditorFor('question');
+            setShowEquationEditor(true);
+        }
+    });
+
+    Froalaeditor.DefineIcon('insertFormulaOption', {
+        NAME: 'formula',
+        PATH:
+            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+    });
+    Froalaeditor.RegisterCommand('insertFormulaOption', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function() {
+            this.selection.save();
+            // curr.editor.id
+
+            setEquationOptionId(this.id);
+
+            setEquationEditorFor('option');
+            setShowEquationEditor(true);
+        }
+    });
+
+    Froalaeditor.DefineIcon('insertFormulaSolution', {
+        NAME: 'formula',
+        PATH:
+            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+    });
+    Froalaeditor.RegisterCommand('insertFormulaSolution', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function() {
+            this.selection.save();
+            // curr.editor.id
+
+            setEquationSolutionId(this.id);
+
+            setEquationEditorFor('solution');
+            setShowEquationEditor(true);
+        }
+    });
 
     // HOOKS
 
@@ -227,6 +320,33 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setRegradeChoices(initialRegradeChoices);
     }, [props.problems]);
 
+    useEffect(() => {
+        if (editQuestionNumber !== 0) {
+            const currentProblem = problems[editQuestionNumber - 1];
+
+            let audioVideoQuestion =
+                currentProblem.question[0] === '{' &&
+                currentProblem.question[currentProblem.question.length - 1] === '}';
+
+            if (audioVideoQuestion) {
+                const currQuestion = JSON.parse(currentProblem.question);
+                const updatedQuestion = {
+                    ...currQuestion,
+                    content: editQuestionContent
+                };
+                const newProbs = [...problems];
+                currentProblem.question = JSON.stringify(updatedQuestion);
+
+                setProblems(newProbs);
+            } else {
+                // setCue(modifedText);
+                const newProbs = [...problems];
+                currentProblem.question = editQuestionContent;
+                setProblems(newProbs);
+            }
+        }
+    }, [editQuestionContent]);
+
     // FUNCTIONS
     /**
      * @description Render timer for Quiz
@@ -243,7 +363,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                     paddingTop: 20,
                     marginBottom: 20,
-                    borderColor: '#efefef'
+                    borderColor: '#f2f2f2'
                 }}
             >
                 <View
@@ -286,7 +406,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: '#efefef',
+                            false: '#f2f2f2',
                             true: '#006AFF'
                         }}
                         activeThumbColor="white"
@@ -296,7 +416,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             style={{
                                 borderRightWidth: 0,
                                 paddingTop: 0,
-                                borderColor: '#efefef',
+                                borderColor: '#f2f2f2',
                                 flexDirection: 'row',
                                 paddingTop: 10,
                                 paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0
@@ -330,7 +450,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -372,7 +492,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -406,7 +526,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     borderRightWidth: 0,
                     flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                     paddingTop: 20,
-                    borderColor: '#efefef',
+                    borderColor: '#f2f2f2',
                     marginBottom: 50
                 }}
             >
@@ -443,7 +563,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: '#efefef',
+                            false: '#f2f2f2',
                             true: '#006AFF'
                         }}
                         activeThumbColor="white"
@@ -492,7 +612,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         paddingBottom: 12,
                         maxWidth: '100%',
                         borderRadius: 1,
-                        borderBottom: '1px solid #efefef',
+                        borderBottom: '1px solid #f2f2f2',
                         width: Dimensions.get('window').width < 768 ? '100%' : '50%'
                     }}
                     onChange={(e: any) => {
@@ -550,35 +670,150 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             return;
         }
 
-        let currentContent = RichText.current.getContent();
+        if (equationEditorFor === 'question') {
+            renderMathjax(equation).then((res: any) => {
+                const random = Math.random();
 
-        const SVGEquation = TeXToSVG(equation); // returns svg in html format
-        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '</div>';
+                RichText.current.editor.selection.restore();
 
-        RichText.current.setContent(currentContent);
+                RichText.current.editor.html.insert(
+                    '<img class="rendered-math-jax" id="' +
+                        random +
+                        '" data-eq="' +
+                        encodeURIComponent(equation) +
+                        '" src="' +
+                        res.imgSrc +
+                        '"></img>'
+                );
+                RichText.current.editor.events.trigger('contentChanged');
 
-        let audioVideoQuestion =
-            problems[editQuestionNumber - 1].question[0] === '{' &&
-            problems[editQuestionNumber - 1].question[problems[editQuestionNumber - 1].question.length - 1] === '}';
+                let audioVideoQuestion =
+                    problems[editQuestionNumber - 1].question[0] === '{' &&
+                    problems[editQuestionNumber - 1].question[problems[editQuestionNumber - 1].question.length - 1] ===
+                        '}';
 
-        if (audioVideoQuestion) {
-            const currQuestion = JSON.parse(problems[editQuestionNumber - 1].question);
-            const updatedQuestion = {
-                ...currQuestion,
-                content: RichText.current.getContent()
-            };
-            const newProbs = [...problems];
-            newProbs[editQuestionNumber - 1].question = JSON.stringify(updatedQuestion);
-            setProblems(newProbs);
-        } else {
-            const newProbs = [...problems];
-            newProbs[editQuestionNumber - 1].question = RichText.current.getContent();
-            setProblems(newProbs);
+                if (audioVideoQuestion) {
+                    const currQuestion = JSON.parse(problems[editQuestionNumber - 1].question);
+                    const updatedQuestion = {
+                        ...currQuestion,
+                        content: RichText.current.editor.html.get()
+                    };
+                    const newProbs = [...problems];
+                    newProbs[editQuestionNumber - 1].question = JSON.stringify(updatedQuestion);
+                    setProblems(newProbs);
+                } else {
+                    const newProbs = [...problems];
+                    newProbs[editQuestionNumber - 1].question = RichText.current.editor.html.get();
+                    setProblems(newProbs);
+                }
+
+                setShowEquationEditor(false);
+                setEquationEditorFor('');
+                setEquation('');
+            });
+        } else if (equationEditorFor === 'option') {
+            renderMathjax(equation).then((res: any) => {
+                const random = Math.random();
+
+                // Find the active Ref for option to insert formula in
+
+                let optionEditorRef: any;
+
+                let optionIndex: number = -1;
+
+                editQuestion.options.map((_: any, i: number) => {
+                    const ref: any = optionRefs[i];
+
+                    if (ref && ref.current && ref.current.editor.id === equationOptionId) {
+                        optionEditorRef = ref;
+                        optionIndex = i;
+                    }
+                });
+
+                if (optionIndex === -1 || !optionEditorRef) return;
+
+                optionEditorRef.current.editor.selection.restore();
+
+                optionEditorRef.current.editor.html.insert(
+                    '<img class="rendered-math-jax" id="' +
+                        random +
+                        '" data-eq="' +
+                        encodeURIComponent(equation) +
+                        '" src="' +
+                        res.imgSrc +
+                        '"></img>'
+                );
+
+                // Update option
+                const newProbs = [...problems];
+                newProbs[editQuestionNumber - 1].options[
+                    optionIndex
+                ].option = optionEditorRef.current.editor.html.get();
+
+                optionEditorRef.current.editor.events.trigger('contentChanged');
+
+                setProblems(newProbs);
+
+                setShowEquationEditor(false);
+                setEquationEditorFor('');
+                setEquation('');
+            });
+        } else if (equationEditorFor === 'solution') {
+            renderMathjax(equation).then((res: any) => {
+                const random = Math.random();
+
+                // Find the active Ref for option to insert formula in
+                let solutionEditorRef: any;
+
+                let problemIndex: number = -1;
+
+                problemRefs.map((ref: any, i: number) => {
+                    if (ref && ref.current && ref.current.editor.id === equationSolutionId) {
+                        solutionEditorRef = ref;
+                        problemIndex = i;
+                    }
+                });
+
+                if (problemIndex === -1 || !solutionEditorRef) return;
+
+                solutionEditorRef.current.editor.selection.restore();
+
+                solutionEditorRef.current.editor.html.insert(
+                    '<img class="rendered-math-jax" id="' +
+                        random +
+                        '" data-eq="' +
+                        encodeURIComponent(equation) +
+                        '" src="' +
+                        res.imgSrc +
+                        '"></img>'
+                );
+
+                const updatedSolution = [...solutions];
+                updatedSolution[problemIndex].response = solutionEditorRef.current.editor.html.get();
+
+                solutionEditorRef.current.editor.events.trigger('contentChanged');
+
+                setSolutions(updatedSolution);
+                props.setSolutions(updatedSolution);
+
+                setShowEquationEditor(false);
+                setEquationEditorFor('');
+                setEquation('');
+            });
         }
-
-        setShowEquationEditor(false);
-        setEquation('');
-    }, [equation, RichText, RichText.current, showEquationEditor, problems, editQuestionNumber]);
+    }, [
+        equation,
+        RichText,
+        RichText.current,
+        showEquationEditor,
+        problems,
+        editQuestion,
+        editQuestionNumber,
+        equationEditorFor,
+        equationOptionId,
+        equationSolutionId,
+        optionRefs
+    ]);
 
     /**
      * @description Used to insert equation into MCQ option
@@ -647,6 +882,25 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         [showFormulas, problemRefs, responseEquations, solutions]
     );
 
+    const handleVideoImport = useCallback(
+        async (files: any, problemIndex: number) => {
+            const res = await handleFileUploadEditor(true, files.item(0), props.userId);
+
+            if (!res || res.url === '' || res.type === '' || !RichText || !RichText.current) {
+                return;
+            }
+
+            const obj = { url: res.url, type: res.type, content: RichText.current.props.model };
+
+            const newProbs = [...problems];
+            newProbs[problemIndex].question = JSON.stringify(obj);
+            // setEditQuestion(newProbs[problemIndex]);
+            setProblems(newProbs);
+            setShowImportOptions(false);
+        },
+        [props.userId, problems, RichText]
+    );
+
     /**
      * @description Renders Rich editor for Question
      */
@@ -667,11 +921,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             url = parse.url;
             content = parse.content;
             type = parse.type;
+        } else {
+            content = problems[index].question;
         }
 
         return (
             <View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 25 }}>
-                {audioVideoQuestion || !showImportOptions ? null : (
+                {/* {audioVideoQuestion || !showImportOptions ? null : (
                     <View style={{ paddingVertical: 10 }}>
                         <FileUpload
                             action={'audio/video'}
@@ -685,7 +941,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }}
                         />
                     </View>
-                )}
+                )} */}
                 {audioVideoQuestion ? (
                     <View style={{ marginBottom: 20 }}>{renderAudioVideoPlayer(url, type)}</View>
                 ) : null}
@@ -696,7 +952,53 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     onClose={() => setShowEquationEditor(false)}
                     onInsertEquation={insertEquation}
                 />
-                <Editor
+
+                <FroalaEditor
+                    ref={RichText}
+                    model={editQuestionContent}
+                    onModelChange={(model: any) => {
+                        setEditQuestionContent(model);
+                    }}
+                    config={{
+                        key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                        attribution: false,
+                        placeholderText: 'Problem',
+                        charCounterCount: false,
+                        zIndex: 2003,
+                        // immediateReactModelUpdate: true,
+                        heightMin: 200,
+                        fileUpload: false,
+                        videoUpload: true,
+                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                        imageUploadParam: 'file',
+                        imageUploadParams: { userId: props.userId },
+                        imageUploadMethod: 'POST',
+                        imageMaxSize: 5 * 1024 * 1024,
+                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                        // VIDEO UPLOAD
+                        videoMaxSize: 20 * 1024 * 1024,
+                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                        paragraphFormatSelection: true,
+                        // Default Font Size
+                        fontSizeDefaultSelection: '24',
+                        spellcheck: true,
+                        tabSpaces: 4,
+
+                        // TOOLBAR
+                        toolbarButtons: QUIZ_QUESTION_TOOLBAR_BUTTONS,
+                        toolbarSticky: false,
+                        quickInsertEnabled: false,
+                        events: {
+                            'video.beforeUpload': function(videos: any) {
+                                handleVideoImport(videos, index);
+
+                                return false;
+                            }
+                        }
+                    }}
+                />
+
+                {/* <Editor
                     onInit={(evt, editor) => (RichText.current = editor)}
                     initialValue={editQuestion && editQuestion.question ? editQuestion.question : ''}
                     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
@@ -808,7 +1110,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             setProblems(newProbs);
                         }
                     }}
-                />
+                /> */}
             </View>
         );
     };
@@ -833,6 +1135,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         setEditQuestionNumber(0);
         setEditQuestion({});
+        setEditQuestionContent('');
     };
 
     /**
@@ -917,72 +1220,103 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             ) : null}
             <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 25, paddingTop: 15 }}>
                 {props.isOwner ? (
-                    <Editor
-                        // onInit={(evt, editor) => RichText.current = editor}
-                        initialValue={initialInstructions}
-                        apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                        init={{
-                            skin: 'snow',
-                            // toolbar_sticky: true,
-                            indent: false,
-                            branding: false,
-                            placeholder: 'Instructions',
-                            autoresize_on_init: false,
-                            autoresize_min_height: 250,
-                            height: 250,
-                            min_height: 250,
-                            paste_data_images: true,
-                            images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                            mobile: {
-                                plugins:
-                                    'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                            },
-                            plugins:
-                                'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                            menu: {
-                                // this is the complete default configuration
-                                file: { title: 'File', items: 'newdocument' },
-                                edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                                insert: { title: 'Insert', items: 'link media | template hr' },
-                                view: { title: 'View', items: 'visualaid' },
-                                format: {
-                                    title: 'Format',
-                                    items:
-                                        'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                                },
-                                table: {
-                                    title: 'Table',
-                                    items: 'inserttable tableprops deletetable | cell row column'
-                                },
-                                tools: { title: 'Tools', items: 'spellchecker code' }
-                            },
-                            // menubar: 'file edit view insert format tools table tc help',
-                            menubar: false,
-                            statusbar: false,
-                            toolbar:
-                                'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
-                            importcss_append: true,
-                            image_caption: true,
-                            quickbars_selection_toolbar:
-                                'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                            noneditable_noneditable_class: 'mceNonEditable',
-                            toolbar_mode: 'sliding',
-                            content_style:
-                                '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                            // tinycomments_mode: 'embedded',
-                            // content_style: '.mymention{ color: gray; }',
-                            // contextmenu: 'link image table configurepermanentpen',
-                            // a11y_advanced_options: true,
-                            extended_valid_elements:
-                                'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                            // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                            // content_css: useDarkMode ? 'dark' : 'default',
-                        }}
-                        onChange={(e: any) => {
-                            setInstructions(e.target.getContent());
+                    <FroalaEditor
+                        model={instructions}
+                        onModelChange={(model: any) => setInstructions(model)}
+                        config={{
+                            key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                            attribution: false,
+                            placeholderText: 'Quiz Instructions',
+                            charCounterCount: false,
+                            zIndex: 2003,
+                            // immediateReactModelUpdate: true,
+                            heightMin: 200,
+                            fileUpload: false,
+                            videoUpload: false,
+                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                            imageUploadParam: 'file',
+                            imageUploadParams: { userId: props.userId },
+                            imageUploadMethod: 'POST',
+                            imageMaxSize: 5 * 1024 * 1024,
+                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                            paragraphFormatSelection: true,
+                            // Default Font Size
+                            fontSizeDefaultSelection: '24',
+                            spellcheck: true,
+                            tabSpaces: 4,
+                            // TOOLBAR
+                            toolbarButtons: QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
+                            toolbarSticky: false,
+                            quickInsertEnabled: false
                         }}
                     />
-                ) : instructions !== '' ? (
+                ) : // <Editor
+                //     // onInit={(evt, editor) => RichText.current = editor}
+                //     initialValue={initialInstructions}
+                //     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                //     init={{
+                //         skin: 'snow',
+                //         // toolbar_sticky: true,
+                //         indent: false,
+                //         branding: false,
+                //         placeholder: 'Instructions',
+                //         autoresize_on_init: false,
+                //         autoresize_min_height: 250,
+                //         height: 250,
+                //         min_height: 250,
+                //         paste_data_images: true,
+                //         images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                //         mobile: {
+                //             plugins:
+                //                 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                //         },
+                //         plugins:
+                //             'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                //         menu: {
+                //             // this is the complete default configuration
+                //             file: { title: 'File', items: 'newdocument' },
+                //             edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                //             insert: { title: 'Insert', items: 'link media | template hr' },
+                //             view: { title: 'View', items: 'visualaid' },
+                //             format: {
+                //                 title: 'Format',
+                //                 items:
+                //                     'bold italic underline strikethrough superscript subscript | formats | removeformat'
+                //             },
+                //             table: {
+                //                 title: 'Table',
+                //                 items: 'inserttable tableprops deletetable | cell row column'
+                //             },
+                //             tools: { title: 'Tools', items: 'spellchecker code' }
+                //         },
+                //         // menubar: 'file edit view insert format tools table tc help',
+                //         menubar: false,
+                //         statusbar: false,
+                //         toolbar:
+                //             'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                //         importcss_append: true,
+                //         image_caption: true,
+                //         quickbars_selection_toolbar:
+                //             'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                //         noneditable_noneditable_class: 'mceNonEditable',
+                //         toolbar_mode: 'sliding',
+                //         content_style:
+                //             '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
+                //         // tinycomments_mode: 'embedded',
+                //         // content_style: '.mymention{ color: gray; }',
+                //         // contextmenu: 'link image table configurepermanentpen',
+                //         // a11y_advanced_options: true,
+                //         extended_valid_elements:
+                //             'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
+                //         // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                //         // content_css: useDarkMode ? 'dark' : 'default',
+                //     }}
+                //     onChange={(e: any) => {
+                //         setInstructions(e.target.getContent());
+                //     }}
+                // />
+
+                instructions !== '' ? (
                     <Text
                         style={{
                             // marginTop: 20,
@@ -1037,7 +1371,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return (
                     <View
                         style={{
-                            borderBottomColor: '#efefef',
+                            borderBottomColor: '#f2f2f2',
                             width: '100%',
                             paddingLeft: Dimensions.get('window').width < 768 ? 10 : 0,
                             borderBottomWidth: index === problems.length - 1 ? 0 : 1,
@@ -1227,7 +1561,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         marginRight: editQuestionNumber === index + 1 ? 20 : 0,
                                                         textAlign: 'center',
                                                         fontWeight: editQuestionNumber === index + 1 ? 'normal' : '700',
-                                                        borderBottomColor: '#efefef',
+                                                        borderBottomColor: '#f2f2f2',
                                                         borderBottomWidth: editQuestionNumber === index + 1 ? 1 : 0
                                                     }}
                                                     onChangeText={val => {
@@ -1268,20 +1602,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     question: initialContent
                                                                 });
 
-                                                                const currProblemOptions: any[] =
-                                                                    currentProblems[index].options;
+                                                                setEditQuestionContent(initialContent);
 
-                                                                const updateShowFormulas: any[] = [];
+                                                                const refs: any[] = currentProblems[
+                                                                    index
+                                                                ].options.map(() => createRef(null));
 
-                                                                const updateOptionEquations: any[] = [];
-
-                                                                currProblemOptions.map((option: any) => {
-                                                                    updateShowFormulas.push(false);
-                                                                    updateOptionEquations.push('');
-                                                                });
-
-                                                                setShowFormulas(updateShowFormulas);
-                                                                setOptionEquations(updateOptionEquations);
+                                                                setOptionRefs(refs);
                                                             }}
                                                             style={{ marginBottom: 20, paddingTop: 6 }}
                                                         >
@@ -1304,7 +1631,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
 
                         {(!problem.questionType || problem.questionType === 'trueFalse') &&
-                            problem.options.map((option: any, i: any) => {
+                            problem.options.map((option: any, i: number) => {
                                 let color = '#000000';
                                 if (props.isOwner && option.isCorrect) {
                                     color = '#3B64F8';
@@ -1373,7 +1700,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <View
                                                 style={{
                                                     flexDirection: 'column',
-                                                    maxWidth: Dimensions.get('window').width < 768 ? '80%' : 400
+                                                    maxWidth: Dimensions.get('window').width < 768 ? '80%' : '60%'
                                                 }}
                                             >
                                                 <FormulaGuide
@@ -1391,12 +1718,59 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     }}
                                                     onInsertEquation={() => insertOptionEquation(i)}
                                                 />
-                                                <Editor
+
+                                                <FroalaEditor
+                                                    ref={optionRefs[i]}
+                                                    model={
+                                                        editQuestion &&
+                                                        editQuestion.options &&
+                                                        editQuestion.options[i] &&
+                                                        editQuestion.options[i].option !== ''
+                                                            ? editQuestion.options[i].option
+                                                            : ''
+                                                    }
+                                                    onModelChange={(model: any) => {
+                                                        const newProbs = [...problems];
+                                                        newProbs[problemIndex].options[i].option = model;
+                                                        setEditQuestion(newProbs[problemIndex]);
+                                                        setProblems(newProbs);
+                                                    }}
+                                                    config={{
+                                                        key:
+                                                            'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                        attribution: false,
+                                                        placeholderText: 'Option ' + (i + 1),
+                                                        charCounterCount: false,
+                                                        zIndex: 2003,
+                                                        // immediateReactModelUpdate: true,
+                                                        heightMin: 150,
+                                                        fileUpload: false,
+                                                        videoUpload: false,
+                                                        imageUploadURL:
+                                                            'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                        imageUploadParam: 'file',
+                                                        imageUploadParams: { userId: props.userId },
+                                                        imageUploadMethod: 'POST',
+                                                        imageMaxSize: 5 * 1024 * 1024,
+                                                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                        paragraphFormatSelection: true,
+                                                        // Default Font Size
+                                                        fontSizeDefaultSelection: '24',
+                                                        spellcheck: true,
+                                                        tabSpaces: 4,
+                                                        // TOOLBAR
+                                                        toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                        toolbarSticky: false,
+                                                        quickInsertEnabled: false
+                                                    }}
+                                                />
+                                                {/* <Editor
                                                     onInit={(evt, editor) => {
-                                                        const currRef: any = setRef(i.toString());
-                                                        if (currRef) {
-                                                            currRef.current = editor;
-                                                        }
+                                                         const newProbs = [...problems];
+                                                        newProbs[problemIndex].options[
+                                                            i
+                                                        ].option = e.target.getContent();
+                                                        setProblems(newProbs);
                                                     }}
                                                     initialValue={
                                                         editQuestion &&
@@ -1495,7 +1869,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         ].option = e.target.getContent();
                                                         setProblems(newProbs);
                                                     }}
-                                                />
+                                                /> */}
                                             </View>
                                         ) : (
                                             <Text
@@ -1543,20 +1917,51 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <View style={{ flexDirection: 'column', width: '100%' }}>
                                         <FormulaGuide
                                             equation={equation}
-                                            onChange={(x: any) => {
-                                                const updateResponseEquations = [...responseEquations];
-                                                updateResponseEquations[problemIndex] = x;
-                                                setResponseEquations(updateResponseEquations);
-                                            }}
-                                            show={showFormulas[problemIndex]}
-                                            onClose={() => {
-                                                const updateShowFormulas = [...showFormulas];
-                                                updateShowFormulas[problemIndex] = !updateShowFormulas[problemIndex];
-                                                setShowFormulas(updateShowFormulas);
-                                            }}
-                                            onInsertEquation={() => insertResponseEquation(problemIndex)}
+                                            onChange={setEquation}
+                                            show={showEquationEditor}
+                                            onClose={() => setShowEquationEditor(false)}
+                                            onInsertEquation={insertEquation}
                                         />
-                                        <Editor
+                                        <FroalaEditor
+                                            ref={problemRefs[problemIndex]}
+                                            model={solutions[problemIndex].response}
+                                            onModelChange={(model: any) => {
+                                                const updatedSolution = [...solutions];
+                                                updatedSolution[problemIndex].response = model;
+                                                setSolutions(updatedSolution);
+                                                props.setSolutions(updatedSolution);
+                                            }}
+                                            config={{
+                                                key:
+                                                    'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                attribution: false,
+                                                placeholderText: 'Solution',
+                                                charCounterCount: false,
+                                                zIndex: 2003,
+                                                // immediateReactModelUpdate: true,
+                                                heightMin: 200,
+                                                fileUpload: false,
+                                                videoUpload: false,
+                                                imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                imageUploadParam: 'file',
+                                                imageUploadParams: { userId: props.userId },
+                                                imageUploadMethod: 'POST',
+                                                imageMaxSize: 5 * 1024 * 1024,
+                                                imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                // VIDEO UPLOAD
+                                                paragraphFormatSelection: true,
+                                                // Default Font Size
+                                                fontSizeDefaultSelection: '24',
+                                                spellcheck: true,
+                                                tabSpaces: 4,
+
+                                                // TOOLBAR
+                                                toolbarButtons: QUIZ_SOLUTION_TOOLBAR_BUTTONS,
+                                                toolbarSticky: false,
+                                                quickInsertEnabled: false
+                                            }}
+                                        />
+                                        {/* <Editor
                                             onInit={(evt, editor) => {
                                                 const updateRefs = [...problemRefs];
                                                 updateRefs[problemIndex].current = editor;
@@ -1649,7 +2054,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 setSolutions(updatedSolution);
                                                 props.setSolutions(updatedSolution);
                                             }}
-                                        />
+                                        /> */}
                                     </View>
                                 )}
                             </View>
@@ -1758,6 +2163,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     onPress={() => {
                                         setEditQuestionNumber(0);
                                         setEditQuestion({});
+                                        setEditQuestionContent('');
                                     }}
                                     style={{ backgroundColor: 'white', borderRadius: 15, width: 120 }}
                                 >
@@ -1832,7 +2238,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#efefef',
+        // borderBottomColor: '#f2f2f2',
         // borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,

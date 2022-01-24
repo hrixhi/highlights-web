@@ -67,6 +67,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [deadline, setDeadline] = useState('');
     const [headers, setHeaders] = useState({});
     const [exportAoa, setExportAoa] = useState<any[]>();
+    const [showQuizGrading, setShowQuizGrading] = useState(false);
     if (props.cue && props.cue.submission) {
         categories.push('Submitted');
         categories.push('Graded');
@@ -119,6 +120,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     // HOOKS
 
+    useEffect(() => {
+        if (props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
+            const obj = JSON.parse(props.cue.original);
+
+            if (obj.quizId) {
+                setIsQuiz(true);
+            }
+        }
+    }, [props.cue]);
+
     /**
      * @description prepares export data for Assignment grades
      */
@@ -127,7 +138,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             return;
         }
 
-        const exportAoa = [];
+        const exportAoa: any[] = [];
 
         // Add row 1 with Overall, problem Score, problem Comments,
         let row1 = [''];
@@ -239,6 +250,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             subscriberRow.push(comment);
 
             exportAoa.push(subscriberRow);
+            s;
         });
 
         setExportAoa(exportAoa);
@@ -306,6 +318,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setInitiatedAt(attempt.initiatedAt);
                         setSubmittedAt(attempt.submittedAt);
                         setGraded(attempt.isFullyGraded);
+                        setShowQuizGrading(true);
                     }
                 });
             }
@@ -970,7 +983,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 width: '100%',
                                 borderRadius: 1,
                                 borderWidth: 0,
-                                borderColor: '#efefef',
+                                borderColor: '#f2f2f2',
                                 maxWidth: 900,
                                 marginBottom: 50,
                                 paddingHorizontal: 10
@@ -991,7 +1004,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 setSubmittedAt(subscriber.submittedAt);
                                                 setDeadline(subscriber.deadline);
                                                 setShowSubmission(true);
-                                                setScore(subscriber.score ? subscriber.score.toString() : '0');
+                                                setScore(subscriber.score ? subscriber.score.toString() : '');
                                                 setGraded(subscriber.graded);
                                                 setComment(subscriber.comment);
                                                 setUserId(subscriber.userId);
@@ -1000,7 +1013,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             backgroundColor: '#fff',
                                             flexDirection: 'row',
-                                            borderColor: '#efefef',
+                                            borderColor: '#f2f2f2',
                                             paddingVertical: 5,
                                             borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                             width: '100%'
@@ -1090,7 +1103,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             })}
                         </ScrollView>
                     ) : // is Quiz then show the Quiz Grading Component and new version with problemScores
-                    isQuiz ? (
+                    isQuiz && showQuizGrading ? (
                         <ScrollView
                             showsVerticalScrollIndicator={true}
                             keyboardDismissMode={'on-drag'}
@@ -1205,7 +1218,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             flex: 1,
                                             flexDirection: 'row',
                                             alignItems: 'center',
-                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto'
+                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
+                                            marginBottom: 10
                                         }}
                                     >
                                         <TouchableOpacity
@@ -1277,7 +1291,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             numberOfLines={1}
                                             style={{
                                                 width: 120,
-                                                borderBottomColor: '#efefef',
+                                                borderBottomColor: '#f2f2f2',
                                                 borderBottomWidth: 1,
                                                 fontSize: 14,
                                                 // paddingTop: 13,
@@ -1295,7 +1309,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 backgroundColor: 'white',
                                                 overflow: 'hidden',
                                                 height: 35,
-                                                marginLeft: Dimensions.get('window').width < 768 ? 20 : 0
+                                                marginLeft: Dimensions.get('window').width < 768 ? 20 : 0,
+                                                marginBottom: 10
                                             }}
                                         >
                                             <Text
@@ -1378,7 +1393,7 @@ const styleObject = () => {
         },
         input: {
             width: '100%',
-            borderBottomColor: '#efefef',
+            borderBottomColor: '#f2f2f2',
             borderBottomWidth: 1,
             fontSize: 14,
             paddingTop: 13,
@@ -1413,7 +1428,7 @@ const styleObject = () => {
             color: '#000000',
             height: 24,
             paddingHorizontal: 15,
-            backgroundColor: '#efefef',
+            backgroundColor: '#f2f2f2',
             lineHeight: 24,
             fontFamily: 'inter'
             // textTransform: 'uppercase'

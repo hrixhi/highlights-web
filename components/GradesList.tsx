@@ -155,15 +155,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
      * @description Renders export button
      */
     const renderExportButton = () => {
-        return (<View style={{ flexDirection: "row", backgroundColor: '#efefef' }}>
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%', backgroundColor: '#efefef', marginBottom: 20 }}>
+        return (<View style={{ flexDirection: "row", backgroundColor: '#f2f2f2' }}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%', backgroundColor: '#f2f2f2', marginBottom: 20 }}>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
                     <TouchableOpacity
                         onPress={() => {
                             exportGrades()
                         }}
                         style={{
-                            backgroundColor: '#efefef',
+                            backgroundColor: '#f2f2f2',
                             overflow: 'hidden',
                             height: 35,
                             justifyContent: 'center',
@@ -193,14 +193,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     // MAIN RETURN
     return (
         <View style={{
-            backgroundColor: '#efefef',
+            backgroundColor: '#f2f2f2',
             width: '100%',
             height: '100%',
         }}>
             {renderExportButton()}
             {
                 props.scores.length === 0 || cues.length === 0 ?
-                    <View style={{ backgroundColor: '#efefef' }}>
+                    <View style={{ backgroundColor: '#f2f2f2' }}>
                         <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -384,7 +384,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             nestedScrollEnabled={true}
                         >
-                            <View style={{ minHeight: 70, flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: (!props.isOwner && Dimensions.get('window').width) || props.isOwner < 768 ? 1 : 0, borderBottomColor: '#efefef' }} key={"-"}>
+                            <View style={{ minHeight: 70, flexDirection: props.isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: (!props.isOwner && Dimensions.get('window').width) || props.isOwner < 768 ? 1 : 0, borderBottomColor: '#f2f2f2' }} key={"-"}>
                                 {props.isOwner ? <View style={styles.col} key={'0,0'}>
                                     <CustomTextInput
                                         value={studentSearch}
@@ -495,7 +495,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#efefef", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f2f2f2", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#1F1F1F'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
@@ -564,6 +564,6 @@ export default React.memo(GradesList, (prev, next) => {
 
 
 const stylesObject: any = (isOwner: any) => StyleSheet.create({
-    row: { minHeight: 70, flexDirection: isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column',  borderBottomColor: '#efefef', borderBottomWidth: (!isOwner && Dimensions.get('window').width < 768) || isOwner ? 1 : 0 },
-    col: { height: isOwner || Dimensions.get('window').width < 768 ? 'auto' : 80, paddingBottom: isOwner ? 0 : 10, width: isOwner || Dimensions.get('window').width < 768 ? (Dimensions.get('window').width < 768 ? 90 : 120) : 180, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, borderBottomColor: '#efefef', borderBottomWidth: isOwner || (Dimensions.get('window').width < 768) ? 0 : 1,  },
+    row: { minHeight: 70, flexDirection: isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column',  borderBottomColor: '#f2f2f2', borderBottomWidth: (!isOwner && Dimensions.get('window').width < 768) || isOwner ? 1 : 0 },
+    col: { height: isOwner || Dimensions.get('window').width < 768 ? 'auto' : 90, paddingBottom: isOwner ? 0 : 10, width: isOwner || Dimensions.get('window').width < 768 ? (Dimensions.get('window').width < 768 ? 90 : 120) : 180, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, borderBottomColor: '#f2f2f2', borderBottomWidth: isOwner || (Dimensions.get('window').width < 768) ? 0 : 1,  },
 })

@@ -32,8 +32,33 @@ import Books from './Books';
 
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-import { handleFile } from '../helpers/FileUpload';
+import { handleFileUploadEditor } from '../helpers/FileUpload';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
+
+// NEW EDITOR
+// Require Editor JS files.
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+
+// import 'froala-editor/css/froala_editor.pkgd.min.css';
+// import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/js/plugins.pkgd.min.js';
+
+// Require Editor CSS files.
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+
+// Require Font Awesome.
+import 'font-awesome/css/font-awesome.css';
+
+import FroalaEditor from 'react-froala-wysiwyg';
+
+import Froalaeditor from 'froala-editor';
+
+import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from '../constants/Froala';
+
+import { renderMathjax } from '../helpers/FormulaHelpers';
+// Include special components if required.
+// import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -98,6 +123,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const window = Dimensions.get('window');
     const screen = Dimensions.get('screen');
     const [dimensions, setDimensions] = useState({ window, screen });
+    const [userId, setUserId] = useState('');
     const width = dimensions.window.width;
     const hours: any[] = [0, 1, 2, 3, 4, 5, 6];
     const minutes: any[] = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
@@ -126,6 +152,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
+
+    Froalaeditor.DefineIcon('insertFormula', {
+        NAME: 'formula',
+        PATH:
+            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+    });
+    Froalaeditor.RegisterCommand('insertFormula', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function() {
+            RichText.current.editor.selection.save();
+            setShowEquationEditor(true);
+        }
+    });
 
     // HOOKS
 
@@ -179,7 +221,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
-        console.log(url);
         WebViewer(
             {
                 licenseKey: 'xswED5JutJBccg0DZhBM',
@@ -204,9 +245,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         (async () => {
             const uString: any = await AsyncStorage.getItem('user');
-            const userId = JSON.parse(uString);
-            if (userId.role) {
-                setRole(userId.role);
+            const parsedUser = JSON.parse(uString);
+            if (parsedUser._id) {
+                setUserId(parsedUser._id);
+            }
+            if (parsedUser.role) {
+                setRole(parsedUser.role);
             }
         })();
     });
@@ -317,18 +361,26 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
-        let currentContent = editorRef.current.getContent();
+        renderMathjax(equation).then((res: any) => {
+            const random = Math.random();
 
-        const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-        // currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '<br/></div>';
+            RichText.current.editor.selection.restore();
 
-        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '</div> ';
+            RichText.current.editor.html.insert(
+                '<img class="rendered-math-jax" id="' +
+                    random +
+                    '" data-eq="' +
+                    encodeURIComponent(equation) +
+                    '" src="' +
+                    res.imgSrc +
+                    '"></img>'
+            );
+            RichText.current.editor.events.trigger('contentChanged');
 
-        editorRef.current.setContent(currentContent);
-
-        setShowEquationEditor(false);
-        setEquation('');
-    }, [equation, RichText, RichText.current, cue]);
+            setShowEquationEditor(false);
+            setEquation('');
+        });
+    }, [equation, RichText, RichText.current]);
 
     /**
      * @description Validates Quiz for Creation
@@ -560,7 +612,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         const categories = new Set();
 
                         res.data.channel.getChannelCategories.map((category: any) => {
-                            console.log('Channel category', category);
                             categories.add(category);
                         });
 
@@ -610,10 +661,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }
                     });
                     setSubscribers(withoutOwner);
-                    console.log('Subscribers', withoutOwner);
                     // clear selected
                     setSelected(withoutOwnerIds);
-                    console.log('Selected', withoutOwnerIds);
                 }
             })
             .catch((err: any) => console.log(err));
@@ -675,15 +724,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         await AsyncStorage.setItem(type, value);
     }, []);
 
-    /**
-     * @description Update cue with URL and file type after file is uploaded
-     */
-    const updateAfterFileImport = useCallback(
-        (uploadURL, uploadType) => {
-            const obj = { url: uploadURL, type: uploadType, title };
-            setCue(JSON.stringify(obj));
+    const setUploadResult = useCallback((uploadURL: string, uploadType: string) => {
+        const obj = { url: uploadURL, type: uploadType, title };
+
+        setImported(true);
+        setCue(JSON.stringify(obj));
+    }, []);
+
+    const fileUploadEditor = useCallback(
+        async (files: any) => {
+            const res = await handleFileUploadEditor(false, files.item(0), userId);
+
+            if (!res || res.url === '' || res.type === '') {
+                return false;
+            }
+            setUploadResult(res.url, res.type);
         },
-        [title]
+        [userId]
+    );
+
+    const videoUploadEditor = useCallback(
+        async (files: any) => {
+            const res = await handleFileUploadEditor(true, files.item(0), userId);
+
+            if (!res || res.url === '' || res.type === '') {
+                return false;
+            }
+            setUploadResult(res.url, res.type);
+        },
+        [userId]
     );
 
     /**
@@ -938,7 +1007,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         style={{
                             flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                            paddingBottom: 20
+                            paddingBottom: 30
                         }}
                     >
                         {props.option === 'Browse' && !showOptions ? null : (
@@ -1116,7 +1185,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 flexDirection: width < 768 ? 'column' : 'row',
                                                 borderRightWidth: 0,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 paddingTop: width < 768 ? 0 : 40
                                             }}
                                         >
@@ -1242,7 +1311,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#efefef',
+                                                                false: '#f2f2f2',
                                                                 true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
@@ -1336,7 +1405,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#efefef',
+                                                                false: '#f2f2f2',
                                                                 true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
@@ -1466,7 +1535,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             fontFamily: 'Inter'
                                                         }}
                                                     >
-                                                        Graded
+                                                        Grade Weight
                                                     </Text>
                                                 </View>
                                                 <View>
@@ -1485,7 +1554,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 onValueChange={() => setGraded(!graded)}
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
-                                                                    false: '#efefef',
+                                                                    false: '#f2f2f2',
                                                                     true: '#006AFF'
                                                                 }}
                                                                 activeThumbColor="white"
@@ -1507,7 +1576,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     value={gradeWeight}
                                                                     style={{
                                                                         width: '25%',
-                                                                        borderBottomColor: '#efefef',
+                                                                        borderBottomColor: '#f2f2f2',
                                                                         borderBottomWidth: 1,
                                                                         fontSize: 14,
                                                                         padding: 15,
@@ -1580,7 +1649,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 }
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
-                                                                    false: '#efefef',
+                                                                    false: '#f2f2f2',
                                                                     true: '#006AFF'
                                                                 }}
                                                                 activeThumbColor="white"
@@ -1685,7 +1754,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#efefef',
+                                                                false: '#f2f2f2',
                                                                 true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
@@ -1738,7 +1807,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             width: '100%',
                                             borderRightWidth: 0,
-                                            borderColor: '#efefef'
+                                            borderColor: '#f2f2f2'
                                         }}
                                     >
                                         <View
@@ -1781,7 +1850,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 value={customCategory}
                                                                 style={{
                                                                     borderRadius: 0,
-                                                                    borderColor: '#efefef',
+                                                                    borderColor: '#f2f2f2',
                                                                     borderBottomWidth: 1,
                                                                     fontSize: 14,
                                                                     height: '2.75em',
@@ -1855,7 +1924,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             width: '100%',
                                             borderRightWidth: 0,
-                                            borderColor: '#efefef',
+                                            borderColor: '#f2f2f2',
                                             flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40,
                                             alignItems: width < 1024 ? 'flex-start' : 'center',
@@ -1967,7 +2036,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: '#efefef',
+                                                    false: '#f2f2f2',
                                                     true: '#006AFF'
                                                 }}
                                                 activeThumbColor="white"
@@ -2011,7 +2080,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         onValueChange={() => setShuffle(!shuffle)}
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#efefef',
+                                                            false: '#f2f2f2',
                                                             true: '#006AFF'
                                                         }}
                                                         activeThumbColor="white"
@@ -2155,7 +2224,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#efefef',
+                                                            false: '#f2f2f2',
                                                             true: '#006AFF'
                                                         }}
                                                         activeThumbColor="white"
@@ -2256,7 +2325,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#efefef',
+                                                        false: '#f2f2f2',
                                                         true: '#006AFF'
                                                     }}
                                                     activeThumbColor="white"
@@ -2267,7 +2336,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{
                                                         borderRightWidth: 0,
                                                         paddingTop: 0,
-                                                        borderColor: '#efefef',
+                                                        borderColor: '#f2f2f2',
                                                         flexDirection: 'row'
                                                     }}
                                                 >
@@ -2300,7 +2369,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         borderRadius: 15,
                                                                         shadowOpacity: 0,
                                                                         borderWidth: 1,
-                                                                        borderColor: '#efefef',
+                                                                        borderColor: '#f2f2f2',
                                                                         overflow: 'scroll',
                                                                         maxHeight: '100%'
                                                                     }
@@ -2344,7 +2413,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         borderRadius: 15,
                                                                         shadowOpacity: 0,
                                                                         borderWidth: 1,
-                                                                        borderColor: '#efefef',
+                                                                        borderColor: '#f2f2f2',
                                                                         overflow: 'scroll',
                                                                         maxHeight: '100%'
                                                                     }
@@ -2408,7 +2477,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#efefef',
+                                                        false: '#f2f2f2',
                                                         true: '#006AFF'
                                                     }}
                                                     activeThumbColor="white"
@@ -2430,7 +2499,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 width: '100%',
                                                 borderRightWidth: 0,
-                                                borderColor: '#efefef',
+                                                borderColor: '#f2f2f2',
                                                 flexDirection: 'row',
                                                 alignItems: 'center'
                                             }}
@@ -2441,7 +2510,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontFamily: 'overpass',
                                                     width: '100%',
                                                     maxWidth: 400,
-                                                    borderBottom: '1px solid #efefef',
+                                                    borderBottom: '1px solid #f2f2f2',
                                                     fontSize: 14,
                                                     paddingTop: 13,
                                                     paddingBottom: 13,
@@ -2483,6 +2552,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         minHeight: isQuiz ? 0 : 500,
                                         backgroundColor: 'white'
                                     }}
+                                    key={imported.toString()}
                                 >
                                     {isQuiz ? (
                                         <View
@@ -2505,7 +2575,42 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         paddingTop: 15
                                                     }}
                                                 >
-                                                    <Editor
+                                                    <View key={userId.toString()}>
+                                                        <FroalaEditor
+                                                            model={quizInstructions}
+                                                            onModelChange={(model: any) => setQuizInstructions(model)}
+                                                            config={{
+                                                                key:
+                                                                    'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                                attribution: false,
+                                                                placeholderText: 'Quiz Instructions',
+                                                                charCounterCount: false,
+                                                                zIndex: 2003,
+                                                                // immediateReactModelUpdate: true,
+                                                                heightMin: 200,
+                                                                fileUpload: false,
+                                                                videoUpload: false,
+                                                                imageUploadURL:
+                                                                    'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                                imageUploadParam: 'file',
+                                                                imageUploadParams: { userId },
+                                                                imageUploadMethod: 'POST',
+                                                                imageMaxSize: 5 * 1024 * 1024,
+                                                                imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                                paragraphFormatSelection: true,
+                                                                // Default Font Size
+                                                                fontSizeDefaultSelection: '24',
+                                                                spellcheck: true,
+                                                                tabSpaces: 4,
+                                                                // TOOLBAR
+                                                                toolbarButtons: QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
+                                                                toolbarSticky: false,
+                                                                quickInsertEnabled: false,
+                                                                id: 'XYZ'
+                                                            }}
+                                                        />
+                                                    </View>
+                                                    {/* <Editor
                                                         initialValue={initialQuizInstructions}
                                                         apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
                                                         init={{
@@ -2576,7 +2681,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         onChange={(e: any) => {
                                                             setQuizInstructions(e.target.getContent());
                                                         }}
-                                                    />
+                                                    /> */}
                                                 </View>
                                             </View>
                                             <QuizCreate
@@ -2584,6 +2689,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 headers={headers}
                                                 setProblems={(p: any) => setProblems(p)}
                                                 setHeaders={(h: any) => setHeaders(h)}
+                                                userId={userId}
                                             />
                                         </View>
                                     ) : imported ? (
@@ -2617,7 +2723,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{
                                                         height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh',
                                                         borderWidth: 1,
-                                                        borderColor: '#efefef',
+                                                        borderColor: '#f2f2f2',
                                                         borderRadius: 1
                                                     }}
                                                 ></div>
@@ -2633,100 +2739,78 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         />
                                     ) : null}
                                     {isQuiz || imported || showBooks ? null : (
-                                        <Editor
-                                            onInit={(evt, editor) => (editorRef.current = editor)}
-                                            initialValue={cueDraft !== '' ? cueDraft : '<h2>Title</h2>'}
-                                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                            init={{
-                                                skin: 'snow',
-                                                // toolbar_sticky: true,
-                                                branding: false,
-                                                placeholder: 'Content...',
-                                                min_height: 500,
-                                                paste_data_images: true,
-                                                images_upload_url:
-                                                    'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                mobile: {
-                                                    plugins:
-                                                        'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                },
-                                                plugins:
-                                                    'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                menu: {
-                                                    // this is the complete default configuration
-                                                    file: { title: 'File', items: 'newdocument' },
-                                                    edit: {
-                                                        title: 'Edit',
-                                                        items: 'undo redo | cut copy paste pastetext | selectall'
-                                                    },
-                                                    insert: { title: 'Insert', items: 'link media | template hr' },
-                                                    view: { title: 'View', items: 'visualaid' },
-                                                    format: {
-                                                        title: 'Format',
-                                                        items:
-                                                            'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                                                    },
-                                                    table: {
-                                                        title: 'Table',
-                                                        items: 'inserttable tableprops deletetable | cell row column'
-                                                    },
-                                                    tools: { title: 'Tools', items: 'spellchecker code' }
-                                                },
-                                                setup: (editor: any) => {
-                                                    // const equationIcon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 48 60" style="enable-background:new 0 0 48 48;" xml:space="preserve"><g><path d="M45,2v2H20.8271484l-7.8447266,41.1875c-0.0830078,0.4335938-0.4404297,0.7617188-0.8789063,0.8076172   C12.0683594,45.9980469,12.0341797,46,12,46c-0.4003906,0-0.7666016-0.2402344-0.9228516-0.6152344L6.7265625,34.9433594   L3.78125,38.625l-1.5625-1.25l4-5c0.2207031-0.2753906,0.5654297-0.4189453,0.9208984-0.3652344   c0.3496094,0.0488281,0.6474609,0.2792969,0.7832031,0.6054688l3.71875,8.9238281L19.0175781,2.8125   C19.1074219,2.3408203,19.5195313,2,20,2H45z M27.7070313,21.7070313L33,16.4140625l5.2929688,5.2929688l1.4140625-1.4140625   L34.4140625,15l5.2929688-5.2929688l-1.4140625-1.4140625L33,13.5859375l-5.2929688-5.2929688l-1.4140625,1.4140625L31.5859375,15   l-5.2929688,5.2929688L27.7070313,21.7070313z M32.9546509,38.5549316l-5.1089478-8.0891113l-1.6914063,1.0683594   l5.6068115,8.8773804l-2.6019287,4.0474243l1.6816406,1.0820313l9-14l-1.6816406-1.0820313L32.9546509,38.5549316z M23,27h20v-2H23   V27z"/></g></svg>'
+                                        <View key={userId.toString()}>
+                                            <FroalaEditor
+                                                ref={RichText}
+                                                model={cue}
+                                                onModelChange={(model: any) => setCue(model)}
+                                                config={{
+                                                    key:
+                                                        'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                    attribution: false,
+                                                    placeholderText: 'Enter Title',
+                                                    charCounterCount: true,
+                                                    zIndex: 2003,
+                                                    // immediateReactModelUpdate: true,
+                                                    heightMin: 500,
+                                                    // FILE UPLOAD
+                                                    // fileUploadURL: 'https://api.learnwithcues.com/upload',
+                                                    fileMaxSize: 25 * 1024 * 1024,
+                                                    fileAllowedTypes: ['*'],
+                                                    fileUploadParams: { userId },
+                                                    // IMAGE UPLOAD
+                                                    imageUploadURL:
+                                                        'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                    imageUploadParam: 'file',
+                                                    imageUploadParams: { userId },
+                                                    imageUploadMethod: 'POST',
+                                                    imageMaxSize: 5 * 1024 * 1024,
+                                                    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                    // VIDEO UPLOAD
+                                                    videoMaxSize: 50 * 1024 * 1024,
+                                                    videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                                                    paragraphFormatSelection: true,
+                                                    // Default Font Size
+                                                    spellcheck: true,
+                                                    tabSpaces: 4,
 
-                                                    const equationIcon =
-                                                        '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                                                    editor.ui.registry.addIcon('formula', equationIcon);
+                                                    // TOOLBAR
+                                                    toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                                                    toolbarSticky: true,
+                                                    htmlAllowedEmptyTags: [
+                                                        'textarea',
+                                                        'a',
+                                                        'iframe',
+                                                        'object',
+                                                        'video',
+                                                        'style',
+                                                        'script',
+                                                        '.fa',
+                                                        'span',
+                                                        'p',
+                                                        'path',
+                                                        'line'
+                                                    ],
+                                                    htmlAllowedTags: ['.*'],
+                                                    htmlAllowedAttrs: ['.*'],
+                                                    htmlRemoveTags: ['script'],
 
-                                                    editor.ui.registry.addButton('formula', {
-                                                        icon: 'formula',
-                                                        // text: "Upload File",
-                                                        tooltip: 'Insert equation',
-                                                        onAction: () => {
-                                                            setShowEquationEditor(!showEquationEditor);
+                                                    events: {
+                                                        'file.beforeUpload': function(files: any) {
+                                                            // Return false if you want to stop the file upload.
+                                                            fileUploadEditor(files);
+
+                                                            return false;
+                                                        },
+                                                        'video.beforeUpload': function(videos: any) {
+                                                            videoUploadEditor(videos);
+
+                                                            return false;
                                                         }
-                                                    });
-
-                                                    editor.ui.registry.addButton('upload', {
-                                                        icon: 'upload',
-                                                        tooltip: 'Import File (pdf, docx, media, etc.)',
-                                                        onAction: async () => {
-                                                            const res = await handleFile(false);
-
-                                                            console.log('File upload result', res);
-
-                                                            if (!res || res.url === '' || res.type === '') {
-                                                                return;
-                                                            }
-
-                                                            updateAfterFileImport(res.url, res.type);
-                                                        }
-                                                    });
-                                                },
-                                                // menubar: 'file edit view insert format tools table tc help',
-                                                menubar: false,
-                                                toolbar:
-                                                    'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat  pagebreak | preview print | outdent indent ltr rtl ',
-                                                importcss_append: true,
-                                                image_caption: true,
-                                                quickbars_selection_toolbar:
-                                                    'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                noneditable_noneditable_class: 'mceNonEditable',
-                                                toolbar_mode: 'sliding',
-                                                content_style:
-                                                    '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                                                // tinycomments_mode: 'embedded',
-                                                // content_style: '.mymention{ color: gray; }',
-                                                // contextmenu: 'link image table configurepermanentpen',
-                                                // a11y_advanced_options: true,
-                                                extended_valid_elements:
-                                                    'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                                                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                // content_css: useDarkMode ? 'dark' : 'default',
-                                            }}
-                                            onChange={(e: any) => setCue(e.target.getContent())}
-                                        />
+                                                    }
+                                                }}
+                                            />
+                                        </View>
                                     )}
                                 </View>
                             </>
@@ -2845,7 +2929,7 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#efefef',
+        borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,

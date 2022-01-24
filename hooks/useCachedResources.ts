@@ -15,8 +15,8 @@ export default function useCachedResources() {
                 // Load fonts
                 await Font.loadAsync({
                     ...Ionicons.font,
-                    inter: require('../assets/fonts/SF-Pro-Display-Bold.otf'),
-                    overpass: require('../assets/fonts/SF-Pro-Text-Regular.otf')
+                    inter: require('../assets/fonts/clarkson500.woff2'),
+                    overpass: require('../assets/fonts/clarkson400.woff2')
                 });
             } catch (e) {
                 // We might want to provide this error information to an error reporting service
