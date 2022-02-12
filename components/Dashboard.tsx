@@ -603,7 +603,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
                     Linking.openURL(url);
                 } else {
-                    window.open(url);
+                    window.open(url, '_blank');
                 }
             }
         } else {
@@ -1352,7 +1352,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     if (meetingProvider !== '' && meeting.joinUrl) {
-                                                        if (Platform.OS == 'web') {
+                                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                                             window.open(meeting.joinUrl, '_blank');
                                                         } else {
                                                             Linking.openURL(meeting.joinUrl);
@@ -1376,13 +1376,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     text: 'Okay',
                                                                     onPress: () => {
                                                                         if (createdBy === userId) {
-                                                                            if (Platform.OS == 'web') {
+                                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                                                                 window.open(meeting.startUrl, '_blank');
                                                                             } else {
                                                                                 Linking.openURL(meeting.startUrl);
                                                                             }
                                                                         } else {
-                                                                            if (Platform.OS == 'web') {
+                                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                                                                 window.open(meeting.joinUrl, '_blank');
                                                                             } else {
                                                                                 Linking.openURL(meeting.joinUrl);
@@ -1394,13 +1394,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         );
                                                     } else {
                                                         if (createdBy === userId) {
-                                                            if (Platform.OS == 'web') {
+                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                                                 window.open(meeting.startUrl, '_blank');
                                                             } else {
                                                                 Linking.openURL(meeting.startUrl);
                                                             }
                                                         } else {
-                                                            if (Platform.OS == 'web') {
+                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                                                 window.open(meeting.joinUrl, '_blank');
                                                             } else {
                                                                 Linking.openURL(meeting.joinUrl);

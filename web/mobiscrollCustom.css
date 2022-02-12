@@ -157,3 +157,11 @@
     font-family: Inter;
     font-size: 18px;
 } */
+
+.noClearButtons .mbsc-textfield-tag-clear.mbsc-icon {
+    display: none !important;
+}
+
+.noClearButtons .mbsc-textfield-tag.mbsc-ltr {
+    padding-right: 0.75em;
+}

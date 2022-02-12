@@ -86,6 +86,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     // HOOKS
 
+    console.log("Cue", props.cue)
+
     /**
      * @description Set if cue is a Quiz
      */
@@ -1086,7 +1088,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     height: 'auto'
                 }}
             >
-                <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
+                <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10, flex: 1 }}>
                     {/* Section 1: Shows all cues from Channel */}
                     <View
                         style={{
@@ -1246,7 +1248,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     {/* Section 2 */}
 
-                    {channelCues.length !== 0 ? (
+                    {channelCues.length === 0 && selectedCues.length === 0 ? null : selectedCues.length !== 0 ? (
                         <View
                             style={{
                                 flex: 1,
@@ -1265,7 +1267,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 useDragHandle
                             />
                         </View>
-                    ) : null}
+                    ) : (
+                        <View style={{ backgroundColor: '#f2f2f2' }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#000000',
+                                    textAlign: 'center',
+                                    fontFamily: 'inter',
+                                    backgroundColor: '#f2f2f2',
+                                    paddingVertical: 20
+                                }}
+                            >
+                                No selection.
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </InsetShadow>
         );
@@ -1449,24 +1466,41 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     {/* Section 2 */}
 
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            backgroundColor: '#f2f2f2',
-                            paddingTop: 7,
-                            paddingBottom: 14
-                        }}
-                    >
-                        <SortableListUpdate
-                            items={folderCuesToDisplay}
-                            onSortEnd={onSortEndUpdate}
-                            useDragHandle={true}
-                            axis={'x'}
-                            lockAxis={'x'}
-                        />
-                    </View>
+                    {folderCuesToDisplay.length !== 0 ? (
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                backgroundColor: '#f2f2f2',
+                                paddingTop: 7,
+                                paddingBottom: 14
+                            }}
+                        >
+                            <SortableListUpdate
+                                items={folderCuesToDisplay}
+                                onSortEnd={onSortEndUpdate}
+                                useDragHandle={true}
+                                axis={'x'}
+                                lockAxis={'x'}
+                            />
+                        </View>
+                    ) : (
+                        <View style={{ backgroundColor: '#f2f2f2' }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: '#000000',
+                                    textAlign: 'center',
+                                    fontFamily: 'inter',
+                                    backgroundColor: '#f2f2f2',
+                                    paddingVertical: 20
+                                }}
+                            >
+                                No selection.
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </InsetShadow>
         );
@@ -1669,7 +1703,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </TouchableOpacity>
                 ) : null}
                 {/* Create new folder button */}
-                {channelOwner && folderId === '' && !createNewFolder && !editFolder && showOriginal ? (
+                {channelOwner && folderId === '' && !createNewFolder && !editFolder && showOriginal && props.channelId ? (
                     <TouchableOpacity
                         onPress={() => {
                             setCreateNewFolder(true);
@@ -1797,6 +1831,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                 const server = fetchAPI('');
 
+                                if (selectedCues.length < 2) {
+                                    Alert('Folder must contain at least 2 items.');
+                                    return;
+                                }
+
                                 server
                                     .mutate({
                                         mutation: creatFolder,
@@ -1895,6 +1934,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             setUpdatingFolder(true);
 
                                             const cueIds = folderCuesToDisplay.map((cue: any) => cue._id);
+
+                                            if (cueIds.length < 2) {
+                                                Alert('Folder must contain at least 2 items.');
+                                                return;
+                                            }
 
                                             server
                                                 .mutate({

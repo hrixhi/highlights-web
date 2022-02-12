@@ -134,7 +134,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [deadline, setDeadline] = useState<Date>(dead);
     const [initiateAt, setInitiateAt] = useState<Date>(initiate);
     const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0);
-    const [graded, setGraded] = useState(props.cue.gradeWeight && props.cue.gradeWeight !== 0 ? true : false);
+    const [graded, setGraded] = useState(
+        props.cue.gradeWeight
+    );
     const currentDate = new Date();
     const [submitted, setSubmitted] = useState(false);
     const [imported, setImported] = useState(false);
@@ -417,7 +419,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         const stringifiedCues = JSON.stringify(subCues);
                         await AsyncStorage.setItem('cues', stringifiedCues);
-                        props.reloadCueListAfterUpdate();
+                        // props.reloadCueListAfterUpdate();
+                        
                     }
                 );
             });
@@ -1044,9 +1047,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             const format = res.data.cue.getSharedWith.map((sub: any) => {
                                 return {
                                     value: sub.value,
-                                    label: sub.label,
-                                    isFixed: sub.isFixed,
-                                    visited: sub.isFixed
+                                    text: sub.label,
+                                    // isFixed: sub.isFixed,
+                                    // visited: sub.isFixed
                                 };
                             });
 
@@ -1066,16 +1069,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             const formatSel = sel.map((sub: any) => {
                                 return {
                                     value: sub.value,
-                                    label: sub.label,
-                                    isFixed: true,
-                                    visited: true
+                                    text: sub.label,
+                                    // isFixed: true,
+                                    // visited: true
                                 };
                             });
 
                             const withoutOwner: any = [];
                             formatSel.map((i: any) => {
                                 if (user._id !== i.value) {
-                                    withoutOwner.push(i);
+                                    withoutOwner.push(i.value);
                                 }
                             });
                             setSelected(withoutOwner);
@@ -1556,7 +1559,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             shuffle,
             frequency,
             customCategory: customCategory === 'None' ? '' : customCategory,
-            gradeWeight,
+            gradeWeight: graded ? gradeWeight : null,
             endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
             submission,
             deadline: submission ? deadline.toISOString() : '',
@@ -1564,6 +1567,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
             availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : ''
         };
+
+        console.log("Save cue", saveCue)
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
 
@@ -1586,7 +1591,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         unlimitedAttempts,
         allowLateSubmission,
         availableUntil,
-        isOwner
+        isOwner,
+        graded
     ]);
 
     /**
@@ -2860,7 +2866,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         model={original}
                         onModelChange={(model: any) => setOriginal(model)}
                         config={{
-                            key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                             attribution: false,
                             placeholderText: 'Enter Title',
                             charCounterCount: true,
@@ -2881,7 +2887,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             imageAllowedTypes: ['jpeg', 'jpg', 'png'],
                             // VIDEO UPLOAD
                             videoMaxSize: 50 * 1024 * 1024,
-                            videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                            videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
                             paragraphFormatSelection: true,
                             // Default Font Size
                             spellcheck: true,
@@ -3234,7 +3240,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     model={submissionDraft}
                     onModelChange={(model: any) => setSubmissionDraft(model)}
                     config={{
-                        key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                         attribution: false,
                         placeholderText: 'Submission',
                         charCounterCount: true,
@@ -3255,7 +3261,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
                         // VIDEO UPLOAD
                         videoMaxSize: 50 * 1024 * 1024,
-                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
                         paragraphFormatSelection: true,
                         // Default Font Size
                         spellcheck: true,
@@ -3348,7 +3354,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </View>
                     ) : null}
-                    {limitedShares ? (
+                    {limitedShares && selected.length !== 0 && subscribers.length !== 0 ? (
                         <View
                             style={{
                                 flexDirection: 'column',
@@ -3366,7 +3372,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     minWidth: 300
                                 }}
                             >
-                                <Select
+                                {/* <Select
                                     value={selected}
                                     isMulti
                                     styles={reactSelectStyles}
@@ -3376,6 +3382,57 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     classNamePrefix="select"
                                     onChange={onChange}
                                     options={subscribers}
+                                /> */}
+                                <MobiscrollSelect
+                                    inputProps={{
+                                        className: 'noClearButtons'
+                                    }}
+                                    value={selected}
+                                    rows={subscribers.length}
+                                    data={subscribers}
+                                    selectMultiple={true}
+                                    theme="ios"
+                                    themeVariant="light"
+                                    touchUi={true}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false
+                                        }
+                                    }}
+                                    onChange={(val: any) => {
+                                        // if (!initializedCustomCategories) return;
+                                        // setCustomCategory(val.value);
+                                        if (val.value.length < selected.length) {
+                                            console.log("Remove")
+                                            return;
+                                        } else if (val.value.length > selected.length) {
+                                            // New Sub added
+                                            
+                                            const addedUser = val.value.filter((sub: string) => !selected.includes(sub))[0];
+                                            
+                                            const server = fetchAPI('');
+                                            server
+                                                .mutate({
+                                                    mutation: shareCueWithMoreIds,
+                                                    variables: {
+                                                        cueId: props.cue._id,
+                                                        userId: addedUser
+                                                    }
+                                                })
+                                                .then(res => {
+                                                    if (res.data && res.data.cue.shareCueWithMoreIds) {
+                                                        loadChannelsAndSharedWith();
+                                                    }
+                                                })
+                                                .catch(err => console.log(err));
+
+                                            setSelected(val.value)
+
+                                        }
+                                    }}
                                 />
                             </View>
                         </View>

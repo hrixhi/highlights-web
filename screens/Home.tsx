@@ -55,7 +55,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     // All cues
     const [cues, setCues] = useState<any>({});
 
-    const [reLoading, setReLoading] = useState(false);
     const [fadeAnimation] = useState(new Animated.Value(0));
 
     // Open an existing Cue
@@ -348,7 +347,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     duration: 150,
                     useNativeDriver: true
                 }).start();
-                setReLoading(false);
             }
         } else if (unparsedCues) {
             const custom: any = {};
@@ -374,7 +372,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 duration: 150,
                 useNativeDriver: true
             }).start();
-            setReLoading(false);
         }
     }, []);
 
@@ -605,7 +602,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 .then(async res => {
                     const u = res.data.user.findById;
                     if (u) {
-                        await AsyncStorage.setItem('cueDraft', u.currentDraft);
+                        // await AsyncStorage.setItem('cueDraft', u.currentDraft);
                         delete u.currentDraft;
                         delete u.__typename;
                         const sU = JSON.stringify(u);
@@ -709,7 +706,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const saveDataInCloud = useCallback(async () => {
         if (saveDataInProgress) return;
 
-        setSaveDataInProgress(true);
         const u: any = await AsyncStorage.getItem('user');
         const parsedUser = JSON.parse(u);
         const sC: any = await AsyncStorage.getItem('cues');
@@ -726,7 +722,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         _id: cue._id.toString(),
                         color: cue.color.toString(),
                         date: new Date(cue.date).toISOString(),
-                        gradeWeight: cue.submission ? cue.gradeWeight.toString() : undefined,
+                        gradeWeight: cue.submission && cue.gradeWeight ? cue.gradeWeight.toString() : undefined,
                         endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? new Date(cue.endPlayAt).toISOString() : '',
                         allowedAttempts:
                             cue.allowedAttempts && cue.allowedAttempts !== null ? cue.allowedAttempts.toString() : null
@@ -756,7 +752,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 });
             });
         }
-
+        
         const server = fetchAPI('');
 
         // UPDATE CUES
@@ -809,7 +805,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                 }
 
-                setSaveDataInProgress(false);
             })
             .catch(err => console.log(err));
     }, [cues]);
@@ -1542,7 +1537,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
-                (option === 'Channels' && !showCreate) ? (
+                (option === 'Channels' && !showCreate) ||
+                (option === 'Settings' && !showHelp) ? (
                     <TouchableOpacity
                         onPress={() => {
                             if (option === 'Classroom') {
@@ -1564,6 +1560,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 setTab('Add');
                             } else if (option === 'Channels') {
                                 setShowCreate(true);
+                            } else if (option === 'Settings') {
+                                window.open('https://www.learnwithcues.com/help', '_blank');
                             } else {
                                 setShowDirectory(true);
                             }
@@ -1603,7 +1601,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Inbox' ? (
                                 <Ionicons name="person-add-outline" size={21} />
-                            ) : null}
+                            ) : (
+                                <Ionicons name="help-outline" size={21} />
+                            )}
                         </Text>
                     </TouchableOpacity>
                 ) : null)}

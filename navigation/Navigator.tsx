@@ -9,6 +9,7 @@ import Home from '../screens/Home';
 import LinkingConfiguration from './Linking';
 import FinishZoomSetup from '../screens/FinishZoomSetup';
 import PDFViewerCues from '../screens/PDFViewerCues';
+import DesktopSSO from '../screens/DesktopSSO';
 import Auth from '../screens/Auth';
 
 // Main stack navigator
@@ -20,24 +21,25 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                 <Stack.Screen
                     name="Root"
                     options={{ title: 'Cues' }}
-                    component={() => (
-                        <View
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                                backgroundColor: 'white'
-                            }}
-                        >
-                            <Home />
-                        </View>
-                    )}
-                />
+                >
+                    {props =>  <View
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            backgroundColor: 'white'
+                        }}
+                    >
+                        <Home {...props} />
+                    </View>
+                    }
+                </Stack.Screen>
 
-                <Stack.Screen name="login" component={Auth} options={{ title: 'Login to Cues' }} />
+                <Stack.Screen name="login" component={Auth} options={{ title: 'Log In to Cues' }} />
                 <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
                 <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
+                <Stack.Screen name="desktopSSORedirect" component={DesktopSSO} options={{ title: 'Cues - Single Sign On' }} />
                 {/* In case navigation ends up at a wrong location */}
                 <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
             </Stack.Navigator>

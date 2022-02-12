@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Platform, Dimensions, Image, ScrollView } from 'react-native';
 import Alert from '../components/Alert';
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -9,12 +9,14 @@ import { origin } from '../constants/zoomCredentials';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { TextInput } from '../components/CustomTextInput';
 import { Ionicons } from '@expo/vector-icons';
-import { login, resetPassword, isSsoAvailable, getSsoLink, loginFromSso } from '../graphql/QueriesAndMutations';
+import { login, resetPassword, getSsoLink, loginFromSso } from '../graphql/QueriesAndMutations';
 
 import logo from '../components/default-images/cues-logo-black-exclamation-hidden.jpg';
 
 import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+
+import axios from 'axios';
 
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
 
@@ -30,6 +32,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
     const [emailValidError, setEmailValidError] = useState('');
     const [isSsoEnabled, setIsSsoEnabled] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    let cancelTokenRef: any = useRef({});
 
     const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
@@ -130,25 +134,35 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                 const split = email.split('@');
 
                 if (split[1] !== '') {
-                    const server = fetchAPI('');
+                    if (typeof cancelTokenRef.current != typeof undefined) {
+                        cancelTokenRef.current &&
+                            cancelTokenRef.current.cancel &&
+                            cancelTokenRef.current.cancel('Operation canceled due to new request.');
+                    }
 
-                    server
-                        .query({
-                            query: isSsoAvailable,
-                            variables: {
-                                ssoDomain: split[1]
-                            }
-                        })
-                        .then(res => {
-                            if (res.data && res.data.user.isSsoAvailable) {
-                                setIsSsoEnabled(true);
-                            } else {
-                                setIsSsoEnabled(false);
-                            }
-                        })
-                        .catch(e => {
-                            setIsSsoEnabled(false);
-                        });
+                    //Save the cancel token for the current request
+                    cancelTokenRef.current = axios.CancelToken.source();
+
+                    try {
+                        axios
+                            .post(
+                                `https://api.learnwithcues.com/checkSSO`,
+                                {
+                                    ssoDomain: split[1]
+                                },
+                                { cancelToken: cancelTokenRef.current.token }
+                            )
+                            .then((res: any) => {
+                                if (res.data && res.data.ssoFound) {
+                                    setIsSsoEnabled(true);
+                                } else {
+                                    setIsSsoEnabled(false);
+                                }
+                            });
+                    } catch (e) {
+                        console.log(e);
+                        setIsSsoEnabled(false);
+                    }
                 }
             }
         })();

@@ -47,6 +47,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [joinWithCode, setJoinWithCode] = useState('');
     const [joinWithCodeDisabled, setJoinWithCodeDisabled] = useState(true);
     const [userId, setUserId] = useState('');
+    const [sortChannels, setSortChannels] = useState<any[]>([]);
+    const [subIds, setSubIds] = useState<any[]>([]);
+
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
      const filterRoleOptions = [
@@ -108,17 +111,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         return match
 	})
-	const sortChannels = channels.sort((a: any, b: any) => {
-
-        const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
-
-        const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
-
-        if (aSubscribed && !bSubscribed) return -1;
-
-        return 1;
-
-    })
 
     // HOOKS 
 
@@ -204,6 +196,35 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [name, password, passwordRequired, props.showCreate, colorCode, school])
 
+    useEffect(() => {
+        const subSet = new Set()
+        props.subscriptions.map((sub: any) => {
+            subSet.add(sub.channelId);
+        })
+        setSubIds(Array.from(subSet.values()))
+    }, [props.subscriptions])
+
+    useEffect(() => {
+        const sort = channels.sort((a: any, b: any) => {
+
+            const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
+    
+            const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
+    
+            if (aSubscribed && !bSubscribed) {
+                return -1;
+            } else if (!aSubscribed && bSubscribed) {
+                return 1;
+            } else {
+                return 0;
+            }
+            
+    
+        })
+
+        setSortChannels(sort)
+    }, [channels, props.subscriptions])
+
     /**
      * @description Validate submit for join channel with code
      */
@@ -230,31 +251,23 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             }).then((res: any) => {
                 if (res.data && res.data.channel.findBySchoolId) {
-                    res.data.channel.findBySchoolId.sort((a: any, b: any) => {
+                    const sortedChannels = res.data.channel.findBySchoolId.sort((a: any, b: any) => {
                         if (a.name < b.name) { return -1; }
                         if (a.name > b.name) { return 1; }
                         return 0;
                     })
-                    const c = res.data.channel.findBySchoolId.map((item: any, index: any) => {
-                        const x = { ...item, selected: false, index }
-                        delete x.__typename
-                        return x
-                    })
-                    const sortedChannels = c.sort((a: any, b: any) => {
-                        if (a.name < b.name) { return -1; }
-                        if (a.name > b.name) { return 1; }
-                        return 0;
-                    })
+                    // const c = res.data.channel.findBySchoolId.map((item: any, index: any) => {
+                    //     const x = { ...item, selected: false, index }
+                    //     delete x.__typename
+                    //     return x
+                    // })
                     setChannels(sortedChannels)
                     setLoading(false)
                 }
             }).catch(err => {
                 setLoading(false)
             })
-        } else {
-            // Fetch all public channels here
-            loadOutsideChannels()
-        }
+        } 
     }, [role, school])
 
     /**
@@ -467,8 +480,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setIsSubmitting(false);
                     switch (channelCreateStatus) {
                         case "created":
-                            Alert("Channel created successfully")
-                            props.closeModal()
+                            Alert("Course created successfully")
+                            props.setShowCreate(false);
                             // Refresh subs
                             props.refreshSubscriptions()
                             break;
@@ -713,7 +726,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         backgroundColor: '#f2f2f2',
                         width: '100%',
                         minHeight: Dimensions.get("window").height - 52
-                    }}>
+                    }}
+                    key={sortChannels.length + subIds.length} 
+                    >
 
                         {/* */}
                         {sortChannels.length === 0 ? <View
@@ -758,9 +773,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 {
                                     sortChannels.map((channel: any, ind: any) => {
 
-                                        const subscribed = props.subscriptions.find((sub: any) => {
-                                            return sub.channelId === channel._id
-                                        })
+                                        const subscribed = subIds.includes(channel._id)
 
                                         let role = 'Viewer';
 
@@ -948,7 +961,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 />
                             </View>
 
-                            {!school ? <View style={{ backgroundColor: 'white' }}>
+                            {/* {!school ? <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
                                     color: '#000000'
@@ -974,7 +987,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 placeholder={""}
                                 onChange={(e: any) => setDescription(e.target.value)}
                                 />
-                            </View> : null}
+                            </View> : null} */}
 
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{

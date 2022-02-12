@@ -29,7 +29,7 @@ export const handleFile = async (audioVideoOnly: boolean) => {
     }
 
     if (type === 'wma' || type === 'avi') {
-        alert('This video format is not supported. Upload mp4 or ogg.');
+        alert('This video format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 
@@ -48,7 +48,7 @@ export const handleFile = async (audioVideoOnly: boolean) => {
         audioVideoOnly &&
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
-        alert('Error! Only audio/video files can be imported.');
+        alert('Error! This file format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 
@@ -88,7 +88,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
         audioVideoOnly &&
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
-        alert('Error! Only audio/video files can be imported.');
+        alert('Error! This file format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 
@@ -99,7 +99,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     }
 
     if (type === 'wma' || type === 'avi') {
-        alert('This video format is not supported. Upload mp4 or ogg.');
+        alert('This video format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 

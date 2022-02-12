@@ -260,7 +260,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (Platform.OS === 'ios' || Platform.OS === 'android') {
             Linking.openURL(url);
         } else {
-            window.open(url);
+            window.open(url, '_blank');
         }
     }, [zoomInfo, userId]);
 

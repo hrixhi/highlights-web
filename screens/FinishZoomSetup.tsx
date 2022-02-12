@@ -72,7 +72,7 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                             zoomRedirectUri
                         )}&state=${user._id}`;
 
-                        window.open(url);
+                        window.open(url, '_blank');
                     }
                 }
             }

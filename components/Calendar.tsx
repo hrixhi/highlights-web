@@ -20,10 +20,7 @@ import {
     createDateV1,
     editDateV1,
     deleteDateV1,
-    meetingRequest,
-    markAttendance,
     getActivity,
-    // getOrganisation,
     markActivityAsRead,
     regenZoomMeeting
 } from '../graphql/QueriesAndMutations';
@@ -697,7 +694,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             {
                                 text: 'Yes',
                                 onPress: async () => {
-                                    if (Platform.OS == 'web') {
+                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                         window.open(meetingLink, '_blank');
                                     } else {
                                         Linking.openURL(meetingLink);
@@ -1014,7 +1011,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <TouchableOpacity
                         style={{ marginRight: 15 }}
                         onPress={() => {
-                            if (Platform.OS == 'web') {
+                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
                                 window.open(editEvent.zoomStartUrl, '_blank');
                             } else {
                                 Linking.openURL(editEvent.zoomStartUrl);
@@ -1846,6 +1843,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     borderLeftWidth: 3,
                                                                     borderLeftColor: act.colorCode
                                                                 }}
+                                                                disabled={target === 'CHANNEL_UNSUBSCRIBED'}
                                                             >
                                                                 <View
                                                                     style={{
@@ -1913,20 +1911,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     >
                                                                         {emailTimeDisplay(act.date)}
                                                                     </Text>
-                                                                    <Text
-                                                                        style={{
-                                                                            fontSize: 13,
-                                                                            padding: 5,
-                                                                            lineHeight: 13
-                                                                        }}
-                                                                        ellipsizeMode="tail"
-                                                                    >
-                                                                        <Ionicons
-                                                                            name="chevron-forward-outline"
-                                                                            size={18}
-                                                                            color="#006AFF"
-                                                                        />
-                                                                    </Text>
+                                                                    {target !== 'CHANNEL_UNSUBSCRIBED' ? (
+                                                                        <Text
+                                                                            style={{
+                                                                                fontSize: 13,
+                                                                                padding: 5,
+                                                                                lineHeight: 13
+                                                                            }}
+                                                                            ellipsizeMode="tail"
+                                                                        >
+                                                                            <Ionicons
+                                                                                name="chevron-forward-outline"
+                                                                                size={18}
+                                                                                color="#006AFF"
+                                                                            />
+                                                                        </Text>
+                                                                    ) : null}
                                                                 </View>
                                                             </TouchableOpacity>
                                                         );
@@ -2260,7 +2260,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     ) {
                                                                         Linking.openURL(url);
                                                                     } else {
-                                                                        window.open(url);
+                                                                        window.open(url, '_blank');
                                                                     }
                                                                 }}
                                                                 style={{

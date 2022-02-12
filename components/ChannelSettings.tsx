@@ -1504,15 +1504,18 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             borderRadius: 15,
                                             overflow: 'hidden',
                                             height: 35,
-                                            marginTop: 15,
+                                            marginTop: 15
                                         }}
                                     >
                                         <Text style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#000000',
+                                            color: '#006AFF',
+                                            borderWidth: 1,
+                                            borderRadius: 15,
+                                            borderColor: '#006AFF',
+                                            backgroundColor: '#fff',
                                             fontSize: 12,
-                                            backgroundColor: '#efefef',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,

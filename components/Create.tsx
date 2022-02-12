@@ -62,8 +62,9 @@ import { renderMathjax } from '../helpers/FormulaHelpers';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
-    const [cue, setCue] = useState('');
+    const [cue, setCue] = useState('<h2>Title</h2>');
     const [cueDraft, setCueDraft] = useState('');
+    const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [shuffle, setShuffle] = useState(false);
     const [starred] = useState(false);
     const [notify, setNotify] = useState(false);
@@ -317,9 +318,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         const getData = async () => {
             try {
                 const h = await AsyncStorage.getItem('cueDraft');
-                if (h !== null) {
+                if (h && h !== '') {
+                    if (h[0] === '{' && h[h.length - 1] === '}') {
+                        // const obj = JSON.parse(h);
+                        setImported(true);
+                        // setUrl(obj.url);
+                        // setType(obj.type);
+                        // setTitle(obj.title);
+                    } else {
+                        setImported(false);
+                        setUrl('');
+                        setType('');
+                        setTitle('');
+                    }
                     setCue(h);
                     setCueDraft(h);
+                    setReloadEditorKey(Math.random());
                 }
                 const quizDraft = await AsyncStorage.getItem('quizDraft');
                 if (quizDraft !== null) {
@@ -1120,6 +1134,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         const h = await AsyncStorage.getItem('cueDraft');
                                         if (h !== null) {
                                             setCueDraft(h);
+                                            setCue(h);
                                         }
 
                                         setShowOptions(true);
@@ -2581,7 +2596,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onModelChange={(model: any) => setQuizInstructions(model)}
                                                             config={{
                                                                 key:
-                                                                    'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                                    'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                                 attribution: false,
                                                                 placeholderText: 'Quiz Instructions',
                                                                 charCounterCount: false,
@@ -2739,14 +2754,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         />
                                     ) : null}
                                     {isQuiz || imported || showBooks ? null : (
-                                        <View key={userId.toString()}>
+                                        <View key={userId.toString() + reloadEditorKey.toString()}>
                                             <FroalaEditor
                                                 ref={RichText}
                                                 model={cue}
                                                 onModelChange={(model: any) => setCue(model)}
                                                 config={{
                                                     key:
-                                                        'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                        'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                     attribution: false,
                                                     placeholderText: 'Enter Title',
                                                     charCounterCount: true,
@@ -2768,7 +2783,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     imageAllowedTypes: ['jpeg', 'jpg', 'png'],
                                                     // VIDEO UPLOAD
                                                     videoMaxSize: 50 * 1024 * 1024,
-                                                    videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                                                    videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
                                                     paragraphFormatSelection: true,
                                                     // Default Font Size
                                                     spellcheck: true,

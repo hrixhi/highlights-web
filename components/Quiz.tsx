@@ -960,7 +960,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setEditQuestionContent(model);
                     }}
                     config={{
-                        key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                         attribution: false,
                         placeholderText: 'Problem',
                         charCounterCount: false,
@@ -977,7 +977,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
                         // VIDEO UPLOAD
                         videoMaxSize: 20 * 1024 * 1024,
-                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'avi', 'mov'],
+                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
                         paragraphFormatSelection: true,
                         // Default Font Size
                         fontSizeDefaultSelection: '24',
@@ -1224,7 +1224,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         model={instructions}
                         onModelChange={(model: any) => setInstructions(model)}
                         config={{
-                            key: 'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                             attribution: false,
                             placeholderText: 'Quiz Instructions',
                             charCounterCount: false,
@@ -1737,7 +1737,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     }}
                                                     config={{
                                                         key:
-                                                            'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                            'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                         attribution: false,
                                                         placeholderText: 'Option ' + (i + 1),
                                                         charCounterCount: false,
@@ -1933,7 +1933,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             }}
                                             config={{
                                                 key:
-                                                    'dKA5cC3A2C2I2E2B5D4D-17iyzE4i1hoB-16D-13fB-11gA-8vcrkA2ytqaG3C2A5B4C4E3C2D4D2I2==',
+                                                    'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                 attribution: false,
                                                 placeholderText: 'Solution',
                                                 charCounterCount: false,

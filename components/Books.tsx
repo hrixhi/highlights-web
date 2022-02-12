@@ -49,7 +49,6 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     '&count=1000&and[]=lending___status%3A"is_readable"'
             );
             const items = response.data.items;
-            console.log('All items');
             const filteredItems = items.filter((item: any) => {
                 if (item.mediatype !== 'texts') {
                     return false;
@@ -67,7 +66,6 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 }
                 return pdfExists;
             });
-            console.log('Search results', filteredItems);
             setResults(filteredItems);
             setSearchComplete(true);
             setLoading(false);

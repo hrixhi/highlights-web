@@ -250,7 +250,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             subscriberRow.push(comment);
 
             exportAoa.push(subscriberRow);
-            s;
         });
 
         setExportAoa(exportAoa);
