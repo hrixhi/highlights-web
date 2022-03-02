@@ -1592,7 +1592,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 </View>
                                             ) : null}
                                             {sortChatsByLastMessage.map((chat: any, index) => {
-                                                console.log('Chat', chat);
 
                                                 // Group name or individual user name
                                                 let fName = '';

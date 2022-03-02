@@ -11,9 +11,6 @@ export default function DesktopSSO({ navigation, route }: StackScreenProps<any, 
                 const code = route?.params?.code;
                 // const userId = route?.params?.state;
 
-                console.log('Code', code);
-                // console.log('User id', userId);
-
                 if (code) {
                     window.open('cues-app://ssoRedirect?code=' + code);
                 }

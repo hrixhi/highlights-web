@@ -17,9 +17,6 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                 const code = route?.params?.code;
                 const userId = route?.params?.state;
 
-                console.log('Code', code);
-                console.log('User id', userId);
-
                 if (code && userId) {
                     const server = fetchAPI('');
                     server
@@ -32,7 +29,6 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                         })
                         .then(async res => {
                             if (res.data && res.data.user.connectZoom) {
-                                console.log('Connect with zoom', res.data.user.connectZoom);
                                 const u = await AsyncStorage.getItem('user');
                                 if (!u) {
                                     return;

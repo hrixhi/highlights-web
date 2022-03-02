@@ -165,7 +165,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         problems.forEach((prob: any, i: number) => {
             const { questionType, required, options = [] } = prob;
-            let type = questionType === '' ? 'MCQ' : 'Free Response';
+            let type = questionType === '' ? 'MCQ' : (questionType === 'trueFalse' ? 'True/False' : 'Free Response');
 
             let require = required ? 'Required' : 'Optional';
 

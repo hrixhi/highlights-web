@@ -320,9 +320,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const temp: any = {};
         const tempCat: any = {};
         const mycues: any[] = [];
-        temp['Home'] = [];
+        temp['My Notes'] = [];
         const tempCollapse: any = {};
-        tempCollapse['Home'] = false;
+        tempCollapse['My Notes'] = false;
         const tempIndexes: any = {};
 
         let dateFilteredCues: any[] = [];
@@ -405,18 +405,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             });
         }
 
-        temp['Home'] = mycues;
+        temp['My Notes'] = mycues;
         if (!cat['']) {
             delete cat[''];
         }
-        tempCat['Home'] = Object.keys(cat);
-        tempIndexes['Home'] = 0;
+        tempCat['My Notes'] = Object.keys(cat);
+        tempIndexes['My Notes'] = 0;
 
         setCueMap(temp);
         setCollapseMap(tempCollapse);
         setCategoryMap(tempCat);
         setIndexMap(tempIndexes);
-    }, [sortBy, filterStart, filterEnd]);
+    }, [sortBy, filterStart, filterEnd, props.subscriptions]);
 
     /**
      * @description Calls method to fetch any ongoing meetings
@@ -549,7 +549,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         let channelId = '';
 
         Object.keys(collapseMap).map((key: any) => {
-            if (collapseMap[key] && key.split('-SPLIT-')[0] !== 'Home') {
+            if (collapseMap[key] && key.split('-SPLIT-')[0] !== 'My Notes') {
                 channelId = key.split('-SPLIT-')[1];
             }
         });
@@ -567,7 +567,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 .then(res => {
                     if (res.data && res.data.channel.ongoingMeetings) {
                         setOngoingMeetings(res.data.channel.ongoingMeetings);
-                        console.log('Ongoing meetings', res.data.channel.ongoingMeetings);
                     }
                 })
                 .catch(err => {
@@ -888,7 +887,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEventFilters = () => {
         const channelOptions = [
             { value: 'All', text: 'All' },
-            { value: 'Home', text: 'Home' }
+            { value: 'My Events', text: 'My Events' }
         ];
 
         props.subscriptions.map((sub: any) => {
@@ -2188,6 +2187,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // setShowHome(false)
                                                                         // closeModal()
                                                                     }}
+                                                                    userId={userId}
                                                                     channelColor={key.split('-SPLIT-')[3]}
                                                                 />
                                                             </View>
@@ -2301,7 +2301,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 setEditFolderChannelId(
                                                                                                     cue.channelId
                                                                                                         ? cue.channelId
-                                                                                                        : 'Home'
+                                                                                                        : 'My Notes'
                                                                                                 );
                                                                                             }}
                                                                                             add={() => {
@@ -2490,7 +2490,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     : op === 'Performance'
                                                     ? 'Performance'
                                                     : op === 'To Do'
-                                                    ? 'Agenda'
+                                                    ? 'Home'
                                                     : op}
                                             </Text>
 
@@ -2889,7 +2889,8 @@ const styleObject: any = () =>
             lineHeight: 24,
             fontFamily: 'overpass',
             fontWeight: 'bold',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            marginRight: 5,
         },
         allGrayFill: {
             fontSize: 14,
@@ -2900,7 +2901,8 @@ const styleObject: any = () =>
             lineHeight: 24,
             height: 24,
             fontFamily: 'inter',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            marginRight: 5,
         },
         all1: {
             fontSize: 10,

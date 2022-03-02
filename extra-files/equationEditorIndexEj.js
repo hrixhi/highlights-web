@@ -104,8 +104,6 @@ var EquationEditor = /** @class */ (function(_super) {
         this.mathField.latex(value || '');
     };
     EquationEditor.prototype.componentDidUpdate = function(prevProps) {
-        console.log('Prev props', prevProps);
-        console.log('New Props', this.props);
         if (
             prevProps.addElementFromButton !== this.props.addElementFromButton &&
             this.props.addElementFromButton !== ''

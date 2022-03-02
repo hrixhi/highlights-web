@@ -429,7 +429,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             await saveDataInCloud();
                         } else {
                             // REFRESH LOCAL STORAGE (USED FOR EXISTING CUES)
-                            console.log('Call load Data from cloud');
                             await loadDataFromCloud();
                         }
                     }
@@ -1701,7 +1700,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     tab.toString() +
                                     showDirectory.toString() +
                                     showCreate.toString() +
-                                    showHelp.toString()
+                                    showHelp.toString() +
+                                    subscriptions.toString()
                                 }
                                 openDiscussionFromActivity={(channelId: string) => {
                                     setOption('Classroom');

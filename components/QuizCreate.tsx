@@ -436,7 +436,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             handleVideoImport(videos, index)
 
                             return false;
-                        }
+                        },
+                        'image.beforeUpload': function(images: any) {
+                            if (images[0].size > (5 * 1024 * 1024) ) {
+                                alert('Image size must be less than 5mb.')
+                                return false;
+                            }
+
+                            return true;
+                        },
                     }
                 }}
             />
@@ -928,7 +936,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     themeVariant="light"
                                                     onChange={(val: any) => {
                                                         const updatedProblems = [...problems]
-                                                        console.log("Change", val)
                                                         updatedProblems[index].required = (val.value === "required")
                                                         setProblems(updatedProblems)
                                                         props.setProblems(updatedProblems)

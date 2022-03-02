@@ -770,16 +770,17 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                         <Text
                                             style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }}
-                                            ellipsizeMode="tail"
-                                        >
-                                            {thread.anonymous ? 'Anonymous' : thread.fullName}
-                                        </Text>
-                                        <Text
-                                            style={{ fontSize: 12, margin: 5, fontWeight: 'bold', lineHeight: 18 }}
+                                            
                                             ellipsizeMode="tail"
                                             numberOfLines={2}
                                         >
                                             {title}
+                                        </Text>
+                                        <Text
+                                            style={{ fontSize: 12, margin: 5, fontWeight: 'bold', lineHeight: 18 }}
+                                            ellipsizeMode="tail"
+                                        >
+                                            {thread.anonymous ? 'Anonymous' : thread.fullName}
                                         </Text>
                                     </View>
                                     <View style={{ justifyContent: 'center', flexDirection: 'column' }}>

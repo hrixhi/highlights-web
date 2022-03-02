@@ -61,8 +61,6 @@ class EquationEditor extends Component<EquationEditorProps> {
   } 
 
   componentDidUpdate(prevProps) {
-    console.log("Prev props", prevProps)
-    console.log("New Props", this.props)
     if (prevProps.addElementFromButton !== this.props.addElementFromButton && this.props.addElementFromButton !== "") {
       this.mathField.cmd(this.props.addElementFromButton)
       this.props.clearAddElementField()

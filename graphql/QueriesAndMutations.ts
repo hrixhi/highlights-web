@@ -351,9 +351,16 @@ export const editMeeting = gql`
     }
 `;
 export const shareCueWithMoreIds = gql`
-    mutation($userId: String!, $cueId: String!) {
+    mutation($userIds: [String!]!, $cueId: String!) {
         cue {
-            shareCueWithMoreIds(userId: $userId, cueId: $cueId)
+            shareCueWithMoreIds(userIds: $userIds, cueId: $cueId)
+        }
+    }
+`;
+export const unshareCueWithIds = gql`
+    mutation($userIds: [String!]!, $cueId: String!) {
+        cue {
+            unshareCueWithIds(userIds: $userIds, cueId: $cueId)
         }
     }
 `;
@@ -661,6 +668,7 @@ export const findUserById = gql`
                 email
                 currentDraft
                 role
+                allowQuizCreation
             }
         }
     }
@@ -1077,7 +1085,7 @@ export const getSharedWith = gql`
             getSharedWith(cueId: $cueId, channelId: $channelId) {
                 value
                 label
-                isFixed
+                sharedWith
             }
         }
     }
@@ -1288,7 +1296,20 @@ export const regenZoomMeeting = gql`
         }
     }
 `;
-
+export const deleteChannel = gql`
+    mutation($channelId: String!) {
+        channel {
+            deleteById(channelId: $channelId)
+        }
+    }
+`;
+export const shareWithAll = gql`
+    mutation($cueId: String!) {
+        cue {
+            shareWithAll(cueId: $cueId)
+        }
+    }
+`;
 // export const isSubInactive = gql`
 //   query($userId: String!, $channelId: String!) {
 //     subscription {

@@ -93,10 +93,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         // Logged in
         if (
-            !props.showSavePassword &&
-            fullName &&
-            displayName &&
-            (fullName !== currentFullName || displayName !== currentDisplayName || avatar !== currentAvatar)
+            !props.showSavePassword && avatar !== currentAvatar
         ) {
             setIsSubmitDisabled(false);
             return;
@@ -201,7 +198,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     user.avatar = avatar;
                     const updatedUser = JSON.stringify(user);
                     await AsyncStorage.setItem('user', updatedUser);
-                    Alert(profileUpdatedAlert);
+                    Alert('Profile picture updated!')
                     props.reOpenProfile();
                 } else {
                     Alert(somethingWentWrongAlert);
@@ -399,32 +396,30 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             paddingTop: Dimensions.get('window').width < 768 ? 25 : 50,
                             paddingBottom: 20,
                             maxWidth: 400,
-                            alignSelf: 'center'
+                            alignSelf: 'center',
                             // flex: 1
                         }}
                     >
-                        <Image
-                            style={{
-                                height: 100,
-                                width: 100,
-                                borderRadius: 75,
-                                // marginTop: 20,
-                                alignSelf: 'center'
-                            }}
-                            source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                        />
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+                            <Image
+                                style={{
+                                    height: 100,
+                                    width: 100,
+                                    borderRadius: 75,
+                                    // marginTop: 20,
+                                    position: 'relative',
+                                    alignSelf: 'center'
+                                }}
+                                source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                            />
                             {avatar ? (
                                 <TouchableOpacity
                                     onPress={() => setAvatar(undefined)}
                                     style={{
                                         backgroundColor: 'white',
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        // marginLeft: 20,
-                                        // marginTop: 15,
                                         justifyContent: 'center',
-                                        flexDirection: 'row'
+                                        flexDirection: 'row',
+                                        marginLeft: 10
                                     }}
                                 >
                                     <Text>
@@ -433,12 +428,46 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </TouchableOpacity>
                             ) : (
                                 <FileUpload
+                                    profile={true}
                                     onUpload={(u: any, t: any) => {
                                         setAvatar(u);
                                     }}
                                 />
                             )}
                         </View>
+                        {
+                            !props.showSavePassword ? 
+                                <TouchableOpacity
+                                    onPress={() => handleSubmit()}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        overflow: 'hidden',
+                                        height: 35,
+                                        marginTop: 15,
+                                        justifyContent: 'center',
+                                        flexDirection: 'row'
+                                    }}
+                                    disabled={isSubmitDisabled}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            lineHeight: 34,
+                                            color: '#006AFF',
+                                            fontSize: 12,
+                                            // backgroundColor: '#006AFF',
+                                            // paddingHorizontal: 20,
+                                            fontFamily: 'inter',
+                                            // height: 35,
+                                            // borderRadius: 15,
+                                            // width: 175,
+                                            textTransform: 'uppercase'
+                                        }}
+                                    >
+                                        Save 
+                                    </Text>
+                                </TouchableOpacity> : null
+                        }
                         <Text
                             style={{
                                 marginTop: 20,
@@ -530,7 +559,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         alignSelf: 'center'
                     }}
                 >
-                    <TouchableOpacity
+                    {props.showSavePassword ? <TouchableOpacity
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
@@ -557,9 +586,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textTransform: 'uppercase'
                             }}
                         >
-                            {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
+                            {PreferredLanguageText('update')}
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> : null}
                     {!props.showSavePassword ? (
                         <TouchableOpacity
                             onPress={() => props.setShowSavePassword(!props.showSavePassword)}
@@ -576,11 +605,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{
                                     textAlign: 'center',
                                     lineHeight: 34,
-                                    color: '#006AFF',
-                                    borderWidth: 1,
+                                    color: '#fff',
+                                    // borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#006AFF',
-                                    backgroundColor: '#fff',
+                                    // borderColor: '#006AFF',
+                                    backgroundColor: '#006AFF',
                                     fontSize: 12,
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
@@ -591,7 +620,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 {props.showSavePassword
                                     ? PreferredLanguageText('back')
-                                    : PreferredLanguageText('password')}
+                                    : 'Reset password'}
                             </Text>
                         </TouchableOpacity>
                     ) : null}
@@ -677,7 +706,41 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </TouchableOpacity>
                     )}
 
-                    {props.showSavePassword ? null : (
+                    {
+                        !props.showSavePassword ? <TouchableOpacity
+                            onPress={() => logout()}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 20,
+                                justifyContent: 'center',
+                                flexDirection: 'row'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    lineHeight: 34,
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    color: '#006AFF',
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    borderColor: '#006AFF',
+                                    backgroundColor: '#fff',
+                                    fontSize: 12,
+                                    width: 175,
+                                    textTransform: 'uppercase'
+                                }}
+                            >
+                                Sign out
+                            </Text> 
+                        </TouchableOpacity> : null
+                    }
+
+                    {/* {props.showSavePassword ? null : (
                         <TouchableOpacity
                             onPress={() => logout()}
                             style={{
@@ -702,7 +765,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 Log Out
                             </Text>
                         </TouchableOpacity>
-                    )}
+                    )} */}
                     {/* {props.showHelp || props.showSaveCue ? null : (
                         <View
                             style={{
@@ -719,6 +782,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 {/* </View> */}
                 {/* </View> */}
+                {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 12, textAlign: 'center'}}>
+                    version 1.8.6
+                </Text> : null}
             </ScrollView>
         </View>
     );

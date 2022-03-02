@@ -993,7 +993,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 handleVideoImport(videos, index);
 
                                 return false;
-                            }
+                            },
+                            'image.beforeUpload': function(images: any) {
+                                if (images[0].size > (5 * 1024 * 1024) ) {
+                                    alert('Image size must be less than 5mb.')
+                                    return false;
+                                }
+
+                                return true;
+                            },
                         }
                     }}
                 />

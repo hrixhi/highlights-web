@@ -16,7 +16,9 @@ const FileUpload: React.FC<any> = (props: any) => {
     const [uploading, setUploading] = useState(false);
     const handleFile = useCallback(async () => {
         // e.preventDefault();
-        const res: any = await DocumentPicker.getDocumentAsync();
+        const res: any = await DocumentPicker.getDocumentAsync({
+            type: props.profile ? 'image/*' : '*/*'
+        });
 
         if (res.type === 'cancel' || res.type !== 'success') {
             return;
@@ -111,7 +113,7 @@ const FileUpload: React.FC<any> = (props: any) => {
     }, []);
 
     return (
-        <View>
+        <View style={{ position: props.profile ? 'absolute' : 'relative', backgroundColor: props.profile ? 'none' : '#fff', }}>
             {uploading ? (
                 <View>
                     <ActivityIndicator color={'#a2a2ac'} size={'small'} />
@@ -133,17 +135,18 @@ const FileUpload: React.FC<any> = (props: any) => {
                 <Text
                     style={{
                         color: '#006AFF',
+                        backgroundColor: props.profile ? 'none' : '#fff',
                         lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
                         fontSize: props.quiz ? 12 : 12,
                         fontFamily: 'overpass',
                         textTransform: 'uppercase',
-                        paddingLeft: 10
+                        paddingLeft: props.profile ? 0 : 10
                     }}
                     onPress={() => handleFile()}
                 >
-                    {props.chat ? (
-                        <Ionicons name="document-attach-outline" size={18} />
+                    {props.chat || props.profile ? (
+                        <Ionicons name={props.profile ? "attach-outline" : "document-attach-outline"} size={props.profile ? 25 : 18}  color={props.profile ? 'white' : '#006AFF' } />
                     ) : (
                         PreferredLanguageText('import')
                     )}

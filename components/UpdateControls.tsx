@@ -18,6 +18,8 @@ import {
     getSharedWith,
     markAsRead,
     shareCueWithMoreIds,
+    unshareCueWithIds,
+    shareWithAll,
     start,
     submit,
     modifyQuiz,
@@ -152,6 +154,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [channels, setChannels] = useState<any[]>([]);
     const [shareWithChannelId, setShareWithChannelId] = useState('None');
     const [selected, setSelected] = useState<any[]>([]);
+    const [originalSelected, setOriginalSelected] = useState<any[]>([]);
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [original, setOriginal] = useState(!props.cue.channelId ? props.cue.cue : props.cue.original);
     const [initialOriginal, setInitialOriginal] = useState(!props.cue.channelId ? props.cue.cue : props.cue.original);
@@ -696,12 +699,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 },
                 {
                     text: 'Yes',
-                    onPress: () => {
-                        if (props.showOriginal) {
-                            handleUpdateContent();
-                        } else {
-                            handleUpdateDetails();
-                        }
+                    onPress: async () => {
+                        await handleUpdateContent();
+                        await handleUpdateDetails();
+                        await handleRestrictAccessUpdate();
                     }
                 }
             ]);
@@ -715,7 +716,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         if (props.del) {
             handleDelete();
-            // props.setDelete(false);
+            props.setDelete(false);
         }
     }, [props.del]);
 
@@ -1048,40 +1049,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 return {
                                     value: sub.value,
                                     text: sub.label,
-                                    // isFixed: sub.isFixed,
-                                    // visited: sub.isFixed
                                 };
                             });
 
-                            const subscriberwithoutOwner: any = [];
-                            format.map((i: any) => {
-                                if (user._id !== i.value) {
-                                    subscriberwithoutOwner.push(i);
-                                }
-                            });
-
-                            setSubscribers(subscriberwithoutOwner);
+                            setSubscribers(format);
+                            
                             // clear selected
                             const sel = res.data.cue.getSharedWith.filter((item: any) => {
-                                return item.isFixed;
+                                return item.sharedWith;
                             });
 
                             const formatSel = sel.map((sub: any) => {
-                                return {
-                                    value: sub.value,
-                                    text: sub.label,
-                                    // isFixed: true,
-                                    // visited: true
-                                };
+                                return sub.value
                             });
 
-                            const withoutOwner: any = [];
-                            formatSel.map((i: any) => {
-                                if (user._id !== i.value) {
-                                    withoutOwner.push(i.value);
-                                }
-                            });
-                            setSelected(withoutOwner);
+                            setSelected(formatSel);
+                            setOriginalSelected(formatSel);
                         }
                     })
                     .catch((err: any) => console.log(err));
@@ -1226,8 +1209,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const fileUploadEditor = useCallback(
         async (files: any, forSubmission: boolean) => {
             const res = await handleFileUploadEditor(false, files.item(0), userId);
-
-            console.log('On upload', res);
 
             if (!res || res.url === '' || res.type === '') {
                 return false;
@@ -1523,6 +1504,75 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [title, original, imported, type, url, isQuiz]);
 
     /**
+     * @description Handle changes to restrict access
+     */
+    const handleRestrictAccessUpdate = useCallback(async () => {
+        // If restrict access initially and it is now turned off
+        const server = fetchAPI('');
+         
+        if (props.cue.limitedShares && !limitedShares) {
+            server.mutate({
+                mutation: shareWithAll,
+                variables: {
+                    cueId: props.cue._id
+                }
+            }).then((res: any) => {
+                loadChannelsAndSharedWith()
+            }).catch((e: any) => {
+                console.log("Error", e)
+            })
+        } else if (limitedShares) {
+            const toAdd: string[] = [];
+            const toRemove: string[] = [];
+
+            originalSelected.map((userId: string) => {
+                if (!selected.includes(userId)) {
+                    toRemove.push(userId)
+                }
+            })
+
+            selected.map((userId: string) => {
+                if (!originalSelected.includes(userId)) {
+                    toAdd.push(userId)
+                }
+            })
+
+            if (toAdd.length > 0) {
+                server.mutate({
+                    mutation: shareCueWithMoreIds,
+                    variables: {
+                        userIds: toAdd,
+                        cueId: props.cue._id
+                    }
+                }).then((res: any) => {
+                    console.log("Res", res);
+                }).catch((e: any) => {
+                    console.log("Error", e)
+                })
+            }
+            
+
+            if (toRemove.length > 0) {
+                server.mutate({
+                    mutation: unshareCueWithIds,
+                    variables: {
+                        userIds: toRemove,
+                        cueId: props.cue._id
+                    }
+                }).then((res: any) => {
+                    console.log("Res", res);
+                }).catch((e: any) => {
+                    console.log("Error", e)
+                })
+            }
+            
+            setOriginalSelected(selected)
+
+        }
+         
+    }, [props.cue, originalSelected, selected, limitedShares])
+
+    /**
      * @description Handle update cue details
      */
     const handleUpdateDetails = useCallback(async () => {
@@ -1565,10 +1615,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             deadline: submission ? deadline.toISOString() : '',
             initiateAt: submission ? initiateAt.toISOString() : '',
             allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
-            availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : ''
+            availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
+            limitedShares
         };
-
-        console.log("Save cue", saveCue)
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
 
@@ -1592,7 +1641,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         allowLateSubmission,
         availableUntil,
         isOwner,
-        graded
+        graded,
+        limitedShares
     ]);
 
     /**
@@ -2013,45 +2063,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         shareWithChannelId,
         props.cue
     ]);
-
-    /**
-     * @description Share cue with subscribers dropdown change
-     */
-    const onChange = useCallback(
-        (value, { action, option, removedValue }) => {
-            switch (action) {
-                case 'remove-value':
-                case 'pop-value':
-                    if (removedValue.isFixed) {
-                        return;
-                    }
-                    break;
-                case 'select-option':
-                    const server = fetchAPI('');
-                    server
-                        .mutate({
-                            mutation: shareCueWithMoreIds,
-                            variables: {
-                                cueId: props.cue._id,
-                                userId: option.value
-                            }
-                        })
-                        .then(res => {
-                            if (res.data && res.data.cue.shareCueWithMoreIds) {
-                                loadChannelsAndSharedWith();
-                            }
-                        })
-                        .catch(err => console.log(err));
-                    return;
-
-                case 'clear':
-                    value = subscribers.filter(v => v.isFixed);
-                    break;
-            }
-            setSelected(value);
-        },
-        [subscribers, props.cue]
-    );
 
     // FUNCTIONS
 
@@ -2904,9 +2915,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 },
                                 'file.beforeUpload': function(files: any) {
                                     // Return false if you want to stop the file upload.
-                                    console.log('Before upload');
-                                    console.log('File', files.item(0));
-
                                     fileUploadEditor(files, false);
 
                                     return false;
@@ -2915,7 +2923,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     videoUploadEditor(videos, false);
 
                                     return false;
-                                }
+                                },
+                                'image.beforeUpload': function(images: any) {
+                                    if (images[0].size > (5 * 1024 * 1024) ) {
+                                        alert('Image size must be less than 5mb.')
+                                        return false;
+                                    }
+
+                                    return true;
+                                },
                             }
                         }}
                     />
@@ -3289,7 +3305,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 videoUploadEditor(videos, true);
 
                                 return false;
-                            }
+                            },
+                            'image.beforeUpload': function(images: any) {
+                                if (images[0].size > (5 * 1024 * 1024) ) {
+                                    alert('Image size must be less than 5mb.')
+                                    return false;
+                                }
+
+                                return true;
+                            },
                         }
                     }}
                 />
@@ -3364,7 +3388,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         >
                             <View
-                                key={JSON.stringify(selected)}
                                 style={{
                                     width: '90%',
                                     padding: 5,
@@ -3372,21 +3395,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     minWidth: 300
                                 }}
                             >
-                                {/* <Select
-                                    value={selected}
-                                    isMulti
-                                    styles={reactSelectStyles}
-                                    isClearable={selected.some((v: any) => !v.isFixed)}
-                                    name="Share With"
-                                    className="basic-multi-select"
-                                    classNamePrefix="select"
-                                    onChange={onChange}
-                                    options={subscribers}
-                                /> */}
                                 <MobiscrollSelect
-                                    inputProps={{
-                                        className: 'noClearButtons'
-                                    }}
                                     value={selected}
                                     rows={subscribers.length}
                                     data={subscribers}
@@ -3403,35 +3412,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }
                                     }}
                                     onChange={(val: any) => {
-                                        // if (!initializedCustomCategories) return;
-                                        // setCustomCategory(val.value);
-                                        if (val.value.length < selected.length) {
-                                            console.log("Remove")
-                                            return;
-                                        } else if (val.value.length > selected.length) {
-                                            // New Sub added
-                                            
-                                            const addedUser = val.value.filter((sub: string) => !selected.includes(sub))[0];
-                                            
-                                            const server = fetchAPI('');
-                                            server
-                                                .mutate({
-                                                    mutation: shareCueWithMoreIds,
-                                                    variables: {
-                                                        cueId: props.cue._id,
-                                                        userId: addedUser
-                                                    }
-                                                })
-                                                .then(res => {
-                                                    if (res.data && res.data.cue.shareCueWithMoreIds) {
-                                                        loadChannelsAndSharedWith();
-                                                    }
-                                                })
-                                                .catch(err => console.log(err));
-
-                                            setSelected(val.value)
-
-                                        }
+                                        setSelected(val.value)
                                     }}
                                 />
                             </View>

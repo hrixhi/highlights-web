@@ -32,12 +32,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
             const sourceParam = route?.params?.source;
             const nameParam = route?.params?.name;
 
-            // console.log('url', urlParam);
-            // console.log('User id', userIdParam);
-            // console.log('Cue id', cueIdParam);
-            // console.log('Source', sourceParam);
-            // console.log('Name', nameParam);
-
             if (!urlParam || !sourceParam) {
                 setInvalidParams(true);
                 return;
@@ -65,7 +59,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         }
                     })
                     .then(async res => {
-                        console.log('Annotations result', res.data);
 
                         if (
                             res.data &&
@@ -98,7 +91,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         }
                     })
                     .then(async res => {
-                        console.log('Annotations result', res.data);
 
                         if (
                             res.data &&

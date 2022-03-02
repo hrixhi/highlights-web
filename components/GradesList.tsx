@@ -69,7 +69,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             const { title } = htmlStringParser(cue.cue)
 
-            row1.push(`${title} (${cue.gradeWeight}%)`)
+            row1.push(`${title} (${cue.gradeWeight ? cue.gradeWeight : '0'}%)`)
         })
 
         row1.push("Total")
@@ -420,7 +420,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {title}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#000000' }}>
-                                                {cue.gradeWeight}%
+                                                {cue.gradeWeight ? cue.gradeWeight : '0'}%
                                             </Text>
                                         </TouchableOpacity>
                                     })
@@ -514,8 +514,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                             </View>
                                                         }
-
-                                                        console.log("Score object", scoreObject)
 
                                                         return <TouchableOpacity disabled={!props.isOwner} style={styles.col} key={row.toString() + '-' + col.toString()} onPress={() => {
 

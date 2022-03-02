@@ -37,8 +37,6 @@ export const handleFile = async (audioVideoOnly: boolean) => {
         type = 'mp3';
     }
 
-    console.log('File type', type);
-
     if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '' };
@@ -77,6 +75,11 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
         return { type: '', url: '' };
     }
 
+    if (file.size > 26214400) {
+        alert('File size must be less than 25 mb.');
+        return { type: '', url: '' };
+    }
+
     let type = mime.extension(file.type);
 
     if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
@@ -107,12 +110,12 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
         type = 'mp3';
     }
 
-    console.log('File type', type);
-
     if (type === 'svg') {
         alert('This file type is not supported.');
         return { type: '', url: '' };
     }
+
+    alert("Upload in progress! Large files may take longer to process.")
 
     const response = await fileUpload(file, type, userId);
 

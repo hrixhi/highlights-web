@@ -86,8 +86,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     // HOOKS
 
-    console.log("Cue", props.cue)
-
     /**
      * @description Set if cue is a Quiz
      */
@@ -1836,6 +1834,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     return;
                                 }
 
+                                if (newFolderTitle.trim() === '') {
+                                    Alert('Folder title cannot be empty.');
+                                    return;
+                                }
+
                                 server
                                     .mutate({
                                         mutation: creatFolder,
@@ -1937,6 +1940,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                             if (cueIds.length < 2) {
                                                 Alert('Folder must contain at least 2 items.');
+                                                return;
+                                            }
+
+                                            if (updateFolderTitle.trim() === '') {
+                                                Alert('Folder title cannot be empty.');
                                                 return;
                                             }
 

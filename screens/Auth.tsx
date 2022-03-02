@@ -48,8 +48,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
         (async () => {
             const code = route?.params?.code;
 
-            console.log('Code', code);
-
             if (code && code !== '') {
                 setIsLoggingIn(true);
 
@@ -62,7 +60,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                         }
                     })
                     .then(async (r: any) => {
-                        console.log('Res', r.data.user.loginFromSso);
                         if (
                             r.data &&
                             r.data.user.loginFromSso &&
@@ -123,8 +120,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             Dimensions.removeEventListener('change', onDimensionsChange);
         };
     }, []);
-
-    console.log('Is SSO Available', isSsoEnabled);
 
     useEffect(() => {
         (async () => {

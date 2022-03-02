@@ -53,7 +53,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [channels, setChannels] = useState<any[]>([]);
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [channelId, setChannelId] = useState('');
-    const [selectedChannel, setSelectedChannel] = useState('Home');
+    const [selectedChannel, setSelectedChannel] = useState('My Events');
     const [description, setDescription] = useState('');
     const [recurring, setRecurring] = useState(false);
     const [frequency, setFrequency] = useState('1-W');
@@ -85,8 +85,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [selectedDays, setSelectedDays] = useState<any[]>([selectedStartDay]);
     const channelOptions = [
         {
-            value: 'Home',
-            text: 'Home'
+            value: 'My Events',
+            text: 'My Events'
         }
     ];
 
@@ -219,7 +219,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         if (props.filterByChannel !== 'All') {
             total = total.filter((e: any) => {
-                if (props.filterByChannel === 'Home') {
+                if (props.filterByChannel === 'My Events') {
                     return e.channelId === '';
                 } else {
                     return props.filterByChannel === e.channelId;
@@ -1581,7 +1581,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 })
                                                 .then(res => {
                                                     if (res.data && res.data.activity.getActivity) {
-                                                        const tempActivity = res.data.activity.getActivity.reverse();
+                                                        const tempActivity = res.data.activity.getActivity;
                                                         let unread = 0;
                                                         tempActivity.map((act: any) => {
                                                             if (act.status === 'unread') {

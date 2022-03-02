@@ -78,7 +78,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelOptions, setChannelOptions] = useState<any[]>([]);
     const [showOptions, setShowOptions] = useState(false);
     const [channelId, setChannelId] = useState<any>('');
-    const [selectedChannel, setSelectedChannel] = useState<any>('Home');
+    const [selectedChannel, setSelectedChannel] = useState<any>('My Notes');
     const [endPlayAt, setEndPlayAt] = useState(new Date(current.getTime() + 1000 * 60 * 60));
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true);
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();
@@ -87,6 +87,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     let editorRef: any = useRef();
     const [init, setInit] = useState(false);
     const [role, setRole] = useState('');
+    const [allowQuizCreation, setAllowQuizCreation] = useState(false);
     const [submission, setSubmission] = useState(false);
     const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24));
     const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()));
@@ -186,6 +187,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Sets import options based on Cue content if JSON object
      */
     useEffect(() => {
+        if (isQuiz) {
+            return;
+        }
+
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
             const obj = JSON.parse(cue);
             setImported(true);
@@ -198,7 +203,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             setType('');
             setTitle('');
         }
-    }, [cue]);
+    }, [cue, isQuiz]);
 
     /**
      * @description Loads webviewer for Imports
@@ -252,6 +257,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
             if (parsedUser.role) {
                 setRole(parsedUser.role);
+            }
+            if (parsedUser.allowQuizCreation) {
+                setAllowQuizCreation(parsedUser.allowQuizCreation)
             }
         })();
     });
@@ -536,6 +544,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
+        // Same validation as handle create
+
+        if ((imported || isQuiz) && title === '') {
+            Alert(enterTitleAlert);
+            setIsSubmitting(false);
+            setCreatingQuiz(false);
+            return;
+        }
+
+        if ((submission || isQuiz) && deadline < new Date()) {
+            Alert('Submission deadline must be in future');
+            setIsSubmitting(false);
+            setCreatingQuiz(false);
+            return;
+        }
+
+        if ((submission || isQuiz) && allowLateSubmission && availableUntil < deadline) {
+            Alert('Late submission date must be set after deadline.');
+            setIsSubmitting(false);
+            setCreatingQuiz(false);
+            return;
+        }
+
+        if ((submission || isQuiz) && deadline < initiateAt) {
+            Alert('Available from time must be set before deadline', '');
+            setIsSubmitting(false);
+            setCreatingQuiz(false);
+            return;
+        }
+
         const server = fetchAPI('');
         const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
         server
@@ -594,7 +632,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         playChannelCueIndef,
         shuffleQuiz,
         quizInstructions,
-        headers
+        headers,
+        availableUntil,
+        allowLateSubmission,
     ]);
 
     /**
@@ -702,8 +742,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setChannels(res.data.channel.findByUserId);
                         const options = [
                             {
-                                value: 'Home',
-                                text: 'Home'
+                                value: 'My Notes',
+                                text: 'My Notes'
                             }
                         ];
 
@@ -790,8 +830,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return;
             }
 
-            if (submission && deadline < new Date()) {
+            if ((submission || isQuiz) && deadline < new Date()) {
                 Alert('Submission deadline must be in future');
+                setIsSubmitting(false);
+                return;
+            }
+
+            if ((submission || isQuiz) && deadline < initiateAt) {
+                Alert('Available from time must be set before deadline', '');
+                setIsSubmitting(false);
+                return;
+            }
+
+            if ((submission || isQuiz) && allowLateSubmission && availableUntil < deadline) {
+                Alert('Late submission date must be set after deadline.')
                 setIsSubmitting(false);
                 return;
             }
@@ -872,11 +924,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setSelected(ownerarray);
                 }
 
-                if ((submission || isQuiz) && deadline < initiateAt) {
-                    Alert('Available from time must be set before deadline', '');
-                    setIsSubmitting(false);
-                    return;
-                }
 
                 const user = JSON.parse(uString);
                 const server = fetchAPI('');
@@ -1041,7 +1088,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                             >
                                 <Text>
-                                    <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
+                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -1079,7 +1126,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
-                            {role === 'instructor' &&
+                            {allowQuizCreation &&
                             !imported &&
                             !showOptions &&
                             !showBooks &&
@@ -1241,8 +1288,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onChange={val => {
                                                                 const channel = val.value;
 
-                                                                if (channel === 'Home') {
-                                                                    setSelectedChannel('Home');
+                                                                if (channel === 'My Notes') {
+                                                                    setSelectedChannel('My Notes');
                                                                     setChannelId('');
                                                                     setCustomCategories(localCustomCategories);
                                                                     setCustomCategory('None');
@@ -1451,7 +1498,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         onChange={(event: any) => {
                                                                             const date = new Date(event.value);
                                                                             const roundValue = roundSeconds(date);
-                                                                            if (date < new Date()) return;
+                                                                            if (date < new Date()) {
+                                                                                Alert('Available date must be set in the future.');
+                                                                                return
+                                                                            };
                                                                             setInitiateAt(roundValue);
                                                                         }}
                                                                         responsive={{
@@ -1501,7 +1551,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         }}
                                                                         onChange={(event: any) => {
                                                                             const date = new Date(event.value);
-                                                                            if (date < new Date()) return;
+                                                                            if (date < new Date()) {
+                                                                                Alert('Deadline must be set in the future.')
+                                                                                return;
+                                                                            }
                                                                             const roundValue = roundSeconds(date);
                                                                             setDeadline(roundValue);
                                                                         }}
@@ -1696,7 +1749,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     }}
                                                                     onChange={(event: any) => {
                                                                         const date = new Date(event.value);
-                                                                        if (date < deadline) return;
+                                                                        if (date < deadline) {
+                                                                            Alert('Late submission date must be set after deadline.')
+                                                                            return
+                                                                        };
                                                                         const roundValue = roundSeconds(date);
                                                                         setAvailableUntil(roundValue);
                                                                     }}
@@ -2592,6 +2648,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 >
                                                     <View key={userId.toString()}>
                                                         <FroalaEditor
+                                                            ref={RichText}
                                                             model={quizInstructions}
                                                             onModelChange={(model: any) => setQuizInstructions(model)}
                                                             config={{
@@ -2821,7 +2878,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             videoUploadEditor(videos);
 
                                                             return false;
-                                                        }
+                                                        },
+                                                        'image.beforeUpload': function(images: any) {
+
+                                                            if (images[0].size > (5 * 1024 * 1024) ) {
+                                                                alert('Image size must be less than 5mb.')
+                                                                return false;
+                                                            }
+
+                                                            return true;
+                                                        },
                                                     }
                                                 }}
                                             />

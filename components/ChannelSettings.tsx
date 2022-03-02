@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators
+    findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators, deleteChannel
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -383,7 +383,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     })
                     .catch(e => {
-                        alert("Could not Channel data. Check connection.")
+                        alert("Could not fetch course data. Check connection.")
                     })
 
                     // get subs
@@ -447,12 +447,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const handleDuplicate = useCallback(() => {
 
         if (duplicateChannelName.toString().trim() === '') {
-            alert('Enter duplicate channel name.')
+            alert('Enter duplicate course name.')
             return
         }
 
         if (duplicateChannelColor === "") {
-            alert('Pick duplicate channel color.')
+            alert('Pick duplicate course color.')
             return
         }
 
@@ -471,10 +471,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
         }).then((res2) => {
             if (res2.data && res2.data.channel.duplicate === "created") {
-                alert("Channel duplicated successfully.")
+                alert("Course duplicated successfully.")
                 // Refresh Subscriptions for user
                 props.refreshSubscriptions()
-                props.closeModal()
             }
         })
         .catch((e) => {
@@ -518,7 +517,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
      */
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
-            alert('Enter channel name.')
+            alert('Enter Course name.')
             return
         }
 
@@ -535,7 +534,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
 
         if (!moderatorsPresentAsSubscribers) {
-            alert("A moderator must be a subscriber");
+            alert("An editor must be added as a viewer");
             return;
         }
 
@@ -614,10 +613,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         // Set updated subs as new subs
                         setOriginalSubs(updatedOriginalSubs)
-
-                        // need to refresh channel subscriptions since name will be updated
-
-                        props.closeModal()
                     } else {
                         setIsUpdatingChannel(false);
                         alert("Something went wrong. Try again.")
@@ -633,25 +628,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     /**
      * @description Handle delete channel (Note: Only temporary channels can be deleted)
      */
-    const handleDelete = useCallback(() => {
+    const handleDelete = useCallback(async () => {
         const server = fetchAPI('')
-        const subs = JSON.parse(JSON.stringify(originalSubs))
-        subs.push(owner)
-        subs.map((o: any) => {
-            server.mutate({
-                mutation: unsubscribe,
-                variables: {
-                    channelId: props.channelId,
-                    keepContent: false,
-                    userId: o.id
-                }
-            })
+        server.mutate({
+            mutation: deleteChannel,
+            variables: {
+                channelId: props.channelId,
+            }
+        }).then((res: any) => {
+            Alert("Deleted Course successfully.")
+            props.refreshSubscriptions()
         })
-        Alert("Deleted Channel successfully.")
-        props.closeModal()
-        // Force reload
-        props.refreshSubscriptions()
-    }, [props.channelId, originalSubs, owner])
+        .catch((e: any) => {
+            Alert("Failed to delete Course.")
+            console.log("Error", e)
+        })
+
+        
+    }, [props.channelId])
 
     // FUNCTIONS 
 
@@ -803,7 +797,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             flex: 1,
                             lineHeight: 25
                         }}>
-                        Duplicate
+                        Duplicate Course
                     </Text>
                     <ScrollView
                         onScroll={() => {
@@ -934,7 +928,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your channel visible to all users
+                                        Makes your course visible to all users
                                     </Text>
                                 </View>
                                 : null
@@ -1103,6 +1097,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>)
 
     }
+
+    console.log("Channel creator", channelCreator);
+    console.log("Props.userId", props.userId);
 
     // MAIN RETURN 
     return (
@@ -1286,7 +1283,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
-                                        Makes your channel visible to all users
+                                        Makes your course visible to all users
                                     </Text>
                                 </View>
                                 : null
@@ -1375,14 +1372,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </div>
                             </View>
                         </View>
-                        <Text style={{
+                        {props.userId === channelCreator ? <Text style={{
                             fontSize: 14,
                             color: '#000000', marginTop: 25, marginBottom: 20
                         }}>
                             Editors
-                        </Text>
+                        </Text> : null}
 
-                        <label style={{ width: '100%', maxWidth: 320 }}>
+                        {props.userId === channelCreator ? <label style={{ width: '100%', maxWidth: 320 }}>
                             <Select
                                 themeVariant="light"
                                 select="multiple"
@@ -1405,7 +1402,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             // minWidth={[60, 320]}
                             />
-                        </label>
+                        </label> : null}
 
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                             <TouchableOpacity
@@ -1451,7 +1448,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </TouchableOpacity>
 
 
-                            <TouchableOpacity
+                            {props.userId === channelCreator ? <TouchableOpacity
                                 onPress={() => setShowDuplicateChannel(true)}
                                 style={{
                                     backgroundColor: 'white',
@@ -1478,12 +1475,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}>
                                     DUPLICATE
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> : null}
                             {
                                 temporary ?
                                     <TouchableOpacity
                                         onPress={() => {
-                                            Alert("Delete channel?", "", [
+                                            Alert("Delete course?", "", [
                                                 {
                                                     text: "Cancel",
                                                     style: "cancel",

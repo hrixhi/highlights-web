@@ -22,8 +22,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [comment, setComment] = useState(props.comment ? props.comment : "");
     const [headers, setHeaders] = useState<any>(props.headers)
 
-    console.log("PROPS SOLUTIONS", props.solutions)
-
     if (!props.solutions) {
         return null;
     }
@@ -544,7 +542,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         value={comment}
                         onChange={(e: any) => setComment(e.target.value)}
                         minRows={3}
-                        placeholder={"Feedback"}
+                        placeholder={"Overall Feedback"}
                     />
                 </View> :
                     <Text style={{ color: '#006AFF', fontSize: 14, width: '100%', textAlign: 'left', marginTop: 40 }}>
