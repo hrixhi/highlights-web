@@ -67,7 +67,15 @@ export const duplicateChannel = gql`
         }
     }
 `;
-
+export const duplicateQuiz = gql`
+    mutation(
+        $quizId: String!
+    ) {
+        cue {
+            duplicateQuiz(quizId: $quizId)
+        }
+    }
+`
 export const createCue = gql`
     mutation(
         $cue: String!
@@ -591,9 +599,6 @@ export const connectZoom = gql`
         user {
             connectZoom(code: $code, userId: $userId) {
                 accountId
-                accessToken
-                refreshToken
-                expiresOn
                 email
             }
         }
@@ -645,6 +650,18 @@ export const updateAnnotationsFromViewer = gql`
         }
     }
 `;
+
+export const addUsersByEmail = gql`
+    mutation($channelId: String!, $userId: String!, $emails: [String!]!) {
+        channel {
+            addUsersByEmail(channelId: $channelId, userId: $userId, emails: $emails) {
+                success
+                failed
+                error
+            }
+        }
+    }
+`
 
 /**
  * ALL
@@ -1638,9 +1655,9 @@ export const getOngoingMeetings = gql`
 // PDF Viewer stuff;
 
 export const fetchAnnotationsForViewer = gql`
-    query($userId: String!, $cueId: String!) {
+    query($userId: String!, $cueId: String!, $myNotes: Boolean) {
         user {
-            fetchAnnotationsForViewer(userId: $userId, cueId: $cueId) {
+            fetchAnnotationsForViewer(userId: $userId, cueId: $cueId, myNotes: $myNotes) {
                 _id
                 cue
                 date

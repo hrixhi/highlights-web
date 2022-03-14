@@ -329,7 +329,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             height: 50,
                             marginBottom: 10,
                             marginTop: 20,
-                            paddingHorizontal: 10
+                            // paddingHorizontal: 10
                         }}>
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity
@@ -343,7 +343,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     alignSelf: 'flex-start'
                                 }}>
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
+                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>

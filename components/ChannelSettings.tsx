@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
 import {
-    findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators, deleteChannel
+    findChannelById, getOrganisation, getSubscribers, getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel, resetAccessCode, getChannelModerators, deleteChannel, addUsersByEmail
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -28,6 +28,7 @@ import Alert from './Alert';
 import TextareaAutosize from 'react-textarea-autosize';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
+import InviteByEmailModal from './InviteByEmailModal'
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -117,7 +118,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
     const [meetingProvider, setMeetingProvider] = useState('');
     const [meetingUrl, setMeetingUrl] = useState('');
-    
+    const [showInviteByEmailsModal, setShowInviteByEmailsModal] = useState(false);
+
     // HOOKS
 
     /**
@@ -192,7 +194,54 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         setOptions(sort)
 
-    }, [activeRole, activeGrade, activeSection, channelCreator])
+    }, [activeRole, activeGrade, activeSection, channelCreator, allUsers])
+
+    const addViewersWithEmail = useCallback(async (emails: string[]) => {
+        const server = fetchAPI('')
+
+        server.mutate({
+            mutation: addUsersByEmail,
+            variables: {
+                channelId: props.channelId,
+                userId: props.userId,
+                emails
+            }
+        }).then((res) => {
+            if (res.data && res.data.channel.addUsersByEmail) {
+
+                const { success, failed, error } = res.data.channel.addUsersByEmail;
+
+                if (error) {
+                    alert(error);
+                    return;
+                } else {
+
+
+                    const successCount = success.length;
+                    const failedCount = failed.length
+
+                    let failedString = ''
+                    if (failedCount > 0) {
+                        failedString = 'Failed to add ' + failed.join(', ') + '. Cannot add users with emails that are part of another org.'
+                    }
+
+
+                    Alert((successCount > 0 ? 'Successfully added ' + successCount + ' viewers. ' : '') + (failedCount > 0 ? failedString : ''))
+                    
+                    if (successCount > 0) {
+                        setShowInviteByEmailsModal(false);
+                        // Refresh subscribers for the channel
+                        fetchChannelSettings()
+                    }
+                }
+               
+            }
+        })
+        .catch((e) => {
+            alert("Something went wrong. Try again.")
+        })
+
+    }, [props.channelId, props.userId])
 
     /**
      * @description Filter out channel Creator from the Subscribers dropdown
@@ -210,17 +259,16 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [channelCreator])
 
-    /**
-     * @description Fetches all the data for the channel 
-     */
-    useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
+    const fetchChannelSettings = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
 
                 let schoolObj: any;
 
                 if (u) {
+                    setLoadingOrg(true);
+                    setLoadingUsers(true);
+                    setLoadingChannelColor(true);
+
                     const user = JSON.parse(u)
                     const server = fetchAPI('')
                     // get all users
@@ -436,9 +484,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     })
                 }
-            }
-        )()
+    }, [props.channelId, props.user])
 
+    /**
+     * @description Fetches all the data for the channel 
+     */
+    useEffect(() => {
+        fetchChannelSettings()
     }, [props.channelId, props.user])
 
     /**
@@ -1098,9 +1150,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }
 
-    console.log("Channel creator", channelCreator);
-    console.log("Props.userId", props.userId);
-
     // MAIN RETURN 
     return (
         <View style={{
@@ -1326,13 +1375,45 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             : null
                         }
 
-                        <Text style={{
-                            fontSize: 14,
-                            paddingTop: 20,
-                            color: '#000000'
+                        <View style={{
+                            display: 'flex',
+                            width: '100%',
+                            flexDirection: 'row',
+                            paddingTop: 30,
+                            alignItems: 'center'
                         }}>
-                            Viewers
-                        </Text>
+                            <Text style={{
+                                fontSize: 14,
+                                
+                                color: '#000000'
+                            }}>
+                                Viewers
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => setShowInviteByEmailsModal(true)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginLeft: 'auto',
+                                    paddingTop: 2
+                                }}
+                            >
+                                <Ionicons name="mail-outline" color="#006AFF" style={{ marginRight: 7, paddingTop: 2 }} size={18} />
+                                <Text
+                                    style={{
+                                        fontSize: 13,
+                                        color: '#006AFF'
+                                    }}
+                                >
+                                Invite New Users
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        
 
                         {school ? renderSubscriberFilters() : null}
                         <View style={{
@@ -1372,6 +1453,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </div>
                             </View>
                         </View>
+
                         {props.userId === channelCreator ? <Text style={{
                             fontSize: 14,
                             color: '#000000', marginTop: 25, marginBottom: 20
@@ -1529,6 +1611,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                 </View>
             </View>
+            {
+                showInviteByEmailsModal ? 
+                    <InviteByEmailModal 
+                        show={true} 
+                        onClose={() => setShowInviteByEmailsModal(false)} 
+                        onAddUsersWithEmails={(emails: string[]) => addViewersWithEmail(emails)}
+                    /> : null
+            }
         </View>
     );
 }

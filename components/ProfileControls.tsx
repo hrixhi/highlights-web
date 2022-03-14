@@ -93,7 +93,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         // Logged in
         if (
-            !props.showSavePassword && avatar !== currentAvatar
+            !props.showSavePassword && (avatar !== currentAvatar || fullName !== currentFullName) 
         ) {
             setIsSubmitDisabled(false);
             return;
@@ -198,7 +198,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     user.avatar = avatar;
                     const updatedUser = JSON.stringify(user);
                     await AsyncStorage.setItem('user', updatedUser);
-                    Alert('Profile picture updated!')
+                    Alert('Profile updated!')
                     props.reOpenProfile();
                 } else {
                     Alert(somethingWentWrongAlert);
@@ -435,7 +435,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 />
                             )}
                         </View>
-                        {
+                        {/* {
                             !props.showSavePassword ? 
                                 <TouchableOpacity
                                     onPress={() => handleSubmit()}
@@ -467,7 +467,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         Save 
                                     </Text>
                                 </TouchableOpacity> : null
-                        }
+                        } */}
                         <Text
                             style={{
                                 marginTop: 20,
@@ -486,7 +486,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             required={true}
                             style={{
                                 borderBottomWidth: 0,
-                                paddingTop: 5
+                                paddingTop: 5,
+                                paddingLeft: 5
                             }}
                         />
                         <Text
@@ -498,15 +499,17 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {PreferredLanguageText('fullName')}
                         </Text>
                         <TextInput
-                            editable={false}
+                            // editable={false}
                             value={fullName}
                             placeholder={''}
                             onChangeText={val => setFullName(val)}
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
                             style={{
-                                borderBottomWidth: 0,
-                                paddingTop: 5
+                                paddingVertical: 10,
+                                paddingLeft: 5,
+                                borderBottomWidth: 1,
+                                borderBottomColor: '#f2f2f2'
                             }}
                         />
                         {/* <Text style={{
@@ -559,7 +562,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         alignSelf: 'center'
                     }}
                 >
-                    {props.showSavePassword ? <TouchableOpacity
+                    <TouchableOpacity
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
@@ -586,9 +589,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textTransform: 'uppercase'
                             }}
                         >
-                            {PreferredLanguageText('update')}
+                            {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
                         </Text>
-                    </TouchableOpacity> : null}
+                    </TouchableOpacity>
                     {!props.showSavePassword ? (
                         <TouchableOpacity
                             onPress={() => props.setShowSavePassword(!props.showSavePassword)}
@@ -597,6 +600,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 overflow: 'hidden',
                                 height: 35,
                                 marginTop: 20,
+                                // width: "100%",
                                 justifyContent: 'center',
                                 flexDirection: 'row'
                             }}
@@ -605,22 +609,20 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{
                                     textAlign: 'center',
                                     lineHeight: 34,
-                                    color: '#fff',
-                                    // borderWidth: 1,
-                                    borderRadius: 15,
-                                    // borderColor: '#006AFF',
-                                    backgroundColor: '#006AFF',
-                                    fontSize: 12,
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
+                                    color: '#006AFF',
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    borderColor: '#006AFF',
+                                    backgroundColor: '#fff',
+                                    fontSize: 12,
                                     width: 175,
                                     textTransform: 'uppercase'
                                 }}
                             >
-                                {props.showSavePassword
-                                    ? PreferredLanguageText('back')
-                                    : 'Reset password'}
+                                Reset password
                             </Text>
                         </TouchableOpacity>
                     ) : null}
@@ -706,7 +708,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </TouchableOpacity>
                     )}
 
-                    {
+                    {/* {
                         !props.showSavePassword ? <TouchableOpacity
                             onPress={() => logout()}
                             style={{
@@ -738,9 +740,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 Sign out
                             </Text> 
                         </TouchableOpacity> : null
-                    }
+                    } */}
 
-                    {/* {props.showSavePassword ? null : (
+                    {props.showSavePassword ? null : (
                         <TouchableOpacity
                             onPress={() => logout()}
                             style={{
@@ -748,7 +750,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 overflow: 'hidden',
                                 height: 35,
                                 marginTop: 20,
-                                marginBottom: 30,
                                 width: '100%',
                                 justifyContent: 'center',
                                 flexDirection: 'row',
@@ -762,10 +763,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     color: '#006AFF'
                                 }}
                             >
-                                Log Out
+                                Sign Out
                             </Text>
                         </TouchableOpacity>
-                    )} */}
+                    )}
                     {/* {props.showHelp || props.showSaveCue ? null : (
                         <View
                             style={{
@@ -782,9 +783,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 {/* </View> */}
                 {/* </View> */}
-                {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 12, textAlign: 'center'}}>
+                {/* {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 12, textAlign: 'center'}}>
                     version 1.8.6
-                </Text> : null}
+                </Text> : null} */}
             </ScrollView>
         </View>
     );

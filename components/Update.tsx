@@ -116,12 +116,19 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         if (!props.channelCues) return;
 
-        const filterExisting = props.channelCues.filter((cue: any) => {
+        let filterExisting = props.channelCues.filter((cue: any) => {
             return cue.folderId === '' || !cue.folderId;
         });
 
+        // Filter out current
+        if (folderId) {
+            filterExisting = filterExisting.filter((cue: any) => {
+                return cue._id !== props.cue._id
+            })
+        }
+
         setChannelCues(filterExisting);
-    }, [props.channelCues]);
+    }, [props.channelCues, folderId, props.cue]);
 
     /**
      * @description Fetch all Channel Folders
@@ -1760,6 +1767,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setAddingToFolder(false);
                                         return;
                                     }
+
+                                    // Filter out current cue from FolderCuesToDisplay
+                                    const filterOutCurrent = folderCuesToDisplay.filter((cue: any) => {
+                                        return cue._id !== props.cue._id
+                                    })
+
+                                    setFolderCuesToDisplay(filterOutCurrent)
+
                                     setAddingToFolder(false);
                                     setFolderId(choice);
                                 })
@@ -1831,11 +1846,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                 if (selectedCues.length < 2) {
                                     Alert('Folder must contain at least 2 items.');
+                                    setCreatingFolder(false);
                                     return;
                                 }
 
                                 if (newFolderTitle.trim() === '') {
                                     Alert('Folder title cannot be empty.');
+                                    setCreatingFolder(false);
                                     return;
                                 }
 
@@ -1940,11 +1957,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                             if (cueIds.length < 2) {
                                                 Alert('Folder must contain at least 2 items.');
+                                                setUpdatingFolder(false);
                                                 return;
                                             }
 
                                             if (updateFolderTitle.trim() === '') {
                                                 Alert('Folder title cannot be empty.');
+                                                setUpdatingFolder(false);
                                                 return;
                                             }
 

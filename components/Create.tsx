@@ -1000,7 +1000,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             endPlayAt,
             playChannelCueIndef,
             allowLateSubmission,
-            availableUntil
+            availableUntil,
+            attempts
         ]
     );
 

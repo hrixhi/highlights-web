@@ -45,17 +45,25 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
             setSource(sourceParam);
             setName(decodeURIComponent(nameParam));
 
+            // console.log("UrlParam", urlParam)
+            // console.log("Source", sourceParam)
+            // console.log("CueId", cueIdParam)
+            // console.log("UserId", userIdParam)
+            // console.log("Source", sourceParam)
+            // console.log("NameParam", nameParam)
+
             if (sourceParam === 'CREATE') {
                 setLoading(false);
                 return;
-            } else if (sourceParam === 'UPDATE') {
+            } else if (sourceParam === 'UPDATE' || sourceParam === 'MY_NOTES') {
                 const server = fetchAPI('');
                 server
                     .query({
                         query: fetchAnnotationsForViewer,
                         variables: {
                             cueId: cueIdParam,
-                            userId: userIdParam
+                            userId: userIdParam,
+                            myNotes: sourceParam === 'MY_NOTES'
                         }
                     })
                     .then(async res => {
@@ -75,6 +83,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         setLoading(false);
                     })
                     .catch(err => {
+                        console.log("Error in fetching params", err);
                         setLoading(false);
                         setInvalidParams(true);
                         console.log(err);
@@ -116,11 +125,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                                     setAnnotations(currAttempt.annotations ? currAttempt.annotations : '');
                                 }
 
-                               
-
-                                // const annot = currAttempt.annotations ? currAttempt.annotations : '';
-
-                                
                             }
 
                             setReleaseSubmission(
@@ -137,7 +141,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         setInvalidParams(true);
                         setLoading(false);
                     });
-            }
+            } 
         } else {
             setInvalidParams(true);
             setLoading(false);

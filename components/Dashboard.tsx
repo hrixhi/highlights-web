@@ -335,6 +335,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             dateFilteredCues = props.cues;
         }
 
+       
+
+
         props.subscriptions.map((sub: any) => {
             // const tempCategories: any = {}
             const tempCues: any[] = [];
@@ -348,8 +351,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }
             });
 
+            // Sort alphabetically
+            tempCues.sort((a: any, b: any) => {
+                return a.title > b.title ? -1 : 1
+            })
+                
             if (sortBy === 'Priority') {
-                tempCues.reverse();
+                // tempCues.reverse();
+                tempCues.sort((a: any, b: any) => {
+                    return a.colorCode < b.colorCode ? 1 : -1 
+                });
             } else if (sortBy === 'Date ↑') {
                 tempCues.sort((a: any, b: any) => {
                     const aDate = new Date(a.date);
@@ -358,6 +369,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         return 1;
                     } else if (aDate > bDate) {
                         return -1;
+                    } else {
+                        return 0;
+                    }
+                });
+            } else {
+                tempCues.sort((a: any, b: any) => {
+                    const aDate = new Date(a.date);
+                    const bDate = new Date(b.date);
+                    if (aDate < bDate) {
+                        return -1;
+                    } else if (aDate > bDate) {
+                        return 1;
                     } else {
                         return 0;
                     }
@@ -389,9 +412,30 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }
             }
         });
+
+        // Sort alphabetically
+        mycues.sort((a: any, b: any) => {
+            return a.title > b.title ? -1 : 1
+        })
+
         if (sortBy === 'Priority') {
-            mycues.reverse();
+            // mycues.reverse();
+            mycues.sort((a: any, b: any) => {
+                return a.colorCode < b.colorCode ? 1 : -1 
+            });
         } else if (sortBy === 'Date ↑') {
+            mycues.sort((a: any, b: any) => {
+                const aDate = new Date(a.date);
+                const bDate = new Date(b.date);
+                if (aDate < bDate) {
+                    return 1;
+                } else if (aDate > bDate) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+        } else {
             mycues.sort((a: any, b: any) => {
                 const aDate = new Date(a.date);
                 const bDate = new Date(b.date);
@@ -403,7 +447,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     return 0;
                 }
             });
-        }
+        } 
 
         temp['My Notes'] = mycues;
         if (!cat['']) {
@@ -663,7 +707,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     channelId
                 }
             })
-            .then(res => {
+            .then(async res => {
                 if (res.data.channel && res.data.channel.getChannelStatus) {
                     const channelStatus = res.data.channel.getChannelStatus;
                     switch (channelStatus) {
@@ -671,11 +715,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             handleSubscribe(channelId, '');
                             break;
                         case 'password-required':
-                            let pass: any = prompt('Enter Password');
-                            if (!pass) {
-                                pass = '';
+                            let pass: any = await prompt('Enter Password')
+                            if (!pass || pass === "") {
+                                Alert('Enter a valid password.')
+                                return;
                             }
-                            handleSubscribe(channelId, pass);
+                            handleSubscribe(channelId, pass)
                             break;
                         case 'non-existant':
                             Alert(doesNotExistAlert);
@@ -1092,6 +1137,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             let channelName = '';
                                             let colorCode = '';
                                             let subscribed = false;
+                                            let messageSenderName = '';
+                                            let messageSenderAvatar = '';
 
                                             if (option === 'Classroom') {
                                                 const { title, subtitle } = htmlStringParser(obj.cue);
@@ -1141,6 +1188,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     colorCode = filterChannel[0].colorCode;
                                                 }
                                             } else if (option === 'Messages') {
+
+                                                const users = obj.groupId.users;
+
+                                                const sender = users.filter((user: any) => user._id === obj.sentBy)[0]
+
+                                                if (obj.groupId && obj.groupId.name) {
+                                                    messageSenderName = obj.groupId.name + ' > ' + sender.fullName
+                                                    messageSenderAvatar = obj.groupId.image ? obj.groupId.image : ''
+                                                } else {
+                                                    messageSenderName = sender.fullName
+                                                    messageSenderAvatar = sender.avatar ? sender.avatar : ''
+                                                }
+
+
                                                 if (
                                                     obj.message[0] === '{' &&
                                                     obj.message[obj.message.length - 1] === '}'
@@ -1164,7 +1225,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         // maxWidth: 150,
                                                         backgroundColor: '#f2f2f2',
                                                         width: '100%',
-                                                        maxWidth: 150
+                                                        maxWidth: 160
                                                     }}
                                                     key={index}
                                                 >
@@ -1172,6 +1233,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         title={t}
                                                         subtitle={s}
                                                         channelName={channelName}
+                                                        messageSenderName={messageSenderName}
+                                                        messageSenderAvatar={messageSenderAvatar}
                                                         colorCode={colorCode}
                                                         option={option}
                                                         subscribed={subscribed}
@@ -1207,7 +1270,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 await AsyncStorage.setItem(
                                                                     'openChat',
                                                                     JSON.stringify({
-                                                                        _id: obj.groupId,
+                                                                        _id: obj.groupId._id,
                                                                         users: obj.users
                                                                     })
                                                                 );
@@ -2236,7 +2299,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     <View
                                                                         style={{
                                                                             width: '100%',
-                                                                            maxWidth: 130,
+                                                                            maxWidth: 145,
                                                                             backgroundColor: '#f2f2f2',
                                                                             marginRight: 15
                                                                         }}
@@ -2266,7 +2329,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <View
                                                                             style={{
                                                                                 // borderWidth: 1,
-                                                                                maxWidth: 130,
+                                                                                maxWidth: 145,
                                                                                 paddingLeft: 5,
                                                                                 backgroundColor: '#f2f2f2',
                                                                                 width: '100%'
@@ -2289,7 +2352,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             marginBottom: 15,
                                                                                             backgroundColor: '#f2f2f2',
                                                                                             width: '100%',
-                                                                                            maxWidth: 130
+                                                                                            maxWidth: 145
                                                                                         }}
                                                                                         key={index}
                                                                                     >

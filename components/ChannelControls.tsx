@@ -370,7 +370,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             variables: {
                 channelId
             }
-        }).then(res => {
+        }).then(async res => {
             if (res.data.channel && res.data.channel.getChannelStatus) {
                 const channelStatus = res.data.channel.getChannelStatus
                 switch (channelStatus) {
@@ -378,9 +378,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         handleSubscribe(channelId, '')
                         break;
                     case "password-required":
-                        let pass: any = prompt('Enter Password')
-                        if (!pass) {
-                            pass = ''
+                        let pass: any = await prompt('Enter Password')
+                        if (!pass || pass === "") {
+                            Alert('Enter a valid password.')
+                            return;
                         }
                         handleSubscribe(channelId, pass)
                         break;

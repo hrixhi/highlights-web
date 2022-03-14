@@ -1,6 +1,6 @@
 // REACT
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 
@@ -25,9 +25,21 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                     <View style={styleObject.dateContainer}>
                         {props.channelName !== '' && props.option !== 'Channels' ? (
                             <Text style={styleObject.date}>{props.channelName}</Text>
-                        ) : (
-                            <Text style={styleObject.date}> </Text>
-                        )}
+                        ) : props.option === 'Messages'? (
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                {/* {props.messageSenderAvatar ? <Image source={props.messageSenderAvatar} style={{
+                                    width: 20,
+                                    marginTop: 1,
+                                    borderRadius: 20,
+                                    height: 20,
+                                    marginRight: 5
+                                }}
+                                resizeMode={'contain'} /> : null} */}
+                                <Text numberOfLines={1} ellipsizeMode="tail" style={styleObject.date}> 
+                                    {props.messageSenderName}
+                                </Text>
+                            </View>
+                        ): <Text style={styleObject.date}> </Text>}
                     </View>
                     <View
                         style={{
@@ -94,8 +106,8 @@ const styles: any = (colorScheme: any, col: any) =>
             height: '100%',
             backgroundColor: '#fff',
             borderRadius: 1,
-            maxWidth: 130,
-            width: 130,
+            maxWidth: 160,
+            width: 160,
             borderColor: col,
             borderLeftWidth: 3,
             flexDirection: 'row',
@@ -110,8 +122,8 @@ const styles: any = (colorScheme: any, col: any) =>
         },
         card: {
             height: '100%',
-            width: 130,
-            minWidth: 130,
+            width: 160,
+            minWidth: 160,
             padding: 10,
             paddingHorizontal: 10,
             backgroundColor: '#fff'
@@ -130,7 +142,10 @@ const styles: any = (colorScheme: any, col: any) =>
         date: {
             fontSize: 9,
             color: colorScheme === 'light' ? '#f2f2f2' : '#1F1F1F',
-            lineHeight: 10
+            lineHeight: 10,
+            width: 150,
+            maxWidth: 150,
+
         },
         title: {
             fontFamily: 'overpass',

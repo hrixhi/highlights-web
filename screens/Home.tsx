@@ -1008,7 +1008,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setChannelId('');
         }
 
-        loadData();
+        await loadData();
     }, [fadeAnimation, modalType]);
 
     const cuesArray: any[] = [];

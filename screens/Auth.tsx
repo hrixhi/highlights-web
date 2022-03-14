@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Platform, Dimensions, Image, ScrollView } from 'react-native';
 import Alert from '../components/Alert';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { connectZoom } from '../graphql/QueriesAndMutations';
 import { origin } from '../constants/zoomCredentials';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { TextInput } from '../components/CustomTextInput';
@@ -89,6 +88,58 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             const { error } = r.data.user.loginFromSso;
                             Alert(error);
                             setIsLoggingIn(false);
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        setIsLoggingIn(false);
+                        Alert('Something went wrong. Try again.');
+                    });
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            const emailParam = route?.params?.email;
+            const passwordParam = route?.params?.password;
+
+            if (emailParam && emailParam !== '' && passwordParam && passwordParam !== '') {
+                setIsLoggingIn(true);
+
+                const server = fetchAPI('');
+                server
+                    .query({
+                        query: login,
+                        variables: {
+                            email: emailParam.toLowerCase(),
+                            password: decodeURIComponent(passwordParam)
+                        }
+                    })
+                    .then(async (r: any) => {
+                        if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
+                            const u = r.data.user.login.user;
+                            const token = r.data.user.login.token;
+                            if (u.__typename) {
+                                delete u.__typename;
+                            }
+
+                            const userId = u._id;
+
+                            OneSignal.setExternalUserId(userId);
+
+                            const sU = JSON.stringify(u);
+                            await AsyncStorage.setItem('jwt_token', token);
+                            await AsyncStorage.setItem('user', sU);
+                            if (redirectToZoom) {
+                                window.location.href = `${origin}/zoom_auth`;
+                            } else {
+                                window.location.href = origin;
+                            }
+                        } else {
+                            const { error } = r.data.user.login;
+                            setIsLoggingIn(false);
+                            Alert(error);
                         }
                     })
                     .catch(e => {
@@ -233,7 +284,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                 setIsLoggingIn(false);
                 Alert('Something went wrong. Try again.');
             });
-    }, [email, password]);
+    }, [email, password, redirectToZoom]);
 
     const forgotPassword = useCallback(() => {
         const server = fetchAPI('');

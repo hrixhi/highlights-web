@@ -25,7 +25,8 @@ import {
     modifyQuiz,
     // findBySchoolId,
     getRole,
-    getOrganisation
+    getOrganisation,
+    duplicateQuiz
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -462,7 +463,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         } else {
             setInitDuration(remainingTime); // set remaining duration in seconds
         }
-    }, [initiatedAt, duration, deadline, isQuizTimed, isOwner, allowLateSubmission, availableUntil]);
+    }, [initiatedAt, duration, deadline, isQuizTimed, isOwner, allowLateSubmission, availableUntil, props.showOriginal]);
 
     /**
      * @description If cue contains a Quiz, then need to fetch the quiz and set State
@@ -1158,6 +1159,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, []);
 
+    console.log("Initiated at", initiatedAt)
+
     /**
      * @description Initialize the quiz (Timed quiz)
      */
@@ -1222,8 +1225,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         async (files: any, forSubmission: boolean) => {
             const res = await handleFileUploadEditor(true, files.item(0), userId);
 
-            console.log('On upload', res);
-
             if (!res || res.url === '' || res.type === '') {
                 return false;
             }
@@ -1266,6 +1267,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Handle cue content for Submissions and Quiz responses
      */
     const handleUpdateCue = useCallback(async () => {
+
+        if (isSubmitting) return;
+
         let subCues: any = {};
         try {
             const value = await AsyncStorage.getItem('cues');
@@ -1355,7 +1359,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         submissionTitle,
         submissionImported,
         isQuiz,
-        submissionDraft
+        submissionDraft,
+        isSubmitting
     ]);
 
     /**
@@ -1986,68 +1991,87 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Share cue
      */
     const shareCue = useCallback(async () => {
-        let saveCue = '';
-        if (submissionImported) {
-            const obj = {
-                type: submissionType,
-                url: submissionUrl,
-                title: submissionTitle
-            };
-            saveCue = JSON.stringify(obj);
-        } else {
-            saveCue = cue;
-        }
 
-        let tempOriginal = '';
-        if (imported) {
-            const obj = {
-                type,
-                url,
-                title
-            };
-            tempOriginal = JSON.stringify(obj);
-        } else {
-            tempOriginal = original;
+        const variables = {
+            cue: props.cue.channelId ? props.cue.original : props.cue.cue,
+            starred: props.cue.starred,
+            channelId: shareWithChannelId,
+            createdBy: props.cue.createdBy,
+            color: color.toString(),
+            shuffle,
+            frequency,
+            customCategory: customCategory === 'None' ? '' : customCategory,
+            gradeWeight: graded ? gradeWeight.toString() : '0',
+            endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
+            submission,
+            deadline: submission ? deadline.toISOString() : '',
+            initiateAt: submission ? initiateAt.toISOString() : '',
+            allowedAttempts: unlimitedAttempts ? '' : allowedAttempts,
+            availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
+            limitedShares,
+            shareWithUserIds: limitedShares ? [props.cue.createdBy] : null,
         }
 
         const server = fetchAPI('');
-        server
-            .mutate({
-                mutation: createCue,
-                variables: {
-                    cue: props.cue.channelId ? tempOriginal : saveCue,
-                    starred,
-                    color: color.toString(),
-                    channelId: shareWithChannelId,
-                    frequency,
-                    customCategory: customCategory === 'None' ? '' : customCategory,
-                    shuffle,
-                    createdBy: selectedChannelOwner ? selectedChannelOwner.id : props.cue.createdBy,
-                    gradeWeight: gradeWeight.toString(),
-                    submission,
-                    deadline: submission ? deadline.toISOString() : '',
-                    endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : ''
-                }
-            })
-            .then(res => {
-                if (res.data.cue.create) {
-                    Alert(sharedAlert, 'Cue has been successfully shared.');
-                }
-            })
-            .catch(err => {
-                Alert(somethingWentWrongAlert, checkConnectionAlert);
-            });
+
+        if (props.cue.channelId && props.cue.original && props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}' && props.cue.original.includes("quizId")) {
+            const parseCue = JSON.parse(props.cue.original);
+
+            if (parseCue.quizId) {
+                server
+                    .mutate({
+                        mutation: duplicateQuiz,
+                        variables: {
+                            quizId: parseCue.quizId
+                        }
+                    })
+                    .then((res) => {
+                        if (res.data && res.data.cue.duplicateQuiz) {
+
+                            if (!res.data.cue.duplicateQuiz) {
+                                Alert("Something went wrong. Try again.")
+                                return;
+                            }
+
+                            variables.cue = JSON.stringify({
+                                quizId: res.data.cue.duplicateQuiz,
+                                title: parseCue.title
+                            })
+                            server
+                                .mutate({
+                                    mutation: createCue,
+                                    variables
+                                })
+                                .then(res1 => {
+                                    if (res1.data.cue.create) {
+                                        Alert(sharedAlert, 'Cue has been successfully shared.');
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log("Err", err)
+                                    Alert(somethingWentWrongAlert, checkConnectionAlert);
+                                });
+                        }
+                    })
+            }
+        } else {
+            server
+                .mutate({
+                    mutation: createCue,
+                    variables
+                })
+                .then(res1 => {
+                    if (res1.data.cue.create) {
+                        Alert(sharedAlert, 'Cue has been successfully shared.');
+                    }
+                })
+                .catch(err => {
+                    console.log("Err", err)
+                    Alert(somethingWentWrongAlert, checkConnectionAlert);
+                });
+
+        }
     }, [
-        submissionImported,
-        submissionTitle,
-        submissionType,
-        submissionUrl,
-        selectedChannelOwner,
-        url,
-        type,
-        imported,
-        title,
-        original,
         cue,
         starred,
         color,
@@ -2057,11 +2081,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         gradeWeight,
         submission,
         deadline,
+        initiateAt,
+        allowLateSubmission,
+        availableUntil,
         notify,
         playChannelCueIndef,
         endPlayAt,
         shareWithChannelId,
-        props.cue
+        props.cue,
+        unlimitedAttempts,
+        limitedShares,
+        allowedAttempts,
+        graded
     ]);
 
     // FUNCTIONS
@@ -4327,7 +4358,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <TouchableOpacity
                             disabled={shareWithChannelId === 'None'}
                             onPress={() => {
-                                Alert('Forward cue?', '', [
+                                Alert('Forward cue?', 'All unsaved changes in Details will also reflect in the forwarded cue.', [
                                     {
                                         text: 'Cancel',
                                         style: 'cancel',

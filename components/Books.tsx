@@ -40,7 +40,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             setLoading(true);
             setSearchComplete(false);
             const url =
-                'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads,rights,licenseurl,source&q=';
+                'https://archive.org/services/search/v1/scrape?fields=title,identifier,mediatype,format,description,downloads,collection&q=';
             const response = await axios.get(
                 url +
                     encodeURIComponent(searchTerm) +
@@ -64,7 +64,14 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 } catch (e) {
                     console.log(item.format);
                 }
-                return pdfExists;
+
+                let isAvailableForFree = false;
+
+                if (item.collection && (item.collection.includes('opensource') || item.collection.includes('community'))) {
+                    isAvailableForFree = true;
+                }
+
+                return pdfExists && isAvailableForFree;
             });
             setResults(filteredItems);
             setSearchComplete(true);
