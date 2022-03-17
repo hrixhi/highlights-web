@@ -686,6 +686,8 @@ export const findUserById = gql`
                 currentDraft
                 role
                 allowQuizCreation
+                schoolId
+                orgName
             }
         }
     }

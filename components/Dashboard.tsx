@@ -2553,7 +2553,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     : op === 'Performance'
                                                     ? 'Performance'
                                                     : op === 'To Do'
-                                                    ? 'Home'
+                                                    ? 'Agenda'
                                                     : op}
                                             </Text>
 

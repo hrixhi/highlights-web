@@ -34,7 +34,7 @@ import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 import { defaultCues } from '../helpers/DefaultData';
 import { origin } from '../constants/zoomCredentials';
-
+import { Popup } from '@mobiscroll/react5';
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
 
@@ -83,6 +83,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
     const [openChannelId, setOpenChannelId] = useState('');
     const [passwordValidError, setPasswordValidError] = useState('');
+    const [user, setUser] = useState<any>(null);
 
     const [tab, setTab] = useState('Agenda');
     const [showDirectory, setShowDirectory] = useState<any>(false);
@@ -100,6 +101,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const passwordInvalidError = PreferredLanguageText('atleast8char');
     const [filterStart, setFilterStart] = useState<any>(new Date());
     const [filterEnd, setFilterEnd] = useState<any>(null);
+    const [showOnboardModal, setShowOnboardModal] = useState(false);
 
     const [option, setOption] = useState('To Do');
     const [options] = useState(
@@ -115,6 +117,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [loadingSubs, setLoadingSubs] = useState(true);
     const [loadingUser, setLoadingUser] = useState(true);
     const [loadingOrg, setLoadingOrg] = useState(true);
+
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -179,10 +182,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     useEffect(() => {
         (async () => {
             const u = await AsyncStorage.getItem('user');
+            const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
+
             if (u) {
                 const parsedUser: any = JSON.parse(u);
+                if (showOnboarding === "true") {
+                    setShowOnboardModal(true)
+                    AsyncStorage.setItem("show_onboard_modal", "false")
+                }
+
                 if (parsedUser._id && parsedUser._id !== '') {
-                    await loadDataFromCloud();
+                    await loadDataFromCloud();        
                 } else {
                     // setShowLoginWindow(true);
                     window.location.href = `${origin}/login`;
@@ -578,6 +588,37 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
     }, [email, password]);
 
+    useEffect(() => {
+
+        if (user && user.email) {
+            window.pendo.initialize({
+                visitor: {
+                    id: user._id,   // Required if user is logged in
+                    email:  user.email,      // Recommended if using Pendo Feedback, or NPS Email
+                    full_name: user.fullName,    // Recommended if using Pendo Feedback
+                    role: user.role,        // Optional
+                    // You can add any additional visitor level key-values here,
+                    // as long as it's not one of the above reserved names.
+                },
+        
+                account: {
+                    id: user.schoolId,
+                    name: user.orgName    // Required if using Pendo Feedback
+                    // name:         // Optional
+                    // is_paying:    // Recommended if using Pendo Feedback
+                    // monthly_value:// Recommended if using Pendo Feedback
+                    // planLevel:    // Optional
+                    // planPrice:    // Optional
+                    // creationDate: // Optional
+        
+                    // You can add any additional account level key-values here,
+                    // as long as it's not one of the above reserved names.
+                }
+            });
+        }
+        
+    }, [user])
+
     // imp
     const loadDataFromCloud = useCallback(async () => {
         const u = await AsyncStorage.getItem('user');
@@ -600,13 +641,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 })
                 .then(async res => {
                     const u = res.data.user.findById;
+
+                    console.log("Fetched User", u)
                     if (u) {
                         // await AsyncStorage.setItem('cueDraft', u.currentDraft);
                         delete u.currentDraft;
                         delete u.__typename;
                         const sU = JSON.stringify(u);
                         await AsyncStorage.setItem('user', sU);
+
+                        setUser(u);
                         setLoadingUser(false);
+
                     }
                 })
                 .catch(err => console.log(err));
@@ -1023,6 +1069,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 });
             });
         });
+    }
+
+    const renderTimeMessage = () => {
+        const currentTime = new Date()
+
+        if (currentTime.getHours() < 12 && currentTime.getHours() > 0) {
+            return 'Good Morning'
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 17) {
+            return 'Good Afternoon' 
+        } else {
+            return 'Good Evening'
+        }
     }
 
     const cuesCopy = cuesArray.sort((a: any, b: any) => {
@@ -1753,10 +1811,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     setModalType('');
                                     setPageNumber(0);
                                 }}
-                                closeOnCreate={() => {
+                                closeOnCreate={async () => {
                                     setModalType('');
                                     setPageNumber(0);
-                                    loadData(true);
+                                    await loadData(true);
+                                    await loadData();
                                 }}
                                 unreadMessages={unreadMessages}
                                 refreshUnreadInbox={refreshUnreadInbox}
@@ -1884,6 +1943,240 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     })}
                 </View>
             ) : null}
+            {
+                <Popup
+                    isOpen={showOnboardModal}
+                    buttons={[
+                        // {
+                        //     text: 'BEGIN USE',
+                        //     handler: function(event) {
+                        //         setShowOnboardModal(false)
+                        //     }
+                        // },
+                        // {
+                        //     text: 'HELP',
+                        //     handler: function(event) {
+                        //         setShowOnboardModal(false)
+                        //     }
+                        // },
+                    ]}
+                    themeVariant="light"
+                    theme="ios"
+                    onClose={() => setShowOnboardModal(false)}
+                    responsive={{
+                        small: {
+                            display: 'center'
+                        },
+                        medium: {
+                            display: 'center'
+                        }
+                    }}
+                >
+                    {/* Show all the settings here */}
+                    <View
+                        style={{ flexDirection: 'column', backgroundColor: 'none', width: 480, marginHorizontal: 25 }}
+                        className="mbsc-align-center mbsc-padding"
+                    >
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: '#f2f2f7',
+                            paddingVertical: 20
+                        }}>
+                            <Text 
+                                style={{
+                                    fontSize: 28,
+                                    color: '#000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                {renderTimeMessage()}
+                            </Text>
+                            
+                            <View 
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f2f2f7',
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        window.open('https://www.learnwithcues.com/help', '_blank');
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#f2f2f7',
+                                        
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            lineHeight: 30,
+                                            color: 'white',
+                                            fontSize: 12,
+                                            backgroundColor: '#006AFF',
+                                            paddingHorizontal: 20,
+                                            fontFamily: 'inter',
+                                            height: 30,
+                                            borderRadius: 15,
+                                            width: 90,
+                                            textTransform: 'uppercase'
+                                        }}
+                                    >
+                                        HELP
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                       setShowOnboardModal(false)
+                                    }}
+                                    style={{
+                                        backgroundColor: '#f2f2f7',
+                                        marginLeft: 15
+                                    }}
+                                >
+                                    <Ionicons name="close-outline" size={22} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <div style={{
+                            marginTop: 20,
+                            marginBottom: 20,
+                            display: "flex", 
+                            flexDirection: 'row',
+                            justifyContent: 'center'
+                        }}>
+                            <iframe
+                            width="480"
+                            height="300"
+                            src={`https://www.youtube.com/embed/64GhiDvem4o`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title="Embedded youtube"
+                            />
+                        </div>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f2f2f7',
+                            paddingVertical: 20
+                        }}>
+                            {/* <Text 
+                                style={{
+                                    fontSize: 22,
+                                    color: '#000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Download Apps
+                            </Text> */}
+
+                            {/* <View 
+                                style={{ 
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f2f2f7',
+                                    // paddingRight: 50 
+                                }}
+                            >
+
+                                <Text style={{ paddingRight: 15, fontSize: 16 }}>
+                                    DESKTOP
+                                </Text> */}
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.dmg', '_blank');
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#f2f2f7',
+                                        paddingRight: 35
+                                    }}
+                                >
+                                    <Ionicons name='logo-apple' size={35} />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.exe', '_blank');
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#f2f2f7',
+                                        paddingRight: 35
+                                    }}
+                                >
+                                    <Ionicons name='logo-windows' size={35} />
+                                </TouchableOpacity>
+
+                            {/* </View>
+
+                            <View 
+                                style={{ 
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f2f2f7',
+                                    paddingRight: 35 
+                                }}
+                            >
+
+                                <Text style={{ paddingRight: 15, fontSize: 16 }}>
+                                    MOBILE
+                                </Text> */}
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        window.open('https://www.learnwithcues.com/help', '_blank');
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#f2f2f7',
+                                        paddingRight: 35
+                                    }}
+                                >
+                                    <Ionicons name='logo-apple-appstore' size={35}/>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        window.open('https://www.learnwithcues.com/help', '_blank');
+                                    }}
+                                    style={{
+                                        overflow: 'hidden',
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#f2f2f7'
+                                    }}
+                                >
+                                    <Ionicons name='logo-android' size={35} />
+                                </TouchableOpacity>
+
+                            {/* </View> */}
+                        </View>
+
+                        
+                    </View>
+                </Popup>
+            }
         </View>
     );
 };

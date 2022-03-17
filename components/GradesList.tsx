@@ -529,7 +529,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 :
                                                                 <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#000000', }}>
                                                                     {
-                                                                        scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score.replace(/\.0+$/, '') : (scoreObject && (new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline))) ? "Late" : '-')
+                                                                        scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score ? scoreObject.score.replace(/\.0+$/, '') : (scoreObject && (new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline))) ? "Late" : 'Submitted')
                                                                     }
                                                                 </Text>}
 
@@ -539,6 +539,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 </Text> : null
                                                             }
                                                         </TouchableOpacity>
+
                                                     })
                                                 }
                                                 

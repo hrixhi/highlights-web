@@ -131,11 +131,16 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             const sU = JSON.stringify(u);
                             await AsyncStorage.setItem('jwt_token', token);
                             await AsyncStorage.setItem('user', sU);
+                            await AsyncStorage.setItem('show_onboard_modal', 'true')
+                            
                             if (redirectToZoom) {
                                 window.location.href = `${origin}/zoom_auth`;
                             } else {
                                 window.location.href = origin;
                             }
+
+                            
+
                         } else {
                             const { error } = r.data.user.login;
                             setIsLoggingIn(false);
