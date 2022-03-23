@@ -121,7 +121,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             ) : props.quiz ? (
                 <Text
                     style={{
-                        color: '#006AFF',
+                        color: '#4794ff',
                         // lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
                         fontSize: 12,
@@ -134,7 +134,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             ) : (
                 <Text
                     style={{
-                        color: '#006AFF',
+                        color: '#4794ff',
                         backgroundColor: props.profile ? 'none' : '#fff',
                         lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
@@ -146,7 +146,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                     onPress={() => handleFile()}
                 >
                     {props.chat || props.profile ? (
-                        <Ionicons name={props.profile ? "attach-outline" : "document-attach-outline"} size={props.profile ? 25 : 18}  color={props.profile ? 'white' : '#006AFF' } />
+                        <Ionicons name={props.profile ? "attach-outline" : "document-attach-outline"} size={props.profile ? 25 : 18}  color={props.profile ? 'white' : '#4794ff' } />
                     ) : (
                         PreferredLanguageText('import')
                     )}

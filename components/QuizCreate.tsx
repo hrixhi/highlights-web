@@ -1,9 +1,9 @@
 // REACT
 import React, { useEffect, useState, useCallback, useRef, } from 'react';
-import { Dimensions, TextInput as DefaultTextInput } from 'react-native';
+import { Dimensions, TextInput as DefaultTextInput, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import TeXToSVG from "tex-to-svg";
-import lodash from "lodash";
+import lodash, { update } from "lodash";
 import { Ionicons } from '@expo/vector-icons';
 
 // COMPONENTS
@@ -25,7 +25,7 @@ import { Editor } from '@tinymce/tinymce-react';
 
 // HELPER
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-import { handleFileUploadEditor } from '../helpers/FileUpload';
+import { handleFile, handleFileUploadEditor } from '../helpers/FileUpload';
 
 // NEW EDITOR
 // Require Editor JS files.
@@ -50,6 +50,15 @@ import { QUIZ_QUESTION_TOOLBAR_BUTTONS, QUIZ_OPTION_TOOLBAR_BUTTONS } from '../c
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { TextInput } from './CustomTextInput';
+
+import ImageMarker from "react-image-marker"
+
+
+// import { BoardRepository, Board } from 'react-native-draganddrop-board'
+
+
 // CONSTANTS
 const questionTypeOptions = [
     {
@@ -63,6 +72,14 @@ const questionTypeOptions = [
     {
         text: "True/False",
         value: "trueFalse"
+    },
+    {
+        text: "Drag & Drop",
+        value: "dragdrop"
+    },
+    {
+        text: "Hotspot",
+        value: "hotspot"
     }
 ]
 
@@ -77,7 +94,12 @@ const requiredOptions = [
     }
 ]
 
+// if (Platform.OS === "web") {
+//     Image.resolveAssetSource = (source) => { uri: source }
+// }
+
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
 
     const [problems, setProblems] = useState<any[]>(props.problems ? props.problems : [])
     const [headers, setHeaders] = useState<any>(props.headers ? props.headers : {});
@@ -104,7 +126,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         focus: false,
         undo: true,
         refreshAfterCallback: false,
-        callback: function() {
+        callback: function () {
 
             RichText.current.editor.selection.save();
 
@@ -125,8 +147,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         focus: false,
         undo: true,
         refreshAfterCallback: false,
-        callback: function() {
-            
+        callback: function () {
+
             this.selection.save();
             // curr.editor.id
 
@@ -136,11 +158,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             setShowEquationEditor(true);
         }
     });
-    
 
 
     // HOOKS
-
     /**
      * @description Reset formulas when edit question changes
      */
@@ -166,17 +186,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (equationEditorFor === "question") {
             renderMathjax(equation).then((res: any) => {
                 const random = Math.random();
-    
+
                 RichText.current.editor.selection.restore();
-    
+
                 RichText.current.editor.html.insert(
                     '<img class="rendered-math-jax" id="' +
-                        random +
-                        '" data-eq="' +
-                        encodeURIComponent(equation) +
-                        '" src="' +
-                        res.imgSrc +
-                        '"></img>'
+                    random +
+                    '" data-eq="' +
+                    encodeURIComponent(equation) +
+                    '" src="' +
+                    res.imgSrc +
+                    '"></img>'
                 );
                 RichText.current.editor.events.trigger('contentChanged');
 
@@ -200,7 +220,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setProblems(newProbs)
                     props.setProblems(newProbs)
                 }
-    
+
                 setShowEquationEditor(false);
                 setEquationEditorFor('')
                 setEquation('');
@@ -226,37 +246,37 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                 if (optionIndex === -1 || !optionEditorRef) return;
 
-    
+
                 optionEditorRef.current.editor.selection.restore();
-    
+
                 optionEditorRef.current.editor.html.insert(
                     '<img class="rendered-math-jax" id="' +
-                        random +
-                        '" data-eq="' +
-                        encodeURIComponent(equation) +
-                        '" src="' +
-                        res.imgSrc +
-                        '"></img>'
+                    random +
+                    '" data-eq="' +
+                    encodeURIComponent(equation) +
+                    '" src="' +
+                    res.imgSrc +
+                    '"></img>'
                 );
 
                 // Update problem in props
                 const newProbs = [...problems];
                 newProbs[editQuestionNumber - 1].options[optionIndex].option = optionEditorRef.current.editor.html.get();
 
-                
+
                 optionEditorRef.current.editor.events.trigger('contentChanged');
 
                 setProblems(newProbs)
                 props.setProblems(newProbs)
 
-    
+
                 setShowEquationEditor(false);
                 setEquationEditorFor('')
                 setEquation('');
             });
         }
 
-       
+
     }, [equation, RichText, RichText.current, showEquationEditor, editQuestionNumber, problems, equationEditorFor, equationOptionId, editQuestion]);
 
     /**
@@ -338,25 +358,25 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             let audioVideoQuestion = currentProblem.question[0] === "{" && currentProblem.question[currentProblem.question.length - 1] === "}";
 
-           if (audioVideoQuestion) {
-                        const currQuestion = JSON.parse(currentProblem.question);
-                        const updatedQuestion = {
-                            ...currQuestion,
-                            content: editQuestionContent
-                        }
-                        const newProbs = [...problems];
-                        newProbs[editQuestionNumber - 1].question = JSON.stringify(updatedQuestion);
-                        setEditQuestion(newProbs[editQuestionNumber - 1])
-                        setProblems(newProbs)
-                        props.setProblems(newProbs)
-                    } else {
-                        // setCue(modifedText);
-                        const newProbs = [...problems];
-                        newProbs[editQuestionNumber - 1].question = editQuestionContent;
-                        setEditQuestion( newProbs[editQuestionNumber - 1])
-                        setProblems(newProbs)
-                        props.setProblems(newProbs) 
-                    }
+            if (audioVideoQuestion) {
+                const currQuestion = JSON.parse(currentProblem.question);
+                const updatedQuestion = {
+                    ...currQuestion,
+                    content: editQuestionContent
+                }
+                const newProbs = [...problems];
+                newProbs[editQuestionNumber - 1].question = JSON.stringify(updatedQuestion);
+                setEditQuestion(newProbs[editQuestionNumber - 1])
+                setProblems(newProbs)
+                props.setProblems(newProbs)
+            } else {
+                // setCue(modifedText);
+                const newProbs = [...problems];
+                newProbs[editQuestionNumber - 1].question = editQuestionContent;
+                setEditQuestion(newProbs[editQuestionNumber - 1])
+                setProblems(newProbs)
+                props.setProblems(newProbs)
+            }
 
         }
 
@@ -393,7 +413,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </View>
                 : null
             }
-            <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation}  />
+            <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation} />
             <FroalaEditor
                 ref={RichText}
                 model={editQuestionContent}
@@ -425,20 +445,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     fontSizeDefaultSelection: '24',
                     spellcheck: true,
                     tabSpaces: 4,
-                    
+
                     // TOOLBAR
                     toolbarButtons: QUIZ_QUESTION_TOOLBAR_BUTTONS,
                     toolbarSticky: false,
                     quickInsertEnabled: false,
                     events: {
-                        'video.beforeUpload': function(videos: any) {
+                        'video.beforeUpload': function (videos: any) {
 
                             handleVideoImport(videos, index)
 
                             return false;
                         },
-                        'image.beforeUpload': function(images: any) {
-                            if (images[0].size > (5 * 1024 * 1024) ) {
+                        'image.beforeUpload': function (images: any) {
+                            if (images[0].size > (5 * 1024 * 1024)) {
                                 alert('Image size must be less than 5mb.')
                                 return false;
                             }
@@ -649,7 +669,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View style={{ paddingTop: 35, paddingLeft: 20 }}>
                         <Text
                             style={{
-                                color: '#006AFF',
+                                color: '#4794ff',
                                 fontFamily: 'Overpass',
                                 fontSize: 10
                             }}
@@ -677,10 +697,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 >
                     <Text
                         style={{
-                            color: '#006AFF',
+                            color: '#4794ff',
                             borderWidth: 1,
                             borderRadius: 15,
-                            borderColor: '#006AFF',
+                            borderColor: '#4794ff',
                             backgroundColor: '#fff',
                             fontSize: 12,
                             textAlign: "center",
@@ -760,7 +780,58 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         return true;
 
     }
-  
+
+    // Web drag and drop
+    /**
+    * Moves an item from one list to another list.
+    */
+    const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
+        const sourceClone = Array.from(source);
+        const destClone = Array.from(destination);
+        const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+        destClone.splice(droppableDestination.index, 0, removed);
+
+        const result: any = {};
+        result[droppableSource.droppableId] = sourceClone;
+        result[droppableDestination.droppableId] = destClone;
+
+        return result;
+    };
+    const grid = 8;
+
+    const getItemStyle = (isDragging: any, draggableStyle: any) => ({
+        // some basic styles to make the items look a bit nicer
+        userSelect: "none",
+        padding: grid * 2,
+        margin: `0 0 ${grid}px 0`,
+
+        // change background colour if dragging
+        background: isDragging ? "lightgreen" : "#fff",
+
+        // styles we need to apply on draggables
+        ...draggableStyle,
+        // height: 25
+        marginBottom: 10,
+        top: draggableStyle.top,
+        borderRadius: 10,
+    });
+    const getListStyle = (isDraggingOver: any) => ({
+        background: "#f2f2f2",
+        padding: 15,
+        width: 200,
+        margin: 15
+    });
+
+    const reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
+
+
     // MAIN RETURN 
 
     return (
@@ -803,8 +874,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         type = parse.type;
                     }
 
+                    // let boardRepository: any = null
+                    // if (questionType === 'dragdrop') {
+                    //     boardRepository = new BoardRepository(problem.data);
+                    // }
 
-                    return <View style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 25, width: '100%' }}>
+                    return <View
+                        key={index}
+                        style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 25, width: '100%' }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
@@ -814,253 +891,280 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                 {/* Question */}
                                 <View style={{ flexDirection: Dimensions.get('window').width < 768 || editQuestionNumber === (index + 1) ? (editQuestionNumber === (index + 1) ? 'column-reverse' : 'column') : 'row', flex: 1 }}>
-                                
-                                <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingRight: Dimensions.get('window').width < 768 ? 0 : 20 }}>
-                                    <View style={{ width: '100%', }}>
-                                        {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
-                                            {audioVideoQuestion ? 
-                                                <TouchableOpacity onPress={() => {
-                                                    const updateProblems = lodash.cloneDeep(problems);
-                                                    const question = updateProblems[index].question;
-                                                    const parse = JSON.parse(question);
-                                                    updateProblems[index].question = parse.content;
-                                                    setProblems(updateProblems)
-                                                    props.setProblems(updateProblems)
-                                                }}>
-                                                    <Text style={{
-                                                        color: '#006AFF',
-                                                        fontFamily: 'Overpass',
-                                                        fontSize: 10,
-                                                    }}> Clear</Text>
-                                                </TouchableOpacity>
-                                                :
-                                                null
+
+                                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingRight: Dimensions.get('window').width < 768 ? 0 : 20 }}>
+                                        <View style={{ width: '100%', }}>
+                                            {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
+                                                {audioVideoQuestion ?
+                                                    <TouchableOpacity onPress={() => {
+                                                        const updateProblems = lodash.cloneDeep(problems);
+                                                        const question = updateProblems[index].question;
+                                                        const parse = JSON.parse(question);
+                                                        updateProblems[index].question = parse.content;
+                                                        setProblems(updateProblems)
+                                                        props.setProblems(updateProblems)
+                                                    }}>
+                                                        <Text style={{
+                                                            color: '#4794ff',
+                                                            fontFamily: 'Overpass',
+                                                            fontSize: 10,
+                                                        }}> Clear</Text>
+                                                    </TouchableOpacity>
+                                                    :
+                                                    null
+                                                }
+                                            </View> : null)}
+                                            {
+                                                (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View style={{}}>
+                                                    <View style={{ marginBottom: 20 }}>
+                                                        {renderAudioVideoPlayer(url, type)}
+                                                    </View>
+                                                    <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                        {parser(content)}
+                                                    </Text>
+                                                </View> : <Text style={{ marginTop: 15, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                    {parser(problem.question)}
+                                                </Text>))
                                             }
-                                        </View> : null)}
-                                        {
-                                            (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View style={{ }}>
-                                                <View style={{ marginBottom: 20 }}>
-                                                    {renderAudioVideoPlayer(url, type)}
-                                                </View>
-                                                <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                    {parser(content)}
-                                                </Text>
-                                            </View> : <Text style={{ marginTop: 15, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                {parser(problem.question)}
-                                            </Text>))
-                                        }
-                                    </View>
-                                </View>
-
-
-                                {/* Options */}
-                                <View style={{
-                                    flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                                    // width: '100%',
-                                    maxWidth: 900,
-                                    marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
-                                    marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
-                                }}>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        {editQuestionNumber === (index + 1) ? <View
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
-                                                alignItems: 'flex-start',
-                                                paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
-                                            }}>
-                                            <label style={{ width: 160 }}>
-                                                <Select
-                                                    touchUi={true}
-                                                    cssClass="customDropdown"
-                                                    value={dropdownQuestionType}
-                                                    rows={questionTypeOptions.length}
-                                                    data={questionTypeOptions}
-                                                    themeVariant="light"
-                                                    onChange={(val: any) => {
-                                                        const updatedProblems = [...problems]
-                                                        if (val.value === "mcq") {
-                                                            updatedProblems[index].questionType = "";
-                                                        } else {
-                                                            updatedProblems[index].questionType = val.value;
-                                                        }
-
-                                                        // Clear Options 
-                                                        if (val.value === "freeResponse") {
-                                                            updatedProblems[index].options = []
-                                                        } else if (val.value === "trueFalse") {
-                                                            updatedProblems[index].options = []
-                                                            updatedProblems[index].options.push({
-                                                                option: 'True',
-                                                                isCorrect: false
-                                                            })
-                                                            updatedProblems[index].options.push({
-                                                                option: 'False',
-                                                                isCorrect: false
-                                                            })
-                                                        }
-                                                        setProblems(updatedProblems)
-                                                        props.setProblems(updatedProblems)
-
-                                                    }}
-                                                    responsive={{
-                                                        small: {
-                                                            display: 'bubble'
-                                                        },
-                                                        medium: {
-                                                            touchUi: false,
-                                                        }
-                                                    }}
-                                                />
-                                            </label>
-                                        </View> : null}
-
-                                        {editQuestionNumber === (index + 1) ? 
-                                            <View
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
-                                                paddingLeft: 20,
-                                                alignItems: 'flex-start',
-                                                paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
-                                            }}>
-                                            <label style={{ width: 160 }}>
-                                                <Select
-                                                    touchUi={true}
-                                                    cssClass="customDropdown"
-                                                    value={requiredDropdown}
-                                                    rows={requiredOptions.length}
-                                                    data={requiredOptions}
-                                                    themeVariant="light"
-                                                    onChange={(val: any) => {
-                                                        const updatedProblems = [...problems]
-                                                        updatedProblems[index].required = (val.value === "required")
-                                                        setProblems(updatedProblems)
-                                                        props.setProblems(updatedProblems)
-                                                    }}
-                                                    responsive={{
-                                                        small: {
-                                                            display: 'bubble'
-                                                        },
-                                                        medium: {
-                                                            touchUi: false,
-                                                        }
-                                                    }}
-                                                />
-                                            </label>
-
-                                        </View> : null
-                                        }
-                                    </View>
-                                    {
-                                        Dimensions.get('window').width < 768 ? null : <View style={{ flex: 1 }} />
-                                    }
-                                    <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15, marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 'none' }}>
-                                        {editQuestionNumber === (index + 1) ? null : (!problem.required ?
-                                            null
-                                            : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
-                                                *
-                                            </Text>))}
-                                        <DefaultTextInput
-                                            value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
-                                            editable={editQuestionNumber === (index + 1)}
-                                            style={{
-                                                fontSize: 14,
-                                                padding: 15,
-                                                paddingTop: 8,
-                                                paddingBottom: 12,
-                                                width: 120,
-                                                marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
-                                                textAlign: 'center',
-                                                marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
-                                                fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                borderBottomColor: '#f2f2f2',
-                                                borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
-                                            }}
-                                            placeholder={PreferredLanguageText('enterPoints')}
-                                            onChangeText={val => {
-                                                if (Number.isNaN(Number(val))) return;
-                                                const newProbs = [...problems];
-                                                newProbs[index].points = val;
-                                                setProblems(newProbs)
-                                                props.setProblems(newProbs)
-                                            }}
-                                            placeholderTextColor={'#a2a2ac'}
-                                        />
-
-
-                                        <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 10 : 5, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
-                                            {editQuestionNumber === (index + 1) ?
-                                                <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
-
-                                                    <Ionicons
-                                                        name='trash-outline'
-                                                        color={"#006aff"}
-                                                        onPress={() => {
-                                                            Alert(`Delete Question ${editQuestionNumber} ?`, "", [
-                                                                {
-                                                                    text: "Cancel",
-                                                                    style: "cancel",
-                                                                },
-                                                                {
-                                                                    text: "Clear",
-                                                                    onPress: () => {
-                                                                        const updatedProblems = [...problems]
-                                                                        updatedProblems.splice(index, 1);
-                                                                        removeHeadersOnDeleteProblem(index + 1);
-                                                                        setProblems(updatedProblems)
-                                                                        props.setProblems(updatedProblems)
-                                                                        setEditQuestionNumber(0);
-                                                                        setEditQuestion({});
-                                                                        setEditQuestionContent('')
-                                                                    },
-                                                                },
-                                                            ])
-                                                        }}
-                                                        size={23}
-                                                    />
-                                                </View> : <Ionicons
-                                                    name='cog-outline'
-                                                    color={'#006AFF'}
-                                                    style={{
-                                                        // paddingTop: 4
-                                                    }}
-                                                    onPress={() => {
-                                                        if (isCurrentQuestionValid(editQuestionNumber - 1)) {
-                                                            setEditQuestionNumber(index + 1)
-                                                            // set edit question the one from problems array
-
-                                                            let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
-
-                                                            let initialContent = "";
-
-                                                            if (initialAudioVideo) {
-                                                                const parse = JSON.parse(problems[index].question);
-                                                                initialContent = parse.content;
-                                                            } else {
-                                                                initialContent = problems[index].question
-                                                            }
-
-                                                            const currentProblems: any[] = lodash.cloneDeep(problems)
-
-                                                            setEditQuestion({ ...currentProblems[index], question: initialContent })
-
-                                                            setEditQuestionContent(initialContent)
-                                                        }
-
-                                                    }}
-                                                    size={20}
-                                                />}
                                         </View>
                                     </View>
-                                </View>
+
+                                    {/* Options */}
+                                    <View style={{
+                                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                        // width: '100%',
+                                        maxWidth: 900,
+                                        marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
+                                        marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                    }}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            {editQuestionNumber === (index + 1) ? <View
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
+                                                    alignItems: 'flex-start',
+                                                    paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
+                                                }}>
+                                                <label style={{ width: 160 }}>
+                                                    <Select
+                                                        touchUi={true}
+                                                        cssClass="customDropdown"
+                                                        value={dropdownQuestionType}
+                                                        rows={questionTypeOptions.length}
+                                                        data={questionTypeOptions}
+                                                        themeVariant="light"
+                                                        onChange={(val: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            if (val.value === "mcq") {
+                                                                updatedProblems[index].questionType = "";
+                                                                updatedProblems[index].imgUrl = ''
+                                                            } else {
+                                                                updatedProblems[index].questionType = val.value;
+                                                            }
+
+                                                            // hotspots
+                                                            updatedProblems[index].hotspots = []
+                                                            updatedProblems[index].imgUrl = ''
+
+                                                            // drag and drop
+                                                            if (val.value === 'dragdrop') {
+                                                                updatedProblems[index].questionType = 'dragdrop'
+                                                                updatedProblems[index].options = []
+                                                                updatedProblems[index].data = [
+                                                                    [
+                                                                        {
+                                                                            id: '0',
+                                                                            content: 'Item 1'
+                                                                        },
+                                                                    ],
+                                                                    [
+                                                                        { id: '1', content: 'Item 2' },
+                                                                        { id: '2', content: 'Item 3' }
+                                                                    ]
+                                                                ]
+                                                                updatedProblems[index].headers = ['Group 1', 'Group 2']
+                                                            } else {
+                                                                // clear data if not drag and drop
+                                                                updatedProblems[index].data = []
+                                                                updatedProblems[index].headers = []
+                                                                updatedProblems[index].options = []
+                                                            }
+
+                                                            // Clear Options 
+                                                            if (val.value === "freeResponse") {
+                                                                updatedProblems[index].options = []
+                                                            } else if (val.value === "trueFalse") {
+                                                                updatedProblems[index].options = []
+                                                                updatedProblems[index].options.push({
+                                                                    option: 'True',
+                                                                    isCorrect: false
+                                                                })
+                                                                updatedProblems[index].options.push({
+                                                                    option: 'False',
+                                                                    isCorrect: false
+                                                                })
+                                                            }
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+
+                                                        }}
+                                                        responsive={{
+                                                            small: {
+                                                                display: 'bubble'
+                                                            },
+                                                            medium: {
+                                                                touchUi: false,
+                                                            }
+                                                        }}
+                                                    />
+                                                </label>
+                                            </View> : null}
+
+                                            {editQuestionNumber === (index + 1) ?
+                                                <View
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
+                                                        paddingLeft: 20,
+                                                        alignItems: 'flex-start',
+                                                        paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
+                                                    }}>
+                                                    <label style={{ width: 160 }}>
+                                                        <Select
+                                                            touchUi={true}
+                                                            cssClass="customDropdown"
+                                                            value={requiredDropdown}
+                                                            rows={requiredOptions.length}
+                                                            data={requiredOptions}
+                                                            themeVariant="light"
+                                                            onChange={(val: any) => {
+                                                                const updatedProblems = [...problems]
+                                                                updatedProblems[index].required = (val.value === "required")
+                                                                setProblems(updatedProblems)
+                                                                props.setProblems(updatedProblems)
+                                                            }}
+                                                            responsive={{
+                                                                small: {
+                                                                    display: 'bubble'
+                                                                },
+                                                                medium: {
+                                                                    touchUi: false,
+                                                                }
+                                                            }}
+                                                        />
+                                                    </label>
+
+                                                </View> : null
+                                            }
+                                        </View>
+                                        {
+                                            Dimensions.get('window').width < 768 ? null : <View style={{ flex: 1 }} />
+                                        }
+                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15, marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 'none' }}>
+                                            {editQuestionNumber === (index + 1) ? null : (!problem.required ?
+                                                null
+                                                : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
+                                                    *
+                                                </Text>))}
+                                            <DefaultTextInput
+                                                value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
+                                                editable={editQuestionNumber === (index + 1)}
+                                                style={{
+                                                    fontSize: 14,
+                                                    padding: 15,
+                                                    paddingTop: 8,
+                                                    paddingBottom: 12,
+                                                    width: 120,
+                                                    marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
+                                                    textAlign: 'center',
+                                                    marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
+                                                    fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
+                                                    borderBottomColor: '#f2f2f2',
+                                                    borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
+                                                }}
+                                                placeholder={PreferredLanguageText('enterPoints')}
+                                                onChangeText={val => {
+                                                    if (Number.isNaN(Number(val))) return;
+                                                    const newProbs = [...problems];
+                                                    newProbs[index].points = val;
+                                                    setProblems(newProbs)
+                                                    props.setProblems(newProbs)
+                                                }}
+                                                placeholderTextColor={'#a2a2ac'}
+                                            />
+
+                                            <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 10 : 5, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
+                                                {editQuestionNumber === (index + 1) ?
+                                                    <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
+
+                                                        <Ionicons
+                                                            name='trash-outline'
+                                                            color={"#4794ff"}
+                                                            onPress={() => {
+                                                                Alert(`Delete Question ${editQuestionNumber} ?`, "", [
+                                                                    {
+                                                                        text: "Cancel",
+                                                                        style: "cancel",
+                                                                    },
+                                                                    {
+                                                                        text: "Clear",
+                                                                        onPress: () => {
+                                                                            const updatedProblems = [...problems]
+                                                                            updatedProblems.splice(index, 1);
+                                                                            removeHeadersOnDeleteProblem(index + 1);
+                                                                            setProblems(updatedProblems)
+                                                                            props.setProblems(updatedProblems)
+                                                                            setEditQuestionNumber(0);
+                                                                            setEditQuestion({});
+                                                                            setEditQuestionContent('')
+                                                                        },
+                                                                    },
+                                                                ])
+                                                            }}
+                                                            size={23}
+                                                        />
+                                                    </View> : <Ionicons
+                                                        name='cog-outline'
+                                                        color={'#4794ff'}
+                                                        style={{
+                                                            // paddingTop: 4
+                                                        }}
+                                                        onPress={() => {
+                                                            if (isCurrentQuestionValid(editQuestionNumber - 1)) {
+                                                                setEditQuestionNumber(index + 1)
+                                                                // set edit question the one from problems array
+
+                                                                let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
+
+                                                                let initialContent = "";
+
+                                                                if (initialAudioVideo) {
+                                                                    const parse = JSON.parse(problems[index].question);
+                                                                    initialContent = parse.content;
+                                                                } else {
+                                                                    initialContent = problems[index].question
+                                                                }
+
+                                                                const currentProblems: any[] = lodash.cloneDeep(problems)
+
+                                                                setEditQuestion({ ...currentProblems[index], question: initialContent })
+
+                                                                setEditQuestionContent(initialContent)
+                                                            }
+
+                                                        }}
+                                                        size={20}
+                                                    />}
+                                            </View>
+                                        </View>
+                                    </View>
 
                                 </View>
 
                             </View>
-                            
+
                         </View>
                         {
                             problem.questionType === "freeResponse" ? <Text style={{
@@ -1076,6 +1180,369 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}>
                                 Free Response Answer
                             </Text> : null
+                        }
+                        {
+                            problem.questionType === 'hotspot' ? (
+                                !problem.imgUrl || problem.imgUrl === '' ?
+                                    <TouchableOpacity
+                                        onPress={async () => {
+                                            const url = await handleFile(true, true)
+                                            const updatedProblems = [...problems]
+                                            if (url) {
+                                                updatedProblems[index].imgUrl = url.url
+                                            }
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+                                        }}
+                                        style={{
+                                            backgroundColor: "white",
+                                            overflow: "hidden",
+                                            height: 35,
+                                            marginTop: 15,
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: '#4794ff',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                borderColor: '#4794ff',
+                                                backgroundColor: '#fff',
+                                                fontSize: 12,
+                                                textAlign: "center",
+                                                lineHeight: 34,
+                                                paddingHorizontal: 20,
+                                                fontFamily: "inter",
+                                                height: 35,
+                                                textTransform: 'uppercase',
+                                                width: 175,
+                                            }}
+                                        >
+                                            Upload Image
+                                        </Text>
+                                    </TouchableOpacity>
+                                    :
+                                    <View style={{
+                                        width: '100%', height: '100%', maxWidth: 400, maxHeight: 400, overflow: 'hidden'
+                                    }}>
+                                        <ImageMarker
+                                            src={problem.imgUrl}
+                                            markers={problem.hotspots.map((spot: any) => {
+                                                return { top: spot.y, left: spot.x }
+                                            })}
+                                            onAddMarker={(marker: any) => {
+                                                // setMarkers([...markers, marker])
+                                                const updatedProblems = [...problems]
+                                                if (updatedProblems[index].hotspots >= 100) {
+                                                    return
+                                                }
+                                                console.log(marker)
+                                                updatedProblems[index].hotspots = [...updatedProblems[index].hotspots, {
+                                                    x: marker.left, y: marker.top
+                                                }]
+                                                setProblems(updatedProblems)
+                                                props.setProblems(updatedProblems)
+                                            }}
+                                            markerComponent={(p: any) => <TouchableOpacity style={{
+                                                backgroundColor: '#fff',
+                                                height: 25, width: 25, borderColor: '#000',
+                                                borderRadius: 12.5
+                                            }}
+                                                onPress={() => {
+                                                    console.log(p.itemNumber)
+                                                    // return
+                                                    const updatedProblems = [...problems]
+                                                    updatedProblems[index].hotspots.splice(p.itemNumber, 1)
+                                                    console.log(updatedProblems)
+                                                    setProblems(updatedProblems)
+                                                    props.setProblems(updatedProblems)
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: '#000', lineHeight: 25, textAlign: 'center'
+                                                }}>
+                                                    {p.itemNumber}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            }
+                                        />
+                                    </View>
+                            ) : null
+                        }
+                        {
+                            problem.questionType === 'dragdrop' ?
+                                // <Board
+                                //     boardRepository={new BoardRepository(problem.data)}
+                                //     open={(res: any) => { console.log(res) }}
+                                //     onDragEnd={(res: any) => { console.log(res) }}
+                                // />
+                                <div>
+                                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                                        <TouchableOpacity
+                                            onPress={async () => {
+                                                const updatedProblems = [...problems]
+                                                updatedProblems[index].data = [...updatedProblems[index].data, []]
+                                                updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
+                                                setProblems(updatedProblems)
+                                                props.setProblems(updatedProblems)
+                                            }}
+                                            style={{
+                                                backgroundColor: "white",
+                                                overflow: "hidden",
+                                                height: 35,
+                                                marginTop: 15,
+                                                alignSelf: 'center'
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: '#4794ff',
+                                                    borderWidth: 1,
+                                                    borderRadius: 15,
+                                                    borderColor: '#4794ff',
+                                                    backgroundColor: '#fff',
+                                                    fontSize: 12,
+                                                    textAlign: "center",
+                                                    lineHeight: 34,
+                                                    paddingHorizontal: 20,
+                                                    fontFamily: "inter",
+                                                    height: 35,
+                                                    textTransform: 'uppercase',
+                                                    width: 175,
+                                                }}
+                                            >
+                                                New Group
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={{ width: 25 }} />
+                                        <TouchableOpacity
+                                            onPress={async () => {
+                                                const updatedProblems = [...problems]
+
+                                                const id = Math.round(Math.random() * 100).toString()
+                                                updatedProblems[index].data = [...updatedProblems[index].data, [
+                                                    { id, content: 'item' + id.toString() }
+                                                ]]
+                                                updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
+                                                setProblems(updatedProblems)
+                                                props.setProblems(updatedProblems)
+                                            }}
+                                            style={{
+                                                backgroundColor: "white",
+                                                overflow: "hidden",
+                                                height: 35,
+                                                marginTop: 15,
+                                                alignSelf: 'center'
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: '#4794ff',
+                                                    borderWidth: 1,
+                                                    borderRadius: 15,
+                                                    borderColor: '#4794ff',
+                                                    backgroundColor: '#fff',
+                                                    fontSize: 12,
+                                                    textAlign: "center",
+                                                    lineHeight: 34,
+                                                    paddingHorizontal: 20,
+                                                    fontFamily: "inter",
+                                                    height: 35,
+                                                    textTransform: 'uppercase',
+                                                    width: 175,
+                                                }}
+                                            >
+                                                New Item
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    {/* <button
+                                        type="button"
+                                        onClick={() => {
+                                            const updatedProblems = [...problems]
+                                            updatedProblems[index].data = [...updatedProblems[index].data, []]
+                                            updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+                                        }}
+                                    >
+                                        Add new group
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const updatedProblems = [...problems]
+
+                                            const id = Math.round(Math.random() * 100).toString()
+                                            updatedProblems[index].data = [...updatedProblems[index].data, [
+                                                { id, content: 'item' + id.toString() }
+                                            ]]
+                                            updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+                                        }}
+                                    >
+                                        Add new item
+                                    </button> */}
+                                    <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
+                                        <DragDropContext
+                                            onDragEnd={(result: any) => {
+
+                                                const { source, destination } = result;
+
+                                                // dropped outside the list
+                                                if (!destination) {
+                                                    return;
+                                                }
+                                                const sInd = +source.droppableId;
+                                                const dInd = +destination.droppableId;
+
+                                                if (sInd === dInd) {
+
+                                                    const updatedProbs: any[] = [...problems]
+
+                                                    const items = reorder(updatedProbs[index].data[sInd], source.index, destination.index);
+                                                    const newState = [...updatedProbs[index].data];
+                                                    newState[sInd] = items;
+                                                    updatedProbs[index].data = newState
+                                                    setProblems(updatedProbs);
+                                                    props.setProblems(updatedProbs)
+                                                } else {
+
+                                                    const updatedProbs: any[] = [...problems]
+
+                                                    const result = move(updatedProbs[index].data[sInd], updatedProbs[index].data[dInd], source, destination);
+                                                    const newState = [...updatedProbs[index].data];
+                                                    newState[sInd] = result[sInd];
+                                                    newState[dInd] = result[dInd];
+
+                                                    const newstate = newState.filter((group, i) => {
+                                                        if (group.length === 0) {
+                                                            updatedProbs[index].headers.splice(i, 1)
+                                                            return false
+                                                        }
+                                                        return group.length
+                                                    })
+                                                    updatedProbs[index].data = newstate
+                                                    setProblems(updatedProbs);
+                                                    props.setProblems(updatedProbs)
+                                                }
+
+                                            }}>
+                                            {problem.data.map((el: any, ind2: any) => (
+                                                <Droppable key={ind2} droppableId={`${ind2}`}>
+                                                    {(provided: any, snapshot: any) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            style={getListStyle(snapshot.isDraggingOver)}
+                                                            {...provided.droppableProps}
+                                                        >
+                                                            <div>
+                                                                <TextInput
+                                                                    style={{
+                                                                        width: 150,
+                                                                        borderColor: '#cccccc',
+                                                                        borderBottomWidth: 1,
+                                                                        fontSize: 14,
+                                                                        paddingTop: 13,
+                                                                        paddingBottom: 13,
+                                                                        marginTop: 0,
+                                                                        marginBottom: 5,
+                                                                        paddingHorizontal: 10
+                                                                    }}
+                                                                    value={problem.headers[ind2]}
+                                                                    onChangeText={(text) => {
+                                                                        const updatedProblems = [...problems]
+                                                                        updatedProblems[index].headers[ind2] = text
+                                                                        setProblems(updatedProblems)
+                                                                        props.setProblems(updatedProblems)
+                                                                    }}
+                                                                // style={{
+                                                                //     maxWidth: 150,
+                                                                //     borderColor: '#000'
+                                                                // }}
+                                                                />
+                                                            </div>
+                                                            {el.map((item: any, index2: any) => (
+                                                                <Draggable
+                                                                    key={item.id}
+                                                                    draggableId={item.id}
+                                                                    index={index2}
+                                                                >
+                                                                    {(provided: any, snapshot: any) => (
+                                                                        <div
+                                                                            ref={provided.innerRef}
+                                                                            {...provided.draggableProps}
+                                                                            {...provided.dragHandleProps}
+                                                                            style={getItemStyle(
+                                                                                snapshot.isDragging,
+                                                                                provided.draggableProps.style
+                                                                            )}
+                                                                        >
+                                                                            <div
+                                                                                style={{
+                                                                                    display: "flex",
+                                                                                    justifyContent: "space-around"
+                                                                                }}
+                                                                            >
+                                                                                <TextInput
+                                                                                    style={{
+                                                                                        width: 150,
+                                                                                        borderColor: '#e8e8e8',
+                                                                                        borderBottomWidth: 1,
+                                                                                        fontSize: 14,
+                                                                                        paddingTop: 13,
+                                                                                        paddingBottom: 13,
+                                                                                        marginTop: 0,
+                                                                                        marginBottom: 5,
+                                                                                        paddingHorizontal: 10
+                                                                                    }}
+                                                                                    value={item.content}
+                                                                                    onChangeText={(text) => {
+                                                                                        const updatedProblems = [...problems]
+                                                                                        updatedProblems[index].data[ind2][index2].content = text
+                                                                                        setProblems(updatedProblems)
+                                                                                        props.setProblems(updatedProblems)
+                                                                                    }}
+                                                                                />
+                                                                                <TouchableOpacity
+                                                                                    style={{
+                                                                                        backgroundColor: 'rgba(0,0,0,0)',
+                                                                                        paddingTop: 20, paddingLeft: 5
+                                                                                    }}
+                                                                                    onPress={() => {
+                                                                                        const updatedProblems = [...problems];
+                                                                                        updatedProblems[index].data[ind2].splice(index2, 1);
+                                                                                        const newProb = updatedProblems[index].data.filter((group: any, i: any) => {
+                                                                                            if (group.length === 0) {
+                                                                                                updatedProblems[index].headers.splice(i, 1)
+                                                                                            }
+                                                                                            return group.length
+                                                                                        })
+                                                                                        updatedProblems[index].data = newProb
+                                                                                        setProblems(
+                                                                                            updatedProblems
+                                                                                        );
+                                                                                        props.setProblems(updatedProblems)
+                                                                                    }}
+                                                                                >
+                                                                                    <Ionicons name='trash-outline' color='#797979' size={15} />
+                                                                                </TouchableOpacity>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </Draggable>
+                                                            ))}
+                                                            {provided.placeholder}
+                                                        </div>
+                                                    )}
+                                                </Droppable>
+                                            ))}
+                                        </DragDropContext>
+                                    </div>
+                                </div>
+                                : null
                         }
                         {
                             problem.options.map((option: any, i: any) => {
@@ -1110,14 +1577,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </Text>
                                                     :
                                                     <View style={{ flexDirection: 'row' }}>
-                                                        <FormulaGuide 
-                                                            equation={optionEquations[i]} 
+                                                        <FormulaGuide
+                                                            equation={optionEquations[i]}
                                                             onChange={(eq: any) => {
                                                                 const updateOptionEquations = [...optionEquations]
                                                                 updateOptionEquations[i] = eq;
                                                                 setOptionEquations(updateOptionEquations)
                                                             }}
-                                                            show={showOptionFormulas[i]} 
+                                                            show={showOptionFormulas[i]}
                                                             onClose={() => {
                                                                 const updateShowFormulas = [...showOptionFormulas]
                                                                 updateShowFormulas[i] = !updateShowFormulas[i]
@@ -1165,7 +1632,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 quickInsertEnabled: false
                                                             }}
                                                         />
-                                                        
+
                                                         {/* <Editor
                                                             onInit={(evt, editor) => {
                                                                 const currRef: any = setRef(i.toString());
@@ -1267,7 +1734,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     <Text
                                                                         style={{
                                                                             paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                            color: '#006AFF',
+                                                                            color: '#4794ff',
                                                                             fontFamily: 'Overpass',
                                                                             fontSize: 10
                                                                         }}
@@ -1305,7 +1772,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         isCorrect: false
                                     }]
                                 }
-                                
+
                                 setEditQuestion(updatedProblems[index])
                                 setProblems(updatedProblems)
                                 props.setProblems(updatedProblems)
@@ -1327,10 +1794,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    color: '#006AFF',
+                                    color: '#4794ff',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#006AFF',
+                                    borderColor: '#4794ff',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     textAlign: "center",
@@ -1351,7 +1818,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'center',
-                paddingBottom: 25, 
+                paddingBottom: 25,
             }}>
                 <TouchableOpacity
                     onPress={() => {
@@ -1377,7 +1844,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 34,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#006AFF",
+                            backgroundColor: "#4794ff",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",

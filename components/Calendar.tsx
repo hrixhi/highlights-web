@@ -743,7 +743,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{ height: 20 }}
                         trackColor={{
                             false: '#f2f2f2',
-                            true: '#006AFF'
+                            true: '#4794ff'
                         }}
                         activeThumbColor="white"
                     />
@@ -917,7 +917,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={{ height: 20 }}
                                 trackColor={{
                                     false: '#f2f2f2',
-                                    true: '#006AFF'
+                                    true: '#4794ff'
                                 }}
                                 activeThumbColor="white"
                             />
@@ -1022,7 +1022,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
-                                color: '#006AFF'
+                                color: '#4794ff'
                             }}
                         >
                             Start meeting
@@ -1041,7 +1041,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
-                                color: '#006AFF'
+                                color: '#4794ff'
                             }}
                         >
                             Copy Invite
@@ -1127,7 +1127,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             fontSize: 14,
                             fontFamily: 'inter',
-                            color: '#006AFF',
+                            color: '#4794ff',
                             backgroundColor: '#f3f3f3'
                         }}
                     >
@@ -1200,7 +1200,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 lineHeight: 34,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#006AFF',
+                                backgroundColor: '#4794ff',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1247,7 +1247,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             lineHeight: 34,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#006AFF',
+                            backgroundColor: '#4794ff',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 35,
@@ -1292,9 +1292,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             textAlign: 'center',
                             lineHeight: 34,
-                            color: '#006AFF',
+                            color: '#4794ff',
                             borderWidth: 1,
-                            borderColor: '#006AFF',
+                            borderColor: '#4794ff',
                             borderRadius: 15,
                             fontSize: 12,
                             width: 120,
@@ -1343,9 +1343,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 textAlign: 'center',
                                 lineHeight: 34,
-                                color: '#006AFF',
+                                color: '#4794ff',
                                 borderWidth: 1,
-                                borderColor: '#006AFF',
+                                borderColor: '#4794ff',
                                 borderRadius: 15,
                                 fontSize: 12,
                                 backgroundColor: 'white',
@@ -1392,7 +1392,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <div>
                             <div
                                 style={{
-                                    color: data.original.submitted ? '#35AC78' : !assingmentDue ? '#006AFF' : '#F94144',
+                                    color: data.original.submitted ? '#35AC78' : !assingmentDue ? '#4794ff' : '#F94144',
                                     borderRadius: 12,
                                     padding: 4,
                                     fontSize: 12,
@@ -1407,7 +1407,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <div>
                             <div
                                 style={{
-                                    color: '#006AFF',
+                                    color: '#4794ff',
                                     borderRadius: 12,
                                     padding: 4,
                                     fontSize: 12,
@@ -1609,10 +1609,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 textAlign: 'center',
                                 lineHeight: 34,
-                                color: '#006AFF',
+                                color: '#4794ff',
                                 fontSize: 12,
                                 borderWidth: 1,
-                                borderColor: '#006AFF',
+                                borderColor: '#4794ff',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1703,7 +1703,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 width: tab === 'Add' ? 0 : 2,
                                                 height: tab === 'Add' ? 0 : 2
                                             },
-                                            shadowOpacity: 0.1,
+                                            shadowOpacity: 0,
                                             shadowRadius: tab === 'Add' ? 0 : 10,
                                             zIndex: 500000
                                         }}
@@ -1923,7 +1923,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             <Ionicons
                                                                                 name="chevron-forward-outline"
                                                                                 size={18}
-                                                                                color="#006AFF"
+                                                                                color="#4794ff"
                                                                             />
                                                                         </Text>
                                                                     ) : null}
@@ -2272,7 +2272,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     style={{
                                                                         fontSize: 14,
                                                                         fontFamily: 'inter',
-                                                                        color: '#006AFF',
+                                                                        color: '#4794ff',
                                                                         backgroundColor: '#f3f3f3'
                                                                     }}
                                                                 >
@@ -2312,7 +2312,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         lineHeight: 34,
                                                                         color: 'white',
                                                                         fontSize: 12,
-                                                                        backgroundColor: '#006AFF',
+                                                                        backgroundColor: '#4794ff',
                                                                         paddingHorizontal: 20,
                                                                         fontFamily: 'inter',
                                                                         height: 35,
@@ -2417,7 +2417,7 @@ const styles: any = StyleSheet.create({
     },
     allGrayFill1: {
         fontSize: 10,
-        color: '#006AFF',
+        color: '#4794ff',
         height: 20,
         paddingHorizontal: 7,
         lineHeight: 20,

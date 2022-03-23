@@ -590,32 +590,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     useEffect(() => {
 
-        if (user && user.email) {
-            window.pendo.initialize({
-                visitor: {
-                    id: user._id,   // Required if user is logged in
-                    email:  user.email,      // Recommended if using Pendo Feedback, or NPS Email
-                    full_name: user.fullName,    // Recommended if using Pendo Feedback
-                    role: user.role,        // Optional
-                    // You can add any additional visitor level key-values here,
-                    // as long as it's not one of the above reserved names.
-                },
+        // if (user && user.email) {
+        //     window.pendo.initialize({
+        //         visitor: {
+        //             id: user._id,   // Required if user is logged in
+        //             email:  user.email,      // Recommended if using Pendo Feedback, or NPS Email
+        //             full_name: user.fullName,    // Recommended if using Pendo Feedback
+        //             role: user.role,        // Optional
+        //             // You can add any additional visitor level key-values here,
+        //             // as long as it's not one of the above reserved names.
+        //         },
         
-                account: {
-                    id: user.schoolId,
-                    name: user.orgName    // Required if using Pendo Feedback
-                    // name:         // Optional
-                    // is_paying:    // Recommended if using Pendo Feedback
-                    // monthly_value:// Recommended if using Pendo Feedback
-                    // planLevel:    // Optional
-                    // planPrice:    // Optional
-                    // creationDate: // Optional
+        //         account: {
+        //             id: user.schoolId,
+        //             name: user.orgName    // Required if using Pendo Feedback
+        //             // name:         // Optional
+        //             // is_paying:    // Recommended if using Pendo Feedback
+        //             // monthly_value:// Recommended if using Pendo Feedback
+        //             // planLevel:    // Optional
+        //             // planPrice:    // Optional
+        //             // creationDate: // Optional
         
-                    // You can add any additional account level key-values here,
-                    // as long as it's not one of the above reserved names.
-                }
-            });
-        }
+        //             // You can add any additional account level key-values here,
+        //             // as long as it's not one of the above reserved names.
+        //         }
+        //     });
+        // }
         
     }, [user])
 
@@ -1257,7 +1257,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             lineHeight: 34,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#006aff',
+                                            backgroundColor: '#4794ff',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -1287,7 +1287,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            color: '#006AFF'
+                                            color: '#4794ff'
                                         }}
                                     >
                                         Back to Sign In
@@ -1414,7 +1414,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
-                                                            color: '#006AFF'
+                                                            color: '#4794ff'
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -1468,7 +1468,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 34,
                                                 color: 'white',
                                                 fontSize: 12,
-                                                backgroundColor: '#006aff',
+                                                backgroundColor: '#4794ff',
                                                 paddingHorizontal: 20,
                                                 fontFamily: 'inter',
                                                 height: 35,
@@ -1502,7 +1502,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
-                                                        color: '#006AFF'
+                                                        color: '#4794ff'
                                                     }}>
                                                     Sign up now
                                                 </Text>
@@ -1561,7 +1561,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#006AFF'
+                                                    color: '#4794ff'
                                                 }}
                                             >
                                                 Back to Sign In
@@ -1636,7 +1636,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             width: 58,
                             height: 58,
                             borderRadius: 29,
-                            backgroundColor: '#006aff',
+                            backgroundColor: '#4794ff',
                             borderColor: '#f2f2f2',
                             borderWidth: 0,
                             shadowColor: '#000',
@@ -2019,7 +2019,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             lineHeight: 30,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#006AFF',
+                                            backgroundColor: '#4794ff',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 30,
@@ -2206,7 +2206,7 @@ const styles = (channelId: string) =>
             color: '#fff',
             paddingHorizontal: 12,
             borderRadius: 12,
-            backgroundColor: '#006aff',
+            backgroundColor: '#4794ff',
             lineHeight: 25,
             height: 25,
             fontFamily: 'inter',
