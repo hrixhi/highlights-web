@@ -25,7 +25,7 @@ import FileUpload from './UploadFiles';
 import { Select } from '@mobiscroll/react';
 import { TextInput } from './CustomTextInput';
 import ReactPlayer from 'react-player';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, MessageText, Message } from 'react-native-gifted-chat';
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -766,6 +766,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     };
 
     /**
+     * @description render custom font size
+     */
+    const renderMessageText = (props: any) => {
+        return <MessageText
+            {...props}
+            customTextStyle={{ fontSize: 14, lineHeight: 14 }}    
+        />
+    }
+
+
+    /**
      * @description Customize how Audio message appears
      */
     const renderMessageAudio = (props: any) => {
@@ -1212,6 +1223,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 _id: userId,
                                                 avatar
                                             }}
+                                            // renderMessage={renderMessage}
+                                            renderMessageText={renderMessageText}
                                             renderBubble={renderBubble}
                                             renderActions={() => (
                                                 <View
@@ -1587,7 +1600,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             paddingHorizontal: 5,
                                                             fontFamily: 'inter'
                                                         }}>
-                                                        No conversations.
+                                                        Click on + to initiate a new chat.
                                                     </Text>
                                                 </View>
                                             ) : null}

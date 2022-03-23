@@ -36,7 +36,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                     }
                 </Stack.Screen>
 
-                <Stack.Screen name="login" component={Auth} options={{ title: 'Log In to Cues' }} />
+                <Stack.Screen name="login" component={Auth} options={{ title: 'Sign In - Cues' }} />
                 <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
                 <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
                 <Stack.Screen name="desktopSSORedirect" component={DesktopSSO} options={{ title: 'Cues - Single Sign On' }} />

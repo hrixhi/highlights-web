@@ -2,7 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 const mime = require('mime-types');
 import axios from 'axios';
 
-export const handleFile = async (audioVideoOnly: boolean) => {
+export const handleFile = async (audioVideoOnly: boolean, userId: string) => {
     // e.preventDefault();
     const res: any = await DocumentPicker.getDocumentAsync();
 
@@ -55,7 +55,7 @@ export const handleFile = async (audioVideoOnly: boolean) => {
         return { type: '', url: '' };
     }
 
-    const response = await fileUpload(file, type, '');
+    const response = await fileUpload(file, type, userId);
 
     const { data } = response;
     if (data.status === 'success') {

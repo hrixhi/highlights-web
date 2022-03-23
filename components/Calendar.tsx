@@ -1716,6 +1716,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 themeVariant="light"
                                                 onEventClick={onSelectEvent}
                                                 renderEventContent={renderEventContent}
+                                                noEventsText="Click + to schedule a new event or meeting. Submission tasks will be automatically listed as per their due dates."
                                             />
                                         ) : tab === tabs[1] ? (
                                             <Eventcalendar
@@ -1726,6 +1727,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 onEventClick={onSelectEvent}
                                                 renderEventContent={renderEventContent}
                                                 star
+                                                noEventsText="Click + to schedule a new event or meeting. Submission tasks will be automatically listed as per their due dates."
                                             />
                                         ) : tab === tabs[2] ? (
                                             <Eventcalendar
@@ -1951,7 +1953,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 color: '#000000'
                                                             }}
                                                         >
-                                                            Create an event
+                                                            New event
                                                         </Text>
                                                     </View>
                                                 ) : null}
@@ -2406,23 +2408,29 @@ const styles: any = StyleSheet.create({
         backgroundColor: '#f2f2f2'
     },
     all1: {
-        fontSize: 10,
-        color: '#1F1F1F',
+        fontSize: 11,
         height: 20,
-        paddingHorizontal: 7,
-        backgroundColor: '#f2f2f2',
         lineHeight: 20,
+        color: '#1F1F1F',
+        // height: 20,
+        paddingHorizontal: 8,
+        backgroundColor: '#f2f2f2',
+        // lineHeight: 20,
         fontFamily: 'inter',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 1
     },
     allGrayFill1: {
-        fontSize: 10,
-        color: '#006AFF',
+        fontSize: 11,
         height: 20,
-        paddingHorizontal: 7,
         lineHeight: 20,
+        color: '#006AFF',
+        // height: 20,
+        paddingHorizontal: 8,
+        // lineHeight: 20,
         fontFamily: 'inter',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 1
     },
     col: {
         width: '100%',

@@ -57,6 +57,7 @@ import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
     const [userId, setUserId] = useState('');
+    const [userCreatedOrg, setUserCreatedOrg] = useState(false);
     const scrollViewRef: any = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [collapseMap, setCollapseMap] = useState<any>({});
@@ -310,6 +311,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (u) {
                 const user = JSON.parse(u);
                 setUserId(user._id);
+
+                if (user.userCreatedOrg) {
+                    setUserCreatedOrg(user.userCreatedOrg)
+                }
 
                 if (user.zoomInfo) {
                     setUserZoomInfo(user.zoomInfo);
@@ -1092,7 +1097,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 backgroundColor: '#f2f2f2'
                             }}
                         >
-                            No results.
+                            No search results found.
                         </Text>
                     ) : null}
                     {loadingSearchResults ? (
@@ -2252,6 +2257,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     }}
                                                                     userId={userId}
                                                                     channelColor={key.split('-SPLIT-')[3]}
+                                                                    userCreatedOrg={userCreatedOrg}
                                                                 />
                                                             </View>
                                                         )
@@ -2260,7 +2266,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             style={{
                                                                 width: '100%',
                                                                 color: '#1F1F1F',
-                                                                fontSize: 20,
+                                                                fontSize: 16,
                                                                 paddingTop: 50,
                                                                 paddingBottom: 50,
                                                                 paddingHorizontal: 5,
@@ -2268,7 +2274,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 flex: 1
                                                             }}
                                                         >
-                                                            {PreferredLanguageText('noCuesCreated')}
+                                                            {key.split('-SPLIT-')[0] !== 'My Notes' ? (key.split('-SPLIT-')[2] === userId ? PreferredLanguageText('noCuesCreatedInstructor') : PreferredLanguageText('noCuesCreated')) : PreferredLanguageText('noNotesCreated')}
                                                         </Text>
                                                     ) : (
                                                         <ScrollView
@@ -2613,7 +2619,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     maxWidth: 225
                                 }}
                                 autoCompleteType={'xyz'}
-                                placeholder={'Search'}
+                                placeholder={'🔍 '}
                                 onChangeText={val => setSearchTerm(val)}
                                 placeholderTextColor={'#fff'}
                             />
@@ -2660,26 +2666,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuTrigger>
                                 <Text>
                                     <Ionicons
-                                        name={
-                                            props.option === 'Settings' && !props.showHelp
-                                                ? 'person-circle-outline'
-                                                : props.option === 'Channels'
-                                                ? 'file-tray-stacked-outline'
-                                                : 'settings-outline'
-                                        }
-                                        size={
-                                            props.option === 'Settings' && !props.showHelp
-                                                ? 21
-                                                : props.option === 'Channels'
-                                                ? 19
-                                                : 16
-                                        }
-                                        color={
-                                            (props.option === 'Settings' && !props.showHelp) ||
-                                            props.option === 'Channels'
-                                                ? '#006AFF'
-                                                : '#f2f2f2'
-                                        }
+                                        name={'settings-outline'}
+                                        size={16}
+                                        color={'#f2f2f2'}
                                     />
                                 </Text>
                             </MenuTrigger>
@@ -2721,11 +2710,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </MenuOption>
                             </MenuOptions>
                         </Menu>
-                        {/* <TouchableOpacity
+                        <TouchableOpacity
                             style={{ backgroundColor: 'none', marginLeft: 15 }}
                             onPress={() => {
-                                props.setShowHelp(true);
-                                props.setOption('Settings');
+                                props.openHelpModal(true)
                             }}>
                             <Text
                                 style={{
@@ -2736,11 +2724,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}>
                                 <Ionicons
                                     name="help-circle-outline"
-                                    size={18}
+                                    size={19}
                                     color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
                                 />
                             </Text>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -2968,22 +2956,24 @@ const styleObject: any = () =>
             marginRight: 5,
         },
         all1: {
-            fontSize: 10,
+            fontSize: 11,
             color: '#1F1F1F',
             height: 20,
-            paddingHorizontal: 7,
-            backgroundColor: '#f2f2f2',
             lineHeight: 20,
+            paddingHorizontal: 8,
+            backgroundColor: '#f2f2f2',
             fontFamily: 'inter',
-            textAlign: 'center'
+            textAlign: 'center',
+            marginBottom: 1
         },
         allGrayFill1: {
-            fontSize: 10,
-            color: '#006AFF',
+            fontSize: 11,
             height: 20,
-            paddingHorizontal: 7,
             lineHeight: 20,
+            color: '#006AFF',
+            paddingHorizontal: 8,
             fontFamily: 'inter',
-            textAlign: 'center'
+            textAlign: 'center',
+            marginBottom: 1
         }
     });

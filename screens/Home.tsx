@@ -1820,6 +1820,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 unreadMessages={unreadMessages}
                                 refreshUnreadInbox={refreshUnreadInbox}
                                 hideNewChatButton={(hide: boolean) => setHideNewChatButton(hide)}
+                                openHelpModal={(show: boolean) => setShowOnboardModal(true)}
                             />
                         )}
                     </View>
@@ -1974,7 +1975,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 >
                     {/* Show all the settings here */}
                     <View
-                        style={{ flexDirection: 'column', backgroundColor: 'none', width: 480, marginHorizontal: 25 }}
+                        style={{ flexDirection: 'column', backgroundColor: 'none', width: Dimensions.get('window').width < 768 ? '100%' : 480 , marginHorizontal: Dimensions.get('window').width < 768 ? 0 : 25 }}
                         className="mbsc-align-center mbsc-padding"
                     >
                         <View style={{
@@ -1986,7 +1987,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}>
                             <Text 
                                 style={{
-                                    fontSize: 28,
+                                    fontSize: Dimensions.get('window').width < 768 ? 24 : 28,
                                     color: '#000',
                                     fontFamily: 'Inter',
                                 }}
@@ -2032,7 +2033,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     </Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     onPress={() => {
                                        setShowOnboardModal(false)
                                     }}
@@ -2042,7 +2043,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }}
                                 >
                                     <Ionicons name="close-outline" size={22} />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                         </View>
 
@@ -2054,8 +2055,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             justifyContent: 'center'
                         }}>
                             <iframe
-                            width="480"
-                            height="300"
+                            width={Dimensions.get('window').width < 768 ? '300' : "480"}
+                            height={Dimensions.get('window').width < 768 ? '230' : "300"}
                             src={`https://www.youtube.com/embed/64GhiDvem4o`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -2107,7 +2108,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingRight: 35
                                     }}
                                 >
-                                    <Ionicons name='logo-apple' size={35} />
+                                    <Ionicons name='logo-apple' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
@@ -2122,7 +2123,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingRight: 35
                                     }}
                                 >
-                                    <Ionicons name='logo-windows' size={35} />
+                                    <Ionicons name='logo-windows' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
                                 </TouchableOpacity>
 
                             {/* </View>
@@ -2143,7 +2144,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                 <TouchableOpacity
                                     onPress={() => {
-                                        window.open('https://www.learnwithcues.com/help', '_blank');
+                                        Alert("Available soon!")
+                                        // window.open('https://www.learnwithcues.com/help', '_blank');
                                     }}
                                     style={{
                                         overflow: 'hidden',
@@ -2153,12 +2155,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingRight: 35
                                     }}
                                 >
-                                    <Ionicons name='logo-apple-appstore' size={35}/>
+                                    <Ionicons name='logo-apple-appstore' size={ Dimensions.get('window').width < 768 ? 30 : 35}/>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
                                     onPress={() => {
-                                        window.open('https://www.learnwithcues.com/help', '_blank');
+                                        Alert("Available soon!")
+                                        // window.open('https://www.learnwithcues.com/help', '_blank');
                                     }}
                                     style={{
                                         overflow: 'hidden',
@@ -2167,7 +2170,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         backgroundColor: '#f2f2f7'
                                     }}
                                 >
-                                    <Ionicons name='logo-android' size={35} />
+                                    <Ionicons name='logo-android' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
                                 </TouchableOpacity>
 
                             {/* </View> */}

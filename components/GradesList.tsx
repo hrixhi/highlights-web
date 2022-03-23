@@ -201,9 +201,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: '#f2f2f2' }}>
-                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#1F1F1F', fontSize: 16, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
-                                cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
+                                cues.length === 0 ? (props.isOwner ? PreferredLanguageText('noGraded') : PreferredLanguageText('noGradedStudents')) : PreferredLanguageText('noStudents')
                             }
                         </Text>
                     </View>

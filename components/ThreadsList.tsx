@@ -32,7 +32,7 @@ import moment from 'moment';
 //     MenuTrigger,
 // } from 'react-native-popup-menu';
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, MessageText } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
 import { Select } from '@mobiscroll/react';
 import ReactPlayer from 'react-player';
@@ -406,6 +406,16 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     };
 
     /**
+     * @description render custom font size
+     */
+     const renderMessageText = (props: any) => {
+        return <MessageText
+            {...props}
+            customTextStyle={{ fontSize: 14, lineHeight: 14 }}    
+        />
+    }
+
+    /**
      * @description Customize how Audio message appears
      */
     const renderMessageAudio = (props: any) => {
@@ -586,6 +596,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         avatar
                     }}
                     renderBubble={renderBubble}
+                    renderMessageText={renderMessageText}
                     renderActions={() => (
                         <View
                             style={{
@@ -696,7 +707,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             style={{
                                 width: '100%',
                                 color: '#1F1F1F',
-                                fontSize: 20,
+                                fontSize: 16,
                                 paddingVertical: 50,
                                 fontFamily: 'inter',
                                 flex: 1,
