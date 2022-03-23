@@ -851,7 +851,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 ])
                                                             }}
                                                         >
-                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#006AFF', marginRight: 10 }} ellipsizeMode='tail'>
+                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#4794ff', marginRight: 10 }} ellipsizeMode='tail'>
                                                                 <Ionicons name='enter-outline' size={18} />
                                                             </Text>
                                                         </TouchableOpacity>
@@ -859,7 +859,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{
                                                             textAlign: 'center', fontSize: 13,
                                                             fontFamily: 'inter',
-                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#006AFF' : '#1F1F1F'
+                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#4794ff' : '#1F1F1F'
                                                         }}>
                                                             {role}
                                                         </Text>
@@ -920,7 +920,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
-                                    backgroundColor: '#006aff',
+                                    backgroundColor: '#4794ff',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
@@ -1066,7 +1066,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: "#f2f2f2",
-                                                    true: "#006AFF"
+                                                    true: "#4794ff"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1106,7 +1106,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: "#f2f2f2",
-                                                    true: "#006AFF"
+                                                    true: "#4794ff"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1310,7 +1310,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 34,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#006AFF',
+                                            backgroundColor: '#4794ff',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,

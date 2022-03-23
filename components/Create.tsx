@@ -154,6 +154,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
+    const noItemsAlert = 'Create one or more items for Drag & Drop problems.'
+    const noImageAlert = 'Upload image for Hotspot problems.'
+    const noHotspotsAlert = 'Create one or more markers for Hotspot problems.'
+    // new alert 
 
     Froalaeditor.DefineIcon('insertFormula', {
         NAME: 'formula',
@@ -165,7 +169,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         focus: false,
         undo: true,
         refreshAfterCallback: false,
-        callback: function() {
+        callback: function () {
             RichText.current.editor.selection.save();
             setShowEquationEditor(true);
         }
@@ -390,12 +394,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             RichText.current.editor.html.insert(
                 '<img class="rendered-math-jax" id="' +
-                    random +
-                    '" data-eq="' +
-                    encodeURIComponent(equation) +
-                    '" src="' +
-                    res.imgSrc +
-                    '"></img>'
+                random +
+                '" data-eq="' +
+                encodeURIComponent(equation) +
+                '" src="' +
+                res.imgSrc +
+                '"></img>'
             );
             RichText.current.editor.events.trigger('contentChanged');
 
@@ -537,6 +541,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     error = true;
                 }
             }
+
+            if (problem.questionType === 'dragdrop') {
+                problem.data.filter((col: any) => {
+                    // if(col.length === 0) {
+                    return col.length
+                    //     Alert(eachOptionOneCorrectAlert);
+                    //     setIsSubmitting(false);
+                    //     error = true;
+                    // }
+                })
+                if (problem.data.length === 0) {
+                    Alert(noItemsAlert);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+            }
+
+            if (problem.questionType === 'hotspot') {
+                if(problem.imgUrl === '' || !problem.imgUrl) {
+                    Alert(noImageAlert);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+                if(!problem.hotspots || problem.hotspots.length === 0) {
+                    Alert(noHotspotsAlert);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+            }
+
         });
         if (error) {
             setIsSubmitting(false);
@@ -684,7 +718,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 }
             })
-            .catch(err => {});
+            .catch(err => { });
         // get subscribers
         server
             .query({
@@ -757,7 +791,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setChannelOptions(options);
                     }
                 })
-                .catch(err => {});
+                .catch(err => { });
         }
         setInit(true);
     }, []);
@@ -889,7 +923,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     if (value) {
                         subCues = JSON.parse(value);
                     }
-                } catch (e) {}
+                } catch (e) { }
                 let _id = subCues['local'].length;
                 while (true) {
                     const duplicateId = subCues['local'].findIndex((item: any) => {
@@ -1152,8 +1186,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 28,
-                                            color: '#006AFF',
-                                            borderColor: '#006AFF',
+                                            color: '#4794ff',
+                                            borderColor: '#4794ff',
                                             borderWidth: 1,
                                             marginTop: 2,
                                             fontSize: 12,
@@ -1171,10 +1205,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </TouchableOpacity>
                             ) : null}
                             {allowQuizCreation &&
-                            !imported &&
-                            !showOptions &&
-                            !showBooks &&
-                            props.version !== 'read' ? (
+                                !imported &&
+                                !showOptions &&
+                                !showBooks &&
+                                props.version !== 'read' ? (
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
@@ -1193,8 +1227,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 28,
-                                            color: '#006AFF',
-                                            borderColor: '#006AFF',
+                                            color: '#4794ff',
+                                            borderColor: '#4794ff',
                                             borderWidth: 1,
                                             marginTop: 2,
                                             fontSize: 12,
@@ -1242,7 +1276,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             textAlign: 'center',
                                             lineHeight: 28,
                                             color: '#fff',
-                                            backgroundColor: '#006AFF',
+                                            backgroundColor: '#4794ff',
                                             marginTop: 2,
                                             fontSize: 12,
                                             borderRadius: 15,
@@ -1418,7 +1452,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#4794ff'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1512,7 +1546,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#4794ff'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1667,7 +1701,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#006AFF'
+                                                                    true: '#4794ff'
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -1762,7 +1796,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#006AFF'
+                                                                    true: '#4794ff'
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -1870,7 +1904,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#4794ff'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -2152,7 +2186,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#f2f2f2',
-                                                    true: '#006AFF'
+                                                    true: '#4794ff'
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -2196,7 +2230,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f2f2f2',
-                                                            true: '#006AFF'
+                                                            true: '#4794ff'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2340,7 +2374,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f2f2f2',
-                                                            true: '#006AFF'
+                                                            true: '#4794ff'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2441,7 +2475,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#006AFF'
+                                                        true: '#4794ff'
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2593,7 +2627,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#006AFF'
+                                                        true: '#4794ff'
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2651,7 +2685,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             fontSize: 12,
                                                             lineHeight: 34,
                                                             fontFamily: 'inter',
-                                                            color: '#006AFF'
+                                                            color: '#4794ff'
                                                         }}
                                                     >
                                                         Clear
@@ -2810,14 +2844,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </View>
                                     ) : imported ? (
                                         type === 'mp4' ||
-                                        type === 'oga' ||
-                                        type === 'mov' ||
-                                        type === 'wmv' ||
-                                        type === 'mp3' ||
-                                        type === 'mov' ||
-                                        type === 'mpeg' ||
-                                        type === 'mp2' ||
-                                        type === 'wav' ? (
+                                            type === 'oga' ||
+                                            type === 'mov' ||
+                                            type === 'wmv' ||
+                                            type === 'mp3' ||
+                                            type === 'mov' ||
+                                            type === 'mpeg' ||
+                                            type === 'mp2' ||
+                                            type === 'wav' ? (
                                             <ReactPlayer
                                                 url={url}
                                                 controls={true}
@@ -2912,20 +2946,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     htmlRemoveTags: ['script'],
 
                                                     events: {
-                                                        'file.beforeUpload': function(files: any) {
+                                                        'file.beforeUpload': function (files: any) {
                                                             // Return false if you want to stop the file upload.
                                                             fileUploadEditor(files);
 
                                                             return false;
                                                         },
-                                                        'video.beforeUpload': function(videos: any) {
+                                                        'video.beforeUpload': function (videos: any) {
                                                             videoUploadEditor(videos);
 
                                                             return false;
                                                         },
-                                                        'image.beforeUpload': function(images: any) {
+                                                        'image.beforeUpload': function (images: any) {
 
-                                                            if (images[0].size > (5 * 1024 * 1024) ) {
+                                                            if (images[0].size > (5 * 1024 * 1024)) {
                                                                 alert('Image size must be less than 5mb.')
                                                                 return false;
                                                             }
@@ -2978,7 +3012,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 34,
                                                     color: 'white',
                                                     fontSize: 12,
-                                                    backgroundColor: '#006AFF',
+                                                    backgroundColor: '#4794ff',
                                                     borderRadius: 15,
                                                     paddingHorizontal: 20,
                                                     fontFamily: 'inter',
@@ -2996,7 +3030,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 34,
                                                     color: 'white',
                                                     fontSize: 12,
-                                                    backgroundColor: '#006AFF',
+                                                    backgroundColor: '#4794ff',
                                                     borderRadius: 15,
                                                     paddingHorizontal: 20,
                                                     fontFamily: 'inter',

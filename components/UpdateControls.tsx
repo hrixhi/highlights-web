@@ -2367,7 +2367,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     isPlaying={true}
                                     duration={duration}
                                     initialRemainingTime={initDuration}
-                                    colors="#006AFF"
+                                    colors="#4794ff"
                                 />
                             </View>
                         ) : null
@@ -2394,7 +2394,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         textTransform: 'uppercase',
                                         fontSize: 12,
                                         fontFamily: 'overpass',
-                                        color: '#006AFF'
+                                        color: '#4794ff'
                                     }}
                                 >
                                     Erase
@@ -2569,10 +2569,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#006AFF',
+                                            color: '#4794ff',
                                             borderWidth: 1,
                                             fontSize: 12,
-                                            borderColor: '#006AFF',
+                                            borderColor: '#4794ff',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -2740,8 +2740,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             style={{
                                                 textAlign: 'center',
                                                 lineHeight: 34,
-                                                color: '#006AFF',
-                                                borderColor: '#006AFF',
+                                                color: '#4794ff',
+                                                borderColor: '#4794ff',
                                                 borderWidth: 1,
                                                 fontSize: 12,
                                                 backgroundColor: '#fff',
@@ -3401,7 +3401,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{ height: 20 }}
                                         trackColor={{
                                             false: '#F8F9FA',
-                                            true: '#006AFF'
+                                            true: '#4794ff'
                                         }}
                                         activeThumbColor="white"
                                     />
@@ -3498,7 +3498,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{ height: 20 }}
                                         trackColor={{
                                             false: '#f2f2f2',
-                                            true: '#006AFF'
+                                            true: '#4794ff'
                                         }}
                                         activeThumbColor="white"
                                     />
@@ -3688,7 +3688,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#4794ff'
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -3794,7 +3794,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#4794ff'
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -3971,7 +3971,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{ height: 20 }}
                                 trackColor={{
                                     false: '#f2f2f2',
-                                    true: '#006AFF'
+                                    true: '#4794ff'
                                 }}
                                 activeThumbColor="white"
                             />
@@ -4386,7 +4386,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={'share-outline'}
                                     size={18}
-                                    color={shareWithChannelId === 'None' ? '#000000' : '#006aff'}
+                                    color={shareWithChannelId === 'None' ? '#000000' : '#4794ff'}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -4448,7 +4448,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{ height: 20 }}
                             trackColor={{
                                 false: '#f2f2f2',
-                                true: '#006AFF'
+                                true: '#4794ff'
                             }}
                             activeThumbColor="white"
                         />
@@ -4489,7 +4489,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#4794ff'
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -4678,7 +4678,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#4794ff'
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -4783,7 +4783,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
-                                    backgroundColor: '#006AFF',
+                                    backgroundColor: '#4794ff',
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
@@ -4869,7 +4869,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 height: 22,
                                 paddingHorizontal: 10,
                                 borderRadius: 15,
-                                backgroundColor: '#006AFF',
+                                backgroundColor: '#4794ff',
                                 lineHeight: 20,
                                 paddingTop: 1,
                                 marginBottom: 5,
@@ -5051,7 +5051,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         textTransform: 'uppercase',
                                                         fontSize: 12,
                                                         fontFamily: 'overpass',
-                                                        color: '#006AFF'
+                                                        color: '#4794ff'
                                                     }}
                                                 >
                                                     Erase
@@ -5075,7 +5075,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
-                                                color: '#006AFF'
+                                                color: '#4794ff'
                                             }}
                                         >
                                             Erase
@@ -5209,7 +5209,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: Dimensions.get('window').width < 768 ? 12 : 15,
         borderRadius: 12,
-        backgroundColor: '#006AFF',
+        backgroundColor: '#4794ff',
         lineHeight: 25,
         height: 25,
         fontFamily: 'inter',

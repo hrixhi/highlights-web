@@ -85,7 +85,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <Text
                                 style={{
                                     fontSize: 9,
-                                    color: '#006AFF',
+                                    color: '#4794ff',
                                     marginLeft: 5,
                                     textAlign: 'right'
                                 }}>
@@ -111,7 +111,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#006AFF',
+                                    backgroundColor: '#4794ff',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,

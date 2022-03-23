@@ -37,7 +37,7 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string) => {
         type = 'mp3';
     }
 
-    if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+    if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '' };
     }

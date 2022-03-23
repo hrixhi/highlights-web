@@ -1051,7 +1051,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 fontFamily: 'inter',
                                 // flex: 1,
                                 lineHeight: 23,
-                                color: '#006AFF',
+                                color: '#4794ff',
                                 backgroundColor: '#f2f2f2'
                             }}
                         >
@@ -1481,7 +1481,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         fontSize: 12,
                                                         fontFamily: 'inter',
-                                                        color: '#006AFF',
+                                                        color: '#4794ff',
                                                         marginRight: 20
                                                     }}
                                                 >
@@ -1501,7 +1501,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         style={{
                                                             fontSize: 12,
                                                             fontFamily: 'inter',
-                                                            color: '#006AFF',
+                                                            color: '#4794ff',
                                                             marginRight: 20
                                                         }}
                                                     >
@@ -1754,7 +1754,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#4794ff'
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -1841,7 +1841,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <InsetShadow
                                 shadowColor={'#000'}
                                 shadowOffset={2}
-                                shadowOpacity={0.12}
+                                shadowOpacity={0}   // no shadow
                                 shadowRadius={collapseMap[key] ? 10 : 0}
                                 elevation={500000}
                                 containerStyle={{
@@ -1968,7 +1968,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         : 'chevron-down-outline'
                                                                 }
                                                                 size={18}
-                                                                color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
+                                                                color={collapseMap[key] ? '#1F1F1F' : '#4794ff'}
                                                             />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -2083,7 +2083,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         : 'chevron-down-outline'
                                                                 }
                                                                 size={18}
-                                                                color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
+                                                                color={collapseMap[key] ? '#1F1F1F' : '#4794ff'}
                                                             />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -2174,7 +2174,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     lineHeight: 34,
                                                                                     color: '#fff',
                                                                                     borderRadius: 15,
-                                                                                    backgroundColor: '#006AFF',
+                                                                                    backgroundColor: '#4794ff',
                                                                                     fontSize: 12,
                                                                                     paddingHorizontal: 20,
                                                                                     fontFamily: 'inter',
@@ -2724,8 +2724,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}>
                                 <Ionicons
                                     name="help-circle-outline"
-                                    size={19}
-                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
+                                    size={18}
+                                    color={props.option === 'Settings' && props.showHelp ? '#4794ff' : '#f2f2f2'}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -2948,7 +2948,7 @@ const styleObject: any = () =>
             color: '#fff',
             paddingHorizontal: 15,
             borderRadius: 12,
-            backgroundColor: '#006AFF',
+            backgroundColor: '#4794ff',
             lineHeight: 24,
             height: 24,
             fontFamily: 'inter',
@@ -2967,7 +2967,7 @@ const styleObject: any = () =>
             marginBottom: 1
         },
         allGrayFill1: {
-            fontSize: 11,
+            color: '#4794ff',
             height: 20,
             lineHeight: 20,
             color: '#006AFF',
