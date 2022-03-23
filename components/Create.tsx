@@ -32,7 +32,7 @@ import Books from './Books';
 
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-import { handleFileUploadEditor } from '../helpers/FileUpload';
+import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 
 // NEW EDITOR
@@ -831,6 +831,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         [userId]
     );
 
+    const handleFileUpload = useCallback(
+        async () => {
+            const res = await handleFile(false, userId);
+
+            if (!res || res.url === '' || res.type === '') {
+                return false;
+            }
+            setUploadResult(res.url, res.type);
+        },
+        [userId]
+    );
+
     const videoUploadEditor = useCallback(
         async (files: any) => {
             const res = await handleFileUploadEditor(true, files.item(0), userId);
@@ -1128,6 +1140,37 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </TouchableOpacity>
                         )}
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
+                            {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' ? <TouchableOpacity
+                                style={{
+                                    borderRadius: 15,
+                                    backgroundColor: 'white'
+                                }}
+                                onPress={() => {
+                                    handleFileUpload()
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        lineHeight: 28,
+                                        color: '#006AFF',
+                                        borderColor: '#006AFF',
+                                        borderWidth: 1,
+                                        marginTop: 2,
+                                        fontSize: 12,
+                                        borderRadius: 15,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
+                                        marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                        fontFamily: 'inter',
+                                        overflow: 'hidden',
+                                        height: 30,
+                                        textTransform: 'uppercase'
+                                    }}
+                                >
+                                    Upload file
+                                </Text>
+                            </TouchableOpacity> : null}
+
                             {/* QUIZ BUTTON FOR INSTRUCTORS */}
                             {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' ? (
                                 <TouchableOpacity

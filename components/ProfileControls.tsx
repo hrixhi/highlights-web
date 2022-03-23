@@ -756,7 +756,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 alignItems: 'center'
                             }}
                         >
-                            <Ionicons name="log-out-outline" color="#4794ff" style={{ marginRight: 10 }} size={18} />
+                            {/* <Ionicons name="log-out-outline" color="#006AFF" style={{ marginRight: 10 }} size={18} /> */}
                             <Text
                                 style={{
                                     fontSize: 14,

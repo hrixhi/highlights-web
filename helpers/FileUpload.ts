@@ -2,7 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 const mime = require('mime-types');
 import axios from 'axios';
 
-export const handleFile = async (audioVideoOnly: boolean, imageOnly?: boolean) => {
+export const handleFile = async (audioVideoOnly: boolean, userId: string) => {
     // e.preventDefault();
     const res: any = await DocumentPicker.getDocumentAsync();
 
@@ -37,13 +37,13 @@ export const handleFile = async (audioVideoOnly: boolean, imageOnly?: boolean) =
         type = 'mp3';
     }
 
-    if (!imageOnly && (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
+    if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '' };
     }
 
     if (
-        audioVideoOnly && !imageOnly &&
+        audioVideoOnly &&
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
         alert('Error! This file format is not supported. Upload mp4.');
@@ -55,7 +55,7 @@ export const handleFile = async (audioVideoOnly: boolean, imageOnly?: boolean) =
         return { type: '', url: '' };
     }
 
-    const response = await fileUpload(file, type, '');
+    const response = await fileUpload(file, type, userId);
 
     const { data } = response;
     if (data.status === 'success') {

@@ -410,8 +410,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                 <Image
                                     source={logo}
                                     style={{
-                                        width: dimensions.window.height * 0.16 * 0.53456,
-                                        height: dimensions.window.height * 0.16 * 0.2
+                                        width: dimensions.window.height * 0.20 * 0.53456,
+                                        height: dimensions.window.height * 0.20 * 0.2
                                     }}
                                     resizeMode={'contain'}
                                 />
@@ -421,13 +421,14 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     fontSize: 15,
                                     color: '#1F1F1F',
                                     fontFamily: 'overpass',
-                                    paddingBottom: 20,
+                                    paddingBottom: showForgotPassword ? 20 : 0,
                                     textAlign: 'center'
                                 }}
                             >
                                 {showForgotPassword
                                     ? PreferredLanguageText('temporaryPassword')
-                                    : PreferredLanguageText('continueLeftOff')}
+                                    : ''}
+                                    {/* PreferredLanguageText('continueLeftOff')} */}
                             </Text>
 
                             <View

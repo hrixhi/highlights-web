@@ -688,6 +688,7 @@ export const findUserById = gql`
                 allowQuizCreation
                 schoolId
                 orgName
+                userCreatedOrg
             }
         }
     }
