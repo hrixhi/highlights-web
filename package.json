@@ -124,6 +124,7 @@
         "reanimated-bottom-sheet": "^1.0.0-alpha.22",
         "rmc-date-picker": "^6.0.10",
         "rsuite": "^4.10.2",
+        "swiper": "^8.0.7",
         "tex-to-svg": "^0.2.0",
         "use-dynamic-refs": "^1.0.0",
         "volkeno-react-native-drag-drop": "^1.0.8",

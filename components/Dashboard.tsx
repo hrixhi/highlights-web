@@ -2619,7 +2619,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     maxWidth: 225
                                 }}
                                 autoCompleteType={'xyz'}
-                                placeholder={'🔍 '}
+                                placeholder={'Search'}
                                 onChangeText={val => setSearchTerm(val)}
                                 placeholderTextColor={'#fff'}
                             />

@@ -29,6 +29,14 @@ import logo from '../components/default-images/cues-logo-black-exclamation-hidde
 import SocialMediaButton from '../components/SocialMediaButton';
 import Dashboard from '../components/Dashboard';
 
+import Swiper from 'react-native-web-swiper';
+
+import agenda from '../assets/images/agenda.png'
+import workspace from '../assets/images/workspace.png'
+import inbox from '../assets/images/inbox.png'
+
+
+
 // HELPERS
 import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
@@ -192,7 +200,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }
 
                 if (parsedUser._id && parsedUser._id !== '') {
-                    await loadDataFromCloud();        
+                    await loadDataFromCloud();
                 } else {
                     // setShowLoginWindow(true);
                     window.location.href = `${origin}/login`;
@@ -600,7 +608,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         //             // You can add any additional visitor level key-values here,
         //             // as long as it's not one of the above reserved names.
         //         },
-        
+
         //         account: {
         //             id: user.schoolId,
         //             name: user.orgName    // Required if using Pendo Feedback
@@ -610,13 +618,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         //             // planLevel:    // Optional
         //             // planPrice:    // Optional
         //             // creationDate: // Optional
-        
+
         //             // You can add any additional account level key-values here,
         //             // as long as it's not one of the above reserved names.
         //         }
         //     });
         // }
-        
+
     }, [user])
 
     // imp
@@ -797,7 +805,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 });
             });
         }
-        
+
         const server = fetchAPI('');
 
         // UPDATE CUES
@@ -1017,7 +1025,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             if (value) {
                 subCues = JSON.parse(value);
             }
-        } catch (e) {}
+        } catch (e) { }
         if (subCues[updateModalKey].length === 0) {
             return;
         }
@@ -1072,12 +1080,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
     const renderTimeMessage = () => {
+        return 'Overview'
+
         const currentTime = new Date()
 
         if (currentTime.getHours() < 12 && currentTime.getHours() > 0) {
             return 'Good Morning'
         } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 17) {
-            return 'Good Afternoon' 
+            return 'Good Afternoon'
         } else {
             return 'Good Evening'
         }
@@ -1592,10 +1602,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 !loadingOrg &&
                 !saveDataInProgress &&
                 ((option === 'Classroom' && modalType !== 'Create') ||
-                (option === 'To Do' && tab !== 'Add') ||
-                (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
-                (option === 'Channels' && !showCreate) ||
-                (option === 'Settings' && !showHelp) ? (
+                    (option === 'To Do' && tab !== 'Add') ||
+                    (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
+                    (option === 'Channels' && !showCreate) ||
+                    (option === 'Settings' && !showHelp) ? (
                     <TouchableOpacity
                         onPress={() => {
                             if (option === 'Classroom') {
@@ -1921,10 +1931,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             ? 'Library'
                                             : 'Workspace'
                                         : op === 'Performance'
-                                        ? 'Performance'
-                                        : op === 'To Do'
-                                        ? 'Agenda'
-                                        : op}
+                                            ? 'Performance'
+                                            : op === 'To Do'
+                                                ? 'Agenda'
+                                                : op}
                                 </Text>
                                 {op === 'Inbox' && unreadMessages > 0 ? (
                                     <View
@@ -1975,17 +1985,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 >
                     {/* Show all the settings here */}
                     <View
-                        style={{ flexDirection: 'column', backgroundColor: 'none', width: Dimensions.get('window').width < 768 ? '100%' : 480 , marginHorizontal: Dimensions.get('window').width < 768 ? 0 : 25 }}
+                        style={{
+                            flexDirection: 'column',
+                            backgroundColor: 'none',
+                            width: Dimensions.get('window').width < 768 ? '100%' : 480,
+                            marginHorizontal: Dimensions.get('window').width < 768 ? 0 : 25,
+                        }}
                         className="mbsc-align-center mbsc-padding"
                     >
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            backgroundColor: '#f2f2f7',
+                            backgroundColor: '#f2f2f2',
                             paddingVertical: 20
                         }}>
-                            <Text 
+                            <Text
                                 style={{
                                     fontSize: Dimensions.get('window').width < 768 ? 24 : 28,
                                     color: '#000',
@@ -1994,12 +2009,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             >
                                 {renderTimeMessage()}
                             </Text>
-                            
-                            <View 
+
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    backgroundColor: '#f2f2f7',
+                                    backgroundColor: '#f2f2f2',
                                 }}
                             >
                                 <TouchableOpacity
@@ -2010,8 +2025,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         overflow: 'hidden',
                                         justifyContent: 'center',
                                         flexDirection: 'row',
-                                        backgroundColor: '#f2f2f7',
-                                        
+                                        backgroundColor: '#f2f2f2',
+
                                     }}
                                 >
                                     <Text
@@ -2025,11 +2040,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             fontFamily: 'inter',
                                             height: 30,
                                             borderRadius: 15,
-                                            width: 90,
+                                            width: 125,
                                             textTransform: 'uppercase'
                                         }}
                                     >
-                                        HELP
+                                        MORE HELP
                                     </Text>
                                 </TouchableOpacity>
 
@@ -2038,7 +2053,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                        setShowOnboardModal(false)
                                     }}
                                     style={{
-                                        backgroundColor: '#f2f2f7',
+                                        backgroundColor: '#f2f2f2',
                                         marginLeft: 15
                                     }}
                                 >
@@ -2047,14 +2062,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             </View>
                         </View>
 
-                        <div style={{
+                        {/* <div style={{
                             marginTop: 20,
                             marginBottom: 20,
-                            display: "flex", 
+                            display: "flex",
                             flexDirection: 'row',
                             justifyContent: 'center'
-                        }}>
-                            <iframe
+                        }}> */}
+                        {/* <iframe
                             width={Dimensions.get('window').width < 768 ? '300' : "480"}
                             height={Dimensions.get('window').width < 768 ? '230' : "300"}
                             src={`https://www.youtube.com/embed/64GhiDvem4o`}
@@ -2062,14 +2077,113 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             title="Embedded youtube"
-                            />
-                        </div>
+                            /> */}
+                        <View>
+                            <Swiper
+                                containerStyle={{
+                                    width: Dimensions.get('window').width < 768 ? '300' : "480",
+                                    height: Dimensions.get('window').width < 768 ? '430' : 500
+                                }}
+                                innerContainerStyle={{
+                                    width: Dimensions.get('window').width < 768 ? '300' : "480",
+                                    height: Dimensions.get('window').width < 768 ? '430' : 500,
+                                    backgroundColor: '#f2f2f2',
+                                    paddingTop: 20
+                                }}
+                            >
+                                <View style={{
+                                    backgroundColor: '#f2f2f2'
+                                }}>
+                                    <Text style={{
+                                        fontSize: 18,
+                                        fontFamily: 'Inter',
+                                        paddingTop: 10
+                                    }}>
+                                        Agenda
+                                    </Text>
+                                    <Image
+                                        source={agenda}
+                                        style={{
+                                            width: '100%',
+                                            height: 350
+                                        }}
+                                        resizeMode={'contain'}
+                                    />
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontFamily: 'Overpass'
+                                    }}>
+                                        {'\n'}
+                                        Cues compiles your daily, weekly and monthly plan.{'\n'}
+                                        Click + to schedule a new event or meeting. {'\n'}
+                                        Submission tasks will be listed automatically.{'\n'}
+                                    </Text>
+                                </View>
+                                <View style={{
+                                    backgroundColor: '#f2f2f2'
+                                }}>
+                                    <Text style={{
+                                        fontSize: 18,
+                                        fontFamily: 'Inter',
+                                        paddingTop: 10
+                                    }}>
+                                        Workspace
+                                    </Text>
+                                    <Image
+                                        source={workspace}
+                                        style={{
+                                            width: '100%',
+                                            height: 350
+                                        }}
+                                        resizeMode={'contain'}
+                                    />
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontFamily: 'Overpass'
+                                    }}>
+                                        {'\n'}
+                                        One place for all your books, notes, tests and discussions.{'\n'}
+                                        Click + to create, import or share content. {'\n'}
+                                        Click on any content or discussion thread to view it.{'\n'}
+                                    </Text>
+                                </View>
+                                <View style={{
+                                    backgroundColor: '#f2f2f2'
+                                }}>
+                                    <Text style={{
+                                        fontSize: 18,
+                                        fontFamily: 'Inter',
+                                        paddingTop: 10
+                                    }}>
+                                        Inbox
+                                    </Text>
+                                    <Image
+                                        source={inbox}
+                                        style={{
+                                            width: '100%',
+                                            height: 350
+                                        }}
+                                        resizeMode={'contain'}
+                                    />
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontFamily: 'Overpass'
+                                    }}>
+                                        {'\n'}
+                                        Chat or meet with your peers, instantly. {'\n'}
+                                        Click + to create a new message or launch a private meeting. {'\n'}
+                                        Click on a chat to view it.{'\n'}
+                                    </Text>
+                                </View>
+                            </Swiper>
+                        </View>
+                        {/* </div> */}
 
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: '#f2f2f7',
+                            backgroundColor: '#f2f2f2',
                             paddingVertical: 20
                         }}>
                             {/* <Text 
@@ -2087,7 +2201,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    backgroundColor: '#f2f2f7',
+                                    backgroundColor: '#f2f2f2',
                                     // paddingRight: 50 
                                 }}
                             >
@@ -2096,35 +2210,35 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     DESKTOP
                                 </Text> */}
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.dmg', '_blank');
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                        backgroundColor: '#f2f2f7',
-                                        paddingRight: 35
-                                    }}
-                                >
-                                    <Ionicons name='logo-apple' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
-                                </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.dmg', '_blank');
+                                }}
+                                style={{
+                                    overflow: 'hidden',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    backgroundColor: '#f2f2f2',
+                                    paddingRight: 35
+                                }}
+                            >
+                                <Ionicons name='logo-apple' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                            </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.exe', '_blank');
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                        backgroundColor: '#f2f2f7',
-                                        paddingRight: 35
-                                    }}
-                                >
-                                    <Ionicons name='logo-windows' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
-                                </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.exe', '_blank');
+                                }}
+                                style={{
+                                    overflow: 'hidden',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    backgroundColor: '#f2f2f2',
+                                    paddingRight: 35
+                                }}
+                            >
+                                <Ionicons name='logo-windows' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                            </TouchableOpacity>
 
                             {/* </View>
 
@@ -2133,7 +2247,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    backgroundColor: '#f2f2f7',
+                                    backgroundColor: '#f2f2f2',
                                     paddingRight: 35 
                                 }}
                             >
@@ -2142,41 +2256,41 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     MOBILE
                                 </Text> */}
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert("Available soon!")
-                                        // window.open('https://www.learnwithcues.com/help', '_blank');
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                        backgroundColor: '#f2f2f7',
-                                        paddingRight: 35
-                                    }}
-                                >
-                                    <Ionicons name='logo-apple-appstore' size={ Dimensions.get('window').width < 768 ? 30 : 35}/>
-                                </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert("Available soon!")
+                                    // window.open('https://www.learnwithcues.com/help', '_blank');
+                                }}
+                                style={{
+                                    overflow: 'hidden',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    backgroundColor: '#f2f2f2',
+                                    paddingRight: 35
+                                }}
+                            >
+                                <Ionicons name='logo-apple-appstore' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                            </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert("Available soon!")
-                                        // window.open('https://www.learnwithcues.com/help', '_blank');
-                                    }}
-                                    style={{
-                                        overflow: 'hidden',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                        backgroundColor: '#f2f2f7'
-                                    }}
-                                >
-                                    <Ionicons name='logo-android' size={ Dimensions.get('window').width < 768 ? 30 : 35} />
-                                </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert("Available soon!")
+                                    // window.open('https://www.learnwithcues.com/help', '_blank');
+                                }}
+                                style={{
+                                    overflow: 'hidden',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    backgroundColor: '#f2f2f2'
+                                }}
+                            >
+                                <Ionicons name='logo-android' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                            </TouchableOpacity>
 
                             {/* </View> */}
                         </View>
 
-                        
+
                     </View>
                 </Popup>
             }
