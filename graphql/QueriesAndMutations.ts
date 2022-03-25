@@ -1244,6 +1244,16 @@ export const getQuiz = gql`
                         isCorrect
                     }
                     required
+                    dragDropData {
+                        id
+                        content
+                    }
+                    dragDropHeaders
+                    hotspots {
+                        x
+                        y
+                    }
+                    imgUrl
                 }
                 instructions
                 headers

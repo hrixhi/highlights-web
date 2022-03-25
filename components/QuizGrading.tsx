@@ -10,6 +10,8 @@ import parser from 'html-react-parser';
 import ReactPlayer from "react-player";
 import { Ionicons } from "@expo/vector-icons";
 
+import ImageMarker from "react-image-marker"
+
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [problems] = useState<any[]>(props.problems)
@@ -231,6 +233,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}>
         <ActivityIndicator color={"#1F1F1F"} />
     </View>)
+
+    console.log("Solutions", solutions)
 
     // MAIN RETURN
     
@@ -485,6 +489,100 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </View>
                                 :
                                 null
+                        }
+
+                        {
+                            problem.questionType === 'dragdrop' ?
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    overflow: 'scroll',
+                                    marginTop: 50
+                                }}>
+                                    {problem.dragDropHeaders.map((header: string, groupIndex: number) => {
+                                        // 
+                                        return (<View style={{ width: 200, marginRight: 20, padding: 20, backgroundColor: '#f2f2f2', }}>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                width: '100%',
+                                                textAlign: 'center',
+                                                marginBottom: 20,    
+                                                fontFamily: 'Inter'           
+                                            }}>
+                                                {header}
+                                            </Text>
+
+                                            {
+                                                solutions[index].dragDropChoices[groupIndex].map((label: any) => {
+                                                    return <View style={{
+                                                        width: 160,
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        padding: 12,
+                                                        marginRight: 20,
+                                                        marginBottom: 20
+                                                    }}>
+                                                        <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
+                                                        <Text
+                                                            style={{
+                                                                width: '100%',
+                                                                marginLeft: 5
+                                                            }}
+                                                        >
+                                                            {label.content}
+                                                        </Text>
+                                                        <Ionicons name={label.correct ? 'checkmark-circle-outline' : 'close-circle-outline'} size={16} color={label.correct ? '#35AC78' : '#ff0000'} />
+                                                    </View>
+                                                })
+                                            }
+                                        </View>)
+                                    })}
+                                </div> : null
+                        }
+
+                        {
+                            problem.questionType === 'hotspot' ?
+                            <View style={{
+                                width: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                            }}>
+                                <View style={{
+                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                }}>
+                                    <ImageMarker
+                                        src={problem.imgUrl}
+                                        markers={[...problem.hotspots, ...solutions[index].hotspotSelection].map((spot: any) => {
+                                            return { top: spot.y, left: spot.x }
+                                        })}
+                                        onAddMarker={(marker: any) => { 
+                                           return;
+                                        }}
+                                        markerComponent={(p: any) => {
+
+                                            console.log("P", p)
+                                            console.log("Solutions[index].hotspotSelection", solutions[index].hotspotSelection)
+
+                                            const isSelection = solutions[index].hotspotSelection.length > 0 && (p.left === solutions[index].hotspotSelection[0].x) && (p.top === solutions[index].hotspotSelection[0].y)
+
+                                            return <TouchableOpacity disabled={true} style={{
+                                                backgroundColor: isSelection ? solutions[index].hotspotSelection[0].correct ? '#35AC78' : '#ff0000' : '#fff',
+                                                height: 25, width: 25, borderColor: '#000',
+                                                borderRadius: 12.5
+                                            }}
+                                                onPress={() => {
+                                                    return;
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: '#000', lineHeight: 25, textAlign: 'center'
+                                                }}>
+                                                    {isSelection ? '' : p.itemNumber}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }}
+                                    />
+                                </View>
+                            </View> : null
                         }
 
                         {!props.isOwner && problemComments[index] === '' ? null : <View style={{ width: window.screen.width < 1024 ? '100%' : '80%' , maxWidth: 400, marginLeft: 40, marginBottom: 40 }}>

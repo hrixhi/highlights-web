@@ -777,42 +777,106 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         }
 
+        if (currentQuestion.questionType === 'hotspot') {
+            if (!currentQuestion.imgUrl || currentQuestion.imgUrl === '') {
+                Alert(`Hotspot image is missing in Question ${index + 1}`)
+                return;
+            }
+
+            if (currentQuestion.hotspots.length === 0) {
+                Alert(`You must place at least one hotspot marker on the image in Question ${index + 1}`);
+                return;
+            }
+        }
+
+        if (currentQuestion.questionType === 'dragdrop') {
+            let groupHeaderMissing = false 
+            let labelMissing = false
+            let groupEmpty = false
+
+            currentQuestion.dragDropHeaders.map((header: string) => {
+                if (!header) {
+                    groupHeaderMissing = true
+                }
+            });
+
+            if (groupHeaderMissing) {
+                alert(`Group header is missing in Question ${index + 1}.`)
+                return false;
+            }
+
+            currentQuestion.dragDropData.map((items: any[]) => {
+
+                if (items.length === 0) {
+                    groupEmpty = true
+                }
+
+                items.map((label: any) => {
+                    if (label.content === '') {
+                        labelMissing = true
+                    }
+                })
+
+            });
+
+            if (labelMissing) {
+                alert(`Item missing in Question ${index + 1}.`)
+                return false;
+            }
+
+            if (groupEmpty) {
+                alert(`Each group must have at least 1 item in Question ${index + 1}.`)
+                return false;
+            }
+
+        }
+
         return true;
 
     }
 
     // Web drag and drop
     /**
-    * Moves an item from one list to another list.
+    * @description Moves an item from one list to another list.
     */
     const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
         const sourceClone = Array.from(source);
+        console.log("Source clone", sourceClone)
+
         const destClone = Array.from(destination);
+        console.log("Destination clone", destClone)
+
         const [removed] = sourceClone.splice(droppableSource.index, 1);
+        console.log("Removed", removed)
 
         destClone.splice(droppableDestination.index, 0, removed);
+        console.log()
+
 
         const result: any = {};
         result[droppableSource.droppableId] = sourceClone;
         result[droppableDestination.droppableId] = destClone;
 
+        console.log("Result", result)
+
         return result;
     };
+
     const grid = 8;
 
     const getItemStyle = (isDragging: any, draggableStyle: any) => ({
         // some basic styles to make the items look a bit nicer
         userSelect: "none",
-        padding: grid * 2,
+        padding: 12,
         margin: `0 0 ${grid}px 0`,
 
         // change background colour if dragging
-        background: isDragging ? "lightgreen" : "#fff",
+        background: "#fff",
 
         // styles we need to apply on draggables
         ...draggableStyle,
         // height: 25
-        marginBottom: 10,
+        marginBottom: 15,
         top: draggableStyle.top,
         borderRadius: 10,
     });
@@ -820,6 +884,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         background: "#f2f2f2",
         padding: 15,
         width: 200,
+        minWidth: 200,
         margin: 15
     });
 
@@ -829,8 +894,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         result.splice(endIndex, 0, removed);
         return result;
     };
-
-
 
     // MAIN RETURN 
 
@@ -866,6 +929,18 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     let content = "";
                     let type = "";
 
+                    const dndOptions: string[] = [];
+
+                    if (editQuestionNumber !== (index + 1) && problem.questionType === 'dragdrop') {
+                        problem.dragDropData.map((group: any) => {
+                            group.map((label: any) => {
+                                dndOptions.push(label.content)
+                            })
+                        })
+                    }
+
+                    const dragDropOptions = (dndOptions)
+
                     if (audioVideoQuestion) {
                         const parse = JSON.parse(problem.question);
 
@@ -873,11 +948,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         content = parse.content;
                         type = parse.type;
                     }
-
-                    // let boardRepository: any = null
-                    // if (questionType === 'dragdrop') {
-                    //     boardRepository = new BoardRepository(problem.data);
-                    // }
 
                     return <View
                         key={index}
@@ -958,7 +1028,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             const updatedProblems = [...problems]
                                                             if (val.value === "mcq") {
                                                                 updatedProblems[index].questionType = "";
-                                                                updatedProblems[index].imgUrl = ''
                                                             } else {
                                                                 updatedProblems[index].questionType = val.value;
                                                             }
@@ -971,23 +1040,29 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             if (val.value === 'dragdrop') {
                                                                 updatedProblems[index].questionType = 'dragdrop'
                                                                 updatedProblems[index].options = []
-                                                                updatedProblems[index].data = [
+                                                                updatedProblems[index].dragDropData = [
                                                                     [
                                                                         {
                                                                             id: '0',
-                                                                            content: 'Item 1'
+                                                                            content: ''
                                                                         },
                                                                     ],
                                                                     [
-                                                                        { id: '1', content: 'Item 2' },
-                                                                        { id: '2', content: 'Item 3' }
+                                                                        { 
+                                                                            id: '1',
+                                                                            content: '' 
+                                                                        },
                                                                     ]
                                                                 ]
-                                                                updatedProblems[index].headers = ['Group 1', 'Group 2']
+                                                                updatedProblems[index].dragDropHeaders = ['', '']
                                                             } else {
                                                                 // clear data if not drag and drop
-                                                                updatedProblems[index].data = []
-                                                                updatedProblems[index].headers = []
+                                                                updatedProblems[index].dragDropData = []
+                                                                updatedProblems[index].dragDropHeaders = []
+                                                                updatedProblems[index].options = []
+                                                            }
+
+                                                            if (val.value === 'hotspot') {
                                                                 updatedProblems[index].options = []
                                                             }
 
@@ -1182,11 +1257,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </Text> : null
                         }
                         {
-                            problem.questionType === 'hotspot' ? (
+                            problem.questionType === 'hotspot' && editQuestionNumber === (index + 1) ? (
                                 !problem.imgUrl || problem.imgUrl === '' ?
                                     <TouchableOpacity
                                         onPress={async () => {
-                                            const url = await handleFile(true, true)
+                                            const url = await handleFile(false, props.userId, true)
                                             const updatedProblems = [...problems]
                                             if (url) {
                                                 updatedProblems[index].imgUrl = url.url
@@ -1224,323 +1299,431 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </TouchableOpacity>
                                     :
                                     <View style={{
-                                        width: '100%', height: '100%', maxWidth: 400, maxHeight: 400, overflow: 'hidden'
+                                        width: '100%', height: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
                                     }}>
-                                        <ImageMarker
-                                            src={problem.imgUrl}
-                                            markers={problem.hotspots.map((spot: any) => {
-                                                return { top: spot.y, left: spot.x }
-                                            })}
-                                            onAddMarker={(marker: any) => {
-                                                // setMarkers([...markers, marker])
-                                                const updatedProblems = [...problems]
-                                                if (updatedProblems[index].hotspots >= 100) {
-                                                    return
-                                                }
-                                                console.log(marker)
-                                                updatedProblems[index].hotspots = [...updatedProblems[index].hotspots, {
-                                                    x: marker.left, y: marker.top
-                                                }]
-                                                setProblems(updatedProblems)
-                                                props.setProblems(updatedProblems)
-                                            }}
-                                            markerComponent={(p: any) => <TouchableOpacity style={{
-                                                backgroundColor: '#fff',
-                                                height: 25, width: 25, borderColor: '#000',
-                                                borderRadius: 12.5
-                                            }}
-                                                onPress={() => {
-                                                    console.log(p.itemNumber)
-                                                    // return
+                                        <View style={{
+                                            maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                        }}>
+                                            <ImageMarker
+                                                src={problem.imgUrl}
+                                                markers={problem.hotspots.map((spot: any) => {
+                                                    return { top: spot.y, left: spot.x }
+                                                })}
+                                                onAddMarker={(marker: any) => {
+                                                    // setMarkers([...markers, marker])
                                                     const updatedProblems = [...problems]
-                                                    updatedProblems[index].hotspots.splice(p.itemNumber, 1)
-                                                    console.log(updatedProblems)
+                                                    if (updatedProblems[index].hotspots >= 100) {
+                                                        return
+                                                    }
+                                                    console.log(marker)
+                                                    updatedProblems[index].hotspots = [...updatedProblems[index].hotspots, {
+                                                        x: marker.left, y: marker.top
+                                                    }]
                                                     setProblems(updatedProblems)
                                                     props.setProblems(updatedProblems)
                                                 }}
-                                            >
-                                                <Text style={{
-                                                    color: '#000', lineHeight: 25, textAlign: 'center'
-                                                }}>
-                                                    {p.itemNumber}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            }
-                                        />
+                                                markerComponent={(p: any) => <TouchableOpacity style={{
+                                                    backgroundColor: '#fff',
+                                                    height: 25, width: 25, borderColor: '#000',
+                                                    borderRadius: 12.5
+                                                }}
+                                                    onPress={() => {
+                                                        console.log(p.itemNumber)
+                                                        // return
+                                                        const updatedProblems = [...problems]
+                                                        updatedProblems[index].hotspots.splice(p.itemNumber, 1)
+                                                        console.log(updatedProblems)
+                                                        setProblems(updatedProblems)
+                                                        props.setProblems(updatedProblems)
+                                                    }}
+                                                >
+                                                    <Text style={{
+                                                        color: '#000', lineHeight: 25, textAlign: 'center'
+                                                    }}>
+                                                        {p.itemNumber}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                }
+                                            />
+                                        </View>
                                     </View>
                             ) : null
                         }
+
                         {
-                            problem.questionType === 'dragdrop' ?
+                            problem.questionType === 'hotspot' && editQuestionNumber !== (index + 1) && (problem.imgUrl && problem.imgUrl !== '')
+                            ? <View style={{
+                                width: '100%', height: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                            }}>
+                                <View style={{
+                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                }}>
+                                    <ImageMarker
+                                        src={problem.imgUrl}
+                                        markers={problem.hotspots.map((spot: any) => {
+                                            return { top: spot.y, left: spot.x }
+                                        })}
+                                        onAddMarker={(marker: any) => { 
+                                           return;
+                                        }}
+                                        markerComponent={(p: any) => <TouchableOpacity disabled={true} style={{
+                                            backgroundColor: '#fff',
+                                            height: 25, width: 25, borderColor: '#000',
+                                            borderRadius: 12.5
+                                        }}
+                                            onPress={() => {
+                                                return;
+                                            }}
+                                        >
+                                            <Text style={{
+                                                color: '#000', lineHeight: 25, textAlign: 'center'
+                                            }}>
+                                                {p.itemNumber}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        }
+                                    />
+                                </View>
+                                
+                            </View> : null
+                        }
+                        {
+                            problem.questionType === 'dragdrop' && editQuestionNumber !== (index + 1) ?
+                                <div style={{
+                                    display: 'flex', flexDirection: 'column', width: '100%',
+                                    marginBottom: 20
+                                }}>
+                                    <div style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        background: '#f2f2f2',
+                                        padding: 20,
+                                    }}>
+                                        {
+                                            dragDropOptions.map((label: string) => {
+                                                return <View style={{
+                                                    width: 150,
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    padding: 12,
+                                                    marginRight: 20,
+                                                    marginBottom: 20
+                                                }}>
+                                                    <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
+                                                    <Text
+                                                        style={{
+                                                            width: '100%',
+                                                            marginLeft: 5
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </Text>
+                                                </View>
+                                            })
+                                        }
+                                    </div>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        overflow: 'scroll',
+                                        marginTop: 50
+                                    }}>
+                                        {problem.dragDropHeaders.map((header: string) => {
+                                            return <View style={{ width: 200, marginRight: 20, justifyContent: 'center', padding: 20, backgroundColor: '#f2f2f2', }}>
+                                                <Text style={{
+                                                    fontSize: 16,
+                                                    width: '100%',
+                                                    textAlign: 'center',
+                                                    marginBottom: 20,    
+                                                    fontFamily: 'Inter'           
+                                                }}>
+                                                    {header}
+                                                </Text>
+                                            </View>
+                                        })}
+                                    </div>
+                                </div>
+                                : null
+                        }
+                        {
+                            problem.questionType === 'dragdrop' && editQuestionNumber === (index + 1) ?
                                 // <Board
-                                //     boardRepository={new BoardRepository(problem.data)}
+                                //     boardRepository={new BoardRepository(problem.dragDropData)}
                                 //     open={(res: any) => { console.log(res) }}
                                 //     onDragEnd={(res: any) => { console.log(res) }}
                                 // />
-                                <div>
-                                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                                        <TouchableOpacity
-                                            onPress={async () => {
-                                                const updatedProblems = [...problems]
-                                                updatedProblems[index].data = [...updatedProblems[index].data, []]
-                                                updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
-                                                setProblems(updatedProblems)
-                                                props.setProblems(updatedProblems)
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                alignSelf: 'center'
-                                            }}
-                                        >
-                                            <Text
+                                <div style={{
+                                    display: 'flex', flexDirection: 'column', width: '100%'
+                                }}>
+                                    {/* Set groups */}
+                                    <div>
+                                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                                            <TouchableOpacity
+                                                onPress={async () => {
+                                                    const updatedProblems = [...problems]
+                                                    updatedProblems[index].dragDropData = [...updatedProblems[index].dragDropData, []]
+                                                    updatedProblems[index].dragDropHeaders = [...updatedProblems[index].dragDropHeaders, '']
+                                                    setProblems(updatedProblems)
+                                                    props.setProblems(updatedProblems)
+                                                }}
                                                 style={{
-                                                    color: '#4794ff',
-                                                    borderWidth: 1,
-                                                    borderRadius: 15,
-                                                    borderColor: '#4794ff',
-                                                    backgroundColor: '#fff',
-                                                    fontSize: 12,
-                                                    textAlign: "center",
-                                                    lineHeight: 34,
-                                                    paddingHorizontal: 20,
-                                                    fontFamily: "inter",
+                                                    backgroundColor: "white",
+                                                    overflow: "hidden",
                                                     height: 35,
-                                                    textTransform: 'uppercase',
-                                                    width: 175,
+                                                    marginTop: 15,
+                                                    alignSelf: 'center'
                                                 }}
                                             >
-                                                New Group
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={{ width: 25 }} />
-                                        <TouchableOpacity
-                                            onPress={async () => {
-                                                const updatedProblems = [...problems]
+                                                <Text
+                                                    style={{
+                                                        color: '#4794ff',
+                                                        borderWidth: 1,
+                                                        borderRadius: 15,
+                                                        borderColor: '#4794ff',
+                                                        backgroundColor: '#fff',
+                                                        fontSize: 12,
+                                                        textAlign: "center",
+                                                        lineHeight: 34,
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: "inter",
+                                                        height: 35,
+                                                        textTransform: 'uppercase',
+                                                        width: 175,
+                                                    }}
+                                                >
+                                                    New Group
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <View style={{ width: 25 }} />
+                                            <TouchableOpacity
+                                                onPress={async () => {
+                                                    const updatedProblems = [...problems]
 
-                                                const id = Math.round(Math.random() * 100).toString()
-                                                updatedProblems[index].data = [...updatedProblems[index].data, [
-                                                    { id, content: 'item' + id.toString() }
-                                                ]]
-                                                updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
-                                                setProblems(updatedProblems)
-                                                props.setProblems(updatedProblems)
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                alignSelf: 'center'
-                                            }}
-                                        >
-                                            <Text
+                                                    const id = Math.round(Math.random() * 100000).toString()
+                                                    
+                                                    // Add to the most recent column
+                                                    const lastGroup = Object.keys(updatedProblems[index].dragDropData).length - 1;
+
+                                                    const updatedData = lodash.clone(updatedProblems[index].dragDropData)
+
+                                                    updatedData[lastGroup] = [...updatedData[lastGroup], { id, content: '' }]
+
+                                                    updatedProblems[index].dragDropData = updatedData
+
+                                                    updatedProblems[index].dragDropHeaders = [...updatedProblems[index].dragDropHeaders]
+
+                                                    setProblems(updatedProblems)
+
+                                                    props.setProblems(updatedProblems)
+
+                                                }}
                                                 style={{
-                                                    color: '#4794ff',
-                                                    borderWidth: 1,
-                                                    borderRadius: 15,
-                                                    borderColor: '#4794ff',
-                                                    backgroundColor: '#fff',
-                                                    fontSize: 12,
-                                                    textAlign: "center",
-                                                    lineHeight: 34,
-                                                    paddingHorizontal: 20,
-                                                    fontFamily: "inter",
+                                                    backgroundColor: "white",
+                                                    overflow: "hidden",
                                                     height: 35,
-                                                    textTransform: 'uppercase',
-                                                    width: 175,
+                                                    marginTop: 15,
+                                                    alignSelf: 'center'
                                                 }}
                                             >
-                                                New Item
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    {/* <button
-                                        type="button"
-                                        onClick={() => {
-                                            const updatedProblems = [...problems]
-                                            updatedProblems[index].data = [...updatedProblems[index].data, []]
-                                            updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
-                                            setProblems(updatedProblems)
-                                            props.setProblems(updatedProblems)
-                                        }}
-                                    >
-                                        Add new group
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            const updatedProblems = [...problems]
+                                                <Text
+                                                    style={{
+                                                        color: '#4794ff',
+                                                        borderWidth: 1,
+                                                        borderRadius: 15,
+                                                        borderColor: '#4794ff',
+                                                        backgroundColor: '#fff',
+                                                        fontSize: 12,
+                                                        textAlign: "center",
+                                                        lineHeight: 34,
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: "inter",
+                                                        height: 35,
+                                                        textTransform: 'uppercase',
+                                                        width: 175,
+                                                    }}
+                                                >
+                                                    New Item
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
 
-                                            const id = Math.round(Math.random() * 100).toString()
-                                            updatedProblems[index].data = [...updatedProblems[index].data, [
-                                                { id, content: 'item' + id.toString() }
-                                            ]]
-                                            updatedProblems[index].headers = [...updatedProblems[index].headers, 'Group ' + (updatedProblems[index].headers.length + 1).toString()]
-                                            setProblems(updatedProblems)
-                                            props.setProblems(updatedProblems)
-                                        }}
-                                    >
-                                        Add new item
-                                    </button> */}
-                                    <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
-                                        <DragDropContext
-                                            onDragEnd={(result: any) => {
+                                        <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
+                                            <DragDropContext
+                                                onDragEnd={(result: any) => {
 
-                                                const { source, destination } = result;
+                                                    const { source, destination } = result;
 
-                                                // dropped outside the list
-                                                if (!destination) {
-                                                    return;
-                                                }
-                                                const sInd = +source.droppableId;
-                                                const dInd = +destination.droppableId;
+                                                    // dropped outside the list
+                                                    if (!destination) {
+                                                        return;
+                                                    }
+                                                    const sInd = +source.droppableId;
+                                                    const dInd = +destination.droppableId;
 
-                                                if (sInd === dInd) {
+                                                    if (sInd === dInd) {
 
-                                                    const updatedProbs: any[] = [...problems]
+                                                        const updatedProbs: any[] = [...problems]
+                                                        const items = reorder(updatedProbs[index].dragDropData[sInd], source.index, destination.index);
+                                                        const newState = [...updatedProbs[index].dragDropData];
+                                                        newState[sInd] = items;
+                                                        updatedProbs[index].dragDropData = newState
+                                                        setProblems(updatedProbs);
+                                                        props.setProblems(updatedProbs)
 
-                                                    const items = reorder(updatedProbs[index].data[sInd], source.index, destination.index);
-                                                    const newState = [...updatedProbs[index].data];
-                                                    newState[sInd] = items;
-                                                    updatedProbs[index].data = newState
-                                                    setProblems(updatedProbs);
-                                                    props.setProblems(updatedProbs)
-                                                } else {
+                                                    } else {
 
-                                                    const updatedProbs: any[] = [...problems]
+                                                        const updatedProbs: any[] = [...problems]
+                                                        const result = move(updatedProbs[index].dragDropData[sInd], updatedProbs[index].dragDropData[dInd], source, destination);
+                                                        const newState = [...updatedProbs[index].dragDropData];
+                                                        newState[sInd] = result[sInd];
+                                                        newState[dInd] = result[dInd];
+                                                        updatedProbs[index].dragDropData = newState
+                                                        setProblems(updatedProbs);
+                                                        props.setProblems(updatedProbs)
+                                                    }
 
-                                                    const result = move(updatedProbs[index].data[sInd], updatedProbs[index].data[dInd], source, destination);
-                                                    const newState = [...updatedProbs[index].data];
-                                                    newState[sInd] = result[sInd];
-                                                    newState[dInd] = result[dInd];
+                                                }}>
+                                                {problem.dragDropData.map((el: any, ind2: any) => (
+                                                    <Droppable key={ind2} droppableId={`${ind2}`}>
+                                                        {(provided: any, snapshot: any) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                style={getListStyle(snapshot.isDraggingOver)}
+                                                                {...provided.droppableProps}
+                                                            >
+                                                                <div style={{
+                                                                    marginBottom: 20
+                                                                }}>
+                                                                    <TextareaAutosize
+                                                                        style={{
+                                                                            width: '90%',
+                                                                            maxWidth: '90%',
+                                                                            borderBottom: '1px solid #e8e8e8', 
+                                                                            fontSize: 14,
+                                                                            paddingTop: 13,
+                                                                            paddingBottom: 13,
+                                                                            marginTop: 0,
+                                                                            marginBottom: 5,
+                                                                            padding: '10px',
+                                                                            background: '#f2f2f2'
+                                                                        }}
+                                                                        value={problem.dragDropHeaders[ind2]}
+                                                                        placeholder={'Group ' + (ind2 + 1)}
+                                                                        onChange={(e: any) => {
+                                                                            const updatedProblems = [...problems]
+                                                                            updatedProblems[index].dragDropHeaders[ind2] = e.target.value
+                                                                            setProblems(updatedProblems)
+                                                                            props.setProblems(updatedProblems)
+                                                                        }}
+                                                                        minRows={1}
+                                                                    />
 
-                                                    const newstate = newState.filter((group, i) => {
-                                                        if (group.length === 0) {
-                                                            updatedProbs[index].headers.splice(i, 1)
-                                                            return false
-                                                        }
-                                                        return group.length
-                                                    })
-                                                    updatedProbs[index].data = newstate
-                                                    setProblems(updatedProbs);
-                                                    props.setProblems(updatedProbs)
-                                                }
-
-                                            }}>
-                                            {problem.data.map((el: any, ind2: any) => (
-                                                <Droppable key={ind2} droppableId={`${ind2}`}>
-                                                    {(provided: any, snapshot: any) => (
-                                                        <div
-                                                            ref={provided.innerRef}
-                                                            style={getListStyle(snapshot.isDraggingOver)}
-                                                            {...provided.droppableProps}
-                                                        >
-                                                            <div>
-                                                                <TextInput
-                                                                    style={{
-                                                                        width: 150,
-                                                                        borderColor: '#cccccc',
-                                                                        borderBottomWidth: 1,
-                                                                        fontSize: 14,
-                                                                        paddingTop: 13,
-                                                                        paddingBottom: 13,
-                                                                        marginTop: 0,
-                                                                        marginBottom: 5,
-                                                                        paddingHorizontal: 10
-                                                                    }}
-                                                                    value={problem.headers[ind2]}
-                                                                    onChangeText={(text) => {
-                                                                        const updatedProblems = [...problems]
-                                                                        updatedProblems[index].headers[ind2] = text
-                                                                        setProblems(updatedProblems)
-                                                                        props.setProblems(updatedProblems)
-                                                                    }}
-                                                                // style={{
-                                                                //     maxWidth: 150,
-                                                                //     borderColor: '#000'
-                                                                // }}
-                                                                />
-                                                            </div>
-                                                            {el.map((item: any, index2: any) => (
-                                                                <Draggable
-                                                                    key={item.id}
-                                                                    draggableId={item.id}
-                                                                    index={index2}
-                                                                >
-                                                                    {(provided: any, snapshot: any) => (
-                                                                        <div
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                            style={getItemStyle(
-                                                                                snapshot.isDragging,
-                                                                                provided.draggableProps.style
-                                                                            )}
-                                                                        >
+                                                                </div>
+                                                                {el.map((item: any, index2: any) => (
+                                                                    <Draggable
+                                                                        key={item.id}
+                                                                        draggableId={item.id}
+                                                                        index={index2}
+                                                                    >
+                                                                        {(provided: any, snapshot: any) => (
                                                                             <div
-                                                                                style={{
-                                                                                    display: "flex",
-                                                                                    justifyContent: "space-around"
-                                                                                }}
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                                style={getItemStyle(
+                                                                                    snapshot.isDragging,
+                                                                                    provided.draggableProps.style
+                                                                                )}
                                                                             >
-                                                                                <TextInput
+                                                                                <div
                                                                                     style={{
-                                                                                        width: 150,
-                                                                                        borderColor: '#e8e8e8',
-                                                                                        borderBottomWidth: 1,
-                                                                                        fontSize: 14,
-                                                                                        paddingTop: 13,
-                                                                                        paddingBottom: 13,
-                                                                                        marginTop: 0,
-                                                                                        marginBottom: 5,
-                                                                                        paddingHorizontal: 10
-                                                                                    }}
-                                                                                    value={item.content}
-                                                                                    onChangeText={(text) => {
-                                                                                        const updatedProblems = [...problems]
-                                                                                        updatedProblems[index].data[ind2][index2].content = text
-                                                                                        setProblems(updatedProblems)
-                                                                                        props.setProblems(updatedProblems)
-                                                                                    }}
-                                                                                />
-                                                                                <TouchableOpacity
-                                                                                    style={{
-                                                                                        backgroundColor: 'rgba(0,0,0,0)',
-                                                                                        paddingTop: 20, paddingLeft: 5
-                                                                                    }}
-                                                                                    onPress={() => {
-                                                                                        const updatedProblems = [...problems];
-                                                                                        updatedProblems[index].data[ind2].splice(index2, 1);
-                                                                                        const newProb = updatedProblems[index].data.filter((group: any, i: any) => {
-                                                                                            if (group.length === 0) {
-                                                                                                updatedProblems[index].headers.splice(i, 1)
-                                                                                            }
-                                                                                            return group.length
-                                                                                        })
-                                                                                        updatedProblems[index].data = newProb
-                                                                                        setProblems(
-                                                                                            updatedProblems
-                                                                                        );
-                                                                                        props.setProblems(updatedProblems)
+                                                                                        display: "flex",
+                                                                                        justifyContent: "space-around",
+                                                                                        alignItems: 'center'
                                                                                     }}
                                                                                 >
-                                                                                    <Ionicons name='trash-outline' color='#797979' size={15} />
-                                                                                </TouchableOpacity>
+                                                                                    {/* <TextInput
+                                                                                        style={{
+                                                                                            width: 150,
+                                                                                            borderColor: '#e8e8e8',
+                                                                                            borderBottomWidth: 1,
+                                                                                            fontSize: 14,
+                                                                                            paddingTop: 13,
+                                                                                            paddingBottom: 13,
+                                                                                            marginTop: 0,
+                                                                                            marginBottom: 5,
+                                                                                            paddingHorizontal: 10
+                                                                                        }}
+                                                                                        multiline={true}
+                                                                                        value={item.content}
+                                                                                        onChangeText={(text) => {
+                                                                                            const updatedProblems = [...problems]
+                                                                                            updatedProblems[index].dragDropData[ind2][index2].content = text
+                                                                                            setProblems(updatedProblems)
+                                                                                            props.setProblems(updatedProblems)
+                                                                                        }}
+                                                                                    /> */}
+                                                                                    <TextareaAutosize
+                                                                                        style={{
+                                                                                            width: 150,
+                                                                                            borderBottom: '1px solid #e8e8e8',
+                                                                                            fontSize: 14,
+                                                                                            paddingTop: 13,
+                                                                                            paddingBottom: 13,
+                                                                                            marginTop: 0,
+                                                                                            padding: '10px',
+                                                                                            marginRight: 5
+                                                                                        }}
+                                                                                        value={item.content}
+                                                                                        placeholder={'Label'}
+                                                                                        onChange={(e: any) => {
+                                                                                            const updatedProblems = [...problems]
+                                                                                            updatedProblems[index].dragDropData[ind2][index2].content = e.target.value
+                                                                                            setProblems(updatedProblems)
+                                                                                            props.setProblems(updatedProblems)
+                                                                                        }}
+                                                                                        minRows={1}
+                                                                                    />
+                                                                                    <TouchableOpacity
+                                                                                        style={{
+                                                                                            backgroundColor: 'rgba(0,0,0,0)',
+                                                                                            paddingLeft: 5,
+                                                                                            paddingTop: 5
+                                                                                        }}
+                                                                                        onPress={() => {
+                                                                                            const updatedProblems = [...problems];
+                                                                                            updatedProblems[index].dragDropData[ind2].splice(index2, 1);
+                                                                                            // const newProb = updatedProblems[index].dragDropData.filter((group: any, i: any) => {
+                                                                                            //     if (group.length === 0) {
+                                                                                            //         updatedProblems[index].headers.splice(i, 1)
+                                                                                            //     }
+                                                                                            //     return group.length
+                                                                                            // })
+                                                                                            // updatedProblems[index].dragDropData = updatedProblems
+                                                                                            setProblems(
+                                                                                                updatedProblems
+                                                                                            );
+                                                                                            props.setProblems(updatedProblems)
+                                                                                        }}
+                                                                                    >
+                                                                                        <Ionicons name='remove-circle-outline' color='#F94144' size={15} />
+                                                                                    </TouchableOpacity>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))}
-                                                            {provided.placeholder}
-                                                        </div>
-                                                    )}
-                                                </Droppable>
-                                            ))}
-                                        </DragDropContext>
+                                                                        )}
+                                                                    </Draggable>
+                                                                ))}
+                                                                {provided.placeholder}
+                                                            </div>
+                                                        )}
+                                                    </Droppable>
+                                                ))}
+                                            </DragDropContext>
+                                        </div>
                                     </div>
+
                                 </div>
                                 : null
                         }

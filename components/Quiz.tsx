@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback, useRef, createRef } from 'react';
 import { StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Dimensions, Switch, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import lodash from 'lodash';
+import lodash, { update } from 'lodash';
 import * as ImagePicker from 'expo-image-picker';
 
 // COMPONENT
@@ -48,6 +48,10 @@ import {
 } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
+
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+import ImageMarker from "react-image-marker"
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems, setProblems] = useState<any[]>(props.problems.slice());
@@ -208,6 +212,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     solutionInit.push({
                         selected: arr
                     });
+                } else if (problem.questionType === 'dragdrop') {
+                    const arr: any = [];
+                    problem.dragDropHeaders.map((i: any) => {
+                        arr.push([]);
+                    });
+                    solutionInit.push({
+                        dragDropChoices: arr
+                    })
+                } else if (problem.questionType === 'hotspot') {
+                    solutionInit.push({
+                        hotspotSelection: []
+                    })
                 } else {
                     solutionInit.push({
                         response: ''
@@ -882,6 +898,66 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         [showFormulas, problemRefs, responseEquations, solutions]
     );
 
+    // Web drag and drop
+    /**
+    * @description Moves an item from one list to another list.
+    */
+     const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
+        const sourceClone = Array.from(source);
+        console.log("Source clone", sourceClone)
+
+        const destClone = Array.from(destination);
+        console.log("Destination clone", destClone)
+
+        const [removed] = sourceClone.splice(droppableSource.index, 1);
+        console.log("Removed", removed)
+
+        destClone.splice(droppableDestination.index, 0, removed);
+        console.log()
+
+
+        const result: any = {};
+        result[droppableSource.droppableId] = sourceClone;
+        result[droppableDestination.droppableId] = destClone;
+
+        console.log("Result", result)
+
+        return result;
+    };
+    
+    const grid = 8;
+
+    const getItemStyle = (isDragging: any, draggableStyle: any) => ({
+        // some basic styles to make the items look a bit nicer
+        userSelect: "none",
+        padding: 12,
+        margin: `0 0 ${grid}px 0`,
+
+        // change background colour if dragging
+        background: "#fff",
+
+        // styles we need to apply on draggables
+        ...draggableStyle,
+        // height: 25
+        marginBottom: 15,
+        top: draggableStyle.top,
+        borderRadius: 10,
+    });
+    const getListStyle = (isDraggingOver: any) => ({
+        background: "#f2f2f2",
+        padding: 15,
+        width: 200,
+        minWidth: 200,
+        margin: 15
+    });
+
+    const reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
     const handleVideoImport = useCallback(
         async (files: any, problemIndex: number) => {
             const res = await handleFileUploadEditor(true, files.item(0), props.userId);
@@ -1147,6 +1223,27 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     };
 
     /**
+     * @description Shuffle Items for drag and drop
+     */
+     function shuffleArray(array: any[]) {
+        let currentIndex = array.length,  randomIndex;
+      
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+      
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      
+        return array;
+    }
+
+    /**
      * @description Select MCQ
      */
     const selectMCQOption = (problem: any, problemIndex: number, optionIndex: number) => {
@@ -1367,6 +1464,61 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 let url = '';
                 let content = '';
                 let type = '';
+
+                let dndOptions: any[] = [];
+
+                if (problem.questionType === 'dragdrop' && props.isOwner) {
+                    problem.dragDropData.map((group: any) => {
+                        group.map((label: any) => {
+                            dndOptions.push(label.content)
+                        })
+                    })
+                } else if (problem.questionType === 'dragdrop' && !props.isOwner) {
+                    let allOptions: any[] = []
+
+                    problem.dragDropData.map((group: any[]) => {
+                        group.map((label: any) => {
+                            allOptions.push(label)
+                        })
+                    })
+
+                    // 2D array
+                    const solutionChoices: any[][] = []
+
+                    // array
+                    const usedOptions: any[] = []
+
+                    console.log('Solutions[problemIndex]', solutions[problemIndex])
+                    
+                    solutions[problemIndex].dragDropChoices.map((selections: any[]) => {
+                        let groupOptions: any[] = []
+                        selections.map((label: any) => {
+                            groupOptions.push(label)
+                            usedOptions.push(label)
+                        })
+                        solutionChoices.push(groupOptions)
+                    })
+
+                    allOptions = allOptions.filter((label: any) => {
+                        const used = usedOptions.find((val: any) => {
+                            return val.id === label.id
+                        })
+
+                        if (used && used.id) {
+                            return false
+                        }
+                        return true
+                    })
+
+                    allOptions = shuffleArray(allOptions)
+
+                    dndOptions = [allOptions, ...solutionChoices]
+
+                }
+
+                console.log("DragDropOptions", dndOptions)
+
+                const dragDropOptions = (dndOptions)
 
                 if (audioVideoQuestion) {
                     const parse = JSON.parse(problem.question);
@@ -1899,6 +2051,311 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     </View>
                                 );
                             })}
+                        
+                        {
+                            problem.questionType === 'hotspot' && props.isOwner ?
+                            <View style={{
+                                width: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                            }}>
+                                <View style={{
+                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                }}>
+                                    <ImageMarker
+                                        src={problem.imgUrl}
+                                        markers={problem.hotspots.map((spot: any) => {
+                                            return { top: spot.y, left: spot.x }
+                                        })}
+                                        onAddMarker={(marker: any) => { 
+                                           return;
+                                        }}
+                                        markerComponent={(p: any) => <TouchableOpacity disabled={true} style={{
+                                            backgroundColor: '#fff',
+                                            height: 25, width: 25, borderColor: '#000',
+                                            borderRadius: 12.5
+                                        }}
+                                            onPress={() => {
+                                                return;
+                                            }}
+                                        >
+                                            <Text style={{
+                                                color: '#000', lineHeight: 25, textAlign: 'center'
+                                            }}>
+                                                {p.itemNumber}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        }
+                                    />
+                                </View>
+                            </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'hotspot' && !props.isOwner ?
+                            <View style={{
+                                width: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                            }}>
+                                <View style={{
+                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                }}>
+                                    <ImageMarker
+                                        src={problem.imgUrl}
+                                        markers={solutions[problemIndex].hotspotSelection.map((spot: any) => {
+                                            return { top: spot.y, left: spot.x }
+                                        })}
+                                        onAddMarker={(marker: any) => { 
+                                            const updatedSolution = [...solutions];
+                                            updatedSolution[problemIndex].hotspotSelection = [{ x: marker.left, y: marker.top }];
+                                            setSolutions(updatedSolution);
+                                            props.setSolutions(updatedSolution);
+                                        }}
+                                        markerComponent={(p: any) => <TouchableOpacity style={{
+                                            backgroundColor: '#ff0000',
+                                            height: 20, width: 20, borderColor: '#000',
+                                            borderRadius: 12.5
+                                        }}
+                                            onPress={() => {
+                                                const updatedSolution = [...solutions];
+                                                updatedSolution[problemIndex].hotspotSelection = []
+                                                setSolutions(updatedSolution);
+                                                props.setSolutions(updatedSolution);
+                                            }}
+                                        >
+                                            <Text style={{
+                                                color: '#000', lineHeight: 25, textAlign: 'center'
+                                            }}>
+                                                {/* {p.itemNumber} */}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        }
+                                    />
+                                </View>
+                            </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'dragdrop' && props.isOwner && editQuestionNumber === (index + 1) ? 
+                                <div style={{
+                                    display: 'flex', flexDirection: 'column', width: '100%',
+                                    marginBottom: 20
+                                }}>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        overflow: 'scroll',
+                                        marginTop: 50
+                                    }}>
+                                        {problem.dragDropData.map((group: any[], groupIndex: number) => {
+                                            return <View style={{ width: 200, marginRight: 20, justifyContent: 'center', padding: 20, backgroundColor: '#f2f2f2', }}>
+                                                <Text style={{
+                                                    fontSize: 16,
+                                                    width: '100%',
+                                                    textAlign: 'center',
+                                                    marginBottom: 20,    
+                                                    fontFamily: 'Inter'           
+                                                }}>
+                                                    {problem.dragDropHeaders[groupIndex]}
+                                                </Text>
+                                                {
+                                                    group.map((label: any) => {
+                                                        return <View style={{
+                                                            width: 160,
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            padding: 12,
+                                                            marginRight: 20,
+                                                            marginBottom: 20
+                                                        }}>
+                                                            <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
+                                                            <Text
+                                                                style={{
+                                                                    width: '100%',
+                                                                    marginLeft: 5
+                                                                }}
+                                                            >
+                                                                {label.content}
+                                                            </Text>
+                                                        </View>
+                                                    })
+                                                }
+                                            </View>
+                                        })}
+                                    </div>
+                                </div>
+                                : null
+                        }
+
+                        {                   
+                            problem.questionType === 'dragdrop' && props.isOwner && editQuestionNumber !== (index + 1) ?
+                                <div style={{
+                                    display: 'flex', flexDirection: 'column', width: '100%',
+                                    marginBottom: 20
+                                }}>
+                                    <div style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        background: '#f2f2f2',
+                                        padding: 20,
+                                    }}>
+                                        {
+                                            dragDropOptions.map((label: string) => {
+                                                return <View style={{
+                                                    width: 150,
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    padding: 12,
+                                                    marginRight: 20,
+                                                    marginBottom: 20
+                                                }}>
+                                                    <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
+                                                    <Text
+                                                        style={{
+                                                            width: '100%',
+                                                            marginLeft: 5
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </Text>
+                                                </View>
+                                            })
+                                        }
+                                    </div>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        overflow: 'scroll',
+                                        marginTop: 50
+                                    }}>
+                                        {problem.dragDropHeaders.map((header: string) => {
+                                            return <View style={{ width: 200, marginRight: 20, justifyContent: 'center', padding: 20, backgroundColor: '#f2f2f2', }}>
+                                                <Text style={{
+                                                    fontSize: 16,
+                                                    width: '100%',
+                                                    textAlign: 'center',
+                                                    marginBottom: 20,    
+                                                    fontFamily: 'Inter'           
+                                                }}>
+                                                    {header}
+                                                </Text>
+                                            </View>
+                                        })}
+                                    </div>
+                                </div>
+                                : null
+                        }
+                        {
+                            problem.questionType === 'dragdrop' && !props.isOwner ? (
+                                <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
+                                    <DragDropContext
+                                        onDragEnd={(result: any) => {
+
+                                            const { source, destination } = result;
+
+                                            // dropped outside the list
+                                            if (!destination) {
+                                                return;
+                                            }
+                                            const sInd = +source.droppableId;
+                                            const dInd = +destination.droppableId;
+
+                                            console.log("Source ind", sInd)
+                                            console.log("Destination ind", dInd)
+
+                                            if (sInd === dInd) {
+
+                                                if (dInd !== 0) {
+                                                    const updatedSolution = [...solutions];
+                                                    const items = reorder(dndOptions[sInd], source.index, destination.index);
+                                                    const newState = [...dndOptions]
+                                                    newState[sInd] = items;
+                                                    updatedSolution[index].dragDropChoices = newState.slice(1, dndOptions.length);
+                                                    setSolutions(updatedSolution);
+                                                    console.log("Updated solutions", updatedSolution)
+                                                    props.setSolutions(updatedSolution);
+                                                }
+
+                                            } else {
+
+                                                const updatedSolution = [...solutions];
+                                                const result = move(dndOptions[sInd], dndOptions[dInd], source, destination);
+                                                const newState = [...dndOptions]
+                                                newState[sInd] = result[sInd];
+                                                newState[dInd] = result[dInd];
+                                                updatedSolution[index].dragDropChoices = newState.slice(1, dndOptions.length);
+                                                setSolutions(updatedSolution);
+                                                console.log("Updated solutions", updatedSolution)
+                                                props.setSolutions(updatedSolution);
+                                            }
+
+                                        }}>
+                                            {
+                                                dndOptions.map((el: any, ind2: any) => (
+                                                    <Droppable key={ind2} droppableId={`${ind2}`}>
+                                                        {(provided: any, snapshot: any) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                style={getListStyle(snapshot.isDraggingOver)}
+                                                                {...provided.droppableProps}
+                                                            >
+                                                                <div style={{
+                                                                    marginBottom: 20
+                                                                }}>
+                                                                    {ind2 === 0 ? null : <Text style={{
+                                                                        fontSize: 16,
+                                                                        width: '100%',
+                                                                        textAlign: 'center',
+                                                                        marginBottom: 20,    
+                                                                        fontFamily: 'Inter'           
+                                                                    }}>
+                                                                        {problem.dragDropHeaders[ind2 - 1]}
+                                                                    </Text>}
+
+                                                                </div>
+                                                                {el.map((item: any, index2: any) => (
+                                                                    <Draggable
+                                                                        key={item.id}
+                                                                        draggableId={item.id}
+                                                                        index={index2}
+                                                                    >
+                                                                        {(provided: any, snapshot: any) => (
+                                                                            <div
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                                style={getItemStyle(
+                                                                                    snapshot.isDragging,
+                                                                                    provided.draggableProps.style
+                                                                                )}
+                                                                            >
+                                                                                <div style={{
+                                                                                    marginBottom: 20
+                                                                                }}>
+                                                                                    <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
+                                                                                    <Text
+                                                                                        style={{
+                                                                                            width: '100%',
+                                                                                            marginLeft: 5
+                                                                                        }}
+                                                                                    >
+                                                                                        {item.content}
+                                                                                    </Text>
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                    </Draggable>
+                                                                ))}
+                                                                {provided.placeholder}
+                                                            </div>
+                                                        )}
+                                                    </Droppable>
+                                            ))}
+                                                    
+                                        </DragDropContext>
+                                </div>) : null
+                            
+                        }
                         {problem.questionType === 'freeResponse' ? (
                             <View
                                 style={{

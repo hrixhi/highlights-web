@@ -2724,7 +2724,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}>
                                 <Ionicons
                                     name="help-circle-outline"
-                                    size={18}
+                                    size={19}
                                     color={props.option === 'Settings' && props.showHelp ? '#4794ff' : '#f2f2f2'}
                                 />
                             </Text>
@@ -2967,10 +2967,10 @@ const styleObject: any = () =>
             marginBottom: 1
         },
         allGrayFill1: {
+            fontSize: 11,
             color: '#4794ff',
             height: 20,
             lineHeight: 20,
-            color: '#006AFF',
             paddingHorizontal: 8,
             fontFamily: 'inter',
             textAlign: 'center',

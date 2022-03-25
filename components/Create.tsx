@@ -542,20 +542,34 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
 
-            if (problem.questionType === 'dragdrop') {
-                problem.data.filter((col: any) => {
-                    // if(col.length === 0) {
-                    return col.length
-                    //     Alert(eachOptionOneCorrectAlert);
-                    //     setIsSubmitting(false);
-                    //     error = true;
-                    // }
-                })
-                if (problem.data.length === 0) {
-                    Alert(noItemsAlert);
-                    setIsSubmitting(false);
-                    error = true;
-                }
+
+
+            if ((problem.questionType === 'dragdrop')) {
+    
+                problem.dragDropHeaders.map((header: string) => {
+                    if (!header) {
+                        Alert('Group headers cannot be empty in Drag and Drop questions.')
+                        error = true
+                    }
+                });
+    
+
+                problem.dragDropData.map((items: any[]) => {
+
+                    if (items.length === 0) {
+                        Alert('Each Group must have one item in Drag and Drop questions.')
+                        error = true
+                    }
+    
+                    items.map((label: any) => {
+                        if (label.content === '') {
+                            Alert('Each Group must have one item in Drag and Drop questions.')
+                            error = true
+                        }
+                    })
+                });
+
+    
             }
 
             if (problem.questionType === 'hotspot') {
@@ -1153,8 +1167,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         textAlign: 'center',
                                         lineHeight: 28,
-                                        color: '#006AFF',
-                                        borderColor: '#006AFF',
+                                        color: '#4794ff',
+                                        borderColor: '#4794ff',
                                         borderWidth: 1,
                                         marginTop: 2,
                                         fontSize: 12,

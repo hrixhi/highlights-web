@@ -2,7 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 const mime = require('mime-types');
 import axios from 'axios';
 
-export const handleFile = async (audioVideoOnly: boolean, userId: string) => {
+export const handleFile = async (audioVideoOnly: boolean, userId: string, imagesOnly?: boolean) => {
     // e.preventDefault();
     const res: any = await DocumentPicker.getDocumentAsync();
 
@@ -37,8 +37,13 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string) => {
         type = 'mp3';
     }
 
-    if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
+    if (!imagesOnly && (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
+        return { type: '', url: '' };
+    }
+
+    if (imagesOnly && (type !== 'png' && type !== 'jpeg' && type !== 'jpg' && type !== 'gif')) {
+        alert('Upload Images only.');
         return { type: '', url: '' };
     }
 
