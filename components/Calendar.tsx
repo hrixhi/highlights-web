@@ -1703,7 +1703,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 width: tab === 'Add' ? 0 : 2,
                                                 height: tab === 'Add' ? 0 : 2
                                             },
-                                            shadowOpacity: 0,
+                                            shadowOpacity: 0.05,
                                             shadowRadius: tab === 'Add' ? 0 : 10,
                                             zIndex: 500000
                                         }}
@@ -1716,7 +1716,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 themeVariant="light"
                                                 onEventClick={onSelectEvent}
                                                 renderEventContent={renderEventContent}
-                                                noEventsText="Click + to schedule a new event or meeting. Submission tasks will be automatically listed as per their due dates."
+                                                noEventsText="Click + to schedule a new event or meeting."
                                             />
                                         ) : tab === tabs[1] ? (
                                             <Eventcalendar
