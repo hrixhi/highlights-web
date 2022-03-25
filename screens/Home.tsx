@@ -1257,7 +1257,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             lineHeight: 34,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#4794ff',
+                                            backgroundColor: '#006AFF',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -1287,7 +1287,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            color: '#4794ff'
+                                            color: '#006AFF'
                                         }}
                                     >
                                         Back to Sign In
@@ -1414,7 +1414,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
-                                                            color: '#4794ff'
+                                                            color: '#006AFF'
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -1468,7 +1468,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 34,
                                                 color: 'white',
                                                 fontSize: 12,
-                                                backgroundColor: '#4794ff',
+                                                backgroundColor: '#006AFF',
                                                 paddingHorizontal: 20,
                                                 fontFamily: 'inter',
                                                 height: 35,
@@ -1502,7 +1502,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
-                                                        color: '#4794ff'
+                                                        color: '#006AFF'
                                                     }}>
                                                     Sign up now
                                                 </Text>
@@ -1561,7 +1561,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#4794ff'
+                                                    color: '#006AFF'
                                                 }}
                                             >
                                                 Back to Sign In
@@ -1636,7 +1636,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             width: 58,
                             height: 58,
                             borderRadius: 29,
-                            backgroundColor: '#4794ff',
+                            backgroundColor: '#006AFF',
                             borderColor: '#f2f2f2',
                             borderWidth: 0,
                             shadowColor: '#000',
@@ -2020,7 +2020,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             lineHeight: 30,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#4794ff',
+                                            backgroundColor: '#006AFF',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 30,
@@ -2209,7 +2209,7 @@ const styles = (channelId: string) =>
             color: '#fff',
             paddingHorizontal: 12,
             borderRadius: 12,
-            backgroundColor: '#4794ff',
+            backgroundColor: '#006AFF',
             lineHeight: 25,
             height: 25,
             fontFamily: 'inter',

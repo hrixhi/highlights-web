@@ -635,6 +635,27 @@ export const startInstantMeeting = gql`
         }
     }
 `;
+export const startInstantMeetingInbox = gql`
+    mutation(
+        $userId: String!
+        $start: String!
+        $end: String!
+        $users: [String!]!
+        $groupId: String
+        $topic: String
+    ) {
+        message {
+            startInstantMeetingInbox(
+                userId: $userId
+                start: $start
+                end: $end
+                users: $users
+                topic: $topic
+                groupId: $groupId
+            )
+        }
+    }
+`;
 export const removeZoom = gql`
     mutation($userId: String!) {
         user {

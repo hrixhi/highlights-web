@@ -768,7 +768,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
-                                color: value._id === props.cue._id ? '#4794ff' : '#000000'
+                                color: value._id === props.cue._id ? '#006AFF' : '#000000'
                             }}
                         >
                             {title}
@@ -1061,7 +1061,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 20,
                                                     flex: 1,
                                                     marginTop: 5,
-                                                    color: cue._id === props.cue._id ? '#4794ff' : '#000000'
+                                                    color: cue._id === props.cue._id ? '#006AFF' : '#000000'
                                                 }}
                                             >
                                                 {title}
@@ -1198,7 +1198,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             marginLeft: 'auto'
                                                         }}
                                                     >
-                                                        <Text style={{ color: '#4794ff', textAlign: 'center' }}>
+                                                        <Text style={{ color: '#006AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -1416,7 +1416,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             marginLeft: 'auto'
                                                         }}
                                                     >
-                                                        <Text style={{ color: '#4794ff', textAlign: 'center' }}>
+                                                        <Text style={{ color: '#006AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -2465,7 +2465,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
         borderRadius: 12,
-        backgroundColor: '#4794ff',
+        backgroundColor: '#006AFF',
         lineHeight: 24,
         height: 25,
         fontFamily: 'inter',

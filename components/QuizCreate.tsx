@@ -669,7 +669,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View style={{ paddingTop: 35, paddingLeft: 20 }}>
                         <Text
                             style={{
-                                color: '#4794ff',
+                                color: '#006AFF',
                                 fontFamily: 'Overpass',
                                 fontSize: 10
                             }}
@@ -697,10 +697,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 >
                     <Text
                         style={{
-                            color: '#4794ff',
+                            color: '#006AFF',
                             borderWidth: 1,
                             borderRadius: 15,
-                            borderColor: '#4794ff',
+                            borderColor: '#006AFF',
                             backgroundColor: '#fff',
                             fontSize: 12,
                             textAlign: "center",
@@ -867,7 +867,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const getItemStyle = (isDragging: any, draggableStyle: any) => ({
         // some basic styles to make the items look a bit nicer
         userSelect: "none",
-        padding: 12,
+        padding: 16,
         margin: `0 0 ${grid}px 0`,
 
         // change background colour if dragging
@@ -975,7 +975,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         props.setProblems(updateProblems)
                                                     }}>
                                                         <Text style={{
-                                                            color: '#4794ff',
+                                                            color: '#006AFF',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10,
                                                         }}> Clear</Text>
@@ -1176,7 +1176,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                         <Ionicons
                                                             name='trash-outline'
-                                                            color={"#4794ff"}
+                                                            color={"#006AFF"}
                                                             onPress={() => {
                                                                 Alert(`Delete Question ${editQuestionNumber} ?`, "", [
                                                                     {
@@ -1202,7 +1202,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         />
                                                     </View> : <Ionicons
                                                         name='cog-outline'
-                                                        color={'#4794ff'}
+                                                        color={'#006AFF'}
                                                         style={{
                                                             // paddingTop: 4
                                                         }}
@@ -1279,10 +1279,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     >
                                         <Text
                                             style={{
-                                                color: '#4794ff',
+                                                color: '#006AFF',
                                                 borderWidth: 1,
                                                 borderRadius: 15,
-                                                borderColor: '#4794ff',
+                                                borderColor: '#006AFF',
                                                 backgroundColor: '#fff',
                                                 fontSize: 12,
                                                 textAlign: "center",
@@ -1478,10 +1478,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             >
                                                 <Text
                                                     style={{
-                                                        color: '#4794ff',
+                                                        color: '#006AFF',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
-                                                        borderColor: '#4794ff',
+                                                        borderColor: '#006AFF',
                                                         backgroundColor: '#fff',
                                                         fontSize: 12,
                                                         textAlign: "center",
@@ -1529,10 +1529,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             >
                                                 <Text
                                                     style={{
-                                                        color: '#4794ff',
+                                                        color: '#006AFF',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
-                                                        borderColor: '#4794ff',
+                                                        borderColor: '#006AFF',
                                                         backgroundColor: '#fff',
                                                         fontSize: 12,
                                                         textAlign: "center",
@@ -1596,28 +1596,29 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 <div style={{
                                                                     marginBottom: 20
                                                                 }}>
-                                                                    <TextareaAutosize
+                                                                    <TextInput
                                                                         style={{
                                                                             width: '90%',
                                                                             maxWidth: '90%',
-                                                                            borderBottom: '1px solid #e8e8e8', 
+                                                                            borderBottomWidth: 1,
+                                                                            borderBottomColor: '#e8e8e8',
                                                                             fontSize: 14,
                                                                             paddingTop: 13,
                                                                             paddingBottom: 13,
                                                                             marginTop: 0,
                                                                             marginBottom: 5,
                                                                             padding: '10px',
-                                                                            background: '#f2f2f2'
+                                                                            backgroundColor: '#f2f2f2'
                                                                         }}
                                                                         value={problem.dragDropHeaders[ind2]}
                                                                         placeholder={'Group ' + (ind2 + 1)}
-                                                                        onChange={(e: any) => {
+                                                                        onChangeText={(val: any) => {
                                                                             const updatedProblems = [...problems]
-                                                                            updatedProblems[index].dragDropHeaders[ind2] = e.target.value
+                                                                            updatedProblems[index].dragDropHeaders[ind2] = val
                                                                             setProblems(updatedProblems)
                                                                             props.setProblems(updatedProblems)
                                                                         }}
-                                                                        minRows={1}
+                                                                        // minRows={1}
                                                                     />
 
                                                                 </div>
@@ -1708,7 +1709,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             props.setProblems(updatedProblems)
                                                                                         }}
                                                                                     >
-                                                                                        <Ionicons name='remove-circle-outline' color='#F94144' size={15} />
+                                                                                        <Ionicons name='trash-outline' color='#1f1f1f' size={15} />
                                                                                     </TouchableOpacity>
                                                                                 </div>
                                                                             </div>
@@ -1917,7 +1918,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     <Text
                                                                         style={{
                                                                             paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                            color: '#4794ff',
+                                                                            color: '#006AFF',
                                                                             fontFamily: 'Overpass',
                                                                             fontSize: 10
                                                                         }}
@@ -1977,10 +1978,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     textAlign: "center",
@@ -2027,7 +2028,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 34,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#4794ff",
+                            backgroundColor: "#006AFF",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",

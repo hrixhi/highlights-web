@@ -461,7 +461,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                 alignItems: 'center'
                                             }}
                                         >
-                                            <Ionicons name="lock-closed" size={18} color="#4794ff" />
+                                            <Ionicons name="lock-closed" size={18} color="#006AFF" />
                                             <Text style={{ paddingLeft: 7, color: '#1f1f1f', paddingTop: 3 }}>
                                                 Single sign-on enabled
                                             </Text>
@@ -494,7 +494,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
-                                                            color: '#4794ff'
+                                                            color: '#006AFF'
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -550,7 +550,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                 lineHeight: 34,
                                                 color: 'white',
                                                 fontSize: 12,
-                                                backgroundColor: '#4794ff',
+                                                backgroundColor: '#006AFF',
                                                 paddingHorizontal: 20,
                                                 fontFamily: 'inter',
                                                 height: 35,
@@ -588,7 +588,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
-                                                        color: '#4794ff'
+                                                        color: '#006AFF'
                                                     }}>
                                                     Sign up now
                                                 </Text>
@@ -647,7 +647,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#4794ff'
+                                                    color: '#006AFF'
                                                 }}
                                             >
                                                 Back to Sign In

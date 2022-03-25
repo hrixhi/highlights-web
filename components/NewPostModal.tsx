@@ -201,7 +201,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             style={{ height: 20 }}
                             trackColor={{
                                 false: '#F8F9FA',
-                                true: '#4794ff'
+                                true: '#006AFF'
                             }}
                             activeThumbColor="white"
                         />

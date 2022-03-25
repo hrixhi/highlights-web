@@ -327,9 +327,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 textAlign: 'center',
                                 lineHeight: 34,
-                                color: '#4794ff',
+                                color: '#006AFF',
                                 fontSize: 12,
-                                borderColor: '#4794ff',
+                                borderColor: '#006AFF',
                                 borderWidth: 1,
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
@@ -524,7 +524,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <Ionicons
                                                                 name="checkmark-outline"
                                                                 size={15}
-                                                                color={'#4794ff'}
+                                                                color={'#006AFF'}
                                                             />
                                                         ) : isOwner ? (
                                                             <Ionicons

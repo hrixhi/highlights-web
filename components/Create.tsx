@@ -1167,8 +1167,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         textAlign: 'center',
                                         lineHeight: 28,
-                                        color: '#4794ff',
-                                        borderColor: '#4794ff',
+                                        color: '#006AFF',
+                                        borderColor: '#006AFF',
                                         borderWidth: 1,
                                         marginTop: 2,
                                         fontSize: 12,
@@ -1200,8 +1200,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 28,
-                                            color: '#4794ff',
-                                            borderColor: '#4794ff',
+                                            color: '#006AFF',
+                                            borderColor: '#006AFF',
                                             borderWidth: 1,
                                             marginTop: 2,
                                             fontSize: 12,
@@ -1241,8 +1241,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 28,
-                                            color: '#4794ff',
-                                            borderColor: '#4794ff',
+                                            color: '#006AFF',
+                                            borderColor: '#006AFF',
                                             borderWidth: 1,
                                             marginTop: 2,
                                             fontSize: 12,
@@ -1290,7 +1290,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             textAlign: 'center',
                                             lineHeight: 28,
                                             color: '#fff',
-                                            backgroundColor: '#4794ff',
+                                            backgroundColor: '#006AFF',
                                             marginTop: 2,
                                             fontSize: 12,
                                             borderRadius: 15,
@@ -1466,7 +1466,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#4794ff'
+                                                                true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1560,7 +1560,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#4794ff'
+                                                                true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1715,7 +1715,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#4794ff'
+                                                                    true: '#006AFF'
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -1810,7 +1810,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#4794ff'
+                                                                    true: '#006AFF'
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -1918,7 +1918,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#4794ff'
+                                                                true: '#006AFF'
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -2200,7 +2200,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#f2f2f2',
-                                                    true: '#4794ff'
+                                                    true: '#006AFF'
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -2244,7 +2244,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f2f2f2',
-                                                            true: '#4794ff'
+                                                            true: '#006AFF'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2388,7 +2388,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f2f2f2',
-                                                            true: '#4794ff'
+                                                            true: '#006AFF'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2489,7 +2489,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#4794ff'
+                                                        true: '#006AFF'
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2641,7 +2641,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#4794ff'
+                                                        true: '#006AFF'
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2699,7 +2699,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             fontSize: 12,
                                                             lineHeight: 34,
                                                             fontFamily: 'inter',
-                                                            color: '#4794ff'
+                                                            color: '#006AFF'
                                                         }}
                                                     >
                                                         Clear
@@ -3026,7 +3026,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 34,
                                                     color: 'white',
                                                     fontSize: 12,
-                                                    backgroundColor: '#4794ff',
+                                                    backgroundColor: '#006AFF',
                                                     borderRadius: 15,
                                                     paddingHorizontal: 20,
                                                     fontFamily: 'inter',
@@ -3044,7 +3044,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 34,
                                                     color: 'white',
                                                     fontSize: 12,
-                                                    backgroundColor: '#4794ff',
+                                                    backgroundColor: '#006AFF',
                                                     borderRadius: 15,
                                                     paddingHorizontal: 20,
                                                     fontFamily: 'inter',

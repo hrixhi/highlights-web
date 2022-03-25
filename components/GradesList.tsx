@@ -172,9 +172,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 34,
-                            color: '#4794ff',
+                            color: '#006AFF',
                             fontSize: 12,
-                            borderColor: '#4794ff',
+                            borderColor: '#006AFF',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 35,

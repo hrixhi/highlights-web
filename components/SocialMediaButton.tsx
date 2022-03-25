@@ -54,9 +54,9 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 style={{
                     textAlign: 'center',
                     lineHeight: 34,
-                    color: '#4794ff',
+                    color: '#006AFF',
                     fontSize: 12,
-                    borderColor: '#4794ff',
+                    borderColor: '#006AFF',
                     borderWidth: 1,
                     paddingHorizontal: 20,
                     fontFamily: 'inter',

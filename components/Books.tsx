@@ -179,7 +179,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             lineHeight: 34,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#4794ff',
+                            backgroundColor: '#006AFF',
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
@@ -346,7 +346,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }}
                     >
                         <Text>
-                            <Ionicons name="arrow-back-circle-outline" size={30} color="#4794ff" />
+                            <Ionicons name="arrow-back-circle-outline" size={30} color="#006AFF" />
                         </Text>
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
@@ -365,7 +365,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }}
                     >
                         <Text>
-                            <Ionicons name="arrow-forward-circle-outline" size={30} color="#4794ff" />
+                            <Ionicons name="arrow-forward-circle-outline" size={30} color="#006AFF" />
                         </Text>
                     </TouchableOpacity>
                 </View>

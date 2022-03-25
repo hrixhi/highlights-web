@@ -14,7 +14,8 @@ import {
     markMessagesAsRead,
     sendMessage,
     updateGroup,
-    getGroup
+    getGroup,
+    startInstantMeetingInbox
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -26,6 +27,9 @@ import { Select } from '@mobiscroll/react';
 import { TextInput } from './CustomTextInput';
 import ReactPlayer from 'react-player';
 import { GiftedChat, Bubble, MessageText, Message } from 'react-native-gifted-chat';
+import { Popup, Datepicker } from '@mobiscroll/react5';
+import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -56,6 +60,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [newGroupImage, setNewGroupImage] = useState(undefined);
     const [creatingMessage, setCreatingMessage] = useState(false);
     const [selected, setSelected] = useState<any[]>([]);
+    const [showInstantMeeting, setShowInstantMeeting] = useState(false);
+    const [instantMeetingTitle, setInstantMeetingTitle] = useState<any>('');
+    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
+    const [meetingProvider, setMeetingProvider] = useState('');
+    const [instantMeetingStart, setInstantMeetingStart] = useState<any>('');
+    const [instantMeetingEnd, setInstantMeetingEnd] = useState<any>('');
+
     const width = Dimensions.get('window').width;
     let options = users.map((sub: any) => {
         return {
@@ -122,6 +133,21 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     }, [chats]);
 
     /**
+     * @description Fetch meeting provider for org
+     */
+     useEffect(() => {
+        (async () => {
+            const org = await AsyncStorage.getItem('school');
+
+            if (org) {
+                const school = JSON.parse(org);
+
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+            }
+        })();
+    }, []);
+
+    /**
      * @description Loads all the users to show in Directory
      */
     const loadUsers = useCallback(async () => {
@@ -137,6 +163,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             } else {
                 setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
             }
+
+            if (user.zoomInfo) {
+                setUserZoomInfo(user.zoomInfo);
+            }
+
         } else {
             return;
         }
@@ -253,13 +284,37 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     audio = url;
                                 } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
                                     video = url;
-                                } else {
+                                } else if (type === 'meeting_link') {
                                     text = (
-                                        <TouchableOpacity style={{ backgroundColor: '#4794ff' }}>
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
                                             <Text
                                                 style={{
                                                     textDecorationLine: 'underline',
-                                                    backgroundColor: '#4794ff',
+                                                    backgroundColor: '#006AFF',
+                                                    color: '#fff'
+                                                }}
+                                                onPress={() => {
+                                                    if (
+                                                        Platform.OS === 'web' ||
+                                                        Platform.OS === 'macos' ||
+                                                        Platform.OS === 'windows'
+                                                    ) {
+                                                        window.open(url, '_blank');
+                                                    } else {
+                                                        Linking.openURL(url);
+                                                    }
+                                                }}>
+                                                {obj.title}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                } else {
+                                    text = (
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
+                                            <Text
+                                                style={{
+                                                    textDecorationLine: 'underline',
+                                                    backgroundColor: '#006AFF',
                                                     color: '#fff'
                                                 }}
                                                 onPress={() => {
@@ -543,13 +598,37 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     audio = url;
                                 } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
                                     video = url;
-                                } else {
+                                } else if (type === 'meeting_link') {
                                     text = (
-                                        <TouchableOpacity style={{ backgroundColor: '#4794ff' }}>
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
                                             <Text
                                                 style={{
                                                     textDecorationLine: 'underline',
-                                                    backgroundColor: '#4794ff',
+                                                    backgroundColor: '#006AFF',
+                                                    color: '#fff'
+                                                }}
+                                                onPress={() => {
+                                                    if (
+                                                        Platform.OS === 'web' ||
+                                                        Platform.OS === 'macos' ||
+                                                        Platform.OS === 'windows'
+                                                    ) {
+                                                        window.open(url, '_blank');
+                                                    } else {
+                                                        Linking.openURL(url);
+                                                    }
+                                                }}>
+                                                {obj.title}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                } else {
+                                    text = (
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
+                                            <Text
+                                                style={{
+                                                    textDecorationLine: 'underline',
+                                                    backgroundColor: '#006AFF',
                                                     color: '#fff'
                                                 }}
                                                 onPress={() => {
@@ -689,13 +768,37 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     audio = url;
                                 } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
                                     video = url;
-                                } else {
+                                } else if (type === 'meeting_link') {
                                     text = (
-                                        <TouchableOpacity style={{ backgroundColor: '#4794ff' }}>
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
                                             <Text
                                                 style={{
                                                     textDecorationLine: 'underline',
-                                                    backgroundColor: '#4794ff',
+                                                    backgroundColor: '#006AFF',
+                                                    color: '#fff'
+                                                }}
+                                                onPress={() => {
+                                                    if (
+                                                        Platform.OS === 'web' ||
+                                                        Platform.OS === 'macos' ||
+                                                        Platform.OS === 'windows'
+                                                    ) {
+                                                        window.open(url, '_blank');
+                                                    } else {
+                                                        Linking.openURL(url);
+                                                    }
+                                                }}>
+                                                {obj.title}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                } else {
+                                    text = (
+                                        <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
+                                            <Text
+                                                style={{
+                                                    textDecorationLine: 'underline',
+                                                    backgroundColor: '#006AFF',
                                                     color: '#fff'
                                                 }}
                                                 onPress={() => {
@@ -758,7 +861,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 {...props}
                 wrapperStyle={{
                     right: {
-                        backgroundColor: '#4794ff'
+                        backgroundColor: '#006AFF'
                     }
                 }}
             />
@@ -834,6 +937,229 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         else if (currentDate.isSame(date, 'year')) return date.format('MMM DD');
         else return date.format('MM/DD/YYYY');
     }
+
+    const startInstantMeeting = useCallback(() => {
+        if (userZoomInfo || (meetingProvider && meetingProvider !== '')) {
+            const current = new Date();
+            setInstantMeetingStart(current);
+            setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
+            setShowInstantMeeting(true);
+        } else {
+            Alert('You must connect with Zoom to start a meeting.');
+
+            // ZOOM OATH
+
+            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                zoomRedirectUri
+            )}&state=${userId}`;
+
+            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                Linking.openURL(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+    }, [userZoomInfo, meetingProvider])
+
+    /**
+     * @description Round time to nearest seconds
+     */
+     const roundSeconds = (time: Date) => {
+        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+        time.setSeconds(0, 0);
+        return time;
+    };
+
+    const createInstantMeeting = useCallback(() => {
+        const startDate = new Date();
+        console.log("Instant meeting params", {
+            userId,
+            topic: instantMeetingTitle,
+            start: startDate.toUTCString(),
+            end: instantMeetingEnd.toUTCString(),
+            groupId,
+            users: chatUsers
+        })
+        
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: startInstantMeetingInbox,
+                variables: {
+                    userId,
+                    topic: instantMeetingTitle,
+                    start: startDate.toUTCString(),
+                    end: instantMeetingEnd.toUTCString(),
+                    groupId,
+                    users: chatUsers
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.message.startInstantMeetingInbox !== 'error') {
+                   
+                    setShowInstantMeeting(false);
+                    setInstantMeetingTitle('');
+                    setInstantMeetingStart('');
+                    setInstantMeetingEnd('');
+
+                    window.open(res.data.message.startInstantMeetingInbox, '_blank');
+
+                } else {
+                    Alert('Something went wrong. Try again.');
+                }
+            })
+            .catch(err => {
+                Alert('Something went wrong.');
+            });
+    }, [chatUsers, userId, groupId, instantMeetingTitle, instantMeetingEnd])
+
+    const renderInstantMeetingPopup = () => {
+        return (
+            <Popup
+                isOpen={showInstantMeeting}
+                buttons={[
+                    {
+                        text: 'START',
+                        handler: function(event) {
+                            createInstantMeeting();
+                        }
+                    },
+                    {
+                        text: 'CANCEL',
+                        handler: function(event) {
+                            setShowInstantMeeting(false);
+                            setInstantMeetingTitle('');
+                            setInstantMeetingStart('');
+                            setInstantMeetingEnd('');
+                        }
+                    }
+                ]}
+                theme="ios"
+                themeVariant="light"
+                onClose={() => {
+                    setShowInstantMeeting(false);
+                }}
+                responsive={{
+                    small: {
+                        display: 'bottom'
+                    },
+                    medium: {
+                        // Custom breakpoint
+                        display: 'center'
+                    }
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        paddingHorizontal: Dimensions.get('window').width > 768 ? 25 : 0,
+                        backgroundColor: '#f2f2f7'
+                    }}
+                    className="mbsc-align-center mbsc-padding"
+                >
+                    <ScrollView
+                        showsVerticalScrollIndicator={true}
+                        horizontal={false}
+                        contentContainerStyle={{
+                            width: '100%'
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                paddingHorizontal: 20,
+                                marginVertical: 20,
+                                minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
+                                maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                                backgroundColor: '#f2f2f7'
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 13,
+                                    textTransform: 'uppercase',
+                                    fontFamily: 'inter',
+                                    marginBottom: 20
+                                }}
+                            >
+                                Instant meeting
+                            </Text>
+
+                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
+                                        color: '#000000'
+                                    }}
+                                >
+                                    Topic 
+                                </Text>
+                                <View style={{ marginTop: 10, marginBottom: 10, backgroundColor: '#f2f2f7' }}>
+                                    <TextInput
+                                        style={{ padding: 10, fontSize: 14, backgroundColor: '#ffffff' }}
+                                        value={instantMeetingTitle}
+                                        placeholder={'Optional'}
+                                        onChangeText={val => setInstantMeetingTitle(val)}
+                                        placeholderTextColor={'#1F1F1F'}
+                                        // required={true}
+                                    />
+                                </View>
+                            </View>
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    maxWidth: 400,
+                                    // paddingVertical: 15,
+                                    backgroundColor: '#f2f2f7'
+                                }}
+                            >
+                                <Text  
+                                    style={{
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
+                                        color: '#000000'
+                                    }}>{PreferredLanguageText('end')}</Text>
+                                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                                    <Datepicker
+                                        controls={['date', 'time']}
+                                        touchUi={true}
+                                        theme="ios"
+                                        value={instantMeetingEnd}
+                                        themeVariant="light"
+                                        // inputComponent="input"
+                                        inputProps={{
+                                            placeholder: 'Select end...',
+                                            backgroundColor: 'white'
+                                        }}
+                                        onChange={(event: any) => {
+                                            const date = new Date(event.value);
+                                            const roundOffDate = roundSeconds(date);
+                                            setInstantMeetingEnd(roundOffDate);
+                                        }}
+                                        responsive={{
+                                            xsmall: {
+                                                controls: ['date', 'time'],
+                                                display: 'bottom',
+                                                touchUi: true
+                                            },
+                                            medium: {
+                                                controls: ['date', 'time'],
+                                                display: 'anchored',
+                                                touchUi: false
+                                            }
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                            
+                        </View>
+                    </ScrollView>
+                </View>
+            </Popup>
+        );
+    };
 
     // MAIN RETURN
     return (
@@ -935,7 +1261,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     ) : null}
                                     {/* Show user / group name if you open the chat */}
                                     {showChat ? (
-                                        <TouchableOpacity
+                                        <View style={{
+                                            flex: 1,
+                                            display: 'flex', 
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: '#f2f2f2',
+                                            paddingVertical: 10,
+                                            paddingHorizontal: 10
+                                        }}>
+                                            <TouchableOpacity
                                             disabled={!isChatGroup}
                                             onPress={() => setViewGroup(true)}
                                             style={{
@@ -943,10 +1279,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 alignItems: 'center',
                                                 flex: 1,
                                                 width: '100%',
-                                                paddingVertical: 10,
-                                                borderBottomWidth: 1,
-                                                borderBottomColor: '#f2f2f2',
-                                                paddingHorizontal: 10
                                             }}>
                                             <Image
                                                 style={{
@@ -967,6 +1299,16 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 {chatName}
                                             </Text>
                                         </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                onPress={() => startInstantMeeting()}
+                                                style={{
+                                                    marginLeft: 'auto'
+                                                }}>
+                                                    <Ionicons name='videocam-outline' size={20} color='#006AFF' />
+                                                </TouchableOpacity>
+                                        </View>
+                                        
                                     ) : null}
                                     {showNewGroup || showChat || !props.showDirectory ? null : (
                                         <View style={{ flexDirection: 'row', flex: 1 }} />
@@ -987,10 +1329,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 style={{
                                                     textAlign: 'center',
                                                     lineHeight: 34,
-                                                    color: '#4794ff',
+                                                    color: '#006AFF',
                                                     fontSize: 12,
                                                     borderWidth: 1,
-                                                    borderColor: '#4794ff',
+                                                    borderColor: '#006AFF',
                                                     paddingHorizontal: 20,
                                                     fontFamily: 'inter',
                                                     height: 35,
@@ -1188,7 +1530,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 34,
                                                         color: '#fff',
                                                         fontSize: 12,
-                                                        backgroundColor: '#4794ff',
+                                                        backgroundColor: '#006AFF',
                                                         paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 35,
@@ -1277,7 +1619,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             }
                                                                         }}
                                                                         style={{
-                                                                            backgroundColor: '#4794ff',
+                                                                            backgroundColor: '#006AFF',
                                                                             borderRadius: 15,
                                                                             marginLeft: 15,
                                                                             marginTop: 6
@@ -1289,7 +1631,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 color: 'white',
                                                                                 fontSize: 12,
                                                                                 borderWidth: 1,
-                                                                                borderColor: '#4794ff',
+                                                                                borderColor: '#006AFF',
                                                                                 paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
                                                                                 height: 35,
@@ -1459,7 +1801,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 34,
                                                         color: '#fff',
                                                         fontSize: 12,
-                                                        backgroundColor: '#4794ff',
+                                                        backgroundColor: '#006AFF',
                                                         paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 35,
@@ -1568,7 +1910,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <Ionicons
                                                                     name="chatbubble-ellipses-outline"
                                                                     size={18}
-                                                                    color="#4794ff"
+                                                                    color="#006AFF"
                                                                 />
                                                             </Text>
                                                         </View>
@@ -1709,7 +2051,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         height: 16,
                                                                         borderRadius: 8,
                                                                         marginRight: 5,
-                                                                        backgroundColor: '#4794ff',
+                                                                        backgroundColor: '#006AFF',
                                                                         alignItems: 'center',
                                                                         justifyContent: 'center'
                                                                     }}>
@@ -1725,7 +2067,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     padding: 5,
                                                                     lineHeight: 13,
                                                                     color:
-                                                                        chat.unreadMessages > 0 ? '#4794ff' : '#000000'
+                                                                        chat.unreadMessages > 0 ? '#006AFF' : '#000000'
                                                                 }}
                                                                 ellipsizeMode="tail">
                                                                 {emailTimeDisplay(chat.lastMessageTime)}
@@ -1736,7 +2078,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <Ionicons
                                                                     name="chevron-forward-outline"
                                                                     size={18}
-                                                                    color="#4794ff"
+                                                                    color="#006AFF"
                                                                 />
                                                             </Text>
                                                         </View>
@@ -1751,6 +2093,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     </View>
                 </View>
             )}
+            {showInstantMeeting ? renderInstantMeetingPopup() : null}
         </View>
     );
 };

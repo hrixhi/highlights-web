@@ -453,9 +453,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#4794ff',
+                                            color: '#006AFF',
                                             fontSize: 12,
-                                            // backgroundColor: '#4794ff',
+                                            // backgroundColor: '#006AFF',
                                             // paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             // height: 35,
@@ -545,7 +545,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{
                                     fontSize: 14,
                                     marginBottom: 10
-                                    // color: '#4794ff'
+                                    // color: '#006AFF'
                                 }}>
                                 Zoom account linked
                             </Text>
@@ -580,7 +580,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 34,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#4794ff',
+                                backgroundColor: '#006AFF',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -612,10 +612,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     width: 175,
@@ -646,10 +646,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     width: 175,
@@ -693,10 +693,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     width: 175,
@@ -727,10 +727,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     width: 175,
@@ -760,7 +760,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text
                                 style={{
                                     fontSize: 14,
-                                    color: '#4794ff'
+                                    color: '#006AFF'
                                 }}
                             >
                                 Sign Out

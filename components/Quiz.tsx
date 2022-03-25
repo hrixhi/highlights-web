@@ -423,7 +423,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{ height: 20 }}
                         trackColor={{
                             false: '#f2f2f2',
-                            true: '#4794ff'
+                            true: '#006AFF'
                         }}
                         activeThumbColor="white"
                     />
@@ -580,7 +580,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{ height: 20 }}
                         trackColor={{
                             false: '#f2f2f2',
-                            true: '#4794ff'
+                            true: '#006AFF'
                         }}
                         activeThumbColor="white"
                     />
@@ -1623,7 +1623,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             >
                                                                 <Text
                                                                     style={{
-                                                                        color: '#4794ff',
+                                                                        color: '#006AFF',
                                                                         fontFamily: 'Overpass',
                                                                         fontSize: 10
                                                                     }}
@@ -1779,7 +1779,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 style={{
                                                                     paddingTop: 4
                                                                 }}
-                                                                color={'#4794ff'}
+                                                                color={'#006AFF'}
                                                             />
                                                         </TouchableOpacity>
                                                     ))}
@@ -2611,10 +2611,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
-                                            color: '#4794ff',
+                                            color: '#006AFF',
                                             borderWidth: 1,
                                             borderRadius: 15,
-                                            borderColor: '#4794ff',
+                                            borderColor: '#006AFF',
                                             backgroundColor: '#fff',
                                             fontSize: 12,
                                             width: 120,
@@ -2641,7 +2641,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             height: 35,
                                             color: 'white',
                                             borderRadius: 15,
-                                            backgroundColor: '#4794ff',
+                                            backgroundColor: '#006AFF',
                                             fontSize: 12,
                                             width: 120,
                                             textTransform: 'uppercase'
@@ -2680,7 +2680,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 lineHeight: 34,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#4794ff',
+                                backgroundColor: '#006AFF',
                                 borderRadius: 15,
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',

@@ -426,7 +426,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         fontFamily: 'inter',
                                                         flex: 1,
                                                         lineHeight: 16,
-                                                        color: item.isOpen ? '#4794ff' : '#000000'
+                                                        color: item.isOpen ? '#006AFF' : '#000000'
                                                     }}>
                                                     {item.question}
                                                 </Text>
@@ -435,7 +435,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         name={
                                                             item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'
                                                         }
-                                                        color={item.isOpen ? '#1F1F1F' : '#4794ff'}
+                                                        color={item.isOpen ? '#1F1F1F' : '#006AFF'}
                                                         size={18}
                                                     />
                                                 </Text>
@@ -474,7 +474,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     )}
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#4794ff" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" />
         </View>
     );
 };

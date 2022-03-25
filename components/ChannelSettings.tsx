@@ -975,7 +975,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#efefef",
-                                                true: "#4794ff"
+                                                true: "#006AFF"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -1060,7 +1060,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: "#efefef",
-                                                    true: "#4794ff"
+                                                    true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1107,7 +1107,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: "#efefef",
-                                                    true: "#4794ff"
+                                                    true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1132,7 +1132,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
-                                    backgroundColor: '#4794ff',
+                                    backgroundColor: '#006AFF',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
@@ -1213,16 +1213,16 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         navigator.clipboard.writeText(accessCode)
                                         setCopied(true)
                                     }}>
-                                        <Ionicons name={copied ? "checkmark-circle-outline" : "clipboard-outline"} size={18} color={copied ? "#35AC78" : "#4794ff"} />
-                                        <Text style={{ color: copied ? "#35AC78" : "#4794ff", fontSize: 10, paddingTop: 3 }}> {copied ? "Copied" : "Copy"} </Text>
+                                        <Ionicons name={copied ? "checkmark-circle-outline" : "clipboard-outline"} size={18} color={copied ? "#35AC78" : "#006AFF"} />
+                                        <Text style={{ color: copied ? "#35AC78" : "#006AFF", fontSize: 10, paddingTop: 3 }}> {copied ? "Copied" : "Copy"} </Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity style={{ 
                                         flexDirection: 'column',
                                         alignItems: 'center'
                                     }} onPress={() => handleResetCode()}>
-                                        <Ionicons name="refresh-outline" size={18} color={"#4794ff"} />
-                                        <Text style={{ color: '#4794ff', fontSize: 10, paddingTop: 3 }}> Reset </Text>
+                                        <Ionicons name="refresh-outline" size={18} color={"#006AFF"} />
+                                        <Text style={{ color: '#006AFF', fontSize: 10, paddingTop: 3 }}> Reset </Text>
                                     </TouchableOpacity>
 
                                 </View>
@@ -1336,7 +1336,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#efefef",
-                                                true: "#4794ff"
+                                                true: "#006AFF"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -1423,11 +1423,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingTop: 2
                                 }}
                             >
-                                <Ionicons name="mail-outline" color="#4794ff" style={{ marginRight: 7, paddingTop: 2 }} size={18} />
+                                <Ionicons name="mail-outline" color="#006AFF" style={{ marginRight: 7, paddingTop: 2 }} size={18} />
                                 <Text
                                     style={{
                                         fontSize: 13,
-                                        color: '#4794ff'
+                                        color: '#006AFF'
                                     }}
                                 >
                                 Add Users
@@ -1555,7 +1555,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 34,
                                     color: 'white',
                                     fontSize: 12,
-                                    backgroundColor: '#4794ff',
+                                    backgroundColor: '#006AFF',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
@@ -1580,10 +1580,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text style={{
                                     textAlign: 'center',
                                     lineHeight: 34,
-                                    color: '#4794ff',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#4794ff',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     paddingHorizontal: 20,
@@ -1626,10 +1626,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#4794ff',
+                                            color: '#006AFF',
                                             borderWidth: 1,
                                             borderRadius: 15,
-                                            borderColor: '#4794ff',
+                                            borderColor: '#006AFF',
                                             backgroundColor: '#fff',
                                             fontSize: 12,
                                             paddingHorizontal: 20,
