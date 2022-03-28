@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import ImageMarker from "react-image-marker"
 
+import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
+
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [problems] = useState<any[]>(props.problems)
@@ -491,6 +493,57 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 null
                         }
 
+{   
+                            problem.questionType === 'highlightText' && props.isOwner ? <View style={{ paddingTop: 20 }}>
+                                {ReactHtmlParser(problem.highlightTextHtml, {
+                                    transform: (node: any, ind1: any) => {
+                                        if (node.type === 'tag' && node.name === 'p') {
+
+                                            node.attribs.style = 'line-height: 40px'
+
+                                            const highlightTextHtml = problem.highlightTextHtml
+                                            const highlightTextChoices = problem.highlightTextChoices
+                                            const highlightTextSelection = solutions[index].highlightTextSelection
+
+                                            console.log("solutions", solutions[index])
+
+                                            var el = document.createElement('html');
+                                            el.innerHTML = highlightTextHtml;
+                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                            return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                if (node.type === 'tag' && node.name === 'span') {
+
+                                                    let matchIndex = -1; 
+
+                                                    // Loop over all the 
+                                                    Array.from(spans).map((elm: any, ind3: number) => {
+                                                        if (node.next.data === elm.nextSibling.data && node.prev.data === elm.previousSibling.data && node.children[0].data === elm.firstChild.data) {
+                                                            matchIndex = ind3;
+                                                        }
+                                                    })
+
+                                                    let classNameHighlight = 'highlightTextOption';
+
+                                                    if (highlightTextSelection[matchIndex] && !highlightTextChoices[matchIndex]) {
+                                                        classNameHighlight = 'highlightTextWrong'
+                                                    } else if (highlightTextSelection[matchIndex] && highlightTextChoices[matchIndex]) {
+                                                        classNameHighlight = 'highlightTextCorrect'
+                                                    } else if (!highlightTextSelection[matchIndex] && highlightTextChoices[matchIndex]) {
+                                                        classNameHighlight = 'highlightTextActive'
+                                                    } 
+
+        
+                                                    return <span className={classNameHighlight}>{node.children[0].data}</span>;
+                                                }
+                                            });
+                                        }
+
+                                    } 
+                                })}
+                            </View> : null
+                        }
+                        
                         {
                             problem.questionType === 'dragdrop' ?
                                 <div style={{

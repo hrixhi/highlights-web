@@ -1080,6 +1080,9 @@ export const getEvents = gql`
                 zoomMeetingScheduledBy
                 zoomMeetingCreatorProfile
                 meetingLink
+                isNonChannelMeeting
+                nonChannelGroupId
+                groupUsername
             }
         }
     }
@@ -1275,6 +1278,8 @@ export const getQuiz = gql`
                         y
                     }
                     imgUrl
+                    highlightTextChoices
+                    highlightTextHtml
                 }
                 instructions
                 headers

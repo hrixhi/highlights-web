@@ -558,7 +558,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             zoomJoinUrl: e.zoomJoinUrl,
                             zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
                             zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile,
-                            meetingLink: e.meetingLink ? e.meetingLink : null
+                            meetingLink: e.meetingLink ? e.meetingLink : null,
+                            isNonChannelMeeting: e.isNonChannelMeeting,
+                            nonChannelGroupId: e.nonChannelGroupId,
+                            groupUsername: e.groupUsername
                         });
                     });
                     setEvents(parsedEvents);
@@ -1372,12 +1375,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const isMeeting = data.original.meeting;
 
+        const isNonChannelMeeting = data.original.isNonChannelMeeting
+
+        const groupUsername = data.original.groupUsername
+
         const startTime = new Date(data.original.start);
         const endTime = new Date(data.original.end);
 
         return (
             <React.Fragment>
-                <div>{data.title}</div>
+                <div>{data.title} {isNonChannelMeeting ? ' · ' + groupUsername : ''} </div>
                 <div className="md-custom-event-cont">
                     <div
                         style={{

@@ -572,6 +572,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     
             }
 
+            if (problem.questionType === 'highlightText') {
+
+                if (problem.highlightTextChoices.length < 2) {
+                    Alert(`You must set multiple highlight text choices and mark one as correct in Highlight Text questions.`);
+                    return;
+                }
+                
+                let atleastOneCorrect = false;
+    
+                problem.highlightTextChoices.map((choice: boolean) => {
+                    if (choice) {
+                        atleastOneCorrect = true;
+                    }
+                })
+    
+                if (!atleastOneCorrect) {
+                    Alert(`You must set at least one highlight text choice as correct in Highlight Text questions.`);
+                    return;
+                }
+            }
+
             if (problem.questionType === 'hotspot') {
                 if(problem.imgUrl === '' || !problem.imgUrl) {
                     Alert(noImageAlert);

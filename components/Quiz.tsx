@@ -53,6 +53,8 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import ImageMarker from "react-image-marker"
 
+import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
+
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems, setProblems] = useState<any[]>(props.problems.slice());
     const [headers, setHeaders] = useState<any>(props.headers);
@@ -223,6 +225,14 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 } else if (problem.questionType === 'hotspot') {
                     solutionInit.push({
                         hotspotSelection: []
+                    })
+                } else if (problem.questionType === 'highlightText') {
+                    const highlightTextChoices = problem.highlightTextChoices
+
+                    const initSelection = highlightTextChoices.map(() => false);
+
+                    solutionInit.push({
+                        highlightTextSelection: initSelection
                     })
                 } else {
                     solutionInit.push({
@@ -1003,21 +1013,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         return (
             <View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 25 }}>
-                {/* {audioVideoQuestion || !showImportOptions ? null : (
-                    <View style={{ paddingVertical: 10 }}>
-                        <FileUpload
-                            action={'audio/video'}
-                            back={() => setShowImportOptions(false)}
-                            onUpload={(u: any, t: any) => {
-                                const obj = { url: u, type: t, content: '' };
-                                const newProbs = [...problems];
-                                newProbs[index].question = JSON.stringify(obj);
-                                setProblems(newProbs);
-                                setShowImportOptions(false);
-                            }}
-                        />
-                    </View>
-                )} */}
+               
                 {audioVideoQuestion ? (
                     <View style={{ marginBottom: 20 }}>{renderAudioVideoPlayer(url, type)}</View>
                 ) : null}
@@ -1082,119 +1078,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                 />
 
-                {/* <Editor
-                    onInit={(evt, editor) => (RichText.current = editor)}
-                    initialValue={editQuestion && editQuestion.question ? editQuestion.question : ''}
-                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                    init={{
-                        skin: 'snow',
-                        // toolbar_sticky: true,
-                        // selector: 'textarea',  // change this value according to your HTML
-                        // content_style: 'div { margin: 10px; border: 5px solid red; padding: 3px; }',
-                        indent: false,
-                        body_class: 'tinyMCEInput',
-                        branding: false,
-                        placeholder: 'Problem',
-                        autoresize_on_init: false,
-                        autoresize_min_height: 250,
-                        height: 250,
-                        min_height: 250,
-                        paste_data_images: true,
-                        images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                        mobile: {
-                            plugins:
-                                'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                        },
-                        plugins:
-                            'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                        menu: {
-                            // this is the complete default configuration
-                            file: { title: 'File', items: 'newdocument' },
-                            edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                            insert: { title: 'Insert', items: 'link media | template hr' },
-                            view: { title: 'View', items: 'visualaid' },
-                            format: {
-                                title: 'Format',
-                                items:
-                                    'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                            },
-                            table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                            tools: { title: 'Tools', items: 'spellchecker code' }
-                        },
-                        setup: (editor: any) => {
-                            const equationIcon =
-                                '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                            editor.ui.registry.addIcon('formula', equationIcon);
-
-                            editor.ui.registry.addButton('formula', {
-                                icon: 'formula',
-                                // text: "Upload File",
-                                tooltip: 'Insert equation',
-                                onAction: () => {
-                                    setShowEquationEditor(!showEquationEditor);
-                                }
-                            });
-
-                            editor.ui.registry.addButton('upload', {
-                                icon: 'upload',
-                                tooltip: 'Import Audio/Video file',
-                                onAction: async () => {
-                                    const res = await handleFile(true);
-
-                                    console.log('File upload result', res);
-
-                                    if (!res || res.url === '' || res.type === '') {
-                                        return;
-                                    }
-
-                                    const obj = { url: res.url, type: res.type, content: problems[index].question };
-
-                                    const newProbs = [...problems];
-                                    newProbs[index].question = JSON.stringify(obj);
-                                    setProblems(newProbs);
-                                    setShowImportOptions(false);
-                                }
-                            });
-                        },
-                        // menubar: 'file edit view insert format tools table tc help',
-                        menubar: false,
-                        statusbar: false,
-                        toolbar:
-                            'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image upload link media | charmap emoticons ',
-                        importcss_append: true,
-                        image_caption: true,
-                        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                        noneditable_noneditable_class: 'mceNonEditable',
-                        toolbar_mode: 'sliding',
-                        content_style:
-                            '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                        // tinycomments_mode: 'embedded',
-                        // content_style: '.mymention{ color: gray; }',
-                        // contextmenu: 'link image table configurepermanentpen',
-                        // a11y_advanced_options: true,
-                        extended_valid_elements:
-                            'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                        // content_css: useDarkMode ? 'dark' : 'default',
-                    }}
-                    onChange={(e: any) => {
-                        if (audioVideoQuestion) {
-                            const currQuestion = JSON.parse(problems[index].question);
-                            const updatedQuestion = {
-                                ...currQuestion,
-                                content: e.target.getContent()
-                            };
-                            const newProbs = [...problems];
-                            newProbs[index].question = JSON.stringify(updatedQuestion);
-                            setProblems(newProbs);
-                        } else {
-                            // setCue(modifedText);
-                            const newProbs = [...problems];
-                            newProbs[index].question = e.target.getContent();
-                            setProblems(newProbs);
-                        }
-                    }}
-                /> */}
+                
             </View>
         );
     };
@@ -2245,6 +2129,99 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </div>
                                 : null
                         }
+
+                        {   
+                            problem.questionType === 'highlightText' && props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                                {ReactHtmlParser(problems[index].highlightTextHtml, {
+                                    transform: (node: any, ind1: any) => {
+                                        if (node.type === 'tag' && node.name === 'p') {
+
+                                            node.attribs.style = 'line-height: 40px; font-family: Overpass;'
+
+                                            const highlightTextHtml = problems[index].highlightTextHtml
+                                            const highlightTextChoices = problems[index].highlightTextChoices
+
+                                            var el = document.createElement('html');
+                                            el.innerHTML = highlightTextHtml;
+                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                            return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                if (node.type === 'tag' && node.name === 'span') {
+
+                                                    let matchIndex = -1; 
+
+                                                    // Loop over all the 
+                                                    Array.from(spans).map((elm: any, ind3: number) => {
+                                                        if (node.next.data === elm.nextSibling.data && node.prev.data === elm.previousSibling.data && node.children[0].data === elm.firstChild.data) {
+                                                            matchIndex = ind3;
+                                                        }
+                                                    })
+
+                                                    console.log("Match index", matchIndex)
+                                                    console.log("highlightTextChoices", highlightTextChoices)
+
+
+                                                    let isCorrect = matchIndex !== -1 ? highlightTextChoices[matchIndex] : false
+        
+                                                    return <span className={isCorrect ? "highlightTextActive" : "highlightTextOption"}>{node.children[0].data}</span>;
+                                                }
+                                            });
+                                        }
+
+                                    } 
+                                })}
+                            </View> : null
+                        }
+
+                        {   
+                            problem.questionType === 'highlightText' && !props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                                {ReactHtmlParser(problems[index].highlightTextHtml, {
+                                    transform: (node: any, ind1: any) => {
+                                        if (node.type === 'tag' && node.name === 'p') {
+
+                                            node.attribs.style = 'line-height: 40px'
+
+                                            const highlightTextHtml = problems[index].highlightTextHtml
+                                            const highlightTextSelection = solutions[problemIndex].highlightTextSelection
+
+                                            var el = document.createElement('html');
+                                            el.innerHTML = highlightTextHtml;
+                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                            return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                if (node.type === 'tag' && node.name === 'span') {
+
+                                                    let matchIndex = -1; 
+
+                                                    // Loop over all the 
+                                                    Array.from(spans).map((elm: any, ind3: number) => {
+                                                        if (node.next.data === elm.nextSibling.data && node.prev.data === elm.previousSibling.data && node.children[0].data === elm.firstChild.data) {
+                                                            matchIndex = ind3;
+                                                        }
+                                                    })
+
+                                                    let isCorrect = matchIndex !== -1 ? highlightTextSelection[matchIndex] : false
+        
+                                                    return <span onClick={() => {
+
+                                                        const updatedSolution = [...solutions];
+                                                        const updatedHighlightTextSelection = [...updatedSolution[problemIndex].highlightTextSelection];
+                                                        updatedHighlightTextSelection[matchIndex] = !isCorrect;
+                                                        updatedSolution[index].highlightTextSelection = updatedHighlightTextSelection
+                                                        setSolutions(updatedSolution);
+                                                        props.setSolutions(updatedSolution);
+
+                                                    }} className={isCorrect ? "highlightTextSelected" : "highlightTextUnselected"}>{node.children[0].data}</span>;
+                                                }
+                                            });
+                                        }
+
+                                    } 
+                                })}
+                            </View> : null
+                        }
+
+
                         {
                             problem.questionType === 'dragdrop' && !props.isOwner ? (
                                 <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
@@ -2426,100 +2403,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 quickInsertEnabled: false
                                             }}
                                         />
-                                        {/* <Editor
-                                            onInit={(evt, editor) => {
-                                                const updateRefs = [...problemRefs];
-                                                updateRefs[problemIndex].current = editor;
-                                                setProblemRefs(updateRefs);
-                                                solutionRefs[problemIndex].current = editor;
-                                            }}
-                                            initialValue={initialSolutions[problemIndex].response}
-                                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                            init={{
-                                                skin: 'snow',
-                                                // toolbar_sticky: true,
-                                                indent: false,
-                                                branding: false,
-                                                placeholder: 'Answer',
-                                                autoresize_on_init: false,
-                                                autoresize_min_height: 350,
-                                                height: 350,
-                                                min_height: 350,
-                                                paste_data_images: true,
-                                                images_upload_url:
-                                                    'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                mobile: {
-                                                    plugins:
-                                                        'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                },
-                                                plugins:
-                                                    'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                menu: {
-                                                    // this is the complete default configuration
-                                                    file: { title: 'File', items: 'newdocument' },
-                                                    edit: {
-                                                        title: 'Edit',
-                                                        items: 'undo redo | cut copy paste pastetext | selectall'
-                                                    },
-                                                    insert: { title: 'Insert', items: 'link media | template hr' },
-                                                    view: { title: 'View', items: 'visualaid' },
-                                                    format: {
-                                                        title: 'Format',
-                                                        items:
-                                                            'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                                                    },
-                                                    table: {
-                                                        title: 'Table',
-                                                        items: 'inserttable tableprops deletetable | cell row column'
-                                                    },
-                                                    tools: { title: 'Tools', items: 'spellchecker code' }
-                                                },
-                                                setup: (editor: any) => {
-                                                    const equationIcon =
-                                                        '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                                                    editor.ui.registry.addIcon('formula', equationIcon);
-
-                                                    editor.ui.registry.addButton('formula', {
-                                                        icon: 'formula',
-                                                        // text: "Upload File",
-                                                        tooltip: 'Insert equation',
-                                                        onAction: () => {
-                                                            const updateShowFormulas = [...showFormulas];
-                                                            updateShowFormulas[problemIndex] = !updateShowFormulas[
-                                                                problemIndex
-                                                            ];
-                                                            setShowFormulas(updateShowFormulas);
-                                                        }
-                                                    });
-                                                },
-                                                // menubar: 'file edit view insert format tools table tc help',
-                                                menubar: false,
-                                                toolbar:
-                                                    'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons ',
-                                                importcss_append: true,
-                                                image_caption: true,
-                                                quickbars_selection_toolbar:
-                                                    'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                noneditable_noneditable_class: 'mceNonEditable',
-                                                toolbar_mode: 'sliding',
-                                                content_style:
-                                                    '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                                                // tinycomments_mode: 'embedded',
-                                                // content_style: '.mymention{ color: gray; }',
-                                                // contextmenu: 'link image table configurepermanentpen',
-                                                // a11y_advanced_options: true,
-                                                extended_valid_elements:
-                                                    'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                                                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                // content_css: useDarkMode ? 'dark' : 'default',
-                                            }}
-                                            onChange={(e: any) => {
-                                                const updatedSolution = [...solutions];
-                                                updatedSolution[problemIndex].response = e.target.getContent();
-                                                setSolutions(updatedSolution);
-                                                props.setSolutions(updatedSolution);
-                                            }}
-                                        /> */}
                                     </View>
                                 )}
                             </View>
