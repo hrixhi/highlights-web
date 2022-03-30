@@ -58,6 +58,9 @@ import { TextInput } from './CustomTextInput';
 
 import ImageMarker from "react-image-marker"
 
+import EquationEditorQuiz from './EquationEditorQuiz';
+import MathJax from 'react-mathjax-preview'
+
 
 // import { BoardRepository, Board } from 'react-native-draganddrop-board'
 
@@ -65,7 +68,7 @@ import ImageMarker from "react-image-marker"
 // CONSTANTS
 const questionTypeOptions = [
     {
-        text: "MCQ",
+        text: "MCQ/Multiselect",
         value: "mcq",
     },
     {
@@ -85,7 +88,7 @@ const questionTypeOptions = [
         value: "hotspot"
     },
     {
-        text: 'Highlight Text',
+        text: 'Hot Text',
         value: "highlightText"
     },
     {
@@ -95,6 +98,14 @@ const questionTypeOptions = [
     {
         text: 'Text Entry',
         value: 'textEntry'
+    },
+    {
+        text: 'Multipart',
+        value: 'multipart'
+    },
+    {
+        text: 'Equation Editor',
+        value: 'equationEditor'
     }
 ]
 
@@ -475,7 +486,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             content = problems[index].question
         }
 
-        return (<View >
+        return (<View style={{ paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }} >
             {audioVideoQuestion ?
                 <View style={{ marginBottom: 20 }}>
                     {renderAudioVideoPlayer(url, type)}
@@ -611,6 +622,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 maxWidth: '100%', marginBottom: 10, marginTop: 10,
                                 borderRadius: 1,
                                 paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                paddingLeft: 10
                             }}
                             value={headers[index]}
                             placeholder={'Heading'}
@@ -645,7 +657,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         backgroundColor: "white",
                         overflow: "hidden",
                         height: 35,
-                        marginTop: 15,
+                        marginTop: 20,
                         marginBottom: 15,
                         // width: "100%",
                         justifyContent: "center",
@@ -738,14 +750,31 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Hotspot
         if (currentQuestion.questionType === 'hotspot') {
             if (!currentQuestion.imgUrl || currentQuestion.imgUrl === '') {
-                Alert(`Hotspot image is missing in Question ${index + 1}`)
+                Alert(`Hotspot image is missing in Question ${index + 1}.`)
                 return;
             }
 
-            if (currentQuestion.hotspots.length === 0) {
-                Alert(`You must place at least one hotspot marker on the image in Question ${index + 1}`);
+            if (currentQuestion.hotspots.length < 2) {
+                Alert(`You must place at least two hotspot marker on the image in Question ${index + 1}.`);
                 return;
             }
+
+            let hasCorrectAnswer = false;
+
+            currentQuestion.hotspotOptions.map((option: any) => {
+
+                if (option.isCorrect) {
+                    hasCorrectAnswer = true;
+                }
+
+            })
+
+            if (!hasCorrectAnswer) {
+                Alert(`You must mark at least one hotspot marker as correct in Question ${index + 1}.`);
+                return;
+            }
+
+
         }
 
         // Drag and Drop
@@ -795,7 +824,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (currentQuestion.questionType === 'highlightText') {
 
             if (currentQuestion.highlightTextChoices.length < 2) {
-                Alert(`You must set multiple highlight text choices and mark one as correct in Question ${index + 1}`);
+                Alert(`You must set multiple highlight text choices and mark one as correct in Question ${index + 1}.`);
                 return;
             }
 
@@ -808,7 +837,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             })
 
             if (!atleastOneCorrect) {
-                Alert(`You must set at least one highlight text choice as correct in Question ${index + 1}`);
+                Alert(`You must set at least one highlight text choice as correct in Question ${index + 1}.`);
                 return;
             }
             
@@ -822,7 +851,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }
 
             if (currentQuestion.inlineChoiceOptions.length === 0) {
-                alert(`Inline choice question ${index + 1} must have at lease one dropdown.`)
+                alert(`Question ${index + 1} must have at lease one dropdown.`)
                 return;
             }
             
@@ -885,6 +914,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             let missingEntryAnswer = false;
             let missingEntryPoints = false;
+            let pointsNotANumber = false;
 
             currentQuestion.textEntryOptions.map((choice: any, index: number) => {
                 if (choice.option === '') {
@@ -893,6 +923,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                 if (choice.points === '') {
                     missingEntryPoints = true
+                }
+
+                if (Number.isNaN(Number(choice.points))) {
+                    pointsNotANumber = true
                 }
 
             })
@@ -907,6 +941,81 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 return;
             }
 
+            if (pointsNotANumber) {
+                alert(`Each Text entry must have numeric points in question ${index + 1}.`)
+                return;
+            }
+
+        }
+
+        // Multipart 
+        if (currentQuestion.questionType === 'multipart') {
+            if (currentQuestion.multipartQuestions[0] === '' || currentQuestion.multipartQuestions[1] === '') {
+                alert(`Part A and Part B questions cannot be empty in question ${index + 1}`);
+                return;
+            }
+
+            // Part A
+            let hasOneCorrect = false;
+            let hasMissingOption = false;
+
+            // At least two choices
+            if (currentQuestion.multipartOptions[0].length < 2) {
+                alert(`Part A must have at least two choices in question ${index + 1}`)
+                return;
+            }
+
+            currentQuestion.multipartOptions[0].map((option: any) => {
+                if (option.isCorrect) {
+                    hasOneCorrect = true
+                }
+
+                if (option.option === '') {
+                    hasMissingOption = true;
+                }
+            })
+
+            if (!hasOneCorrect) {
+                alert(`Part A must have at least one correct choice in question ${index + 1}`)
+                return;
+            }
+
+            if (hasMissingOption) {
+                alert(`Part A option is empty in question ${index + 1}`)
+            }
+
+            if (currentQuestion.multipartOptions[0].length < 2) {
+                alert(`Part A must have at least two choices in question ${index + 1}`)
+                return;
+            }
+
+            // Part B
+            currentQuestion.multipartOptions[1].map((option: any) => {
+                if (option.isCorrect) {
+                    hasOneCorrect = true
+                }
+
+                if (option.option === '') {
+                    hasMissingOption = true;
+                }
+            })
+
+            if (!hasOneCorrect) {
+                alert(`Part A must have at least one correct choice in question ${index + 1}`)
+                return;
+            }
+
+            if (hasMissingOption) {
+                alert(`Part A option is empty in question ${index + 1}`)
+            }
+        }
+
+        // Equation editor
+        if (currentQuestion.questionType === 'equationEditor') {
+            if (currentQuestion.correctEquations[0] === '') {
+                alert('Correct equation cannot be empty.')
+                return;
+            }
         }
 
         return true;
@@ -1027,7 +1136,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                     return <View
                         key={index}
-                        style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 25, width: '100%' }}>
+                        style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 30, width: '100%' }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
@@ -1038,9 +1147,291 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 {/* Question */}
                                 <View style={{ flexDirection: Dimensions.get('window').width < 768 || editQuestionNumber === (index + 1) ? (editQuestionNumber === (index + 1) ? 'column-reverse' : 'column') : 'row', flex: 1 }}>
 
-                                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingRight: Dimensions.get('window').width < 768 ? 0 : 20 }}>
-                                        <View style={{ width: '100%', }}>
-                                            {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
+                                    {/* Options */}
+                                    <View style={{
+                                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                        // width: '100%',
+                                        maxWidth: 900,
+                                        marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
+                                        marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                        marginLeft: editQuestionNumber !== (index + 1) ? 'auto' : 'none',
+                                        width: '100%'
+                                    }}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            {editQuestionNumber === (index + 1) ? <View
+                                                style={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
+                                                    alignItems: 'flex-start',
+                                                    paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
+                                                }}>
+                                                <label style={{ width: 160 }}>
+                                                    <Select
+                                                        touchUi={true}
+                                                        cssClass="customDropdown"
+                                                        value={dropdownQuestionType}
+                                                        rows={questionTypeOptions.length}
+                                                        data={questionTypeOptions}
+                                                        themeVariant="light"
+                                                        onChange={(val: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            if (val.value === "mcq") {
+                                                                updatedProblems[index].questionType = "";
+                                                            } else {
+                                                                updatedProblems[index].questionType = val.value;
+                                                                updatedProblems[index].options = []
+                                                            }
+
+                                                            // hotspots
+                                                            updatedProblems[index].hotspots = []
+                                                            updatedProblems[index].hotspotOptions = []
+                                                            updatedProblems[index].imgUrl = ''
+
+                                                            // Equation editor
+                                                            updatedProblems[index].correctEquations = [''];
+
+                                                            if (val.value === 'multipart') {
+                                                                updatedProblems[index].multipartOptions = []
+                                                                updatedProblems[index].multipartQuestions = ['', '']
+                                                                updatedProblems[index].multipartOptions.push([{
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                                updatedProblems[index].multipartOptions.push([{
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                                
+                                                            } else {
+                                                                updatedProblems[index].multipartOptions = []
+                                                                updatedProblems[index].multipartQuestions = []
+                                                            }
+
+                                                            // drag and drop
+                                                            if (val.value === 'dragdrop') {
+                                                                updatedProblems[index].questionType = 'dragdrop'
+                                                                updatedProblems[index].options = []
+                                                                updatedProblems[index].dragDropData = [
+                                                                    [
+                                                                        {
+                                                                            id: '0',
+                                                                            content: ''
+                                                                        },
+                                                                    ],
+                                                                    [
+                                                                        { 
+                                                                            id: '1',
+                                                                            content: '' 
+                                                                        },
+                                                                    ]
+                                                                ]
+                                                                updatedProblems[index].dragDropHeaders = ['', '']
+                                                            } else {
+                                                                // clear data if not drag and drop
+                                                                updatedProblems[index].dragDropData = []
+                                                                updatedProblems[index].dragDropHeaders = []
+                                                                updatedProblems[index].options = []
+                                                            }
+
+
+                                                            // Clear Options 
+                                                            if (val.value === "freeResponse") {
+                                                                updatedProblems[index].options = []
+                                                            } else if (val.value === "trueFalse") {
+                                                                updatedProblems[index].options = []
+                                                                updatedProblems[index].options.push({
+                                                                    option: 'True',
+                                                                    isCorrect: false
+                                                                })
+                                                                updatedProblems[index].options.push({
+                                                                    option: 'False',
+                                                                    isCorrect: false
+                                                                })
+                                                            }
+
+                                                            updatedProblems[index].textEntryHtml = ''
+                                                            updatedProblems[index].textEntryOptions = []
+
+                                                            updatedProblems[index].inlineChoiceHtml = ''
+                                                            updatedProblems[index].inlineChoiceOptions = []
+
+                                                            if (val.value !== 'highlightText') {
+                                                                updatedProblems[index].highlightTextHtml = ''
+                                                                updatedProblems[index].highlightTextChoices = []
+                                                            } 
+                                                            
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+
+                                                        }}
+                                                        responsive={{
+                                                            small: {
+                                                                display: 'bubble'
+                                                            },
+                                                            medium: {
+                                                                touchUi: false,
+                                                            }
+                                                        }}
+                                                    />
+                                                </label>
+                                            </View> : null}
+
+                                            {editQuestionNumber === (index + 1) ?
+                                                <View
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
+                                                        paddingLeft: 20,
+                                                        alignItems: 'flex-start',
+                                                        paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
+                                                    }}>
+                                                    <label style={{ width: 160 }}>
+                                                        <Select
+                                                            touchUi={true}
+                                                            cssClass="customDropdown"
+                                                            value={requiredDropdown}
+                                                            rows={requiredOptions.length}
+                                                            data={requiredOptions}
+                                                            themeVariant="light"
+                                                            onChange={(val: any) => {
+                                                                const updatedProblems = [...problems]
+                                                                updatedProblems[index].required = (val.value === "required")
+                                                                setProblems(updatedProblems)
+                                                                props.setProblems(updatedProblems)
+                                                            }}
+                                                            responsive={{
+                                                                small: {
+                                                                    display: 'bubble'
+                                                                },
+                                                                medium: {
+                                                                    touchUi: false,
+                                                                }
+                                                            }}
+                                                        />
+                                                    </label>
+
+                                                </View> : null
+                                            }
+                                        </View>
+                                        {
+                                            Dimensions.get('window').width < 768 ? null : <View style={{ flex: 1 }} />
+                                        }
+                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15,  }}>
+                                            {editQuestionNumber === (index + 1) ? null : (!problem.required ?
+                                                null
+                                                : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
+                                                    *
+                                                </Text>))}
+                                            <DefaultTextInput
+                                                value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
+                                                editable={editQuestionNumber === (index + 1)}
+                                                style={{
+                                                    fontSize: 14,
+                                                    padding: 15,
+                                                    paddingTop: 8,
+                                                    paddingBottom: 12,
+                                                    width: 120,
+                                                    marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
+                                                    textAlign: 'center',
+                                                    marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
+                                                    fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
+                                                    borderBottomColor: '#f2f2f2',
+                                                    borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
+                                                }}
+                                                placeholder={PreferredLanguageText('enterPoints')}
+                                                onChangeText={val => {
+                                                    if (Number.isNaN(Number(val))) return;
+                                                    const newProbs = [...problems];
+                                                    newProbs[index].points = val;
+                                                    setProblems(newProbs)
+                                                    props.setProblems(newProbs)
+                                                }}
+                                                placeholderTextColor={'#a2a2ac'}
+                                            />
+
+                                            <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 10 : 5, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
+                                                {editQuestionNumber === (index + 1) ?
+                                                    <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
+
+                                                        <Ionicons
+                                                            name='trash-outline'
+                                                            color={"#006AFF"}
+                                                            onPress={() => {
+                                                                Alert(`Delete Question ${editQuestionNumber} ?`, "", [
+                                                                    {
+                                                                        text: "Cancel",
+                                                                        style: "cancel",
+                                                                    },
+                                                                    {
+                                                                        text: "Clear",
+                                                                        onPress: () => {
+                                                                            const updatedProblems = [...problems]
+                                                                            updatedProblems.splice(index, 1);
+                                                                            removeHeadersOnDeleteProblem(index + 1);
+                                                                            setProblems(updatedProblems)
+                                                                            props.setProblems(updatedProblems)
+                                                                            setEditQuestionNumber(0);
+                                                                            setEditQuestion({});
+                                                                            setEditQuestionContent('')
+                                                                        },
+                                                                    },
+                                                                ])
+                                                            }}
+                                                            size={23}
+                                                        />
+                                                    </View> : <Ionicons
+                                                        name='cog-outline'
+                                                        color={'#006AFF'}
+                                                        style={{
+                                                            // paddingTop: 4
+                                                        }}
+                                                        onPress={() => {
+                                                            if (isCurrentQuestionValid(editQuestionNumber - 1)) {
+                                                                setEditQuestionNumber(index + 1)
+                                                                // set edit question the one from problems array
+
+                                                                let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
+
+                                                                let initialContent = "";
+
+                                                                if (initialAudioVideo) {
+                                                                    const parse = JSON.parse(problems[index].question);
+                                                                    initialContent = parse.content;
+                                                                } else {
+                                                                    initialContent = problems[index].question
+                                                                }
+
+                                                                const currentProblems: any[] = lodash.cloneDeep(problems)
+
+                                                                setEditQuestion({ ...currentProblems[index], question: initialContent })
+
+                                                                setEditQuestionContent(initialContent)
+                                                            }
+
+                                                        }}
+                                                        size={20}
+                                                    />}
+                                            </View>
+                                        </View>
+                                    </View>
+
+                                </View>
+
+                            </View>
+
+                        </View>
+
+                        {/* Questions */}
+
+                        {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
                                                 {audioVideoQuestion ?
                                                     <TouchableOpacity onPress={() => {
                                                         const updateProblems = lodash.cloneDeep(problems);
@@ -1065,12 +1456,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <View style={{ marginBottom: 20 }}>
                                                         {renderAudioVideoPlayer(url, type)}
                                                     </View>
-                                                    <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                    {content !== '' ? <Text style={{ marginVertical: 20, fontSize: 15, lineHeight: 25 }}>
                                                         {parser(content)}
-                                                    </Text>
-                                                </View> : <Text style={{ marginTop: 15, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                    </Text> : null}
+                                                </View> : (problem.question !== '' ? <Text style={{ marginVertical: 20, fontSize: 15, lineHeight: 25 }}>
                                                     {parser(problem.question)}
-                                                </Text>))
+                                                </Text> : null)))
                                             }
 
                                             {/* Render all other Equation Editors here */}
@@ -1158,10 +1549,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         // Added choice
                                                         if (updateInlineChoices.length < Array.from(spans).length) {
                                                             updateInlineChoices.push([{
-                                                                option: 'Option 1',
+                                                                option: '',
                                                                 isCorrect: true
                                                             }, {
-                                                                option: 'Option 2',
+                                                                option: '',
                                                                 isCorrect: false
                                                             }])
                                                         } else if (updateInlineChoices.length > Array.from(spans).length && Array.from(spans).length !== 0) {
@@ -1251,7 +1642,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         key:
                                                             'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                         attribution: false,
-                                                        placeholderText: '',
+                                                        placeholderText: 'Click on + in toolbar to add new inline choice',
                                                         charCounterCount: false,
                                                         zIndex: 2003,
                                                         // immediateReactModelUpdate: true,
@@ -1396,7 +1787,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     key:
                                                         'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                     attribution: false,
-                                                    placeholderText: '',
+                                                    placeholderText: 'Click on + in toolbar to add new Text entry.',
                                                     charCounterCount: false,
                                                     zIndex: 2003,
                                                     // immediateReactModelUpdate: true,
@@ -1426,262 +1817,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             
                                     }
 
-                                        </View>
-                                    </View>
-
-                                    {/* Options */}
-                                    <View style={{
-                                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                                        // width: '100%',
-                                        maxWidth: 900,
-                                        marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
-                                        marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
-                                    }}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            {editQuestionNumber === (index + 1) ? <View
-                                                style={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
-                                                    alignItems: 'flex-start',
-                                                    paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
-                                                }}>
-                                                <label style={{ width: 160 }}>
-                                                    <Select
-                                                        touchUi={true}
-                                                        cssClass="customDropdown"
-                                                        value={dropdownQuestionType}
-                                                        rows={questionTypeOptions.length}
-                                                        data={questionTypeOptions}
-                                                        themeVariant="light"
-                                                        onChange={(val: any) => {
-                                                            const updatedProblems = [...problems]
-                                                            if (val.value === "mcq") {
-                                                                updatedProblems[index].questionType = "";
-                                                            } else {
-                                                                updatedProblems[index].questionType = val.value;
-                                                                updatedProblems[index].options = []
-                                                            }
-
-                                                            // hotspots
-                                                            updatedProblems[index].hotspots = []
-                                                            updatedProblems[index].hotspotOptions = []
-                                                            updatedProblems[index].imgUrl = ''
-
-                                                            // drag and drop
-                                                            if (val.value === 'dragdrop') {
-                                                                updatedProblems[index].questionType = 'dragdrop'
-                                                                updatedProblems[index].options = []
-                                                                updatedProblems[index].dragDropData = [
-                                                                    [
-                                                                        {
-                                                                            id: '0',
-                                                                            content: ''
-                                                                        },
-                                                                    ],
-                                                                    [
-                                                                        { 
-                                                                            id: '1',
-                                                                            content: '' 
-                                                                        },
-                                                                    ]
-                                                                ]
-                                                                updatedProblems[index].dragDropHeaders = ['', '']
-                                                            } else {
-                                                                // clear data if not drag and drop
-                                                                updatedProblems[index].dragDropData = []
-                                                                updatedProblems[index].dragDropHeaders = []
-                                                                updatedProblems[index].options = []
-                                                            }
-
-
-                                                            // Clear Options 
-                                                            if (val.value === "freeResponse") {
-                                                                updatedProblems[index].options = []
-                                                            } else if (val.value === "trueFalse") {
-                                                                updatedProblems[index].options = []
-                                                                updatedProblems[index].options.push({
-                                                                    option: 'True',
-                                                                    isCorrect: false
-                                                                })
-                                                                updatedProblems[index].options.push({
-                                                                    option: 'False',
-                                                                    isCorrect: false
-                                                                })
-                                                            }
-
-                                                            updatedProblems[index].textEntryHtml = ''
-                                                            updatedProblems[index].textEntryOptions = []
-
-                                                            updatedProblems[index].inlineChoiceHtml = ''
-                                                            updatedProblems[index].inlineChoiceOptions = []
-
-                                                            if (val.value !== 'highlightText') {
-                                                                updatedProblems[index].highlightTextHtml = ''
-                                                                updatedProblems[index].highlightTextChoices = []
-                                                            } 
-                                                            
-                                                            setProblems(updatedProblems)
-                                                            props.setProblems(updatedProblems)
-
-                                                        }}
-                                                        responsive={{
-                                                            small: {
-                                                                display: 'bubble'
-                                                            },
-                                                            medium: {
-                                                                touchUi: false,
-                                                            }
-                                                        }}
-                                                    />
-                                                </label>
-                                            </View> : null}
-
-                                            {editQuestionNumber === (index + 1) ?
-                                                <View
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
-                                                        paddingLeft: 20,
-                                                        alignItems: 'flex-start',
-                                                        paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
-                                                    }}>
-                                                    <label style={{ width: 160 }}>
-                                                        <Select
-                                                            touchUi={true}
-                                                            cssClass="customDropdown"
-                                                            value={requiredDropdown}
-                                                            rows={requiredOptions.length}
-                                                            data={requiredOptions}
-                                                            themeVariant="light"
-                                                            onChange={(val: any) => {
-                                                                const updatedProblems = [...problems]
-                                                                updatedProblems[index].required = (val.value === "required")
-                                                                setProblems(updatedProblems)
-                                                                props.setProblems(updatedProblems)
-                                                            }}
-                                                            responsive={{
-                                                                small: {
-                                                                    display: 'bubble'
-                                                                },
-                                                                medium: {
-                                                                    touchUi: false,
-                                                                }
-                                                            }}
-                                                        />
-                                                    </label>
-
-                                                </View> : null
-                                            }
-                                        </View>
-                                        {
-                                            Dimensions.get('window').width < 768 ? null : <View style={{ flex: 1 }} />
-                                        }
-                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15, marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 'none' }}>
-                                            {editQuestionNumber === (index + 1) ? null : (!problem.required ?
-                                                null
-                                                : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
-                                                    *
-                                                </Text>))}
-                                            <DefaultTextInput
-                                                value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
-                                                editable={editQuestionNumber === (index + 1)}
-                                                style={{
-                                                    fontSize: 14,
-                                                    padding: 15,
-                                                    paddingTop: 8,
-                                                    paddingBottom: 12,
-                                                    width: 120,
-                                                    marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
-                                                    textAlign: 'center',
-                                                    marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
-                                                    fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                    borderBottomColor: '#f2f2f2',
-                                                    borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
-                                                }}
-                                                placeholder={PreferredLanguageText('enterPoints')}
-                                                onChangeText={val => {
-                                                    if (Number.isNaN(Number(val))) return;
-                                                    const newProbs = [...problems];
-                                                    newProbs[index].points = val;
-                                                    setProblems(newProbs)
-                                                    props.setProblems(newProbs)
-                                                }}
-                                                placeholderTextColor={'#a2a2ac'}
-                                            />
-
-                                            <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 10 : 5, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
-                                                {editQuestionNumber === (index + 1) ?
-                                                    <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
-
-                                                        <Ionicons
-                                                            name='trash-outline'
-                                                            color={"#006AFF"}
-                                                            onPress={() => {
-                                                                Alert(`Delete Question ${editQuestionNumber} ?`, "", [
-                                                                    {
-                                                                        text: "Cancel",
-                                                                        style: "cancel",
-                                                                    },
-                                                                    {
-                                                                        text: "Clear",
-                                                                        onPress: () => {
-                                                                            const updatedProblems = [...problems]
-                                                                            updatedProblems.splice(index, 1);
-                                                                            removeHeadersOnDeleteProblem(index + 1);
-                                                                            setProblems(updatedProblems)
-                                                                            props.setProblems(updatedProblems)
-                                                                            setEditQuestionNumber(0);
-                                                                            setEditQuestion({});
-                                                                            setEditQuestionContent('')
-                                                                        },
-                                                                    },
-                                                                ])
-                                                            }}
-                                                            size={23}
-                                                        />
-                                                    </View> : <Ionicons
-                                                        name='cog-outline'
-                                                        color={'#006AFF'}
-                                                        style={{
-                                                            // paddingTop: 4
-                                                        }}
-                                                        onPress={() => {
-                                                            if (isCurrentQuestionValid(editQuestionNumber - 1)) {
-                                                                setEditQuestionNumber(index + 1)
-                                                                // set edit question the one from problems array
-
-                                                                let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
-
-                                                                let initialContent = "";
-
-                                                                if (initialAudioVideo) {
-                                                                    const parse = JSON.parse(problems[index].question);
-                                                                    initialContent = parse.content;
-                                                                } else {
-                                                                    initialContent = problems[index].question
-                                                                }
-
-                                                                const currentProblems: any[] = lodash.cloneDeep(problems)
-
-                                                                setEditQuestion({ ...currentProblems[index], question: initialContent })
-
-                                                                setEditQuestionContent(initialContent)
-                                                            }
-
-                                                        }}
-                                                        size={20}
-                                                    />}
-                                            </View>
-                                        </View>
-                                    </View>
-
-                                </View>
-
-                            </View>
-
-                        </View>
                         {
                             problem.questionType === "freeResponse" ? <Text style={{
                                 marginTop: 20,
@@ -1751,7 +1886,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
 
                         {
-                            problem.questionType === 'textEntry' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 30, flexDirection: 'row', overflow: 'scroll' }}>
+                            problem.questionType === 'textEntry' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 30, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
                                 {
                                     problems[index].textEntryOptions.map((choice: any, choiceIndex: number) => {
 
@@ -1768,7 +1903,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                         return <div style={{
                                             flexDirection: 'column',
-                                            // backgroundColor: "#f2f2f2",
                                             padding: 15,
                                             width: 280,
                                             minWidth: 280,
@@ -1777,12 +1911,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             border: '1px solid #cccccc'
                                         }}>
                                             
-
-                                            {/* <View style={{
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                backgroundColor: "#f2f2f2",
-                                            }}> */}
                                                 <View style={{ flexDirection: 'column', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 15, marginBottom: 15, borderRadius: 10 }}>
                                                     
                                                     <Text style={{
@@ -1965,21 +2093,55 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             
                                                         return <span style={{ width: 160 }}>
-                                                            <select style={{
-                                                                border: '1px solid #DDD',
-                                                                padding: 5,
-                                                                borderRadius: 3,
-                                                                fontFamily: 'Overpass'
-                                                            }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
                                                                 {
                                                                     options.map((option: any) => {
-                                                                        return <option value={option.option}>{option.option}</option>
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
                                                         </span>;
                                                     }
                                                 });
+                                            } else {
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });  
                                             }
 
                                         } 
@@ -1988,7 +2150,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
 
                         { 
-                            problem.questionType === 'highlightText' ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                            problem.questionType === 'highlightText' && editQuestionNumber !== (index + 1) ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
                                 {ReactHtmlParser(problems[index].highlightTextHtml, {
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
@@ -2031,17 +2193,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
 
                         {
-                            problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 20, flexDirection: 'row', overflow: 'scroll' }}>
+                            problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 20, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
                                 {
                                     problems[index].inlineChoiceOptions.map((choice: any[], choiceIndex: number) => {
                                         return <View style={{
                                             flexDirection: 'column',
-                                            backgroundColor: "#f2f2f2",
                                             padding: 30,
                                             width: 280,
                                             minWidth: 280,
-                                            margin: 15,
-                                            // borderRadius: 15,
+                                            marginRight: 30,
+                                            borderRadius: 15,
+                                            border: '1px solid #cccccc'
                                         }}>
                                             <Text style={{
                                                 fontSize: 16,
@@ -2052,7 +2214,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             <View style={{
                                                 flexDirection: 'column',
                                                 alignItems: 'center',
-                                                backgroundColor: "#f2f2f2",
                                             }}>
                                                 {
                                                     choice.map((option: any, optionIndex: number) => {
@@ -2084,6 +2245,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     marginBottom: 0
                                                                 }}
                                                                 multiline={true}
+                                                                placeholder={"Option " + (optionIndex + 1)}
                                                                 value={option.option}
                                                                 onChangeText={(text) => {
                                                                     const updatedProblems = [...problems]
@@ -2118,13 +2280,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     const updatedProblems = [...problems]
                                                     updatedProblems[index].inlineChoiceOptions[choiceIndex].push({
                                                         isCorrect: false,
-                                                        option: 'Option ' + (updatedProblems[index].inlineChoiceOptions[choiceIndex].length + 1)
+                                                        option: ''
                                                     })
                                                     setProblems(updatedProblems)
                                                     props.setProblems(updatedProblems)
                                                 }}
                                                 style={{
-                                                    backgroundColor: "#f2f2f2",
                                                     overflow: "hidden",
                                                     height: 30,
                                                     marginTop: 15,
@@ -2137,7 +2298,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         borderColor: '#006AFF',
-                                                        backgroundColor: '#f2f2f2',
                                                         fontSize: 11,
                                                         textAlign: "center",
                                                         lineHeight: 30,
@@ -2340,7 +2500,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 return (<View style={{ 
                                                     flexDirection: 'row',
                                                     alignItems: 'center',
-                                                    marginRight: 30,
+                                                    marginRight: 50,
                                                     marginBottom: 30
                                                 }}>
 
@@ -2382,7 +2542,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             setProblems(updatedProblems)
                                                             props.setProblems(updatedProblems)
                                                         }}
-                                                    /> : <div className={option.isCorrect ? 'highlightTextActive' : 'highlightTextOption'}>
+                                                    /> : <div className={option.isCorrect ? 'hotspotActive' : 'hotspotOption'}>
                                                         {ind + 1}. {option.option}
                                                     </div>}
 
@@ -2679,7 +2839,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             paddingBottom: 13,
                                                                                             marginTop: 0,
                                                                                             padding: '10px',
-                                                                                            marginRight: 5
+                                                                                            marginRight: 5,
+                                                                                            paddingLeft: 10
                                                                                         }}
                                                                                         value={item.content}
                                                                                         placeholder={'Label'}
@@ -2732,6 +2893,288 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </div>
                                 : null
                         }
+
+                        {/* MULTIPART */}
+
+                        {
+                            problem.questionType === 'multipart' && editQuestionNumber === (index + 1) ?
+                                (<View style={{
+                                    flexDirection: 'column', 
+                                    paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                                }}>
+                                    {
+                                        problem.multipartOptions.map((part: any, partIndex: number) => {
+                                            const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                                            return <View style={{
+                                                flexDirection: 'column',
+
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: 22,
+                                                    fontFamily: 'Overpass',
+                                                    marginTop: 50,
+                                                    marginBottom: 20
+                                                }}>Part {alphabet[partIndex]}</Text>
+
+                                                {/* Question */}
+                                                <View style={{
+                                                    maxWidth: 600,
+                                                }}>                                                
+                                                    <FroalaEditor
+                                                        model={problem.multipartQuestions[partIndex]}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].multipartQuestions[partIndex] = model;
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Part ' + alphabet[partIndex] + ' Question',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL:
+                                                                'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                        }}
+                                                    />
+                                                </View>
+
+                                                {/* Options */}
+
+                                                {
+                                                    problem.multipartOptions[partIndex].map((option: any, optionIndex: number) => {
+                                                        return (<View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <input
+                                                                style={{}}
+                                                                type='checkbox'
+                                                                checked={option.isCorrect}
+                                                                onChange={(e) => {
+                                                                    const updatedProblems = [...problems]
+                                                                    problems[index].multipartOptions[partIndex][optionIndex].isCorrect = !problems[index].multipartOptions[partIndex][optionIndex].isCorrect;
+                                                                    setProblems(updatedProblems)
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                disabled={editQuestionNumber !== (index + 1)}
+                                                            />
+
+                                                            <TextareaAutosize
+                                                                style={{
+                                                                    fontFamily: 'overpass',
+                                                                    maxWidth: '100%', marginBottom: 10, marginTop: 10,
+                                                                    borderRadius: 1,
+                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                                                    width: 300,
+                                                                    maxWidth: 300,
+                                                                    marginLeft: 20,
+                                                                    paddingLeft: 10
+                                                                }}
+                                                                value={option.option}
+                                                                placeholder={'Option ' + (optionIndex + 1)}
+                                                                onChange={(e: any) => {
+                                                                    const newProbs = [...problems];
+                                                                    newProbs[index].multipartOptions[partIndex][optionIndex].option = e.target.value;
+                                                                    setProblems(newProbs)
+                                                                    props.setProblems(newProbs)
+                                                                }}
+                                                                minRows={2}
+                                                            />
+
+                                                            <TouchableOpacity style={{
+                                                                marginLeft: 20
+                                                            }}
+                                                                onPress={() => {
+                                                                    const newProbs = [...problems];
+                                                                    const updateMultipartOptions = [...newProbs[index].multipartOptions[partIndex]]
+                                                                    updateMultipartOptions.splice(optionIndex, 1)
+                                                                    newProbs[index].multipartOptions[partIndex] = updateMultipartOptions
+                                                                    setProblems(newProbs)
+                                                                    props.setProblems(newProbs)
+                                                                }}
+                                                            >
+                                                                {/* <Ionicons name='trash-outline' size={20} /> */}
+                                                                    <Text
+                                                                        style={{
+                                                                            paddingTop: 0,
+                                                                            color: '#006AFF',
+                                                                            fontFamily: 'Overpass',
+                                                                            fontSize: 10
+                                                                        }}
+                                                                    >
+                                                                        Remove
+                                                                    </Text>
+                                                            </TouchableOpacity>
+                                                        </View>)
+                                                    })
+                                                }
+
+
+                                                {/* Add option button */}
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        const newProbs = [...problems];
+                                                        const updateMultipartOptions = [...newProbs[index].multipartOptions[partIndex]]
+                                                        updateMultipartOptions.push({
+                                                            option: '',
+                                                            isCorrect: false 
+                                                        })
+                                                        newProbs[index].multipartOptions[partIndex] = updateMultipartOptions
+                                                        setProblems(newProbs)
+                                                        props.setProblems(newProbs)
+                                                    }} style={{
+                                                        backgroundColor: "white",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        marginTop: 20,
+                                                        marginBottom: 30
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: '#006AFF',
+                                                            borderWidth: 1,
+                                                            borderRadius: 15,
+                                                            borderColor: '#006AFF',
+                                                            backgroundColor: '#fff',
+                                                            fontSize: 12,
+                                                            textAlign: "center",
+                                                            lineHeight: 34,
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            textTransform: 'uppercase',
+                                                            width: 130,
+                                                        }}
+                                                    >
+                                                        Add Choice
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                                                        
+                                            </View>
+                                        })
+                                    }
+                                </View>) : null
+                        }
+
+                        {
+                            problem.questionType === 'multipart' && editQuestionNumber !== (index + 1) ? <View style={{
+                                flexDirection: 'column', 
+                                paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                            }}>
+                                { problem.multipartOptions.map((part: any, partIndex: number) => {
+                                    const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+                                    return <View style={{
+                                            flexDirection: 'column',
+                                        }}>
+                                            <Text style={{
+                                                fontSize: 22,
+                                                fontFamily: 'Overpass',
+                                                marginTop: 50,
+                                                marginBottom: 20,
+
+                                            }}>Part {alphabet[partIndex]}</Text>
+
+                                            <Text style={{ marginTop: 15, fontSize: 15, lineHeight: 25, marginBottom: 20 }}>
+                                                {parser(problem.multipartQuestions[partIndex])}
+                                            </Text>
+
+                                            {
+                                                part.map((option: any, optionIndex: number) => {
+                                                    return <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginBottom: 20,
+                                                        marginTop: 20,
+                                                    }}>
+                                                        <input
+                                                            style={{}}
+                                                            type='checkbox'
+                                                            checked={option.isCorrect}
+                                                            onChange={(e) => {
+                                                                
+                                                            }}
+                                                            disabled={true}
+                                                        />
+
+                                                        <Text style={{  marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                            {parser(option.option)}
+                                                        </Text>
+                                                    </View>
+                                                })
+                                            }
+
+                                        </View>
+
+                                        
+                                })}
+                            </View> : null
+                        }
+
+                        {/* Equation Editor Questions */}
+                        
+                        {problem.questionType === 'equationEditor' && (editQuestionNumber === (index + 1)) ? 
+                            <View style={{
+                                flexDirection: 'column',
+                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
+                                marginTop: 20
+                            }}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    marginBottom: 10,
+                                    fontFamily: 'Inter'
+                                }}>
+                                    Enter Equation 
+                                </Text>
+                                <EquationEditorQuiz 
+                                    equation={problems[index].correctEquations[0]}
+                                    onChange={(eq: any) => {
+                                        const updateProblems = [...problems]
+                                        updateProblems[index].correctEquations[0] = eq;
+                                        setProblems(updateProblems)
+                                        props.setProblems(updateProblems)
+                                    }}
+                                />
+                            </View> : null}
+
+                        {/* Equation editor  */}
+
+                        {problem.questionType === 'equationEditor' && (editQuestionNumber !== (index + 1)) ? 
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Overpass', marginRight: 10 }}>
+                                    Answer: 
+                                </Text>
+                                <MathJax math={'$$' + problems[index].correctEquations[0] + '$$'} style={{
+                                    fontSize: 20
+                                }} />
+                            </View> : null}
+
                         {
                             problem.options.map((option: any, i: any) => {
 
@@ -2898,7 +3341,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 backgroundColor: "white",
                                 overflow: "hidden",
                                 height: 35,
-                                marginTop: 15,
+                                marginTop: 20,
                                 alignSelf: 'center'
                             }}
                         >
@@ -2928,7 +3371,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'center',
-                paddingBottom: 25,
+                paddingBottom: 30,
             }}>
                 <TouchableOpacity
                     onPress={() => {
@@ -2946,6 +3389,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     style={{
                         borderRadius: 15,
                         backgroundColor: "white",
+                        marginTop: 20
                     }}
                 >
                     <Text

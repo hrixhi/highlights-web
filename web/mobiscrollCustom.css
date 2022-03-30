@@ -173,7 +173,7 @@
 /* Custom css for Question types */
 
 .highlightTextOption {
-    border: 1px solid #006aff;
+    border: 2px solid #e6f0ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
@@ -190,20 +190,20 @@
 } */
 
 .highlightTextActive {
-    border: 1px solid #006aff;
+    border: 2px solid #006aff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
-    background: #006aff;
-    color: #fff;
+    background: #e6f0ff;
+    color: #006aff;
     font-family: 'Overpass';
     font-size: 15px;
 }
 
 .highlightTextUnselected {
-    border: 1px solid #006aff;
+    border: 2px solid #e6f0ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
@@ -220,7 +220,7 @@
 }
 
 .highlightTextSelected {
-    border: 1px solid #006aff;
+    border: 2px solid #006aff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
@@ -233,7 +233,7 @@
 }
 
 .highlightTextCorrect {
-    border: 1px solid #35ac78;
+    border: 2px solid #35ac78;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
@@ -246,7 +246,7 @@
 }
 
 .highlightTextWrong {
-    border: 1px solid #f94144;
+    border: 2px solid #f94144;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
@@ -303,4 +303,34 @@ div#editable {
 .cardShadow {
     /* box-shadow: 0 5px 10px rgba(154, 160, 185, 0.05), 0 15px 40px rgba(166, 173, 201, 0.2); */
     border: 1px solid #cccccc;
+}
+
+.hotspotOption {
+    border: 2px solid #e6f0ff;
+    border-radius: 8px;
+    padding: 7px;
+    margin-left: 2;
+    margin-right: 2;
+    /* cursor: pointer; */
+    background: #e6f0ff;
+    color: #006aff;
+    font-family: 'Overpass';
+    font-size: 15px;
+}
+
+/* .highlightTextOption:hover {
+    border: 2px solid #006aff !important;
+} */
+
+.hotspotActive {
+    border: 2px solid #006aff;
+    border-radius: 8px;
+    padding: 7px;
+    margin-left: 2;
+    margin-right: 2;
+    /* cursor: pointer; */
+    background: #e6f0ff;
+    color: #006aff;
+    font-family: 'Overpass';
+    font-size: 15px;
 }

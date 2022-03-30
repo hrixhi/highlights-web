@@ -1277,9 +1277,30 @@ export const getQuiz = gql`
                         x
                         y
                     }
+                    hotspotOptions {
+                        option
+                        isCorrect
+                    }
                     imgUrl
                     highlightTextChoices
                     highlightTextHtml
+                    inlineChoiceHtml
+                    inlineChoiceOptions {
+                        option
+                        isCorrect
+                    }
+                    textEntryHtml
+                    textEntryOptions {
+                        option
+                        type
+                        points
+                    }
+                    multipartQuestions
+                    multipartOptions {
+                        option
+                        isCorrect
+                    }
+                    correctEquations
                 }
                 instructions
                 headers

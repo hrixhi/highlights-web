@@ -159,6 +159,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const noHotspotsAlert = 'Create one or more markers for Hotspot problems.'
     // new alert 
 
+    console.log("Equation", equation)
+
     Froalaeditor.DefineIcon('insertFormula', {
         NAME: 'formula',
         PATH:
@@ -299,11 +301,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             saveCue = JSON.stringify(obj);
         } else if (isQuiz) {
             // Loop over entire quiz and save only the questions which are valid
-            const validProblems = problems.filter((prob: any) => isCurrentQuestionValid(prob));
+            // const validProblems = problems.filter((prob: any) => isCurrentQuestionValid(prob));
 
             const quiz = {
                 title,
-                problems: validProblems,
+                problems,
                 timer,
                 duration,
                 headers,
@@ -423,20 +425,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return;
             }
         }
-        problems.map(problem => {
-            if (problem.question === '' || problem.question === 'formula:') {
-                Alert(fillMissingProblemsAlert);
+        problems.map((problem: any, problemIndex: number) => {
+
+            if (problem.question === "" && (problem.questionType !== 'textEntry' && problem.questionType !== 'inlineChoice' && problem.questionType !== 'highlightText')) {
+                alert(`Question ${problemIndex + 1} has no content.`)
                 error = true;
             }
+
             if (problem.points === '' || Number.isNaN(Number(problem.points))) {
-                Alert(enterNumericPointsAlert);
+                Alert(`Enter numeric points for Question ${problemIndex + 1}.`);
                 error = true;
             }
             let optionFound = false;
 
             // If MCQ then > 2 options
             if (!problem.questionType && problem.options.length < 2) {
-                Alert('Problem must have at least 2 options');
+                Alert(`Question ${problemIndex + 1} must have at least 2 options.`);
+                setIsSubmitting(false);
                 error = true;
             }
 
@@ -446,12 +451,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 problem.options.map((option: any) => {
                     if (option.option === '' || option.option === 'formula:') {
-                        Alert(fillMissingOptionsAlert);
+                        Alert(`Fill out missing options in question ${problemIndex + 1}.`);
+                        setIsSubmitting(false);
                         error = true;
                     }
 
                     if (option.option in keys) {
-                        Alert('Option repeated in a question');
+                        Alert(`Option repeated in question ${problemIndex + 1}.`);
+                        setIsSubmitting(false);
                         error = true;
                     }
 
@@ -463,8 +470,278 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 });
 
                 if (!optionFound) {
-                    Alert(eachOptionOneCorrectAlert);
+                    Alert(`Question ${problemIndex + 1} must have at least one correct answer.`);
+                    setIsSubmitting(false);
                     error = true;
+                }
+            }
+
+
+            // Drag and Drop
+            if (problem.questionType === 'dragdrop') {
+                let groupHeaderMissing = false 
+                let labelMissing = false
+                let groupEmpty = false
+
+                problem.dragDropHeaders.map((header: string) => {
+                    if (!header) {
+                        groupHeaderMissing = true
+                    }
+                });
+
+                if (groupHeaderMissing) {
+                    alert(`Group header is missing in Question ${problemIndex + 1}.`)
+                    return false;
+                }
+
+                problem.dragDropData.map((items: any[]) => {
+
+                    if (items.length === 0) {
+                        groupEmpty = true
+                    }
+
+                    items.map((label: any) => {
+                        if (label.content === '') {
+                            labelMissing = true
+                        }
+                    })
+
+                });
+
+                if (labelMissing) {
+                    alert(`Item missing in Question ${problemIndex + 1}.`)
+                    return false;
+                }
+
+                if (groupEmpty) {
+                    alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`)
+                    return false;
+                }
+
+            }
+
+            // Hotspot
+            if (problem.questionType === 'hotspot') {
+                if(problem.imgUrl === '' || !problem.imgUrl) {
+                    Alert(`Hotspot image is missing in Question ${problemIndex + 1}.`)
+                    setIsSubmitting(false);
+                    error = true;
+                }
+                if(!problem.hotspots || problem.hotspots.length === 0) {
+                    Alert(`You must place at least two hotspot marker on the image in Question ${problemIndex + 1}.`);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+                
+                let hasCorrectAnswer = false;
+
+                problem.hotspotOptions.map((option: any) => {
+
+                    if (option.isCorrect) {
+                        hasCorrectAnswer = true;
+                    }
+
+                })
+
+                if (!hasCorrectAnswer) {
+                    Alert(`Hotspot question ${problemIndex + 1} must have at least correct choice.`);
+                    return;
+                }
+            }
+
+            // Highlight Text
+            if (problem.questionType === 'highlightText') {
+
+                if (problem.highlightTextChoices.length < 2) {
+                    Alert(`You must set multiple highlight text choices and mark one as correct in Question ${problemIndex + 1}.`);
+                    return;
+                }
+                
+                let atleastOneCorrect = false;
+    
+                problem.highlightTextChoices.map((choice: boolean) => {
+                    if (choice) {
+                        atleastOneCorrect = true;
+                    }
+                })
+    
+                if (!atleastOneCorrect) {
+                    Alert(`You must set at least one highlight text choice as correct in Question ${problemIndex + 1}.`);
+                    return;
+                }
+            }
+
+            // Inline Choice
+            if (problem.questionType === 'inlineChoice') {
+                if (problem.inlineChoiceHtml === '') {
+                    alert(`Question ${problemIndex + 1} has no content.`)
+                    return;
+                }
+    
+                if (problem.inlineChoiceOptions.length === 0) {
+                    alert(`Question ${problemIndex + 1} must have at lease one dropdown.`)
+                    return;
+                }
+                
+                let lessThan2DropdownValues = false
+                let missingDropdownValue = false;
+                let missingCorrectAnswer = false;
+    
+                if (problem.inlineChoiceOptions.length > 0) {
+                    problem.inlineChoiceOptions.map((choices: any[]) => {
+                        if (choices.length < 2) {
+                            lessThan2DropdownValues = true
+                        }
+    
+                        let hasCorrect = false
+                        choices.map((choice: any) => {
+                            if (choice.isCorrect) {
+                                hasCorrect = true
+                            }
+    
+                            if (choice.option === '') {
+                                missingDropdownValue = true
+                            }
+                        })
+    
+                        if (!hasCorrect) {
+                            missingCorrectAnswer = true
+                        }
+    
+                    })
+    
+                    if (lessThan2DropdownValues) {
+                        alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`)
+                        return;
+                    }
+    
+                    if (missingDropdownValue) {
+                        alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`)
+                        return;
+                    }
+    
+                    if (missingCorrectAnswer) {
+                        alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`)
+                        return;
+                    }
+                }
+    
+            }
+
+            // Text Entry
+            if (problem.questionType === 'textEntry') {
+                if (problem.textEntryHtml === '') {
+                    alert(`Question ${problemIndex + 1} has no content.`)
+                    return;
+                }
+
+                if (problem.textEntryOptions.length === 0) {
+                    alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`)
+                    return;
+                }
+
+                let missingEntryAnswer = false;
+                let missingEntryPoints = false;
+                let pointsNotANumber = false;
+
+                problem.textEntryOptions.map((choice: any, problemIndex: number) => {
+                    if (choice.option === '') {
+                        missingEntryAnswer = true;
+                    }
+
+                    if (choice.points === '') {
+                        missingEntryPoints = true
+                    }
+
+                    if (Number.isNaN(Number(choice.points))) {
+                        pointsNotANumber = true
+                    }
+
+                })
+
+                if (missingEntryAnswer) {
+                    alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`)
+                    return;
+                }
+
+                if (missingEntryPoints) {
+                    alert(`Each Text entry must have points in question ${problemIndex + 1}.`)
+                    return;
+                }
+
+                if (pointsNotANumber) {
+                    alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`)
+                    return;
+                }
+
+            }
+
+            // Multipart 
+            if (problem.questionType === 'multipart') {
+                if (problem.multipartQuestions[0] === '' || problem.multipartQuestions[1] === '') {
+                    alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                // Part A
+                let hasOneCorrect = false;
+                let hasMissingOption = false;
+
+                // At least two choices
+                if (problem.multipartOptions[0].length < 2) {
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`)
+                    return;
+                }
+
+                problem.multipartOptions[0].map((option: any) => {
+                    if (option.isCorrect) {
+                        hasOneCorrect = true
+                    }
+
+                    if (option.option === '') {
+                        hasMissingOption = true;
+                    }
+                })
+
+                if (!hasOneCorrect) {
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`)
+                    return;
+                }
+
+                if (hasMissingOption) {
+                    alert(`Part A option is empty in question ${problemIndex + 1}`)
+                }
+
+                if (problem.multipartOptions[0].length < 2) {
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`)
+                    return;
+                }
+
+                // Part B
+                problem.multipartOptions[1].map((option: any) => {
+                    if (option.isCorrect) {
+                        hasOneCorrect = true
+                    }
+
+                    if (option.option === '') {
+                        hasMissingOption = true;
+                    }
+                })
+
+                if (!hasOneCorrect) {
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`)
+                    return;
+                }
+
+                if (hasMissingOption) {
+                    alert(`Part A option is empty in question ${problemIndex + 1}`)
+                }
+            }
+
+            if (problem.questionType === 'equationEditor') {
+                if (problem.correctEquations[0] === '') {
+                    alert('Correct equation cannot be empty.')
+                    return;
                 }
             }
         });
@@ -482,132 +759,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const createNewQuiz = useCallback(() => {
         setIsSubmitting(true);
         setCreatingQuiz(true);
-        let error = false;
-        if (problems.length === 0) {
-            Alert(enterOneProblemAlert);
-            return;
-        }
-        if (timer) {
-            if (duration.hours === 0 && duration.minutes === 0 && duration.seconds === 0) {
-                Alert(invalidDurationAlert);
-                return;
-            }
-        }
-        problems.map(problem => {
-            if (problem.question === '' || problem.question === 'formula:') {
-                Alert(fillMissingProblemsAlert);
-                error = true;
-            }
-            if (problem.points === '' || Number.isNaN(Number(problem.points))) {
-                Alert(enterNumericPointsAlert);
-                error = true;
-            }
-            let optionFound = false;
 
-            // If MCQ then > 2 options
-            if (!problem.questionType && problem.options.length < 2) {
-                Alert('Problem must have at least 2 options');
-                setIsSubmitting(false);
-                error = true;
-            }
-
-            // If MCQ, check if any options repeat:
-            if (!problem.questionType || problem.questionType === 'trueFalse') {
-                const keys: any = {};
-
-                problem.options.map((option: any) => {
-                    if (option.option === '' || option.option === 'formula:') {
-                        Alert(fillMissingOptionsAlert);
-                        setIsSubmitting(false);
-                        error = true;
-                    }
-
-                    if (option.option in keys) {
-                        Alert('Option repeated in a question');
-                        setIsSubmitting(false);
-                        error = true;
-                    }
-
-                    if (option.isCorrect) {
-                        optionFound = true;
-                    }
-
-                    keys[option.option] = 1;
-                });
-
-                if (!optionFound) {
-                    Alert(eachOptionOneCorrectAlert);
-                    setIsSubmitting(false);
-                    error = true;
-                }
-            }
-
-
-
-            if ((problem.questionType === 'dragdrop')) {
-    
-                problem.dragDropHeaders.map((header: string) => {
-                    if (!header) {
-                        Alert('Group headers cannot be empty in Drag and Drop questions.')
-                        error = true
-                    }
-                });
-    
-
-                problem.dragDropData.map((items: any[]) => {
-
-                    if (items.length === 0) {
-                        Alert('Each Group must have one item in Drag and Drop questions.')
-                        error = true
-                    }
-    
-                    items.map((label: any) => {
-                        if (label.content === '') {
-                            Alert('Each Group must have one item in Drag and Drop questions.')
-                            error = true
-                        }
-                    })
-                });
-
-    
-            }
-
-            if (problem.questionType === 'highlightText') {
-
-                if (problem.highlightTextChoices.length < 2) {
-                    Alert(`You must set multiple highlight text choices and mark one as correct in Highlight Text questions.`);
-                    return;
-                }
-                
-                let atleastOneCorrect = false;
-    
-                problem.highlightTextChoices.map((choice: boolean) => {
-                    if (choice) {
-                        atleastOneCorrect = true;
-                    }
-                })
-    
-                if (!atleastOneCorrect) {
-                    Alert(`You must set at least one highlight text choice as correct in Highlight Text questions.`);
-                    return;
-                }
-            }
-
-            if (problem.questionType === 'hotspot') {
-                if(problem.imgUrl === '' || !problem.imgUrl) {
-                    Alert(noImageAlert);
-                    setIsSubmitting(false);
-                    error = true;
-                }
-                if(!problem.hotspots || problem.hotspots.length === 0) {
-                    Alert(noHotspotsAlert);
-                    setIsSubmitting(false);
-                    error = true;
-                }
-            }
-
-        });
-        if (error) {
+        const isValid = isQuizValid()
+           
+        console.log("isValid", isValid);
+        
+        if (!isValid) {
             setIsSubmitting(false);
             setCreatingQuiz(false);
             return;
@@ -643,6 +800,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
+        // Sanitize problems  
+
+        const sanitizeProblems = problems.map((problem: any) => {
+            
+            if (problem.questionType === 'textEntry') {
+
+                let updateProblem = {
+                    ...problem
+                };
+    
+                const updatedTextEntryOptions = problem.textEntryOptions.map((option: any) => {
+                    return {
+                        ...option,
+                        points: Number(option.points)
+                    }
+                });
+
+                updateProblem.textEntryOptions = updatedTextEntryOptions;
+
+                return updateProblem
+
+            }
+
+            return problem;
+        })
+
+        console.log("Sanitized problems", sanitizeProblems)
+
+
         const server = fetchAPI('');
         const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
         server
@@ -650,7 +836,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 mutation: createQuiz,
                 variables: {
                     quiz: {
-                        problems,
+                        problems: sanitizeProblems,
                         duration: timer ? durationMinutes.toString() : null,
                         shuffleQuiz,
                         instructions: quizInstructions,
@@ -2698,6 +2884,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontSize: 14,
                                                     paddingTop: 13,
                                                     paddingBottom: 13,
+                                                    paddingLeft: 10,
                                                     marginTop: 12,
                                                     marginBottom: 15,
                                                     borderRadius: 1,

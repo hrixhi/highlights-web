@@ -55,6 +55,9 @@ import ImageMarker from "react-image-marker"
 
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 
+import EquationEditorQuiz from './EquationEditorQuiz';
+import MathJax from 'react-mathjax-preview'
+
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems, setProblems] = useState<any[]>(props.problems.slice());
     const [headers, setHeaders] = useState<any>(props.headers);
@@ -97,6 +100,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [equationEditorFor, setEquationEditorFor] = useState('');
     const [equationOptionId, setEquationOptionId] = useState('');
     const [equationSolutionId, setEquationSolutionId] = useState('');
+
+    console.log("Solutions", solutions)
 
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
@@ -223,9 +228,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         dragDropChoices: arr
                     })
                 } else if (problem.questionType === 'hotspot') {
+
+                    const hotspotOptions = problem.hotspotOptions
+
+                    const initSelection = hotspotOptions.map(() => false);
+
                     solutionInit.push({
-                        hotspotSelection: []
+                        hotspotSelection: initSelection
                     })
+
                 } else if (problem.questionType === 'highlightText') {
                     const highlightTextChoices = problem.highlightTextChoices
 
@@ -234,7 +245,55 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     solutionInit.push({
                         highlightTextSelection: initSelection
                     })
-                } else {
+                } else if (problem.questionType === 'inlineChoice') {
+                    const inlineChoiceOptions = problem.inlineChoiceOptions;
+                    
+                    const initSelection = inlineChoiceOptions.map(() => '');
+
+                    solutionInit.push({
+                        inlineChoiceSelection: initSelection
+                    })
+
+                } else if (problem.questionType === 'textEntry') {
+
+                    const textEntryOptions = problem.textEntryOptions
+
+                    const initSelection = textEntryOptions.map(() => '');
+
+                    solutionInit.push({
+                        textEntrySelection: initSelection
+                    })
+
+
+                } else if (problem.questionType === 'multipart') {
+
+                    const multipartOptions = problem.multipartOptions;
+
+                    const selections: any[] = []
+
+                    // Loop over all parts
+                    multipartOptions.map((part: any) => {
+                        const arr: any = [];
+
+                        // For each part loop over all the options
+                        part.map((i: any) => {
+                            arr.push(false);
+                        });
+
+                        selections.push(arr);
+
+                    })
+
+                    solutionInit.push({
+                        multipartSelection: selections
+                    })
+
+                } else if (problem.questionType === 'equationEditor') {
+                    solutionInit.push({
+                        equationResponse: ''
+                    })
+
+                } else {    
                     solutionInit.push({
                         response: ''
                     });
@@ -993,6 +1052,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const renderQuestionEditor = (index: number) => {
         if (editQuestionNumber === 0) return null;
 
+        if (problems[index].questionType === 'textEntry' || problems[index].questionType === 'inlineChoice' || problems[index].questionType === 'highlightText' ) {
+            return null;
+        }
+
         let audioVideoQuestion =
             problems[index].question[0] === '{' &&
             problems[index].question[problems[index].question.length - 1] === '}';
@@ -1012,7 +1075,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
 
         return (
-            <View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 25 }}>
+            <View style={{ width: '100%', marginBottom: props.isOwner ? 0 : 10, paddingBottom: 25, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40  }}>
                
                 {audioVideoQuestion ? (
                     <View style={{ marginBottom: 20 }}>{renderAudioVideoPlayer(url, type)}</View>
@@ -1239,73 +1302,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             quickInsertEnabled: false
                         }}
                     />
-                ) : // <Editor
-                //     // onInit={(evt, editor) => RichText.current = editor}
-                //     initialValue={initialInstructions}
-                //     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                //     init={{
-                //         skin: 'snow',
-                //         // toolbar_sticky: true,
-                //         indent: false,
-                //         branding: false,
-                //         placeholder: 'Instructions',
-                //         autoresize_on_init: false,
-                //         autoresize_min_height: 250,
-                //         height: 250,
-                //         min_height: 250,
-                //         paste_data_images: true,
-                //         images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                //         mobile: {
-                //             plugins:
-                //                 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                //         },
-                //         plugins:
-                //             'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                //         menu: {
-                //             // this is the complete default configuration
-                //             file: { title: 'File', items: 'newdocument' },
-                //             edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                //             insert: { title: 'Insert', items: 'link media | template hr' },
-                //             view: { title: 'View', items: 'visualaid' },
-                //             format: {
-                //                 title: 'Format',
-                //                 items:
-                //                     'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                //             },
-                //             table: {
-                //                 title: 'Table',
-                //                 items: 'inserttable tableprops deletetable | cell row column'
-                //             },
-                //             tools: { title: 'Tools', items: 'spellchecker code' }
-                //         },
-                //         // menubar: 'file edit view insert format tools table tc help',
-                //         menubar: false,
-                //         statusbar: false,
-                //         toolbar:
-                //             'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
-                //         importcss_append: true,
-                //         image_caption: true,
-                //         quickbars_selection_toolbar:
-                //             'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                //         noneditable_noneditable_class: 'mceNonEditable',
-                //         toolbar_mode: 'sliding',
-                //         content_style:
-                //             '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                //         // tinycomments_mode: 'embedded',
-                //         // content_style: '.mymention{ color: gray; }',
-                //         // contextmenu: 'link image table configurepermanentpen',
-                //         // a11y_advanced_options: true,
-                //         extended_valid_elements:
-                //             'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                //         // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                //         // content_css: useDarkMode ? 'dark' : 'default',
-                //     }}
-                //     onChange={(e: any) => {
-                //         setInstructions(e.target.getContent());
-                //     }}
-                // />
-
-                instructions !== '' ? (
+                ) : instructions !== '' ? (
                     <Text
                         style={{
                             // marginTop: 20,
@@ -1481,76 +1478,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         : 'column'
                                                     : 'row',
                                             flex: 1,
-                                            justifyContent: 'space-between'
+                                            // justifyContent: 'space-between'
                                         }}
                                     >
-                                        {props.isOwner && editQuestionNumber === index + 1 ? (
-                                            <View style={{ flexDirection: 'column', width: '100%', flex: 1 }}>
-                                                {editQuestionNumber === index + 1 ? (
-                                                    <View
-                                                        style={{
-                                                            flexDirection: 'row',
-                                                            marginTop: 20,
-                                                            marginBottom: 10,
-                                                            justifyContent: 'flex-end'
-                                                        }}
-                                                    >
-                                                        {audioVideoQuestion ? (
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    const updateProblems = lodash.cloneDeep(problems);
-                                                                    const question = updateProblems[index].question;
-                                                                    const parse = JSON.parse(question);
-                                                                    updateProblems[index].question = parse.content;
-                                                                    setProblems(updateProblems);
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        color: '#006AFF',
-                                                                        fontFamily: 'Overpass',
-                                                                        fontSize: 10
-                                                                    }}
-                                                                >
-                                                                    {' '}
-                                                                    Remove upload
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        ) : null}
-                                                    </View>
-                                                ) : null}
-
-                                                {renderQuestionEditor(editQuestionNumber - 1)}
-                                            </View>
-                                        ) : audioVideoQuestion ? (
-                                            <View style={{ width: '100%', marginBottom: 25, flex: 1 }}>
-                                                <View style={{ marginBottom: 20 }}>
-                                                    {renderAudioVideoPlayer(url, type)}
-                                                </View>
-                                                <Text style={{ marginVertical: 20, fontSize: 14, lineHeight: 25 }}>
-                                                    {parser(content)}
-                                                </Text>
-                                            </View>
-                                        ) : (
-                                            <Text
-                                                style={{
-                                                    marginTop: 15,
-                                                    fontSize: 14,
-                                                    width: Dimensions.get('window').width < 768 ? '100%' : '80%',
-                                                    marginBottom: 25,
-                                                    lineHeight: 25
-                                                }}
-                                            >
-                                                {parser(problem.question)}
-                                            </Text>
-                                        )}
-
+                                        
                                         {/* Options */}
                                         <View
                                             style={{
                                                 flexDirection: 'row',
                                                 marginBottom: Dimensions.get('window').width < 768 ? 15 : 0,
-                                                justifyContent: 'flex-end'
+                                                // justifyContent: 'flex-end',
+                                                marginLeft: 'auto'
                                             }}
                                         >
                                             <View
@@ -1673,6 +1611,67 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </View>
                             </View>
                         </View>
+
+                        {props.isOwner && editQuestionNumber === index + 1 ? (
+                            <View style={{ flexDirection: 'column', width: '100%', flex: 1 }}>
+                                {editQuestionNumber === index + 1 ? (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            marginTop: 20,
+                                            marginBottom: 10,
+                                            justifyContent: 'flex-end'
+                                        }}
+                                    >
+                                        {audioVideoQuestion ? (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    const updateProblems = lodash.cloneDeep(problems);
+                                                    const question = updateProblems[index].question;
+                                                    const parse = JSON.parse(question);
+                                                    updateProblems[index].question = parse.content;
+                                                    setProblems(updateProblems);
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#006AFF',
+                                                        fontFamily: 'Overpass',
+                                                        fontSize: 10
+                                                    }} 
+                                                >
+                                                    {' '}
+                                                    Remove upload
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ) : null}
+                                    </View>
+                                ) : null}
+
+                                {renderQuestionEditor(editQuestionNumber - 1)}
+                            </View>
+                        ) : audioVideoQuestion ? (
+                            <View style={{ width: '100%', marginBottom: 25, flex: 1 }}>
+                                <View style={{ marginBottom: 20 }}>
+                                    {renderAudioVideoPlayer(url, type)}
+                                </View>
+                                <Text style={{ marginVertical: 20, fontSize: 14, lineHeight: 25 }}>
+                                    {parser(content)}
+                                </Text>
+                            </View>
+                        ) : (
+                            <Text
+                                style={{
+                                    marginVertical: 20,
+                                    fontSize: 14,
+                                    width: Dimensions.get('window').width < 768 ? '100%' : '80%',
+                                    lineHeight: 25
+                                }}
+                            >
+                                {parser(problem.question)}
+                            </Text>
+                        )}
+
 
                         {(!problem.questionType || problem.questionType === 'trueFalse') &&
                             problem.options.map((option: any, i: number) => {
@@ -1808,112 +1807,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         quickInsertEnabled: false
                                                     }}
                                                 />
-                                                {/* <Editor
-                                                    onInit={(evt, editor) => {
-                                                         const newProbs = [...problems];
-                                                        newProbs[problemIndex].options[
-                                                            i
-                                                        ].option = e.target.getContent();
-                                                        setProblems(newProbs);
-                                                    }}
-                                                    initialValue={
-                                                        editQuestion &&
-                                                        editQuestion.options &&
-                                                        editQuestion.options[i] &&
-                                                        editQuestion.options[i].option !== ''
-                                                            ? editQuestion.options[i].option
-                                                            : ''
-                                                    }
-                                                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                                    init={{
-                                                        skin: 'snow',
-                                                        // toolbar_sticky: true,
-                                                        statusbar: false,
-                                                        branding: false,
-                                                        placeholder: 'Option',
-                                                        autoresize_on_init: false,
-                                                        autoresize_min_height: 150,
-                                                        height: 150,
-                                                        min_height: 150,
-                                                        paste_data_images: true,
-                                                        images_upload_url:
-                                                            'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                        mobile: {
-                                                            plugins:
-                                                                'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                        },
-                                                        plugins:
-                                                            'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                        menu: {
-                                                            // this is the complete default configuration
-                                                            file: { title: 'File', items: 'newdocument' },
-                                                            edit: {
-                                                                title: 'Edit',
-                                                                items:
-                                                                    'undo redo | cut copy paste pastetext | selectall'
-                                                            },
-                                                            insert: {
-                                                                title: 'Insert',
-                                                                items: 'link media | template hr'
-                                                            },
-                                                            view: { title: 'View', items: 'visualaid' },
-                                                            format: {
-                                                                title: 'Format',
-                                                                items:
-                                                                    'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                                                            },
-                                                            table: {
-                                                                title: 'Table',
-                                                                items:
-                                                                    'inserttable tableprops deletetable | cell row column'
-                                                            },
-                                                            tools: { title: 'Tools', items: 'spellchecker code' }
-                                                        },
-                                                        setup: (editor: any) => {
-                                                            const equationIcon =
-                                                                '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                                                            editor.ui.registry.addIcon('formula', equationIcon);
-
-                                                            editor.ui.registry.addButton('formula', {
-                                                                icon: 'formula',
-                                                                // text: "Upload File",
-                                                                tooltip: 'Insert equation',
-                                                                onAction: () => {
-                                                                    const updateShowFormulas = [...showOptionFormulas];
-                                                                    updateShowFormulas[i] = !updateShowFormulas[i];
-                                                                    setShowOptionFormulas(updateShowFormulas);
-                                                                }
-                                                            });
-                                                        },
-                                                        // menubar: 'file edit view insert format tools table tc help',
-                                                        menubar: false,
-                                                        toolbar:
-                                                            'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist removeformat | table image media link | charmap emoticons',
-                                                        importcss_append: true,
-                                                        image_caption: true,
-                                                        quickbars_selection_toolbar:
-                                                            'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                        noneditable_noneditable_class: 'mceNonEditable',
-                                                        toolbar_mode: 'sliding',
-                                                        content_style:
-                                                            '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                                                        // tinycomments_mode: 'embedded',
-                                                        // content_style: '.mymention{ color: gray; }',
-                                                        // contextmenu: 'link image table configurepermanentpen',
-                                                        // a11y_advanced_options: true,
-                                                        extended_valid_elements:
-                                                            'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                                                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                        // content_css: useDarkMode ? 'dark' : 'default',
-                                                    }}
-                                                    onChange={(e: any) => {
-                                                        const newProbs = [...problems];
-                                                        newProbs[problemIndex].options[
-                                                            i
-                                                        ].option = e.target.getContent();
-                                                        setProblems(newProbs);
-                                                    }}
-                                                /> */}
                                             </View>
                                         ) : (
                                             <Text
@@ -1936,6 +1829,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 );
                             })}
                         
+                        {/* Hotspot image owner */}
                         {
                             problem.questionType === 'hotspot' && props.isOwner ?
                             <View style={{
@@ -1952,27 +1846,37 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         onAddMarker={(marker: any) => { 
                                            return;
                                         }}
-                                        markerComponent={(p: any) => <TouchableOpacity disabled={true} style={{
-                                            backgroundColor: '#fff',
-                                            height: 25, width: 25, borderColor: '#000',
-                                            borderRadius: 12.5
-                                        }}
-                                            onPress={() => {
-                                                return;
+                                        markerComponent={(p: any) => {
+
+                                            const hotspotOption = problem.hotspotOptions[p.itemNumber]; 
+
+                                            return <TouchableOpacity disabled={true} style={{
+                                                backgroundColor: hotspotOption.isCorrect ? '#006AFF' : '#fff',
+                                                height: 25, 
+                                                width: 25, 
+                                                borderColor: '#006AFF', 
+                                                borderWidth: 1,
+                                                borderRadius: 12.5
                                             }}
-                                        >
-                                            <Text style={{
-                                                color: '#000', lineHeight: 25, textAlign: 'center'
-                                            }}>
-                                                {p.itemNumber}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        }
+                                                onPress={() => {
+                                                    return;
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: hotspotOption.isCorrect ? '#fff' : '#006AFF', 
+                                                    lineHeight: 25, 
+                                                    textAlign: 'center',
+                                                }}>
+                                                    {p.itemNumber + 1}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }}
                                     />
                                 </View>
                             </View> : null
                         }
 
+                        {/* Hotspot images for non-owner */}
                         {
                             problem.questionType === 'hotspot' && !props.isOwner ?
                             <View style={{
@@ -1983,37 +1887,144 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}>
                                     <ImageMarker
                                         src={problem.imgUrl}
-                                        markers={solutions[problemIndex].hotspotSelection.map((spot: any) => {
+                                        markers={problem.hotspots.map((spot: any) => {
                                             return { top: spot.y, left: spot.x }
                                         })}
                                         onAddMarker={(marker: any) => { 
-                                            const updatedSolution = [...solutions];
-                                            updatedSolution[problemIndex].hotspotSelection = [{ x: marker.left, y: marker.top }];
-                                            setSolutions(updatedSolution);
-                                            props.setSolutions(updatedSolution);
+                                            return;
                                         }}
-                                        markerComponent={(p: any) => <TouchableOpacity style={{
-                                            backgroundColor: '#ff0000',
-                                            height: 20, width: 20, borderColor: '#000',
-                                            borderRadius: 12.5
-                                        }}
-                                            onPress={() => {
-                                                const updatedSolution = [...solutions];
-                                                updatedSolution[problemIndex].hotspotSelection = []
-                                                setSolutions(updatedSolution);
-                                                props.setSolutions(updatedSolution);
+                                        markerComponent={(p: any) => {
+
+                                            const selection = solutions[problemIndex].hotspotSelection[p.itemNumber] 
+
+                                            return <TouchableOpacity style={{
+                                                backgroundColor: selection ? '#006AFF' : '#fff',
+                                                height: 25, 
+                                                width: 25, 
+                                                borderColor: '#006AFF', 
+                                                borderWidth: 1,
+                                                borderRadius: 12.5
                                             }}
-                                        >
-                                            <Text style={{
-                                                color: '#000', lineHeight: 25, textAlign: 'center'
-                                            }}>
-                                                {/* {p.itemNumber} */}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        }
+                                                onPress={() => {
+                                                    const updatedSolution = [...solutions];
+                                                    updatedSolution[problemIndex].hotspotSelection[p.itemNumber] = !updatedSolution[problemIndex].hotspotSelection[p.itemNumber]
+                                                    setSolutions(updatedSolution);
+                                                    props.setSolutions(updatedSolution);
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: selection ? '#fff' : '#006AFF', 
+                                                    lineHeight: 25, 
+                                                    textAlign: 'center',
+                                                }}>
+                                                    {p.itemNumber + 1}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }}
                                     />
                                 </View>
                             </View> : null
+                        }
+
+                        
+                        {/* Hotspot labels for owners */}
+                        {
+                            problem.questionType === 'hotspot' && props.isOwner ? ( 
+                                <View style={{
+                                    paddingTop: 50
+                                }}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center'
+                                    }}>
+                                        {
+                                            problem.hotspotOptions.map((option: any, ind: number) => {
+                                                return (<View style={{ 
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    marginRight: 50,
+                                                    marginBottom: 30
+                                                }}>
+
+                                                    <input
+                                                        style={{
+                                                            marginRight: 12
+                                                        }}
+                                                        type='checkbox'
+                                                        checked={option.isCorrect}
+                                                        onChange={(e) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].hotspotOptions[ind].isCorrect = !updatedProblems[index].hotspotOptions[ind].isCorrect
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        // disabled={editQuestionNumber !== (index + 1)}
+                                                        disabled={true}
+                                                    />
+
+                                                    {/* {editQuestionNumber === (index + 1) ? <Text style={{ fontSize: 20 }}>{ind + 1}.</Text> : null} */}
+
+                                                    {<div className={option.isCorrect ? 'hotspotActive' : 'hotspotOption'}>
+                                                        {ind + 1}. {option.option}
+                                                    </div>}
+
+                                                </View>)
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                            ) : null
+                        }
+
+                        {/* Hotspot labels for non-owners */}
+                        {
+                            problem.questionType === 'hotspot' && !props.isOwner ? ( 
+                                <View style={{
+                                    paddingTop: 50
+                                }}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center'
+                                    }}>
+                                        {
+                                            problem.hotspotOptions.map((option: any, ind: number) => {
+
+                                                // Check if selected 
+                                                const currentSelection = solutions[problemIndex].hotspotSelection[ind]
+
+                                                return (<View style={{ 
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    marginRight: 50,
+                                                    marginBottom: 30
+                                                }}>
+                                                    <input
+                                                        style={{
+                                                            marginRight: 12
+                                                        }}
+                                                        type='checkbox'
+                                                        checked={currentSelection}
+                                                        onChange={(e) => {
+                                                            const updatedSolution = [...solutions];
+                                                            updatedSolution[problemIndex].hotspotSelection[ind] = !updatedSolution[problemIndex].hotspotSelection[ind]
+                                                            setSolutions(updatedSolution);
+                                                            props.setSolutions(updatedSolution);
+                                                        }}
+                                                        disabled={false}
+                                                    />
+
+                                                    <div className={currentSelection ? 'hotspotActive' : 'hotspotOption'}>
+                                                        {ind + 1}. {option.option}
+                                                    </div>
+
+                                                </View>)
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                            ) : null
                         }
 
                         {
@@ -2131,7 +2142,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
 
                         {   
-                            problem.questionType === 'highlightText' && props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                            problem.questionType === 'highlightText' && props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
                                 {ReactHtmlParser(problems[index].highlightTextHtml, {
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
@@ -2152,7 +2163,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                     // Loop over all the 
                                                     Array.from(spans).map((elm: any, ind3: number) => {
-                                                        if (node.next.data === elm.nextSibling.data && node.prev.data === elm.previousSibling.data && node.children[0].data === elm.firstChild.data) {
+                                                        if (((!node.next && !elm.nextSibling) || node.next.data === elm.nextSibling.data) && ((!node.prev && !node.previousSibling) || node.prev.data === elm.previousSibling.data) && node.children[0].data === elm.firstChild.data) {
                                                             matchIndex = ind3;
                                                         }
                                                     })
@@ -2174,7 +2185,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
 
                         {   
-                            problem.questionType === 'highlightText' && !props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                            problem.questionType === 'highlightText' && !props.isOwner ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
                                 {ReactHtmlParser(problems[index].highlightTextHtml, {
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
@@ -2195,7 +2206,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                     // Loop over all the 
                                                     Array.from(spans).map((elm: any, ind3: number) => {
-                                                        if (node.next.data === elm.nextSibling.data && node.prev.data === elm.previousSibling.data && node.children[0].data === elm.firstChild.data) {
+                                                        if (((!node.next && !elm.nextSibling) || node.next.data === elm.nextSibling.data) && ((!node.prev && !node.previousSibling) || node.prev.data === elm.previousSibling.data) && node.children[0].data === elm.firstChild.data) {
                                                             matchIndex = ind3;
                                                         }
                                                     })
@@ -2262,7 +2273,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 newState[dInd] = result[dInd];
                                                 updatedSolution[index].dragDropChoices = newState.slice(1, dndOptions.length);
                                                 setSolutions(updatedSolution);
-                                                console.log("Updated solutions", updatedSolution)
                                                 props.setSolutions(updatedSolution);
                                             }
 
@@ -2333,6 +2343,528 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </div>) : null
                             
                         }
+
+
+                        {/* Inline Choice owner */}
+
+                        {
+                            problem.questionType === 'inlineChoice' && props.isOwner ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
+                                    {ReactHtmlParser(problems[index].inlineChoiceHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });
+                                            } else {
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });  
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        {/* Inline choice not owner */}
+
+                        {
+                            problem.questionType === 'inlineChoice' && !props.isOwner ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
+                                    {ReactHtmlParser(problems[index].inlineChoiceHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                                onChange={(e) => {
+
+                                                                    console.log("Solution ", e.target.value)
+
+                                                                    const updatedSolution = [...solutions];
+                                                                    updatedSolution[problemIndex].inlineChoiceSelection[Number(node.attribs.id)] = e.target.value;
+                                                                    setSolutions(updatedSolution);
+                                                                    props.setSolutions(updatedSolution);
+
+                                                                }}
+                                                                value={solutions[problemIndex].inlineChoiceSelection[Number(node.attribs.id)]}
+                                                            >
+                                                                <option value="" selected disabled hidden>Choose option</option>
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });
+                                            } else {
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                                onChange={(e) => {
+
+                                                                    console.log("Solution ", e.target.value)
+
+                                                                    const updatedSolution = [...solutions];
+                                                                    updatedSolution[problemIndex].inlineChoiceSelection[Number(node.attribs.id)] = e.target.value;
+                                                                    setSolutions(updatedSolution);
+                                                                    props.setSolutions(updatedSolution);
+
+                                                                }}
+                                                                value={solutions[problemIndex].inlineChoiceSelection[Number(node.attribs.id)]}
+                                                            >
+                                                                <option value="" selected disabled hidden>Choose option</option>
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });  
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        {/* Text entry */}
+
+                        {
+                            problem.questionType === 'textEntry' && props.isOwner  ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
+                                    {ReactHtmlParser(problems[index].textEntryHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const textEntryOptions = problems[index].textEntryOptions
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = option.option;
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }} type={type} value={value} disabled={true}  />;
+                                                    }
+                                                });
+                                            } else {
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+                                                        const textEntryOptions = problems[index].textEntryOptions
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = option.option;
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }} type={type} value={value} disabled={true} />;
+                                                    }
+                                                });
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'textEntry' && !props.isOwner  ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0, paddingBottom: 30 }}>
+                                    {ReactHtmlParser(problems[index].textEntryHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const textEntryOptions = problems[index].textEntryOptions
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = solutions[problemIndex].textEntrySelection[Number(node.attribs.id)]
+
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }}
+                                                        onChange={(e) => {
+                                                            const updatedSolution = [...solutions];
+                                                            updatedSolution[problemIndex].textEntrySelection[Number(node.attribs.id)] = e.target.value;
+                                                            setSolutions(updatedSolution);
+                                                            props.setSolutions(updatedSolution);
+                                                        }}
+                                                        type={type} value={value} />;
+                                                    }
+                                                });
+                                            } else {
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+                                                        const textEntryOptions = problems[index].textEntryOptions
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = solutions[problemIndex].textEntrySelection[Number(node.attribs.id)]
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }} 
+                                                        onChange={(e) => {
+                                                            const updatedSolution = [...solutions];
+                                                            updatedSolution[problemIndex].textEntrySelection[Number(node.attribs.id)] = e.target.value;
+                                                            setSolutions(updatedSolution);
+                                                            props.setSolutions(updatedSolution);
+                                                        }}
+                                                        type={type} value={value} />;
+                                                    }
+                                                });
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'multipart' && props.isOwner && editQuestionNumber === (index + 1) ?
+                                (<View style={{
+                                    flexDirection: 'column', 
+                                    paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                                }}>
+                                    {
+                                        problem.multipartOptions.map((part: any, partIndex: number) => {
+                                            const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                                            return <View style={{
+                                                flexDirection: 'column',
+
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: 22,
+                                                    fontFamily: 'Overpass',
+                                                    marginTop: 50,
+                                                    marginBottom: 20
+                                                }}>Part {alphabet[partIndex]}</Text>
+
+                                                {/* Question */}
+                                                <View style={{
+                                                    maxWidth: 600,
+                                                }}>                                                
+                                                    <FroalaEditor
+                                                        model={problem.multipartQuestions[partIndex]}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].multipartQuestions[partIndex] = model;
+                                                            setEditQuestion(newProbs[problemIndex]);
+                                                            setProblems(newProbs)
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Part ' + alphabet[partIndex] + ' Question',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL:
+                                                                'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                        }}
+                                                    />
+                                                </View>
+
+                                                {/* Options */}
+
+                                                {
+                                                    problem.multipartOptions[partIndex].map((option: any, optionIndex: number) => {
+                                                        return (<View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <input
+                                                                style={{}}
+                                                                type='checkbox'
+                                                                checked={option.isCorrect}
+                                                                onChange={(e) => {
+                                                                    return
+                                                                }}
+                                                                disabled={true}
+                                                            />
+
+                                                            <TextareaAutosize
+                                                                style={{
+                                                                    fontFamily: 'overpass',
+                                                                    maxWidth: '100%', marginBottom: 10, marginTop: 10,
+                                                                    borderRadius: 1,
+                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                                                    width: 300,
+                                                                    maxWidth: 300,
+                                                                    marginLeft: 20,
+                                                                    paddingLeft: 10
+                                                                }}
+                                                                value={option.option}
+                                                                placeholder={'Option ' + (optionIndex + 1)}
+                                                                onChange={(e: any) => {
+                                                                    const newProbs = [...problems];
+                                                                    newProbs[index].multipartOptions[partIndex][optionIndex].option = e.target.value;
+                                                                    setEditQuestion(newProbs[problemIndex]);
+                                                                    setProblems(newProbs)
+                                                                }}
+                                                                minRows={2}
+                                                            />
+
+                                                        </View>)
+                                                    })
+                                                }
+                                                                        
+                                            </View>
+                                        })
+                                    }
+                                </View>) : null
+                        }
+
+                        {
+                            problem.questionType === 'multipart' && (editQuestionNumber !== (index + 1)) ? <View style={{
+                                flexDirection: 'column', 
+                                // paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                            }}>
+                                { problem.multipartOptions.map((part: any, partIndex: number) => {
+                                    const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+                                    return <View style={{
+                                            flexDirection: 'column',
+                                        }}>
+                                            <Text style={{
+                                                fontSize: 22,
+                                                fontFamily: 'Overpass',
+                                                marginTop: 50,
+                                                marginBottom: 20,
+
+                                            }}>Part {alphabet[partIndex]}</Text>
+
+                                            <Text style={{ marginTop: 15, fontSize: 15, lineHeight: 25, marginBottom: 20 }}>
+                                                {parser(problem.multipartQuestions[partIndex])}
+                                            </Text>
+
+                                            {
+                                                part.map((option: any, optionIndex: number) => {
+                                                    return <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginBottom: 20,
+                                                        marginTop: 20,
+                                                    }}>
+                                                        <input
+                                                            style={{}}
+                                                            type='checkbox'
+                                                            checked={props.isOwner ? option.isCorrect : solutions[problemIndex].multipartSelection[partIndex][optionIndex]}
+                                                            onChange={(e) => {
+                                                                const updatedSolution = [...solutions];
+                                                                updatedSolution[problemIndex].multipartSelection[partIndex][optionIndex] = !updatedSolution[problemIndex].multipartSelection[partIndex][optionIndex]
+                                                                setSolutions(updatedSolution)
+                                                                props.setSolutions(updatedSolution)
+                                                            }}
+                                                            disabled={props.isOwner}
+                                                        />
+
+                                                        {<Text style={{  marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                            {parser(option.option)}
+                                                        </Text>}
+                                                    </View>
+                                                })
+                                            }
+
+                                        </View>
+
+                                        
+                                })}
+                            </View> : null
+                        }
+
+                        {/* Equation Editor Questions */}
+                        
+                        {problem.questionType === 'equationEditor' && (editQuestionNumber === (index + 1) || !props.isOwner) ? 
+                            <View style={{
+                                flexDirection: 'column',
+                                paddingLeft: Dimensions.get('window').width < 768 || !props.isOwner ? 0 : 40,
+                                marginTop: 20
+                            }}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    marginBottom: 10,
+                                    fontFamily: 'Inter'
+                                }}>
+                                    Enter Equation 
+                                </Text>
+                                <EquationEditorQuiz 
+                                    equation={props.isOwner ? problem.correctEquations[0] : solutions[index].equationResponse}
+                                    onChange={(eq: any) => {
+
+                                        if (props.isOwner) {    
+                                            const newProbs = [...problems];
+                                            newProbs[index].correctEquations[0] = eq;
+                                            setProblems(newProbs);
+                                            return;
+                                        }
+
+                                        const updatedSolution = [...solutions]
+                                        updatedSolution[index].equationResponse = eq;
+                                        setSolutions(updatedSolution)
+                                        props.setSolutions(updatedSolution)
+                                    }}
+                                />
+                            </View> : null}
+
+                        {problem.questionType === 'equationEditor' && props.isOwner && (editQuestionNumber !== (index + 1)) ? 
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Overpass', marginRight: 10 }}>
+                                    Answer: 
+                                </Text>
+                                <MathJax math={'$$' + problems[index].correctEquations[0] + '$$'} style={{
+                                    fontSize: 20
+                                }} />
+                            </View> : null}
+
+
                         {problem.questionType === 'freeResponse' ? (
                             <View
                                 style={{
@@ -2480,7 +3012,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     paddingTop: 25,
                                     paddingBottom: 50,
-                                    paddingLeft: Dimensions.get('window').width < 768 ? 20 : 40
+                                    paddingLeft: 0
                                 }}
                             >
                                 <TouchableOpacity
@@ -2555,7 +3087,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 shuffleQuiz
                             );
                         }}
-                        style={{ backgroundColor: 'white', borderRadius: 15, width: 150 }}
+                        style={{ backgroundColor: 'white', borderRadius: 15, width: 150, marginTop: 50 }}
                     >
                         <Text
                             style={{

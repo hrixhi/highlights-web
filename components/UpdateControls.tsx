@@ -231,6 +231,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     });
 
+    console.log("Props.cue", props.cue)
+
     // HOOKS
 
     /**
