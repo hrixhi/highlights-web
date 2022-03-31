@@ -384,3 +384,155 @@ export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
         'wordPaste'
     ]
 };
+
+export const HIGHLIGHT_BUTTONS = {
+    moreText: {
+        buttons: [
+            'backgroundColor',
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'subscript',
+            'superscript',
+            'clearFormatting'
+        ],
+        buttonsVisible: 3
+    },
+    moreParagraph: {
+        buttons: ['formatOLSimple', 'formatUL'],
+        buttonsVisible: 2
+    },
+    moreRich: {
+        buttons: [
+            'insertImage',
+            'insertFormulaOption',
+            'insertTable',
+            'insertLink',
+            'emoticons',
+            'fontAwesome',
+            'specialCharacters'
+        ],
+        buttonsVisible: 2
+    },
+    moreMisc: {
+        buttons: ['undo', 'redo'],
+        align: 'right',
+        buttonsVisible: 2
+    },
+    pluginsEnabled: [
+        'colors',
+    ]
+};
+
+
+export const INLINE_CHOICE_BUTTONS = {
+    moreText: {
+        buttons: [
+            'insertChoice',
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'subscript',
+            'superscript',
+            'clearFormatting'
+        ],
+        buttonsVisible: 3
+    },
+    moreParagraph: {
+        buttons: ['formatOLSimple', 'formatUL'],
+        buttonsVisible: 2
+    },
+    moreRich: {
+        buttons: [
+            'insertImage',
+            'insertFormulaOption',
+            'insertTable',
+            'insertLink',
+            'emoticons',
+            'fontAwesome',
+            'specialCharacters'
+        ],
+        buttonsVisible: 2
+    },
+    moreMisc: {
+        buttons: ['undo', 'redo'],
+        align: 'right',
+        buttonsVisible: 2
+    },
+    pluginsEnabled: [
+        'colors',
+    ]
+};
+
+export const TEXT_ENTRY_BUTTONS = {
+    moreText: {
+        buttons: [
+            'insertTextEntryField',
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'subscript',
+            'superscript',
+            'clearFormatting'
+        ],
+        buttonsVisible: 3
+    },
+    moreParagraph: {
+        buttons: ['formatOLSimple', 'formatUL'],
+        buttonsVisible: 2
+    },
+    moreRich: {
+        buttons: [
+            'insertImage',
+            'insertFormulaOption',
+            'insertTable',
+            'insertLink',
+            'emoticons',
+            'fontAwesome',
+            'specialCharacters'
+        ],
+        buttonsVisible: 2
+    },
+    moreMisc: {
+        buttons: ['undo', 'redo'],
+        align: 'right',
+        buttonsVisible: 2
+    },
+    pluginsEnabled: [
+        'align',
+        'charCounter',
+        'codeBeautifier',
+        'codeView',
+        'colors',
+        'draggable',
+        'embedly',
+        'emoticons',
+        'entities',
+        'file',
+        'fontAwesome',
+        'fontFamily',
+        'fontSize',
+        'fullscreen',
+        'image',
+        'imageTUI',
+        'imageManager',
+        'inlineStyle',
+        'inlineClass',
+        'lineBreaker',
+        'lineHeight',
+        'link',
+        'lists',
+        'paragraphFormat',
+        'paragraphStyle',
+        'quickInsert',
+        'quote',
+        'save',
+        'table',
+        'url',
+        'video',
+        'wordPaste'
+    ]
+};

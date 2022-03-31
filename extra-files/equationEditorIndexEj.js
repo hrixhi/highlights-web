@@ -111,6 +111,11 @@ var EquationEditor = /** @class */ (function(_super) {
             this.mathField.cmd(this.props.addElementFromButton);
             this.props.clearAddElementField();
         }
+
+        if (prevProps.clearField !== this.props.clearField && this.props.clearField) {
+            this.mathField.latex('')
+            this.props.resetClearField()
+        } 
     };
     EquationEditor.prototype.render = function() {
         return React.createElement('span', { ref: this.element, style: { border: '0px', boxShadow: 'None' } });

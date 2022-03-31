@@ -16,6 +16,11 @@ import { Select } from '@mobiscroll/react';
 import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
 import { Editor } from '@tinymce/tinymce-react';
+import { RadioButton } from './RadioButton';
+
+
+import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
+
 // import {
 //     Menu,
 //     MenuOptions,
@@ -46,7 +51,7 @@ import FroalaEditor from 'react-froala-wysiwyg';
 
 import Froalaeditor from 'froala-editor';
 
-import { QUIZ_QUESTION_TOOLBAR_BUTTONS, QUIZ_OPTION_TOOLBAR_BUTTONS } from '../constants/Froala';
+import { QUIZ_QUESTION_TOOLBAR_BUTTONS, QUIZ_OPTION_TOOLBAR_BUTTONS, HIGHLIGHT_BUTTONS, INLINE_CHOICE_BUTTONS, TEXT_ENTRY_BUTTONS } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 
@@ -55,6 +60,9 @@ import { TextInput } from './CustomTextInput';
 
 import ImageMarker from "react-image-marker"
 
+import EquationEditorQuiz from './EquationEditorQuiz';
+import MathJax from 'react-mathjax-preview'
+
 
 // import { BoardRepository, Board } from 'react-native-draganddrop-board'
 
@@ -62,7 +70,7 @@ import ImageMarker from "react-image-marker"
 // CONSTANTS
 const questionTypeOptions = [
     {
-        text: "MCQ",
+        text: "MCQ/Multiselect",
         value: "mcq",
     },
     {
@@ -70,7 +78,7 @@ const questionTypeOptions = [
         value: "freeResponse"
     },
     {
-        text: "True/False",
+        text: "True & False",
         value: "trueFalse"
     },
     {
@@ -80,6 +88,30 @@ const questionTypeOptions = [
     {
         text: "Hotspot",
         value: "hotspot"
+    },
+    {
+        text: 'Hot Text',
+        value: "highlightText"
+    },
+    {
+        text: 'Inline Choice',
+        value: 'inlineChoice'
+    },
+    {
+        text: 'Text Entry',
+        value: 'textEntry'
+    },
+    {
+        text: 'Multipart',
+        value: 'multipart'
+    },
+    {
+        text: 'Equation Editor',
+        value: 'equationEditor'
+    },
+    {
+        text: 'Match Table Grid',
+        value: 'matchTableGrid'
     }
 ]
 
@@ -115,6 +147,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [editQuestionContent, setEditQuestionContent] = useState('');
     const [equationEditorFor, setEquationEditorFor] = useState('');
     const [equationOptionId, setEquationOptionId] = useState('')
+    const [getHighlightTextRef, setHighlightTextRef] = useDynamicRefs();
+
+    console.log("Problems", problems)
 
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
@@ -136,7 +171,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
     });
 
-
     Froalaeditor.DefineIcon('insertFormulaOption', {
         NAME: 'formula',
         PATH:
@@ -156,6 +190,54 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             setEquationEditorFor('option')
             setShowEquationEditor(true);
+        }
+    });
+
+    Froalaeditor.DefineIcon('insertChoice', { NAME: 'plus', SVG_KEY: 'add' });
+    Froalaeditor.RegisterCommand('insertChoice', { 
+        title: 'Insert Choice',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function () {
+
+            const currentQuestion = problems[editQuestionNumber - 1]
+
+            const currentChoices = currentQuestion.inlineChoiceOptions;
+
+            this.html.insert(`<span id="${currentChoices.length}" class="inlineChoicePlaceholder fr-deletable" contenteditable="false">Dropdown ${currentChoices.length + 1}</span>&zwj;`);
+
+            // const updatedProblems = [...problems]
+
+            // updatedProblems[editQuestionNumber - 1].inlineChoiceOptions.push([{
+            //     option: 'Option 1',
+            //     isCorrect: true
+            // }, {
+            //     option: 'Option 2',
+            //     isCorrect: false
+            // }])
+
+            this.events.trigger('contentChanged');
+
+        }
+    });
+
+    Froalaeditor.DefineIcon('insertTextEntryField', { NAME: 'plus', SVG_KEY: 'add' });
+    Froalaeditor.RegisterCommand('insertTextEntryField', { 
+        title: 'Insert Entry',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function () {
+
+            const currentQuestion = problems[editQuestionNumber - 1]
+
+            const currentChoices = currentQuestion.textEntryOptions;
+
+            this.html.insert(`<span id="${currentChoices.length}" class="inlineTextEntry fr-deletable" contenteditable="false">Entry ${currentChoices.length + 1}</span>&zwj;`);
+
+            this.events.trigger('contentChanged');
+
         }
     });
 
@@ -390,6 +472,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         if (editQuestionNumber === 0) return null;
 
+        if (problems[index].questionType === 'textEntry' || problems[index].questionType === 'inlineChoice' || problems[index].questionType === 'highlightText' ) {
+            return null;
+        }
+
         let audioVideoQuestion = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
 
         let url = "";
@@ -406,7 +492,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             content = problems[index].question
         }
 
-        return (<View >
+        return (<View style={{ paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }} >
             {audioVideoQuestion ?
                 <View style={{ marginBottom: 20 }}>
                     {renderAudioVideoPlayer(url, type)}
@@ -427,7 +513,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     charCounterCount: false,
                     zIndex: 2003,
                     // immediateReactModelUpdate: true,
-                    heightMin: 200,
+                    heightMin: 150,
                     fileUpload: false,
                     videoUpload: true,
                     imageUploadURL:
@@ -468,118 +554,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }
                 }}
             />
-            {/* <Editor
-                onInit={(evt, editor) => RichText.current = editor}
-                initialValue={editQuestion && editQuestion.question ? editQuestion.question : ""}
-                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                init={{
-                    skin: "snow",
-                    // toolbar_sticky: true,
-                    // selector: 'textarea',  // change this value according to your HTML
-                    // content_style: 'div { margin: 10px; border: 5px solid red; padding: 3px; }',
-                    indent: false,
-                    body_class: 'tinyMCEInput',
-                    branding: false,
-                    placeholder: 'Problem',
-                    autoresize_on_init: false,
-                    autoresize_min_height: 250,
-                    height: 250,
-                    min_height: 250,
-                    paste_data_images: true,
-                    images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                    mobile: {
-                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                    },
-                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                    menu: { // this is the complete default configuration
-                        file: { title: 'File', items: 'newdocument' },
-                        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                        insert: { title: 'Insert', items: 'link media | template hr' },
-                        view: { title: 'View', items: 'visualaid' },
-                        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
-                        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                        tools: { title: 'Tools', items: 'spellchecker code' }
-                    },
-                    statusbar: false,
-                    setup: (editor: any) => {
-                                                                    
-                        const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
-                        editor.ui.registry.addIcon('formula', equationIcon)
-                        
-                        editor.ui.registry.addButton("formula", {
-                            icon: 'formula',
-                            // text: "Upload File",
-                            tooltip: 'Insert equation',
-                            onAction: () => {
-                                setShowEquationEditor(!showEquationEditor)
-                            }
-                        });
-
-                        editor.ui.registry.addButton("upload", {
-                            icon: 'upload',
-                            tooltip: 'Import Audio/Video file',
-                            onAction: async () => {
-
-                                const res = await handleFile(true);
-
-                                console.log("File upload result", res);
-
-                                if (!res || res.url === "" || res.type === "") {
-                                    return;
-                                }
-
-                                const obj = { url: res.url, type: res.type, content: problems[index].question };
-
-                                const newProbs = [...problems];
-                                newProbs[index].question = JSON.stringify(obj);
-                                setProblems(newProbs)
-                                props.setProblems(newProbs)
-                              
-                            }
-                        })
-
-
-                    },
-                    // menubar: 'file edit view insert format tools table tc help',
-                    menubar: false,
-                    toolbar: 'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image upload link media | charmap emoticons ',
-                    importcss_append: true,
-                    image_caption: true,
-                    quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                    noneditable_noneditable_class: 'mceNonEditable',
-                    toolbar_mode: 'sliding',
-                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
-                    // tinycomments_mode: 'embedded',
-                    // content_style: '.mymention{ color: gray; }',
-                    // contextmenu: 'link image table configurepermanentpen',
-                    // a11y_advanced_options: true,
-                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                    // content_css: useDarkMode ? 'dark' : 'default',
-                }}
-                onChange={(e: any) => {
-                    if (audioVideoQuestion) {
-                        const currQuestion = JSON.parse(problems[index].question);
-                        const updatedQuestion = {
-                            ...currQuestion,
-                            content: e.target.getContent()
-                        }
-                        const newProbs = [...problems];
-                        newProbs[index].question = JSON.stringify(updatedQuestion);
-                        setProblems(newProbs)
-                        props.setProblems(newProbs)
-
-                    } else {
-                        // setCue(modifedText);
-                        const newProbs = [...problems];
-                        newProbs[index].question = e.target.getContent();
-                        setProblems(newProbs)
-                        props.setProblems(newProbs)
-                    }
-                }}
-            /> */}
-
-
         </View>)
     }
 
@@ -654,6 +628,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 maxWidth: '100%', marginBottom: 10, marginTop: 10,
                                 borderRadius: 1,
                                 paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                paddingLeft: 10
                             }}
                             value={headers[index]}
                             placeholder={'Heading'}
@@ -688,7 +663,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         backgroundColor: "white",
                         overflow: "hidden",
                         height: 35,
-                        marginTop: 15,
+                        marginTop: 20,
                         marginBottom: 15,
                         // width: "100%",
                         justifyContent: "center",
@@ -727,7 +702,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const currentQuestion = problems[index];
 
-        if (currentQuestion.question === "") {
+        if (currentQuestion.question === "" && (currentQuestion.questionType !== 'textEntry' && currentQuestion.questionType !== 'inlineChoice' && currentQuestion.questionType !== 'highlightText')) {
             alert(`Question ${index + 1} has no content.`)
             return false;
         }
@@ -742,6 +717,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             return false;
         }
 
+        // MCQs, True & false
         if ((currentQuestion.questionType === "" || currentQuestion.questionType === "trueFalse")) {
 
             let error = false;
@@ -777,18 +753,37 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         }
 
+        // Hotspot
         if (currentQuestion.questionType === 'hotspot') {
             if (!currentQuestion.imgUrl || currentQuestion.imgUrl === '') {
-                Alert(`Hotspot image is missing in Question ${index + 1}`)
+                Alert(`Hotspot image is missing in Question ${index + 1}.`)
                 return;
             }
 
-            if (currentQuestion.hotspots.length === 0) {
-                Alert(`You must place at least one hotspot marker on the image in Question ${index + 1}`);
+            if (currentQuestion.hotspots.length < 2) {
+                Alert(`You must place at least two hotspot marker on the image in Question ${index + 1}.`);
                 return;
             }
+
+            let hasCorrectAnswer = false;
+
+            currentQuestion.hotspotOptions.map((option: any) => {
+
+                if (option.isCorrect) {
+                    hasCorrectAnswer = true;
+                }
+
+            })
+
+            if (!hasCorrectAnswer) {
+                Alert(`You must mark at least one hotspot marker as correct in Question ${index + 1}.`);
+                return;
+            }
+
+
         }
 
+        // Drag and Drop
         if (currentQuestion.questionType === 'dragdrop') {
             let groupHeaderMissing = false 
             let labelMissing = false
@@ -831,6 +826,256 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         }
 
+        // Highlight Text
+        if (currentQuestion.questionType === 'highlightText') {
+
+            if (currentQuestion.highlightTextChoices.length < 2) {
+                Alert(`You must set multiple highlight text choices and mark one as correct in Question ${index + 1}.`);
+                return;
+            }
+
+            let atleastOneCorrect = false;
+
+            currentQuestion.highlightTextChoices.map((choice: boolean) => {
+                if (choice) {
+                    atleastOneCorrect = true;
+                }
+            })
+
+            if (!atleastOneCorrect) {
+                Alert(`You must set at least one highlight text choice as correct in Question ${index + 1}.`);
+                return;
+            }
+            
+        }
+
+        // Inline Choice
+        if (currentQuestion.questionType === 'inlineChoice') {
+            if (currentQuestion.inlineChoiceHtml === '') {
+                alert(`Question ${index + 1} has no content.`)
+                return;
+            }
+
+            if (currentQuestion.inlineChoiceOptions.length === 0) {
+                alert(`Question ${index + 1} must have at lease one dropdown.`)
+                return;
+            }
+            
+            let lessThan2DropdownValues = false
+            let missingDropdownValue = false;
+            let missingCorrectAnswer = false;
+
+            if (currentQuestion.inlineChoiceOptions.length > 0) {
+                currentQuestion.inlineChoiceOptions.map((choices: any[], index: number) => {
+                    if (choices.length < 2) {
+                        lessThan2DropdownValues = true
+                    }
+
+                    let hasCorrect = false
+                    choices.map((choice: any) => {
+                        if (choice.isCorrect) {
+                            hasCorrect = true
+                        }
+
+                        if (choice.option === '') {
+                            missingDropdownValue = true
+                        }
+                    })
+
+                    if (!hasCorrect) {
+                        missingCorrectAnswer = true
+                    }
+
+                })
+
+                if (lessThan2DropdownValues) {
+                    alert(`Each dropdown in question ${index + 1} must have at lease two options.`)
+                    return;
+                }
+
+                if (missingDropdownValue) {
+                    alert(`Each dropdown option must have a value in question ${index + 1}.`)
+                    return;
+                }
+
+                if (missingCorrectAnswer) {
+                    alert(`Each dropdown must have a correct answer in question ${index + 1}.`)
+                    return;
+                }
+            }
+
+        }
+
+        // Text Entry
+        if (currentQuestion.questionType === 'textEntry') {
+            if (currentQuestion.textEntryHtml === '') {
+                alert(`Question ${index + 1} has no content.`)
+                return;
+            }
+
+            if (currentQuestion.textEntryOptions.length === 0) {
+                alert(`Text entry question ${index + 1} must have at lease one entry.`)
+                return;
+            }
+
+            let missingEntryAnswer = false;
+            let missingEntryPoints = false;
+            let pointsNotANumber = false;
+
+            currentQuestion.textEntryOptions.map((choice: any, index: number) => {
+                if (choice.option === '') {
+                    missingEntryAnswer = true;
+                }
+
+                if (choice.points === '') {
+                    missingEntryPoints = true
+                }
+
+                if (Number.isNaN(Number(choice.points))) {
+                    pointsNotANumber = true
+                }
+
+            })
+
+            if (missingEntryAnswer) {
+                alert(`Each Text entry option must have an answer in question ${index + 1}.`)
+                return;
+            }
+
+            if (missingEntryPoints) {
+                alert(`Each Text entry must have points in question ${index + 1}.`)
+                return;
+            }
+
+            if (pointsNotANumber) {
+                alert(`Each Text entry must have numeric points in question ${index + 1}.`)
+                return;
+            }
+
+        }
+
+        // Multipart 
+        if (currentQuestion.questionType === 'multipart') {
+            if (currentQuestion.multipartQuestions[0] === '' || currentQuestion.multipartQuestions[1] === '') {
+                alert(`Part A and Part B questions cannot be empty in question ${index + 1}`);
+                return;
+            }
+
+            // Part A
+            let hasOneCorrect = false;
+            let hasMissingOption = false;
+
+            // At least two choices
+            if (currentQuestion.multipartOptions[0].length < 2) {
+                alert(`Part A must have at least two choices in question ${index + 1}`)
+                return;
+            }
+
+            currentQuestion.multipartOptions[0].map((option: any) => {
+                if (option.isCorrect) {
+                    hasOneCorrect = true
+                }
+
+                if (option.option === '') {
+                    hasMissingOption = true;
+                }
+            })
+
+            if (!hasOneCorrect) {
+                alert(`Part A must have at least one correct choice in question ${index + 1}`)
+                return;
+            }
+
+            if (hasMissingOption) {
+                alert(`Part A option is empty in question ${index + 1}`)
+            }
+
+            if (currentQuestion.multipartOptions[0].length < 2) {
+                alert(`Part A must have at least two choices in question ${index + 1}`)
+                return;
+            }
+
+            // Part B
+            currentQuestion.multipartOptions[1].map((option: any) => {
+                if (option.isCorrect) {
+                    hasOneCorrect = true
+                }
+
+                if (option.option === '') {
+                    hasMissingOption = true;
+                }
+            })
+
+            if (!hasOneCorrect) {
+                alert(`Part A must have at least one correct choice in question ${index + 1}`)
+                return;
+            }
+
+            if (hasMissingOption) {
+                alert(`Part A option is empty in question ${index + 1}`)
+            }
+        }
+
+        // Equation editor
+        if (currentQuestion.questionType === 'equationEditor') {
+            if (currentQuestion.correctEquations[0] === '') {
+                alert(`Correct equation cannot be empty in question ${index + 1}.`)
+                return;
+            }
+        }
+
+        if (currentQuestion.questionType === 'matchTableGrid') {
+
+            let missingColHeader = false;
+            let missingRowHeader = false;
+            let missingCorrect = false;
+
+            currentQuestion.matchTableHeaders.map((header: string) => {
+                if (header === '') {
+                    missingColHeader = true;
+                }
+            })
+
+            if (missingColHeader) {
+                alert(`Column header cannot be empty in question ${index + 1}.`)
+                return;
+            }
+
+            currentQuestion.matchTableOptions.map((rowHeader: string) => {
+                if (rowHeader === '') {
+                    missingRowHeader = true
+                }
+            })
+
+            if (missingRowHeader) {
+                alert(`Row header cannot be empty in question ${index + 1}.`)
+                return;
+            }
+
+            currentQuestion.matchTableChoices.map((row: any) => {
+                let hasCorrect = false;
+
+                if (missingCorrect) {
+                    return;
+                }
+
+                row.map((option: boolean) => {
+                    if (option) {
+                        hasCorrect = true
+                    }
+                })
+
+                if (!hasCorrect) {
+                    missingCorrect = true
+                }
+            })
+
+            if (missingCorrect) {
+                alert(`Each row must have a correct response in question ${index + 1}.`)
+                return;
+            }
+        }
+
         return true;
 
     }
@@ -841,23 +1086,16 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     */
     const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
         const sourceClone = Array.from(source);
-        console.log("Source clone", sourceClone)
 
         const destClone = Array.from(destination);
-        console.log("Destination clone", destClone)
 
         const [removed] = sourceClone.splice(droppableSource.index, 1);
-        console.log("Removed", removed)
 
         destClone.splice(droppableDestination.index, 0, removed);
-        console.log()
-
 
         const result: any = {};
         result[droppableSource.droppableId] = sourceClone;
         result[droppableDestination.droppableId] = destClone;
-
-        console.log("Result", result)
 
         return result;
     };
@@ -894,6 +1132,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         result.splice(endIndex, 0, removed);
         return result;
     };
+
+
 
     // MAIN RETURN 
 
@@ -949,9 +1189,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         type = parse.type;
                     }
 
+                    // Highlight text editor ref
+                    const highlightTextProblemEditorRef: any = setHighlightTextRef(index.toString());
+
                     return <View
                         key={index}
-                        style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 25, width: '100%' }}>
+                        style={{ borderBottomColor: '#f2f2f2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, paddingBottom: 30, width: '100%' }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
@@ -962,43 +1205,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 {/* Question */}
                                 <View style={{ flexDirection: Dimensions.get('window').width < 768 || editQuestionNumber === (index + 1) ? (editQuestionNumber === (index + 1) ? 'column-reverse' : 'column') : 'row', flex: 1 }}>
 
-                                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingRight: Dimensions.get('window').width < 768 ? 0 : 20 }}>
-                                        <View style={{ width: '100%', }}>
-                                            {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
-                                                {audioVideoQuestion ?
-                                                    <TouchableOpacity onPress={() => {
-                                                        const updateProblems = lodash.cloneDeep(problems);
-                                                        const question = updateProblems[index].question;
-                                                        const parse = JSON.parse(question);
-                                                        updateProblems[index].question = parse.content;
-                                                        setProblems(updateProblems)
-                                                        props.setProblems(updateProblems)
-                                                    }}>
-                                                        <Text style={{
-                                                            color: '#006AFF',
-                                                            fontFamily: 'Overpass',
-                                                            fontSize: 10,
-                                                        }}> Clear</Text>
-                                                    </TouchableOpacity>
-                                                    :
-                                                    null
-                                                }
-                                            </View> : null)}
-                                            {
-                                                (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View style={{}}>
-                                                    <View style={{ marginBottom: 20 }}>
-                                                        {renderAudioVideoPlayer(url, type)}
-                                                    </View>
-                                                    <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                        {parser(content)}
-                                                    </Text>
-                                                </View> : <Text style={{ marginTop: 15, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                    {parser(problem.question)}
-                                                </Text>))
-                                            }
-                                        </View>
-                                    </View>
-
                                     {/* Options */}
                                     <View style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
@@ -1006,6 +1212,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         maxWidth: 900,
                                         marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
                                         marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                        marginLeft: editQuestionNumber !== (index + 1) ? 'auto' : 'none',
+                                        width: '100%'
                                     }}>
                                         <View style={{ flexDirection: 'row' }}>
                                             {editQuestionNumber === (index + 1) ? <View
@@ -1016,7 +1224,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     alignItems: 'flex-start',
                                                     paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
                                                 }}>
-                                                <label style={{ width: 160 }}>
+                                                <label style={{ width: 180 }}>
                                                     <Select
                                                         touchUi={true}
                                                         cssClass="customDropdown"
@@ -1030,11 +1238,39 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 updatedProblems[index].questionType = "";
                                                             } else {
                                                                 updatedProblems[index].questionType = val.value;
+                                                                updatedProblems[index].options = []
                                                             }
 
                                                             // hotspots
                                                             updatedProblems[index].hotspots = []
+                                                            updatedProblems[index].hotspotOptions = []
                                                             updatedProblems[index].imgUrl = ''
+
+                                                            // Equation editor
+                                                            updatedProblems[index].correctEquations = [''];
+
+                                                            if (val.value === 'multipart') {
+                                                                updatedProblems[index].multipartOptions = []
+                                                                updatedProblems[index].multipartQuestions = ['', '']
+                                                                updatedProblems[index].multipartOptions.push([{
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                                updatedProblems[index].multipartOptions.push([{
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                                
+                                                            } else {
+                                                                updatedProblems[index].multipartOptions = []
+                                                                updatedProblems[index].multipartQuestions = []
+                                                            }
 
                                                             // drag and drop
                                                             if (val.value === 'dragdrop') {
@@ -1062,9 +1298,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 updatedProblems[index].options = []
                                                             }
 
-                                                            if (val.value === 'hotspot') {
-                                                                updatedProblems[index].options = []
-                                                            }
+                                                            // Free response maxCharCount
+                                                            updatedProblems[index].maxCharCount = ''
 
                                                             // Clear Options 
                                                             if (val.value === "freeResponse") {
@@ -1080,6 +1315,25 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     isCorrect: false
                                                                 })
                                                             }
+
+                                                            // These will be columns
+                                                            updatedProblems[index].matchTableHeaders = ['', '']
+                                                            // These will be rows
+                                                            updatedProblems[index].matchTableOptions = ['', '']
+                                                            // Grid of responses
+                                                            updatedProblems[index].matchTableChoices = [[false, false], [false, false]]
+
+                                                            updatedProblems[index].textEntryHtml = ''
+                                                            updatedProblems[index].textEntryOptions = []
+
+                                                            updatedProblems[index].inlineChoiceHtml = ''
+                                                            updatedProblems[index].inlineChoiceOptions = []
+
+                                                            if (val.value !== 'highlightText') {
+                                                                updatedProblems[index].highlightTextHtml = ''
+                                                                updatedProblems[index].highlightTextChoices = []
+                                                            } 
+                                                            
                                                             setProblems(updatedProblems)
                                                             props.setProblems(updatedProblems)
 
@@ -1137,7 +1391,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         {
                                             Dimensions.get('window').width < 768 ? null : <View style={{ flex: 1 }} />
                                         }
-                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15, marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 'none' }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingTop: 15,  }}>
                                             {editQuestionNumber === (index + 1) ? null : (!problem.required ?
                                                 null
                                                 : (<Text style={{ fontSize: 20, fontFamily: 'inter', color: 'black', marginBottom: 5, marginRight: 10, paddingTop: 8 }}>
@@ -1241,23 +1495,962 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </View>
 
                         </View>
+
+                        {/* Questions */}
+
+                        {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: audioVideoQuestion ? 10 : 0, marginBottom: audioVideoQuestion ? 10 : 0, justifyContent: 'flex-end' }}>
+                                                {audioVideoQuestion ?
+                                                    <TouchableOpacity onPress={() => {
+                                                        const updateProblems = lodash.cloneDeep(problems);
+                                                        const question = updateProblems[index].question;
+                                                        const parse = JSON.parse(question);
+                                                        updateProblems[index].question = parse.content;
+                                                        setProblems(updateProblems)
+                                                        props.setProblems(updateProblems)
+                                                    }}>
+                                                        <Text style={{
+                                                            color: '#006AFF',
+                                                            fontFamily: 'Overpass',
+                                                            fontSize: 10,
+                                                        }}> Clear</Text>
+                                                    </TouchableOpacity>
+                                                    :
+                                                    null
+                                                }
+                                            </View> : null)}
+                                            {
+                                                (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View style={{}}>
+                                                    <View style={{ marginBottom: 20 }}>
+                                                        {renderAudioVideoPlayer(url, type)}
+                                                    </View>
+                                                    {content !== '' ? <Text style={{ marginVertical: 20, fontSize: 15, lineHeight: 25 }}>
+                                                        {parser(content)}
+                                                    </Text> : null}
+                                                </View> : (problem.question !== '' ? <Text style={{ marginVertical: 20, fontSize: 15, lineHeight: 25 }}>
+                                                    {parser(problem.question)}
+                                                </Text> : null)))
+                                            }
+
+                                            {/* Render all other Equation Editors here */}
+                                            {
+                                                problem.questionType === 'highlightText' && editQuestionNumber === (index + 1) ?
+                                                <View style={{
+                                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                                }}>
+                                                    <FroalaEditor
+                                                        ref={highlightTextProblemEditorRef}
+                                                        model={problems[index].highlightTextHtml}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].highlightTextHtml = model;
+
+                                                            // Extract SPAN Tags from HTML 
+                                                            var el = document.createElement('html');
+                                                            el.innerHTML = model;
+                                                            const spans: HTMLCollection = el.getElementsByTagName('span');
+
+                                                            const highlightTextChoices: boolean[] = [];
+
+                                                            Array.from(spans).map((span: any) => {
+                                                                if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                                                                    highlightTextChoices.push(true);
+                                                                } else {
+                                                                    highlightTextChoices.push(false);
+                                                                }
+                                                            })
+
+                                                            newProbs[index].highlightTextChoices = highlightTextChoices;
+
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Highlight correct answers with green and rest with yellow.',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
+                                                            colorsHEXInput: false,
+                                                            pastePlain: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: HIGHLIGHT_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                            }}
+                                                        />
+                                                    </View>
+                                                : null
+                                        }
+
+                                        {
+                                            problem.questionType === 'inlineChoice' && editQuestionNumber === (index + 1) ?
+                                                <View style={{
+                                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                                }}>
+                                                    <FroalaEditor
+                                                        ref={highlightTextProblemEditorRef}
+                                                        model={problems[index].inlineChoiceHtml}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].inlineChoiceHtml = model;
+
+                                                            // Extract SPAN Tags from HTML 
+                                                            var el = document.createElement('html');
+                                                            el.innerHTML = model;
+
+                                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                                            console.log("Spans", spans)
+
+                                                            let updateInlineChoices: any[] = problems[index].inlineChoiceOptions;
+
+                                                            // Added choice
+                                                            if (updateInlineChoices.length < Array.from(spans).length) {
+                                                                updateInlineChoices.push([{
+                                                                    option: '',
+                                                                    isCorrect: true
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                            } else if (updateInlineChoices.length > Array.from(spans).length && Array.from(spans).length !== 0) {
+                                                                // A span was deleted so need to update all the existing inlineChoiceOptions
+
+                                                                let deletedInd = -1;
+                                                                const deleteCount = updateInlineChoices.length - Array.from(spans).length;
+
+                                                                // 0, 1, 2, 3
+
+                                                                // 1 is deleted, then 2 => 1 and 3 => 2
+
+                                                                // 0, 1, 2, 3, 4, 5 
+
+                                                                // 2, 3 are deleted 4 => 2, 5 => 3
+
+                                                                // Span list goes from 5 -> 3
+
+                                                                const spanList = Array.from(spans)
+                                                                updateInlineChoices.map((choice: any, ind: number) => {
+
+                                                                    if (deletedInd !== -1) return;
+
+                                                                    // Check if #id of ind exist in spans
+                                                                    if (!spans[ind] || spans[ind].id !== ind.toString()) {
+                                                                        deletedInd = ind
+                                                                    } 
+                                                                    
+                                                                })
+
+                                                                console.log("DeletedInd", deletedInd)
+                                                                console.log("deleteCount", deleteCount)
+
+                                                                updateInlineChoices.splice(deletedInd, deleteCount);
+
+                                                                // Update all span tags
+                                                                spanList.map((s: any, i: number) => {
+
+                                                                    if (spans[i].id === i.toString()) return;
+
+                                                                    const html = `<span id="${i}" class="inlineChoicePlaceholder fr-deletable" contenteditable="false">Dropdown ${i + 1}</span>&zwj;`
+
+                                                                    var x, tmp, elm, last, target = document.getElementById(s.id);
+                                                                    /// create a temporary div or tr (to support tds)
+                                                                    tmp = document.createElement(html.indexOf('<td')!=-1?'tr':'div');
+
+                                                                    console.log("tmp", tmp);
+
+                                                                    /// fill that div with our html, this generates our children
+                                                                    tmp.innerHTML = html;
+                                                                    /// step through the temporary div's children and insertBefore our target
+                                                                    x = tmp.childNodes.length;
+                                                                    /// the insertBefore method was more complicated than I first thought so I 
+                                                                    /// have improved it. Have to be careful when dealing with child lists as  
+                                                                    /// they are counted as live lists and so will update as and when you make
+                                                                    /// changes. This is why it is best to work backwards when moving children 
+                                                                    /// around, and why I'm assigning the elements I'm working with to `elm` 
+                                                                    /// and `last`
+                                                                    last = target;
+                                                                    console.log("Target", target)
+                                                                    while(x--){
+                                                                        target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
+                                                                        last = elm;
+                                                                    }
+                                                                    /// remove the target.
+                                                                    target.parentNode.removeChild(target);
+
+                                                                })
+
+
+
+                                                                // Now loop over all the spans and update them from 
+
+                                                            } else if (Array.from(spans).length === 0) {
+                                                                // Reset
+                                                                updateInlineChoices = []
+                                                            }
+
+                                                            newProbs[index].inlineChoiceOptions = updateInlineChoices
+                                                            console.log("Update inline choices", updateInlineChoices)
+
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
+
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Click on + in toolbar to add new inline choice',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
+                                                            colorsHEXInput: false,
+                                                            pastePlain: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: INLINE_CHOICE_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                        }}
+                                                    />
+                                                </View> : null
+                                                
+                                        }
+
+                                        {
+                                        problem.questionType === 'textEntry' && editQuestionNumber === (index + 1) ?
+                                            <View style={{
+                                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                            }}>
+                                                <FroalaEditor
+                                                    ref={highlightTextProblemEditorRef}
+                                                    model={problems[index].textEntryHtml}
+                                                    onModelChange={(model: any) => {
+                                                        const newProbs = [...problems];
+                                                        newProbs[index].textEntryHtml = model;
+
+                                                        // Extract SPAN Tags from HTML 
+                                                        var el = document.createElement('html');
+                                                        el.innerHTML = model;
+
+                                                        const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                                        console.log("Spans", spans)
+
+                                                        console.log("Text entry model", model)
+
+                                                        let updateTextEntryOptions: any[] = problems[index].textEntryOptions;
+
+                                                        // Added choice
+                                                        if (updateTextEntryOptions.length < Array.from(spans).length) {
+                                                            updateTextEntryOptions.push({
+                                                                option: '',
+                                                                type: 'text',
+                                                                points: '1'
+                                                            })
+                                                        } else if (updateTextEntryOptions.length > Array.from(spans).length && Array.from(spans).length !== 0) {
+                                                            // A span was deleted so need to update all the existing inlineChoiceOptions
+
+                                                            let deletedInd = -1;
+                                                            const deleteCount = updateTextEntryOptions.length - Array.from(spans).length;
+
+                                                            // 0, 1, 2, 3
+
+                                                            // 1 is deleted, then 2 => 1 and 3 => 2
+
+                                                            // 0, 1, 2, 3, 4, 5 
+
+                                                            // 2, 3 are deleted 4 => 2, 5 => 3
+
+                                                            // Span list goes from 5 -> 3
+
+                                                            const spanList = Array.from(spans)
+                                                            updateTextEntryOptions.map((choice: any, ind: number) => {
+
+                                                                if (deletedInd !== -1) return;
+
+                                                                // Check if #id of ind exist in spans
+                                                                if (!spans[ind] || spans[ind].id !== ind.toString()) {
+                                                                    deletedInd = ind
+                                                                } 
+                                                                
+                                                            })
+
+                                                            console.log("DeletedInd", deletedInd)
+                                                            console.log("deleteCount", deleteCount)
+
+                                                            updateTextEntryOptions.splice(deletedInd, deleteCount);
+
+                                                            // Update all span tags
+                                                            spanList.map((s: any, i: number) => {
+
+                                                                if (spans[i].id === i.toString()) return;
+
+                                                                const html = `<span id="${i}" class="inlineTextEntry fr-deletable" contenteditable="false">Entry ${i + 1}</span>&zwj;`
+
+                                                                var x, tmp, elm, last, target = document.getElementById(s.id);
+                                                                /// create a temporary div or tr (to support tds)
+                                                                tmp = document.createElement(html.indexOf('<td')!=-1?'tr':'div');
+
+                                                                console.log("tmp", tmp);
+
+                                                                /// fill that div with our html, this generates our children
+                                                                tmp.innerHTML = html;
+                                                                /// step through the temporary div's children and insertBefore our target
+                                                                x = tmp.childNodes.length;
+                                                                /// the insertBefore method was more complicated than I first thought so I 
+                                                                /// have improved it. Have to be careful when dealing with child lists as  
+                                                                /// they are counted as live lists and so will update as and when you make
+                                                                /// changes. This is why it is best to work backwards when moving children 
+                                                                /// around, and why I'm assigning the elements I'm working with to `elm` 
+                                                                /// and `last`
+                                                                last = target;
+                                                                console.log("Target", target)
+                                                                while(x--){
+                                                                    target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
+                                                                    last = elm;
+                                                                }
+                                                                /// remove the target.
+                                                                target.parentNode.removeChild(target);
+
+                                                            })
+
+
+
+                                                            // Now loop over all the spans and update them from 
+
+                                                        } else if (Array.from(spans).length === 0) {
+                                                            // Reset
+                                                            updateTextEntryOptions = []
+                                                        }
+
+                                                        newProbs[index].textEntryOptions = updateTextEntryOptions
+                                                        console.log("Update text entry choices", updateTextEntryOptions)
+
+                                                        setProblems(newProbs)
+                                                        props.setProblems(newProbs)
+
+                                                    }}
+                                                    config={{
+                                                        key:
+                                                            'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                        attribution: false,
+                                                        placeholderText: 'Click on + in toolbar to add new Text entry.',
+                                                        charCounterCount: false,
+                                                        zIndex: 2003,
+                                                        // immediateReactModelUpdate: true,
+                                                        heightMin: 150,
+                                                        fileUpload: false,
+                                                        videoUpload: false,
+                                                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                        imageUploadParam: 'file',
+                                                        imageUploadParams: { userId: props.userId },
+                                                        imageUploadMethod: 'POST',
+                                                        imageMaxSize: 5 * 1024 * 1024,
+                                                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                        paragraphFormatSelection: true,
+                                                        colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
+                                                        colorsHEXInput: false,
+                                                        pastePlain: true,
+                                                        // Default Font Size
+                                                        fontSizeDefaultSelection: '24',
+                                                        spellcheck: true,
+                                                        tabSpaces: 4,
+                                                        // TOOLBAR
+                                                        toolbarButtons: TEXT_ENTRY_BUTTONS,
+                                                        toolbarSticky: false,
+                                                        quickInsertEnabled: false
+                                                    }}
+                                                /> 
+                                            </View> : null
+                                            
+                                    }
+
                         {
-                            problem.questionType === "freeResponse" ? <Text style={{
-                                marginTop: 20,
-                                fontSize: 15,
-                                marginLeft: 20,
-                                paddingTop: 12,
-                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
-                                paddingBottom: 40,
-                                width: '100%',
-                                color: "#a2a2ac",
-                                marginBottom: 20,
+                            problem.questionType === "freeResponse" ? <View style={{
+                                flexDirection: 'column',
+
                             }}>
-                                Free Response Answer
-                            </Text> : null
+                                <Text style={{
+                                    marginTop: 20,
+                                    fontSize: 15,
+                                    marginLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 20,
+                                    paddingTop: 12,
+                                    paddingLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 40,
+                                    paddingBottom: 40,
+                                    width: '100%',
+                                    color: "#a2a2ac",
+                                    marginBottom: 20,
+                                }}>
+                                    Free Response Answer
+                                </Text> 
+
+                                <View style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 60
+                                }}>
+                                    <Text style={{
+                                        fontSize: 14,
+
+                                    }}>
+                                        Max Character Count
+                                    </Text>
+                                    <DefaultTextInput 
+                                        style={{
+                                            width: 150,
+                                            borderColor: '#e8e8e8',
+                                            borderBottomWidth: 1,
+                                            fontSize: 14,
+                                            paddingTop: 13,
+                                            paddingBottom: 13,
+                                            marginTop: 0,
+                                            paddingHorizontal: 10,
+                                            marginLeft: 10,
+                                            marginBottom: 0
+                                        }}
+                                        editable={(editQuestionNumber === (index + 1))}
+                                        value={problem.maxCharCount}
+                                        onChangeText={(text) => {
+
+                                            if (Number.isNaN(Number(text))){
+                                                alert('Character count must be a number.')
+                                                return;
+                                            }
+
+                                            const updatedProblems = [...problems]
+                                            updatedProblems[index].maxCharCount = text
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+
+                                        }}
+                                        placeholder='optional'
+                                        placeholderTextColor={'#a2a2ac'}
+                                    />
+                                </View>
+                            </View> : null
                         }
+
+
                         {
-                            problem.questionType === 'hotspot' && editQuestionNumber === (index + 1) ? (
+                            problem.questionType === 'textEntry' && editQuestionNumber !== (index + 1)  ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                                    {ReactHtmlParser(problems[index].textEntryHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const textEntryOptions = problems[index].textEntryOptions
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = option.option;
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }} type={type} value={value} disabled={true}  />;
+                                                    }
+                                                });
+                                            } else {
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+                                                        const textEntryOptions = problems[index].textEntryOptions
+
+                                                        const option = textEntryOptions[Number(node.attribs.id)];
+
+                                                        const type = option.type;
+                                                        const value = option.option;
+            
+                                                        return <input style={{
+                                                            border: '1px solid #DDD',
+                                                            padding: 5,
+                                                            borderRadius: 3,
+                                                            fontFamily: 'Overpass'
+                                                        }} type={type} value={value} disabled={true} />;
+                                                    }
+                                                });
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'textEntry' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 30, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
+                                {
+                                    problems[index].textEntryOptions.map((choice: any, choiceIndex: number) => {
+
+                                        const textEntryOptionTypes = [
+                                            {
+                                                text: 'Text',
+                                                value: 'text'
+                                            }, 
+                                            {
+                                                text: 'Numbers',
+                                                value: 'number'
+                                            }
+                                        ]
+
+                                        return <div style={{
+                                            flexDirection: 'column',
+                                            padding: 15,
+                                            width: 280,
+                                            minWidth: 280,
+                                            marginRight: 30,
+                                            borderRadius: 15,
+                                            border: '1px solid #cccccc'
+                                        }}>
+                                            
+                                                <View style={{ flexDirection: 'column', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 15, marginBottom: 15, borderRadius: 10 }}>
+                                                    
+                                                    <Text style={{
+                                                        width: '100%',
+                                                        fontSize: 16,
+                                                        fontFamily: 'Inter',
+                                                        paddingBottom: 20,
+                                                        textAlign: 'center'
+                                                    }}> Entry {choiceIndex + 1}</Text>
+
+                                                    <View style={{ 
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginBottom: 20
+                                                    }}>
+
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                color: '#000000',
+                                                                fontFamily: 'Inter',
+                                                                marginRight: 20
+                                                            }}
+                                                        >
+                                                            Answer
+                                                        </Text>
+
+                                                        <DefaultTextInput
+                                                            style={{
+                                                                width: 150,
+                                                                borderColor: '#e8e8e8',
+                                                                borderBottomWidth: 1,
+                                                                fontSize: 14,
+                                                                paddingTop: 13,
+                                                                paddingBottom: 13,
+                                                                marginTop: 0,
+                                                                paddingHorizontal: 10,
+                                                                marginLeft: 10,
+                                                                marginBottom: 0
+                                                            }}
+                                                            multiline={true}
+                                                            value={choice.option}
+                                                            placeholder=""
+                                                            onChangeText={(text) => {
+                                                                const updatedProblems = [...problems]
+                                                                updatedProblems[index].textEntryOptions[choiceIndex].option = text
+                                                                setProblems(updatedProblems)
+                                                                props.setProblems(updatedProblems)
+                                                            }}
+                                                        />
+                                                    </View>
+
+                                                    <View style={{ 
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginBottom: 20
+                                                    }}>
+
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                color: '#000000',
+                                                                fontFamily: 'Inter',
+                                                                marginRight: 20
+                                                            }}
+                                                        >
+                                                            Type
+                                                        </Text>
+
+                                                        <label style={{ width: 150, marginLeft: 10 }}>
+                                                            <Select
+                                                                touchUi={true}
+                                                                cssClass="customDropdown"
+                                                                value={problems[index].textEntryOptions[choiceIndex].type}
+                                                                rows={textEntryOptionTypes.length}
+                                                                data={textEntryOptionTypes}
+                                                                themeVariant="light"
+                                                                onChange={(val: any) => {
+                                                                    const updatedProblems = [...problems]
+                                                                    updatedProblems[index].textEntryOptions[choiceIndex].type = val.value
+                                                                    setProblems(updatedProblems)
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                responsive={{
+                                                                    small: {
+                                                                        display: 'bubble'
+                                                                    },
+                                                                    medium: {
+                                                                        touchUi: false,
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </label>
+                                                    </View>
+
+                                                    <View style={{ 
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                    }}>
+
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                color: '#000000',
+                                                                fontFamily: 'Inter',
+                                                                marginRight: 20
+                                                            }}
+                                                        >
+                                                            Points
+                                                        </Text>
+                                                        <DefaultTextInput
+                                                            style={{
+                                                                width: 150,
+                                                                borderColor: '#e8e8e8',
+                                                                borderBottomWidth: 1,
+                                                                fontSize: 14,
+                                                                paddingTop: 13,
+                                                                paddingBottom: 13,
+                                                                marginTop: 0,
+                                                                paddingHorizontal: 10,
+                                                                marginLeft: 10,
+                                                                marginBottom: 0
+                                                            }}
+                                                            placeholder=''
+                                                            multiline={true}
+                                                            value={choice.points}
+                                                            onChangeText={(text) => {
+                                                                const updatedProblems = [...problems]
+                                                                updatedProblems[index].textEntryOptions[choiceIndex].points = text
+                                                                setProblems(updatedProblems)
+                                                                props.setProblems(updatedProblems)
+                                                            }}
+                                                        />
+                                                    </View>
+                                                    
+                                                    {/* <TouchableOpacity
+                                                        style={{
+                                                            backgroundColor: 'rgba(0,0,0,0)',
+                                                            paddingLeft: 10
+                                                        }}
+                                                        onPress={() => {
+                                                            const updatedProblems = [...problems];
+                                                            updatedProblems[index].textEntryOpions[choiceIndex].splice(optionIndex, 1);
+                                                            setProblems(
+                                                                updatedProblems
+                                                            );
+                                                            props.setProblems(updatedProblems)                                                                 
+                                                        }}
+                                                    >
+                                                        <Ionicons name='trash-outline' color='#1f1f1f' size={15} />
+                                                    </TouchableOpacity> */}
+
+                                                </View>
+
+                                            {/* </View> */}
+
+                                        </div>
+                                    })
+                                }
+                            </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'inlineChoice' && editQuestionNumber !== (index + 1)  ?
+                                <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                                    {ReactHtmlParser(problems[index].inlineChoiceHtml, {
+                                        transform: (node: any, ind1: any) => {
+                                            if (node.type === 'tag' && node.name === 'p') {
+
+                                                node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });
+                                            } else {
+
+                                                const inlineChoiceOptions = problems[index].inlineChoiceOptions
+
+
+                                                return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                    if (node.type === 'tag' && node.name === 'span') {
+
+
+                                                        const options = inlineChoiceOptions[Number(node.attribs.id)];
+
+            
+                                                        return <span style={{ width: 160 }}>
+                                                            <select 
+                                                                style={{
+                                                                    border: '1px solid #DDD',
+                                                                    padding: 5,
+                                                                    borderRadius: 3,
+                                                                    fontFamily: 'Overpass'
+                                                                }}
+                                                            >
+                                                                {
+                                                                    options.map((option: any) => {
+
+                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </span>;
+                                                    }
+                                                });  
+                                            }
+
+                                        } 
+                                    })}
+                                </View> : null
+                        }
+
+                        { 
+                            problem.questionType === 'highlightText' && editQuestionNumber !== (index + 1) ? <View style={{ paddingTop: editQuestionNumber === (index + 1) ? 20 : 0 }}>
+                                {ReactHtmlParser(problems[index].highlightTextHtml, {
+                                    transform: (node: any, ind1: any) => {
+                                        if (node.type === 'tag' && node.name === 'p') {
+
+                                            node.attribs.style = 'line-height: 40px; font-family: Overpass; font-size: 15px;'
+
+                                            const highlightTextHtml = problems[index].highlightTextHtml
+                                            const highlightTextChoices = problems[index].highlightTextChoices
+
+                                            var el = document.createElement('html');
+                                            el.innerHTML = highlightTextHtml;
+                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                            return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
+                                                if (node.type === 'tag' && node.name === 'span') {
+
+                                                    let matchIndex = -1; 
+
+                                                    // Loop over all the 
+                                                    Array.from(spans).map((elm: any, ind3: number) => {
+                                                        if (((!node.next && !elm.nextSibling) || node.next.data === elm.nextSibling.data) && ((!node.prev && !node.previousSibling) || node.prev.data === elm.previousSibling.data) && node.children[0].data === elm.firstChild.data) {
+                                                            matchIndex = ind3;
+                                                        }
+                                                    })
+
+                                                    console.log("Match index", matchIndex)
+                                                    console.log("highlightTextChoices", highlightTextChoices)
+
+
+                                                    let isCorrect = matchIndex !== -1 ? highlightTextChoices[matchIndex] : false
+        
+                                                    return <span className={isCorrect ? "highlightTextActive" : "highlightTextOption"}>{node.children[0].data}</span>;
+                                                }
+                                            });
+                                        }
+
+                                    } 
+                                })}
+                            </View> : null
+                        }
+
+                        {
+                            problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 20, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
+                                {
+                                    problems[index].inlineChoiceOptions.map((choice: any[], choiceIndex: number) => {
+                                        return <View style={{
+                                            flexDirection: 'column',
+                                            padding: 30,
+                                            width: 280,
+                                            minWidth: 280,
+                                            marginRight: 30,
+                                            borderRadius: 15,
+                                            border: '1px solid #cccccc'
+                                        }}>
+                                            <Text style={{
+                                                fontSize: 16,
+                                                fontFamily: 'Inter',
+                                                paddingBottom: 15,
+                                                textAlign: 'center'
+                                            }}> Dropdown {choiceIndex + 1}</Text>
+                                            <View style={{
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}>
+                                                {
+                                                    choice.map((option: any, optionIndex: number) => {
+                                                        return <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 15, marginBottom: 15, borderRadius: 10 }}>
+                                                            <input
+                                                                style={{}}
+                                                                type='checkbox'
+                                                                checked={option.isCorrect}
+                                                                onChange={(e) => {
+                                                                    const updatedProblems = [...problems]
+                                                                    updatedProblems[index].inlineChoiceOptions[choiceIndex][optionIndex].isCorrect = !updatedProblems[index].inlineChoiceOptions[choiceIndex][optionIndex].isCorrect
+                                                                    setProblems(updatedProblems)
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                disabled={editQuestionNumber !== (index + 1)}
+                                                            />
+                                                            
+                                                            <DefaultTextInput
+                                                                style={{
+                                                                    width: 150,
+                                                                    borderColor: '#e8e8e8',
+                                                                    borderBottomWidth: 1,
+                                                                    fontSize: 14,
+                                                                    paddingTop: 13,
+                                                                    paddingBottom: 13,
+                                                                    marginTop: 0,
+                                                                    paddingHorizontal: 10,
+                                                                    marginLeft: 10,
+                                                                    marginBottom: 0
+                                                                }}
+                                                                multiline={true}
+                                                                placeholder={"Option " + (optionIndex + 1)}
+                                                                value={option.option}
+                                                                onChangeText={(text) => {
+                                                                    const updatedProblems = [...problems]
+                                                                    updatedProblems[index].inlineChoiceOptions[choiceIndex][optionIndex].option = text
+                                                                    setProblems(updatedProblems)
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                            />
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    backgroundColor: 'rgba(0,0,0,0)',
+                                                                    paddingLeft: 10
+                                                                }}
+                                                                onPress={() => {
+                                                                    const updatedProblems = [...problems];
+                                                                    updatedProblems[index].inlineChoiceOptions[choiceIndex].splice(optionIndex, 1);
+                                                                    setProblems(
+                                                                        updatedProblems
+                                                                    );
+                                                                    props.setProblems(updatedProblems)                                                                 
+                                                                }}
+                                                            >
+                                                                <Ionicons name='trash-outline' color='#1f1f1f' size={15} />
+                                                            </TouchableOpacity>
+
+                                                        </View>
+                                                    })
+                                                }
+                                            </View>
+                                            <TouchableOpacity
+                                                onPress={async () => {
+                                                    const updatedProblems = [...problems]
+                                                    updatedProblems[index].inlineChoiceOptions[choiceIndex].push({
+                                                        isCorrect: false,
+                                                        option: ''
+                                                    })
+                                                    setProblems(updatedProblems)
+                                                    props.setProblems(updatedProblems)
+                                                }}
+                                                style={{
+                                                    overflow: "hidden",
+                                                    height: 30,
+                                                    marginTop: 15,
+                                                    alignSelf: 'center'
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#006AFF',
+                                                        borderWidth: 1,
+                                                        borderRadius: 15,
+                                                        borderColor: '#006AFF',
+                                                        fontSize: 11,
+                                                        textAlign: "center",
+                                                        lineHeight: 30,
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: "inter",
+                                                        height: 30,
+                                                        textTransform: 'uppercase',
+                                                        width: 130,
+                                                    }}
+                                                >
+                                                    Add
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    })
+                                }
+                            </View> : null
+                        }
+                        
+
+                        {
+                            problem.questionType === 'hotspot' ? (
                                 !problem.imgUrl || problem.imgUrl === '' ?
                                     <TouchableOpacity
                                         onPress={async () => {
@@ -1299,10 +2492,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </TouchableOpacity>
                                     :
                                     <View style={{
-                                        width: '100%', height: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                                        paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
                                     }}>
                                         <View style={{
-                                            maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                            maxWidth: Dimensions.get('window').width < 768 ? 300 : 600, maxHeight: Dimensions.get('window').width < 768 ? 300 : 600,
                                         }}>
                                             <ImageMarker
                                                 src={problem.imgUrl}
@@ -1311,38 +2504,61 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 })}
                                                 onAddMarker={(marker: any) => {
                                                     // setMarkers([...markers, marker])
-                                                    const updatedProblems = [...problems]
-                                                    if (updatedProblems[index].hotspots >= 100) {
-                                                        return
+
+                                                    if (editQuestionNumber !== (index + 1)) {
+                                                        return;
                                                     }
-                                                    console.log(marker)
+
+                                                    const updatedProblems = [...problems]
+
                                                     updatedProblems[index].hotspots = [...updatedProblems[index].hotspots, {
                                                         x: marker.left, y: marker.top
                                                     }]
+                                                    updatedProblems[index].hotspotOptions = [...updatedProblems[index].hotspotOptions, {
+                                                        option: '',
+                                                        isCorrect: false
+                                                    }]
+
+                                                    console.log("Markers", updatedProblems[index].hotspots);
+
                                                     setProblems(updatedProblems)
                                                     props.setProblems(updatedProblems)
                                                 }}
-                                                markerComponent={(p: any) => <TouchableOpacity style={{
-                                                    backgroundColor: '#fff',
-                                                    height: 25, width: 25, borderColor: '#000',
-                                                    borderRadius: 12.5
-                                                }}
-                                                    onPress={() => {
-                                                        console.log(p.itemNumber)
-                                                        // return
-                                                        const updatedProblems = [...problems]
-                                                        updatedProblems[index].hotspots.splice(p.itemNumber, 1)
-                                                        console.log(updatedProblems)
-                                                        setProblems(updatedProblems)
-                                                        props.setProblems(updatedProblems)
+                                                markerComponent={(p: any) => {
+                                                   
+                                                    const hotspotOption = problem.hotspotOptions[p.itemNumber]; 
+                                                    
+                                                    return <TouchableOpacity style={{
+                                                        backgroundColor: hotspotOption.isCorrect ? '#006AFF' : '#fff',
+                                                        height: 25, 
+                                                        width: 25, 
+                                                        borderColor: '#006AFF', 
+                                                        borderWidth: 1,
+                                                        borderRadius: 12.5
                                                     }}
-                                                >
-                                                    <Text style={{
-                                                        color: '#000', lineHeight: 25, textAlign: 'center'
-                                                    }}>
-                                                        {p.itemNumber}
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                        onPress={() => {
+                                                            // return
+                                                            if (editQuestionNumber !== (index + 1)) {
+                                                                return;
+                                                            } 
+
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].hotspots.splice(p.itemNumber, 1)
+                                                            updatedProblems[index].hotspotOptions.splice(p.itemNumber, 1)
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+
+                                                            
+                                                        }}
+                                                    >
+                                                        <Text style={{
+                                                            color: hotspotOption.isCorrect ? '#fff' : '#006AFF', 
+                                                            lineHeight: 25, 
+                                                            textAlign: 'center',
+                                                        }}>
+                                                            {p.itemNumber + 1}
+                                                        </Text>
+                                                    </TouchableOpacity>}
                                                 }
                                             />
                                         </View>
@@ -1350,13 +2566,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ) : null
                         }
 
-                        {
+                         {/* Hotspot Preview */}
+
+                         {/* {
                             problem.questionType === 'hotspot' && editQuestionNumber !== (index + 1) && (problem.imgUrl && problem.imgUrl !== '')
                             ? <View style={{
-                                width: '100%', height: '100%', paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
+                                paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
                             }}>
                                 <View style={{
-                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 400, maxHeight: Dimensions.get('window').width < 768 ? 300 : 400,
+                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 600, maxHeight: Dimensions.get('window').width < 768 ? 300 : 600,
                                 }}>
                                     <ImageMarker
                                         src={problem.imgUrl}
@@ -1366,27 +2584,109 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         onAddMarker={(marker: any) => { 
                                            return;
                                         }}
-                                        markerComponent={(p: any) => <TouchableOpacity disabled={true} style={{
-                                            backgroundColor: '#fff',
-                                            height: 25, width: 25, borderColor: '#000',
-                                            borderRadius: 12.5
-                                        }}
-                                            onPress={() => {
-                                                return;
+                                        markerComponent={(p: any) => {
+
+                                            const hotspotOption = problem.hotspotOptions[p.itemNumber];
+
+
+                                            return <TouchableOpacity disabled={true} style={{
+                                                backgroundColor: hotspotOption.isCorrect ? '#006AFF' : '#fff',
+                                                height: 25, 
+                                                width: 25, 
+                                                borderColor: '#006AFF',
+                                                borderRadius: 12.5
                                             }}
-                                        >
-                                            <Text style={{
-                                                color: '#000', lineHeight: 25, textAlign: 'center'
-                                            }}>
-                                                {p.itemNumber}
-                                            </Text>
-                                        </TouchableOpacity>
+                                                onPress={() => {
+                                                    return;
+                                                }}
+                                            >
+                                                <Text style={{
+                                                    color: hotspotOption.isCorrect ? '#fff' : '#006AFF', 
+                                                    lineHeight: 25, 
+                                                    textAlign: 'center'
+                                                }}>
+                                                    {p.itemNumber + 1}
+                                                </Text>
+                                            </TouchableOpacity>}
                                         }
                                     />
                                 </View>
                                 
                             </View> : null
+                        } */}
+
+                        {
+                            problem.questionType === 'hotspot' && problem.imgUrl !== '' ? ( 
+                                <View style={{
+                                    paddingTop: 50
+                                }}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center'
+                                    }}>
+                                        {
+                                            problem.hotspotOptions.map((option: any, ind: number) => {
+                                                console.log('Hotspot', option)
+                                                return (<View style={{ 
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    marginRight: 50,
+                                                    marginBottom: 30
+                                                }}>
+
+                                                    <input
+                                                        style={{
+                                                            marginRight: 12
+                                                        }}
+                                                        type='checkbox'
+                                                        checked={option.isCorrect}
+                                                        onChange={(e) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].hotspotOptions[ind].isCorrect = !updatedProblems[index].hotspotOptions[ind].isCorrect
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        disabled={editQuestionNumber !== (index + 1)}
+                                                    />
+
+                                                    {editQuestionNumber === (index + 1) ? <Text style={{ fontSize: 20 }}>{ind + 1}.</Text> : null}
+
+                                                    {editQuestionNumber === (index + 1) ? <DefaultTextInput
+                                                        style={{
+                                                            width: 150,
+                                                            borderColor: '#e8e8e8',
+                                                            borderBottomWidth: 1,
+                                                            fontSize: 14,
+                                                            paddingTop: 13,
+                                                            paddingBottom: 13,
+                                                            marginTop: 0,
+                                                            paddingHorizontal: 10,
+                                                            marginLeft: 10,
+                                                            marginBottom: 0
+                                                        }}
+                                                        value={option.option}
+                                                        placeholder={''}
+                                                        onChangeText={(val: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].hotspotOptions[ind].option = val
+                                                            setProblems(updatedProblems)
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                    /> : <div className={option.isCorrect ? 'hotspotActive' : 'hotspotOption'}>
+                                                        {ind + 1}. {option.option}
+                                                    </div>}
+
+                                                </View>)
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                            ) : null
                         }
+
+                       
+
                         {
                             problem.questionType === 'dragdrop' && editQuestionNumber !== (index + 1) ?
                                 <div style={{
@@ -1449,11 +2749,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
                         {
                             problem.questionType === 'dragdrop' && editQuestionNumber === (index + 1) ?
-                                // <Board
-                                //     boardRepository={new BoardRepository(problem.dragDropData)}
-                                //     open={(res: any) => { console.log(res) }}
-                                //     onDragEnd={(res: any) => { console.log(res) }}
-                                // />
                                 <div style={{
                                     display: 'flex', flexDirection: 'column', width: '100%'
                                 }}>
@@ -1675,7 +2970,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             paddingBottom: 13,
                                                                                             marginTop: 0,
                                                                                             padding: '10px',
-                                                                                            marginRight: 5
+                                                                                            marginRight: 5,
+                                                                                            paddingLeft: 10
                                                                                         }}
                                                                                         value={item.content}
                                                                                         placeholder={'Label'}
@@ -1728,6 +3024,492 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </div>
                                 : null
                         }
+
+                        {/* MULTIPART */}
+
+                        {
+                            problem.questionType === 'multipart' && editQuestionNumber === (index + 1) ?
+                                (<View style={{
+                                    flexDirection: 'column', 
+                                    paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                                }}>
+                                    {
+                                        problem.multipartOptions.map((part: any, partIndex: number) => {
+                                            const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+                                            return <View style={{
+                                                flexDirection: 'column',
+
+                                            }}>
+                                                <Text style={{
+                                                    fontSize: 22,
+                                                    fontFamily: 'Overpass',
+                                                    marginTop: 50,
+                                                    marginBottom: 20
+                                                }}>Part {alphabet[partIndex]}</Text>
+
+                                                {/* Question */}
+                                                <View style={{
+                                                    maxWidth: 600,
+                                                }}>                                                
+                                                    <FroalaEditor
+                                                        model={problem.multipartQuestions[partIndex]}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].multipartQuestions[partIndex] = model;
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Part ' + alphabet[partIndex] + ' Question',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL:
+                                                                'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                        }}
+                                                    />
+                                                </View>
+
+                                                {/* Options */}
+
+                                                {
+                                                    problem.multipartOptions[partIndex].map((option: any, optionIndex: number) => {
+                                                        return (<View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <input
+                                                                style={{}}
+                                                                type='checkbox'
+                                                                checked={option.isCorrect}
+                                                                onChange={(e) => {
+                                                                    const updatedProblems = [...problems]
+                                                                    problems[index].multipartOptions[partIndex][optionIndex].isCorrect = !problems[index].multipartOptions[partIndex][optionIndex].isCorrect;
+                                                                    setProblems(updatedProblems)
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                disabled={editQuestionNumber !== (index + 1)}
+                                                            />
+
+                                                            <TextareaAutosize
+                                                                style={{
+                                                                    fontFamily: 'overpass',
+                                                                    maxWidth: '100%', marginBottom: 10, marginTop: 10,
+                                                                    borderRadius: 1,
+                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                                                    width: 300,
+                                                                    maxWidth: 300,
+                                                                    marginLeft: 20,
+                                                                    paddingLeft: 10
+                                                                }}
+                                                                value={option.option}
+                                                                placeholder={'Option ' + (optionIndex + 1)}
+                                                                onChange={(e: any) => {
+                                                                    const newProbs = [...problems];
+                                                                    newProbs[index].multipartOptions[partIndex][optionIndex].option = e.target.value;
+                                                                    setProblems(newProbs)
+                                                                    props.setProblems(newProbs)
+                                                                }}
+                                                                minRows={2}
+                                                            />
+
+                                                            <TouchableOpacity style={{
+                                                                marginLeft: 20
+                                                            }}
+                                                                onPress={() => {
+                                                                    const newProbs = [...problems];
+                                                                    const updateMultipartOptions = [...newProbs[index].multipartOptions[partIndex]]
+                                                                    updateMultipartOptions.splice(optionIndex, 1)
+                                                                    newProbs[index].multipartOptions[partIndex] = updateMultipartOptions
+                                                                    setProblems(newProbs)
+                                                                    props.setProblems(newProbs)
+                                                                }}
+                                                            >
+                                                                {/* <Ionicons name='trash-outline' size={20} /> */}
+                                                                    <Text
+                                                                        style={{
+                                                                            paddingTop: 0,
+                                                                            color: '#006AFF',
+                                                                            fontFamily: 'Overpass',
+                                                                            fontSize: 10
+                                                                        }}
+                                                                    >
+                                                                        Remove
+                                                                    </Text>
+                                                            </TouchableOpacity>
+                                                        </View>)
+                                                    })
+                                                }
+
+
+                                                {/* Add option button */}
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        const newProbs = [...problems];
+                                                        const updateMultipartOptions = [...newProbs[index].multipartOptions[partIndex]]
+                                                        updateMultipartOptions.push({
+                                                            option: '',
+                                                            isCorrect: false 
+                                                        })
+                                                        newProbs[index].multipartOptions[partIndex] = updateMultipartOptions
+                                                        setProblems(newProbs)
+                                                        props.setProblems(newProbs)
+                                                    }} style={{
+                                                        backgroundColor: "white",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        marginTop: 20,
+                                                        marginBottom: 30
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: '#006AFF',
+                                                            borderWidth: 1,
+                                                            borderRadius: 15,
+                                                            borderColor: '#006AFF',
+                                                            backgroundColor: '#fff',
+                                                            fontSize: 12,
+                                                            textAlign: "center",
+                                                            lineHeight: 34,
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            textTransform: 'uppercase',
+                                                            width: 130,
+                                                        }}
+                                                    >
+                                                        Add Choice
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                                                        
+                                            </View>
+                                        })
+                                    }
+                                </View>) : null
+                        }
+
+                        {
+                            problem.questionType === 'multipart' && editQuestionNumber !== (index + 1) ? <View style={{
+                                flexDirection: 'column', 
+                                paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                            }}>
+                                { problem.multipartOptions.map((part: any, partIndex: number) => {
+                                    const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+                                    return <View style={{
+                                            flexDirection: 'column',
+                                        }}>
+                                            <Text style={{
+                                                fontSize: 22,
+                                                fontFamily: 'Overpass',
+                                                marginTop: 50,
+                                                marginBottom: 20,
+
+                                            }}>Part {alphabet[partIndex]}</Text>
+
+                                            <Text style={{ marginTop: 15, fontSize: 15, lineHeight: 25, marginBottom: 20 }}>
+                                                {parser(problem.multipartQuestions[partIndex])}
+                                            </Text>
+
+                                            {
+                                                part.map((option: any, optionIndex: number) => {
+                                                    return <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginBottom: 20,
+                                                        marginTop: 20,
+                                                    }}>
+                                                        <input
+                                                            style={{}}
+                                                            type='checkbox'
+                                                            checked={option.isCorrect}
+                                                            onChange={(e) => {
+                                                                
+                                                            }}
+                                                            disabled={true}
+                                                        />
+
+                                                        <Text style={{  marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                            {parser(option.option)}
+                                                        </Text>
+                                                    </View>
+                                                })
+                                            }
+
+                                        </View>
+
+                                        
+                                })}
+                            </View> : null
+                        }
+
+                        {/* Equation Editor Questions */}
+                        
+                        {problem.questionType === 'equationEditor' && (editQuestionNumber === (index + 1)) ? 
+                            <View style={{
+                                flexDirection: 'column',
+                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
+                                marginTop: 20
+                            }}>
+                                <Text style={{
+                                    fontSize: 18,
+                                    marginBottom: 10,
+                                    fontFamily: 'Inter'
+                                }}>
+                                    Enter Equation 
+                                </Text>
+                                <EquationEditorQuiz 
+                                    equation={problems[index].correctEquations[0]}
+                                    onChange={(eq: any) => {
+                                        const updateProblems = [...problems]
+                                        updateProblems[index].correctEquations[0] = eq;
+                                        setProblems(updateProblems)
+                                        props.setProblems(updateProblems)
+                                    }}
+                                />
+                            </View> : null}
+
+                        {/* Equation editor  */}
+
+                        {problem.questionType === 'equationEditor' && (editQuestionNumber !== (index + 1)) ? 
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center'
+                            }}>
+                                <Text style={{ fontSize: 16, fontFamily: 'Overpass', marginRight: 10 }}>
+                                    Answer: 
+                                </Text>
+                                <MathJax math={'$$' + problems[index].correctEquations[0] + '$$'} style={{
+                                    fontSize: 20
+                                }} />
+                            </View> : null}
+
+                        {/* Match Table Grid */}
+
+                        {
+                            problem.questionType === 'matchTableGrid' ?
+                                <View style={{
+                                    flexDirection: 'column', 
+                                    marginTop: 20,
+                                }}>
+                                    {/* Header row */}
+                                    <View style={{ 
+                                        flexDirection: 'row', alignItems: 'center', paddingLeft:  editQuestionNumber === (index + 1) ? 40 : 0
+                                    }}>
+                                        <View style={{
+                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                        }} />
+                                        {
+                                            problem.matchTableHeaders.map((header: any, headerIndex: number) => {
+                                                return <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ?
+                                                    <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14, 
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={header}
+                                                        placeholder={'Header ' + (headerIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableHeaders[headerIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {header}
+                                                    </Text>}
+                                                </View>
+                                            })
+                                        }
+                                    </View>
+                                    {/* Rows */}
+                                    {
+                                        problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
+                                            return (<View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
+                                            }}>
+                                                <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ? <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14,
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={problem.matchTableOptions[rowIndex]}
+                                                        placeholder={'Row ' + (rowIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableOptions[rowIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {problem.matchTableOptions[rowIndex]}
+                                                    </Text>}
+                                                </View>
+                                                {
+                                                    choiceRow.map((choice: boolean, choiceIndex: number) => {
+                                                        return <View style={{
+                                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                            borderWidth: 1,
+                                                            borderColor: '#DDD',
+                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'center',
+                                                            height: '100%'
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                onPress={() => {
+                                                                    const updatedProblems = [...problems]
+                                                                    const updatedMatchTableChoices = [...problems[index].matchTableChoices]
+
+                                                                    for (let i = 0; i < updatedMatchTableChoices[rowIndex].length; i++) {
+                                                                        updatedMatchTableChoices[rowIndex][i] = (choiceIndex === i)
+                                                                    }
+                                                                    
+                                                                    updatedProblems[index].matchTableChoices = updatedMatchTableChoices
+                                                                    setProblems(updatedProblems);
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                disabled={editQuestionNumber !== (index + 1)}
+                                                            >
+                                                                <RadioButton selected={choice} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    })
+                                                }
+                                                {editQuestionNumber === (index + 1) ? <TouchableOpacity style={{
+                                                    paddingLeft: 25
+                                                }} 
+                                                onPress={() => {
+                                                    const updatedProblems = [...problems];
+                                                    const updatedMatchTableChoices = [...problems[index].matchTableChoices];
+                                                    updatedMatchTableChoices.splice(rowIndex, 1)
+                                                    const updatedMatchTableOptions = [...problems[index].matchTableOptions];
+                                                    updatedMatchTableOptions.splice(rowIndex, 1)
+                                                    updatedProblems[index].matchTableChoices = updatedMatchTableChoices;
+                                                    updatedProblems[index].matchTableOptions = updatedMatchTableOptions;
+                                                    setProblems(updatedProblems);
+                                                    props.setProblems(updatedProblems);
+                                                }}
+                                                >
+                                                    <Ionicons name='trash-outline' size={18} color="#1f1f1f" />    
+                                                </TouchableOpacity> : null}
+                                            </View>)
+                                        })
+                                    }
+
+                                    {/* Add row button */}
+                                    {editQuestionNumber === (index + 1) ? <TouchableOpacity
+                                        onPress={async () => {
+                                            const updatedProblems = [...problems];
+                                            const updatedMatchTableChoices = [...problems[index].matchTableChoices];
+                                            updatedMatchTableChoices.push([false, false]);
+                                            const updatedMatchTableOptions = [...problems[index].matchTableOptions];
+                                            updatedMatchTableOptions.push('');
+                                            updatedProblems[index].matchTableChoices = updatedMatchTableChoices;
+                                            updatedProblems[index].matchTableOptions = updatedMatchTableOptions;
+                                            setProblems(updatedProblems);
+                                            props.setProblems(updatedProblems);
+                                        }}
+                                        style={{
+                                            backgroundColor: "white",
+                                            overflow: "hidden",
+                                            height: 35,
+                                            marginTop: 25,
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: '#006AFF',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                borderColor: '#006AFF',
+                                                backgroundColor: '#fff',
+                                                fontSize: 12,
+                                                textAlign: "center",
+                                                lineHeight: 34,
+                                                paddingHorizontal: 20,
+                                                fontFamily: "inter",
+                                                height: 35,
+                                                textTransform: 'uppercase',
+                                                width: 175,
+                                            }}
+                                        >
+                                            Add Row
+                                        </Text>
+                                    </TouchableOpacity> : null}
+                                </View> : null
+                        }
+
+
                         {
                             problem.options.map((option: any, i: any) => {
 
@@ -1795,7 +3577,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 charCounterCount: false,
                                                                 zIndex: 2003,
                                                                 // immediateReactModelUpdate: true,
-                                                                heightMin: 150,
+                                                                heightMin: 100,
                                                                 fileUpload: false,
                                                                 videoUpload: false,
                                                                 imageUploadURL:
@@ -1816,84 +3598,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 quickInsertEnabled: false
                                                             }}
                                                         />
-
-                                                        {/* <Editor
-                                                            onInit={(evt, editor) => {
-                                                                const currRef: any = setRef(i.toString());
-                                                                if (currRef) {
-                                                                    currRef.current = editor
-                                                                }
-
-                                                            }}
-                                                            initialValue={editQuestion && editQuestion.options && editQuestion.options[i] && editQuestion.options[i].option !== "" ? editQuestion.options[i].option : ""}
-                                                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                                            init={{
-                                                                skin: "snow",
-                                                                // toolbar_sticky: true,
-                                                                branding: false,
-                                                                placeholder: 'Option ' + (i + 1),
-                                                                autoresize_on_init: false,
-                                                                autoresize_min_height: 150,
-                                                                height: 150,
-                                                                min_height: 150,
-                                                                paste_data_images: true,
-                                                                images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                                mobile: {
-                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                                },
-                                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                                menu: { // this is the complete default configuration
-                                                                    file: { title: 'File', items: 'newdocument' },
-                                                                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                                                                    insert: { title: 'Insert', items: 'link media | template hr' },
-                                                                    view: { title: 'View', items: 'visualaid' },
-                                                                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
-                                                                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                                                                    tools: { title: 'Tools', items: 'spellchecker code' }
-                                                                },
-                                                                statusbar: false,
-                                                                setup: (editor: any) => {
-
-                                                                    const equationIcon = '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>'
-                                                                    editor.ui.registry.addIcon('formula', equationIcon)
-                                                                    
-                                                                    editor.ui.registry.addButton("formula", {
-                                                                        icon: 'formula',
-                                                                        // text: "Upload File",
-                                                                        tooltip: 'Insert equation',
-                                                                        onAction: () => {
-                                                                            const updateShowFormulas = [...showOptionFormulas]
-                                                                            updateShowFormulas[i] = !updateShowFormulas[i]
-                                                                            setShowOptionFormulas(updateShowFormulas)
-                                                                        }
-                                                                    });
-
-
-                                                                },
-                                                                // menubar: 'file edit view insert format tools table tc help',
-                                                                menubar: false,
-                                                                toolbar: 'undo redo | bold italic underline strikethrough | formula superscript subscript | numlist bullist removeformat | table image media link | charmap emoticons',
-                                                                importcss_append: true,
-                                                                image_caption: true,
-                                                                quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                                noneditable_noneditable_class: 'mceNonEditable',
-                                                                toolbar_mode: 'sliding',
-                                                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
-                                                                // tinycomments_mode: 'embedded',
-                                                                // content_style: '.mymention{ color: gray; }',
-                                                                // contextmenu: 'link image table configurepermanentpen',
-                                                                // a11y_advanced_options: true,
-                                                                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                                                                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                                // content_css: useDarkMode ? 'dark' : 'default',
-                                                            }}
-                                                            onChange={(e: any) => {
-                                                                const newProbs = [...problems];
-                                                                newProbs[index].options[i].option = e.target.getContent();
-                                                                setProblems(newProbs)
-                                                                props.setProblems(newProbs)
-                                                            }}
-                                                        /> */}
 
                                                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingBottom: 10, paddingTop: 20 }}>
                                                             {questionType === "trueFalse" ? null :
@@ -1972,7 +3676,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 backgroundColor: "white",
                                 overflow: "hidden",
                                 height: 35,
-                                marginTop: 15,
+                                marginTop: 20,
                                 alignSelf: 'center'
                             }}
                         >
@@ -2002,7 +3706,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'center',
-                paddingBottom: 25,
+                paddingBottom: 30,
             }}>
                 <TouchableOpacity
                     onPress={() => {
@@ -2020,6 +3724,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     style={{
                         borderRadius: 15,
                         backgroundColor: "white",
+                        marginTop: 20
                     }}
                 >
                     <Text

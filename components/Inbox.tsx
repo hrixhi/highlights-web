@@ -64,8 +64,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [instantMeetingTitle, setInstantMeetingTitle] = useState<any>('');
     const [userZoomInfo, setUserZoomInfo] = useState<any>('');
     const [meetingProvider, setMeetingProvider] = useState('');
-    const [instantMeetingStart, setInstantMeetingStart] = useState<any>('');
     const [instantMeetingEnd, setInstantMeetingEnd] = useState<any>('');
+    const [instantMeetingNewChat, setInstantMeetingNewChat] = useState(false);
+    const [instantMeetingNewUserId, setInstantMeetingNewUserId] = useState('');
+    const [instantMeetingNewChatGroupId, setInstantMeetingNewChatGroupId] = useState('');
+    const [instantMeetingNewChatUsername, setInstantMeetingNewChatUsername] = useState('');
 
     const width = Dimensions.get('window').width;
     let options = users.map((sub: any) => {
@@ -941,7 +944,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const startInstantMeeting = useCallback(() => {
         if (userZoomInfo || (meetingProvider && meetingProvider !== '')) {
             const current = new Date();
-            setInstantMeetingStart(current);
             setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
             setShowInstantMeeting(true);
         } else {
@@ -961,6 +963,46 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         }
     }, [userZoomInfo, meetingProvider])
 
+    const startInstantMeetingNewChat = useCallback(async (newUserId: string, newUsername: string) => {
+        if (userZoomInfo) {
+            const current = new Date();
+            setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
+            setShowInstantMeeting(true);
+            setInstantMeetingNewChat(true);
+            setInstantMeetingNewUserId(newUserId);
+            setInstantMeetingNewChatUsername(newUsername);
+
+            const server = fetchAPI('');
+
+            // First load the group if there is one
+            const res = await server.query({
+                query: getGroup,
+                variables: {
+                    users: [newUserId, userId]
+                }
+            });
+
+            if (res && res.data.message.getGroupId && res.data.message.getGroupId === '') {
+                setInstantMeetingNewChatGroupId(res.data.message.getGroupId);
+            }
+
+        } else {
+            Alert('You must connect with Zoom to start a meeting.');
+
+            // ZOOM OATH
+
+            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                zoomRedirectUri
+            )}&state=${userId}`;
+
+            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                Linking.openURL(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+    }, [userZoomInfo, meetingProvider, userId])
+
     /**
      * @description Round time to nearest seconds
      */
@@ -970,16 +1012,49 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         return time;
     };
 
-    const createInstantMeeting = useCallback(() => {
+    const createInstantMeetingNewChat = useCallback(async () => {
         const startDate = new Date();
-        console.log("Instant meeting params", {
-            userId,
-            topic: instantMeetingTitle,
-            start: startDate.toUTCString(),
-            end: instantMeetingEnd.toUTCString(),
-            groupId,
-            users: chatUsers
-        })
+        
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: startInstantMeetingInbox,
+                variables: {
+                    userId,
+                    topic: instantMeetingTitle,
+                    start: startDate.toUTCString(),
+                    end: instantMeetingEnd.toUTCString(),
+                    groupId: instantMeetingNewChatGroupId,
+                    users: [userId, instantMeetingNewUserId]
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.message.startInstantMeetingInbox !== 'error') {
+                   
+                    loadNewChat(instantMeetingNewUserId)
+
+                    setShowInstantMeeting(false);
+                    setInstantMeetingTitle('');
+                    setInstantMeetingEnd('');
+                    setInstantMeetingNewChat(false)
+                    setInstantMeetingNewUserId('')
+                    setInstantMeetingNewChatGroupId('')
+                    setInstantMeetingNewChatUsername('')
+
+                    window.open(res.data.message.startInstantMeetingInbox, '_blank');
+
+                } else {
+                    Alert('Something went wrong. Try again.');
+                }
+            })
+            .catch(err => {
+                Alert('Something went wrong.');
+            });
+    }, [instantMeetingNewUserId, userId, instantMeetingNewChatGroupId, instantMeetingTitle, instantMeetingEnd])
+
+    const createInstantMeeting = useCallback(() => {
+
+        const startDate = new Date();
         
         const server = fetchAPI('');
         server
@@ -999,7 +1074,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                    
                     setShowInstantMeeting(false);
                     setInstantMeetingTitle('');
-                    setInstantMeetingStart('');
                     setInstantMeetingEnd('');
 
                     window.open(res.data.message.startInstantMeetingInbox, '_blank');
@@ -1021,7 +1095,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     {
                         text: 'START',
                         handler: function(event) {
-                            createInstantMeeting();
+                            if (instantMeetingNewChat) {
+                                createInstantMeetingNewChat()
+                            } else {
+                                createInstantMeeting();
+                            }
                         }
                     },
                     {
@@ -1029,8 +1107,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         handler: function(event) {
                             setShowInstantMeeting(false);
                             setInstantMeetingTitle('');
-                            setInstantMeetingStart('');
                             setInstantMeetingEnd('');
+                            setInstantMeetingNewChat(false);
+                            setInstantMeetingNewChatGroupId('');
+                            setInstantMeetingNewUserId('');
+                            setInstantMeetingNewChatUsername('')
+
                         }
                     }
                 ]}
@@ -1076,13 +1158,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         >
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 15,
                                     textTransform: 'uppercase',
                                     fontFamily: 'inter',
                                     marginBottom: 20
                                 }}
                             >
-                                Instant meeting
+                                Start meeting with {instantMeetingNewChat ? instantMeetingNewChatUsername : chatName}
                             </Text>
 
                             <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
@@ -1099,7 +1181,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     <TextInput
                                         style={{ padding: 10, fontSize: 14, backgroundColor: '#ffffff' }}
                                         value={instantMeetingTitle}
-                                        placeholder={'Optional'}
+                                        placeholder={'(optional)'}
                                         onChangeText={val => setInstantMeetingTitle(val)}
                                         placeholderTextColor={'#1F1F1F'}
                                         // required={true}
@@ -1300,13 +1382,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             </Text>
                                         </TouchableOpacity>
 
-                                            <TouchableOpacity
-                                                onPress={() => startInstantMeeting()}
-                                                style={{
-                                                    marginLeft: 'auto'
-                                                }}>
-                                                    <Ionicons name='videocam-outline' size={20} color='#006AFF' />
-                                                </TouchableOpacity>
+                                        {meetingProvider && meetingProvider !== '' ? null : <TouchableOpacity
+                                            onPress={() => startInstantMeeting()}
+                                            style={{
+                                                marginLeft: 'auto'
+                                            }}>
+                                            <Ionicons name='videocam-outline' size={21} color='#006AFF' />
+                                        </TouchableOpacity>}
                                         </View>
                                         
                                     ) : null}
@@ -1844,77 +1926,124 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }
                                                 }
                                                 return (
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            loadNewChat(user._id);
-                                                        }}
+                                                    <View 
                                                         style={{
-                                                            backgroundColor: '#fff',
-                                                            flexDirection: 'row',
-                                                            borderColor: '#f2f2f2',
-                                                            paddingVertical: 5,
+                                                            width: '100%',
                                                             borderBottomWidth: ind === users.length - 1 ? 0 : 1,
-                                                            width: '100%'
-                                                        }}>
-                                                        <View style={{ backgroundColor: '#fff', padding: 5 }}>
-                                                            <Image
-                                                                style={{
-                                                                    height: 35,
-                                                                    width: 35,
-                                                                    marginTop: 5,
-                                                                    marginLeft: 5,
-                                                                    marginBottom: 5,
-                                                                    borderRadius: 75,
-                                                                    alignSelf: 'center'
-                                                                }}
-                                                                source={{
-                                                                    uri: user.avatar
-                                                                        ? user.avatar
-                                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png'
-                                                                }}
-                                                            />
-                                                        </View>
-                                                        <View
+                                                            paddingVertical: 5,
+                                                            backgroundColor: '#fff',
+                                                            borderColor: '#f2f2f2',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                loadNewChat(user._id);
+                                                            }}
                                                             style={{
+                                                                backgroundColor: '#fff',
                                                                 flex: 1,
-                                                                backgroundColor: '#fff',
-                                                                paddingLeft: 10
+                                                                display: 'flex',
+                                                                flexDirection: 'row'
                                                             }}>
-                                                            <Text
+                                                            <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        height: 35,
+                                                                        width: 35,
+                                                                        marginTop: 5,
+                                                                        marginLeft: 5,
+                                                                        marginBottom: 5,
+                                                                        borderRadius: 75,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{
+                                                                        uri: user.avatar
+                                                                            ? user.avatar
+                                                                            : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            <View
                                                                 style={{
-                                                                    fontSize: 15,
-                                                                    padding: 5,
-                                                                    fontFamily: 'inter',
-                                                                    marginTop: 5
-                                                                }}
-                                                                ellipsizeMode="tail">
-                                                                {user.fullName}
-                                                            </Text>
-                                                            <Text
-                                                                style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
-                                                                ellipsizeMode="tail">
-                                                                {user.email}
-                                                            </Text>
-                                                        </View>
-                                                        <View
+                                                                    flex: 1,
+                                                                    backgroundColor: '#fff',
+                                                                    paddingLeft: 10
+                                                                }}>
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 15,
+                                                                        padding: 5,
+                                                                        fontFamily: 'inter',
+                                                                        marginTop: 5
+                                                                    }}
+                                                                    ellipsizeMode="tail">
+                                                                    {user.fullName}
+                                                                </Text>
+                                                                <Text
+                                                                    style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
+                                                                    ellipsizeMode="tail">
+                                                                    {user.email}
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                loadNewChat(user._id);
+                                                            }}
                                                             style={{
                                                                 backgroundColor: '#fff',
-                                                                padding: 0,
-                                                                flexDirection: 'row',
-                                                                alignSelf: 'center',
-                                                                alignItems: 'center'
                                                             }}>
-                                                            <Text
-                                                                style={{ fontSize: 13, padding: 5, lineHeight: 13 }}
-                                                                ellipsizeMode="tail">
-                                                                <Ionicons
-                                                                    name="chatbubble-ellipses-outline"
-                                                                    size={18}
-                                                                    color="#006AFF"
-                                                                />
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
+
+                                                            <View
+                                                                style={{
+                                                                    backgroundColor: '#fff',
+                                                                    padding: 0,
+                                                                    flexDirection: 'row',
+                                                                    alignSelf: 'center',
+                                                                    alignItems: 'center'
+                                                                }}>
+                                                                <Text
+                                                                    style={{ fontSize: 13, padding: 10, lineHeight: 13 }}
+                                                                    ellipsizeMode="tail">
+                                                                    <Ionicons
+                                                                        name="chatbubble-ellipses-outline"
+                                                                        size={18}
+                                                                        color="#006AFF"
+                                                                    />
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        {meetingProvider && meetingProvider !== '' ? null : <TouchableOpacity
+                                                            onPress={() => {
+                                                                // loadNewChat(user._id);
+                                                                startInstantMeetingNewChat(user._id, user.fullName)
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: '#fff',
+                                                                marginRight: 10
+                                                            }}>
+                                                            <View
+                                                                style={{
+                                                                    backgroundColor: '#fff',
+                                                                    padding: 0,
+                                                                    flexDirection: 'row',
+                                                                    alignSelf: 'center',
+                                                                    alignItems: 'center'
+                                                                }}>
+                                                                <Text
+                                                                    style={{ fontSize: 13, padding: 10, lineHeight: 13 }}
+                                                                    ellipsizeMode="tail">
+                                                                    <Ionicons
+                                                                        name="videocam-outline"
+                                                                        size={18}
+                                                                        color="#006AFF"
+                                                                    />
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>}
+                                                    </View>
                                                 );
                                             })}
                                         </ScrollView>

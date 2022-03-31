@@ -10,41 +10,6 @@ import EquationEditor from 'equation-editor-react';
 const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [addElementFromButton, setAddElementFromButton] = useState('');
 
-    const symbols = [
-        {
-            symbol: '',
-            howTo: '^     (shift + 6)'
-        },
-        {
-            symbol: 'Subscript',
-            howTo: '_    (shift + -)'
-        },
-        {
-            symbol: 'Summation Σ',
-            howTo: 'sum'
-        },
-        {
-            symbol: 'Product ∏',
-            howTo: 'prod'
-        },
-        {
-            symbol: 'Square root √',
-            howTo: 'sqrt'
-        },
-        {
-            symbol: 'bar over letter',
-            howTo: 'bar'
-        },
-        {
-            symbol: 'α, β, γ, δ, etc.',
-            howTo: 'alpha, beta, gamma, delta, etc. (Lowercase)'
-        },
-        {
-            symbol: 'Γ, Δ, Ε, Ω, etc.',
-            howTo: 'Gamma, Delta, Epsilon, Omega, etc. (Uppercase)'
-        }
-    ];
-
     const categoriesMap = {
         Frequent: [
             'Superscript',
@@ -55,7 +20,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             'Product ∏',
             'Integral ∫',
             'Fraction',
-            '√'
+            '√',
+            '∛'
         ],
         Mathematical: [
             'ƒ',
@@ -220,6 +186,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         '∝': '∝',
         '∠': '∠',
         '√': 'sqrt',
+        '∛': '\sqrt[3]',
 
         // QUOTATIONS
 
@@ -242,7 +209,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         '¨': '¨',
         '¡': '¡',
         '¿': '¿',
-        ˆ: 'ˆ',
+        'ˆ': 'ˆ',
         '˜': '˜',
         '−': '−',
         '±': '±',
