@@ -16,6 +16,8 @@ import { Select } from '@mobiscroll/react';
 import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
 import { Editor } from '@tinymce/tinymce-react';
+import { RadioButton } from './RadioButton';
+
 
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 
@@ -76,7 +78,7 @@ const questionTypeOptions = [
         value: "freeResponse"
     },
     {
-        text: "True/False",
+        text: "True & False",
         value: "trueFalse"
     },
     {
@@ -106,6 +108,10 @@ const questionTypeOptions = [
     {
         text: 'Equation Editor',
         value: 'equationEditor'
+    },
+    {
+        text: 'Match Table Grid',
+        value: 'matchTableGrid'
     }
 ]
 
@@ -507,7 +513,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     charCounterCount: false,
                     zIndex: 2003,
                     // immediateReactModelUpdate: true,
-                    heightMin: 200,
+                    heightMin: 150,
                     fileUpload: false,
                     videoUpload: true,
                     imageUploadURL:
@@ -1013,7 +1019,59 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Equation editor
         if (currentQuestion.questionType === 'equationEditor') {
             if (currentQuestion.correctEquations[0] === '') {
-                alert('Correct equation cannot be empty.')
+                alert(`Correct equation cannot be empty in question ${index + 1}.`)
+                return;
+            }
+        }
+
+        if (currentQuestion.questionType === 'matchTableGrid') {
+
+            let missingColHeader = false;
+            let missingRowHeader = false;
+            let missingCorrect = false;
+
+            currentQuestion.matchTableHeaders.map((header: string) => {
+                if (header === '') {
+                    missingColHeader = true;
+                }
+            })
+
+            if (missingColHeader) {
+                alert(`Column header cannot be empty in question ${index + 1}.`)
+                return;
+            }
+
+            currentQuestion.matchTableOptions.map((rowHeader: string) => {
+                if (rowHeader === '') {
+                    missingRowHeader = true
+                }
+            })
+
+            if (missingRowHeader) {
+                alert(`Row header cannot be empty in question ${index + 1}.`)
+                return;
+            }
+
+            currentQuestion.matchTableChoices.map((row: any) => {
+                let hasCorrect = false;
+
+                if (missingCorrect) {
+                    return;
+                }
+
+                row.map((option: boolean) => {
+                    if (option) {
+                        hasCorrect = true
+                    }
+                })
+
+                if (!hasCorrect) {
+                    missingCorrect = true
+                }
+            })
+
+            if (missingCorrect) {
+                alert(`Each row must have a correct response in question ${index + 1}.`)
                 return;
             }
         }
@@ -1166,7 +1224,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     alignItems: 'flex-start',
                                                     paddingBottom: Dimensions.get('window').width < 768 ? 0 : 30,
                                                 }}>
-                                                <label style={{ width: 160 }}>
+                                                <label style={{ width: 180 }}>
                                                     <Select
                                                         touchUi={true}
                                                         cssClass="customDropdown"
@@ -1240,6 +1298,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 updatedProblems[index].options = []
                                                             }
 
+                                                            // Free response maxCharCount
+                                                            updatedProblems[index].maxCharCount = ''
 
                                                             // Clear Options 
                                                             if (val.value === "freeResponse") {
@@ -1255,6 +1315,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     isCorrect: false
                                                                 })
                                                             }
+
+                                                            // These will be columns
+                                                            updatedProblems[index].matchTableHeaders = ['', '']
+                                                            // These will be rows
+                                                            updatedProblems[index].matchTableOptions = ['', '']
+                                                            // Grid of responses
+                                                            updatedProblems[index].matchTableChoices = [[false, false], [false, false]]
 
                                                             updatedProblems[index].textEntryHtml = ''
                                                             updatedProblems[index].textEntryOptions = []
@@ -1467,74 +1534,231 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             {/* Render all other Equation Editors here */}
                                             {
                                                 problem.questionType === 'highlightText' && editQuestionNumber === (index + 1) ?
-                                                <FroalaEditor
-                                                    ref={highlightTextProblemEditorRef}
-                                                    model={problems[index].highlightTextHtml}
-                                                    onModelChange={(model: any) => {
-                                                        const newProbs = [...problems];
-                                                        newProbs[index].highlightTextHtml = model;
+                                                <View style={{
+                                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                                }}>
+                                                    <FroalaEditor
+                                                        ref={highlightTextProblemEditorRef}
+                                                        model={problems[index].highlightTextHtml}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].highlightTextHtml = model;
 
-                                                        // Extract SPAN Tags from HTML 
-                                                        var el = document.createElement('html');
-                                                        el.innerHTML = model;
-                                                        const spans: HTMLCollection = el.getElementsByTagName('span');
+                                                            // Extract SPAN Tags from HTML 
+                                                            var el = document.createElement('html');
+                                                            el.innerHTML = model;
+                                                            const spans: HTMLCollection = el.getElementsByTagName('span');
 
-                                                        const highlightTextChoices: boolean[] = [];
+                                                            const highlightTextChoices: boolean[] = [];
 
-                                                        Array.from(spans).map((span: any) => {
-                                                            if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
-                                                                highlightTextChoices.push(true);
-                                                            } else {
-                                                                highlightTextChoices.push(false);
-                                                            }
-                                                        })
+                                                            Array.from(spans).map((span: any) => {
+                                                                if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                                                                    highlightTextChoices.push(true);
+                                                                } else {
+                                                                    highlightTextChoices.push(false);
+                                                                }
+                                                            })
 
-                                                        newProbs[index].highlightTextChoices = highlightTextChoices;
+                                                            newProbs[index].highlightTextChoices = highlightTextChoices;
 
-                                                        setProblems(newProbs)
-                                                        props.setProblems(newProbs)
-                                                    }}
-                                                    config={{
-                                                        key:
-                                                            'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                                                        attribution: false,
-                                                        placeholderText: 'Highlight correct answers with green and rest with yellow.',
-                                                        charCounterCount: false,
-                                                        zIndex: 2003,
-                                                        // immediateReactModelUpdate: true,
-                                                        heightMin: 200,
-                                                        fileUpload: false,
-                                                        videoUpload: false,
-                                                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                        imageUploadParam: 'file',
-                                                        imageUploadParams: { userId: props.userId },
-                                                        imageUploadMethod: 'POST',
-                                                        imageMaxSize: 5 * 1024 * 1024,
-                                                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                                                        paragraphFormatSelection: true,
-                                                        colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
-                                                        colorsHEXInput: false,
-                                                        pastePlain: true,
-                                                        // Default Font Size
-                                                        fontSizeDefaultSelection: '24',
-                                                        spellcheck: true,
-                                                        tabSpaces: 4,
-                                                        // TOOLBAR
-                                                        toolbarButtons: HIGHLIGHT_BUTTONS,
-                                                        toolbarSticky: false,
-                                                        quickInsertEnabled: false
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
                                                         }}
-                                                    /> : null
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Highlight correct answers with green and rest with yellow.',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
+                                                            colorsHEXInput: false,
+                                                            pastePlain: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: HIGHLIGHT_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                            }}
+                                                        />
+                                                    </View>
+                                                : null
                                         }
 
                                         {
                                             problem.questionType === 'inlineChoice' && editQuestionNumber === (index + 1) ?
+                                                <View style={{
+                                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                                }}>
+                                                    <FroalaEditor
+                                                        ref={highlightTextProblemEditorRef}
+                                                        model={problems[index].inlineChoiceHtml}
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[index].inlineChoiceHtml = model;
+
+                                                            // Extract SPAN Tags from HTML 
+                                                            var el = document.createElement('html');
+                                                            el.innerHTML = model;
+
+                                                            const spans: HTMLCollection = el.getElementsByTagName('span')
+
+                                                            console.log("Spans", spans)
+
+                                                            let updateInlineChoices: any[] = problems[index].inlineChoiceOptions;
+
+                                                            // Added choice
+                                                            if (updateInlineChoices.length < Array.from(spans).length) {
+                                                                updateInlineChoices.push([{
+                                                                    option: '',
+                                                                    isCorrect: true
+                                                                }, {
+                                                                    option: '',
+                                                                    isCorrect: false
+                                                                }])
+                                                            } else if (updateInlineChoices.length > Array.from(spans).length && Array.from(spans).length !== 0) {
+                                                                // A span was deleted so need to update all the existing inlineChoiceOptions
+
+                                                                let deletedInd = -1;
+                                                                const deleteCount = updateInlineChoices.length - Array.from(spans).length;
+
+                                                                // 0, 1, 2, 3
+
+                                                                // 1 is deleted, then 2 => 1 and 3 => 2
+
+                                                                // 0, 1, 2, 3, 4, 5 
+
+                                                                // 2, 3 are deleted 4 => 2, 5 => 3
+
+                                                                // Span list goes from 5 -> 3
+
+                                                                const spanList = Array.from(spans)
+                                                                updateInlineChoices.map((choice: any, ind: number) => {
+
+                                                                    if (deletedInd !== -1) return;
+
+                                                                    // Check if #id of ind exist in spans
+                                                                    if (!spans[ind] || spans[ind].id !== ind.toString()) {
+                                                                        deletedInd = ind
+                                                                    } 
+                                                                    
+                                                                })
+
+                                                                console.log("DeletedInd", deletedInd)
+                                                                console.log("deleteCount", deleteCount)
+
+                                                                updateInlineChoices.splice(deletedInd, deleteCount);
+
+                                                                // Update all span tags
+                                                                spanList.map((s: any, i: number) => {
+
+                                                                    if (spans[i].id === i.toString()) return;
+
+                                                                    const html = `<span id="${i}" class="inlineChoicePlaceholder fr-deletable" contenteditable="false">Dropdown ${i + 1}</span>&zwj;`
+
+                                                                    var x, tmp, elm, last, target = document.getElementById(s.id);
+                                                                    /// create a temporary div or tr (to support tds)
+                                                                    tmp = document.createElement(html.indexOf('<td')!=-1?'tr':'div');
+
+                                                                    console.log("tmp", tmp);
+
+                                                                    /// fill that div with our html, this generates our children
+                                                                    tmp.innerHTML = html;
+                                                                    /// step through the temporary div's children and insertBefore our target
+                                                                    x = tmp.childNodes.length;
+                                                                    /// the insertBefore method was more complicated than I first thought so I 
+                                                                    /// have improved it. Have to be careful when dealing with child lists as  
+                                                                    /// they are counted as live lists and so will update as and when you make
+                                                                    /// changes. This is why it is best to work backwards when moving children 
+                                                                    /// around, and why I'm assigning the elements I'm working with to `elm` 
+                                                                    /// and `last`
+                                                                    last = target;
+                                                                    console.log("Target", target)
+                                                                    while(x--){
+                                                                        target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
+                                                                        last = elm;
+                                                                    }
+                                                                    /// remove the target.
+                                                                    target.parentNode.removeChild(target);
+
+                                                                })
+
+
+
+                                                                // Now loop over all the spans and update them from 
+
+                                                            } else if (Array.from(spans).length === 0) {
+                                                                // Reset
+                                                                updateInlineChoices = []
+                                                            }
+
+                                                            newProbs[index].inlineChoiceOptions = updateInlineChoices
+                                                            console.log("Update inline choices", updateInlineChoices)
+
+                                                            setProblems(newProbs)
+                                                            props.setProblems(newProbs)
+
+                                                        }}
+                                                        config={{
+                                                            key:
+                                                                'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Click on + in toolbar to add new inline choice',
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 150,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
+                                                            colorsHEXInput: false,
+                                                            pastePlain: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: INLINE_CHOICE_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false
+                                                        }}
+                                                    />
+                                                </View> : null
+                                                
+                                        }
+
+                                        {
+                                        problem.questionType === 'textEntry' && editQuestionNumber === (index + 1) ?
+                                            <View style={{
+                                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40
+                                            }}>
                                                 <FroalaEditor
                                                     ref={highlightTextProblemEditorRef}
-                                                    model={problems[index].inlineChoiceHtml}
+                                                    model={problems[index].textEntryHtml}
                                                     onModelChange={(model: any) => {
                                                         const newProbs = [...problems];
-                                                        newProbs[index].inlineChoiceHtml = model;
+                                                        newProbs[index].textEntryHtml = model;
 
                                                         // Extract SPAN Tags from HTML 
                                                         var el = document.createElement('html');
@@ -1544,22 +1768,22 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                         console.log("Spans", spans)
 
-                                                        let updateInlineChoices: any[] = problems[index].inlineChoiceOptions;
+                                                        console.log("Text entry model", model)
+
+                                                        let updateTextEntryOptions: any[] = problems[index].textEntryOptions;
 
                                                         // Added choice
-                                                        if (updateInlineChoices.length < Array.from(spans).length) {
-                                                            updateInlineChoices.push([{
+                                                        if (updateTextEntryOptions.length < Array.from(spans).length) {
+                                                            updateTextEntryOptions.push({
                                                                 option: '',
-                                                                isCorrect: true
-                                                            }, {
-                                                                option: '',
-                                                                isCorrect: false
-                                                            }])
-                                                        } else if (updateInlineChoices.length > Array.from(spans).length && Array.from(spans).length !== 0) {
+                                                                type: 'text',
+                                                                points: '1'
+                                                            })
+                                                        } else if (updateTextEntryOptions.length > Array.from(spans).length && Array.from(spans).length !== 0) {
                                                             // A span was deleted so need to update all the existing inlineChoiceOptions
 
                                                             let deletedInd = -1;
-                                                            const deleteCount = updateInlineChoices.length - Array.from(spans).length;
+                                                            const deleteCount = updateTextEntryOptions.length - Array.from(spans).length;
 
                                                             // 0, 1, 2, 3
 
@@ -1572,7 +1796,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             // Span list goes from 5 -> 3
 
                                                             const spanList = Array.from(spans)
-                                                            updateInlineChoices.map((choice: any, ind: number) => {
+                                                            updateTextEntryOptions.map((choice: any, ind: number) => {
 
                                                                 if (deletedInd !== -1) return;
 
@@ -1586,14 +1810,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             console.log("DeletedInd", deletedInd)
                                                             console.log("deleteCount", deleteCount)
 
-                                                            updateInlineChoices.splice(deletedInd, deleteCount);
+                                                            updateTextEntryOptions.splice(deletedInd, deleteCount);
 
                                                             // Update all span tags
                                                             spanList.map((s: any, i: number) => {
 
                                                                 if (spans[i].id === i.toString()) return;
 
-                                                                const html = `<span id="${i}" class="inlineChoicePlaceholder fr-deletable" contenteditable="false">Dropdown ${i + 1}</span>&zwj;`
+                                                                const html = `<span id="${i}" class="inlineTextEntry fr-deletable" contenteditable="false">Entry ${i + 1}</span>&zwj;`
 
                                                                 var x, tmp, elm, last, target = document.getElementById(s.id);
                                                                 /// create a temporary div or tr (to support tds)
@@ -1628,11 +1852,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                         } else if (Array.from(spans).length === 0) {
                                                             // Reset
-                                                            updateInlineChoices = []
+                                                            updateTextEntryOptions = []
                                                         }
 
-                                                        newProbs[index].inlineChoiceOptions = updateInlineChoices
-                                                        console.log("Update inline choices", updateInlineChoices)
+                                                        newProbs[index].textEntryOptions = updateTextEntryOptions
+                                                        console.log("Update text entry choices", updateTextEntryOptions)
 
                                                         setProblems(newProbs)
                                                         props.setProblems(newProbs)
@@ -1642,11 +1866,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         key:
                                                             'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                         attribution: false,
-                                                        placeholderText: 'Click on + in toolbar to add new inline choice',
+                                                        placeholderText: 'Click on + in toolbar to add new Text entry.',
                                                         charCounterCount: false,
                                                         zIndex: 2003,
                                                         // immediateReactModelUpdate: true,
-                                                        heightMin: 200,
+                                                        heightMin: 150,
                                                         fileUpload: false,
                                                         videoUpload: false,
                                                         imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
@@ -1664,174 +1888,81 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         spellcheck: true,
                                                         tabSpaces: 4,
                                                         // TOOLBAR
-                                                        toolbarButtons: INLINE_CHOICE_BUTTONS,
+                                                        toolbarButtons: TEXT_ENTRY_BUTTONS,
                                                         toolbarSticky: false,
                                                         quickInsertEnabled: false
-                                                        }}
-                                                    /> : null
-                                                
-                                        }
-
-                                        {
-                                        problem.questionType === 'textEntry' && editQuestionNumber === (index + 1) ?
-                                            <FroalaEditor
-                                                ref={highlightTextProblemEditorRef}
-                                                model={problems[index].textEntryHtml}
-                                                onModelChange={(model: any) => {
-                                                    const newProbs = [...problems];
-                                                    newProbs[index].textEntryHtml = model;
-
-                                                    // Extract SPAN Tags from HTML 
-                                                    var el = document.createElement('html');
-                                                    el.innerHTML = model;
-
-                                                    const spans: HTMLCollection = el.getElementsByTagName('span')
-
-                                                    console.log("Spans", spans)
-
-                                                    console.log("Text entry model", model)
-
-                                                    let updateTextEntryOptions: any[] = problems[index].textEntryOptions;
-
-                                                    // Added choice
-                                                    if (updateTextEntryOptions.length < Array.from(spans).length) {
-                                                        updateTextEntryOptions.push({
-                                                            option: '',
-                                                            type: 'text',
-                                                            points: '1'
-                                                        })
-                                                    } else if (updateTextEntryOptions.length > Array.from(spans).length && Array.from(spans).length !== 0) {
-                                                        // A span was deleted so need to update all the existing inlineChoiceOptions
-
-                                                        let deletedInd = -1;
-                                                        const deleteCount = updateTextEntryOptions.length - Array.from(spans).length;
-
-                                                        // 0, 1, 2, 3
-
-                                                        // 1 is deleted, then 2 => 1 and 3 => 2
-
-                                                        // 0, 1, 2, 3, 4, 5 
-
-                                                        // 2, 3 are deleted 4 => 2, 5 => 3
-
-                                                        // Span list goes from 5 -> 3
-
-                                                        const spanList = Array.from(spans)
-                                                        updateTextEntryOptions.map((choice: any, ind: number) => {
-
-                                                            if (deletedInd !== -1) return;
-
-                                                            // Check if #id of ind exist in spans
-                                                            if (!spans[ind] || spans[ind].id !== ind.toString()) {
-                                                                deletedInd = ind
-                                                            } 
-                                                            
-                                                        })
-
-                                                        console.log("DeletedInd", deletedInd)
-                                                        console.log("deleteCount", deleteCount)
-
-                                                        updateTextEntryOptions.splice(deletedInd, deleteCount);
-
-                                                        // Update all span tags
-                                                        spanList.map((s: any, i: number) => {
-
-                                                            if (spans[i].id === i.toString()) return;
-
-                                                            const html = `<span id="${i}" class="inlineTextEntry fr-deletable" contenteditable="false">Entry ${i + 1}</span>&zwj;`
-
-                                                            var x, tmp, elm, last, target = document.getElementById(s.id);
-                                                            /// create a temporary div or tr (to support tds)
-                                                            tmp = document.createElement(html.indexOf('<td')!=-1?'tr':'div');
-
-                                                            console.log("tmp", tmp);
-
-                                                            /// fill that div with our html, this generates our children
-                                                            tmp.innerHTML = html;
-                                                            /// step through the temporary div's children and insertBefore our target
-                                                            x = tmp.childNodes.length;
-                                                            /// the insertBefore method was more complicated than I first thought so I 
-                                                            /// have improved it. Have to be careful when dealing with child lists as  
-                                                            /// they are counted as live lists and so will update as and when you make
-                                                            /// changes. This is why it is best to work backwards when moving children 
-                                                            /// around, and why I'm assigning the elements I'm working with to `elm` 
-                                                            /// and `last`
-                                                            last = target;
-                                                            console.log("Target", target)
-                                                            while(x--){
-                                                                target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
-                                                                last = elm;
-                                                            }
-                                                            /// remove the target.
-                                                            target.parentNode.removeChild(target);
-
-                                                        })
-
-
-
-                                                        // Now loop over all the spans and update them from 
-
-                                                    } else if (Array.from(spans).length === 0) {
-                                                        // Reset
-                                                        updateTextEntryOptions = []
-                                                    }
-
-                                                    newProbs[index].textEntryOptions = updateTextEntryOptions
-                                                    console.log("Update text entry choices", updateTextEntryOptions)
-
-                                                    setProblems(newProbs)
-                                                    props.setProblems(newProbs)
-
-                                                }}
-                                                config={{
-                                                    key:
-                                                        'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                                                    attribution: false,
-                                                    placeholderText: 'Click on + in toolbar to add new Text entry.',
-                                                    charCounterCount: false,
-                                                    zIndex: 2003,
-                                                    // immediateReactModelUpdate: true,
-                                                    heightMin: 200,
-                                                    fileUpload: false,
-                                                    videoUpload: false,
-                                                    imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                    imageUploadParam: 'file',
-                                                    imageUploadParams: { userId: props.userId },
-                                                    imageUploadMethod: 'POST',
-                                                    imageMaxSize: 5 * 1024 * 1024,
-                                                    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                                                    paragraphFormatSelection: true,
-                                                    colorsBackground: ['#61BD6D', '#F7DA64', 'REMOVE'],
-                                                    colorsHEXInput: false,
-                                                    pastePlain: true,
-                                                    // Default Font Size
-                                                    fontSizeDefaultSelection: '24',
-                                                    spellcheck: true,
-                                                    tabSpaces: 4,
-                                                    // TOOLBAR
-                                                    toolbarButtons: TEXT_ENTRY_BUTTONS,
-                                                    toolbarSticky: false,
-                                                    quickInsertEnabled: false
                                                     }}
-                                                /> : null
+                                                /> 
+                                            </View> : null
                                             
                                     }
 
                         {
-                            problem.questionType === "freeResponse" ? <Text style={{
-                                marginTop: 20,
-                                fontSize: 15,
-                                marginLeft: 20,
-                                paddingTop: 12,
-                                paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
-                                paddingBottom: 40,
-                                width: '100%',
-                                color: "#a2a2ac",
-                                marginBottom: 20,
+                            problem.questionType === "freeResponse" ? <View style={{
+                                flexDirection: 'column',
+
                             }}>
-                                Free Response Answer
-                            </Text> : null
+                                <Text style={{
+                                    marginTop: 20,
+                                    fontSize: 15,
+                                    marginLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 20,
+                                    paddingTop: 12,
+                                    paddingLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 40,
+                                    paddingBottom: 40,
+                                    width: '100%',
+                                    color: "#a2a2ac",
+                                    marginBottom: 20,
+                                }}>
+                                    Free Response Answer
+                                </Text> 
+
+                                <View style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 60
+                                }}>
+                                    <Text style={{
+                                        fontSize: 14,
+
+                                    }}>
+                                        Max Character Count
+                                    </Text>
+                                    <DefaultTextInput 
+                                        style={{
+                                            width: 150,
+                                            borderColor: '#e8e8e8',
+                                            borderBottomWidth: 1,
+                                            fontSize: 14,
+                                            paddingTop: 13,
+                                            paddingBottom: 13,
+                                            marginTop: 0,
+                                            paddingHorizontal: 10,
+                                            marginLeft: 10,
+                                            marginBottom: 0
+                                        }}
+                                        editable={(editQuestionNumber === (index + 1))}
+                                        value={problem.maxCharCount}
+                                        onChangeText={(text) => {
+
+                                            if (Number.isNaN(Number(text))){
+                                                alert('Character count must be a number.')
+                                                return;
+                                            }
+
+                                            const updatedProblems = [...problems]
+                                            updatedProblems[index].maxCharCount = text
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+
+                                        }}
+                                        placeholder='optional'
+                                        placeholderTextColor={'#a2a2ac'}
+                                    />
+                                </View>
+                            </View> : null
                         }
+
 
                         {
                             problem.questionType === 'textEntry' && editQuestionNumber !== (index + 1)  ?
@@ -3175,6 +3306,210 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }} />
                             </View> : null}
 
+                        {/* Match Table Grid */}
+
+                        {
+                            problem.questionType === 'matchTableGrid' ?
+                                <View style={{
+                                    flexDirection: 'column', 
+                                    marginTop: 20,
+                                }}>
+                                    {/* Header row */}
+                                    <View style={{ 
+                                        flexDirection: 'row', alignItems: 'center', paddingLeft:  editQuestionNumber === (index + 1) ? 40 : 0
+                                    }}>
+                                        <View style={{
+                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                        }} />
+                                        {
+                                            problem.matchTableHeaders.map((header: any, headerIndex: number) => {
+                                                return <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ?
+                                                    <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14, 
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={header}
+                                                        placeholder={'Header ' + (headerIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableHeaders[headerIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {header}
+                                                    </Text>}
+                                                </View>
+                                            })
+                                        }
+                                    </View>
+                                    {/* Rows */}
+                                    {
+                                        problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
+                                            return (<View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
+                                            }}>
+                                                <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ? <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14,
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={problem.matchTableOptions[rowIndex]}
+                                                        placeholder={'Row ' + (rowIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableOptions[rowIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                            props.setProblems(updatedProblems)
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {problem.matchTableOptions[rowIndex]}
+                                                    </Text>}
+                                                </View>
+                                                {
+                                                    choiceRow.map((choice: boolean, choiceIndex: number) => {
+                                                        return <View style={{
+                                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                            borderWidth: 1,
+                                                            borderColor: '#DDD',
+                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'center',
+                                                            height: '100%'
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                onPress={() => {
+                                                                    const updatedProblems = [...problems]
+                                                                    const updatedMatchTableChoices = [...problems[index].matchTableChoices]
+
+                                                                    for (let i = 0; i < updatedMatchTableChoices[rowIndex].length; i++) {
+                                                                        updatedMatchTableChoices[rowIndex][i] = (choiceIndex === i)
+                                                                    }
+                                                                    
+                                                                    updatedProblems[index].matchTableChoices = updatedMatchTableChoices
+                                                                    setProblems(updatedProblems);
+                                                                    props.setProblems(updatedProblems)
+                                                                }}
+                                                                disabled={editQuestionNumber !== (index + 1)}
+                                                            >
+                                                                <RadioButton selected={choice} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    })
+                                                }
+                                                {editQuestionNumber === (index + 1) ? <TouchableOpacity style={{
+                                                    paddingLeft: 25
+                                                }} 
+                                                onPress={() => {
+                                                    const updatedProblems = [...problems];
+                                                    const updatedMatchTableChoices = [...problems[index].matchTableChoices];
+                                                    updatedMatchTableChoices.splice(rowIndex, 1)
+                                                    const updatedMatchTableOptions = [...problems[index].matchTableOptions];
+                                                    updatedMatchTableOptions.splice(rowIndex, 1)
+                                                    updatedProblems[index].matchTableChoices = updatedMatchTableChoices;
+                                                    updatedProblems[index].matchTableOptions = updatedMatchTableOptions;
+                                                    setProblems(updatedProblems);
+                                                    props.setProblems(updatedProblems);
+                                                }}
+                                                >
+                                                    <Ionicons name='trash-outline' size={18} color="#1f1f1f" />    
+                                                </TouchableOpacity> : null}
+                                            </View>)
+                                        })
+                                    }
+
+                                    {/* Add row button */}
+                                    {editQuestionNumber === (index + 1) ? <TouchableOpacity
+                                        onPress={async () => {
+                                            const updatedProblems = [...problems];
+                                            const updatedMatchTableChoices = [...problems[index].matchTableChoices];
+                                            updatedMatchTableChoices.push([false, false]);
+                                            const updatedMatchTableOptions = [...problems[index].matchTableOptions];
+                                            updatedMatchTableOptions.push('');
+                                            updatedProblems[index].matchTableChoices = updatedMatchTableChoices;
+                                            updatedProblems[index].matchTableOptions = updatedMatchTableOptions;
+                                            setProblems(updatedProblems);
+                                            props.setProblems(updatedProblems);
+                                        }}
+                                        style={{
+                                            backgroundColor: "white",
+                                            overflow: "hidden",
+                                            height: 35,
+                                            marginTop: 25,
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: '#006AFF',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                borderColor: '#006AFF',
+                                                backgroundColor: '#fff',
+                                                fontSize: 12,
+                                                textAlign: "center",
+                                                lineHeight: 34,
+                                                paddingHorizontal: 20,
+                                                fontFamily: "inter",
+                                                height: 35,
+                                                textTransform: 'uppercase',
+                                                width: 175,
+                                            }}
+                                        >
+                                            Add Row
+                                        </Text>
+                                    </TouchableOpacity> : null}
+                                </View> : null
+                        }
+
+
                         {
                             problem.options.map((option: any, i: any) => {
 
@@ -3242,7 +3577,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 charCounterCount: false,
                                                                 zIndex: 2003,
                                                                 // immediateReactModelUpdate: true,
-                                                                heightMin: 150,
+                                                                heightMin: 100,
                                                                 fileUpload: false,
                                                                 videoUpload: false,
                                                                 imageUploadURL:

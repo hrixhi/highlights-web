@@ -27,6 +27,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [comment, setComment] = useState(props.comment ? props.comment : "");
     const [headers, setHeaders] = useState<any>(props.headers)
 
+    console.log("Solutions", solutions)
+    console.log("Props", props)
+
     if (!props.solutions) {
         return null;
     }
@@ -1078,7 +1081,115 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         Correct Answer
                                     </Text>
                                 </View> : null
-                            }
+                        }
+
+                        {
+                            problem.questionType === 'matchTableGrid' ?
+                                <View style={{
+                                    flexDirection: 'column', 
+                                    marginTop: 20,
+                                }}>
+                                    {/* Header row */}
+                                    <View style={{ 
+                                        flexDirection: 'row', alignItems: 'center', paddingLeft: 0
+                                    }}>
+                                        <View style={{
+                                            width: '33%',
+                                        }} />
+                                        {
+                                            problem.matchTableHeaders.map((header: any, headerIndex: number) => {
+                                                return <View style={{
+                                                    width: '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: 20,
+                                                    height: '100%'
+                                                }}>
+                                                    <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {header}
+                                                    </Text>
+                                                </View>
+                                            })
+                                        }
+                                    </View>
+                                    {/* Rows */}
+                                    {
+                                        problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
+                                            return (<View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingLeft: 0
+                                            }}>
+                                                <View style={{
+                                                    width: '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: 20,
+                                                    height: '100%'
+                                                }}>
+                                                    <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {problem.matchTableOptions[rowIndex]}
+                                                    </Text>
+                                                </View>
+                                                {
+                                                    choiceRow.map((choice: boolean, choiceIndex: number) => {
+
+                                                        let borderColor = '#DDD';
+                                                        let background = 'none';
+
+                                                        const selected = solutions[index].matchTableSelection[rowIndex][choiceIndex]
+                                                        
+                                                        if (choice) {
+                                                            borderColor = '#35ac78'
+                                                            background = '#d4f3e5'
+                                                        } else if (!choice && selected) {
+                                                            borderColor = '#f94144'
+                                                            background = '#ffe6f3'
+                                                        }
+
+                                                        return <View style={{
+                                                            width: '33%',
+                                                            borderWidth: 1,
+                                                            borderColor,
+                                                            padding: 20,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'center',
+                                                            height: '100%',
+                                                            backgroundColor: background
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                disabled={true}
+                                                            >
+                                                                <RadioButton selected={selected} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    })
+                                                }
+                                                
+                                            </View>)
+                                        })
+                                    }
+
+                                </View> : null
+                        }
 
 
                         {/* Remark */}

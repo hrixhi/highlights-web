@@ -102,6 +102,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [equationSolutionId, setEquationSolutionId] = useState('');
 
     console.log("Solutions", solutions)
+    console.log("Problems", problems)
 
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
@@ -291,6 +292,22 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 } else if (problem.questionType === 'equationEditor') {
                     solutionInit.push({
                         equationResponse: ''
+                    })
+
+                } else if (problem.questionType === 'matchTableGrid') {
+
+                    const matchTableChoices = problem.matchTableChoices;
+                    
+                    const initSelection = matchTableChoices.map((row: any) => {
+
+                        // Array
+                        let selectionRow = row.map(() => false);
+
+                        return selectionRow;
+                    })
+
+                    solutionInit.push({
+                        matchTableSelection: initSelection
                     })
 
                 } else {    
@@ -1957,7 +1974,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             const updatedProblems = [...problems]
                                                             updatedProblems[index].hotspotOptions[ind].isCorrect = !updatedProblems[index].hotspotOptions[ind].isCorrect
                                                             setProblems(updatedProblems)
-                                                            props.setProblems(updatedProblems)
                                                         }}
                                                         // disabled={editQuestionNumber !== (index + 1)}
                                                         disabled={true}
@@ -2833,7 +2849,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     Enter Equation 
                                 </Text>
                                 <EquationEditorQuiz 
-                                    equation={props.isOwner ? problem.correctEquations[0] : solutions[index].equationResponse}
+                                    equation={props.isOwner ? problem.correctEquations[0] : solutions[problemIndex].equationResponse}
                                     onChange={(eq: any) => {
 
                                         if (props.isOwner) {    
@@ -2864,12 +2880,191 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }} />
                             </View> : null}
 
+                        {/* Match Table Grid */}
+
+                        {
+                            problem.questionType === 'matchTableGrid' ?
+                                <View style={{
+                                    flexDirection: 'column', 
+                                    marginTop: 20,
+                                }}>
+                                    {/* Header row */}
+                                    <View style={{ 
+                                        flexDirection: 'row', alignItems: 'center', paddingLeft:  editQuestionNumber === (index + 1) ? 40 : 0
+                                    }}>
+                                        <View style={{
+                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                        }} />
+                                        {
+                                            problem.matchTableHeaders.map((header: any, headerIndex: number) => {
+                                                return <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ?
+                                                    <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14, 
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={header}
+                                                        placeholder={'Header ' + (headerIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableHeaders[headerIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {header}
+                                                    </Text>}
+                                                </View>
+                                            })
+                                        }
+                                    </View>
+                                    {/* Rows */}
+                                    {
+                                        problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
+                                            return (<View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
+                                            }}>
+                                                <View style={{
+                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                    borderWidth: 1,
+                                                    borderColor: '#DDD',
+                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                    height: '100%'
+                                                }}>
+                                                    {editQuestionNumber === (index + 1) ? <TextareaAutosize 
+                                                        style={{
+                                                            fontFamily: 'overpass',
+                                                            maxWidth: '90%', marginBottom: 10, marginTop: 10,
+                                                            borderRadius: 1,
+                                                            paddingTop: 13, paddingBottom: 13, fontSize: 14,
+                                                            borderBottom: '1px solid #f2f2f2',
+                                                            paddingLeft: 10,
+                                                            minWidth: '90%'
+                                                        }}
+                                                        value={problem.matchTableOptions[rowIndex]}
+                                                        placeholder={'Row ' + (rowIndex + 1)}
+                                                        onChange={(e: any) => {
+                                                            const updatedProblems = [...problems]
+                                                            updatedProblems[index].matchTableOptions[rowIndex] = e.target.value
+                                                            setProblems(updatedProblems);
+                                                        }}
+                                                        minRows={1}
+                                                    /> : <Text style={{
+                                                        fontFamily: 'overpass', 
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                        width: '100%',
+                                                    }}>
+                                                        {problem.matchTableOptions[rowIndex]}
+                                                    </Text>}
+                                                </View>
+                                                {
+                                                    choiceRow.map((choice: boolean, choiceIndex: number) => {
+
+
+                                                        return <View style={{
+                                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                            borderWidth: 1,
+                                                            borderColor: '#DDD',
+                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'center',
+                                                            height: '100%'
+                                                        }}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center'
+                                                                }}
+                                                                onPress={() => {
+                                                                    // Temporarily disable updating correct answer
+
+                                                                    // const updatedProblems = [...problems]
+                                                                    // const updatedMatchTableChoices = [...problems[index].matchTableChoices]
+
+                                                                    // for (let i = 0; i < updatedMatchTableChoices[rowIndex].length; i++) {
+                                                                    //     updatedMatchTableChoices[rowIndex][i] = (choiceIndex === i)
+                                                                    // }
+                                                                    
+                                                                    // updatedProblems[index].matchTableChoices = updatedMatchTableChoices
+                                                                    // setProblems(updatedProblems);
+                                                                    // props.setProblems(updatedProblems)
+
+                                                                    if (!props.isOwner) {
+                                                                        const updatedSolution = [...solutions];
+                                                                        const updatedMatchTableSelection = [...solutions[problemIndex].matchTableSelection]
+
+                                                                        for (let i = 0; i < updatedMatchTableSelection[rowIndex].length; i++) {
+                                                                            updatedMatchTableSelection[rowIndex][i] = (choiceIndex === i)
+                                                                        }
+
+                                                                        updatedSolution[problemIndex].matchTableSelection = updatedMatchTableSelection
+                                                                        setSolutions(updatedSolution);
+                                                                        props.setSolutions(updatedSolution);
+
+                                                                    }
+
+                                                                }}
+                                                                disabled={props.isOwner}
+                                                            >
+                                                                <RadioButton selected={props.isOwner ? choice : solutions[problemIndex].matchTableSelection[rowIndex][choiceIndex]} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    })
+                                                }
+                                                {editQuestionNumber === (index + 1) ? <TouchableOpacity style={{
+                                                    paddingLeft: 25
+                                                }} 
+                                                onPress={() => {
+                                                    const updatedProblems = [...problems];
+                                                    const updatedMatchTableChoices = [...problems[index].matchTableChoices];
+                                                    updatedMatchTableChoices.splice(rowIndex, 1)
+                                                    const updatedMatchTableOptions = [...problems[index].matchTableOptions];
+                                                    updatedMatchTableOptions.splice(rowIndex, 1)
+                                                    updatedProblems[index].matchTableChoices = updatedMatchTableChoices;
+                                                    updatedProblems[index].matchTableOptions = updatedMatchTableOptions;
+                                                    setProblems(updatedProblems);
+                                                }}
+                                                >
+                                                    <Ionicons name='trash-outline' size={18} color="#1f1f1f" />    
+                                                </TouchableOpacity> : null}
+                                            </View>)
+                                        })
+                                    }
+
+                                </View> : null
+                        }
+
+
 
                         {problem.questionType === 'freeResponse' ? (
                             <View
                                 style={{
                                     width: '100%',
-                                    paddingLeft: 40
+                                    
                                 }}
                             >
                                 {props.isOwner ? (
@@ -2881,6 +3076,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             paddingBottom: 12,
                                             // width: '50%',
                                             // maxWidth: "100%",
+                                            paddingLeft: (props.isOwner && editQuestionNumber === (index + 1)) ? 40 : 0,
                                             color: props.isOwner ? '#a2a2ac' : '#000000',
                                             marginBottom: props.isOwner ? 50 : 30
                                         }}
@@ -2888,7 +3084,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         {props.isOwner ? 'Free Response Answer' : solutions[problemIndex].response}
                                     </Text>
                                 ) : (
-                                    <View style={{ flexDirection: 'column', width: '100%' }}>
+                                    <View style={{ flexDirection: 'column', width: '100%',  }}>
                                         <FormulaGuide
                                             equation={equation}
                                             onChange={setEquation}
@@ -2910,7 +3106,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                 attribution: false,
                                                 placeholderText: 'Solution',
-                                                charCounterCount: false,
+                                                charCounterCount: true,
                                                 zIndex: 2003,
                                                 // immediateReactModelUpdate: true,
                                                 heightMin: 200,
@@ -2932,7 +3128,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 // TOOLBAR
                                                 toolbarButtons: QUIZ_SOLUTION_TOOLBAR_BUTTONS,
                                                 toolbarSticky: false,
-                                                quickInsertEnabled: false
+                                                quickInsertEnabled: false,
+                                                charCounterMax: problem.maxCharCount ? problem.maxCharCount : -1
                                             }}
                                         />
                                     </View>
@@ -3012,7 +3209,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     paddingTop: 25,
                                     paddingBottom: 50,
-                                    paddingLeft: 0
+                                    paddingLeft: 40
                                 }}
                             >
                                 <TouchableOpacity

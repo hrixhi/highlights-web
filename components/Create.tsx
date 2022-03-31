@@ -738,9 +738,63 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
 
+            // Equation Editor
             if (problem.questionType === 'equationEditor') {
                 if (problem.correctEquations[0] === '') {
                     alert('Correct equation cannot be empty.')
+                    return;
+                }
+            }
+    
+            // Match table grid
+            if (problem.questionType === 'matchTableGrid') {
+    
+                let missingColHeader = false;
+                let missingRowHeader = false;
+                let missingCorrect = false;
+    
+                problem.matchTableHeaders.map((header: string) => {
+                    if (header === '') {
+                        missingColHeader = true;
+                    }
+                })
+    
+                if (missingColHeader) {
+                    alert(`Column header cannot be empty in question ${problemIndex + 1}.`)
+                    return;
+                }
+    
+                problem.matchTableOptions.map((rowHeader: string) => {
+                    if (rowHeader === '') {
+                        missingRowHeader = true
+                    }
+                })
+    
+                if (missingRowHeader) {
+                    alert(`Row header cannot be empty in question ${problemIndex + 1}.`)
+                    return;
+                }
+    
+                problem.matchTableChoices.map((row: any) => {
+                    let hasCorrect = false;
+    
+                    if (missingCorrect) {
+                        return;
+                    }
+    
+                    row.map((option: boolean) => {
+                        if (option) {
+                            hasCorrect = true
+                        }
+                    })
+    
+                    if (!hasCorrect) {
+                        missingCorrect = true
+                    }
+                })
+    
+                if (missingCorrect) {
+                    alert(`Each row must have a correct response in question ${problemIndex + 1}.`)
                     return;
                 }
             }
@@ -819,11 +873,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 updateProblem.textEntryOptions = updatedTextEntryOptions;
 
+                updateProblem.maxCharCount = null;
+
                 return updateProblem
 
             }
 
-            return problem;
+            if (problem.questionType === 'freeResponse') {
+                let updateProblem = {
+                    ...problem
+                };
+
+                updateProblem.maxCharCount = Number(problem.maxCharCount);
+
+                return updateProblem;
+            } else {
+                // Make max Char count null since it is expected as a float
+                let updateProblem = {
+                    ...problem
+                };
+
+                updateProblem.maxCharCount = null;
+
+                return updateProblem;
+            }
+
         })
 
         console.log("Sanitized problems", sanitizeProblems)
@@ -2959,7 +3033,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 charCounterCount: false,
                                                                 zIndex: 2003,
                                                                 // immediateReactModelUpdate: true,
-                                                                heightMin: 200,
+                                                                heightMin: 120,
                                                                 fileUpload: false,
                                                                 videoUpload: false,
                                                                 imageUploadURL:

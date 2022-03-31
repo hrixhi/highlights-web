@@ -1301,6 +1301,10 @@ export const getQuiz = gql`
                         isCorrect
                     }
                     correctEquations
+                    maxCharCount
+                    matchTableChoices
+                    matchTableHeaders
+                    matchTableOptions
                 }
                 instructions
                 headers
