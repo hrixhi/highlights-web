@@ -785,6 +785,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         // Drag and Drop
         if (currentQuestion.questionType === 'dragdrop') {
+
+            // At least 2 groups
+            if (currentQuestion.dragDropHeaders.length < 2) {
+                alert(` Question ${index + 1} must have at least 2 Drag & Drop groups.`)
+                return false;
+            }
+
             let groupHeaderMissing = false 
             let labelMissing = false
             let groupEmpty = false
@@ -829,21 +836,31 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Highlight Text
         if (currentQuestion.questionType === 'highlightText') {
 
-            if (currentQuestion.highlightTextChoices.length < 2) {
-                Alert(`You must set multiple highlight text choices and mark one as correct in Question ${index + 1}.`);
-                return;
+            const el = document.createElement('html');
+            el.innerHTML = currentQuestion.highlightTextHtml;
+            const spans: HTMLCollection = el.getElementsByTagName('span');
+
+            let spanIdCounter = 0;
+            let correctAnswers = 0;
+
+            for (let i = 0; i < spans.length; i++) {
+                const span = spans.item(i);
+
+                if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                    spanIdCounter += 1;
+                    correctAnswers += 1;
+                } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
+                    spanIdCounter += 1;
+                }
             }
 
-            let atleastOneCorrect = false;
-
-            currentQuestion.highlightTextChoices.map((choice: boolean) => {
-                if (choice) {
-                    atleastOneCorrect = true;
-                }
-            })
-
-            if (!atleastOneCorrect) {
-                Alert(`You must set at least one highlight text choice as correct in Question ${index + 1}.`);
+            if (spanIdCounter < 2) {
+                Alert(`You must set at least two Hot text choices in Question ${index + 1}.`);
+                return;
+            }
+            
+            if (correctAnswers === 0) {
+                Alert(`You must set at least one Hot text choice as correct in Question ${index + 1}.`);
                 return;
             }
             
@@ -1105,22 +1122,24 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const getItemStyle = (isDragging: any, draggableStyle: any) => ({
         // some basic styles to make the items look a bit nicer
         userSelect: "none",
-        padding: 16,
+        padding: 12,
         margin: `0 0 ${grid}px 0`,
-
+        border: '1px solid #CCC',
         // change background colour if dragging
         background: "#fff",
-
+        boxShadow: 'rgb(0 0 0 / 7%) 2px 2px 7px',
         // styles we need to apply on draggables
         ...draggableStyle,
         // height: 25
-        marginBottom: 15,
+        marginBottom: 20,
         top: draggableStyle.top,
         borderRadius: 10,
     });
     const getListStyle = (isDraggingOver: any) => ({
-        background: "#f2f2f2",
-        padding: 15,
+        // background: "#f2f2f2",
+        border: '1px solid #ccc',
+        borderRadius: 15,
+        padding: 20,
         width: 200,
         minWidth: 200,
         margin: 15
@@ -1239,6 +1258,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             } else {
                                                                 updatedProblems[index].questionType = val.value;
                                                                 updatedProblems[index].options = []
+                                                                updatedProblems[index].question = ''
                                                             }
 
                                                             // hotspots
@@ -1541,25 +1561,53 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         ref={highlightTextProblemEditorRef}
                                                         model={problems[index].highlightTextHtml}
                                                         onModelChange={(model: any) => {
+
+                                                            console.log("On model change called");
+
                                                             const newProbs = [...problems];
-                                                            newProbs[index].highlightTextHtml = model;
 
-                                                            // Extract SPAN Tags from HTML 
-                                                            var el = document.createElement('html');
-                                                            el.innerHTML = model;
-                                                            const spans: HTMLCollection = el.getElementsByTagName('span');
+                                                            console.log("highlightTextProblemEditorRef", highlightTextProblemEditorRef)
 
-                                                            const highlightTextChoices: boolean[] = [];
+                                                            // Extract SPAN Tags from HTML and update Span IDS
+                                                            // var el = document.createElement('html');
+                                                            // el.innerHTML = model;
+                                                            // const spans: HTMLCollection = el.getElementsByTagName('span');
 
-                                                            Array.from(spans).map((span: any) => {
-                                                                if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
-                                                                    highlightTextChoices.push(true);
-                                                                } else {
-                                                                    highlightTextChoices.push(false);
-                                                                }
-                                                            })
+                                                            // const highlightTextChoices: boolean[] = [];
 
-                                                            newProbs[index].highlightTextChoices = highlightTextChoices;
+                                                            // let spanIdCounter = 0;
+
+                                                            // for (let i = 0; i < spans.length; i++) {
+                                                            //     const span = spans.item(i);
+
+                                                            //     console.log("Span", span)
+                                                            //     if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                                                            //         highlightTextChoices.push(true);
+                                                            //         span.setAttribute('id', `${spanIdCounter}`);
+                                                            //         spanIdCounter += 1;
+                                                            //     } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
+                                                            //         span.setAttribute('id', `${spanIdCounter}`);
+                                                            //         highlightTextChoices.push(false);
+                                                            //         spanIdCounter += 1;
+                                                            //     }
+                                                            // }
+ 
+                                                            // // Array.from(spans).map((span: any, spanIndex: number) => {
+
+                                                                
+                                                            // // })
+
+                                                            // console.log("Inner HTML", el.innerHTML)
+
+                                                            // const pTag = el.getElementsByTagName('body')[0].innerHTML;
+
+                                                            // console.log("PTag", pTag)
+
+                                                            // newProbs[index].highlightTextHtml = pTag;
+
+                                                            // newProbs[index].highlightTextChoices = highlightTextChoices;
+
+                                                            newProbs[index].highlightTextHtml = model
 
                                                             setProblems(newProbs)
                                                             props.setProblems(newProbs)
@@ -1717,7 +1765,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             key:
                                                                 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                             attribution: false,
-                                                            placeholderText: 'Click on + in toolbar to add new inline choice',
+                                                            placeholderText: 'Click on + in toolbar to insert a new Inline choice',
                                                             charCounterCount: false,
                                                             zIndex: 2003,
                                                             // immediateReactModelUpdate: true,
@@ -1866,7 +1914,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         key:
                                                             'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                         attribution: false,
-                                                        placeholderText: 'Click on + in toolbar to add new Text entry.',
+                                                        placeholderText: 'Click on + in toolbar to insert a new Text Entry.',
                                                         charCounterCount: false,
                                                         zIndex: 2003,
                                                         // immediateReactModelUpdate: true,
@@ -1916,17 +1964,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     Free Response Answer
                                 </Text> 
 
-                                <View style={{
+                                {editQuestionNumber === (index + 1) ? <View style={{
                                     display: 'flex',
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     paddingLeft: (Dimensions.get('window').width < 768 || (editQuestionNumber !== (index + 1))) ? 0 : 60
                                 }}>
                                     <Text style={{
-                                        fontSize: 14,
+                                        fontSize: 13,
 
                                     }}>
-                                        Max Character Count
+                                        Character limit
                                     </Text>
                                     <DefaultTextInput 
                                         style={{
@@ -1959,7 +2007,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         placeholder='optional'
                                         placeholderTextColor={'#a2a2ac'}
                                     />
-                                </View>
+                                </View> : <Text style={{
+                                    fontSize: 12,
+                                    marginLeft: 'auto'
+                                }}>
+                                    {problem.maxCharCount && problem.maxCharCount !== '' ? problem.maxCharCount + ' character limit' : 'No character limit'}
+                                    </Text>}
                             </View> : null
                         }
 
@@ -2298,22 +2351,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
                                                 if (node.type === 'tag' && node.name === 'span') {
 
-                                                    let matchIndex = -1; 
+                                                    console.log("Node span", node);
 
-                                                    // Loop over all the 
-                                                    Array.from(spans).map((elm: any, ind3: number) => {
-                                                        if (((!node.next && !elm.nextSibling) || node.next.data === elm.nextSibling.data) && ((!node.prev && !node.previousSibling) || node.prev.data === elm.previousSibling.data) && node.children[0].data === elm.firstChild.data) {
-                                                            matchIndex = ind3;
-                                                        }
-                                                    })
+                                                    let className = '';
 
-                                                    console.log("Match index", matchIndex)
-                                                    console.log("highlightTextChoices", highlightTextChoices)
+                                                    if (node.attribs.style === 'background-color: rgb(97, 189, 109);') {
+                                                        className = 'highlightTextActive'
+                                                    }
 
+                                                    if (node.attribs.style === 'background-color: rgb(247, 218, 100);') {
+                                                        className = 'highlightTextOption'
+                                                    }
 
-                                                    let isCorrect = matchIndex !== -1 ? highlightTextChoices[matchIndex] : false
         
-                                                    return <span className={isCorrect ? "highlightTextActive" : "highlightTextOption"}>{node.children[0].data}</span>;
+                                                    return <span className={className}>{node.children[0].data}</span>;
                                                 }
                                             });
                                         }
@@ -2324,7 +2375,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
 
                         {
-                            problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 20, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
+                            problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 30, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
                                 {
                                     problems[index].inlineChoiceOptions.map((choice: any[], choiceIndex: number) => {
                                         return <View style={{
@@ -2447,12 +2498,40 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }
                             </View> : null
                         }
+
+                        {
+                             problem.questionType === 'hotspot' && editQuestionNumber === (index + 1) ? (
+                                !problem.imgUrl || problem.imgUrl === '' ?
+                                <View style={{
+                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
+                                    marginBottom: 20,
+                                    marginTop: 10,
+                                }}>
+                                    <Text style={{
+                                        fontSize: 14,
+                                        fontFamily: 'Overpass',
+                                    }}>
+                                        Upload an image to place hotspots. 
+                                    </Text>
+                                </View> :
+                                <View style={{
+                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
+                                    marginBottom: 30,
+                                }}>
+                                    <Text style={{
+                                        fontSize: 14,
+                                        fontFamily: 'Overpass',
+                                    }}>
+                                        Click anywhere on the image to add hotspots. Add labels and select checkboxes to mark them as correct.
+                                    </Text>  
+                                </View>) : null
+                        }
                         
 
                         {
                             problem.questionType === 'hotspot' ? (
                                 !problem.imgUrl || problem.imgUrl === '' ?
-                                    <TouchableOpacity
+                                    (editQuestionNumber === (index + 1) ? <TouchableOpacity
                                         onPress={async () => {
                                             const url = await handleFile(false, props.userId, true)
                                             const updatedProblems = [...problems]
@@ -2489,7 +2568,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         >
                                             Upload Image
                                         </Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> : null)
                                     :
                                     <View style={{
                                         paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
@@ -2566,55 +2645,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ) : null
                         }
 
-                         {/* Hotspot Preview */}
-
-                         {/* {
-                            problem.questionType === 'hotspot' && editQuestionNumber !== (index + 1) && (problem.imgUrl && problem.imgUrl !== '')
-                            ? <View style={{
-                                paddingLeft: 40, overflow: 'hidden', display: 'flex', flexDirection: 'row', justifyContent: 'center',
-                            }}>
-                                <View style={{
-                                    maxWidth: Dimensions.get('window').width < 768 ? 300 : 600, maxHeight: Dimensions.get('window').width < 768 ? 300 : 600,
-                                }}>
-                                    <ImageMarker
-                                        src={problem.imgUrl}
-                                        markers={problem.hotspots.map((spot: any) => {
-                                            return { top: spot.y, left: spot.x }
-                                        })}
-                                        onAddMarker={(marker: any) => { 
-                                           return;
-                                        }}
-                                        markerComponent={(p: any) => {
-
-                                            const hotspotOption = problem.hotspotOptions[p.itemNumber];
-
-
-                                            return <TouchableOpacity disabled={true} style={{
-                                                backgroundColor: hotspotOption.isCorrect ? '#006AFF' : '#fff',
-                                                height: 25, 
-                                                width: 25, 
-                                                borderColor: '#006AFF',
-                                                borderRadius: 12.5
-                                            }}
-                                                onPress={() => {
-                                                    return;
-                                                }}
-                                            >
-                                                <Text style={{
-                                                    color: hotspotOption.isCorrect ? '#fff' : '#006AFF', 
-                                                    lineHeight: 25, 
-                                                    textAlign: 'center'
-                                                }}>
-                                                    {p.itemNumber + 1}
-                                                </Text>
-                                            </TouchableOpacity>}
-                                        }
-                                    />
-                                </View>
-                                
-                            </View> : null
-                        } */}
-
                         {
                             problem.questionType === 'hotspot' && problem.imgUrl !== '' ? ( 
                                 <View style={{
@@ -2685,8 +2715,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ) : null
                         }
 
-                       
-
                         {
                             problem.questionType === 'dragdrop' && editQuestionNumber !== (index + 1) ?
                                 <div style={{
@@ -2697,8 +2725,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         width: '100%',
                                         display: 'flex',
                                         flexWrap: 'wrap',
-                                        background: '#f2f2f2',
-                                        padding: 20,
+                                        paddingTop: 20,
                                     }}>
                                         {
                                             dragDropOptions.map((label: string) => {
@@ -2707,9 +2734,22 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     display: 'flex',
                                                     flexDirection: 'row',
                                                     alignItems: 'center',
-                                                    padding: 12,
+                                                    paddingVertical: 16,
+                                                    paddingHorizontal: 10,
                                                     marginRight: 20,
-                                                    marginBottom: 20
+                                                    marginBottom: 20,
+                                                    borderRadius: 10,
+                                                    // backgroundColor: '#f2f2f2',
+                                                    borderWidth: 1,
+                                                    borderColor: '#ccc',
+                                                    shadowOffset: {
+                                                        width: 2,
+                                                        height: 2
+                                                    },
+                                                    overflow: 'hidden',
+                                                    shadowOpacity: 0.07,
+                                                    shadowRadius: 7,
+
                                                 }}>
                                                     <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                     <Text
@@ -2731,7 +2771,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         marginTop: 50
                                     }}>
                                         {problem.dragDropHeaders.map((header: string) => {
-                                            return <View style={{ width: 200, marginRight: 20, justifyContent: 'center', padding: 20, backgroundColor: '#f2f2f2', }}>
+
+                                            return <View style={{ width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15 }}>
                                                 <Text style={{
                                                     fontSize: 16,
                                                     width: '100%',
@@ -2791,57 +2832,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     New Group
                                                 </Text>
                                             </TouchableOpacity>
-                                            <View style={{ width: 25 }} />
-                                            <TouchableOpacity
-                                                onPress={async () => {
-                                                    const updatedProblems = [...problems]
-
-                                                    const id = Math.round(Math.random() * 100000).toString()
-                                                    
-                                                    // Add to the most recent column
-                                                    const lastGroup = Object.keys(updatedProblems[index].dragDropData).length - 1;
-
-                                                    const updatedData = lodash.clone(updatedProblems[index].dragDropData)
-
-                                                    updatedData[lastGroup] = [...updatedData[lastGroup], { id, content: '' }]
-
-                                                    updatedProblems[index].dragDropData = updatedData
-
-                                                    updatedProblems[index].dragDropHeaders = [...updatedProblems[index].dragDropHeaders]
-
-                                                    setProblems(updatedProblems)
-
-                                                    props.setProblems(updatedProblems)
-
-                                                }}
-                                                style={{
-                                                    backgroundColor: "white",
-                                                    overflow: "hidden",
-                                                    height: 35,
-                                                    marginTop: 15,
-                                                    alignSelf: 'center'
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color: '#006AFF',
-                                                        borderWidth: 1,
-                                                        borderRadius: 15,
-                                                        borderColor: '#006AFF',
-                                                        backgroundColor: '#fff',
-                                                        fontSize: 12,
-                                                        textAlign: "center",
-                                                        lineHeight: 34,
-                                                        paddingHorizontal: 20,
-                                                        fontFamily: "inter",
-                                                        height: 35,
-                                                        textTransform: 'uppercase',
-                                                        width: 175,
-                                                    }}
-                                                >
-                                                    New Item
-                                                </Text>
-                                            </TouchableOpacity>
                                         </View>
 
                                         <div style={{ display: 'flex', width: '100%', paddingTop: 20, overflow: 'scroll', flexDirection: 'row' }}>
@@ -2888,13 +2878,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 style={getListStyle(snapshot.isDraggingOver)}
                                                                 {...provided.droppableProps}
                                                             >
-                                                                <div style={{
-                                                                    marginBottom: 20
+                                                                <View style={{
+                                                                    // marginBottom: 20,
+                                                                    flexDirection: 'row',
+                                                                    alignItems: 'center',
                                                                 }}>
                                                                     <TextInput
                                                                         style={{
                                                                             width: '90%',
-                                                                            maxWidth: '90%',
+                                                                            // maxWidth: '80%',
                                                                             borderBottomWidth: 1,
                                                                             borderBottomColor: '#e8e8e8',
                                                                             fontSize: 14,
@@ -2902,8 +2894,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             paddingBottom: 13,
                                                                             marginTop: 0,
                                                                             marginBottom: 5,
-                                                                            padding: '10px',
-                                                                            backgroundColor: '#f2f2f2'
+                                                                            paddingHorizontal: 10
+                                                                            // padding: '10px',
+                                                                            // backgroundColor: '#f2f2f2'
                                                                         }}
                                                                         value={problem.dragDropHeaders[ind2]}
                                                                         placeholder={'Group ' + (ind2 + 1)}
@@ -2915,8 +2908,33 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         }}
                                                                         // minRows={1}
                                                                     />
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            const updatedProblems = [...problems]
 
-                                                                </div>
+                                                                            const updatedData = lodash.clone(updatedProblems[index].dragDropData)
+
+                                                                            const updatedDragDropHeaders = lodash.clone(updatedProblems[index].dragDropHeaders)
+
+                                                                            updatedData.splice(ind2, 1);
+                                                                            updatedDragDropHeaders.splice(ind2, 1);
+
+                                                                            updatedProblems[index].dragDropData = updatedData
+
+                                                                            updatedProblems[index].dragDropHeaders = updatedDragDropHeaders
+
+                                                                            setProblems(updatedProblems)
+
+                                                                            props.setProblems(updatedProblems)
+                                                                        }}
+                                                                        style={{
+                                                                            paddingLeft: 8
+                                                                        }}
+                                                                    >
+                                                                        <Ionicons name={'trash-outline'} size={18}  />
+                                                                    </TouchableOpacity>
+
+                                                                </View>
                                                                 {el.map((item: any, index2: any) => (
                                                                     <Draggable
                                                                         key={item.id}
@@ -2961,6 +2979,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             props.setProblems(updatedProblems)
                                                                                         }}
                                                                                     /> */}
+                                                                                    <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                                                     <TextareaAutosize
                                                                                         style={{
                                                                                             width: 150,
@@ -2971,10 +2990,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             marginTop: 0,
                                                                                             padding: '10px',
                                                                                             marginRight: 5,
-                                                                                            paddingLeft: 10
+                                                                                            paddingLeft: 10,
+                                                                                            // background: "#f2f2f2",
                                                                                         }}
                                                                                         value={item.content}
-                                                                                        placeholder={'Label'}
+                                                                                        placeholder={''}
                                                                                         onChange={(e: any) => {
                                                                                             const updatedProblems = [...problems]
                                                                                             updatedProblems[index].dragDropData[ind2][index2].content = e.target.value
@@ -2992,20 +3012,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                         onPress={() => {
                                                                                             const updatedProblems = [...problems];
                                                                                             updatedProblems[index].dragDropData[ind2].splice(index2, 1);
-                                                                                            // const newProb = updatedProblems[index].dragDropData.filter((group: any, i: any) => {
-                                                                                            //     if (group.length === 0) {
-                                                                                            //         updatedProblems[index].headers.splice(i, 1)
-                                                                                            //     }
-                                                                                            //     return group.length
-                                                                                            // })
-                                                                                            // updatedProblems[index].dragDropData = updatedProblems
                                                                                             setProblems(
                                                                                                 updatedProblems
                                                                                             );
                                                                                             props.setProblems(updatedProblems)
                                                                                         }}
                                                                                     >
-                                                                                        <Ionicons name='trash-outline' color='#1f1f1f' size={15} />
+                                                                                        <Ionicons name='trash-outline' color='#006AFF' size={15} />
                                                                                     </TouchableOpacity>
                                                                                 </div>
                                                                             </div>
@@ -3013,6 +3026,112 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     </Draggable>
                                                                 ))}
                                                                 {provided.placeholder}
+
+                                                                <View style={{
+                                                                    flexDirection: 'column',
+                                                                    width: '100%',
+                                                                    alignItems: 'center',
+                                                                    marginTop: 30,
+                                                                    marginBottom: 20
+                                                                }}>
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            const updatedProblems = [...problems]
+
+                                                                            const id = Math.round(Math.random() * 100000).toString()
+
+                                                                            const updatedData = lodash.clone(updatedProblems[index].dragDropData)
+
+                                                                            updatedData[ind2] = [...updatedData[ind2], { id, content: '' }]
+
+                                                                            updatedProblems[index].dragDropData = updatedData
+
+                                                                            updatedProblems[index].dragDropHeaders = [...updatedProblems[index].dragDropHeaders]
+
+                                                                            setProblems(updatedProblems)
+
+                                                                            props.setProblems(updatedProblems)
+                                                                        }}
+                                                                        style={{
+                                                                            alignSelf: 'center',
+                                                                            backgroundColor: "white",
+                                                                            overflow: "hidden",
+                                                                            height: 35,
+                                                                            
+                                                                        }}
+                                                                    >
+                                                                        <Text
+                                                                            style={{
+                                                                                color: '#006AFF',
+                                                                                borderWidth: 1,
+                                                                                borderRadius: 15,
+                                                                                borderColor: '#006AFF',
+                                                                                backgroundColor: '#fff',
+                                                                                fontSize: 12,
+                                                                                textAlign: "center",
+                                                                                lineHeight: 34,
+                                                                                paddingHorizontal: 20,
+                                                                                fontFamily: "inter",
+                                                                                height: 35,
+                                                                                textTransform: 'uppercase',
+                                                                                width: 130,
+                                                                            }}
+                                                                        >
+                                                                            New Item    
+                                                                        </Text>    
+                                                                    </TouchableOpacity>
+
+                                                                    {/* Remove item */}
+
+                                                                    {/* <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            const updatedProblems = [...problems]
+
+                                                                            const updatedData = lodash.clone(updatedProblems[index].dragDropData)
+
+                                                                            const updatedDragDropHeaders = lodash.clone(updatedProblems[index].dragDropHeaders)
+
+                                                                            updatedData.splice(ind2, 1);
+                                                                            updatedDragDropHeaders.splice(ind2, 1);
+
+                                                                            updatedProblems[index].dragDropData = updatedData
+
+                                                                            updatedProblems[index].dragDropHeaders = updatedDragDropHeaders
+
+                                                                            setProblems(updatedProblems)
+
+                                                                            props.setProblems(updatedProblems)
+
+                                                                        }}
+                                                                        style={{
+                                                                            alignSelf: 'center',
+                                                                            backgroundColor: "white",
+                                                                            overflow: "hidden",
+                                                                            height: 35,
+                                                                            marginTop: 20,
+                                                                        }}
+                                                                    >
+                                                                        <Text
+                                                                            style={{
+                                                                                color: '#006AFF',
+                                                                                borderWidth: 1,
+                                                                                borderRadius: 15,
+                                                                                borderColor: '#006AFF',
+                                                                                backgroundColor: '#fff',
+                                                                                fontSize: 12,
+                                                                                textAlign: "center",
+                                                                                lineHeight: 34,
+                                                                                paddingHorizontal: 20,
+                                                                                fontFamily: "inter",
+                                                                                height: 35,
+                                                                                textTransform: 'uppercase',
+                                                                                width: 130,
+                                                                            }}
+                                                                        >
+                                                                            Remove Group    
+                                                                        </Text>    
+                                                                    </TouchableOpacity> */}
+                                                                </View>
                                                             </div>
                                                         )}
                                                     </Droppable>

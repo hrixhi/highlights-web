@@ -306,14 +306,14 @@ div#editable {
 }
 
 .hotspotOption {
-    border: 2px solid #e6f0ff;
+    border: none;
     border-radius: 8px;
     padding: 7px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
-    background: #e6f0ff;
-    color: #006aff;
+    background: #fff;
+    color: #000;
     font-family: 'Overpass';
     font-size: 15px;
 }
@@ -329,7 +329,7 @@ div#editable {
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
-    background: #e6f0ff;
+    background: #fff;
     color: #006aff;
     font-family: 'Overpass';
     font-size: 15px;

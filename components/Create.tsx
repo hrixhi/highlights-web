@@ -479,6 +479,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             // Drag and Drop
             if (problem.questionType === 'dragdrop') {
+
+                // At least 2 groups
+                if (problem.dragDropHeaders.length < 2) {
+                    alert(`Question ${problemIndex + 1} must have at least 2 Drag & Drop groups.`)
+                    return false;
+                }
+                
                 let groupHeaderMissing = false 
                 let labelMissing = false
                 let groupEmpty = false
@@ -552,21 +559,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             // Highlight Text
             if (problem.questionType === 'highlightText') {
 
-                if (problem.highlightTextChoices.length < 2) {
-                    Alert(`You must set multiple highlight text choices and mark one as correct in Question ${problemIndex + 1}.`);
+                const el = document.createElement('html');
+                el.innerHTML = problem.highlightTextHtml;
+                const spans: HTMLCollection = el.getElementsByTagName('span');
+    
+                let spanIdCounter = 0;
+                let correctAnswers = 0;
+    
+                for (let i = 0; i < spans.length; i++) {
+                    const span = spans.item(i);
+    
+                    if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                        spanIdCounter += 1;
+                        correctAnswers += 1;
+                    } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
+                        spanIdCounter += 1;
+                    }
+                }
+    
+                if (spanIdCounter < 2) {
+                    Alert(`You must set at least two Hot text choices in Question ${index + 1}.`);
                     return;
                 }
                 
-                let atleastOneCorrect = false;
-    
-                problem.highlightTextChoices.map((choice: boolean) => {
-                    if (choice) {
-                        atleastOneCorrect = true;
-                    }
-                })
-    
-                if (!atleastOneCorrect) {
-                    Alert(`You must set at least one highlight text choice as correct in Question ${problemIndex + 1}.`);
+                if (correctAnswers === 0) {
+                    Alert(`You must set at least one Hot text choice as correct in Question ${index + 1}.`);
                     return;
                 }
             }
@@ -872,6 +889,67 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 });
 
                 updateProblem.textEntryOptions = updatedTextEntryOptions;
+
+                updateProblem.maxCharCount = null;
+
+                return updateProblem
+
+            }
+
+            // For Highlight Text, manipulate the HTML String to add IDs to the <span> tags
+
+            if (problem.questionType === 'highlightText') {
+
+                let updateProblem = {
+                    ...problem
+                };
+
+                const highlightTextHtml = problem.highlightTextHtml
+
+                // Extract SPAN Tags from HTML and update Span IDS
+                var el = document.createElement('html');
+                el.innerHTML = highlightTextHtml;
+                const spans: HTMLCollection = el.getElementsByTagName('span');
+
+                // const highlightTextChoices: boolean[] = [];
+
+                let spanIdCounter = 0;
+
+                const updateHighlightTextChoices: boolean[] = [];
+
+                for (let i = 0; i < spans.length; i++) {
+                    const span = spans.item(i);
+
+                    console.log("Span", span)
+                    if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
+                        span.setAttribute('id', `${spanIdCounter}`);
+                        spanIdCounter += 1;
+                        updateHighlightTextChoices.push(true)
+                    } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
+                        span.setAttribute('id', `${spanIdCounter}`);
+                        spanIdCounter += 1;
+                        updateHighlightTextChoices.push(false)
+                    }
+                }
+ 
+                // // Array.from(spans).map((span: any, spanIndex: number) => {
+
+                    
+                // // })
+
+                console.log("Inner HTML", el.innerHTML)
+
+                const pTag = el.getElementsByTagName('body')[0].innerHTML;
+
+                console.log("PTag", pTag)
+
+                // newProbs[index].highlightTextHtml = pTag;
+
+                // newProbs[index].highlightTextChoices = highlightTextChoices;
+
+                updateProblem.highlightTextHtml = pTag;
+
+                updateProblem.highlightTextChoices = updateHighlightTextChoices;
 
                 updateProblem.maxCharCount = null;
 
