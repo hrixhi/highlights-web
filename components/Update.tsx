@@ -84,6 +84,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
 
+    console.log("Cue Id", props.cue)
+
     // HOOKS
 
     /**
@@ -983,7 +985,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         horizontal={true}
                         showsHorizontalScrollIndicator={true}
                     >
-                        {folderCuesToDisplay.map((cue: any) => {
+                        {folderCuesToDisplay.map((cue: any, ind: number) => {
                             if (!cue || !cue.channelId) return;
 
                             const { title } = htmlStringParser(
@@ -1021,6 +1023,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         zIndex: 500000,
                                         marginRight: 15
                                     }}
+                                    key={ind.toString()}
                                 >
                                     <TouchableOpacity
                                         onPress={() => props.openCue(cue._id)}
@@ -1118,7 +1121,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={true}
                             >
-                                {channelCues.map((cue: any) => {
+                                {channelCues.map((cue: any, ind: number) => {
                                     const { title } = htmlStringParser(
                                         cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
                                     );
@@ -1154,6 +1157,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 zIndex: 500000,
                                                 marginRight: 15
                                             }}
+                                            key={ind.toString()}
                                         >
                                             <View
                                                 key={'textPage'}
@@ -1336,7 +1340,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 showsHorizontalScrollIndicator={true}
                                 // showsVerticalScrollIndicator={false}
                             >
-                                {channelCues.map((cue: any) => {
+                                {channelCues.map((cue: any, ind: number) => {
                                     const { title } = htmlStringParser(
                                         cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
                                     );
@@ -1372,6 +1376,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 zIndex: 500000,
                                                 marginRight: 15
                                             }}
+                                            key={ind.toString()}
                                         >
                                             <View
                                                 key={'textPage'}

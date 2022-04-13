@@ -334,3 +334,7 @@ div#editable {
     font-family: 'Overpass';
     font-size: 15px;
 }
+
+.mbsc-ios.mbsc-popup-body {
+    background: #f2f2f2 !important;
+}

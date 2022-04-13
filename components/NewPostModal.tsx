@@ -20,25 +20,26 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
      * @description Renders option to select Category for new discussion post
      */
     const customCategoryInput = (
-        <View style={{ backgroundColor: '#f2f2f7', marginVertical: 20, paddingHorizontal: 20 }}>
-            <View style={{ flexDirection: 'column', backgroundColor: '#f2f2f7' }}>
-                <Text style={{ fontSize: 11, textTransform: 'uppercase', fontFamily: 'overpass' }}>CATEGORY</Text>
+        <View style={{ backgroundColor: '#f2f2f2', marginTop: 30,
+                        marginBottom: 20, paddingHorizontal: 20 }}>
+            <View style={{ flexDirection: 'column', backgroundColor: '#f2f2f2' }}>
+                <Text style={{ fontSize: 12, fontFamily: 'Inter' }}>Category</Text>
                 <View
                     style={{
                         width: '100%',
                         flexDirection: 'row',
-                        backgroundColor: '#f2f2f7',
+                        backgroundColor: '#f2f2f2',
                         alignItems: 'center',
                         marginTop: 10
                     }}>
-                    <View style={{ backgroundColor: '#f2f2f7', marginRight: 10 }}>
+                    <View style={{ backgroundColor: '#f2f2f2', marginRight: 10 }}>
                         {addCustomCategory ? (
                             <View style={styles.colorBar}>
                                 <TextInput
                                     value={customCategory}
                                     style={{
                                         borderRadius: 0,
-                                        borderColor: '#f2f2f7',
+                                        borderColor: '#f2f2f2',
                                         borderBottomWidth: 1,
                                         fontSize: 14,
                                         height: '2.75em',
@@ -74,7 +75,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </label>
                         )}
                     </View>
-                    <View style={{ backgroundColor: '#f2f2f7' }}>
+                    <View style={{ backgroundColor: '#f2f2f2' }}>
                         <TouchableOpacity
                             onPress={() => {
                                 if (addCustomCategory) {
@@ -85,7 +86,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     setAddCustomCategory(true);
                                 }
                             }}
-                            style={{ backgroundColor: '#f2f2f7' }}>
+                            style={{ backgroundColor: '#f2f2f2' }}>
                             <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
                                 <Ionicons
                                     name={addCustomCategory ? 'close' : 'create-outline'}
@@ -136,17 +137,16 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     flexDirection: 'column',
                     paddingHorizontal: 20,
                     marginVertical: 20,
-                    minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
+                    minWidth: Dimensions.get('window').width > 768 ? 400 : 300,
                     maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                    backgroundColor: '#f2f2f7'
+                    backgroundColor: '#f2f2f2'
                 }}>
                 <Text
                     style={{
-                        fontSize: 13,
-                        textTransform: 'uppercase',
+                        fontSize: 16,
                         fontFamily: 'inter'
                     }}>
-                    NEW POST
+                    New Post
                 </Text>
                 <TextareaAutosize
                     value={message}
@@ -158,9 +158,10 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         fontSize: 14,
                         borderRadius: 1,
                         padding: 12,
-                        width: '100%',
-                        maxWidth: '100%',
-                        borderBottom: '1px solid #f2f2f7'
+                        width: '95%',
+                        maxWidth: '95%',
+                        minWidth: '95%',
+                        borderBottom: '1px solid #f2f2f2'
                     }}
                     onChange={(e: any) => {
                         setMessage(e.target.value);
@@ -173,22 +174,16 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         flexDirection: 'column',
                         paddingHorizontal: 20,
-                        marginVertical: 20,
-                        minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
+                        marginTop: 30,
+                        marginBottom: 20,
+                        minWidth: Dimensions.get('window').width > 768 ? 400 : 300,
                         maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                        backgroundColor: '#f2f2f7'
+                        backgroundColor: '#f2f2f2'
                     }}>
-                    <Text
-                        style={{
-                            fontSize: 11,
-                            textTransform: 'uppercase',
-                            fontFamily: 'overpass'
-                        }}>
-                        PRIVATE
-                    </Text>
+                    <Text style={{ fontSize: 12, fontFamily: 'Inter' }}>Private</Text>
                     <View
                         style={{
-                            backgroundColor: '#f2f2f7',
+                            backgroundColor: '#f2f2f2',
                             height: 40,
                             marginRight: 10,
                             marginTop: 10

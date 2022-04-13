@@ -42,7 +42,7 @@ module.exports = async function(env, argv) {
     //     test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
     //     use: 'url-loader?limit=10000&mimetype=image/svg+xml'
     // });
-
+       
     config.resolve.alias['react-native-webview'] = 'react-native-web-webview';
 
     config.resolve.alias['FroalaEditor'] = 'froala_editor.min.js/froala_editor.pkgd.min.js';

@@ -112,11 +112,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [showOnboardModal, setShowOnboardModal] = useState(false);
 
     const [option, setOption] = useState('To Do');
-    const [options] = useState(
-        version === 'read'
-            ? ['To Do', 'Classroom', 'Browse', 'Channels', 'Settings']
-            : ['To Do', 'Classroom', 'Inbox', 'Channels', 'Settings']
-    );
+    const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Account']);
 
     const [showHome, setShowHome] = useState(true);
     const [hideNewChatButton, setHideNewChatButton] = useState(false);
@@ -696,6 +692,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         } else {
                             allCues['local'] = [];
                         }
+
+                        console.log("Local cues from loadDataFromCloud", allCues['local'])
+
                         const customC: any[] = [];
                         Object.keys(custom).map(item => {
                             customC.push(item);
@@ -1821,11 +1820,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     setModalType('');
                                     setPageNumber(0);
                                 }}
-                                closeOnCreate={async () => {
+                                closeAfterCreatingMyNotes={async () => {
                                     setModalType('');
                                     setPageNumber(0);
                                     await loadData(true);
-                                    await loadData();
                                 }}
                                 unreadMessages={unreadMessages}
                                 refreshUnreadInbox={refreshUnreadInbox}
@@ -1958,18 +1956,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Popup
                     isOpen={showOnboardModal}
                     buttons={[
-                        // {
-                        //     text: 'BEGIN USE',
-                        //     handler: function(event) {
-                        //         setShowOnboardModal(false)
-                        //     }
-                        // },
-                        // {
-                        //     text: 'HELP',
-                        //     handler: function(event) {
-                        //         setShowOnboardModal(false)
-                        //     }
-                        // },
                     ]}
                     themeVariant="light"
                     theme="ios"
@@ -2186,29 +2172,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             backgroundColor: '#f2f2f2',
                             paddingVertical: 20
                         }}>
-                            {/* <Text 
-                                style={{
-                                    fontSize: 22,
-                                    color: '#000',
-                                    fontFamily: 'Inter',
-                                }}
-                            >
-                                Download Apps
-                            </Text> */}
-
-                            {/* <View 
-                                style={{ 
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    backgroundColor: '#f2f2f2',
-                                    // paddingRight: 50 
-                                }}
-                            >
-
-                                <Text style={{ paddingRight: 15, fontSize: 16 }}>
-                                    DESKTOP
-                                </Text> */}
 
                             <TouchableOpacity
                                 onPress={() => {
@@ -2240,26 +2203,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons name='logo-windows' size={Dimensions.get('window').width < 768 ? 30 : 35} />
                             </TouchableOpacity>
 
-                            {/* </View>
-
-                            <View 
-                                style={{ 
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    backgroundColor: '#f2f2f2',
-                                    paddingRight: 35 
-                                }}
-                            >
-
-                                <Text style={{ paddingRight: 15, fontSize: 16 }}>
-                                    MOBILE
-                                </Text> */}
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    Alert("Available soon!")
-                                    // window.open('https://www.learnwithcues.com/help', '_blank');
+                                    window.open('https://apps.apple.com/us/app/cues-learn/id1614537827', '_blank');
                                 }}
                                 style={{
                                     overflow: 'hidden',
@@ -2286,11 +2233,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             >
                                 <Ionicons name='logo-android' size={Dimensions.get('window').width < 768 ? 30 : 35} />
                             </TouchableOpacity>
-
-                            {/* </View> */}
                         </View>
-
-
                     </View>
                 </Popup>
             }

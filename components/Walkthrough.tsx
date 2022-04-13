@@ -340,6 +340,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 style={{
                                     paddingRight: 20,
                                     paddingTop: 5,
+                                    paddingBottom: 20,
+                                    paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0,
                                     alignSelf: 'flex-start'
                                 }}>
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
@@ -416,7 +418,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 paddingBottom: 10,
                                                 marginTop: 10
                                                 // paddingTop: item.question === 'Home' ? 40 : 0,
-                                            }}>
+                                            }}
+                                            key={index.toString()}    
+                                        >
                                             <View style={{ flexDirection: 'row' }}>
                                                 <Text
                                                     style={{
@@ -441,16 +445,16 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 </Text>
                                             </View>
                                             <Collapse isOpened={item.isOpen}>
-                                                {item.steps.map((step: string) => {
+                                                {item.steps.map((step: string, ind: number) => {
                                                     let renderContent = null;
 
                                                     const split = step.split(':');
 
                                                     if (split.length === 1) {
-                                                        renderContent = <View>• {step}</View>;
+                                                        renderContent = <View key={ind.toString()}>• {step}</View>;
                                                     } else {
                                                         renderContent = (
-                                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            <View key={ind.toString()} style={{ display: 'flex', flexDirection: 'row' }}>
                                                                 • <strong>{split[0]}:</strong>
                                                                 {split[1]}
                                                             </View>
@@ -458,7 +462,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     }
 
                                                     return (
-                                                        <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
+                                                        <View key={ind.toString()} style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                             <Text style={{ display: 'flex', flexDirection: 'row' }}>
                                                                 {renderContent}
                                                             </Text>
@@ -474,7 +478,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     )}
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" />
+            {/* <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" /> */}
         </View>
     );
 };

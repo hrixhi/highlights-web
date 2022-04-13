@@ -26,11 +26,11 @@ import {
     // findBySchoolId,
     getRole,
     getOrganisation,
-    duplicateQuiz
+    duplicateQuiz,
+    saveSubmissionDraft
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
-import { Editor } from '@tinymce/tinymce-react';
 import Alert from '../components/Alert';
 import { Text, View, TouchableOpacity } from './Themed';
 import FileUpload from './UploadFiles';
@@ -197,7 +197,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedChannelOwner, setSelectedChannelOwner] = useState<any>(undefined);
-    const [userId, setUserId] = useState('');
+    const [submissionSavedAt, setSubmissionSavedAt] = useState(new Date())
+    const [failedToSaveSubmission, setFailedToSaveSubmission] = useState(false);
+
+    const [userId, setUserId] = useState(''); 
     const width = Dimensions.get('window').width;
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz');
@@ -422,6 +425,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         };
 
                         subCues[props.cueKey][props.cueIndex] = saveCue;
+
+                        console.log("Update annotation", saveCue)
 
                         const stringifiedCues = JSON.stringify(subCues);
                         await AsyncStorage.setItem('cues', stringifiedCues);
@@ -1339,19 +1344,28 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             updatedCue = JSON.stringify(submissionObj);
         }
 
-        const submittedNow = new Date();
+        if (!userId) return;
 
-        const saveCue = {
-            ...currCue,
-            cue: updatedCue,
-            submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt
-        };
+        const server = fetchAPI(userId)
+        server.mutate({
+            mutation: saveSubmissionDraft,
+            variables: {
+                cueId: props.cue._id,
+                userId,
+                cue: updatedCue
+            }
+        }).then((res) => {
+            if (res.data && res.data.cue.saveSubmissionDraft) {
+                setSubmissionSavedAt(new Date())
+                setFailedToSaveSubmission(false)
+            } else {
+                setFailedToSaveSubmission(true)
+            }
+        }).catch((e) => {
+            console.log("Failed to save submission", e)
+            setFailedToSaveSubmission(true)
+        })
 
-        subCues[props.cueKey][props.cueIndex] = saveCue;
-
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-        props.reloadCueListAfterUpdate();
     }, [
         submitted,
         solutions,
@@ -1362,7 +1376,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         submissionImported,
         isQuiz,
         submissionDraft,
-        isSubmitting
+        isSubmitting,
+        props.cue,
+        userId
     ]);
 
     /**
@@ -2840,7 +2856,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingBottom: 12,
                                 marginTop: 10,
                                 marginBottom: 0,
-                                maxWidth: 300,
+                                maxWidth: Dimensions.get('window').width < 768 ? '100%' : 400,
+                                minWidth: Dimensions.get('window').width < 768 ? '100%' : 400,
                                 borderBottom: '1px solid #f2f2f2',
                                 borderRadius: 1,
                                 width: '100%'
@@ -3027,11 +3044,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: '100%',
                     flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingTop: Dimensions.get('window').width < 768 ? 10 : 30,
+                    paddingBottom: 20,
                     justifyContent: 'space-between',
                     maxWidth: 900,
                     alignSelf: 'center'
                 }}
-            >
+            >   
+                
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && viewSubmission ? (
                     <View
                         style={{
@@ -3039,7 +3060,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             alignItems: 'center',
                             marginTop: 0,
-                            paddingTop: 10
                         }}
                     >
                         <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
@@ -3050,21 +3070,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : null}
 
                 {/* View Submission button here */}
-                {props.cue.graded && props.cue.releaseSubmission && viewSubmission ? (
+                {props.cue.graded && props.cue.releaseSubmission && viewSubmission ? ( 
                     <View style={{ paddingLeft: 20 }}>
                         <Text
                             style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c',
-                                paddingTop: 20,
-                                paddingBottom: 15
                             }}
                         >
                             {PreferredLanguageText('score')}
                         </Text>
                         <Text
-                            style={{
+                        style={{
                                 fontSize: 25,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c',
@@ -3074,10 +3092,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {props.cue.score}%
                         </Text>
                     </View>
-                ) : null}
+                ) : null} 
 
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.graded ? (
-                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row', }}>
                         {viewSubmission ? (
                             props.cue.releaseSubmission ||
                             (!allowLateSubmission && new Date() > deadline) ||
@@ -3221,7 +3239,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     maxWidth: 900,
                     alignSelf: 'center',
                     minHeight: 475,
-                    paddingTop: 25,
+                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
                     backgroundColor: 'white'
                 }}
             >
@@ -3250,6 +3268,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     quizAttempts={quizAttempts}
                                     userId={userId}
                                 />
+                                {renderSubmissionDraftStatus()}
                                 {renderFooter()}
                             </View>
                         ) : (
@@ -3310,6 +3329,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 quizAttempts={quizAttempts}
                                 userId={userId}
                             />
+                            {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
                     )
@@ -3360,6 +3380,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === 'wav' ? (
                         <View style={{ width: '100%' }}>
                             <ReactPlayer url={submissionUrl} controls={true} width={'100%'} height={'100%'} />
+                            {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
                     ) : (
@@ -3376,6 +3397,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 ref={RichText}
                                 style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
                             ></div>
+                            {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
                     )
@@ -3391,6 +3413,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     (allowLateSubmission && new Date() > availableUntil)
                                         ? null
                                         : renderRichEditorModified()}
+                                    {renderSubmissionDraftStatus()}
                                     {renderFooter()}
                                 </View>
                             )
@@ -3431,7 +3454,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
 
         return (
-            <View style={{ width: '100%' }}>
+            <View style={{ width: '100%', marginTop: Dimensions.get('window').width < 768 ? 15 : 0 }}>
                 <View key={userId.toString() + isOwner.toString()}>
                     <FroalaEditor
                         ref={editorRef}
@@ -3466,7 +3489,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             tabSpaces: 4,
 
                             // TOOLBAR
-                            toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                            toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                             toolbarSticky: true,
                             events: {
                                 'froalaEditor.initialized': function(e: any, editor: any) {
@@ -3597,7 +3620,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         const attempt = submissionAttempts[submissionAttempts.length - 1];
 
         return (
-            <View style={{ width: '100%', marginTop: 20 }}>
+            <View style={{ width: '100%' }}>
                 {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
                 {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
@@ -3635,7 +3658,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     attempt.type === 'mpeg' ||
                     attempt.type === 'mp2' ||
                     attempt.type === 'wav' ? (
-                        <View style={{ width: '100%', marginTop: 25 }}>
+                        <View style={{ width: '100%', }}>
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
@@ -3657,7 +3680,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     ) : (
                         <View
-                            style={{ width: '100%', marginTop: 25 }}
+                            style={{ width: '100%', }}
                             key={
                                 JSON.stringify(viewSubmission) +
                                 JSON.stringify(attempt) +
@@ -3696,7 +3719,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     )
                 ) : (
-                    <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(attempt)}>
+                    <View style={{ width: '100%', }} key={JSON.stringify(attempt)}>
                         {viewSubmissionTab === 'mySubmission' ? (
                             <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
@@ -3811,7 +3834,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             //     }}
             //     onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
             // />
-            <View key={userId.toString() + isOwner.toString()}>
+            <View key={userId.toString() + isOwner.toString()} style={{  marginTop: Dimensions.get('window').width < 768 ? 15 : 0 }}>
                 <FroalaEditor
                     ref={editorRef}
                     model={submissionDraft}
@@ -3845,7 +3868,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         tabSpaces: 4,
 
                         // TOOLBAR
-                        toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                        toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                         toolbarSticky: true,
                         events: {
                             'froalaEditor.initialized': function(e: any, editor: any) {
@@ -4791,7 +4814,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 return (
                                     <View
                                         style={color == i ? styles.colorContainerOutline : styles.colorContainer}
-                                        key={Math.random()}
+                                        key={i.toString()}
                                     >
                                         <TouchableOpacity
                                             style={{
@@ -5261,6 +5284,48 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     };
 
+    const renderSubmissionDraftStatus = () => {
+        if (isOwner) {
+            return null
+        }
+
+        const format = moment(submissionSavedAt).format('h:mm a');
+
+        if (failedToSaveSubmission) {
+            return <View style={{
+                paddingVertical: 20,
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}>
+                <Ionicons name='close-outline' color={'#F94144'} size={22} />
+                <Text style={{
+                    fontFamily: 'overpass',
+                    paddingLeft: 5,
+                    paddingTop: 4,
+                    fontSize: 14,
+                }}>
+                    Failed to save. Last saved at {format}. Check Internet connection. 
+                </Text>
+            </View>     
+        } else {
+            return <View style={{
+                paddingVertical: 20,
+                flexDirection: 'row'
+            }}>
+                <Ionicons name='checkmark-outline' color={'#35AC78'} size={22} />
+                <Text style={{
+                    fontFamily: 'overpass',
+                    paddingLeft: 5,
+                    paddingTop: 4,
+                    fontSize: 14,
+                }}>
+                    Saved at {format}
+                </Text>
+            </View>
+        }
+
+    }
+
     /**
      * @description Buttons for Submission
      */
@@ -5373,6 +5438,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 backgroundColor: 'white',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
+                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0
                 // paddingBottom: 50
             }}
         >
@@ -5445,15 +5511,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </TouchableOpacity> */}
                 </View>
             ) : null}
-            {props.showOptions ||
-            props.showComments ||
-            isOwner ||
-            props.showOriginal ||
-            props.viewStatus ||
-            !submission ||
-            isQuiz
-                ? null
-                : renderSubmissionHistory()}
+            
             {/* {props.showOptions || props.showComments || viewSubmission ? null : (
                 <View
                     style={{
@@ -5523,150 +5581,179 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             : Dimensions.get('window').height - 52
                 }}
                 contentContainerStyle={{
-                    maxWidth: 900,
                     width: '100%',
-                    alignSelf: 'center'
+                    flexDirection: 'column', 
+                    alignItems: 'center',
                 }}
-                showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={true}
+                indicatorStyle="black"
                 scrollEnabled={true}
                 scrollEventThrottle={1}
                 keyboardDismissMode={'on-drag'}
                 overScrollMode={'always'}
                 nestedScrollEnabled={true}
-            >
-                {props.showOptions || props.showComments ? null : (
-                    <View>
-                        <View style={{ flexDirection: 'column', width: '100%' }}>
-                            {renderQuizTimerOrUploadOptions()}
-                        </View>
-                        {!props.showOriginal && submissionImported && !isQuiz && !viewSubmission ? (
-                            <View style={{ flexDirection: 'row' }}>
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignSelf: 'flex-start',
-                                        marginLeft: 0,
-                                        marginTop: 5
-                                    }}
-                                >
-                                    <TextInput
-                                        value={submissionTitle}
-                                        style={styles.input}
-                                        placeholder={'Title'}
-                                        onChangeText={val => setSubmissionTitle(val)}
-                                        placeholderTextColor={'#1F1F1F'}
-                                    />
-                                </View>
-                                {props.cue.submittedAt && props.cue.submittedAt !== '' ? (
+            >   
+                <View style={{
+                    width: '100%',
+                    maxWidth: 900,
+                    alignSelf: 'center'
+                }}>
+                    {props.showOptions ||
+                        props.showComments ||
+                        isOwner ||
+                        props.showOriginal ||
+                        props.viewStatus ||
+                        !submission ||
+                        isQuiz
+                            ? null
+                            : renderSubmissionHistory()}
+                            {props.showOptions || props.showComments ? null : (
+                        <View>
+                            <View style={{ flexDirection: 'column', width: '100%' }}>
+                                {renderQuizTimerOrUploadOptions()}
+                            </View>
+                            {!props.showOriginal && submissionImported && !isQuiz && !viewSubmission ? (
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <View
                                         style={{
-                                            marginLeft: 15,
-                                            marginTop: 20,
-                                            alignSelf: 'flex-end'
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            alignSelf: 'flex-start',
+                                            marginLeft: 0,
+                                            marginTop: 10,
+                                            marginBottom: 10,
                                         }}
                                     >
-                                        {props.cue.graded || currentDate > deadline ? null : (
-                                            <TouchableOpacity
-                                                onPress={() => clearAll()}
-                                                style={{
-                                                    backgroundColor: 'white',
-                                                    borderRadius: 15,
-                                                    marginTop: 5
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        lineHeight: 34,
-                                                        textTransform: 'uppercase',
-                                                        fontSize: 12,
-                                                        fontFamily: 'overpass',
-                                                        color: '#006AFF'
-                                                    }}
-                                                >
-                                                    Erase
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    </View>
-                                ) : (
-                                    <TouchableOpacity
-                                        onPress={() => clearAll()}
-                                        style={{
-                                            backgroundColor: 'white',
-                                            borderRadius: 15,
-                                            marginLeft: 15,
-                                            marginTop: 5
-                                        }}
-                                    >
-                                        <Text
+                                        <TextareaAutosize
+                                            value={submissionTitle}
                                             style={{
-                                                lineHeight: 34,
-                                                textTransform: 'uppercase',
-                                                fontSize: 12,
                                                 fontFamily: 'overpass',
-                                                color: '#006AFF'
+                                                fontSize: 14,
+                                                padding: 15,
+                                                paddingTop: 12,
+                                                paddingBottom: 12,
+                                                marginBottom: 0,
+                                                maxWidth: 300,
+                                                minWidth: 300,
+                                                borderBottom: '1px solid #f2f2f2',
+                                                borderRadius: 1,
+                                                width: '100%'
+                                            }}
+                                            placeholder={'Submission Title'}
+                                            onChange={(e: any) => setSubmissionTitle(e.target.value)}
+                                            minRows={1}
+                                        />
+                                    </View>
+                                    {props.cue.submittedAt && props.cue.submittedAt !== '' ? (
+                                        <View
+                                            style={{
+                                                marginLeft: 15,
+                                                marginTop: 20,
+                                                alignSelf: 'flex-end'
                                             }}
                                         >
-                                            Erase
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                        ) : null}
-                        {isQuiz && !isOwner && !initiatedAt ? renderQuizSubmissionHistory() : null}
-                        {isQuiz && cueGraded && props.cue.releaseSubmission && !isOwner ? (
-                            <QuizGrading
-                                problems={problems}
-                                solutions={quizSolutions}
-                                partiallyGraded={false}
-                                comment={comment}
-                                isOwner={false}
-                                headers={headers}
-                                attempts={quizAttempts}
-                            />
-                        ) : (remainingAttempts === 0 ||
-                              props.cue.releaseSubmission ||
-                              (!allowLateSubmission && new Date() > deadline) ||
-                              (allowLateSubmission && new Date() > availableUntil)) &&
-                          !isOwner &&
-                          isQuiz ? (
-                            renderQuizEndedMessage()
-                        ) : (
-                            renderMainCueContent()
-                        )}
-                    </View>
-                )}
-                <View
-                    style={{
-                        width: '100%',
-                        maxWidth: 900,
-                        alignSelf: 'center',
-                        paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
-                    }}
-                >
-                    <Collapse isOpened={props.showOptions}>
-                        <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                            {props.cue.channelId ? (
-                                <View
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    {renderShareWithOptions()}
-                                    {renderSubmissionRequiredOptions()}
-                                    {renderGradeOptions()}
-                                    {renderLateSubmissionOptions()}
-                                    {renderAttemptsOptions()}
+                                            {props.cue.graded || currentDate > deadline ? null : (
+                                                <TouchableOpacity
+                                                    onPress={() => clearAll()}
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        borderRadius: 15,
+                                                        marginTop: 5
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            lineHeight: 34,
+                                                            textTransform: 'uppercase',
+                                                            fontSize: 12,
+                                                            fontFamily: 'overpass',
+                                                            color: '#006AFF'
+                                                        }}
+                                                    >
+                                                        Erase
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        </View>
+                                    ) : (
+                                        <TouchableOpacity
+                                            onPress={() => clearAll()}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                borderRadius: 15,
+                                                marginLeft: 15,
+                                                marginTop: 5
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    lineHeight: 34,
+                                                    textTransform: 'uppercase',
+                                                    fontSize: 12,
+                                                    fontFamily: 'overpass',
+                                                    color: '#006AFF'
+                                                }}
+                                            >
+                                                Erase
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )}
                                 </View>
                             ) : null}
+                            {isQuiz && !isOwner && !initiatedAt ? renderQuizSubmissionHistory() : null}
+                            {isQuiz && cueGraded && props.cue.releaseSubmission && !isOwner ? (
+                                <QuizGrading
+                                    problems={problems}
+                                    solutions={quizSolutions}
+                                    partiallyGraded={false}
+                                    comment={comment}
+                                    isOwner={false}
+                                    headers={headers}
+                                    attempts={quizAttempts}
+                                />
+                            ) : (remainingAttempts === 0 ||
+                                props.cue.releaseSubmission ||
+                                (!allowLateSubmission && new Date() > deadline) ||
+                                (allowLateSubmission && new Date() > availableUntil)) &&
+                            !isOwner &&
+                            isQuiz ? (
+                                renderQuizEndedMessage()
+                            ) : (
+                                renderMainCueContent()
+                            )}
                         </View>
-                        {renderForwardOptions()}
-                        {renderCategoryOptions()}
-                        {renderPriorityOptions()}
-                        {/* {renderReminderOptions()} */}
-                    </Collapse>
+                    )}
+                    <View
+                        style={{
+                            width: '100%',
+                            maxWidth: 900,
+                            alignSelf: 'center',
+                            paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
+                        }}
+                    >
+                        <Collapse isOpened={props.showOptions}>
+                            <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                {props.cue.channelId ? (
+                                    <View
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column'
+                                        }}
+                                    >
+                                        {renderShareWithOptions()}
+                                        {renderSubmissionRequiredOptions()}
+                                        {renderGradeOptions()}
+                                        {renderLateSubmissionOptions()}
+                                        {renderAttemptsOptions()}
+                                    </View>
+                                ) : null}
+                            </View>
+                            {renderForwardOptions()}
+                            {renderCategoryOptions()}
+                            {renderPriorityOptions()}
+                            {/* {renderReminderOptions()} */}
+                        </Collapse>
+                    </View>
                 </View>
             </ScrollView>
         </View>

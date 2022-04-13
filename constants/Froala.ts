@@ -1,93 +1,97 @@
-export const FULL_FLEDGED_TOOLBAR_BUTTONS = {
-    moreText: {
-        buttons: [
-            'bold',
-            'italic',
-            'underline',
-            'strikeThrough',
-            'subscript',
-            'superscript',
+export const FULL_FLEDGED_TOOLBAR_BUTTONS = (width: number) => {
+    return {
+        moreText: {
+            buttons: [
+                'bold',
+                'italic',
+                'underline',
+                'strikeThrough',
+                'subscript',
+                'superscript',
+                'fontFamily',
+                'fontSize',
+                'textColor',
+                'backgroundColor',
+                'inlineClass',
+                'inlineStyle',
+                'clearFormatting'
+            ],
+            buttonsVisible: width < 768 ? 3 : 3
+        },
+        moreParagraph: {
+            buttons: [
+                'alignLeft',
+                'alignCenter',
+                'formatOLSimple',
+                'alignRight',
+                'alignJustify',
+                'formatOL',
+                'formatUL',
+                'paragraphFormat',
+                'paragraphStyle',
+                'lineHeight',
+                'outdent',
+                'indent',
+                'quote'
+            ],
+            buttonsVisible: width < 768 ? 2 : 3
+        },
+        moreRich: {
+            buttons: [
+                'insertLink',
+                'insertImage',
+                'insertFile',
+                'insertTable',
+                'insertVideo',
+                'insertFormula',
+                'emoticons',
+                'fontAwesome',
+                'specialCharacters',
+                'embedly',
+                'insertHR'
+            ],
+            buttonsVisible: width < 768 ? 3 : 4
+        },
+        moreMisc: {
+            buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
+            align: 'right',
+            buttonsVisible: width < 768 ? 2 : 2
+        },
+        pluginsEnabled: [
+            'align',
+            'charCounter',
+            'codeBeautifier',
+            'codeView',
+            'colors',
+            'draggable',
+            'embedly',
+            'emoticons',
+            'entities',
+            'file',
+            'fontAwesome',
             'fontFamily',
             'fontSize',
-            'textColor',
-            'backgroundColor',
-            'inlineClass',
+            'fullscreen',
+            'image',
+            'imageTUI',
+            'imageManager',
             'inlineStyle',
-            'clearFormatting'
-        ]
-    },
-    moreParagraph: {
-        buttons: [
-            'alignLeft',
-            'alignCenter',
-            'formatOLSimple',
-            'alignRight',
-            'alignJustify',
-            'formatOL',
-            'formatUL',
+            'inlineClass',
+            'lineBreaker',
+            'lineHeight',
+            'link',
+            'lists',
             'paragraphFormat',
             'paragraphStyle',
-            'lineHeight',
-            'outdent',
-            'indent',
-            'quote'
+            'quickInsert',
+            'quote',
+            'save',
+            'table',
+            'url',
+            'video',
+            'wordPaste'
         ]
-    },
-    moreRich: {
-        buttons: [
-            'insertLink',
-            'insertImage',
-            'insertFile',
-            'insertTable',
-            'insertVideo',
-            'insertFormula',
-            'emoticons',
-            'fontAwesome',
-            'specialCharacters',
-            'embedly',
-            'insertHR'
-        ],
-        buttonsVisible: 4
-    },
-    moreMisc: {
-        buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-        align: 'right',
-        buttonsVisible: 2
-    },
-    pluginsEnabled: [
-        'align',
-        'charCounter',
-        'codeBeautifier',
-        'codeView',
-        'colors',
-        'draggable',
-        'embedly',
-        'emoticons',
-        'entities',
-        'file',
-        'fontAwesome',
-        'fontFamily',
-        'fontSize',
-        'fullscreen',
-        'image',
-        'imageTUI',
-        'imageManager',
-        'inlineStyle',
-        'inlineClass',
-        'lineBreaker',
-        'lineHeight',
-        'link',
-        'lists',
-        'paragraphFormat',
-        'paragraphStyle',
-        'quickInsert',
-        'quote',
-        'save',
-        'table',
-        'url',
-        'video',
-        'wordPaste'
-    ]
+    }
 };
 
 export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {

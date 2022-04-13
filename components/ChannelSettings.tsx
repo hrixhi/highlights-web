@@ -709,7 +709,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
             <View style={{ backgroundColor: 'white', }}>
                 <View style={{ backgroundColor: 'white', }}>
-                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                    <label style={{ width: 150 }}>
                         <Select
                             touchUi={true}
                             value={activeRole}
@@ -735,7 +735,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ flexDirection: 'row', marginTop: 15 }}>
                 <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
                     <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                        <label style={{ width: 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeGrade}
@@ -758,7 +758,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 <View style={{ backgroundColor: 'white', }}>
                     <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
+                        <label style={{ width: 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeSection}
@@ -792,7 +792,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 justifyContent: "center",
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "#efefef",
+                backgroundColor: "#f2f2f2",
                 paddingVertical: 100
             }}>
             <ActivityIndicator color={"#1F1F1F"} />
@@ -844,11 +844,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <Text
                         style={{
-                            fontSize: 20,
+                            fontSize: 18,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             flex: 1,
-                            lineHeight: 25
+                            lineHeight: 25,
+                            textAlign: 'center'
                         }}>
                         Duplicate Course
                     </Text>
@@ -866,7 +867,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}>
                                 {PreferredLanguageText('name')}
                             </Text>
@@ -885,7 +887,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             (<View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
-                                    color: '#000000'
+                                    color: '#000000',
+                                    fontFamily: 'Inter'
                                 }}>
                                     Description
                                 </Text>
@@ -895,6 +898,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     fontFamily: 'overpass',
                                     width: "100%",
                                     maxWidth: 500,
+                                    minWidth: 500,
                                     borderBottom: '1px solid #efefef',
                                     fontSize: 14,
                                     paddingTop: 13,
@@ -913,8 +917,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, 
-                                color: '#000000'
+                                fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'Inter'
                             }}>
                                 {PreferredLanguageText('enrolmentPassword')}
                             </Text>
@@ -928,8 +933,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, 
-                                color: '#000000'
+                                fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'Inter'
                             }}>
                                 Theme
                             </Text>
@@ -959,7 +965,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            color: '#000000'
+                                            color: '#000000',
+                                            fontFamily: 'Inter'
                                         }}>Public</Text>
                                     </View>
                                     <View
@@ -1001,7 +1008,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        color: '#000000'
+                                        color: '#000000',
+                                        fontFamily: 'Inter'
                                     }}>Tags</Text>
                                 </View>
                                 <View
@@ -1038,7 +1046,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text
                                             style={{
                                                 fontSize: 14,
-                                                color: '#000000'
+                                                color: '#000000',
+                                                fontFamily: 'Inter'
                                             }}
                                         >
                                             Duplicate Students
@@ -1085,7 +1094,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text
                                             style={{
                                                 fontSize: 14,
-                                                color: '#000000'
+                                                color: '#000000',
+                                                fontFamily: 'Inter'
                                             }}
                                         >
                                             Duplicate Instructors
@@ -1181,8 +1191,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}>
                                 <Text style={{
                                     fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                     marginRight: 8,
-                                    color: '#000000', 
                                 }}>
                                     Access Code
                                 </Text>
@@ -1198,7 +1209,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10,  }}>
 
                                 <Text style={{
-                                    fontSize: 30, fontFamily: 'inter', fontWeight: 'bold', 
+                                    fontSize: 26, fontFamily: 'inter', fontWeight: 'bold', 
                                 }}>
                                     {accessCode}
                                 </Text>
@@ -1233,8 +1244,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         <View style={{ backgroundColor: 'white', marginTop: 20 }}>
                             <Text style={{
-                                fontSize: 14, 
-                                color: '#000000'
+                                fontSize: 14,
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}>
                                 {PreferredLanguageText('name')}
                             </Text>
@@ -1251,8 +1263,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 14, 
-                                color: '#000000'
+                                fontSize: 14,
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}>
                                 {PreferredLanguageText('enrolmentPassword')}
                             </Text>
@@ -1271,7 +1284,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             (<View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
-                                    color: '#000000'
+                                    color: '#000000',
+                                    fontFamily: 'Inter'
                                 }}>
                                     Meeting link
                                 </Text>
@@ -1289,7 +1303,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}>
                                 Theme
                             </Text>
@@ -1320,7 +1335,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            color: '#000000'
+                                            color: '#000000',
+                                            fontFamily: 'Inter'
                                         }}>Public</Text>
                                     </View>
                                     <View
@@ -1362,7 +1378,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        color: '#000000'
+                                        color: '#000000',
+                                        fontFamily: 'Inter'
                                     }}>Tags</Text>
                                 </View>
                                 <View
@@ -1397,8 +1414,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}>
                                 <Text style={{
                                     fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                     marginRight: 8,
-                                    color: '#000000'
                                 }}>
                                     Students
                                 </Text>
@@ -1480,8 +1498,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}>
                                 <Text style={{
                                     fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                     marginRight: 8,
-                                    color: '#000000', 
                                 }}>
                                     Instructors
                                 </Text>

@@ -947,19 +947,32 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
             setShowInstantMeeting(true);
         } else {
-            Alert('You must connect with Zoom to start a meeting.');
+            Alert('You must connect your account with Zoom to start a meeting.', 'Would you like to proceed to setup?', [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                        // ZOOM OATH
 
-            // ZOOM OATH
+                        const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                            zoomRedirectUri
+                        )}&state=${userId}`;
 
-            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                zoomRedirectUri
-            )}&state=${userId}`;
+                        if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                            Linking.openURL(url);
+                        } else {
+                            window.open(url, '_blank');
+                        }
+                    }
+                },
+            ]);
 
-            if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                Linking.openURL(url);
-            } else {
-                window.open(url, '_blank');
-            }
         }
     }, [userZoomInfo, meetingProvider])
 
@@ -987,19 +1000,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             }
 
         } else {
-            Alert('You must connect with Zoom to start a meeting.');
+            Alert('You must connect your account with Zoom to start a meeting.', 'Would you like to proceed to setup?', [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                            // ZOOM OATH
 
-            // ZOOM OATH
+                            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                                zoomRedirectUri
+                            )}&state=${userId}`;
 
-            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                zoomRedirectUri
-            )}&state=${userId}`;
+                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                Linking.openURL(url);
+                            } else {
+                                window.open(url, '_blank');
+                            }
+                    }
+                },
+            ]);
 
-            if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                Linking.openURL(url);
-            } else {
-                window.open(url, '_blank');
-            }
+           
         }
     }, [userZoomInfo, meetingProvider, userId])
 
@@ -1135,7 +1162,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     style={{
                         flexDirection: 'column',
                         paddingHorizontal: Dimensions.get('window').width > 768 ? 25 : 0,
-                        backgroundColor: '#f2f2f7'
+                        backgroundColor: '#f2f2f2'
                     }}
                     className="mbsc-align-center mbsc-padding"
                 >
@@ -1153,13 +1180,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 marginVertical: 20,
                                 minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                                 maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                                backgroundColor: '#f2f2f7'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             <Text
                                 style={{
-                                    fontSize: 15,
-                                    textTransform: 'uppercase',
+                                    fontSize: 16,
                                     fontFamily: 'inter',
                                     marginBottom: 20
                                 }}
@@ -1167,17 +1193,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 Start meeting with {instantMeetingNewChat ? instantMeetingNewChatUsername : chatName}
                             </Text>
 
-                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f7' }}>
+                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f2' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
-                                        // fontFamily: 'inter',
+                                        fontSize: 12,
+                                        fontFamily: 'inter',
                                         color: '#000000'
                                     }}
                                 >
                                     Topic 
                                 </Text>
-                                <View style={{ marginTop: 10, marginBottom: 10, backgroundColor: '#f2f2f7' }}>
+                                <View style={{ marginTop: 10, marginBottom: 10, backgroundColor: '#f2f2f2' }}>
                                     <TextInput
                                         style={{ padding: 10, fontSize: 14, backgroundColor: '#ffffff' }}
                                         value={instantMeetingTitle}
@@ -1194,13 +1220,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     width: '100%',
                                     maxWidth: 400,
                                     // paddingVertical: 15,
-                                    backgroundColor: '#f2f2f7'
+                                    backgroundColor: '#f2f2f2'
                                 }}
                             >
                                 <Text  
                                     style={{
-                                        fontSize: 14,
-                                        // fontFamily: 'inter',
+                                        fontSize: 12,
+                                        fontFamily: 'inter',
                                         color: '#000000'
                                     }}>{PreferredLanguageText('end')}</Text>
                                 <View style={{ marginTop: 10, marginBottom: 10 }}>
@@ -1461,20 +1487,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 justifyContent: 'center',
                                                                 flexDirection: 'row'
                                                             }}>
-                                                            <Text
-                                                                style={{
-                                                                    textAlign: 'center',
-                                                                    lineHeight: 34,
-                                                                    color: '#000000',
-                                                                    fontSize: 12,
-                                                                    backgroundColor: '#f2f2f2',
-                                                                    paddingHorizontal: 20,
-                                                                    fontFamily: 'inter',
-                                                                    height: 35,
-                                                                    borderRadius: 15,
-                                                                    textTransform: 'uppercase'
-                                                                }}>
-                                                                REMOVE
+                                                            <Text>
+                                                                <Ionicons
+                                                                    name={'close-circle-outline'}
+                                                                    size={18}
+                                                                    color={'#1F1F1F'}
+                                                                />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     ) : (
@@ -1510,7 +1528,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         <Text
                                             style={{
                                                 fontSize: 14,
-                                                color: '#000000'
+                                                color: '#000000',
+                                                marginBottom: groupCreatedBy === userId ? 15 : 0
                                             }}>
                                             Users
                                         </Text>
@@ -1557,7 +1576,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     ind === Object.keys(groupUsers).length - 1 ? 0 : 1,
                                                                 borderBottomColor: '#f2f2f2',
                                                                 paddingHorizontal: 10
-                                                            }}>
+                                                            }}
+                                                            key={ind.toString()}
+                                                            >
                                                             <Image
                                                                 style={{
                                                                     height: 35,
@@ -1936,6 +1957,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             flexDirection: 'row',
                                                             alignItems: 'center'
                                                         }}
+                                                        key={ind.toString()}
                                                     >
                                                         <TouchableOpacity
                                                             onPress={() => {
@@ -1982,7 +2004,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     {user.fullName}
                                                                 </Text>
                                                                 <Text
-                                                                    style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
+                                                                    style={{ fontSize: 13, padding: 5, }}
                                                                     ellipsizeMode="tail">
                                                                     {user.email}
                                                                 </Text>
@@ -2075,7 +2097,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     </Text>
                                                 </View>
                                             ) : null}
-                                            {sortChatsByLastMessage.map((chat: any, index) => {
+                                            {sortChatsByLastMessage.map((chat: any, index: number) => {
 
                                                 // Group name or individual user name
                                                 let fName = '';
@@ -2107,6 +2129,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 const { title } = htmlStringParser(chat.lastMessage);
                                                 return (
                                                     <TouchableOpacity
+                                                        key={index.toString()}
                                                         onPress={() => {
                                                             if (chat.userNames.length > 2) {
                                                                 loadGroupChat(chat.users, chat._id);
@@ -2158,7 +2181,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 {fName}
                                                             </Text>
                                                             <Text
-                                                                style={{ fontSize: 12, margin: 5, fontWeight: 'bold' }}
+                                                                style={{ fontSize: 13, margin: 5, }}
                                                                 ellipsizeMode="tail"
                                                                 numberOfLines={2}>
                                                                 {title}

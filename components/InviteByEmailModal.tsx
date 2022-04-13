@@ -80,15 +80,14 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     marginVertical: 20,
                     minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                     maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                    backgroundColor: '#f2f2f7'
+                    backgroundColor: '#f2f2f2'
                 }}>
                 <Text
                     style={{
-                        fontSize: 13,
-                        textTransform: 'uppercase',
+                        fontSize: 16,
                         fontFamily: 'inter'
                     }}>
-                    ADD VIEWERS WITH EMAILS 
+                    Add Viewers with emails
                 </Text>
                 <TextareaAutosize
                     value={emails}
@@ -100,9 +99,10 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         fontSize: 14,
                         borderRadius: 1,
                         padding: 12,
-                        width: '100%',
-                        maxWidth: '100%',
-                        borderBottom: '1px solid #f2f2f7'
+                        width: '95%',
+                        maxWidth: '95%',
+                        minWidth: '95%',
+                        borderBottom: '1px solid #f2f2f2'
                     }}
                     onChange={(e: any) => {
                         setEmails(e.target.value);

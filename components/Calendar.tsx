@@ -556,6 +556,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             zoomMeetingId: e.zoomMeetingId,
                             zoomStartUrl: e.zoomStartUrl,
                             zoomJoinUrl: e.zoomJoinUrl,
+                            zoomRegistrationJoinUrl: e.zoomRegistrationJoinUrl,
                             zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
                             zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile,
                             meetingLink: e.meetingLink ? e.meetingLink : null,
@@ -674,7 +675,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const date = new Date();
 
                 if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
-                    const meetingLink = !meetingProvider ? event.zoomJoinUrl : event.meetingLink;
+                    const meetingLink = !meetingProvider ? (event.zoomRegistrationJoinUrl ? event.zoomRegistrationJoinUrl : event.zoomJoinUrl) : event.meetingLink;
 
                     if (!meetingLink) {
                         Alert('No meeting link set. Contact your instructor.');
@@ -683,9 +684,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                     Alert(
                         'Join meeting?',
-                        (!userZoomInfo || !userZoomInfo.accountId) && !meetingProvider
-                            ? 'WARNING- To mark attendance as Present, you must Connect to Zoom under Account.'
-                            : '',
+                        '',
                         [
                             {
                                 text: 'No',
@@ -800,7 +799,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={styles.text}>Occurs on</Text>
                         {
                             <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap' }}>
-                                {Object.keys(weekDays).map((day: any) => {
+                                {Object.keys(weekDays).map((day: any, ind: number) => {
                                     const label = weekDays[day];
 
                                     return (
@@ -811,6 +810,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 marginRight: 10,
                                                 padding: 5
                                             }}
+                                            key={ind.toString()}
                                         >
                                             <input
                                                 disabled={day === selectedStartDay}
@@ -880,6 +880,19 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Allows selection of whether event is a lecture
      */
     const renderMeetingOptions = () => {
+
+        let meetingSwitchMessage = 'Students will be able to join the meeting directly from the Agenda or Meetings tab in your Course.';
+
+        let meetingSwitchSubtitle = 'The meeting link will be same as the one in the Course Settings. Ensure you have a working link set at all times.'
+
+        if ((!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') && !meetingProvider) {
+            meetingSwitchMessage = 'To generate Zoom meetings directly from Cues, connect to Zoom under Account > Profile.'
+            meetingSwitchSubtitle = ''
+        } else if (userZoomInfo && userZoomInfo.accountId && userZoomInfo.accountId !== '' && !meetingProvider) {
+            meetingSwitchMessage = 'Cues will automatically generate a Zoom meeting.'
+            meetingSwitchSubtitle = 'Students will be able to join the meeting directly from the Agenda or Meetings tab in your Course.'
+        }
+
         return channelId !== '' || editChannelName !== '' ? (
             <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 5 }}>
                 {!editEvent ? (
@@ -891,15 +904,25 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}
                     >
                         <View style={{ width: '100%', paddingTop: width < 768 ? 40 : 25, paddingBottom: 15 }}>
-                            <Text
-                                style={{
+                            <View style={{
+                                flexDirection: 'row', alignItems: 'center',
+                            }}>
+                                <Text style={{
                                     fontSize: 14,
-                                    // fontFamily: 'inter',
-                                    color: '#000000'
-                                }}
-                            >
-                                Meeting
-                            </Text>
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                    marginRight: 8,
+                                }}>
+                                    Meeting
+                                </Text>
+                                {editEvent ? null : <TouchableOpacity
+                                    onPress={() => {
+                                        Alert(meetingSwitchMessage, meetingSwitchSubtitle)
+                                    }}
+                                >
+                                    <Ionicons name='help-circle-outline' size={18} color="#939699" />
+                                </TouchableOpacity>}
+                            </View>
                         </View>
                         <View
                             style={{
@@ -970,7 +993,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            // fontFamily: 'inter',
+                            fontFamily: 'inter',
                             marginRight: 5,
                             color: '#000000'
                         }}
@@ -992,7 +1015,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            // fontFamily: 'inter',
+                            fontFamily: 'inter',
                             marginRight: 10,
                             color: '#000000',
                             marginBottom: 5
@@ -1109,6 +1132,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         zoomMeetingId: e.zoomMeetingId,
                                         zoomStartUrl: e.zoomStartUrl,
                                         zoomJoinUrl: e.zoomJoinUrl,
+                                        zoomRegistrationJoinUrl: e.zoomRegistrationJoinUrl,
                                         zoomMeetingScheduledBy: e.zoomMeetingScheduledBy,
                                         zoomMeetingCreatorProfile: e.zoomMeetingCreatorProfile,
                                         meetingLink: e.meetingLink ? e.meetingLink : null
@@ -1734,7 +1758,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 onEventClick={onSelectEvent}
                                                 renderEventContent={renderEventContent}
                                                 star
-                                                noEventsText="Click + to schedule a new event or meeting. Submission tasks will be automatically listed as per their due dates."
+                                                noEventsText="Click + to schedule a new event or meeting."
                                             />
                                         ) : tab === tabs[2] ? (
                                             <Eventcalendar
@@ -1755,7 +1779,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 }}
                                             >
                                                 <View>
-                                                    {activity.map((act: any, index) => {
+                                                    {activity.map((act: any, index: number) => {
                                                         const { cueId, channelId, createdBy, target, threadId } = act;
 
                                                         // if (props.filterByChannel !== 'All') {
@@ -1779,6 +1803,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                         return (
                                                             <TouchableOpacity
+                                                                key={index.toString()}
                                                                 onPress={async () => {
                                                                     const uString: any = await AsyncStorage.getItem(
                                                                         'user'
@@ -1955,7 +1980,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     <View style={{ marginBottom: 15 }}>
                                                         <Text
                                                             style={{
-                                                                fontSize: 16,
+                                                                fontSize: 18,
                                                                 fontFamily: 'Inter',
                                                                 color: '#000000'
                                                             }}
@@ -1975,7 +2000,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <Text
                                                             style={{
                                                                 fontSize: 14,
-                                                                // fontFamily: 'inter',
+                                                                fontFamily: 'inter',
                                                                 color: '#000000'
                                                             }}
                                                         >
@@ -1993,7 +2018,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <Text
                                                             style={{
                                                                 fontSize: 14,
-                                                                // fontFamily: 'inter',
+                                                                fontFamily: 'inter',
                                                                 color: '#000000'
                                                             }}
                                                         >
@@ -2099,7 +2124,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 <Text
                                                                     style={{
                                                                         fontSize: 14,
-                                                                        // fontFamily: 'inter',
+                                                                        fontFamily: 'inter',
                                                                         color: '#000000'
                                                                     }}
                                                                 >
@@ -2212,7 +2237,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     {channelId !== '' &&
                                                         userZoomInfo &&
                                                         userZoomInfo.accountId &&
-                                                        !meetingProvider && (
+                                                        !meetingProvider && isMeeting ? (
                                                             <Text
                                                                 style={{
                                                                     fontSize: 11,
@@ -2223,10 +2248,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     paddingBottom: 15
                                                                 }}
                                                             >
-                                                                Zoom meeting will be automatically created and
-                                                                attendances will be captured for online meetings.
+                                                                Note: You need to be a licensed Zoom user for student attendances to be automatically captured and visible under your Course past meetings. 
                                                             </Text>
-                                                        )}
+                                                        ) : null}
 
                                                     {(channelId !== '' &&
                                                         (!userZoomInfo || !userZoomInfo.accountId) &&
@@ -2405,7 +2429,8 @@ const styles: any = StyleSheet.create({
     text: {
         fontSize: 14,
         color: '#000000',
-        marginBottom: 10
+        marginBottom: 10,
+        fontFamily: 'Inter'
     },
     allBlack: {
         fontSize: 12,

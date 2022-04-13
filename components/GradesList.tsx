@@ -487,7 +487,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         })
 
                                                         if (scoreObject && activeCueId === scoreObject.cueId && activeUserId === score.userId) {
-                                                            return <View style={styles.col}>
+                                                            return <View style={styles.col} key={col.toString()}>
                                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                                                                     <TextInput
                                                                         value={activeScore}

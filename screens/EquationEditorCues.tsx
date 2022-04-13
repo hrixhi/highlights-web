@@ -1,15 +1,18 @@
-// REACT
-import React, { useState } from 'react';
-import { ScrollView, Touchable, Text, Dimensions } from 'react-native';
-
-// COMPONENTS
-import { View, TouchableOpacity } from './Themed';
-import { Popup } from '@mobiscroll/react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useEffect, useState, useRef } from 'react';
+import { Platform, Alert } from 'react-native';
+import { View, TouchableOpacity, Text } from '../components/Themed';
+// import alert from '../components/Alert';
+// import { fetchAPI } from '../graphql/FetchAPI';
+// import { ActivityIndicator, StyleSheet } from 'react-native';
 import EquationEditor from 'equation-editor-react';
 
-const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+// import {ReactComponent as ReactLogo} from '../assets/formulaIcons/subscript.svg';
+
+export default function EquationEditorCues({ navigation, route }: StackScreenProps<any, 'pdfviewer'>) {
     const [addElementFromButton, setAddElementFromButton] = useState('');
-    const [activeTab, setActiveTab] = useState('Frequent');
+    const [equation, setEquation] = useState('');
 
     const categoriesMap = {
         Frequent: [
@@ -321,39 +324,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
     };
 
     // MAIN RETURN
-    return (
-        <Popup
-            isOpen={props.show}
-            // buttons={['ok']}
-            buttons={[
-                {
-                    text: 'ADD',
-                    handler: function(event) {
-                        props.onInsertEquation();
-                    }
-                },
-                {
-                    text: 'CANCEL',
-                    handler: function(event) {
-                        props.onClose();
-                    }
-                }
-            ]}
-            theme="ios"
-            themeVariant="light"
-            onClose={() => props.onClose()}
-            responsive={{
-                small: {
-                    display: 'bottom'
-                },
-                medium: {
-                    // Custom breakpoint
-                    display: 'center'
-                }
-            }}
-        >
-            <View
-                style={{ flexDirection: 'column', padding: Dimensions.get('window').width < 768 ? 0 : 25, backgroundColor: '#f2f2f2' }}
+    return (<View
+                style={{ flexDirection: 'column', padding: 25, backgroundColor: '#f2f2f2' }}
                 className="mbsc-align-center mbsc-padding"
             >
                 <View
@@ -363,18 +335,11 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     }}
                 >
                     {/* Formula Input */}
-                    <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                        }}>
-                            Enter formula
-                        </Text>
-                    </View>
+                    <Text style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2', fontFamily: 'Inter', fontSize: 18 }}>Enter formula</Text>
                     <View
                         style={{
                             width: '100%',
-                            marginBottom: Dimensions.get('window').width < 768 ? 0 : 20,
+                            marginBottom: 20,
                             backgroundColor: '#f2f2f2'
                         }}
                     >
@@ -388,8 +353,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }}
                         >
                             <EquationEditor
-                                value={props.equation}
-                                onChange={props.onChange}
+                                value={equation}
+                                onChange={(eq: string) => setEquation(eq)}
                                 autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Delta Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omicron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega lt lte gt gte"
                                 autoOperatorNames="sin cos tan sec cosec arccos arcsin arctan lt lte gt gte"
                                 addElementFromButton={addElementFromButton}
@@ -397,6 +362,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             />
                         </View>
                     </View>
+                    
                     {/* Guide */}
                     {/* <View
                         style={{
@@ -421,48 +387,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             </View>
                         );
                     })} */}
-                    <View style={{
-                        flexDirection: 'column',
-                        backgroundColor: '#f2f2f2',
-                    }}>
-                        <View style={{
-                            paddingTop: 10,
-                            marginBottom: 20,
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            backgroundColor: '#f2f2f2',
-                        }}>
-                            {
-                                Object.keys(categoriesMap).map((cat: string, ind: number) => {
-                                    return <TouchableOpacity
-                                        style={{
-                                            borderBottomWidth: cat === activeTab ? 1 : 0,
-                                            borderBottomColor: '#1f1f1f',
-                                            paddingHorizontal: 10,
-                                            paddingVertical: 8,
-                                            marginRight: 10,
-                                            backgroundColor: '#f2f2f2',
-                                        }}
-                                        onPress={() => {
-                                            setActiveTab(cat)
-                                        }}
-                                        key={ind.toString()}
-                                    >
-                                        <Text style={{
-                                            fontSize: 12,
-                                            fontFamily: 'Inter'
-                                        }}>
-                                            {cat}
-                                        </Text>
-                                    </TouchableOpacity>
-                                })
-                            }
-                        </View>
-
-                        {Object.keys(categoriesMap).map((cat: any, ind: number) => {
-
-                            if (cat !== activeTab) return null;
-
+                    <View>
+                        {Object.keys(categoriesMap).map((cat: any) => {
                             return (
                                 <View
                                     style={{
@@ -471,9 +397,8 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                         backgroundColor: '#f2f2f2',
                                         paddingBottom: 20
                                     }}
-                                    key={ind.toString()}
                                 >
-                                    {/* <Text
+                                    <Text
                                         style={{
                                             fontSize: 14,
                                             fontFamily: 'Inter',
@@ -483,7 +408,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                         }}
                                     >
                                         {cat}
-                                    </Text> */}
+                                    </Text>
 
                                     <View
                                         style={{
@@ -493,34 +418,26 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             backgroundColor: '#f2f2f2'
                                         }}
                                     >
-                                        {categoriesMap[cat].map((sym: string, ind: number) => {
+                                        {categoriesMap[cat].map((sym: string) => {
                                             return (
                                                 <TouchableOpacity
                                                     onPress={() => {
                                                         setAddElementFromButton(symbolsMap[sym]);
                                                     }}
                                                     style={{
-                                                        borderColor: '#CCC',
+                                                        borderColor: '#000',
                                                         borderWidth: 1,
                                                         marginRight: 10,
-                                                        marginBottom: 10,
-                                                        paddingVertical: Dimensions.get('window').width < 768 ? 7 : 8,
-                                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 12,
-                                                        borderRadius: 10,
-                                                        shadowOffset: {
-                                                            width: 1,
-                                                            height: 1
-                                                        },
-                                                        overflow: 'hidden',
-                                                        shadowOpacity: 0.03,
-                                                        shadowRadius: 3,
+                                                        marginBottom: 10
                                                     }}
-                                                    key={ind.toString()}
                                                 >
                                                     <Text
                                                         style={{
-                                                            backgroundColor: 'white',
-                                                            fontSize: Dimensions.get('window').width < 768 ? 12 : 13
+                                                            paddingHorizontal: 10,
+                                                            paddingVertical: 5,
+                                                            backgroundColor: 'white'
+                                                            // marginRight: 10,
+                                                            // fontFamily: 'inter'
                                                         }}
                                                     >
                                                         {sym}
@@ -535,8 +452,6 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     </View>
                 </View>
             </View>
-        </Popup>
     );
-};
 
-export default FormulaGuide;
+}

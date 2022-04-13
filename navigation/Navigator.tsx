@@ -9,6 +9,7 @@ import Home from '../screens/Home';
 import LinkingConfiguration from './Linking';
 import FinishZoomSetup from '../screens/FinishZoomSetup';
 import PDFViewerCues from '../screens/PDFViewerCues';
+import EquationEditorCues from '../screens/EquationEditorCues';
 import DesktopSSO from '../screens/DesktopSSO';
 import Auth from '../screens/Auth';
 
@@ -39,6 +40,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                 <Stack.Screen name="login" component={Auth} options={{ title: 'Sign In - Cues' }} />
                 <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
                 <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
+                <Stack.Screen name="equationEditor" component={EquationEditorCues} options={{ title: 'Equation Editor CUES' }} />
                 <Stack.Screen name="desktopSSORedirect" component={DesktopSSO} options={{ title: 'Cues - Single Sign On' }} />
                 {/* In case navigation ends up at a wrong location */}
                 <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />

@@ -734,7 +734,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500
                         }}
                     >
-                        {filteredThreads.map((thread: any, ind) => {
+                        {filteredThreads.map((thread: any, ind: number) => {
                             let title = '';
 
                             if (thread.message[0] === '{' && thread.message[thread.message.length - 1] === '}') {
@@ -758,6 +758,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         // minWidth: 600, // flex: 1,
                                         width: '100%'
                                     }}
+                                    key={ind.toString()}
                                 >
                                     <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                         <Image
@@ -788,7 +789,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             {title}
                                         </Text>
                                         <Text
-                                            style={{ fontSize: 12, margin: 5, fontWeight: 'bold', lineHeight: 18 }}
+                                            style={{ fontSize: 12, margin: 5, lineHeight: 18 }}
                                             ellipsizeMode="tail"
                                         >
                                             {thread.anonymous ? 'Anonymous' : thread.fullName}
@@ -839,7 +840,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     fontSize: 12,
                                                     padding: 5,
                                                     lineHeight: 13,
-                                                    fontWeight: 'bold',
                                                     color: thread.unreadThreads > 0 ? '#006AFF' : '#000000'
                                                 }}
                                                 ellipsizeMode="tail"

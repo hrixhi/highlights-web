@@ -288,20 +288,17 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setTitle(obj.title);
             } else if (
                 obj.attempts !== undefined &&
-                obj.submissionDraft !== undefined &&
                 obj.quizResponses === undefined
             ) {
-                // Check if submission draft contains imported document
-                if (obj.submissionDraft[0] === '{' && obj.submissionDraft[obj.submissionDraft.length - 1] === '}') {
-                    let parse = JSON.parse(obj.submissionDraft);
 
-                    if (parse.url !== undefined && parse.title !== undefined && parse.type !== undefined) {
+                obj.attempts.map((attempt: any, index: number) => {
+                    if (attempt.isActive) {
                         setImported(true);
-                        setUrl(parse.url);
-                        setType(parse.type);
-                        setTitle(parse.title);
+                        setUrl(attempt.url);
+                        setType(attempt.type);
+                        setTitle(attempt.title);
                     }
-                }
+                })
 
                 setSubmissionAttempts(obj.attempts);
             } else if (obj.attempts !== undefined && obj.quizResponses !== undefined) {
@@ -694,7 +691,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         const attempt = submissionAttempts[submissionAttempts.length - 1];
 
         return (
-            <View style={{ width: '100%', marginTop: 20 }}>
+            <View style={{ width: '100%' }}>
                 {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
                 {/* {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
@@ -732,7 +729,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     attempt.type === 'mpeg' ||
                     attempt.type === 'mp2' ||
                     attempt.type === 'wav' ? (
-                        <View style={{ width: '100%', marginTop: 25 }}>
+                        <View style={{ width: '100%' }}>
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
@@ -753,7 +750,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <ReactPlayer url={attempt.url} controls={true} width={'100%'} height={'100%'} />
                         </View>
                     ) : (
-                        <View style={{ width: '100%', marginTop: 25 }}>
+                        <View style={{ width: '100%' }}>
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
@@ -774,12 +771,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <div
                                 className="webviewer"
                                 ref={submissionViewerRef}
-                                style={{ height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh' }}
+                                style={{ height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh', marginTop: attempt.title !== '' ? 0 : 20 }}
                             ></div>
                         </View>
                     )
                 ) : (
-                    <View style={{ width: '100%', marginTop: 25 }} key={viewSubmissionTab}>
+                    <View style={{ width: '100%', marginTop: 20 }} key={viewSubmissionTab}>
                         {viewSubmissionTab === 'mySubmission' ? (
                             <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
                                 {parser(attempt.html)}
@@ -1106,6 +1103,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <ScrollView
                             showsVerticalScrollIndicator={true}
                             keyboardDismissMode={'on-drag'}
+                            contentContainerStyle={{
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
+                            }}
                             style={{ flex: 1, paddingTop: 12 }}
                         >
                             {submittedAt !== '' &&
@@ -1332,7 +1332,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row' }}>
+                                {/* <View style={{ flexDirection: 'row' }}>
                                     {imported && !isQuiz ? (
                                         <View style={{ flex: 1 }}>
                                             <TextInput
@@ -1345,7 +1345,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             />
                                         </View>
                                     ) : null}
-                                </View>
+                                </View> */}
+
                                 {submissionAttempts.length > 0 && !isQuiz ? renderViewSubmission() : null}
                             </ScrollView>
                         </View>

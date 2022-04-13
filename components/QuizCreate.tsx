@@ -15,7 +15,6 @@ import ReactPlayer from "react-player";
 import { Select } from '@mobiscroll/react';
 import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
-import { Editor } from '@tinymce/tinymce-react';
 import { RadioButton } from './RadioButton';
 
 
@@ -56,7 +55,6 @@ import { QUIZ_QUESTION_TOOLBAR_BUTTONS, QUIZ_OPTION_TOOLBAR_BUTTONS, HIGHLIGHT_B
 import { renderMathjax } from '../helpers/FormulaHelpers';
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { TextInput } from './CustomTextInput';
 
 import ImageMarker from "react-image-marker"
 
@@ -126,10 +124,6 @@ const requiredOptions = [
     }
 ]
 
-// if (Platform.OS === "web") {
-//     Image.resolveAssetSource = (source) => { uri: source }
-// }
-
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
 
@@ -148,8 +142,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [equationEditorFor, setEquationEditorFor] = useState('');
     const [equationOptionId, setEquationOptionId] = useState('')
     const [getHighlightTextRef, setHighlightTextRef] = useDynamicRefs();
-
-    console.log("Problems", problems)
 
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
@@ -206,16 +198,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             const currentChoices = currentQuestion.inlineChoiceOptions;
 
             this.html.insert(`<span id="${currentChoices.length}" class="inlineChoicePlaceholder fr-deletable" contenteditable="false">Dropdown ${currentChoices.length + 1}</span>&zwj;`);
-
-            // const updatedProblems = [...problems]
-
-            // updatedProblems[editQuestionNumber - 1].inlineChoiceOptions.push([{
-            //     option: 'Option 1',
-            //     isCorrect: true
-            // }, {
-            //     option: 'Option 2',
-            //     isCorrect: false
-            // }])
 
             this.events.trigger('contentChanged');
 
@@ -621,14 +603,18 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {index in headers
                 ?
                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 50, marginBottom: 20 }}>
-                    <View style={{ width: Dimensions.get('window').width < 768 ? '80%' : '50%' }}>
+                    <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '60%', flexDirection: 'row' }}>
                         <TextareaAutosize
                             style={{
                                 fontFamily: 'overpass',
-                                maxWidth: '100%', marginBottom: 10, marginTop: 10,
+                                marginBottom: 10, marginTop: 10,
                                 borderRadius: 1,
-                                paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
-                                paddingLeft: 10
+                                paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #f2f2f2',
+                                paddingLeft: 10,
+                                maxWidth: '100%',
+                                minWidth: '100%',
+                                width: '100%',
+                                marginRight: 20
                             }}
                             value={headers[index]}
                             placeholder={'Heading'}
@@ -640,20 +626,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             minRows={1}
                         />
-                    </View>
-                    <View style={{ paddingTop: 35, paddingLeft: 20 }}>
-                        <Text
-                            style={{
-                                color: '#006AFF',
-                                fontFamily: 'Overpass',
-                                fontSize: 10
-                            }}
-                            onPress={() => {
-                                removeHeader(index)
-                            }}
-                        >
-                            Remove
-                        </Text>
+                        <View style={{ paddingTop: 35, }}>
+                            <Text
+                                style={{
+                                    color: '#006AFF',
+                                    fontFamily: 'Overpass',
+                                    fontSize: 10
+                                }}
+                                onPress={() => {
+                                    removeHeader(index)
+                                }}
+                            >
+                                Remove
+                            </Text>
+                        </View>
                     </View>
                 </View>
                 :
@@ -1426,7 +1412,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     paddingTop: 8,
                                                     paddingBottom: 12,
                                                     width: 120,
-                                                    marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
+                                                    marginLeft: editQuestionNumber === (index + 1) ? (Dimensions.get('window').width < 768 ? 0 : 20) : 0,
                                                     textAlign: 'center',
                                                     marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                     fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
@@ -1978,7 +1964,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </Text>
                                     <DefaultTextInput 
                                         style={{
-                                            width: 150,
+                                            width: 100,
                                             borderColor: '#e8e8e8',
                                             borderBottomWidth: 1,
                                             fontSize: 14,
@@ -2085,15 +2071,18 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }
                                         ]
 
-                                        return <div style={{
-                                            flexDirection: 'column',
-                                            padding: 15,
-                                            width: 280,
-                                            minWidth: 280,
-                                            marginRight: 30,
-                                            borderRadius: 15,
-                                            border: '1px solid #cccccc'
-                                        }}>
+                                        return <div 
+                                            style={{
+                                                flexDirection: 'column',
+                                                padding: 15,
+                                                width: 280,
+                                                minWidth: 280,
+                                                marginRight: 30,
+                                                borderRadius: 15,
+                                                border: '1px solid #cccccc'
+                                            }}
+                                            key={choiceIndex.toString()}
+                                        >
                                             
                                                 <View style={{ flexDirection: 'column', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 15, marginBottom: 15, borderRadius: 10 }}>
                                                     
@@ -2286,9 +2275,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 }}
                                                             >
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2317,9 +2306,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 }}
                                                             >
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2378,15 +2367,18 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             problem.questionType === 'inlineChoice' && (editQuestionNumber === (index + 1)) ? <View style={{ paddingTop: 30, flexDirection: 'row', overflow: 'scroll', paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40 }}>
                                 {
                                     problems[index].inlineChoiceOptions.map((choice: any[], choiceIndex: number) => {
-                                        return <View style={{
-                                            flexDirection: 'column',
-                                            padding: 30,
-                                            width: 280,
-                                            minWidth: 280,
-                                            marginRight: 30,
-                                            borderRadius: 15,
-                                            border: '1px solid #cccccc'
-                                        }}>
+                                        return <View 
+                                            style={{
+                                                flexDirection: 'column',
+                                                padding: 30,
+                                                width: 280,
+                                                minWidth: 280,
+                                                marginRight: 30,
+                                                borderRadius: 15,
+                                                border: '1px solid #cccccc'
+                                            }}
+                                            key={choiceIndex.toString()}
+                                        >
                                             <Text style={{
                                                 fontSize: 16,
                                                 fontFamily: 'Inter',
@@ -2515,6 +2507,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </Text>
                                 </View> :
                                 <View style={{
+                                    flexDirection: 'row',
                                     paddingLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                     marginBottom: 30,
                                 }}>
@@ -2524,6 +2517,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     }}>
                                         Click anywhere on the image to add hotspots. Add labels and select checkboxes to mark them as correct.
                                     </Text>  
+                                    <TouchableOpacity style={{
+                                        paddingLeft: 30
+                                    }} onPress={() => {
+                                        const updatedProblems = [...problems];
+                                        updatedProblems[index].imgUrl = ''
+                                        updatedProblems[index].hotspots = []
+                                        updatedProblems[index].hotspotOptions = []
+                                        setProblems(updatedProblems)
+                                        props.setProblems(updatedProblems)
+                                    }}>
+                                        <Text>
+                                            <Ionicons size={22} name="trash-outline" color={'#006AFF'} />
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>) : null
                         }
                         
@@ -2658,12 +2665,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         {
                                             problem.hotspotOptions.map((option: any, ind: number) => {
                                                 console.log('Hotspot', option)
-                                                return (<View style={{ 
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    marginRight: 50,
-                                                    marginBottom: 30
-                                                }}>
+                                                return (<View 
+                                                        style={{ 
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginRight: 50,
+                                                        marginBottom: 30
+                                                    }}  
+                                                    key={ind.toString()}
+                                                >
 
                                                     <input
                                                         style={{
@@ -2728,29 +2738,32 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         paddingTop: 20,
                                     }}>
                                         {
-                                            dragDropOptions.map((label: string) => {
-                                                return <View style={{
-                                                    width: 150,
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    paddingVertical: 16,
-                                                    paddingHorizontal: 10,
-                                                    marginRight: 20,
-                                                    marginBottom: 20,
-                                                    borderRadius: 10,
-                                                    // backgroundColor: '#f2f2f2',
-                                                    borderWidth: 1,
-                                                    borderColor: '#ccc',
-                                                    shadowOffset: {
-                                                        width: 2,
-                                                        height: 2
-                                                    },
-                                                    overflow: 'hidden',
-                                                    shadowOpacity: 0.07,
-                                                    shadowRadius: 7,
+                                            dragDropOptions.map((label: string, ind: number) => {
+                                                return <View 
+                                                    style={{
+                                                        width: 150,
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        paddingVertical: 16,
+                                                        paddingHorizontal: 10,
+                                                        marginRight: 20,
+                                                        marginBottom: 20,
+                                                        borderRadius: 10,
+                                                        // backgroundColor: '#f2f2f2',
+                                                        borderWidth: 1,
+                                                        borderColor: '#ccc',
+                                                        shadowOffset: {
+                                                            width: 2,
+                                                            height: 2
+                                                        },
+                                                        overflow: 'hidden',
+                                                        shadowOpacity: 0.07,
+                                                        shadowRadius: 7,
 
-                                                }}>
+                                                    }}
+                                                    key={ind.toString()}
+                                                >
                                                     <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                     <Text
                                                         style={{
@@ -2770,9 +2783,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         overflow: 'scroll',
                                         marginTop: 50
                                     }}>
-                                        {problem.dragDropHeaders.map((header: string) => {
+                                        {problem.dragDropHeaders.map((header: string, ind: number) => {
 
-                                            return <View style={{ width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15 }}>
+                                            return <View key={ind.toString()} style={{ width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15 }}>
                                                 <Text style={{
                                                     fontSize: 16,
                                                     width: '100%',
@@ -2882,11 +2895,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     // marginBottom: 20,
                                                                     flexDirection: 'row',
                                                                     alignItems: 'center',
+                                                                    width: '100%',
+                                                                    marginBottom: 10
                                                                 }}>
-                                                                    <TextInput
+                                                                    <DefaultTextInput
                                                                         style={{
-                                                                            width: '90%',
-                                                                            // maxWidth: '80%',
                                                                             borderBottomWidth: 1,
                                                                             borderBottomColor: '#e8e8e8',
                                                                             fontSize: 14,
@@ -2894,9 +2907,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             paddingBottom: 13,
                                                                             marginTop: 0,
                                                                             marginBottom: 5,
-                                                                            paddingHorizontal: 10
-                                                                            // padding: '10px',
-                                                                            // backgroundColor: '#f2f2f2'
+                                                                            paddingHorizontal: 10,
+                                                                            width: Dimensions.get('window').width < 768 ? '80%' : '90%',
+                                                                            maxWidth: Dimensions.get('window').width < 768 ? '80%' : '90%',
                                                                         }}
                                                                         value={problem.dragDropHeaders[ind2]}
                                                                         placeholder={'Group ' + (ind2 + 1)}
@@ -2906,10 +2919,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             setProblems(updatedProblems)
                                                                             props.setProblems(updatedProblems)
                                                                         }}
-                                                                        // minRows={1}
                                                                     />
-                                                                    <TouchableOpacity
-                                                                        onPress={() => {
+                                                                    <button
+                                                                        onClick={() => {
                                                                             const updatedProblems = [...problems]
 
                                                                             const updatedData = lodash.clone(updatedProblems[index].dragDropData)
@@ -2928,11 +2940,16 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             props.setProblems(updatedProblems)
                                                                         }}
                                                                         style={{
-                                                                            paddingLeft: 8
+                                                                            paddingLeft: 8,
+                                                                            backgroundColor: '#fff',
+                                                                            border: 'none',
+                                                                            cursor: 'pointer'
                                                                         }}
                                                                     >
-                                                                        <Ionicons name={'trash-outline'} size={18}  />
-                                                                    </TouchableOpacity>
+                                                                        <Text>
+                                                                            <Ionicons name={'trash-outline'} size={18}  />
+                                                                        </Text>
+                                                                    </button>
 
                                                                 </View>
                                                                 {el.map((item: any, index2: any) => (
@@ -2955,7 +2972,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                     style={{
                                                                                         display: "flex",
                                                                                         justifyContent: "space-around",
-                                                                                        alignItems: 'center'
+                                                                                        alignItems: 'center',
                                                                                     }}
                                                                                 >
                                                                                     {/* <TextInput
@@ -3155,10 +3172,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {
                                         problem.multipartOptions.map((part: any, partIndex: number) => {
                                             const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-                                            return <View style={{
-                                                flexDirection: 'column',
-
-                                            }}>
+                                            return <View 
+                                                style={{
+                                                    flexDirection: 'column',
+                                                }}
+                                                key={partIndex.toString()}    
+                                            >
                                                 <Text style={{
                                                     fontSize: 22,
                                                     fontFamily: 'Overpass',
@@ -3213,10 +3232,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                 {
                                                     problem.multipartOptions[partIndex].map((option: any, optionIndex: number) => {
-                                                        return (<View style={{
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center'
-                                                        }}>
+                                                        return (<View 
+                                                            style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}
+                                                            key={optionIndex.toString()}    
+                                                        >
                                                             <input
                                                                 style={{}}
                                                                 type='checkbox'
@@ -3235,7 +3257,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     fontFamily: 'overpass',
                                                                     maxWidth: '100%', marginBottom: 10, marginTop: 10,
                                                                     borderRadius: 1,
-                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #f2f2f2',
                                                                     width: 300,
                                                                     maxWidth: 300,
                                                                     marginLeft: 20,
@@ -3337,9 +3359,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 { problem.multipartOptions.map((part: any, partIndex: number) => {
                                     const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-                                    return <View style={{
-                                            flexDirection: 'column',
-                                        }}>
+                                    return <View 
+                                            style={{
+                                                flexDirection: 'column',
+                                            }}
+                                            key={partIndex.toString()}
+                                        >
                                             <Text style={{
                                                 fontSize: 22,
                                                 fontFamily: 'Overpass',
@@ -3354,12 +3379,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             {
                                                 part.map((option: any, optionIndex: number) => {
-                                                    return <View style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        marginBottom: 20,
-                                                        marginTop: 20,
-                                                    }}>
+                                                    return <View 
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            marginBottom: 20,
+                                                            marginTop: 20,
+                                                        }}
+                                                        key={optionIndex.toString()}
+                                                    >
                                                         <input
                                                             style={{}}
                                                             type='checkbox'
@@ -3435,20 +3463,23 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }}>
                                     {/* Header row */}
                                     <View style={{ 
-                                        flexDirection: 'row', alignItems: 'center', paddingLeft:  editQuestionNumber === (index + 1) ? 40 : 0
+                                        flexDirection: 'row', alignItems: 'center', paddingLeft:  editQuestionNumber === (index + 1) ? (Dimensions.get('window').width < 768 ? 0 : 40) : 0
                                     }}>
                                         <View style={{
                                             width: editQuestionNumber === (index + 1) ? '30%' : '33%',
                                         }} />
                                         {
                                             problem.matchTableHeaders.map((header: any, headerIndex: number) => {
-                                                return <View style={{
-                                                    width: editQuestionNumber === (index + 1) ? '30%' : '33%',
-                                                    borderWidth: 1,
-                                                    borderColor: '#DDD',
-                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
-                                                    height: '100%'
-                                                }}>
+                                                return <View 
+                                                        style={{
+                                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                            borderWidth: 1,
+                                                            borderColor: '#DDD',
+                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                            height: '100%'
+                                                        }}
+                                                        key={headerIndex.toString()}
+                                                    >
                                                     {editQuestionNumber === (index + 1) ?
                                                     <TextareaAutosize 
                                                         style={{
@@ -3484,11 +3515,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {/* Rows */}
                                     {
                                         problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
-                                            return (<View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
-                                            }}>
+                                            return (<View 
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    paddingLeft: editQuestionNumber === (index + 1) ? (Dimensions.get('window').width < 768 ? 0 : 40) : 0
+                                                }}
+                                                key={rowIndex.toString()}
+                                            >
                                                 <View style={{
                                                     width: editQuestionNumber === (index + 1) ? '30%' : '33%',
                                                     borderWidth: 1,
@@ -3526,17 +3560,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 </View>
                                                 {
                                                     choiceRow.map((choice: boolean, choiceIndex: number) => {
-                                                        return <View style={{
-                                                            width: editQuestionNumber === (index + 1) ? '30%' : '33%',
-                                                            borderWidth: 1,
-                                                            borderColor: '#DDD',
-                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'center',
-                                                            height: '100%'
-                                                        }}>
+                                                        return <View 
+                                                            style={{
+                                                                width: editQuestionNumber === (index + 1) ? '30%' : '33%',
+                                                                borderWidth: 1,
+                                                                borderColor: '#DDD',
+                                                                padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                                height: '100%'
+                                                            }}
+                                                            key={choiceIndex.toString()}
+                                                        >
                                                             <TouchableOpacity
                                                                 style={{
                                                                     display: 'flex',
@@ -3564,7 +3601,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     })
                                                 }
                                                 {editQuestionNumber === (index + 1) ? <TouchableOpacity style={{
-                                                    paddingLeft: 25
+                                                    paddingHorizontal: 12
                                                 }} 
                                                 onPress={() => {
                                                     const updatedProblems = [...problems];
@@ -3634,7 +3671,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                 const currRef: any = setRef(i.toString());
 
-                                return <View style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'none', width: '100%' }} >
+                                return <View key={i.toString()} style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'none', width: '100%' }} >
                                     <View style={{ paddingTop: 25, width: 40 }}>
                                         <input
                                             style={{}}
@@ -3653,7 +3690,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             disabled={editQuestionNumber !== (index + 1)}
                                         />
                                     </View>
-                                    <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '70%', paddingRight: 30, paddingBottom: 10 }}>
+                                    <View style={{ width: Dimensions.get('window').width < 768 ? '85%' : '70%', paddingRight: Dimensions.get('window').width < 768 ? 0 : 30, paddingBottom: 10 }}>
                                         {
                                             <View style={{ width: '100%', marginBottom: 10 }}>
                                                 {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?
@@ -3661,7 +3698,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         {parser(option.option)}
                                                     </Text>
                                                     :
-                                                    <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
                                                         <FormulaGuide
                                                             equation={optionEquations[i]}
                                                             onChange={(eq: any) => {

@@ -50,6 +50,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [userId, setUserId] = useState('');
     const [sortChannels, setSortChannels] = useState<any[]>([]);
     const [subIds, setSubIds] = useState<any[]>([]);
+    const [activeTab, setActiveTab] = useState('create')
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -681,6 +682,28 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>)
     }
 
+    const renderTabs = () => {
+        return (<View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', paddingTop: 5 }}>
+            <TouchableOpacity
+                style={activeTab === 'create' ? styles.selectedButton : styles.unselectedButton}
+                onPress={() => {
+                    setActiveTab('create')
+                }}
+            >
+                <Text style={activeTab === 'create' ? styles.selectedText : styles.unselectedText}> {activeTab === 'create' ? 'Create Course' : 'Create'} </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={activeTab !== 'create' ? styles.selectedButton : styles.unselectedButton}
+                onPress={() => {
+                    setActiveTab('join')
+                }}
+            >
+                <Text style={activeTab !== 'create' ? styles.selectedText : styles.unselectedText}>{activeTab === 'join' ? 'Join a Course' : 'Join'}</Text>
+            </TouchableOpacity>
+        </View>)
+    }
+
+
 
     if (loading) {
         return <View style={{
@@ -701,12 +724,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={{
             width: '100%',
-            maxHeight: Dimensions.get("window").width < 768 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
-            backgroundColor: props.showCreate ? "#fff" : '#f2f2f2',
+            maxHeight: Dimensions.get("window").width < 768 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - (52 + 60),
+            // backgroundColor: props.showCreate ? "#fff" : '#f2f2f2',
             justifyContent: 'center',
             flexDirection: 'row'
         }} key={1}>
-            <View style={{ width: '100%', maxWidth: 900, paddingBottom: 25, backgroundColor: props.showCreate ? '#fff' : '#f2f2f2' }}>
+            <View style={{ width: '100%', maxWidth: 900, backgroundColor: props.showCreate ? '#fff' : '#f2f2f2' }}>
                 {/* Back Button */}
                 {
                     props.showCreate ?
@@ -732,15 +755,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
                 {/* Main Content */}
                 {!props.showCreate ?
-                    <View style={{
-                        backgroundColor: '#f2f2f2',
-                        width: '100%',
-                        minHeight: Dimensions.get("window").height - 52
-                    }}
-                    key={sortChannels.length + subIds.length} 
+                    <View 
+                        style={{
+                            backgroundColor: '#f2f2f2',
+                            width: '100%',
+                            // minHeight: Dimensions.get("window").height - 52
+                        }}
+                        key={sortChannels.length + subIds.length} 
                     >
-
-                        {/* */}
                         {sortChannels.length === 0 ? <View
                             style={{
                                 width: "100%",
@@ -758,30 +780,24 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 backgroundColor: '#f2f2f2',
                                 overflow: 'hidden',
                                 borderRadius: 1,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 4,
-                                    height: 4,
-                                },
-                                shadowOpacity: 0.12,
-                                shadowRadius: 10, 
+                                // shadowColor: "#000",
+                                // shadowOffset: {
+                                //     width: 4,
+                                //     height: 4,
+                                // },
+                                // shadowOpacity: 0.12,
+                                // shadowRadius: 10, 
                             }}
                         >
                             <ScrollView contentContainerStyle={{
-                                maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+                                maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - (52 + 60),
                                 width: '100%',
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 4,
-                                    height: 4,
-                                },
-                                shadowOpacity: 0.12,
-                                shadowRadius: 10, 
+                              
                             }}
                             showsVerticalScrollIndicator={true}  
                             >
                                 {
-                                    sortChannels.map((channel: any, ind: any) => {
+                                    sortChannels.map((channel: any, ind: number) => {
 
                                         const subscribed = subIds.includes(channel._id)
 
@@ -801,6 +817,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }
 
                                         return <View
+                                            key={ind.toString()}
                                             style={{
                                                 backgroundColor: '#fff',
                                                 flexDirection: 'row',
@@ -877,24 +894,27 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         width: '100%',
                         maxWidth: 500,
                         alignSelf: 'center',
-                        paddingTop: Dimensions.get('window').width < 768 ? 20 : 0,
+                        paddingTop: Dimensions.get('window').width < 768 ? (props.isOwner ? 20 : 0) : 0,
                         paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0
                     }}>
 
+                        {role !== 'instructor' ? null : renderTabs()}
+
                         {/* Join channel with code */}
-                        <View style={{ padding: 15, 
+                        {role !== 'instructor' || (role === 'instructor' &&  activeTab === 'join') ? <View style={{ padding: 15, 
                             width: '100%', 
                             marginBottom: Dimensions.get("window").width < 768 ? 20 : 30,
+                            marginTop: Dimensions.get('window').width < 768 ? 0 : 20
                             }}>
-                            <Text style={{
-                                fontSize: 16,
+                            {role !== 'instructor' ? <Text style={{
+                                fontSize: 18,
                                 fontFamily: 'Inter',
                                 color: '#000000',
                                 textAlign: 'center',
                                 marginBottom: 10
                             }}>
                                 Join a course
-                            </Text>
+                            </Text> : null}
                             <TextInput
                                 value={joinWithCode}
                                 placeholder={'Access Code'}
@@ -932,25 +952,15 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     Join
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> : null}
 
 
-                        {role === "instructor" ? <View style={{ width: '100%' }}>
-                            <View style={{ paddingTop: 45, width: '100%', alignSelf: 'center', borderTopWidth: 1, borderTopColor: '#f2f2f2' }}>
-                                <Text
-                                    style={{
-                                        fontSize: 16,
-                                        fontFamily: 'Inter',
-                                        color: '#000000',
-                                        textAlign: 'center'
-                                    }}>
-                                    Create a course
-                                </Text>
-                            </View>
+                        {role === "instructor" && activeTab === 'create' ? <View style={{ width: '100%', marginTop: 20 }}>
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
-                                    color: '#000000'
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                 }}>
                                     {PreferredLanguageText('name')}
                                 </Text>
@@ -1002,6 +1012,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
                                     fontSize: 14,
+                                    fontFamily: 'Inter',
                                     color: '#000000'
                                 }}>
                                     {PreferredLanguageText('enrolmentPassword')}
@@ -1043,6 +1054,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 fontSize: 14,
                                                 marginRight: 8,
                                                 color: '#000000', 
+                                                fontFamily: 'Inter',
                                             }}>
                                                 Temporary
                                             </Text>
@@ -1169,10 +1181,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        color: '#000000'
+                                        color: '#000000',
+                                        fontFamily: 'Inter',
                                     }}>Theme</Text>
                                 </View>
-                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', backgroundColor: 'white', }}>
                                     <CirclePicker
                                         color={colorCode}
                                         onChangeComplete={(color: any) => setColorCode(color.hex)}
@@ -1186,7 +1199,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text style={{
                                     fontSize: 14,
                                     marginRight: 8,
-                                    color: '#000000'
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                 }}>
                                     Students
                                 </Text>
@@ -1203,7 +1217,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {school ? <View style={{
                                 flexDirection: 'column', marginTop: 25,
                             }}>
-                                <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
+                                <View style={{ height: 'auto', width: '100%' }}>
 
                                     <div style={{ width: '100%', }} >
                                         <label style={{ width: '100%', }}>
@@ -1247,6 +1261,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     fontSize: 14,
                                     marginRight: 8,
                                     color: '#000000', 
+                                    fontFamily: 'Inter',
                                 }}>
                                     Instructors
                                 </Text>
@@ -1258,7 +1273,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Ionicons name='help-circle-outline' size={18} color="#939699" />
                                 </TouchableOpacity>
                             </View> : null}
-                            {school ? <label style={{ width: '100%', maxWidth: 400 }}>
+                            {school ? <label style={{ width: '100%' }}>
                                 <Select
                                     themeVariant="light"
                                     select="multiple"
@@ -1370,5 +1385,43 @@ const styles = StyleSheet.create({
         paddingBottom: 13,
         marginTop: 5,
         marginBottom: 20
-    }
+    },
+    selectedText: {
+        fontSize: Dimensions.get('window').width < 768 ? 12 : 12,
+        color: '#fff',
+        backgroundColor: '#000',
+        lineHeight: Dimensions.get('window').width < 768 ? 25 : 25,
+        height: Dimensions.get('window').width < 768 ? 25 : 25,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
+    },
+    unselectedText: {
+        fontSize: Dimensions.get('window').width < 768 ? 12 : 12,
+        color: '#000',
+        height: Dimensions.get('window').width < 768 ? 25 : 25,
+        // backgroundColor: '#000',
+        lineHeight: Dimensions.get('window').width < 768 ? 25 : 25,
+        fontFamily: 'overpass',
+        textTransform: 'uppercase',
+        fontWeight: 'bold'
+    },
+    selectedButton: {
+        backgroundColor: '#000',
+        borderRadius: 20,
+        height: Dimensions.get('window').width < 768 ? 25 : 25,
+        maxHeight: Dimensions.get('window').width < 768 ? 25 : 25,
+        lineHeight: Dimensions.get('window').width < 768 ? 25 : 25,
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
+        marginHorizontal: Dimensions.get('window').width < 768 ? 2 : 4,
+    },
+    unselectedButton: {
+        // backgroundColor: '#000',
+        height:  Dimensions.get('window').width < 768 ? 25 : 25,
+        maxHeight:  Dimensions.get('window').width < 768 ? 25 : 25,
+        lineHeight: Dimensions.get('window').width < 768 ? 25 : 25,
+        borderRadius: 20,
+        color: '#000000',
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
+        marginHorizontal:  Dimensions.get('window').width < 768 ? 2 : 4,
+    },
 });

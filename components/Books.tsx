@@ -251,7 +251,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             </Text>
                         )
                     ) : (
-                        results.map((result: any, index) => {
+                        results.map((result: any, index: number) => {
                             if (index >= (page - 1) * 100 && index < page * 100) {
                                 return (
                                     <TouchableOpacity
@@ -268,6 +268,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             borderRadius: 1,
                                             overflow: 'hidden'
                                         }}
+                                        key={index.toString()}
                                     >
                                         <View
                                             style={{
@@ -438,7 +439,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 padding: 5,
                                 fontSize: 20,
                                 fontFamily: 'inter',
-                                backgroundColor: '#f2f2f7',
+                                backgroundColor: '#f2f2f2',
                                 maxHeight: 75,
                                 marginTop: 25,
                                 paddingTop: 10
@@ -455,7 +456,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 paddingBottom: 10,
                                 fontSize: 12,
                                 fontFamily: 'inter',
-                                backgroundColor: '#f2f2f7',
+                                backgroundColor: '#f2f2f2',
                                 color: '#0061ff'
                             }}
                         >
@@ -467,7 +468,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 padding: 5,
                                 fontSize: 12,
                                 fontFamily: 'inter',
-                                backgroundColor: '#f2f2f7',
+                                backgroundColor: '#f2f2f2',
                                 maxHeight: 200,
                                 paddingTop: 10
                             }}
@@ -481,7 +482,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             padding: 25,
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#f2f2f7'
+                            backgroundColor: '#f2f2f2'
                         }}
                     >
                         <View
@@ -490,7 +491,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 width: 175,
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#f2f2f7'
+                                backgroundColor: '#f2f2f2'
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />

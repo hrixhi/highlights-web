@@ -26,7 +26,6 @@ import { Select, Datepicker as MobiscrollDatePicker } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Editor } from '@tinymce/tinymce-react';
 import FormulaGuide from './FormulaGuide';
 import Books from './Books';
 
@@ -1322,7 +1321,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const stringifiedCues = JSON.stringify(subCues);
                 await AsyncStorage.setItem('cues', stringifiedCues);
                 storeDraft('cueDraft', '');
-                props.closeOnCreate();
+                props.closeAfterCreatingMyNotes();
             } else {
                 // CHANNEL CUE
                 const uString = await AsyncStorage.getItem('user');
@@ -1482,7 +1481,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height: '100%',
                         maxWidth: 900,
                         paddingTop: 10,
-                        paddingHorizontal: dimensions.window.width < 1024 ? 10 : 0
+                        paddingHorizontal: dimensions.window.width < 1024 ? 15 : 0
                     }}
                 >
                     <View
@@ -1513,7 +1512,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </TouchableOpacity>
                         )}
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
-                            {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' ? <TouchableOpacity
+                            {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' && Dimensions.get('window').width > 768 ? <TouchableOpacity
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
@@ -2241,6 +2240,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{
                                                         flex: 1,
                                                         flexDirection: 'row',
+                                                        paddingBottom: 15,
                                                         backgroundColor: 'white'
                                                     }}
                                                 >
@@ -2885,21 +2885,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 </Text>
                                                             </MenuTrigger>
                                                             <MenuOptions
-                                                                customStyles={{
-                                                                    optionsContainer: {
-                                                                        padding: 10,
-                                                                        borderRadius: 15,
-                                                                        shadowOpacity: 0,
-                                                                        borderWidth: 1,
-                                                                        borderColor: '#f2f2f2',
-                                                                        overflow: 'scroll',
-                                                                        maxHeight: '100%'
-                                                                    }
+                                                                optionsContainerStyle={{
+                                                                    shadowOffset: {
+                                                                        width: 2,
+                                                                        height: 2
+                                                                    },
+                                                                    shadowColor: '#000',
+                                                                    // overflow: 'hidden',
+                                                                    shadowOpacity: 0.07,
+                                                                    shadowRadius: 7,
+                                                                    padding: 7,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#CCC'
                                                                 }}
                                                             >
-                                                                {hours.map((hour: any) => {
+                                                                {hours.map((hour: any, ind: number) => {
                                                                     return (
-                                                                        <MenuOption value={hour}>
+                                                                        <MenuOption key={ind.toString()} value={hour}>
                                                                             <Text>{hour}</Text>
                                                                         </MenuOption>
                                                                     );
@@ -2929,21 +2931,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 </Text>
                                                             </MenuTrigger>
                                                             <MenuOptions
-                                                                customStyles={{
-                                                                    optionsContainer: {
-                                                                        padding: 10,
-                                                                        borderRadius: 15,
-                                                                        shadowOpacity: 0,
-                                                                        borderWidth: 1,
-                                                                        borderColor: '#f2f2f2',
-                                                                        overflow: 'scroll',
-                                                                        maxHeight: '100%'
-                                                                    }
+                                                                optionsContainerStyle={{
+                                                                    shadowOffset: {
+                                                                        width: 2,
+                                                                        height: 2
+                                                                    },
+                                                                    shadowColor: '#000',
+                                                                    // overflow: 'hidden',
+                                                                    shadowOpacity: 0.07,
+                                                                    shadowRadius: 7,
+                                                                    padding: 7,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#CCC'
                                                                 }}
                                                             >
-                                                                {minutes.map((min: any) => {
+                                                                {minutes.map((min: any, ind: number) => {
                                                                     return (
-                                                                        <MenuOption value={min}>
+                                                                        <MenuOption key={ind.toString()} value={min}>
                                                                             <Text>{min}</Text>
                                                                         </MenuOption>
                                                                     );
@@ -3032,13 +3036,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontFamily: 'overpass',
                                                     width: '100%',
                                                     maxWidth: 400,
+                                                    minWidth: 400,
                                                     borderBottom: '1px solid #f2f2f2',
                                                     fontSize: 14,
                                                     paddingTop: 13,
                                                     paddingBottom: 13,
                                                     paddingLeft: 10,
                                                     marginTop: 12,
-                                                    marginBottom: 15,
+                                                    marginBottom: 25,
                                                     borderRadius: 1,
                                                     height: 35
                                                 }}
@@ -3299,7 +3304,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     tabSpaces: 4,
 
                                                     // TOOLBAR
-                                                    toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS,
+                                                    toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                                                     toolbarSticky: true,
                                                     htmlAllowedEmptyTags: [
                                                         'textarea',

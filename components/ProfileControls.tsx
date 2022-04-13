@@ -328,7 +328,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={{
                             width: '100%',
                             backgroundColor: 'white',
-                            paddingTop: Dimensions.get('window').width < 768 ? 25 : 50,
+                            paddingTop: 0,
                             paddingBottom: 20,
                             flex: 1,
                             maxWidth: 400,
@@ -338,7 +338,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}
                         >
                             {PreferredLanguageText('currentPassword')}
@@ -355,7 +356,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}
                         >
                             {PreferredLanguageText('newPassword')}
@@ -374,7 +376,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}
                         >
                             {PreferredLanguageText('confirmNewPassword')}
@@ -393,14 +396,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={{
                             width: '100%',
                             backgroundColor: 'white',
-                            paddingTop: Dimensions.get('window').width < 768 ? 25 : 50,
+                            paddingTop: 0,
                             paddingBottom: 20,
                             maxWidth: 400,
                             alignSelf: 'center',
                             // flex: 1
                         }}
                     >
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 15 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 30 }}>
                             <Image
                                 style={{
                                     height: 100,
@@ -470,9 +473,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         } */}
                         <Text
                             style={{
-                                marginTop: 20,
+                                marginTop: 50,
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter'
                             }}
                         >
                             {PreferredLanguageText('email')}
@@ -493,7 +497,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 fontSize: 14,
-                                color: '#000000'
+                                color: '#000000',
+                                fontFamily: 'Inter',
+                                paddingTop: 10 
                             }}
                         >
                             {PreferredLanguageText('fullName')}
@@ -750,6 +756,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 overflow: 'hidden',
                                 height: 35,
                                 marginTop: 20,
+                                marginBottom: 50,
                                 width: '100%',
                                 justifyContent: 'center',
                                 flexDirection: 'row',

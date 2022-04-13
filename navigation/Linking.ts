@@ -20,6 +20,7 @@ export default {
             },
             zoom_auth: 'zoom_auth',
             pdfviewer: 'pdfviewer',
+            equationEditor: 'equationEditor',
             login: 'login',
             desktopSSORedirect: 'desktopSSORedirect',
             NotFound: '*'

@@ -14,7 +14,6 @@ import TeXToSVG from 'tex-to-svg';
 import parser from 'html-react-parser';
 import FileUpload from './UploadFiles';
 import ReactPlayer from 'react-player';
-import { Editor } from '@tinymce/tinymce-react';
 import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
 
@@ -473,7 +472,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: 'white'
+                        backgroundColor: 'white',
+                        marginRight: 15
                     }}
                 >
                     <Text
@@ -546,16 +546,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions
-                                        customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#f2f2f2',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
+                                        optionsContainerStyle={{
+                                            shadowOffset: {
+                                                width: 2,
+                                                height: 2
+                                            },
+                                            shadowColor: '#000',
+                                            // overflow: 'hidden',
+                                            shadowOpacity: 0.07,
+                                            shadowRadius: 7,
+                                            padding: 7,
+                                            borderWidth: 1,
+                                            borderColor: '#CCC'
                                         }}
                                     >
                                         {hours.map((hour: any) => {
@@ -588,16 +590,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions
-                                        customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#f2f2f2',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
+                                        optionsContainerStyle={{
+                                            shadowOffset: {
+                                                width: 2,
+                                                height: 2
+                                            },
+                                            shadowColor: '#000',
+                                            // overflow: 'hidden',
+                                            shadowOpacity: 0.07,
+                                            shadowRadius: 7,
+                                            padding: 7,
+                                            borderWidth: 1,
+                                            borderColor: '#CCC'
                                         }}
                                     >
                                         {minutes.map((min: any) => {
@@ -629,7 +633,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                     paddingTop: 20,
                     borderColor: '#f2f2f2',
-                    marginBottom: 50
+                    marginBottom: Dimensions.get('window').width < 768 ? 20 : 50
                 }}
             >
                 <View
@@ -637,7 +641,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: 'white'
+                        backgroundColor: 'white',
+                        marginRight: 15
                     }}
                 >
                     <Text
@@ -707,15 +712,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     value={headers[index]}
                     style={{
                         fontFamily: 'overpass',
-                        marginBottom: 30,
+                        marginBottom: Dimensions.get('window').width < 768 ? 10 : 30,
                         marginTop: 50,
                         fontSize: 14,
                         paddingTop: 12,
                         paddingBottom: 12,
-                        maxWidth: '100%',
                         borderRadius: 1,
                         borderBottom: '1px solid #f2f2f2',
-                        width: Dimensions.get('window').width < 768 ? '100%' : '50%'
+                        width: Dimensions.get('window').width < 768 ? '100%' : '60%',
+                        maxWidth: Dimensions.get('window').width < 768 ? '100%' : '60%',
+                        minWidth: Dimensions.get('window').width < 768 ? '100%' : '60%',
                     }}
                     onChange={(e: any) => {
                         const currentHeaders = JSON.parse(JSON.stringify(headers));
@@ -728,7 +734,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             ) : (
                 <Text
                     style={{
-                        marginBottom: 30,
+                        marginBottom: Dimensions.get('window').width < 768 ? 10 : 30,
                         marginTop: 50,
                         fontSize: 14,
                         paddingTop: 12,
@@ -1018,20 +1024,21 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         userSelect: "none",
         padding: 12,
         margin: `0 0 ${grid}px 0`,
-
+        border: '1px solid #CCC',
         // change background colour if dragging
         background: "#fff",
-
+        boxShadow: 'rgb(0 0 0 / 7%) 2px 2px 7px',
         // styles we need to apply on draggables
         ...draggableStyle,
         // height: 25
-        marginBottom: 15,
+        marginBottom: 20,
         top: draggableStyle.top,
         borderRadius: 10,
     });
     const getListStyle = (isDraggingOver: any) => ({
-        background: "#f2f2f2",
-        padding: 15,
+        border: '1px solid #ccc',
+        borderRadius: 15,
+        padding: 20,
         width: 200,
         minWidth: 200,
         margin: 15
@@ -1213,24 +1220,36 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const selectMCQOption = (problem: any, problemIndex: number, optionIndex: number) => {
         if (props.isOwner) return;
 
-        let onlyOneCorrect = true;
+        // let onlyOneCorrect = true;
+        let numOfCorrectAnswers = 0
 
         if (!problem.questionType) {
-            let noOfCorrect = 0;
-
             problem.options.map((option: any) => {
-                if (option.isCorrect) noOfCorrect++;
+                if (option.isCorrect) numOfCorrectAnswers++;
             });
 
-            if (noOfCorrect > 1) onlyOneCorrect = false;
         }
         // Check if one correct or multiple correct
         const updatedSolution = [...solutions];
 
-        if (onlyOneCorrect && !updatedSolution[problemIndex].selected[optionIndex].isSelected) {
+        if (numOfCorrectAnswers === 1 && !updatedSolution[problemIndex].selected[optionIndex].isSelected) {
             problem.options.map((option: any, optionIndex: any) => {
                 updatedSolution[problemIndex].selected[optionIndex].isSelected = false;
             });
+        }
+
+        // Calculate num of correct answers
+        let numOfSelected = 0;
+
+        solutions[problemIndex].selected.map((option: any, i: number) => {
+            if (optionIndex !== i && option.isSelected) {
+                numOfSelected++;
+            }
+        })
+
+        if (numOfCorrectAnswers > 1 && numOfSelected === numOfCorrectAnswers) {
+            alert(`You can select a maximum of ${numOfCorrectAnswers} ${numOfCorrectAnswers === 1 ? 'choice' : 'choices'}. Unselect an existing choice to select a new one.`);
+            return;
         }
 
         updatedSolution[problemIndex].selected[optionIndex].isSelected = !updatedSolution[problemIndex].selected[
@@ -1279,7 +1298,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 backgroundColor: 'white',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                paddingTop: 15,
+                paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
                 flexDirection: 'column',
                 justifyContent: 'flex-start'
             }}
@@ -1433,7 +1452,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             width: '100%',
                             paddingLeft: Dimensions.get('window').width < 768 ? 10 : 0,
                             borderBottomWidth: index === problems.length - 1 ? 0 : 1,
-                            marginBottom: 25
+                            marginBottom: Dimensions.get('window').width < 768 ? 0 : 25
                         }}
                         key={index}
                     >
@@ -1698,7 +1717,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }
 
                                 return (
-                                    <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                                    <View key={i.toString()} style={{ flexDirection: 'row', marginBottom: 20 }}>
                                         <View style={{ width: 40 }}>
                                             {onlyOneCorrect && editQuestionNumber !== index + 1 ? (
                                                 <TouchableOpacity
@@ -1868,7 +1887,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                             const selection = props.isOwner ?  problem.hotspotOptions[p.itemNumber].isCorrect : solutions[problemIndex].hotspotSelection[p.itemNumber] 
 
-                                            return <TouchableOpacity disabled={props.isOwner} style={{
+                                            return <TouchableOpacity key={p.itemNumber} disabled={props.isOwner} style={{
                                                 backgroundColor: selection ? '#006AFF' : '#fff',
                                                 height: 25, 
                                                 width: 25, 
@@ -1879,6 +1898,27 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 onPress={() => {
 
                                                     if (!props.isOwner) {
+                                                        // Num of correct
+                                                        let numOfCorrectAnswers = 0;
+
+                                                        problem.hotspotOptions.map((option: any) => {
+                                                            if (option.isCorrect) numOfCorrectAnswers++;
+                                                        });
+                                            
+
+                                                        // Num of selected
+                                                        let numOfSelected = 0;
+                                                        solutions[problemIndex].hotspotSelection.map((selection: any, i: number) => {
+                                                            if (i !== p.itemNumber && selection) {
+                                                                numOfSelected++;
+                                                            }
+                                                        })
+
+                                                        if (numOfCorrectAnswers === numOfSelected) {
+                                                            alert(`You can select a maximum of ${numOfCorrectAnswers} ${numOfCorrectAnswers === 1 ? 'choice' : 'choices'}. Unselect an existing choice to select a new one.`);
+                                                            return;
+                                                        }
+
                                                         const updatedSolution = [...solutions];
                                                         updatedSolution[problemIndex].hotspotSelection[p.itemNumber] = !updatedSolution[problemIndex].hotspotSelection[p.itemNumber]
                                                         setSolutions(updatedSolution);
@@ -1918,12 +1958,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                 let isSelected = props.isOwner ? option.isCorrect : solutions[problemIndex].hotspotSelection[ind]
 
-                                                return (<View style={{ 
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    marginRight: 50,
-                                                    marginBottom: 30
-                                                }}>
+                                                return (<View 
+                                                    style={{ 
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        marginRight: 50,
+                                                        marginBottom: 30
+                                                    }}
+                                                    key={ind.toString()}
+                                                >
                                                     <input
                                                         style={{
                                                             marginRight: 12
@@ -1933,6 +1976,28 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         onChange={(e) => {
 
                                                             if (!props.isOwner) {
+
+                                                                                                                            // Num of correct
+                                                            let numOfCorrectAnswers = 0;
+
+                                                            problem.hotspotOptions.map((option: any) => {
+                                                                if (option.isCorrect) numOfCorrectAnswers++;
+                                                            });
+                                                
+
+                                                            // Num of selected
+                                                            let numOfSelected = 0;
+                                                            solutions[problemIndex].hotspotSelection.map((selection: any, i: number) => {
+                                                                if (i !== ind && selection) {
+                                                                    numOfSelected++;
+                                                                }
+                                                            })
+
+                                                            if (numOfCorrectAnswers === numOfSelected) {
+                                                                alert(`You can select a maximum of ${numOfCorrectAnswers} ${numOfCorrectAnswers === 1 ? 'choice' : 'choices'}. Unselect an existing choice to select a new one.`);
+                                                                return;
+                                                            }
+                                                            
                                                                 const updatedSolution = [...solutions];
                                                                 updatedSolution[problemIndex].hotspotSelection[ind] = !updatedSolution[problemIndex].hotspotSelection[ind]
                                                                 setSolutions(updatedSolution);
@@ -1973,9 +2038,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginTop: 20
                                     }}>
                                         {problem.dragDropData.map((group: any[], groupIndex: number) => {
-                                            return <View style={{ 
-                                                width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15
-                                             }}>
+                                            return <View 
+                                                    key={groupIndex.toString()}
+                                                    style={{ 
+                                                        width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15
+                                                    }}
+                                                >
                                                 <Text style={{
                                                     fontSize: 16,
                                                     width: '100%',
@@ -1986,28 +2054,30 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     {problem.dragDropHeaders[groupIndex]}
                                                 </Text>
                                                 {
-                                                    group.map((label: any) => {
-                                                        return <View style={{
-                                                            width: 200,
-                                                            display: 'flex',
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center',
-                                                            paddingVertical: 16,
-                                                            paddingHorizontal: 10,
-                                                            marginRight: 20,
-                                                            marginBottom: 20,
-                                                            borderRadius: 10,
-                                                            // backgroundColor: '#f2f2f2',
-                                                            borderWidth: 1,
-                                                            borderColor: '#ccc',
-                                                            shadowOffset: {
-                                                                width: 2,
-                                                                height: 2
-                                                            },
-                                                            overflow: 'hidden',
-                                                            shadowOpacity: 0.07,
-                                                            shadowRadius: 7,
-                                                        }}>
+                                                    group.map((label: any, ind: number) => {
+                                                        return <View 
+                                                            key={ind.toString()}
+                                                            style={{
+                                                                width: 200,
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                paddingVertical: 16,
+                                                                paddingHorizontal: 10,
+                                                                marginRight: 20,
+                                                                marginBottom: 20,
+                                                                borderRadius: 10,
+                                                                // backgroundColor: '#f2f2f2',
+                                                                borderWidth: 1,
+                                                                borderColor: '#ccc',
+                                                                shadowOffset: {
+                                                                    width: 2,
+                                                                    height: 2
+                                                                },
+                                                                overflow: 'hidden',
+                                                                shadowOpacity: 0.07,
+                                                                shadowRadius: 7,
+                                                            }}>
                                                             <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                             <Text
                                                                 style={{
@@ -2040,28 +2110,31 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         paddingTop: 20,
                                     }}>
                                         {
-                                            dragDropOptions.map((label: string) => {
-                                                return <View style={{
-                                                    width: 150,
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    paddingVertical: 16,
-                                                    paddingHorizontal: 10,
-                                                    marginRight: 20,
-                                                    marginBottom: 20,
-                                                    borderRadius: 10,
-                                                    // backgroundColor: '#f2f2f2',
-                                                    borderWidth: 1,
-                                                    borderColor: '#ccc',
-                                                    shadowOffset: {
-                                                        width: 2,
-                                                        height: 2
-                                                    },
-                                                    overflow: 'hidden',
-                                                    shadowOpacity: 0.07,
-                                                    shadowRadius: 7,
-                                                }}>
+                                            dragDropOptions.map((label: string, ind: number) => {
+                                                return <View 
+                                                    style={{
+                                                        width: 150,
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        paddingVertical: 16,
+                                                        paddingHorizontal: 10,
+                                                        marginRight: 20,
+                                                        marginBottom: 20,
+                                                        borderRadius: 10,
+                                                        // backgroundColor: '#f2f2f2',
+                                                        borderWidth: 1,
+                                                        borderColor: '#ccc',
+                                                        shadowOffset: {
+                                                            width: 2,
+                                                            height: 2
+                                                        },
+                                                        overflow: 'hidden',
+                                                        shadowOpacity: 0.07,
+                                                        shadowRadius: 7,
+                                                    }}
+                                                    key={ind.toString()}
+                                                >
                                                     <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                     <Text
                                                         style={{
@@ -2081,8 +2154,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         overflow: 'scroll',
                                         marginTop: 50
                                     }}>
-                                        {problem.dragDropHeaders.map((header: string) => {
-                                            return <View style={{ width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15 }}>
+                                        {problem.dragDropHeaders.map((header: string, ind: number) => {
+                                            return <View key={ind.toString()} style={{ width: 240, marginRight: 30, justifyContent: 'center', padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 15 }}>
                                                 <Text style={{
                                                     fontSize: 16,
                                                     width: '100%',
@@ -2162,6 +2235,27 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     let optionIndex = Number(node.attribs.id);
         
                                                     return <span onClick={() => {
+
+                                                        // Num of correct
+                                                        let numOfCorrectAnswers = 0;
+
+                                                        problems[index].highlightTextChoices.map((option: any) => {
+                                                            if (option) numOfCorrectAnswers++;
+                                                        });
+                                            
+
+                                                        // Num of selected
+                                                        let numOfSelected = 0;
+                                                        solutions[problemIndex].highlightTextSelection.map((selection: any, i: number) => {
+                                                            if (i !== optionIndex && selection) {
+                                                                numOfSelected++;
+                                                            }
+                                                        })
+
+                                                        if (numOfCorrectAnswers === numOfSelected) {
+                                                            alert(`You can select a maximum of ${numOfCorrectAnswers} ${numOfCorrectAnswers === 1 ? 'choice' : 'choices'}. Unselect an existing choice to select a new one.`);
+                                                            return;
+                                                        }
 
                                                         const updatedSolution = [...solutions];
                                                         const updatedHighlightTextSelection = [...updatedSolution[problemIndex].highlightTextSelection];
@@ -2265,7 +2359,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                                 )}
                                                                             >
                                                                                 <div style={{
-                                                                                    marginBottom: 20
+                                                                                    display: "flex",
+                                                                                    justifyContent: "space-around",
+                                                                                    alignItems: 'center'
                                                                                 }}>
                                                                                     <Ionicons name={"ellipsis-vertical-outline"} size={16} color="#1f1f1f" />
                                                                                     <Text
@@ -2324,9 +2420,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 }}
                                                             >
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2355,9 +2451,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 }}
                                                             >
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2412,11 +2508,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 }}
                                                                 value={solutions[problemIndex].inlineChoiceSelection[Number(node.attribs.id)]}
                                                             >
-                                                                <option value="" selected disabled hidden>Choose option</option>
+                                                                <option value="" selected disabled>Choose option</option>
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2455,11 +2551,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 }}
                                                                 value={solutions[problemIndex].inlineChoiceSelection[Number(node.attribs.id)]}
                                                             >
-                                                                <option value="" selected disabled hidden>Choose option</option>
+                                                                <option value="" selected disabled>Choose option</option>
                                                                 {
-                                                                    options.map((option: any) => {
+                                                                    options.map((option: any, ind: number) => {
 
-                                                                        return <option value={option.option} selected={option.isCorrect}>{option.option}</option>
+                                                                        return <option key={ind.toString()} value={option.option} selected={option.isCorrect}>{option.option}</option>
                                                                     })
                                                                 }
                                                             </select>
@@ -2554,12 +2650,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             fontFamily: 'Overpass'
                                                         }}
                                                         onChange={(e) => {
+
+                                                            if (type === 'number' && Number.isNaN(Number(e.target.value))) {
+                                                                alert('You must enter a numeric value for this entry.')
+                                                                return;
+                                                            }
+
                                                             const updatedSolution = [...solutions];
                                                             updatedSolution[problemIndex].textEntrySelection[Number(node.attribs.id)] = e.target.value;
                                                             setSolutions(updatedSolution);
                                                             props.setSolutions(updatedSolution);
                                                         }}
-                                                        type={type} value={value} />;
+                                                        value={value} />;
                                                     }
                                                 });
                                             } else {
@@ -2579,12 +2681,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             fontFamily: 'Overpass'
                                                         }} 
                                                         onChange={(e) => {
+
+                                                            if (type === 'number' && Number.isNaN(Number(e.target.value))) {
+                                                                alert('You must enter a numeric value for this entry.')
+                                                                return;
+                                                            }
+
                                                             const updatedSolution = [...solutions];
                                                             updatedSolution[problemIndex].textEntrySelection[Number(node.attribs.id)] = e.target.value;
                                                             setSolutions(updatedSolution);
                                                             props.setSolutions(updatedSolution);
                                                         }}
-                                                        type={type} value={value} />;
+                                                        value={value} />;
                                                     }
                                                 });
                                             }
@@ -2598,15 +2706,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             problem.questionType === 'multipart' && props.isOwner && editQuestionNumber === (index + 1) ?
                                 (<View style={{
                                     flexDirection: 'column', 
-                                    paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                                    paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40,
+                                    paddingBottom: 30
                                 }}>
                                     {
                                         problem.multipartOptions.map((part: any, partIndex: number) => {
                                             const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-                                            return <View style={{
-                                                flexDirection: 'column',
-
-                                            }}>
+                                            return <View 
+                                                style={{
+                                                    flexDirection: 'column',
+                                                }}
+                                                key={partIndex.toString()}
+                                            >
                                                 <Text style={{
                                                     fontSize: 22,
                                                     fontFamily: 'Overpass',
@@ -2661,10 +2772,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                 {
                                                     problem.multipartOptions[partIndex].map((option: any, optionIndex: number) => {
-                                                        return (<View style={{
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center'
-                                                        }}>
+                                                        return (<View 
+                                                            style={{
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center'
+                                                            }}
+                                                            key={optionIndex.toString()}
+                                                        >
                                                             <input
                                                                 style={{}}
                                                                 type='checkbox'
@@ -2680,7 +2794,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     fontFamily: 'overpass',
                                                                     maxWidth: '100%', marginBottom: 10, marginTop: 10,
                                                                     borderRadius: 1,
-                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                                                                    paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #f2f2f2',
                                                                     width: 300,
                                                                     maxWidth: 300,
                                                                     marginLeft: 20,
@@ -2711,13 +2825,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             problem.questionType === 'multipart' && (editQuestionNumber !== (index + 1)) ? <View style={{
                                 flexDirection: 'column', 
                                 // paddingLeft: Dimensions.get("window").width < 768 ? 0 : 40
+                                paddingBottom: 30
                             }}>
                                 { problem.multipartOptions.map((part: any, partIndex: number) => {
                                     const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-                                    return <View style={{
-                                            flexDirection: 'column',
-                                        }}>
+                                    return <View 
+                                            style={{
+                                                flexDirection: 'column',
+                                            }}
+                                            key={partIndex.toString()}
+                                        >
                                             <Text style={{
                                                 fontSize: 22,
                                                 fontFamily: 'Overpass',
@@ -2732,17 +2850,42 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                             {
                                                 part.map((option: any, optionIndex: number) => {
-                                                    return <View style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        marginBottom: 20,
-                                                        marginTop: 20,
-                                                    }}>
+                                                    return <View 
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            marginBottom: 20,
+                                                            marginTop: 20,
+                                                        }}
+                                                        key={optionIndex.toString()}
+                                                    >
                                                         <input
                                                             style={{}}
                                                             type='checkbox'
                                                             checked={props.isOwner ? option.isCorrect : solutions[problemIndex].multipartSelection[partIndex][optionIndex]}
                                                             onChange={(e) => {
+                                                                // Add check for number of selections
+                                                                // Num of correct
+                                                                let numOfCorrectAnswers = 0;
+
+                                                                problem.multipartOptions[partIndex].map((option: any) => {
+                                                                    if (option.isCorrect) numOfCorrectAnswers++;
+                                                                });
+                                                    
+
+                                                                // Num of selected
+                                                                let numOfSelected = 0;
+                                                                solutions[problemIndex].multipartSelection[partIndex].map((selection: any, i: number) => {
+                                                                    if (i !== optionIndex && selection) {
+                                                                        numOfSelected++;
+                                                                    }
+                                                                })
+
+                                                                if (numOfCorrectAnswers === numOfSelected) {
+                                                                    alert(`You can select a maximum of ${numOfCorrectAnswers} ${numOfCorrectAnswers === 1 ? 'choice' : 'choices'}. Unselect an existing choice to select a new one.`);
+                                                                    return;
+                                                                }
+
                                                                 const updatedSolution = [...solutions];
                                                                 updatedSolution[problemIndex].multipartSelection[partIndex][optionIndex] = !updatedSolution[problemIndex].multipartSelection[partIndex][optionIndex]
                                                                 setSolutions(updatedSolution)
@@ -2771,7 +2914,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <View style={{
                                 flexDirection: 'column',
                                 paddingLeft: Dimensions.get('window').width < 768 || !props.isOwner ? 0 : 40,
-                                marginTop: 20
+                                marginTop: 20,
+                                paddingBottom: 30
                             }}>
                                 <Text style={{
                                     fontSize: 18,
@@ -2802,7 +2946,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {problem.questionType === 'equationEditor' && props.isOwner && (editQuestionNumber !== (index + 1)) ? 
                             <View style={{
                                 flexDirection: 'row',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                paddingBottom: 30
                             }}>
                                 <Text style={{ fontSize: 16, fontFamily: 'Overpass', marginRight: 10 }}>
                                     Answer: 
@@ -2819,6 +2964,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <View style={{
                                     flexDirection: 'column', 
                                     marginTop: 20,
+                                    paddingBottom: 30
                                 }}>
                                     {/* Header row */}
                                     <View style={{ 
@@ -2829,13 +2975,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         }} />
                                         {
                                             problem.matchTableHeaders.map((header: any, headerIndex: number) => {
-                                                return <View style={{
-                                                    width: '33%',
-                                                    borderWidth: 1,
-                                                    borderColor: '#DDD',
-                                                    padding: editQuestionNumber === (index + 1) ? 8 : 20,
-                                                    height: '100%'
-                                                }}>
+                                                return <View 
+                                                    style={{
+                                                        width: '33%',
+                                                        borderWidth: 1,
+                                                        borderColor: '#DDD',
+                                                        padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                        height: '100%'
+                                                    }}
+                                                    key={headerIndex.toString()}
+                                                >
                                                     {editQuestionNumber === (index + 1) ?
                                                     <TextareaAutosize 
                                                         style={{
@@ -2870,11 +3019,14 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     {/* Rows */}
                                     {
                                         problem.matchTableChoices.map((choiceRow: any, rowIndex: number) => {
-                                            return (<View style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
-                                            }}>
+                                            return (<View 
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    paddingLeft: editQuestionNumber === (index + 1) ? 40 : 0
+                                                }}
+                                                key={rowIndex.toString()}
+                                            >
                                                 <View style={{
                                                     width: '33%',
                                                     borderWidth: 1,
@@ -2912,17 +3064,20 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 {
                                                     choiceRow.map((choice: boolean, choiceIndex: number) => {
 
-                                                        return <View style={{
-                                                            width: '33%',
-                                                            borderWidth: 1,
-                                                            borderColor: '#DDD',
-                                                            padding: editQuestionNumber === (index + 1) ? 8 : 20,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'center',
-                                                            height: '100%'
-                                                        }}>
+                                                        return <View 
+                                                            style={{
+                                                                width: '33%',
+                                                                borderWidth: 1,
+                                                                borderColor: '#DDD',
+                                                                padding: editQuestionNumber === (index + 1) ? 8 : 20,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                                height: '100%'
+                                                            }}
+                                                            key={choiceIndex.toString()}
+                                                        >
                                                             <TouchableOpacity
                                                                 style={{
                                                                     display: 'flex',
@@ -3042,6 +3197,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             problem.questionType === "freeResponse" && props.isOwner ? <View style={{
                                 flexDirection: 'column',
+                                paddingBottom: 30
                             }}> 
                                 {editQuestionNumber === (index + 1) ? <View style={{
                                     display: 'flex',
@@ -3132,22 +3288,23 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions
-                                        customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#f4f4f6',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%',
-                                                width: Dimensions.get('window').width < 768 ? 300 : 400
-                                            }
+                                        optionsContainerStyle={{
+                                            shadowOffset: {
+                                                width: 2,
+                                                height: 2
+                                            },
+                                            shadowColor: '#000',
+                                            // overflow: 'hidden',
+                                            shadowOpacity: 0.07,
+                                            shadowRadius: 7,
+                                            padding: 7,
+                                            borderWidth: 1,
+                                            borderColor: '#CCC'
                                         }}
                                     >
                                         {Object.keys(regradeOptions).map((option: any, i: number) => {
                                             return (
-                                                <MenuOption value={option}>
+                                                <MenuOption key={i.toString()} value={option}>
                                                     <Text>
                                                         {i + 1}: {regradeOptions[option]}
                                                     </Text>
