@@ -158,8 +158,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const noHotspotsAlert = 'Create one or more markers for Hotspot problems.'
     // new alert 
 
-    console.log("Equation", equation)
-
     Froalaeditor.DefineIcon('insertFormula', {
         NAME: 'formula',
         PATH:
@@ -1479,7 +1477,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: 'white',
                         opacity: modalAnimation,
                         height: '100%',
-                        maxWidth: 900,
+                        maxWidth: 1024,
                         paddingTop: 10,
                         paddingHorizontal: dimensions.window.width < 1024 ? 15 : 0
                     }}
@@ -1682,7 +1680,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     display: 'flex',
                                     flexDirection: 'column',
                                     marginHorizontal: 10,
-                                    maxWidth: 900,
+                                    maxWidth: 1024,
                                     alignSelf: 'center'
                                 }}
                             >

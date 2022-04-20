@@ -336,5 +336,18 @@ div#editable {
 }
 
 .mbsc-ios.mbsc-popup-body {
-    background: #f2f2f2 !important;
+    background: #f8f8f8 !important;
+}
+
+.mbsc-ios.mbsc-calendar-button.mbsc-button {
+    color: '#006AFF' !important;
+}
+
+.mbsc-ios.mbsc-eventcalendar .mbsc-calendar-header,
+.mbsc-ios.mbsc-eventcalendar .mbsc-calendar-week-days {
+    background: #fff !important;
+}
+
+.mbsc-ios.mbsc-schedule-wrapper {
+    background: #fff !important;
 }

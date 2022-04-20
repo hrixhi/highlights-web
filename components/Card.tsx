@@ -95,7 +95,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                     <View
                         style={{
-                            backgroundColor: '#fff',
+                            backgroundColor: '#f8f8f8',
                             width: '100%',
                             flexDirection: 'row',
                             flex: 1,
@@ -136,20 +136,22 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
     StyleSheet.create({
         swiper: {
             height: '100%',
-            backgroundColor: '#fff',
+            backgroundColor: '#f8f8f8',
+            // borderWidth: 1,
+            // borderColor: '#e8e8e8',
             borderRadius: 1,
             maxWidth: 145,
             width: 145,
-            borderColor: col,
+            borderLeftColor: col,
             borderLeftWidth: 3,
             flexDirection: 'row',
-            shadowOffset: {
-                width: 2,
-                height: 2
-            },
-            overflow: 'hidden',
-            shadowOpacity: 0.07,
-            shadowRadius: 7,
+            // shadowOffset: {
+            //     width: 2,
+            //     height: 2
+            // },
+            // overflow: 'hidden',
+            // shadowOpacity: 0.07,
+            // shadowRadius: 7,
             zIndex: 500000
         },
         card: {
@@ -158,7 +160,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             width: '100%',
             padding: 7,
             paddingHorizontal: 10,
-            backgroundColor: '#fff'
+            backgroundColor: '#f8f8f8'
         },
         flipCard: {
             height: '100%',
@@ -174,7 +176,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
         },
         text: {
             height: '100%',
-            backgroundColor: '#fff'
+            backgroundColor: '#f8f8f8'
         },
         flipText: {
             height: '100%',
@@ -185,7 +187,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             fontSize: 10,
             color: '#fff',
             height: '30%',
-            backgroundColor: '#fff',
+            backgroundColor: '#f8f8f8',
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center'
@@ -218,7 +220,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             lineHeight: 20,
             flex: 1,
             marginTop: 5,
-            color: '#000000'
+            color: '#000000',
+            backgroundColor: '#f8f8f8'
         },
         titleFlip: {
             color: colorScheme === 'light' ? '#fff' : '#000000',

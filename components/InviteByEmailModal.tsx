@@ -80,7 +80,7 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     marginVertical: 20,
                     minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                     maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                    backgroundColor: '#f2f2f2'
+                    backgroundColor: '#f8f8f8'
                 }}>
                 <Text
                     style={{

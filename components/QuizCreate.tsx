@@ -1146,7 +1146,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
-            maxWidth: 900,
+            maxWidth: 1024,
             borderTopRightRadius: 0,
             marginTop: 35,
             paddingTop: 25,
@@ -1214,7 +1214,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <View style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                                         // width: '100%',
-                                        maxWidth: 900,
+                                        maxWidth: 1024,
                                         marginTop: Dimensions.get('window').width < 768 ? 0 : 0,
                                         marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
                                         marginLeft: editQuestionNumber !== (index + 1) ? 'auto' : 'none',
@@ -1659,7 +1659,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             if (updateInlineChoices.length < Array.from(spans).length) {
                                                                 updateInlineChoices.push([{
                                                                     option: '',
-                                                                    isCorrect: true
+                                                                    isCorrect: false
                                                                 }, {
                                                                     option: '',
                                                                     isCorrect: false
@@ -2750,7 +2750,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         marginRight: 20,
                                                         marginBottom: 20,
                                                         borderRadius: 10,
-                                                        // backgroundColor: '#f2f2f2',
+                                                        // backgroundColor: '#f8f8f8',
                                                         borderWidth: 1,
                                                         borderColor: '#ccc',
                                                         shadowOffset: {

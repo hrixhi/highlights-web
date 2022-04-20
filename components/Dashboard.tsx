@@ -9,7 +9,7 @@ import {
     ScrollView,
     Switch,
     Platform,
-    TextInput as DefaultInput
+    TextInput as DefaultInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,7 +25,7 @@ import {
     markAttendance,
     meetingRequest,
     startInstantMeeting,
-    getOngoingMeetings
+    getOngoingMeetings,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -57,6 +57,7 @@ import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
     const [userId, setUserId] = useState('');
+    const [avatar, setAvatar] = useState('');
     const [userCreatedOrg, setUserCreatedOrg] = useState(false);
     const scrollViewRef: any = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -65,7 +66,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         Channels: [],
         Classroom: [],
         Messages: [],
-        Threads: []
+        Threads: [],
     });
     const [resultCount, setResultCount] = useState(0);
     const [loadingSearchResults, setLoadingSearchResults] = useState(false);
@@ -92,16 +93,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const sortbyOptions = [
         {
             value: 'Date ↑',
-            text: 'Date ↑'
+            text: 'Date ↑',
         },
         {
             value: 'Date ↓',
-            text: 'Date ↓'
+            text: 'Date ↓',
         },
         {
             value: 'Priority',
-            text: 'Priority'
-        }
+            text: 'Priority',
+        },
     ];
     const [showInstantMeeting, setShowInstantMeeting] = useState(false);
     const [instantMeetingChannelId, setInstantMeetingChannelId] = useState<any>('');
@@ -114,8 +115,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [ongoingMeetings, setOngoingMeetings] = useState<any[]>([]);
     const [userZoomInfo, setUserZoomInfo] = useState<any>('');
     const [meetingProvider, setMeetingProvider] = useState('');
-    const [accountTabs] = useState(['profile', 'courses'])
-    const [activeAccountTab, setActiveAccountTab] = useState('profile');
+    const [selectedWorkspace, setSelectedWorkspace] = useState<any>();
+    const [showNewDiscussionPost, setShowNewDiscussionPost] = useState(false);
 
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -123,6 +124,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const somethingWrongAlert = PreferredLanguageText('somethingWentWrong');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const doesNotExistAlert = PreferredLanguageText('doesNotExists');
+
+    /**
+     * @description Save Sort by option in settings
+     */
+    useEffect(() => {
+        (async () => {
+            const sortByWorkspace = await AsyncStorage.getItem('sortByWorkspace');
+
+            if (sortByWorkspace) {
+                setSortBy(sortByWorkspace);
+            }
+        })();
+    }, []);
+
+    const updateSortByAsync = useCallback(async (sortByValue: string) => {
+        await AsyncStorage.setItem('sortByWorkspace', sortByValue);
+    }, []);
 
     // const openThreadFromSearch = useCallback(
     //     (channelId: String) => {
@@ -172,6 +190,50 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     //     [scrollViewRef.current, channelKeyList, channelHeightList, indexMap]
     // );
 
+    useEffect(() => {
+        props.setSelectedWorkspace(selectedWorkspace);
+    }, [selectedWorkspace]);
+
+    const getWorkspaceNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return props.activeWorkspaceTab === op ? 'library' : 'library-outline';
+            case 'Discuss':
+                return props.activeWorkspaceTab === op ? 'chatbubbles' : 'chatbubbles-outline';
+            case 'Meet':
+                return props.activeWorkspaceTab === op ? 'videocam' : 'videocam-outline';
+            case 'Scores':
+                return props.activeWorkspaceTab === op ? 'bar-chart' : 'bar-chart-outline';
+            default:
+                return props.activeWorkspaceTab === op ? 'build' : 'build-outline';
+        }
+    };
+
+    const getWorkspaceNavbarIconColor = (op: string) => {
+        if (op === props.activeWorkspaceTab) {
+            return selectedWorkspace.split('-SPLIT-')[3];
+        }
+        return '#797979';
+    };
+
+    const getAccountNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'profile':
+                return 'person-outline';
+            case 'courses':
+                return 'school-outline';
+            default:
+                return '';
+        }
+    };
+
+    const getAccountNavbarIconColor = (op: string) => {
+        if (op === props.activeAccountTab) {
+            return '#000';
+        }
+        return '#797979';
+    };
+
     // HOOKS
 
     /**
@@ -188,6 +250,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         })();
     }, []);
+
+    /**
+     * @description Update selected Workspace in Home
+     */
+    //  useEffect(() => {
+    //     props.setSelectedWorkspace(selectedWorkspace);
+    //     // setCategoryPositionList([])
+    // }, [selectedWorkspace]);
 
     /**
      * @description Open discussion from Activity using loadDiscussionForChannelId => It will open that Channel in ScrollView
@@ -241,7 +311,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             scrollViewRef.current.scrollTo({
                 x: 0,
                 y: channelHeightList[matchIndex],
-                animated: true
+                animated: true,
             });
 
             setOpenChannelId('');
@@ -296,7 +366,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             scrollViewRef.current.scrollTo({
                 x: 0,
                 y: channelHeightList[matchIndex],
-                animated: true
+                animated: true,
             });
 
             setLoadDiscussionForChannelId('');
@@ -313,8 +383,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const user = JSON.parse(u);
                 setUserId(user._id);
 
+                if (user.avatar) {
+                    setAvatar(user.avatar);
+                } else {
+                    setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
+                }
+
                 if (user.userCreatedOrg) {
-                    setUserCreatedOrg(user.userCreatedOrg)
+                    setUserCreatedOrg(user.userCreatedOrg);
                 }
 
                 if (user.zoomInfo) {
@@ -339,9 +415,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             dateFilteredCues = props.cues;
         }
 
-       
-
-
         props.subscriptions.map((sub: any) => {
             // const tempCategories: any = {}
             const tempCues: any[] = [];
@@ -357,13 +430,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             // Sort alphabetically
             tempCues.sort((a: any, b: any) => {
-                return a.title > b.title ? -1 : 1
-            })
-                
+                return a.title > b.title ? -1 : 1;
+            });
+
             if (sortBy === 'Priority') {
                 // tempCues.reverse();
                 tempCues.sort((a: any, b: any) => {
-                    return a.colorCode < b.colorCode ? 1 : -1 
+                    return a.colorCode < b.colorCode ? 1 : -1;
                 });
             } else if (sortBy === 'Date ↑') {
                 tempCues.sort((a: any, b: any) => {
@@ -418,13 +491,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         // Sort alphabetically
         mycues.sort((a: any, b: any) => {
-            return a.title > b.title ? -1 : 1
-        })
+            return a.title > b.title ? -1 : 1;
+        });
 
         if (sortBy === 'Priority') {
             // mycues.reverse();
             mycues.sort((a: any, b: any) => {
-                return a.colorCode < b.colorCode ? 1 : -1 
+                return a.colorCode < b.colorCode ? 1 : -1;
             });
         } else if (sortBy === 'Date ↑') {
             mycues.sort((a: any, b: any) => {
@@ -450,7 +523,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     return 0;
                 }
             });
-        } 
+        }
 
         temp['My Notes'] = mycues;
         if (!cat['']) {
@@ -479,10 +552,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 '-SPLIT-' +
                 sub.colorCode;
             tempCollapse[key] = false;
-
         });
-
-    }, [props.subscriptions])
+    }, [props.subscriptions]);
 
     /**
      * @description Calls method to fetch any ongoing meetings
@@ -516,7 +587,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     `https://api.learnwithcues.com/search`,
                     {
                         term: searchTerm,
-                        userId
+                        userId,
                     },
                     { cancelToken: cancelTokenRef.current.token }
                 )
@@ -532,7 +603,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         Classroom: [...res.data.personalCues, ...res.data.channelCues],
                         Channels: res.data.channels,
                         Threads: res.data.threads,
-                        Messages: res.data.messages
+                        Messages: res.data.messages,
                     };
 
                     setResultCount(totalCount);
@@ -566,10 +637,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     description: instantMeetingDescription,
                     start: startDate.toUTCString(),
                     end: instantMeetingEnd.toUTCString(),
-                    notifyUsers: instantMeetingAlertUsers
-                }
+                    notifyUsers: instantMeetingAlertUsers,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data && res.data.channel.startInstantMeeting !== 'error') {
                     if (meetingProvider !== '' && res.data.channel.startInstantMeeting === 'MEETING_LINK_NOT_SET') {
                         Alert(
@@ -594,7 +665,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Alert('Something went wrong. Try again.');
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 Alert('Something went wrong.');
             });
     }, [
@@ -605,7 +676,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         instantMeetingChannelId,
         instantMeetingCreatedBy,
         instantMeetingAlertUsers,
-        meetingProvider
+        meetingProvider,
     ]);
 
     /**
@@ -627,15 +698,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     query: getOngoingMeetings,
                     variables: {
                         userId,
-                        channelId
-                    }
+                        channelId,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data && res.data.channel.ongoingMeetings) {
                         setOngoingMeetings(res.data.channel.ongoingMeetings);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert('Something went wrong.');
                 });
         }
@@ -657,33 +728,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
                 setShowInstantMeeting(true);
             } else {
-
                 // ZOOM OATH
-                Alert('You must connect your account with Zoom to start a meeting.', 'Would you like to proceed to setup?', [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                        onPress: () => {
-                            return;
-                        }
-                    },
-                    {
-                        text: 'Yes',
-                        onPress: () => {
-                            
-                            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                                zoomRedirectUri
-                            )}&state=${userId}`;
+                Alert(
+                    'You must connect your account with Zoom to start a meeting.',
+                    'Would you like to proceed to setup?',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                            onPress: () => {
+                                return;
+                            },
+                        },
+                        {
+                            text: 'Yes',
+                            onPress: () => {
+                                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                                    zoomRedirectUri
+                                )}&state=${userId}`;
 
-                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                                Linking.openURL(url);
-                            } else {
-                                window.open(url, '_blank');
-                            }
-                        }
-                    },
-                ]);
-
+                                if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                    Linking.openURL(url);
+                                } else {
+                                    window.open(url, '_blank');
+                                }
+                            },
+                        },
+                    ]
+                );
             }
         } else {
             return;
@@ -707,24 +779,24 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         variables: {
                             userId,
                             channelId: instantMeetingChannelId,
-                            isOwner: user._id.toString().trim() === instantMeetingCreatedBy
-                        }
+                            isOwner: user._id.toString().trim() === instantMeetingCreatedBy,
+                        },
                     })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data && res.data.channel.meetingRequest !== 'error') {
                             server.mutate({
                                 mutation: markAttendance,
                                 variables: {
                                     userId: userId,
-                                    channelId: props.channelId
-                                }
+                                    channelId: props.channelId,
+                                },
                             });
                             window.open(res.data.channel.meetingRequest, '_blank');
                         } else {
                             Alert('Classroom not in session. Waiting for instructor.');
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         Alert('Something went wrong.');
                     });
             }
@@ -734,16 +806,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     /**
      * @description Fetches status of channel and depending on that handles subscription to channel
      */
-    const handleSub = useCallback(async channelId => {
+    const handleSub = useCallback(async (channelId) => {
         const server = fetchAPI('');
         server
             .query({
                 query: checkChannelStatus,
                 variables: {
-                    channelId
-                }
+                    channelId,
+                },
             })
-            .then(async res => {
+            .then(async (res) => {
                 if (res.data.channel && res.data.channel.getChannelStatus) {
                     const channelStatus = res.data.channel.getChannelStatus;
                     switch (channelStatus) {
@@ -751,12 +823,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             handleSubscribe(channelId, '');
                             break;
                         case 'password-required':
-                            let pass: any = await prompt('Enter Password')
-                            if (!pass || pass === "") {
-                                Alert('Enter a valid password.')
+                            let pass: any = await prompt('Enter Password');
+                            if (!pass || pass === '') {
+                                Alert('Enter a valid password.');
                                 return;
                             }
-                            handleSubscribe(channelId, pass)
+                            handleSubscribe(channelId, pass);
                             break;
                         case 'non-existant':
                             Alert(doesNotExistAlert);
@@ -767,7 +839,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
                 Alert(somethingWrongAlert, checkConnectionAlert);
             });
@@ -788,10 +860,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     variables: {
                         userId: user._id,
                         channelId,
-                        password: pass
-                    }
+                        password: pass,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.subscription && res.data.subscription.subscribe) {
                         const subscriptionStatus = res.data.subscription.subscribe;
                         switch (subscriptionStatus) {
@@ -815,7 +887,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert(somethingWrongAlert, checkConnectionAlert);
                 });
         },
@@ -833,9 +905,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: 'row',
                     marginBottom: 30,
                     paddingTop: 10,
-                    backgroundColor: '#f2f2f2',
+                    backgroundColor: '#fff',
                     flex: 1,
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                     //paddingVertical: 20
                 }}
             >
@@ -843,16 +915,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        maxWidth: 900,
+                        maxWidth: 1024,
                         flex: 1,
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#fff',
                     }}
                 >
                     <TouchableOpacity
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#f2f2f2'
+                            backgroundColor: '#fff',
+                            marginRight: 5,
                         }}
                         onPress={() => {
                             const temp = JSON.parse(JSON.stringify(indexMap));
@@ -860,18 +933,45 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp);
                         }}
                     >
-                        <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name="library-outline" size={18} style={{ marginBottom: 5 }} />
+                        <Text
+                            style={{
+                                fontSize: 11,
+                                color: activeTab === 'Content' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                height: 20,
+                                lineHeight: 20,
+                                paddingHorizontal: 8,
+                                fontFamily: 'inter',
+                                textAlign: 'center',
+                                marginBottom: 1,
+                            }}
+                        >
+                            <Ionicons
+                                name={activeTab === 'Content' ? 'library' : 'library-outline'}
+                                size={18}
+                                style={{ marginBottom: 5 }}
+                            />
                         </Text>
-                        <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                            {props.version === 'read' ? 'Read' : 'Library'}
+                        <Text
+                            style={{
+                                fontSize: 11,
+                                color: activeTab === 'Content' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                height: 20,
+                                lineHeight: 20,
+                                paddingHorizontal: 8,
+                                fontFamily: 'inter',
+                                textAlign: 'center',
+                                marginBottom: 1,
+                            }}
+                        >
+                            Library
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#f2f2f2'
+                            backgroundColor: '#fff',
+                            marginRight: 5,
                         }}
                         onPress={() => {
                             const temp = JSON.parse(JSON.stringify(indexMap));
@@ -879,31 +979,45 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp);
                         }}
                     >
-                        <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name="chatbubbles-outline" size={18} />
+                        <Text
+                            style={{
+                                fontSize: 11,
+                                color: activeTab === 'Discuss' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                height: 20,
+                                lineHeight: 20,
+                                paddingHorizontal: 8,
+                                fontFamily: 'inter',
+                                textAlign: 'center',
+                                marginBottom: 1,
+                            }}
+                        >
+                            <Ionicons
+                                name={activeTab === 'Discuss' ? 'chatbubbles' : 'chatbubbles-outline'}
+                                size={18}
+                            />
                         </Text>
-                        <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>Discussion</Text>
+                        <Text
+                            style={{
+                                fontSize: 11,
+                                color: activeTab === 'Discuss' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                height: 20,
+                                lineHeight: 20,
+                                paddingHorizontal: 8,
+                                fontFamily: 'inter',
+                                textAlign: 'center',
+                                marginBottom: 1,
+                            }}
+                        >
+                            Discussion
+                        </Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        backgroundColor: '#f2f2f2'
-                    }}
-                    onPress={() => handleEnterClassroom()}>
-                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                        <Ionicons name='videocam-outline' size={18} />
-                    </Text>
-                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                        Meet
-                    </Text>
-                </TouchableOpacity> */}
                     {props.version !== 'read' ? (
                         <TouchableOpacity
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#fff',
+                                marginRight: 5,
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -911,10 +1025,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setIndexMap(temp);
                             }}
                         >
-                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="videocam-outline" size={18} />
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Meet' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                <Ionicons name={activeTab === 'Meet' ? 'videocam' : 'videocam-outline'} size={18} />
                             </Text>
-                            <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>Meetings</Text>
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Meet' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                Meetings
+                            </Text>
                         </TouchableOpacity>
                     ) : null}
                     {props.version !== 'read' ? (
@@ -922,7 +1060,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#fff',
+                                marginRight: 5,
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -930,10 +1069,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setIndexMap(temp);
                             }}
                         >
-                            <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="bar-chart-outline" size={18} />
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Scores' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                <Ionicons name={activeTab === 'Scores' ? 'bar-chart' : 'bar-chart-outline'} size={18} />
                             </Text>
-                            <Text style={activeTab === 'Scores' ? styles.allGrayFill1 : styles.all1}>Scores</Text>
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Scores' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                Scores
+                            </Text>
                         </TouchableOpacity>
                     ) : null}
                     {key.split('-SPLIT-')[2] === userId ? (
@@ -941,7 +1104,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#fff',
+                                marginRight: 5,
                             }}
                             onPress={() => {
                                 const temp = JSON.parse(JSON.stringify(indexMap));
@@ -949,11 +1113,33 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setIndexMap(temp);
                             }}
                         >
-                            <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="build-outline" size={18} />
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Settings' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                <Ionicons name={activeTab === 'Settings' ? 'build' : 'build-outline'} size={18} />
                             </Text>
-                            <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                                {props.version === 'read' ? 'Edit' : 'Settings'}
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: activeTab === 'Settings' ? key.split('-SPLIT-')[3] : '#1F1F1F',
+                                    height: 20,
+                                    lineHeight: 20,
+                                    paddingHorizontal: 8,
+                                    fontFamily: 'inter',
+                                    textAlign: 'center',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                Settings
                             </Text>
                         </TouchableOpacity>
                     ) : null}
@@ -963,32 +1149,68 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const renderAccountTabs = () => {
-        return <View style={{
-            width: '100%', flexDirection: 'row', justifyContent: 'center', paddingVertical: 15, backgroundColor: '#f8f8f8',
-        }}>
-            <View style={{  width: '100%', flexDirection: 'row', maxWidth: 900, alignSelf: 'center',  backgroundColor: '#f8f8f8'  }}>
-                {accountTabs.map((tab: string) => {
-                    return <TouchableOpacity style={{
-                        borderBottomColor: '#1f1f1f', borderBottomWidth: activeAccountTab === tab  ? 2 : 0, marginRight: 30, paddingVertical: 3,
-                        backgroundColor: '#f8f8f8'
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingVertical: 15,
+                    backgroundColor: '#f8f8f8',
+                    paddingHorizontal: width < 1024 ? 10 : 0,
+                    height: 54,
+                }}
+            >
+                <View
+                    style={{
+                        position: 'relative',
+                        width: '100%',
+                        maxWidth: 1024,
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'none',
                     }}
-                    onPress={() => {
-                        setActiveAccountTab(tab)
-                    }}
-                    >
-                        <Text style={{
-                            color: activeAccountTab === tab ? '#1f1f1f' : '#656565',
-                            fontSize: 20,
-                            fontFamily: 'Inter',
-                            textTransform: 'capitalize'
-                        }}>
-                            {tab}
-                        </Text>
-                    </TouchableOpacity>
-                })}
+                >
+                    {props.accountTabs.map((tab: string, ind: number) => {
+                        return (
+                            <TouchableOpacity
+                                key={ind.toString()}
+                                style={{
+                                    marginRight: 30,
+                                    paddingVertical: 3,
+                                    backgroundColor: 'none',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}
+                                onPress={() => {
+                                    props.setActiveAccountTab(tab);
+                                }}
+                            >
+                                <Ionicons
+                                    name={getAccountNavbarIconName(tab)}
+                                    style={{ color: getAccountNavbarIconColor(tab) }}
+                                    size={17}
+                                />
+                                <Text
+                                    style={{
+                                        color: getAccountNavbarIconColor(tab),
+                                        fontSize: 15,
+                                        fontFamily: 'Inter',
+                                        textTransform: 'capitalize',
+                                        paddingLeft: 7,
+                                    }}
+                                >
+                                    {tab}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
             </View>
-        </View> 
-    }
+        );
+    };
 
     /**
      * @description Renders filter for Agenda
@@ -996,13 +1218,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEventFilters = () => {
         const channelOptions = [
             { value: 'All', text: 'All' },
-            { value: 'My Events', text: 'My Events' }
+            { value: 'My Events', text: 'My Events' },
         ];
 
         props.subscriptions.map((sub: any) => {
             channelOptions.push({
                 value: sub.channelId,
-                text: sub.channelName
+                text: sub.channelName,
             });
         });
 
@@ -1010,13 +1232,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             { value: 'All', text: 'All' },
             { value: 'Meetings', text: 'Meetings' },
             { value: 'Submissions', text: 'Submissions' },
-            { value: 'Events', text: 'Events' }
+            { value: 'Events', text: 'Events' },
         ];
 
         return (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text style={{ fontSize: 12, fontFamily: 'Inter', color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>Workspace</Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            color: '#000000',
+                            paddingLeft: 5,
+                            paddingBottom: 10,
+                        }}
+                    >
+                        Workspace
+                    </Text>
                     <label style={{ width: 200, backgroundColor: 'white' }}>
                         <Select
                             touchUi={true}
@@ -1028,11 +1260,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             responsive={{
                                 small: {
-                                    display: 'bubble'
+                                    display: 'bubble',
                                 },
                                 medium: {
-                                    touchUi: false
-                                }
+                                    touchUi: false,
+                                },
                             }}
                             dropdown={false}
                             data={channelOptions}
@@ -1040,7 +1272,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </label>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text style={{ fontSize: 12, fontFamily: 'Inter', color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>Type</Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontFamily: 'Inter',
+                            color: '#000000',
+                            paddingLeft: 5,
+                            paddingBottom: 10,
+                        }}
+                    >
+                        Type
+                    </Text>
 
                     <label style={{ width: 200, backgroundColor: 'white' }}>
                         <Select
@@ -1053,11 +1295,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             responsive={{
                                 small: {
-                                    display: 'bubble'
+                                    display: 'bubble',
                                 },
                                 medium: {
-                                    touchUi: false
-                                }
+                                    touchUi: false,
+                                },
                             }}
                             dropdown={false}
                             data={typeOptions}
@@ -1083,15 +1325,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 width: '100%',
                 overflow: 'hidden',
                 justifyContent: 'center',
-                backgroundColor: '#f2f2f2'
+                backgroundColor: '#f8f8f8',
             }}
         >
             <View
                 style={{
                     width: '100%',
-                    maxWidth: 900,
+                    maxWidth: 1024,
                     paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
-                    backgroundColor: '#f2f2f2'
+                    backgroundColor: '#f8f8f8',
                 }}
             >
                 {!loadingSearchResults && resultCount !== 0 ? (
@@ -1099,8 +1341,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            backgroundColor: '#f2f2f2',
-                            alignItems: 'center'
+                            backgroundColor: '#f8f8f8',
+                            alignItems: 'center',
                         }}
                     >
                         <Text
@@ -1111,17 +1353,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // flex: 1,
                                 lineHeight: 23,
                                 color: '#006AFF',
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             {resultCount} Results
                         </Text>
                         <TouchableOpacity
                             style={{
-                                backgroundColor: '#f2f2f2',
+                                backgroundColor: '#f8f8f8',
                                 overflow: 'hidden',
                                 height: 30,
-                                alignSelf: 'center'
+                                alignSelf: 'center',
                             }}
                             onPress={() => {
                                 setSearchTerm('');
@@ -1136,7 +1378,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     horizontal={true}
                     nestedScrollEnabled={true}
                     contentContainerStyle={{
-                        width: '100%'
+                        width: '100%',
+                        backgroundColor: '#fff',
                     }}
                 >
                     {!loadingSearchResults &&
@@ -1153,7 +1396,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 paddingVertical: 50,
                                 fontFamily: 'inter',
                                 flex: 1,
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             No search results found.
@@ -1167,20 +1410,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 justifyContent: 'center',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} />
                         </View>
                     ) : null}
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2' }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
                         {searchOptions.map((option: any, ind: number) => {
                             if (results[option].length === 0 || loadingSearchResults) {
                                 return null;
                             }
 
                             return (
-                                <View key={ind.toString()} style={{ marginRight: 20, backgroundColor: '#f2f2f2' }}>
+                                <View key={ind.toString()} style={{ marginRight: 20, backgroundColor: '#f8f8f8' }}>
                                     <Text
                                         style={{
                                             flexDirection: 'row',
@@ -1189,12 +1432,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             fontSize: 14,
                                             lineHeight: 25,
                                             fontFamily: 'inter',
-                                            paddingBottom: 10
+                                            paddingBottom: 10,
                                         }}
                                     >
                                         {option === 'Classroom' ? 'Content' : option}
                                     </Text>
-                                    <ScrollView>
+                                    <ScrollView
+                                        contentContainerStyle={{
+                                            paddingRight: 10,
+                                        }}
+                                    >
                                         {results[option].map((obj: any, index: number) => {
                                             let t = '';
                                             let s = '';
@@ -1252,19 +1499,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     colorCode = filterChannel[0].colorCode;
                                                 }
                                             } else if (option === 'Messages') {
-
                                                 const users = obj.groupId.users;
 
-                                                const sender = users.filter((user: any) => user._id === obj.sentBy)[0]
+                                                const sender = users.filter((user: any) => user._id === obj.sentBy)[0];
 
                                                 if (obj.groupId && obj.groupId.name) {
-                                                    messageSenderName = obj.groupId.name + ' > ' + sender.fullName
-                                                    messageSenderAvatar = obj.groupId.image ? obj.groupId.image : ''
+                                                    messageSenderName = obj.groupId.name + ' > ' + sender.fullName;
+                                                    messageSenderAvatar = obj.groupId.image ? obj.groupId.image : '';
                                                 } else if (sender) {
-                                                    messageSenderName = sender.fullName
-                                                    messageSenderAvatar = sender.avatar ? sender.avatar : ''
+                                                    messageSenderName = sender.fullName;
+                                                    messageSenderAvatar = sender.avatar ? sender.avatar : '';
                                                 }
-                                                
+
                                                 if (
                                                     obj.message[0] === '{' &&
                                                     obj.message[obj.message.length - 1] === '}'
@@ -1286,9 +1532,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         marginBottom: 15,
                                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                         // maxWidth: 150,
-                                                        backgroundColor: '#f2f2f2',
+                                                        backgroundColor: '#f8f8f8',
                                                         width: '100%',
-                                                        maxWidth: 160
+                                                        maxWidth: 160,
                                                     }}
                                                     key={index}
                                                 >
@@ -1334,7 +1580,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     'openChat',
                                                                     JSON.stringify({
                                                                         _id: obj.groupId._id,
-                                                                        users: obj.users
+                                                                        users: obj.users,
                                                                     })
                                                                 );
 
@@ -1374,7 +1620,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderOngoingMeetings = (createdBy: string, colorCode: string) => {
         return (
-            <View style={{ width: '100%', maxWidth: 900, backgroundColor: '#f2f2f2', paddingBottom: 30 }}>
+            <View style={{ width: '100%', maxWidth: 1024, backgroundColor: '#fff', paddingBottom: 30 }}>
                 <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
                     In Progress
                 </Text>
@@ -1391,11 +1637,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         borderLeftWidth: 3,
                         shadowOffset: {
                             width: 2,
-                            height: 2
+                            height: 2,
                         },
                         shadowOpacity: 0.1,
                         shadowRadius: 10,
-                        zIndex: 5000000
+                        zIndex: 5000000,
                     }}
                 >
                     <ScrollView
@@ -1407,11 +1653,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             // borderRightWidth: 0,
                             // borderLeftWidth: 0,
                             // borderRightWidth: 1,
-                            paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
+                            paddingHorizontal: Dimensions.get('window').width < 768 ? 5 : 10,
                             borderColor: '#f2f2f2',
                             borderRadius: 1,
                             width: '100%',
-                            maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500
+                            maxHeight: Dimensions.get('window').width < 768 ? 400 : 500,
                         }}
                     >
                         {ongoingMeetings.map((meeting: any, ind: number) => {
@@ -1427,7 +1673,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
                                         // minWidth: 600, // flex: 1,
                                         width: '100%',
-                                        alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center'
+                                        alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center',
                                     }}
                                     key={ind.toString()}
                                 >
@@ -1437,7 +1683,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 fontSize: 13,
                                                 padding: 5,
                                                 fontFamily: 'inter',
-                                                maxWidth: 300
+                                                maxWidth: 300,
                                             }}
                                         >
                                             {meeting.title}
@@ -1447,7 +1693,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{
                                                     fontSize: 12,
                                                     padding: 5,
-                                                    maxWidth: 300
+                                                    maxWidth: 300,
                                                 }}
                                             >
                                                 {meeting.description}
@@ -1460,7 +1706,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             marginLeft: Dimensions.get('window').width < 768 ? 0 : 'auto',
-                                            marginTop: Dimensions.get('window').width < 768 ? 5 : 0
+                                            marginTop: Dimensions.get('window').width < 768 ? 5 : 0,
                                         }}
                                     >
                                         <View style={{ marginRight: 20 }}>
@@ -1468,7 +1714,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{
                                                     fontSize: 12,
                                                     padding: 5,
-                                                    lineHeight: 13
+                                                    lineHeight: 13,
                                                 }}
                                             >
                                                 {startTime} to {endTime}
@@ -1478,7 +1724,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     if (meetingProvider !== '' && meeting.joinUrl) {
-                                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                        if (
+                                                            Platform.OS === 'web' ||
+                                                            Platform.OS === 'macos' ||
+                                                            Platform.OS === 'windows'
+                                                        ) {
                                                             window.open(meeting.joinUrl, '_blank');
                                                         } else {
                                                             Linking.openURL(meeting.joinUrl);
@@ -1487,46 +1737,58 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         Alert('No meeting link found. Contact your instructor.');
                                                         return;
                                                     } else if (!userZoomInfo || userZoomInfo.accountId === '') {
-                                                        Alert(
-                                                            'Join Meeting?',
-                                                            'WARNING- To mark attendance as present, you must Connect to Zoom under Account.',
-                                                            [
-                                                                {
-                                                                    text: 'Cancel',
-                                                                    style: 'cancel',
-                                                                    onPress: () => {
-                                                                        return;
-                                                                    }
+                                                        Alert('Join Meeting?', '', [
+                                                            {
+                                                                text: 'Cancel',
+                                                                style: 'cancel',
+                                                                onPress: () => {
+                                                                    return;
                                                                 },
-                                                                {
-                                                                    text: 'Okay',
-                                                                    onPress: () => {
-                                                                        if (createdBy === userId) {
-                                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                                                                window.open(meeting.startUrl, '_blank');
-                                                                            } else {
-                                                                                Linking.openURL(meeting.startUrl);
-                                                                            }
+                                                            },
+                                                            {
+                                                                text: 'Okay',
+                                                                onPress: () => {
+                                                                    if (createdBy === userId) {
+                                                                        if (
+                                                                            Platform.OS === 'web' ||
+                                                                            Platform.OS === 'macos' ||
+                                                                            Platform.OS === 'windows'
+                                                                        ) {
+                                                                            window.open(meeting.startUrl, '_blank');
                                                                         } else {
-                                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                                                                window.open(meeting.joinUrl, '_blank');
-                                                                            } else {
-                                                                                Linking.openURL(meeting.joinUrl);
-                                                                            }
+                                                                            Linking.openURL(meeting.startUrl);
+                                                                        }
+                                                                    } else {
+                                                                        if (
+                                                                            Platform.OS === 'web' ||
+                                                                            Platform.OS === 'macos' ||
+                                                                            Platform.OS === 'windows'
+                                                                        ) {
+                                                                            window.open(meeting.joinUrl, '_blank');
+                                                                        } else {
+                                                                            Linking.openURL(meeting.joinUrl);
                                                                         }
                                                                     }
-                                                                }
-                                                            ]
-                                                        );
+                                                                },
+                                                            },
+                                                        ]);
                                                     } else {
                                                         if (createdBy === userId) {
-                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                            if (
+                                                                Platform.OS === 'web' ||
+                                                                Platform.OS === 'macos' ||
+                                                                Platform.OS === 'windows'
+                                                            ) {
                                                                 window.open(meeting.startUrl, '_blank');
                                                             } else {
                                                                 Linking.openURL(meeting.startUrl);
                                                             }
                                                         } else {
-                                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                            if (
+                                                                Platform.OS === 'web' ||
+                                                                Platform.OS === 'macos' ||
+                                                                Platform.OS === 'windows'
+                                                            ) {
                                                                 window.open(meeting.joinUrl, '_blank');
                                                             } else {
                                                                 Linking.openURL(meeting.joinUrl);
@@ -1541,7 +1803,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         fontSize: 12,
                                                         fontFamily: 'inter',
                                                         color: '#006AFF',
-                                                        marginRight: 20
+                                                        marginRight: 20,
                                                     }}
                                                 >
                                                     JOIN {createdBy === userId ? '' : 'MEETING'}
@@ -1561,7 +1823,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             fontSize: 12,
                                                             fontFamily: 'inter',
                                                             color: '#006AFF',
-                                                            marginRight: 20
+                                                            marginRight: 20,
                                                         }}
                                                     >
                                                         COPY INVITE
@@ -1586,13 +1848,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 buttons={[
                     {
                         text: 'START',
-                        handler: function(event) {
+                        handler: function (event) {
                             createInstantMeeting();
-                        }
+                        },
                     },
                     {
                         text: 'CANCEL',
-                        handler: function(event) {
+                        handler: function (event) {
                             setShowInstantMeeting(false);
                             setInstantMeetingChannelId('');
                             setInstantMeetingCreatedBy('');
@@ -1600,8 +1862,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setInstantMeetingDescription('');
                             setInstantMeetingStart('');
                             setInstantMeetingEnd('');
-                        }
-                    }
+                        },
+                    },
                 ]}
                 theme="ios"
                 themeVariant="light"
@@ -1612,19 +1874,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
                 responsive={{
                     small: {
-                        display: 'bottom'
+                        display: 'bottom',
                     },
                     medium: {
                         // Custom breakpoint
-                        display: 'center'
-                    }
+                        display: 'center',
+                    },
                 }}
             >
                 <View
                     style={{
                         flexDirection: 'column',
                         paddingHorizontal: Dimensions.get('window').width > 768 ? 25 : 0,
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8',
                     }}
                     className="mbsc-align-center mbsc-padding"
                 >
@@ -1632,7 +1894,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         showsVerticalScrollIndicator={true}
                         horizontal={false}
                         contentContainerStyle={{
-                            width: '100%'
+                            width: '100%',
                         }}
                     >
                         <View
@@ -1642,61 +1904,70 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginVertical: 20,
                                 minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                                 maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Text
                                 style={{
                                     fontSize: 16,
                                     fontFamily: 'Inter',
-                                    marginBottom: 20
+                                    marginBottom: 20,
                                 }}
                             >
                                 Start an Instant meeting
                             </Text>
 
-                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f2f2f2' }}>
+                            <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
                                         fontSize: 12,
                                         fontFamily: 'inter',
-                                        color: '#000000'
+                                        color: '#000000',
                                     }}
                                 >
                                     Topic
                                 </Text>
                                 <View style={{ marginTop: 10, marginBottom: 10 }}>
                                     <DefaultInput
-                                        style={{ padding: 10, fontSize: 14 }}
+                                        style={{
+                                            padding: 10,
+                                            fontSize: 14,
+                                            borderColor: '#f2f2f2',
+                                            borderBottomWidth: 1,
+                                        }}
                                         value={instantMeetingTitle}
                                         placeholder={''}
-                                        onChangeText={val => setInstantMeetingTitle(val)}
+                                        onChangeText={(val) => setInstantMeetingTitle(val)}
                                         placeholderTextColor={'#1F1F1F'}
                                         // required={true}
                                     />
                                 </View>
                             </View>
 
-                            <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f2f2f2' }}>
+                            <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
                                         fontSize: 12,
                                         fontFamily: 'inter',
-                                        color: '#000000'
+                                        color: '#000000',
                                     }}
                                 >
                                     Description
                                 </Text>
                                 <View style={{ marginTop: 10, marginBottom: 10 }}>
                                     <DefaultInput
-                                        style={{ padding: 10, fontSize: 14 }}
+                                        style={{
+                                            padding: 10,
+                                            fontSize: 14,
+                                            borderColor: '#f2f2f2',
+                                            borderBottomWidth: 1,
+                                        }}
                                         value={instantMeetingDescription}
                                         placeholder={''}
-                                        onChangeText={val => setInstantMeetingDescription(val)}
+                                        onChangeText={(val) => setInstantMeetingDescription(val)}
                                         placeholderTextColor={'#1F1F1F'}
                                         // required={true}
                                     />
-                                    
                                 </View>
                             </View>
                             {/* <View
@@ -1704,7 +1975,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 width: '100%',
                                 maxWidth: 400,
                                 // paddingVertical: 15,
-                                backgroundColor: '#f2f2f2'
+                                backgroundColor: '#f8f8f8'
                             }}>
                             <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
                             <View style={{ marginTop: 10, marginBottom: 10 }}>
@@ -1744,14 +2015,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     maxWidth: 400,
                                     // paddingVertical: 15,
-                                    backgroundColor: '#f2f2f2'
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
-                                <Text style={{
-                                    fontSize: 12,
-                                    fontFamily: 'inter',
-                                    color: '#000000'
-                                }}>{PreferredLanguageText('end')}</Text>
+                                <Text
+                                    style={{
+                                        fontSize: 12,
+                                        fontFamily: 'inter',
+                                        color: '#000000',
+                                    }}
+                                >
+                                    {PreferredLanguageText('end')}
+                                </Text>
                                 <View style={{ marginTop: 10, marginBottom: 10 }}>
                                     <Datepicker
                                         controls={['date', 'time']}
@@ -1762,7 +2037,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         // inputComponent="input"
                                         inputProps={{
                                             placeholder: 'Select end...',
-                                            backgroundColor: 'white'
+                                            backgroundColor: 'white',
                                         }}
                                         onChange={(event: any) => {
                                             const date = new Date(event.value);
@@ -1773,13 +2048,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             xsmall: {
                                                 controls: ['date', 'time'],
                                                 display: 'bottom',
-                                                touchUi: true
+                                                touchUi: true,
                                             },
                                             medium: {
                                                 controls: ['date', 'time'],
                                                 display: 'anchored',
-                                                touchUi: false
-                                            }
+                                                touchUi: false,
+                                            },
                                         }}
                                     />
                                 </View>
@@ -1789,14 +2064,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     paddingTop: 10,
                                     paddingBottom: 10,
-                                    backgroundColor: '#f2f2f2'
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <Text
                                     style={{
                                         fontSize: 12,
                                         fontFamily: 'inter',
-                                        color: '#000000'
+                                        color: '#000000',
                                     }}
                                 >
                                     Notify Users
@@ -1806,7 +2081,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={{
                                     height: 40,
                                     marginRight: 10,
-                                    backgroundColor: '#f2f2f2'
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <Switch
@@ -1817,7 +2092,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: '#f2f2f2',
-                                        true: '#006AFF'
+                                        true: '#006AFF',
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -1828,7 +2103,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     maxWidth: 400,
                                     // paddingVertical: 15,
 
-                                    backgroundColor: '#f2f2f2'
+                                    backgroundColor: '#f8f8f8'
                                 }}
                             >
                                 <Text
@@ -1848,24 +2123,24 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     width: '100%',
-                                    backgroundColor: '#f2f2f2',
+                                    backgroundColor: '#f8f8f8',
                                     borderRadius: 10,
                                 }}
                             >
-                                <Text style={{
-                                }}>
-                                    <Ionicons name="time-outline" size={23}  color="#f3722c" />
+                                <Text style={{}}>
+                                    <Ionicons name="time-outline" size={23} color="#f3722c" />
                                 </Text>
-                                <Text style={{
-                                    paddingLeft: 10,
-                                    fontSize: 12,
-                                    color: '#000000',
-                                    lineHeight: 20,
-                                    fontFamily: 'Overpass',
-                                }}>
+                                <Text
+                                    style={{
+                                        paddingLeft: 10,
+                                        fontSize: 12,
+                                        color: '#000000',
+                                        lineHeight: 20,
+                                        fontFamily: 'Overpass',
+                                    }}
+                                >
                                     Note: You can schedule future meetings under Agenda
                                 </Text>
-                                
                             </View>
                         </View>
                     </ScrollView>
@@ -1885,16 +2160,152 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         else return date.format('MM/DD/YYYY');
     }
 
+    const renderWorkspaceNavbar = () => {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingVertical: 15,
+                    backgroundColor: '#f8f8f8',
+                    height: 54,
+                }}
+            >
+                {/* Arrow back */}
+                <View
+                    style={{
+                        position: 'relative',
+                        width: '100%',
+                        maxWidth: 1024,
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'none',
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            position: 'absolute',
+                            left: 0,
+                            backgroundColor: 'none',
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => {
+                                setSelectedWorkspace('');
+                                props.setOpenChannelId('');
+                                props.setWorkspaceActiveTab('Content');
+                            }}
+                            style={{
+                                width: 30,
+                                backgroundColor: 'none',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginRight: 15,
+                            }}
+                        >
+                            <Ionicons size={28} name="arrow-back-outline" color="#1f1f1f" />
+                        </TouchableOpacity>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontFamily: 'inter',
+                                marginRight: 75,
+                            }}
+                        >
+                            {selectedWorkspace.split('-SPLIT-')[0]}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'none',
+                        }}
+                    >
+                        {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes' &&
+                            props.workspaceOptions.map((tab: string, ind: number) => {
+                                if (tab === 'Settings' && selectedWorkspace.split('-SPLIT-')[2] !== userId) return null;
+                                return (
+                                    <TouchableOpacity
+                                        key={ind.toString()}
+                                        style={{
+                                            marginRight: 30,
+                                            paddingVertical: 3,
+                                            backgroundColor: 'none',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                        }}
+                                        onPress={() => {
+                                            props.setWorkspaceActiveTab(tab);
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name={getWorkspaceNavbarIconName(tab)}
+                                            style={{ color: getWorkspaceNavbarIconColor(tab) }}
+                                            size={17}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: getWorkspaceNavbarIconColor(tab),
+                                                fontSize: 15,
+                                                fontFamily: 'Inter',
+                                                textTransform: 'capitalize',
+                                                paddingLeft: 7,
+                                            }}
+                                        >
+                                            {tab === 'Content' ? 'Coursework' : tab === 'Discuss' ? 'FAQ' : tab}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                    </View>
+                    <View
+                        style={{
+                            right: 0,
+                            position: 'absolute',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'none',
+                        }}
+                    >
+                        {selectedWorkspace && props.activeWorkspaceTab === 'Content' ? (
+                            <TouchableOpacity
+                                style={{ backgroundColor: 'none', marginLeft: 15 }}
+                                onPress={() => {
+                                    setShowFilterPopup(true);
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 11,
+                                        color: '#1f1f1f',
+                                        textAlign: 'right',
+                                    }}
+                                >
+                                    <Ionicons name="filter-outline" size={20} />
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
     /**
-     * @description Renders all the channels under workspace
+     * @description Overview nested
      */
-    const overview = (
+    const overviewNested = (
         <View
             key={collapseMap.toString()}
             style={{
                 flexDirection: 'row',
                 width: '100%',
-                bottom: 0
             }}
         >
             {/* Add sort by filter here */}
@@ -1904,652 +2315,1087 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 horizontal={false}
                 contentContainerStyle={{
                     width: '100%',
-                    maxHeight:
-                        width < 768 ? Dimensions.get('window').height - 115 : Dimensions.get('window').height - 52,
-                    backgroundColor: '#fff'
+                    height:
+                        width < 768
+                            ? Dimensions.get('window').height - 115
+                            : Dimensions.get('window').height - 52 - (selectedWorkspace ? 45 : 0),
+                    backgroundColor: '#fff',
                 }}
                 ref={scrollViewRef}
             >
                 {Object.keys(cueMap).map((key: any, ind: any) => {
                     return (
                         // Do not add a parent component above this
-                        <View
-                            key={ind}
-                            onLayout={event => {
-                                const layout = event.nativeEvent.layout;
-                                const temp1 = [...channelKeyList];
-                                const temp2 = [...channelHeightList];
-                                temp1[ind] = key.split('-SPLIT-')[1];
-                                temp2[ind] = layout.y;
-                                setChannelKeyList(temp1);
-                                setChannelHeightList(temp2);
-                            }}
-                        >
-                            <InsetShadow
-                                shadowColor={'#000'}
-                                shadowOffset={2}
-                                shadowOpacity={0}   // no shadow
-                                shadowRadius={collapseMap[key] ? 10 : 0}
-                                elevation={500000}
-                                containerStyle={{
-                                    height: 'auto'
-                                }}
-                            >
+                        <View key={ind}>
+                            {!selectedWorkspace ? (
                                 <View
                                     style={{
-                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
+                                        backgroundColor: '#fff',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
                                         borderColor: '#f2f2f2',
-                                        borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0
-                                        // paddingBottom: 10,
+                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                        borderTopWidth: ind === 0 ? 0 : 1,
+                                        paddingBottom: 0,
+                                        maxWidth: 1024,
+                                        alignSelf: 'center',
+                                        width: '100%',
                                     }}
                                 >
-                                    {ind !== 0 ? (
-                                        <View
+                                    <TouchableOpacity
+                                        style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            backgroundColor: '#fff',
+                                        }}
+                                        onPress={() => {
+                                            setSelectedWorkspace(key);
+                                            scrollViewRef.current?.scrollTo({
+                                                y: 0,
+                                                animated: false,
+                                            });
+                                        }}
+                                    >
+                                        <Text
                                             style={{
-                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                flexDirection: 'row',
-                                                borderColor: '#f2f2f2',
-                                                paddingTop: 10,
-                                                paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
-                                                borderTopWidth:
-                                                    ind === 0 ||
-                                                    collapseMap[key] ||
-                                                    collapseMap[Object.keys(cueMap)[ind - 1]]
-                                                        ? 0
-                                                        : 1,
-                                                paddingBottom: 0,
-                                                maxWidth: 900,
-                                                alignSelf: 'center',
-                                                width: '100%'
+                                                fontSize: 18,
+                                                paddingVertical: 20,
+                                                fontFamily: 'inter',
+                                                flex: 1,
+                                                backgroundColor: '#fff',
+                                                lineHeight: 20,
+                                                color: '#000000',
                                             }}
                                         >
-                                            <TouchableOpacity
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                }}
-                                                onPress={() => {
-                                                    const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
-
-                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => {
-                                                        if (item === key) return;
-                                                        tempCollapse[item] = false;
-                                                    });
-
-                                                    tempCollapse[key] = !collapseMap[key];
-                                                    setCollapseMap(tempCollapse);
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 18,
-                                                        paddingBottom: 20,
-                                                        paddingTop: 9,
-                                                        fontFamily: 'inter',
-                                                        flex: 1,
-                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                        lineHeight: 18,
-                                                        color: collapseMap[key] ? '#000000' : '#1a3026'
-                                                    }}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            width: 12,
-                                                            height: 12,
-                                                            borderRadius: 9,
-                                                            // marginTop: 2,
-                                                            marginRight: 5,
-                                                            backgroundColor: key.split('-SPLIT-')[3]
-                                                        }}
-                                                    />{' '}
-                                                    {key.split('-SPLIT-')[0]}
-                                                </Text>
-                                            </TouchableOpacity>
                                             <View
                                                 style={{
-                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                    paddingTop: 5,
-                                                    paddingLeft: 15
+                                                    width: 12,
+                                                    height: 12,
+                                                    borderRadius: 9,
+                                                    // marginTop: 2,
+                                                    marginRight: 5,
+                                                    backgroundColor: key.split('-SPLIT-')[3]
+                                                        ? key.split('-SPLIT-')[3]
+                                                        : '#000',
                                                 }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        justifyContent: 'center',
-                                                        display: 'flex',
-                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                    }}
-                                                >
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            const tempCollapse = JSON.parse(
-                                                                JSON.stringify(collapseMap)
-                                                            );
-
-                                                            Object.keys(tempCollapse).forEach(
-                                                                (item: any, index: any) => {
-                                                                    if (item === key) return;
-                                                                    tempCollapse[item] = false;
-                                                                }
-                                                            );
-
-                                                            tempCollapse[key] = !collapseMap[key];
-                                                            setCollapseMap(tempCollapse);
-                                                        }}
-                                                        style={{
-                                                            backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                lineHeight: 30,
-                                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                            }}
-                                                        >
-                                                            <Ionicons
-                                                                name={
-                                                                    collapseMap[key]
-                                                                        ? 'chevron-up-outline'
-                                                                        : 'chevron-down-outline'
-                                                                }
-                                                                size={18}
-                                                                color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
-                                                            />
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    ) : (
-                                        <View
-                                            style={{
-                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                flexDirection: 'row',
-                                                paddingBottom: 0,
-                                                paddingHorizontal: width < 768 && props.option === 'Classroom' ? 20 : 0,
-                                                maxWidth: 900,
-                                                alignSelf: 'center',
-                                                width: '100%'
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                }}
-                                                onPress={() => {
-                                                    const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
-
-                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => {
-                                                        if (item === key) return;
-                                                        tempCollapse[item] = false;
-                                                    });
-
-                                                    tempCollapse[key] = !collapseMap[key];
-                                                    setCollapseMap(tempCollapse);
-                                                }}
-                                            >
-                                                <Text
-                                                    ellipsizeMode="tail"
-                                                    style={{
-                                                        fontSize: 18,
-                                                        paddingBottom: 20,
-                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                        paddingTop: 19,
-                                                        fontFamily: 'inter',
-                                                        flex: 1,
-                                                        lineHeight: 18,
-                                                        color: collapseMap[key] ? '#000000' : '#1F1F1F'
-                                                    }}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            width: 12,
-                                                            height: 12,
-                                                            marginRight: 5,
-                                                            borderRadius: 9,
-                                                            backgroundColor: '#000000'
-                                                        }}
-                                                    />{' '}
-                                                    {key}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'space-evenly',
-                                                    backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                    paddingTop: 10
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        paddingLeft: 7,
-                                                        justifyContent: 'center',
-                                                        display: 'flex',
-                                                        backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                    }}
-                                                >
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            const tempCollapse = JSON.parse(
-                                                                JSON.stringify(collapseMap)
-                                                            );
-                                                            tempCollapse[key] = !collapseMap[key];
-
-                                                            Object.keys(tempCollapse).forEach(
-                                                                (item: any, index: any) => {
-                                                                    if (item === key) return;
-                                                                    tempCollapse[item] = false;
-                                                                }
-                                                            );
-
-                                                            setCollapseMap(tempCollapse);
-                                                        }}
-                                                        style={{
-                                                            backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff',
-                                                            paddingTop: 5,
-                                                            paddingLeft: 15
-                                                        }}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                lineHeight: 30,
-                                                                backgroundColor: collapseMap[key] ? '#f2f2f2' : '#fff'
-                                                            }}
-                                                        >
-                                                            <Ionicons
-                                                                name={
-                                                                    collapseMap[key]
-                                                                        ? 'chevron-up-outline'
-                                                                        : 'chevron-down-outline'
-                                                                }
-                                                                size={18}
-                                                                color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
-                                                            />
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )}
-                                    {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
+                                            />{' '}
+                                            {key.split('-SPLIT-')[0]}
+                                        </Text>
+                                    </TouchableOpacity>
                                     <View
                                         style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'center',
-                                            backgroundColor: '#f2f2f2',
-                                            borderColor: '#f2f2f2',
-                                            borderBottomWidth:
-                                                collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0
+                                            backgroundColor: '#fff',
+                                            paddingLeft: 15,
                                         }}
-                                        key={collapseMap.toString()}
                                     >
                                         <View
                                             style={{
-                                                width: '100%',
-                                                maxWidth: 900,
-                                                backgroundColor: '#f2f2f2',
-                                                paddingHorizontal: width < 768 ? 20 : 0
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                display: 'flex',
+                                                backgroundColor: '#fff',
                                             }}
                                         >
-                                            {collapseMap[key] ? (
-                                                <View
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setSelectedWorkspace(key);
+                                                }}
+                                                style={{
+                                                    backgroundColor: '#fff',
+                                                }}
+                                            >
+                                                <Text
                                                     style={{
-                                                        width: '100%',
-                                                        paddingBottom: 25,
-                                                        backgroundColor: '#f2f2f2'
+                                                        textAlign: 'center',
+                                                        lineHeight: 30,
+                                                        backgroundColor: '#fff',
                                                     }}
-                                                    key={
-                                                        editFolderChannelId.toString() +
-                                                        cueIds.toString() +
-                                                        cueMap.toString()
-                                                    }
                                                 >
-                                                    {indexMap[key] !== 0 ? (
-                                                        indexMap[key] === 1 ? (
-                                                            <Discussion
-                                                                channelId={key.split('-SPLIT-')[1]}
-                                                                filterChoice={key.split('-SPLIT-')[0]}
-                                                                channelCreatedBy={key.split('-SPLIT-')[2]}
-                                                                refreshUnreadDiscussionCount={() =>
-                                                                    props.refreshUnreadDiscussionCount()
-                                                                }
-                                                                channelColor={key.split('-SPLIT-')[3]}
-                                                            />
-                                                        ) : // Meet
-                                                        indexMap[key] === 2 ? (
-                                                            <View
-                                                                style={{
-                                                                    alignItems: 'center',
-                                                                    backgroundColor: '#f2f2f2'
-                                                                }}
-                                                            >
-                                                                {key.split('-SPLIT-')[2] === userId ? (
-                                                                    <View
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            marginBottom: 20,
-                                                                            backgroundColor: '#f2f2f2'
-                                                                        }}
-                                                                    >
-                                                                        <TouchableOpacity
-                                                                            onPress={() =>
-                                                                                handleStartMeeting(
-                                                                                    key.split('-SPLIT-')[1],
-                                                                                    key.split('-SPLIT-')[2]
-                                                                                )
-                                                                            }
-                                                                            style={{
-                                                                                backgroundColor: '#f2f2f2',
-                                                                                overflow: 'hidden',
-                                                                                height: 35,
-                                                                                marginTop: 20,
-                                                                                justifyContent: 'center',
-                                                                                flexDirection: 'row',
-                                                                                marginLeft: 'auto'
-                                                                            }}
-                                                                        >
-                                                                            <Text
-                                                                                style={{
-                                                                                    textAlign: 'center',
-                                                                                    lineHeight: 34,
-                                                                                    color: '#fff',
-                                                                                    borderRadius: 15,
-                                                                                    backgroundColor: '#006AFF',
-                                                                                    fontSize: 12,
-                                                                                    paddingHorizontal: 20,
-                                                                                    fontFamily: 'inter',
-                                                                                    height: 35,
-                                                                                    width: 175,
-                                                                                    textTransform: 'uppercase'
-                                                                                }}
-                                                                            >
-                                                                                Start Meeting
-                                                                            </Text>
-                                                                        </TouchableOpacity>
-                                                                    </View>
-                                                                ) : null}
-
-                                                                {ongoingMeetings.length > 0
-                                                                    ? renderOngoingMeetings(
-                                                                          key.split('-SPLIT-')[2],
-                                                                          key.split('-SPLIT-')[3]
-                                                                      )
-                                                                    : null}
-
-                                                                <Performance
-                                                                    channelName={key.split('-SPLIT-')[0]}
-                                                                    onPress={(name: any, id: any, createdBy: any) => {
-                                                                        props.setChannelFilterChoice('All');
-                                                                        props.handleFilterChange(name);
-                                                                        props.setChannelId(id);
-                                                                        props.setChannelCreatedBy(createdBy);
-                                                                        props.openGrades();
-                                                                        props.hideHome();
-                                                                    }}
-                                                                    filterStart={filterStart}
-                                                                    filterEnd={filterEnd}
-                                                                    channelId={key.split('-SPLIT-')[1]}
-                                                                    channelCreatedBy={key.split('-SPLIT-')[2]}
-                                                                    subscriptions={props.subscriptions}
-                                                                    openCueFromGrades={props.openCueFromCalendar}
-                                                                    colorCode={key.split('-SPLIT-')[3]}
-                                                                    activeTab={'meetings'}
-                                                                />
-                                                            </View>
-                                                        ) : // Scores
-                                                        indexMap[key] === 3 ? (
-                                                            <Performance
-                                                                channelName={key.split('-SPLIT-')[0]}
-                                                                onPress={(name: any, id: any, createdBy: any) => {
-                                                                    props.setChannelFilterChoice('All');
-                                                                    props.handleFilterChange(name);
-                                                                    props.setChannelId(id);
-                                                                    props.setChannelCreatedBy(createdBy);
-                                                                    props.openGrades();
-                                                                    props.hideHome();
-                                                                }}
-                                                                filterStart={filterStart}
-                                                                channelId={key.split('-SPLIT-')[1]}
-                                                                channelCreatedBy={key.split('-SPLIT-')[2]}
-                                                                filterEnd={filterEnd}
-                                                                subscriptions={props.subscriptions}
-                                                                openCueFromGrades={props.openCueFromCalendar}
-                                                                colorCode={key.split('-SPLIT-')[3]}
-                                                                activeTab={'scores'}
-                                                                isEditor={key.split('-SPLIT-')[2] === userId}
-                                                            />
-                                                        ) : (
-                                                            <View
-                                                                style={{
-                                                                    width: '100%',
-                                                                    maxWidth: 400,
-                                                                    alignSelf: 'center',
-                                                                    borderTopRightRadius: 10,
-                                                                    borderBottomRightRadius: 10
-                                                                }}
-                                                            >
-                                                                <ChannelSettings
-                                                                    channelId={key.split('-SPLIT-')[1]}
-                                                                    refreshSubscriptions={props.refreshSubscriptions}
-                                                                    closeModal={() => {
-                                                                        // setShowHome(false)
-                                                                        // closeModal()
-                                                                    }}
-                                                                    userId={userId}
-                                                                    channelColor={key.split('-SPLIT-')[3]}
-                                                                    userCreatedOrg={userCreatedOrg}
-                                                                />
-                                                            </View>
-                                                        )
-                                                    ) : cueMap[key].length === 0 ? (
-                                                        <Text
-                                                            style={{
-                                                                width: '100%',
-                                                                color: '#1F1F1F',
-                                                                fontSize: 16,
-                                                                paddingTop: 50,
-                                                                paddingBottom: 50,
-                                                                paddingHorizontal: 5,
-                                                                fontFamily: 'inter',
-                                                                flex: 1
-                                                            }}
-                                                        >
-                                                            {key.split('-SPLIT-')[0] !== 'My Notes' ? (key.split('-SPLIT-')[2] === userId ? PreferredLanguageText('noCuesCreatedInstructor') : PreferredLanguageText('noCuesCreated')) : PreferredLanguageText('noNotesCreated')}
-                                                        </Text>
-                                                    ) : (
-                                                        <ScrollView
-                                                            horizontal={true}
-                                                            contentContainerStyle={{
-                                                                maxWidth: '100%',
-                                                                backgroundColor: '#f2f2f2'
-                                                            }}
-                                                            showsHorizontalScrollIndicator={false}
-                                                            key={
-                                                                editFolderChannelId.toString() +
-                                                                cueIds.toString() +
-                                                                cueMap.toString()
-                                                            }
-                                                        >
-                                                            {categoryMap[key].map((category: any, i: any) => {
-                                                                // Check if even one category exists in cues
-
-                                                                const foundCue = cueMap[key].find(
-                                                                    (cue: any) =>
-                                                                        cue.customCategory.toString().trim() ===
-                                                                        category.toString().trim()
-                                                                );
-
-                                                                if (!foundCue) return null;
-
-                                                                return (
-                                                                    <View
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            maxWidth: 145,
-                                                                            backgroundColor: '#f2f2f2',
-                                                                            marginRight: 15
-                                                                        }}
-                                                                        key={i.toString()}
-                                                                    >
-                                                                        <View
-                                                                            style={{
-                                                                                backgroundColor: '#f2f2f2',
-                                                                                paddingLeft: 5
-                                                                            }}
-                                                                        >
-                                                                            <Text
-                                                                                style={{
-                                                                                    flex: 1,
-                                                                                    flexDirection: 'row',
-                                                                                    color: '#1F1F1F',
-                                                                                    // fontWeight: 'bold',
-                                                                                    fontSize: 12,
-                                                                                    lineHeight: 25,
-                                                                                    fontFamily: 'inter',
-                                                                                    backgroundColor: '#f2f2f2'
-                                                                                }}
-                                                                                ellipsizeMode="tail"
-                                                                            >
-                                                                                {category === '' ? ' ' : category}
-                                                                            </Text>
-                                                                        </View>
-                                                                        <View
-                                                                            style={{
-                                                                                // borderWidth: 1,
-                                                                                maxWidth: 145,
-                                                                                paddingLeft: 5,
-                                                                                backgroundColor: '#f2f2f2',
-                                                                                width: '100%'
-                                                                                // height: 190
-                                                                            }}
-                                                                            key={i.toString() + key.toString()}
-                                                                        >
-                                                                            {cueMap[key].map((cue: any, index: any) => {
-                                                                                if (
-                                                                                    cue.customCategory
-                                                                                        .toString()
-                                                                                        .trim() !==
-                                                                                    category.toString().trim()
-                                                                                ) {
-                                                                                    return null;
-                                                                                }
-                                                                                return (
-                                                                                    <View
-                                                                                        style={{
-                                                                                            marginBottom: 15,
-                                                                                            backgroundColor: '#f2f2f2',
-                                                                                            width: '100%',
-                                                                                            maxWidth: 145
-                                                                                        }}
-                                                                                        key={index}
-                                                                                    >
-                                                                                        <Card
-                                                                                            gray={true}
-                                                                                            cueIds={cueIds}
-                                                                                            onLongPress={() => {
-                                                                                                setCueIds([]);
-                                                                                                setEditFolderChannelId(
-                                                                                                    cue.channelId
-                                                                                                        ? cue.channelId
-                                                                                                        : 'My Notes'
-                                                                                                );
-                                                                                            }}
-                                                                                            add={() => {
-                                                                                                const temp = JSON.parse(
-                                                                                                    JSON.stringify(
-                                                                                                        cueIds
-                                                                                                    )
-                                                                                                );
-                                                                                                const found = temp.find(
-                                                                                                    (i: any) => {
-                                                                                                        return (
-                                                                                                            i ===
-                                                                                                            cue._id
-                                                                                                        );
-                                                                                                    }
-                                                                                                );
-                                                                                                if (!found) {
-                                                                                                    temp.push(cue._id);
-                                                                                                }
-                                                                                                setCueIds(temp);
-                                                                                            }}
-                                                                                            remove={() => {
-                                                                                                const temp = JSON.parse(
-                                                                                                    JSON.stringify(
-                                                                                                        cueIds
-                                                                                                    )
-                                                                                                );
-                                                                                                const upd = temp.filter(
-                                                                                                    (i: any) => {
-                                                                                                        return (
-                                                                                                            i !==
-                                                                                                            cue._id
-                                                                                                        );
-                                                                                                    }
-                                                                                                );
-                                                                                                setCueIds(upd);
-                                                                                            }}
-                                                                                            editFolderChannelId={
-                                                                                                editFolderChannelId
-                                                                                            }
-                                                                                            fadeAnimation={
-                                                                                                props.fadeAnimation
-                                                                                            }
-                                                                                            updateModal={() => {
-                                                                                                props.openUpdate(
-                                                                                                    cue.key,
-                                                                                                    cue.index,
-                                                                                                    0,
-                                                                                                    cue._id,
-                                                                                                    cue.createdBy
-                                                                                                        ? cue.createdBy
-                                                                                                        : '',
-                                                                                                    cue.channelId
-                                                                                                        ? cue.channelId
-                                                                                                        : ''
-                                                                                                );
-                                                                                            }}
-                                                                                            cue={cue}
-                                                                                            channelId={props.channelId}
-                                                                                            subscriptions={
-                                                                                                props.subscriptions
-                                                                                            }
-                                                                                        />
-                                                                                    </View>
-                                                                                );
-                                                                            })}
-                                                                        </View>
-                                                                    </View>
-                                                                );
-                                                            })}
-                                                        </ScrollView>
-                                                    )}
-                                                </View>
-                                            ) : null}
+                                                    <Ionicons
+                                                        name={'chevron-forward-outline'}
+                                                        size={18}
+                                                        color={'#006AFF'}
+                                                    />
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 </View>
-                            </InsetShadow>
+                            ) : null}
                         </View>
                     );
                 })}
+                {/* Since only one Selected workspace */}
+                {selectedWorkspace ? (
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            backgroundColor: '#fff',
+                            height: props.activeWorkspaceTab === 'Discuss' ? '100%' : 'auto',
+                        }}
+                        key={selectedWorkspace.toString()}
+                    >
+                        <View
+                            style={{
+                                width: '100%',
+                                maxWidth: 1024,
+                                backgroundColor: '#fff',
+                                paddingHorizontal: width < 1024 ? 20 : 0,
+                                height: props.activeWorkspaceTab === 'Discuss' ? '100%' : 'auto',
+                            }}
+                        >
+                            {props.activeWorkspaceTab !== 'Content' ? (
+                                props.activeWorkspaceTab === 'Discuss' ? (
+                                    <Discussion
+                                        channelId={selectedWorkspace.split('-SPLIT-')[1]}
+                                        filterChoice={selectedWorkspace.split('-SPLIT-')[0]}
+                                        channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
+                                        refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                                        channelColor={selectedWorkspace.split('-SPLIT-')[3]}
+                                        showNewDiscussionPost={showNewDiscussionPost}
+                                        setShowNewDiscussionPost={setShowNewDiscussionPost}
+                                    />
+                                ) : // Meet
+                                props.activeWorkspaceTab === 'Meet' ? (
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            backgroundColor: '#fff',
+                                        }}
+                                    >
+                                        {/* {selectedWorkspace.split('-SPLIT-')[2] === userId ? (
+                                            <View
+                                                style={{
+                                                    width: '100%',
+                                                    marginBottom: 20,
+                                                    backgroundColor: '#fff',
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        handleStartMeeting(
+                                                            selectedWorkspace.split('-SPLIT-')[1],
+                                                            selectedWorkspace.split('-SPLIT-')[2]
+                                                        )
+                                                    }
+                                                    style={{
+                                                        backgroundColor: '#fff',
+                                                        overflow: 'hidden',
+                                                        height: 35,
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row',
+                                                        marginLeft: 'auto',
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            lineHeight: 34,
+                                                            color: '#fff',
+                                                            borderRadius: 15,
+                                                            backgroundColor: '#006AFF',
+                                                            fontSize: 12,
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: 'inter',
+                                                            height: 35,
+                                                            width: 175,
+                                                            textTransform: 'uppercase',
+                                                        }}
+                                                    >
+                                                        Start Meeting
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        ) : null} */}
+
+                                        {ongoingMeetings.length > 0
+                                            ? renderOngoingMeetings(
+                                                  selectedWorkspace.split('-SPLIT-')[2],
+                                                  selectedWorkspace.split('-SPLIT-')[3]
+                                              )
+                                            : null}
+
+                                        <Performance
+                                            channelName={selectedWorkspace.split('-SPLIT-')[0]}
+                                            onPress={(name: any, id: any, createdBy: any) => {
+                                                props.setChannelFilterChoice('All');
+                                                props.handleFilterChange(name);
+                                                props.setChannelId(id);
+                                                props.setChannelCreatedBy(createdBy);
+                                                props.openGrades();
+                                                props.hideHome();
+                                            }}
+                                            filterStart={filterStart}
+                                            filterEnd={filterEnd}
+                                            channelId={selectedWorkspace.split('-SPLIT-')[1]}
+                                            channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
+                                            subscriptions={props.subscriptions}
+                                            openCueFromGrades={props.openCueFromCalendar}
+                                            colorCode={selectedWorkspace.split('-SPLIT-')[3]}
+                                            activeTab={'meetings'}
+                                            isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
+                                            userId={userId}
+                                        />
+                                    </View>
+                                ) : // Scores
+                                props.activeWorkspaceTab === 'Scores' ? (
+                                    <Performance
+                                        channelName={selectedWorkspace.split('-SPLIT-')[0]}
+                                        onPress={(name: any, id: any, createdBy: any) => {
+                                            props.setChannelFilterChoice('All');
+                                            props.handleFilterChange(name);
+                                            props.setChannelId(id);
+                                            props.setChannelCreatedBy(createdBy);
+                                            props.openGrades();
+                                            props.hideHome();
+                                        }}
+                                        filterStart={filterStart}
+                                        channelId={selectedWorkspace.split('-SPLIT-')[1]}
+                                        channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
+                                        filterEnd={filterEnd}
+                                        subscriptions={props.subscriptions}
+                                        openCueFromGrades={props.openCueFromCalendar}
+                                        colorCode={selectedWorkspace.split('-SPLIT-')[3]}
+                                        activeTab={'scores'}
+                                        isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
+                                        userId={userId}
+                                    />
+                                ) : (
+                                    <ChannelSettings
+                                        channelId={selectedWorkspace.split('-SPLIT-')[1]}
+                                        refreshSubscriptions={props.refreshSubscriptions}
+                                        userId={userId}
+                                        channelColor={selectedWorkspace.split('-SPLIT-')[3]}
+                                        userCreatedOrg={userCreatedOrg}
+                                    />
+                                )
+                            ) : cueMap[selectedWorkspace].length === 0 ? (
+                                <Text
+                                    style={{
+                                        width: '100%',
+                                        color: '#1F1F1F',
+                                        fontSize: 18,
+                                        paddingVertical: 100,
+                                        paddingHorizontal: 5,
+                                        fontFamily: 'inter',
+                                    }}
+                                >
+                                    {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes'
+                                        ? selectedWorkspace.split('-SPLIT-')[2] === userId
+                                            ? PreferredLanguageText('noCuesCreatedInstructor')
+                                            : PreferredLanguageText('noCuesCreated')
+                                        : PreferredLanguageText('noNotesCreated')}
+                                </Text>
+                            ) : (
+                                <ScrollView
+                                    horizontal={true}
+                                    contentContainerStyle={{
+                                        maxWidth: '100%',
+                                        width: '100%',
+                                        backgroundColor: '#fff',
+                                        paddingTop: 25,
+                                    }}
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {categoryMap[selectedWorkspace].map((category: any, i: any) => {
+                                        // Check if even one category exists in cues
+
+                                        const foundCue = cueMap[selectedWorkspace].find(
+                                            (cue: any) =>
+                                                cue.customCategory.toString().trim() === category.toString().trim()
+                                        );
+
+                                        if (!foundCue) return null;
+
+                                        return (
+                                            <View
+                                                style={{
+                                                    width: '100%',
+                                                    maxWidth: 145,
+                                                    backgroundColor: '#fff',
+                                                    marginRight: 15,
+                                                }}
+                                                key={i.toString()}
+                                            >
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#fff',
+                                                        paddingLeft: 5,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            flex: 1,
+                                                            flexDirection: 'row',
+                                                            color: '#1F1F1F',
+                                                            // fontWeight: 'bold',
+                                                            fontSize: 12,
+                                                            lineHeight: 25,
+                                                            fontFamily: 'inter',
+                                                            backgroundColor: '#fff',
+                                                        }}
+                                                        ellipsizeMode="tail"
+                                                    >
+                                                        {category === '' ? ' ' : category}
+                                                    </Text>
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        maxWidth: 145,
+                                                        paddingLeft: 5,
+                                                        backgroundColor: '#fff',
+                                                        width: '100%',
+                                                    }}
+                                                    key={i.toString() + selectedWorkspace.toString()}
+                                                >
+                                                    {cueMap[selectedWorkspace].map((cue: any, index: any) => {
+                                                        if (
+                                                            cue.customCategory.toString().trim() !==
+                                                            category.toString().trim()
+                                                        ) {
+                                                            return null;
+                                                        }
+                                                        return (
+                                                            <View
+                                                                style={{
+                                                                    marginBottom: 15,
+                                                                    backgroundColor: '#fff',
+                                                                    width: '100%',
+                                                                    maxWidth: 145,
+                                                                }}
+                                                                key={index}
+                                                            >
+                                                                <Card
+                                                                    gray={true}
+                                                                    cueIds={cueIds}
+                                                                    onLongPress={() => {
+                                                                        setCueIds([]);
+                                                                        setEditFolderChannelId(
+                                                                            cue.channelId ? cue.channelId : 'My Notes'
+                                                                        );
+                                                                    }}
+                                                                    add={() => {
+                                                                        const temp = JSON.parse(JSON.stringify(cueIds));
+                                                                        const found = temp.find((i: any) => {
+                                                                            return i === cue._id;
+                                                                        });
+                                                                        if (!found) {
+                                                                            temp.push(cue._id);
+                                                                        }
+                                                                        setCueIds(temp);
+                                                                    }}
+                                                                    remove={() => {
+                                                                        const temp = JSON.parse(JSON.stringify(cueIds));
+                                                                        const upd = temp.filter((i: any) => {
+                                                                            return i !== cue._id;
+                                                                        });
+                                                                        setCueIds(upd);
+                                                                    }}
+                                                                    editFolderChannelId={editFolderChannelId}
+                                                                    fadeAnimation={props.fadeAnimation}
+                                                                    updateModal={() => {
+                                                                        props.openUpdate(
+                                                                            cue.key,
+                                                                            cue.index,
+                                                                            0,
+                                                                            cue._id,
+                                                                            cue.createdBy ? cue.createdBy : '',
+                                                                            cue.channelId ? cue.channelId : ''
+                                                                        );
+                                                                    }}
+                                                                    cue={cue}
+                                                                    channelId={props.channelId}
+                                                                    subscriptions={props.subscriptions}
+                                                                />
+                                                            </View>
+                                                        );
+                                                    })}
+                                                </View>
+                                            </View>
+                                        );
+                                    })}
+                                </ScrollView>
+                            )}
+                        </View>
+                    </View>
+                ) : null}
             </ScrollView>
         </View>
     );
+
+    // /**
+    //  * @description Renders all the channels under workspace
+    //  */
+    // const overview = (
+    //     <View
+    //         key={collapseMap.toString()}
+    //         style={{
+    //             flexDirection: 'row',
+    //             width: '100%',
+    //             bottom: 0,
+    //         }}
+    //     >
+    //         {/* Add sort by filter here */}
+    //         <ScrollView
+    //             persistentScrollbar={true}
+    //             showsVerticalScrollIndicator={true}
+    //             horizontal={false}
+    //             contentContainerStyle={{
+    //                 width: '100%',
+    //                 height: width < 768 ? Dimensions.get('window').height - 115 : Dimensions.get('window').height - 52,
+    //                 backgroundColor: '#f8f8f8',
+    //             }}
+    //             ref={scrollViewRef}
+    //         >
+    //             {Object.keys(cueMap).map((key: any, ind: any) => {
+    //                 return (
+    //                     // Do not add a parent component above this
+    //                     <View
+    //                         key={ind}
+    //                         onLayout={(event) => {
+    //                             const layout = event.nativeEvent.layout;
+    //                             const temp1 = [...channelKeyList];
+    //                             const temp2 = [...channelHeightList];
+    //                             temp1[ind] = key.split('-SPLIT-')[1];
+    //                             temp2[ind] = layout.y;
+    //                             setChannelKeyList(temp1);
+    //                             setChannelHeightList(temp2);
+    //                         }}
+    //                     >
+    //                         <InsetShadow
+    //                             shadowColor={'#000'}
+    //                             shadowOffset={2}
+    //                             shadowOpacity={0} // no shadow
+    //                             shadowRadius={collapseMap[key] ? 10 : 0}
+    //                             elevation={500000}
+    //                             containerStyle={{
+    //                                 height: 'auto',
+    //                             }}
+    //                         >
+    //                             <View
+    //                                 style={{
+    //                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                     borderColor: '#f2f2f2',
+    //                                     borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0,
+    //                                     // paddingBottom: 10,
+    //                                 }}
+    //                             >
+    //                                 {ind !== 0 ? (
+    //                                     <View
+    //                                         style={{
+    //                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                             flexDirection: 'row',
+    //                                             borderColor: '#f2f2f2',
+    //                                             paddingTop: 10,
+    //                                             paddingHorizontal:
+    //                                                 width < 1024 && props.option === 'Classroom' ? 20 : 0,
+    //                                             borderTopWidth:
+    //                                                 ind === 0 ||
+    //                                                 collapseMap[key] ||
+    //                                                 collapseMap[Object.keys(cueMap)[ind - 1]]
+    //                                                     ? 0
+    //                                                     : 1,
+    //                                             paddingBottom: 0,
+    //                                             maxWidth: 1024,
+    //                                             alignSelf: 'center',
+    //                                             width: '100%',
+    //                                         }}
+    //                                     >
+    //                                         <TouchableOpacity
+    //                                             style={{
+    //                                                 flex: 1,
+    //                                                 flexDirection: 'row',
+    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                             }}
+    //                                             onPress={() => {
+    //                                                 const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
+
+    //                                                 Object.keys(tempCollapse).forEach((item: any, index: any) => {
+    //                                                     if (item === key) return;
+    //                                                     tempCollapse[item] = false;
+    //                                                 });
+
+    //                                                 tempCollapse[key] = !collapseMap[key];
+    //                                                 setCollapseMap(tempCollapse);
+    //                                             }}
+    //                                         >
+    //                                             <Text
+    //                                                 style={{
+    //                                                     fontSize: 18,
+    //                                                     paddingBottom: 20,
+    //                                                     paddingTop: 9,
+    //                                                     fontFamily: 'inter',
+    //                                                     flex: 1,
+    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                     lineHeight: 18,
+    //                                                     color: collapseMap[key] ? '#000000' : '#1a3026',
+    //                                                 }}
+    //                                             >
+    //                                                 <View
+    //                                                     style={{
+    //                                                         width: 12,
+    //                                                         height: 12,
+    //                                                         borderRadius: 9,
+    //                                                         // marginTop: 2,
+    //                                                         marginRight: 5,
+    //                                                         backgroundColor: key.split('-SPLIT-')[3],
+    //                                                     }}
+    //                                                 />{' '}
+    //                                                 {key.split('-SPLIT-')[0]}
+    //                                             </Text>
+    //                                         </TouchableOpacity>
+    //                                         <View
+    //                                             style={{
+    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                 paddingTop: 5,
+    //                                                 paddingLeft: 15,
+    //                                             }}
+    //                                         >
+    //                                             <View
+    //                                                 style={{
+    //                                                     flexDirection: 'row',
+    //                                                     justifyContent: 'center',
+    //                                                     display: 'flex',
+    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                 }}
+    //                                             >
+    //                                                 <TouchableOpacity
+    //                                                     onPress={() => {
+    //                                                         // const tempCollapse = JSON.parse(
+    //                                                         //     JSON.stringify(collapseMap)
+    //                                                         // );
+
+    //                                                         // Object.keys(tempCollapse).forEach(
+    //                                                         //     (item: any, index: any) => {
+    //                                                         //         if (item === key) return;
+    //                                                         //         tempCollapse[item] = false;
+    //                                                         //     }
+    //                                                         // );
+
+    //                                                         // tempCollapse[key] = !collapseMap[key];
+    //                                                         // setCollapseMap(tempCollapse);
+    //                                                         setSelectedWorkspace(key);
+    //                                                     }}
+    //                                                     style={{
+    //                                                         backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                     }}
+    //                                                 >
+    //                                                     <Text
+    //                                                         style={{
+    //                                                             textAlign: 'center',
+    //                                                             lineHeight: 30,
+    //                                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                         }}
+    //                                                     >
+    //                                                         <Ionicons
+    //                                                             name={
+    //                                                                 collapseMap[key]
+    //                                                                     ? 'chevron-up-outline'
+    //                                                                     : 'chevron-down-outline'
+    //                                                             }
+    //                                                             size={18}
+    //                                                             color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
+    //                                                         />
+    //                                                     </Text>
+    //                                                 </TouchableOpacity>
+    //                                             </View>
+    //                                         </View>
+    //                                     </View>
+    //                                 ) : (
+    //                                     <View
+    //                                         style={{
+    //                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                             flexDirection: 'row',
+    //                                             paddingBottom: 0,
+    //                                             paddingHorizontal:
+    //                                                 width < 1024 && props.option === 'Classroom' ? 20 : 0,
+    //                                             maxWidth: 1024,
+    //                                             alignSelf: 'center',
+    //                                             width: '100%',
+    //                                         }}
+    //                                     >
+    //                                         <TouchableOpacity
+    //                                             style={{
+    //                                                 flex: 1,
+    //                                                 flexDirection: 'row',
+    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                             }}
+    //                                             onPress={() => {
+    //                                                 const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
+
+    //                                                 Object.keys(tempCollapse).forEach((item: any, index: any) => {
+    //                                                     if (item === key) return;
+    //                                                     tempCollapse[item] = false;
+    //                                                 });
+
+    //                                                 tempCollapse[key] = !collapseMap[key];
+    //                                                 setCollapseMap(tempCollapse);
+    //                                             }}
+    //                                         >
+    //                                             <Text
+    //                                                 ellipsizeMode="tail"
+    //                                                 style={{
+    //                                                     fontSize: 18,
+    //                                                     paddingBottom: 20,
+    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                     paddingTop: 19,
+    //                                                     fontFamily: 'inter',
+    //                                                     flex: 1,
+    //                                                     lineHeight: 18,
+    //                                                     color: collapseMap[key] ? '#000000' : '#1F1F1F',
+    //                                                 }}
+    //                                             >
+    //                                                 <View
+    //                                                     style={{
+    //                                                         width: 12,
+    //                                                         height: 12,
+    //                                                         marginRight: 5,
+    //                                                         borderRadius: 9,
+    //                                                         backgroundColor: '#000000',
+    //                                                     }}
+    //                                                 />{' '}
+    //                                                 {key}
+    //                                             </Text>
+    //                                         </TouchableOpacity>
+    //                                         <View
+    //                                             style={{
+    //                                                 flexDirection: 'row',
+    //                                                 justifyContent: 'space-evenly',
+    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                 paddingTop: 10,
+    //                                             }}
+    //                                         >
+    //                                             <View
+    //                                                 style={{
+    //                                                     flexDirection: 'row',
+    //                                                     paddingLeft: 7,
+    //                                                     justifyContent: 'center',
+    //                                                     display: 'flex',
+    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                 }}
+    //                                             >
+    //                                                 <TouchableOpacity
+    //                                                     onPress={() => {
+    //                                                         const tempCollapse = JSON.parse(
+    //                                                             JSON.stringify(collapseMap)
+    //                                                         );
+    //                                                         tempCollapse[key] = !collapseMap[key];
+
+    //                                                         Object.keys(tempCollapse).forEach(
+    //                                                             (item: any, index: any) => {
+    //                                                                 if (item === key) return;
+    //                                                                 tempCollapse[item] = false;
+    //                                                             }
+    //                                                         );
+
+    //                                                         setCollapseMap(tempCollapse);
+    //                                                     }}
+    //                                                     style={{
+    //                                                         backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                         paddingTop: 5,
+    //                                                         paddingLeft: 15,
+    //                                                     }}
+    //                                                 >
+    //                                                     <Text
+    //                                                         style={{
+    //                                                             textAlign: 'center',
+    //                                                             lineHeight: 30,
+    //                                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
+    //                                                         }}
+    //                                                     >
+    //                                                         <Ionicons
+    //                                                             name={
+    //                                                                 collapseMap[key]
+    //                                                                     ? 'chevron-up-outline'
+    //                                                                     : 'chevron-down-outline'
+    //                                                             }
+    //                                                             size={18}
+    //                                                             color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
+    //                                                         />
+    //                                                     </Text>
+    //                                                 </TouchableOpacity>
+    //                                             </View>
+    //                                         </View>
+    //                                     </View>
+    //                                 )}
+    //                                 {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
+    //                                 <View
+    //                                     style={{
+    //                                         flexDirection: 'row',
+    //                                         justifyContent: 'center',
+    //                                         backgroundColor: '#fff',
+    //                                         borderColor: '#f2f2f2',
+    //                                         borderBottomWidth:
+    //                                             collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0,
+    //                                     }}
+    //                                     key={collapseMap.toString()}
+    //                                 >
+    //                                     <View
+    //                                         style={{
+    //                                             width: '100%',
+    //                                             maxWidth: 1024,
+    //                                             backgroundColor: '#fff',
+    //                                             paddingHorizontal: width < 1024 ? 20 : 0,
+    //                                         }}
+    //                                     >
+    //                                         {collapseMap[key] ? (
+    //                                             <View
+    //                                                 style={{
+    //                                                     width: '100%',
+    //                                                     paddingBottom: 25,
+    //                                                     backgroundColor: '#fff',
+    //                                                 }}
+    //                                                 key={
+    //                                                     editFolderChannelId.toString() +
+    //                                                     cueIds.toString() +
+    //                                                     cueMap.toString()
+    //                                                 }
+    //                                             >
+    //                                                 {indexMap[key] !== 0 ? (
+    //                                                     indexMap[key] === 1 ? (
+    //                                                         <Discussion
+    //                                                             channelId={key.split('-SPLIT-')[1]}
+    //                                                             filterChoice={key.split('-SPLIT-')[0]}
+    //                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
+    //                                                             refreshUnreadDiscussionCount={() =>
+    //                                                                 props.refreshUnreadDiscussionCount()
+    //                                                             }
+    //                                                             channelColor={key.split('-SPLIT-')[3]}
+    //                                                         />
+    //                                                     ) : // Meet
+    //                                                     indexMap[key] === 2 ? (
+    //                                                         <View
+    //                                                             style={{
+    //                                                                 alignItems: 'center',
+    //                                                                 backgroundColor: '#fff',
+    //                                                             }}
+    //                                                         >
+    //                                                             {key.split('-SPLIT-')[2] === userId ? (
+    //                                                                 <View
+    //                                                                     style={{
+    //                                                                         width: '100%',
+    //                                                                         marginBottom: 20,
+    //                                                                         backgroundColor: '#fff',
+    //                                                                     }}
+    //                                                                 >
+    //                                                                     <TouchableOpacity
+    //                                                                         onPress={() =>
+    //                                                                             handleStartMeeting(
+    //                                                                                 key.split('-SPLIT-')[1],
+    //                                                                                 key.split('-SPLIT-')[2]
+    //                                                                             )
+    //                                                                         }
+    //                                                                         style={{
+    //                                                                             backgroundColor: '#fff',
+    //                                                                             overflow: 'hidden',
+    //                                                                             height: 35,
+    //                                                                             marginTop: 20,
+    //                                                                             justifyContent: 'center',
+    //                                                                             flexDirection: 'row',
+    //                                                                             marginLeft: 'auto',
+    //                                                                         }}
+    //                                                                     >
+    //                                                                         <Text
+    //                                                                             style={{
+    //                                                                                 textAlign: 'center',
+    //                                                                                 lineHeight: 34,
+    //                                                                                 color: '#fff',
+    //                                                                                 borderRadius: 15,
+    //                                                                                 backgroundColor: '#006AFF',
+    //                                                                                 fontSize: 12,
+    //                                                                                 paddingHorizontal: 20,
+    //                                                                                 fontFamily: 'inter',
+    //                                                                                 height: 35,
+    //                                                                                 width: 175,
+    //                                                                                 textTransform: 'uppercase',
+    //                                                                             }}
+    //                                                                         >
+    //                                                                             Start Meeting
+    //                                                                         </Text>
+    //                                                                     </TouchableOpacity>
+    //                                                                 </View>
+    //                                                             ) : null}
+
+    //                                                             {ongoingMeetings.length > 0
+    //                                                                 ? renderOngoingMeetings(
+    //                                                                       key.split('-SPLIT-')[2],
+    //                                                                       key.split('-SPLIT-')[3]
+    //                                                                   )
+    //                                                                 : null}
+
+    //                                                             <Performance
+    //                                                                 channelName={key.split('-SPLIT-')[0]}
+    //                                                                 onPress={(name: any, id: any, createdBy: any) => {
+    //                                                                     props.setChannelFilterChoice('All');
+    //                                                                     props.handleFilterChange(name);
+    //                                                                     props.setChannelId(id);
+    //                                                                     props.setChannelCreatedBy(createdBy);
+    //                                                                     props.openGrades();
+    //                                                                     props.hideHome();
+    //                                                                 }}
+    //                                                                 filterStart={filterStart}
+    //                                                                 filterEnd={filterEnd}
+    //                                                                 channelId={key.split('-SPLIT-')[1]}
+    //                                                                 channelCreatedBy={key.split('-SPLIT-')[2]}
+    //                                                                 subscriptions={props.subscriptions}
+    //                                                                 openCueFromGrades={props.openCueFromCalendar}
+    //                                                                 colorCode={key.split('-SPLIT-')[3]}
+    //                                                                 activeTab={'meetings'}
+    //                                                             />
+    //                                                         </View>
+    //                                                     ) : // Scores
+    //                                                     indexMap[key] === 3 ? (
+    //                                                         <Performance
+    //                                                             channelName={key.split('-SPLIT-')[0]}
+    //                                                             onPress={(name: any, id: any, createdBy: any) => {
+    //                                                                 props.setChannelFilterChoice('All');
+    //                                                                 props.handleFilterChange(name);
+    //                                                                 props.setChannelId(id);
+    //                                                                 props.setChannelCreatedBy(createdBy);
+    //                                                                 props.openGrades();
+    //                                                                 props.hideHome();
+    //                                                             }}
+    //                                                             filterStart={filterStart}
+    //                                                             channelId={key.split('-SPLIT-')[1]}
+    //                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
+    //                                                             filterEnd={filterEnd}
+    //                                                             subscriptions={props.subscriptions}
+    //                                                             openCueFromGrades={props.openCueFromCalendar}
+    //                                                             colorCode={key.split('-SPLIT-')[3]}
+    //                                                             activeTab={'scores'}
+    //                                                             isEditor={key.split('-SPLIT-')[2] === userId}
+    //                                                         />
+    //                                                     ) : (
+    //                                                         <View
+    //                                                             style={{
+    //                                                                 width: '100%',
+    //                                                                 maxWidth: 400,
+    //                                                                 alignSelf: 'center',
+    //                                                                 borderTopRightRadius: 10,
+    //                                                                 borderBottomRightRadius: 10,
+    //                                                             }}
+    //                                                         >
+    //                                                             <ChannelSettings
+    //                                                                 channelId={key.split('-SPLIT-')[1]}
+    //                                                                 refreshSubscriptions={props.refreshSubscriptions}
+    //                                                                 closeModal={() => {
+    //                                                                     // setShowHome(false)
+    //                                                                     // closeModal()
+    //                                                                 }}
+    //                                                                 userId={userId}
+    //                                                                 channelColor={key.split('-SPLIT-')[3]}
+    //                                                                 userCreatedOrg={userCreatedOrg}
+    //                                                             />
+    //                                                         </View>
+    //                                                     )
+    //                                                 ) : cueMap[key].length === 0 ? (
+    //                                                     <Text
+    //                                                         style={{
+    //                                                             width: '100%',
+    //                                                             color: '#1F1F1F',
+    //                                                             fontSize: 16,
+    //                                                             paddingTop: 50,
+    //                                                             paddingBottom: 50,
+    //                                                             paddingHorizontal: 5,
+    //                                                             fontFamily: 'inter',
+    //                                                             flex: 1,
+    //                                                         }}
+    //                                                     >
+    //                                                         {key.split('-SPLIT-')[0] !== 'My Notes'
+    //                                                             ? key.split('-SPLIT-')[2] === userId
+    //                                                                 ? PreferredLanguageText('noCuesCreatedInstructor')
+    //                                                                 : PreferredLanguageText('noCuesCreated')
+    //                                                             : PreferredLanguageText('noNotesCreated')}
+    //                                                     </Text>
+    //                                                 ) : (
+    //                                                     <ScrollView
+    //                                                         horizontal={true}
+    //                                                         contentContainerStyle={{
+    //                                                             maxWidth: '100%',
+    //                                                             width: '100%',
+    //                                                             backgroundColor: '#fff',
+    //                                                         }}
+    //                                                         showsHorizontalScrollIndicator={false}
+    //                                                         key={
+    //                                                             editFolderChannelId.toString() +
+    //                                                             cueIds.toString() +
+    //                                                             cueMap.toString()
+    //                                                         }
+    //                                                     >
+    //                                                         {categoryMap[key].map((category: any, i: any) => {
+    //                                                             // Check if even one category exists in cues
+
+    //                                                             const foundCue = cueMap[key].find(
+    //                                                                 (cue: any) =>
+    //                                                                     cue.customCategory.toString().trim() ===
+    //                                                                     category.toString().trim()
+    //                                                             );
+
+    //                                                             if (!foundCue) return null;
+
+    //                                                             return (
+    //                                                                 <View
+    //                                                                     style={{
+    //                                                                         width: '100%',
+    //                                                                         maxWidth: 145,
+    //                                                                         backgroundColor: '#fff',
+    //                                                                         marginRight: 15,
+    //                                                                     }}
+    //                                                                     key={i.toString()}
+    //                                                                 >
+    //                                                                     <View
+    //                                                                         style={{
+    //                                                                             backgroundColor: '#fff',
+    //                                                                             paddingLeft: 5,
+    //                                                                         }}
+    //                                                                     >
+    //                                                                         <Text
+    //                                                                             style={{
+    //                                                                                 flex: 1,
+    //                                                                                 flexDirection: 'row',
+    //                                                                                 color: '#1F1F1F',
+    //                                                                                 // fontWeight: 'bold',
+    //                                                                                 fontSize: 12,
+    //                                                                                 lineHeight: 25,
+    //                                                                                 fontFamily: 'inter',
+    //                                                                                 backgroundColor: '#fff',
+    //                                                                             }}
+    //                                                                             ellipsizeMode="tail"
+    //                                                                         >
+    //                                                                             {category === '' ? ' ' : category}
+    //                                                                         </Text>
+    //                                                                     </View>
+    //                                                                     <View
+    //                                                                         style={{
+    //                                                                             // borderWidth: 1,
+    //                                                                             maxWidth: 145,
+    //                                                                             paddingLeft: 5,
+    //                                                                             backgroundColor: '#fff',
+    //                                                                             width: '100%',
+    //                                                                             // height: 190
+    //                                                                         }}
+    //                                                                         key={i.toString() + key.toString()}
+    //                                                                     >
+    //                                                                         {cueMap[key].map((cue: any, index: any) => {
+    //                                                                             if (
+    //                                                                                 cue.customCategory
+    //                                                                                     .toString()
+    //                                                                                     .trim() !==
+    //                                                                                 category.toString().trim()
+    //                                                                             ) {
+    //                                                                                 return null;
+    //                                                                             }
+    //                                                                             return (
+    //                                                                                 <View
+    //                                                                                     style={{
+    //                                                                                         marginBottom: 15,
+    //                                                                                         backgroundColor: '#fff',
+    //                                                                                         width: '100%',
+    //                                                                                         maxWidth: 145,
+    //                                                                                     }}
+    //                                                                                     key={index}
+    //                                                                                 >
+    //                                                                                     <Card
+    //                                                                                         gray={true}
+    //                                                                                         cueIds={cueIds}
+    //                                                                                         onLongPress={() => {
+    //                                                                                             setCueIds([]);
+    //                                                                                             setEditFolderChannelId(
+    //                                                                                                 cue.channelId
+    //                                                                                                     ? cue.channelId
+    //                                                                                                     : 'My Notes'
+    //                                                                                             );
+    //                                                                                         }}
+    //                                                                                         add={() => {
+    //                                                                                             const temp = JSON.parse(
+    //                                                                                                 JSON.stringify(
+    //                                                                                                     cueIds
+    //                                                                                                 )
+    //                                                                                             );
+    //                                                                                             const found = temp.find(
+    //                                                                                                 (i: any) => {
+    //                                                                                                     return (
+    //                                                                                                         i ===
+    //                                                                                                         cue._id
+    //                                                                                                     );
+    //                                                                                                 }
+    //                                                                                             );
+    //                                                                                             if (!found) {
+    //                                                                                                 temp.push(cue._id);
+    //                                                                                             }
+    //                                                                                             setCueIds(temp);
+    //                                                                                         }}
+    //                                                                                         remove={() => {
+    //                                                                                             const temp = JSON.parse(
+    //                                                                                                 JSON.stringify(
+    //                                                                                                     cueIds
+    //                                                                                                 )
+    //                                                                                             );
+    //                                                                                             const upd = temp.filter(
+    //                                                                                                 (i: any) => {
+    //                                                                                                     return (
+    //                                                                                                         i !==
+    //                                                                                                         cue._id
+    //                                                                                                     );
+    //                                                                                                 }
+    //                                                                                             );
+    //                                                                                             setCueIds(upd);
+    //                                                                                         }}
+    //                                                                                         editFolderChannelId={
+    //                                                                                             editFolderChannelId
+    //                                                                                         }
+    //                                                                                         fadeAnimation={
+    //                                                                                             props.fadeAnimation
+    //                                                                                         }
+    //                                                                                         updateModal={() => {
+    //                                                                                             props.openUpdate(
+    //                                                                                                 cue.key,
+    //                                                                                                 cue.index,
+    //                                                                                                 0,
+    //                                                                                                 cue._id,
+    //                                                                                                 cue.createdBy
+    //                                                                                                     ? cue.createdBy
+    //                                                                                                     : '',
+    //                                                                                                 cue.channelId
+    //                                                                                                     ? cue.channelId
+    //                                                                                                     : ''
+    //                                                                                             );
+    //                                                                                         }}
+    //                                                                                         cue={cue}
+    //                                                                                         channelId={props.channelId}
+    //                                                                                         subscriptions={
+    //                                                                                             props.subscriptions
+    //                                                                                         }
+    //                                                                                     />
+    //                                                                                 </View>
+    //                                                                             );
+    //                                                                         })}
+    //                                                                     </View>
+    //                                                                 </View>
+    //                                                             );
+    //                                                         })}
+    //                                                     </ScrollView>
+    //                                                 )}
+    //                                             </View>
+    //                                         ) : null}
+    //                                     </View>
+    //                                 </View>
+    //                             </View>
+    //                         </InsetShadow>
+    //                     </View>
+    //                 );
+    //             })}
+    //         </ScrollView>
+    //     </View>
+    // );
 
     // MAIN RETURN
     return (
         <View
             style={{
                 height: windowHeight,
-                backgroundColor: props.option === 'To Do' ? '#f2f2f2' : '#fff'
+                backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
             }}
         >
             {renderInstantMeetingPopup()}
@@ -2563,14 +3409,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     width: '100%',
                     height: 54,
                     paddingVertical: 2,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                        width: 0,
-                        height: 3
-                    },
-                    shadowOpacity: 0.08,
-                    shadowRadius: 4,
-                    zIndex: 500000
+                    zIndex: 500000,
                 }}
             >
                 <div
@@ -2578,12 +3417,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         display: 'flex',
                         flexDirection: 'row',
                         width: '100%',
-                        maxWidth: 900,
+                        maxWidth: 1024,
                         backgroundColor: 'none',
                         // paddingVertical: 10,
                         padding: '0.5rem 1rem',
                         flex: 1,
-                        maxHeight: 50
+                        maxHeight: 50,
                     }}
                 >
                     {Dimensions.get('window').width < 768 ? null : (
@@ -2595,7 +3434,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 flex: 1,
                                 // height: 28,
                                 paddingBottom: 2,
-                                paddingTop: 0
+                                paddingTop: 0,
                             }}
                         >
                             <Image
@@ -2604,7 +3443,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: 61,
                                     // marginTop: 1,
                                     height: 23,
-                                    marginRight: 20
+                                    marginRight: 20,
                                 }}
                                 resizeMode={'contain'}
                             />
@@ -2614,15 +3453,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     paddingRight: 30,
                                     flex: 1,
                                     backgroundColor: 'none',
-                                    paddingTop: 1
+                                    paddingTop: 1,
                                 }}
                             >
                                 {props.options.map((op: any, ind: number) => {
+                                    if (op === 'Account') return null;
+
                                     return (
                                         <TouchableOpacity
                                             key={ind.toString()}
                                             style={{
-                                                backgroundColor: 'none'
+                                                backgroundColor: 'none',
                                             }}
                                             onPress={() => {
                                                 if (op === 'To Do') {
@@ -2658,8 +3499,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 7,
                                                         backgroundColor: '#f94144',
                                                         position: 'absolute',
-                                                        top: -3,
-                                                        right: 5
+                                                        top: -1,
+                                                        right: 9,
                                                     }}
                                                 />
                                             ) : null}
@@ -2675,7 +3516,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             alignItems: 'center',
                             backgroundColor: 'none',
                             width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
-                            margin: 0
+                            margin: 0,
                         }}
                     >
                         {Dimensions.get('window').width < 768 ? (
@@ -2685,34 +3526,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: 56,
                                     marginTop: 1,
                                     height: 20,
-                                    marginRight: 13
+                                    marginRight: 13,
                                 }}
                                 resizeMode={'contain'}
                             />
                         ) : null}
-                        {props.option === 'Account' ? null : (
+                        {props.option === 'Account' || props.option === 'Inbox' ? null : (
                             <DefaultInput
                                 value={searchTerm}
                                 style={{
-                                    color: '#fff',
-                                    backgroundColor: '#000',
+                                    color: '#000',
+                                    backgroundColor: '#f2f2f2',
                                     borderRadius: 15,
                                     fontSize: 12,
                                     paddingVertical: 6,
                                     paddingHorizontal: 16,
                                     marginRight: 2,
-                                    maxWidth: 225
+                                    maxWidth: 225,
                                 }}
                                 autoCompleteType={'xyz'}
                                 placeholder={'Search'}
-                                onChangeText={val => setSearchTerm(val)}
-                                placeholderTextColor={'#fff'}
+                                onChangeText={(val) => setSearchTerm(val)}
+                                placeholderTextColor={'#000'}
                             />
                         )}
                         {Dimensions.get('window').width < 768 ? (
                             <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'none' }} />
                         ) : null}
-                        {props.option === 'To Do' || props.option === 'Classroom' ? (
+                        {/* {props.option === 'To Do' || props.option === 'Classroom' ? (
                             <TouchableOpacity
                                 style={{ backgroundColor: 'none', marginLeft: 15 }}
                                 onPress={() => {
@@ -2723,25 +3564,51 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         fontSize: 11,
                                         color: '#f2f2f2',
-                                        textAlign: 'right'
+                                        textAlign: 'right',
                                     }}
                                 >
-                                    <Ionicons name="filter-outline" size={19} />
+                                    <Ionicons name="filter-outline" size={20} />
                                 </Text>
                             </TouchableOpacity>
-                        ) : null}
+                        ) : null} */}
+                        <TouchableOpacity
+                            style={{
+                                marginLeft: 15,
+                                backgroundColor: 'none',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                height: 30,
+                            }}
+                            onPress={() => {
+                                props.setOption('Account');
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                    borderRadius: 75,
+                                    alignSelf: 'center',
+                                }}
+                                source={{
+                                    uri: avatar,
+                                }}
+                            />
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{ backgroundColor: 'none', marginLeft: 15 }}
                             onPress={() => {
-                                props.openHelpModal(true)
-                            }}>
+                                props.openHelpModal(true);
+                            }}
+                        >
                             <Text
                                 style={{
                                     fontSize: 11,
                                     color: '#1F1F1F',
                                     marginTop: 1,
-                                    textAlign: 'right'
-                                }}>
+                                    textAlign: 'right',
+                                }}
+                            >
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={20}
@@ -2749,56 +3616,56 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 />
                             </Text>
                         </TouchableOpacity>
-                        {Dimensions.get('window').width < 768 && props.option === 'Account' ? <Menu
-                            style={{
-                                marginLeft: 15,
-                                right: 0,
-                            }}
-                            onSelect={(op: any) => {
-                                setActiveAccountTab(op)
-                            }}
-                        >
-                            <MenuTrigger>
-                                <Text>
-                                    <Ionicons
-                                        name={'menu-outline'}
-                                        size={23}
-                                        color={'#f2f2f2'}
-                                    />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions
-                                optionsContainerStyle={{
-                                    shadowOffset: {
-                                        width: 2,
-                                        height: 2
-                                    },
-                                    shadowColor: '#000',
-                                    // overflow: 'hidden',
-                                    shadowOpacity: 0.07,
-                                    shadowRadius: 7,
-                                    padding: 7,
-                                    // borderWidth: 1,
-                                    // borderColor: '#CCC'
+                        {Dimensions.get('window').width < 768 && props.option === 'Account' ? (
+                            <Menu
+                                style={{
+                                    marginLeft: 15,
+                                    right: 0,
+                                }}
+                                onSelect={(op: any) => {
+                                    props.setActiveAccountTab(op);
                                 }}
                             >
-                                {accountTabs.map((tab: string) => {
-                                    return <MenuOption value={tab}>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'inter',
-                                            fontSize: 14,
-                                            fontWeight: 'bold',
-                                            color: tab === activeAccountTab ? '#006AFF' : '#1f1f1f',
-                                            textTransform: 'uppercase'
-                                        }}
-                                    >
-                                        {tab}
+                                <MenuTrigger>
+                                    <Text>
+                                        <Ionicons name={'menu-outline'} size={23} color={'#f2f2f2'} />
                                     </Text>
-                                </MenuOption>
-                                })}
-                            </MenuOptions>
-                        </Menu> : null}
+                                </MenuTrigger>
+                                <MenuOptions
+                                    optionsContainerStyle={{
+                                        shadowOffset: {
+                                            width: 2,
+                                            height: 2,
+                                        },
+                                        shadowColor: '#000',
+                                        // overflow: 'hidden',
+                                        shadowOpacity: 0.07,
+                                        shadowRadius: 7,
+                                        padding: 7,
+                                        // borderWidth: 1,
+                                        // borderColor: '#CCC'
+                                    }}
+                                >
+                                    {props.accountTabs.map((tab: string, ind: number) => {
+                                        return (
+                                            <MenuOption value={tab} key={ind.toString()}>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'inter',
+                                                        fontSize: 14,
+                                                        fontWeight: 'bold',
+                                                        color: tab === props.activeAccountTab ? '#006AFF' : '#1f1f1f',
+                                                        textTransform: 'uppercase',
+                                                    }}
+                                                >
+                                                    {tab}
+                                                </Text>
+                                            </MenuOption>
+                                        );
+                                    })}
+                                </MenuOptions>
+                            </Menu>
+                        ) : null}
                     </View>
                 </div>
             </View>
@@ -2817,13 +3684,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             alignSelf: 'center',
                             width: '100%',
-                            backgroundColor: props.option === 'To Do' ? '#f2f2f2' : '#fff',
-                            height: width < 768 ? windowHeight - 104 : windowHeight - 52
+                            backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
+                            height: width < 768 ? windowHeight - 104 : windowHeight - 52,
                         }}
                     >
                         {/* Add tabs to switch between Account tabs  */}
-                        {props.option === 'Account' && Dimensions.get('window').width > 768 ? renderAccountTabs() : null}
-                        {props.option === 'Account' && activeAccountTab === 'profile' ? (
+                        {props.option === 'Account' && Dimensions.get('window').width > 768
+                            ? renderAccountTabs()
+                            : null}
+                        {props.option === 'Account' && props.activeAccountTab === 'profile' ? (
                             <Walkthrough
                                 closeModal={() => {}}
                                 saveDataInCloud={() => props.saveDataInCloud()}
@@ -2833,7 +3702,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 showHelp={props.showHelp}
                             />
                         ) : null}
-                        {props.option === 'Account' && activeAccountTab === 'courses' ? (
+                        {props.option === 'Account' && props.activeAccountTab === 'courses' ? (
                             <Channels
                                 setShowCreate={(val: any) => props.setShowCreate(val)}
                                 showCreate={props.showCreate}
@@ -2842,7 +3711,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 refreshSubscriptions={props.refreshSubscriptions}
                             />
                         ) : null}
-                        {props.option === 'Classroom' ? overview : null}
+                        {props.option === 'Classroom' && selectedWorkspace ? renderWorkspaceNavbar() : null}
+                        {props.option === 'Classroom' ? overviewNested : null}
                         {props.option === 'To Do' ? (
                             <CalendarX
                                 tab={props.tab}
@@ -2867,7 +3737,69 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 subscriptions={props.subscriptions}
                                 refreshUnreadInbox={props.refreshUnreadInbox}
                                 hideNewChatButton={props.hideNewChatButton}
+                                userId={userId}
                             />
+                        ) : null}
+                        {props.option === 'Classroom' &&
+                        selectedWorkspace &&
+                        !showNewDiscussionPost &&
+                        props.activeWorkspaceTab !== 'Settings' &&
+                        (props.activeWorkspaceTab !== 'Meet' || selectedWorkspace.split('-SPLIT-')[2] === userId) ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    if (props.activeWorkspaceTab === 'Content') {
+                                        props.openCreate();
+                                    } else if (props.activeWorkspaceTab === 'Discuss') {
+                                        console.log('Set show new discussion post true');
+                                        setShowNewDiscussionPost(true);
+                                    } else if (props.activeWorkspaceTab === 'Meet') {
+                                        handleStartMeeting(
+                                            selectedWorkspace.split('-SPLIT-')[1],
+                                            selectedWorkspace.split('-SPLIT-')[2]
+                                        );
+                                    } else if (props.activeWorkspaceTab === 'Scores') {
+                                    }
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    marginRight:
+                                        Dimensions.get('window').width >= 1200
+                                            ? (Dimensions.get('window').width - 1200) / 2
+                                            : Dimensions.get('window').width >= 1024
+                                            ? (Dimensions.get('window').width - 1024) / 2 - 20
+                                            : 20,
+                                    marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
+                                    right: 0,
+                                    justifyContent: 'center',
+                                    bottom: 0,
+                                    width: 58,
+                                    height: 58,
+                                    borderRadius: 29,
+                                    backgroundColor: '#006AFF',
+                                    borderColor: '#f2f2f2',
+                                    borderWidth: 0,
+                                    shadowColor: '#000',
+                                    shadowOffset: {
+                                        width: 4,
+                                        height: 4,
+                                    },
+                                    shadowOpacity: 0.12,
+                                    shadowRadius: 10,
+                                    zIndex: 500000,
+                                }}
+                            >
+                                <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+                                    {props.activeWorkspaceTab === 'Content' ? (
+                                        <Ionicons name="pencil-outline" size={25} />
+                                    ) : props.activeWorkspaceTab === 'Discuss' ? (
+                                        <Ionicons name="add-outline" size={35} />
+                                    ) : props.activeWorkspaceTab === 'Meet' ? (
+                                        <Ionicons name="videocam-outline" size={25} />
+                                    ) : props.activeWorkspaceTab === 'Scores' ? (
+                                        <Ionicons name="download-outline" size={28} />
+                                    ) : null}
+                                </Text>
+                            </TouchableOpacity>
                         ) : null}
                     </View>
                 )
@@ -2879,31 +3811,31 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 buttons={[
                     {
                         text: 'OK',
-                        handler: function(event) {
+                        handler: function (event) {
                             setShowFilterPopup(false);
-                        }
+                        },
                     },
                     {
                         text: 'RESET',
-                        handler: function(event) {
+                        handler: function (event) {
                             setFilterStart(null);
                             setFilterEnd(null);
                             setFilterByChannel('All');
                             setFilterEventsType('All');
                             setShowFilterPopup(false);
-                        }
-                    }
+                        },
+                    },
                 ]}
                 themeVariant="light"
                 theme="ios"
                 onClose={() => setShowFilterPopup(false)}
                 responsive={{
                     small: {
-                        display: 'center'
+                        display: 'center',
                     },
                     medium: {
-                        display: 'center'
-                    }
+                        display: 'center',
+                    },
                 }}
             >
                 {/* Show all the settings here */}
@@ -2913,7 +3845,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 >
                     {props.option === 'Classroom' ? (
                         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                            <Text style={{ fontSize: 12, fontFamily: 'Inter', color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    color: '#000000',
+                                    paddingLeft: 5,
+                                    paddingBottom: 10,
+                                }}
+                            >
                                 Sort By
                             </Text>
 
@@ -2925,14 +3865,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     value={sortBy}
                                     onChange={(val: any) => {
                                         setSortBy(val.value);
+                                        updateSortByAsync(val.value);
                                     }}
                                     responsive={{
                                         small: {
-                                            display: 'bubble'
+                                            display: 'bubble',
                                         },
                                         medium: {
-                                            touchUi: false
-                                        }
+                                            touchUi: false,
+                                        },
                                     }}
                                     dropdown={false}
                                     data={sortbyOptions}
@@ -2942,7 +3883,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     ) : null}
 
                     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                        <Text style={{ fontSize: 12, fontFamily: 'Inter', color: '#000000', paddingLeft: 5, paddingBottom: 10 }}>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                color: '#000000',
+                                paddingLeft: 5,
+                                paddingBottom: 10,
+                            }}
+                        >
                             Filter
                         </Text>
 
@@ -2954,15 +3903,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 select="range"
                                 touchUi={true}
                                 inputProps={{
-                                    placeholder: 'Select'
+                                    placeholder: 'Select',
                                 }}
                                 responsive={{
                                     small: {
-                                        display: 'bubble'
+                                        display: 'bubble',
                                     },
                                     medium: {
-                                        touchUi: false
-                                    }
+                                        touchUi: false,
+                                    },
                                 }}
                                 value={[filterStart, filterEnd]}
                                 onChange={(val: any) => {
@@ -2972,8 +3921,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             />
                         </label>
                     </div>
-
-                    {props.option === 'To Do' ? renderEventFilters() : null}
                 </View>
             </Popup>
         </View>
@@ -3011,7 +3958,6 @@ const styleObject: any = () =>
             backgroundColor: 'none',
             lineHeight: 24,
             fontFamily: 'overpass',
-            fontWeight: 'bold',
             textTransform: 'uppercase',
             marginRight: 5,
         },
@@ -3033,10 +3979,10 @@ const styleObject: any = () =>
             height: 20,
             lineHeight: 20,
             paddingHorizontal: 8,
-            backgroundColor: '#f2f2f2',
+            backgroundColor: '#f8f8f8',
             fontFamily: 'inter',
             textAlign: 'center',
-            marginBottom: 1
+            marginBottom: 1,
         },
         allGrayFill1: {
             fontSize: 11,
@@ -3046,6 +3992,6 @@ const styleObject: any = () =>
             paddingHorizontal: 8,
             fontFamily: 'inter',
             textAlign: 'center',
-            marginBottom: 1
-        }
+            marginBottom: 1,
+        },
     });

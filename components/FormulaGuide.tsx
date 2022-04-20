@@ -353,17 +353,17 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             }}
         >
             <View
-                style={{ flexDirection: 'column', padding: Dimensions.get('window').width < 768 ? 0 : 25, backgroundColor: '#f2f2f2' }}
+                style={{ flexDirection: 'column', padding: Dimensions.get('window').width < 768 ? 0 : 25, backgroundColor: '#f8f8f8' }}
                 className="mbsc-align-center mbsc-padding"
             >
                 <View
                     style={{
                         width: '100%',
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8'
                     }}
                 >
                     {/* Formula Input */}
-                    <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>
+                    <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>
                         <Text style={{
                             fontSize: 16,
                             fontFamily: 'Inter',
@@ -375,7 +375,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         style={{
                             width: '100%',
                             marginBottom: Dimensions.get('window').width < 768 ? 0 : 20,
-                            backgroundColor: '#f2f2f2'
+                            backgroundColor: '#f8f8f8'
                         }}
                     >
                         <View
@@ -402,35 +402,35 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         style={{
                             width: '100%',
                             flexDirection: 'row',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                             borderBottomWidth: 1,
                             borderBottomColor: '#f2f2f2'
                         }}>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>Symbol</View>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>Keyboard command</View>
+                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Symbol</View>
+                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Keyboard command</View>
                     </View>
                     {symbols.map((s: any) => {
                         return (
                             <View
                                 key={JSON.stringify(s)}
-                                style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f2' }}>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>
+                                style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
+                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>
                                     {s.symbol}
                                 </View>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>{s.howTo}</View>
+                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>{s.howTo}</View>
                             </View>
                         );
                     })} */}
                     <View style={{
                         flexDirection: 'column',
-                        backgroundColor: '#f2f2f2',
+                        backgroundColor: '#f8f8f8',
                     }}>
                         <View style={{
                             paddingTop: 10,
                             marginBottom: 20,
                             flexDirection: 'row',
                             flexWrap: 'wrap',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                         }}>
                             {
                                 Object.keys(categoriesMap).map((cat: string, ind: number) => {
@@ -441,7 +441,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             paddingHorizontal: 10,
                                             paddingVertical: 8,
                                             marginRight: 10,
-                                            backgroundColor: '#f2f2f2',
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                         onPress={() => {
                                             setActiveTab(cat)
@@ -468,7 +468,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        backgroundColor: '#f2f2f2',
+                                        backgroundColor: '#f8f8f8',
                                         paddingBottom: 20
                                     }}
                                     key={ind.toString()}
@@ -478,7 +478,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             fontSize: 14,
                                             fontFamily: 'Inter',
                                             color: '#1f1f1f',
-                                            backgroundColor: '#f2f2f2',
+                                            backgroundColor: '#f8f8f8',
                                             marginBottom: 10
                                         }}
                                     >
@@ -490,7 +490,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             width: '100%',
                                             flexDirection: 'row',
                                             flexWrap: 'wrap',
-                                            backgroundColor: '#f2f2f2'
+                                            backgroundColor: '#f8f8f8'
                                         }}
                                     >
                                         {categoriesMap[cat].map((sym: string, ind: number) => {

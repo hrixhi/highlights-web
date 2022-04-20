@@ -17,7 +17,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [loading, setLoading] = useState(true);
     const [cues, setCues] = useState<any[]>([]);
     const [scores, setScores] = useState<any[]>([]);
-    const [isOwner, setIsOwner] = useState(false);
     const couldNotLoadSubscribersAlert = PreferredLanguageText('couldNotLoadSubscribers');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
 
@@ -31,21 +30,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.channelId]);
 
     /**
-     * @description Sets if user is owner
-     */
-    useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-                if (user._id.toString().trim() === props.channelCreatedBy) {
-                    setIsOwner(true);
-                }
-            }
-        })();
-    }, [props.channelCreatedBy, props.channelId]);
-
-    /**
      * @description Fetches all assignments and user grades for each
      */
     const loadCuesAndScores = useCallback(() => {
@@ -56,69 +40,27 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .query({
                     query: getGrades,
                     variables: {
-                        channelId: props.channelId
-                    }
+                        channelId: props.channelId,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.channel && res.data.channel.getSubmissionCues) {
                         setCues(res.data.channel.getSubmissionCues);
                         server
                             .query({
                                 query: getGradesList,
                                 variables: {
-                                    channelId: props.channelId
-                                }
+                                    channelId: props.channelId,
+                                    userId: props.userId,
+                                },
                             })
-                            .then(async res2 => {
+                            .then(async (res2) => {
                                 if (res2.data.channel.getGrades) {
-                                    const u = await AsyncStorage.getItem('user');
-                                    if (u) {
-                                        const user = JSON.parse(u);
-                                        if (
-                                            user._id.toString().trim() === props.channelCreatedBy.toString().trim() ||
-                                            res2.data.channel.getGrades.length === 0
-                                        ) {
-                                            // all scores
-                                            setScores(res2.data.channel.getGrades);
-                                        } else {
-                                            // only user's score
-                                            const score = res2.data.channel.getGrades.find((u: any) => {
-                                                return u.userId.toString().trim() === user._id.toString().trim();
-                                            });
-
-                                            const { scores } = score;
-
-                                            const updateScores = scores.map((x: any) => {
-                                                const { cueId, gradeWeight, graded, submittedAt } = x;
-                                                const findCue = res.data.channel.getSubmissionCues.find((u: any) => {
-                                                    return u._id.toString() === cueId.toString();
-                                                });
-
-                                                const { releaseSubmission } = findCue;
-
-                                                if (!releaseSubmission) {
-                                                    return {
-                                                        cueId,
-                                                        gradeWeight,
-                                                        graded: false,
-                                                        score: '',
-                                                        submittedAt 
-                                                    };
-                                                } else {
-                                                    return x;
-                                                }
-                                            });
-
-                                            score.scores = updateScores;
-
-                                            const singleScoreArray = [{ ...score }];
-                                            setScores(singleScoreArray);
-                                        }
-                                    }
+                                    setScores(res2.data.channel.getGrades);
                                     setLoading(false);
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 console.log('Error', err);
                                 Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                                 setLoading(false);
@@ -127,7 +69,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setLoading(false);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log('Error', err);
                     Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                     setLoading(false);
@@ -146,10 +88,10 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
-        let warning = ''
+        let warning = '';
 
         if (Number(score) > 100) {
-            warning = 'Warning- Assigned score is greater than 100'
+            warning = 'Warning- Assigned score is greater than 100';
         }
 
         Alert('Save grade?', warning, [
@@ -158,14 +100,14 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style: 'cancel',
                 onPress: () => {
                     return;
-                }
+                },
             },
             {
                 text: 'Yes',
                 onPress: async () => {
-                    handleSubmit()
-                }
-            }
+                    handleSubmit();
+                },
+            },
         ]);
 
         function handleSubmit() {
@@ -176,19 +118,19 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     variables: {
                         cueId,
                         userId,
-                        score
-                    }
+                        score,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.cue.submitGrade) {
                         server
                             .query({
                                 query: getGradesList,
                                 variables: {
-                                    channelId: props.channelId
-                                }
+                                    channelId: props.channelId,
+                                },
                             })
-                            .then(async res2 => {
+                            .then(async (res2) => {
                                 if (res2.data.channel.getGrades) {
                                     const u = await AsyncStorage.getItem('user');
                                     if (u) {
@@ -218,7 +160,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         cueId,
                                                         gradeWeight,
                                                         graded: false,
-                                                        score: ''
+                                                        score: '',
                                                     };
                                                 } else {
                                                     return x;
@@ -234,14 +176,14 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     setLoading(false);
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 console.log('Error', err);
                                 Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                                 setLoading(false);
                             });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     alert('Something went wrong. Try Again.');
                 });
         }
@@ -249,7 +191,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     // MAIN RETURN
     return (
-        <View style={{ width: '100%', backgroundColor: '#f2f2f2' }}>
+        <View style={{ width: '100%', backgroundColor: '#fff' }}>
             {loading ? (
                 <View
                     style={{
@@ -258,11 +200,12 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         justifyContent: 'center',
                         display: 'flex',
                         flexDirection: 'column',
-                        backgroundColor: '#f2f2f2',
+                        backgroundColor: '#fff',
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
-                        paddingVertical: 100
-                    }}>
+                        paddingVertical: 100,
+                    }}
+                >
                     <ActivityIndicator color={'#1F1F1F'} />
                 </View>
             ) : (
@@ -271,7 +214,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     scores={scores}
                     cues={cues}
                     channelName={props.filterChoice}
-                    isOwner={isOwner}
+                    isOwner={props.isOwner}
                     channelId={props.channelId}
                     closeModal={() => props.closeModal()}
                     reload={() => loadCuesAndScores()}

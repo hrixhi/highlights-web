@@ -596,7 +596,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             marginRight: 20,
                                                             marginBottom: 20,
                                                             borderRadius: 10,
-                                                            // backgroundColor: '#f2f2f2',
+                                                            // backgroundColor: '#f8f8f8',
                                                             borderWidth: 1,
                                                             borderColor: '#ccc',
                                                             shadowOffset: {
@@ -1354,6 +1354,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 20
     },
-    row: { minHeight: 50, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
+    row: { minHeight: 50, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#f2f2f2', borderBottomWidth: 1 },
     col: { width: "25%", justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
 });

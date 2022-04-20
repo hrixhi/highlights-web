@@ -17,7 +17,7 @@ import {
     totalInboxUnread,
     signup,
     authWithProvider,
-    getOrganisation
+    getOrganisation,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -31,11 +31,9 @@ import Dashboard from '../components/Dashboard';
 
 import Swiper from 'react-native-web-swiper';
 
-import agenda from '../assets/images/agenda.png'
-import workspace from '../assets/images/workspace.png'
-import inbox from '../assets/images/inbox.png'
-
-
+import agenda from '../assets/images/agenda.png';
+import workspace from '../assets/images/workspace.png';
+import inbox from '../assets/images/inbox.png';
 
 // HELPERS
 import { validateEmail } from '../helpers/emailCheck';
@@ -121,7 +119,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [loadingSubs, setLoadingSubs] = useState(true);
     const [loadingUser, setLoadingUser] = useState(true);
     const [loadingOrg, setLoadingOrg] = useState(true);
+    const [accountTabs] = useState(['profile', 'courses']);
+    const [activeAccountTab, setActiveAccountTab] = useState('profile');
 
+    const [workspaceOptions] = useState(['Content', 'Discuss', 'Meet', 'Scores', 'Settings']);
+
+    const [workspaceActiveTab, setWorkspaceActiveTab] = useState('Content');
+
+    const [selectedWorkspace, setSelectedWorkspace] = useState('');
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -190,9 +195,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
             if (u) {
                 const parsedUser: any = JSON.parse(u);
-                if (showOnboarding === "true") {
-                    setShowOnboardModal(true)
-                    AsyncStorage.setItem("show_onboard_modal", "false")
+                if (showOnboarding === 'true') {
+                    setShowOnboardModal(true);
+                    AsyncStorage.setItem('show_onboard_modal', 'false');
                 }
 
                 if (parsedUser._id && parsedUser._id !== '') {
@@ -221,10 +226,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     .query({
                         query: totalInboxUnread,
                         variables: {
-                            userId: user._id
-                        }
+                            userId: user._id,
+                        },
                     })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data.messageStatus.totalInboxUnread) {
                             setUnreadMessages(res.data.messageStatus.totalInboxUnread);
                         }
@@ -241,17 +246,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, []);
 
-    const updateInboxCount = useCallback(userId => {
+    const updateInboxCount = useCallback((userId) => {
         const server = fetchAPI('');
         server
             .query({
                 query: totalInboxUnread,
                 variables: {
                     userId,
-                    channelId
-                }
+                    channelId,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (
                     res.data.messageStatus.totalInboxUnread !== undefined &&
                     res.data.messageStatus.totalInboxUnread !== null
@@ -259,7 +264,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setUnreadMessages(res.data.messageStatus.totalInboxUnread);
                 }
             })
-            .catch(err => console.log(err));
+            .catch((err) => console.log(err));
     }, []);
 
     // imp
@@ -275,8 +280,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 const res = await server.query({
                     query: getCues,
                     variables: {
-                        userId: parsedUser._id
-                    }
+                        userId: parsedUser._id,
+                    },
                 });
 
                 if (res.data.cue.findByUserId) {
@@ -295,7 +300,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         if (index === -1) {
                             let cue: any = {};
                             cue = {
-                                ...item
+                                ...item,
                             };
                             delete cue.__typename;
                             if (allCues[cue.channelId]) {
@@ -323,7 +328,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }
                         });
                         const customC: any[] = [];
-                        Object.keys(custom).map(item => {
+                        Object.keys(custom).map((item) => {
                             customC.push(item);
                         });
                         customC.sort();
@@ -334,7 +339,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     Animated.timing(fadeAnimation, {
                         toValue: 1,
                         duration: 150,
-                        useNativeDriver: true
+                        useNativeDriver: true,
                     }).start();
                 }
             } catch (err) {
@@ -350,7 +355,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
                     });
                     const customC: any[] = [];
-                    Object.keys(custom).map(item => {
+                    Object.keys(custom).map((item) => {
                         customC.push(item);
                     });
                     customC.sort();
@@ -359,7 +364,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 Animated.timing(fadeAnimation, {
                     toValue: 1,
                     duration: 150,
-                    useNativeDriver: true
+                    useNativeDriver: true,
                 }).start();
             }
         } else if (unparsedCues) {
@@ -375,7 +380,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                 });
                 const customC: any[] = [];
-                Object.keys(custom).map(item => {
+                Object.keys(custom).map((item) => {
                     customC.push(item);
                 });
                 customC.sort();
@@ -384,7 +389,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             Animated.timing(fadeAnimation, {
                 toValue: 1,
                 duration: 150,
-                useNativeDriver: true
+                useNativeDriver: true,
             }).start();
         }
     }, []);
@@ -467,8 +472,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     email: email.toLowerCase(),
                     fullName: name,
                     provider: user._provider,
-                    avatar: profilePicURL
-                }
+                    avatar: profilePicURL,
+                },
             })
             .then(async (r: any) => {
                 if (
@@ -496,7 +501,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     Alert(error);
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
                 Alert('Something went wrong. Try again.');
             });
@@ -532,8 +537,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 variables: {
                     email: email.toLowerCase(),
                     fullName,
-                    password
-                }
+                    password,
+                },
             })
             .then(async (r: any) => {
                 if (r.data.user.signup && r.data.user.signup === 'SUCCESS') {
@@ -547,7 +552,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }
                 setSigningUp(false);
             })
-            .catch(e => {
+            .catch((e) => {
                 setSigningUp(false);
                 console.log(e);
             });
@@ -561,8 +566,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 query: login,
                 variables: {
                     email: email.toLowerCase(),
-                    password
-                }
+                    password,
+                },
             })
             .then(async (r: any) => {
                 if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
@@ -586,28 +591,27 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     Alert(error);
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
                 Alert('Something went wrong. Try again.');
             });
     }, [email, password]);
 
     useEffect(() => {
-
         if (user && user.email) {
             window.pendo.initialize({
                 visitor: {
-                    id: user._id,   // Required if user is logged in
-                    email:  user.email,      // Recommended if using Pendo Feedback, or NPS Email
-                    full_name: user.fullName,    // Recommended if using Pendo Feedback
-                    role: user.role,        // Optional
+                    id: user._id, // Required if user is logged in
+                    email: user.email, // Recommended if using Pendo Feedback, or NPS Email
+                    full_name: user.fullName, // Recommended if using Pendo Feedback
+                    role: user.role, // Optional
                     // You can add any additional visitor level key-values here,
                     // as long as it's not one of the above reserved names.
                 },
 
                 account: {
                     id: user.schoolId,
-                    name: user.orgName    // Required if using Pendo Feedback
+                    name: user.orgName, // Required if using Pendo Feedback
                     // name:         // Optional
                     // is_paying:    // Recommended if using Pendo Feedback
                     // monthly_value:// Recommended if using Pendo Feedback
@@ -617,11 +621,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     // You can add any additional account level key-values here,
                     // as long as it's not one of the above reserved names.
-                }
+                },
             });
         }
-
-    }, [user])
+    }, [user]);
 
     // imp
     const loadDataFromCloud = useCallback(async () => {
@@ -640,13 +643,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 .query({
                     query: findUserById,
                     variables: {
-                        id: user._id
-                    }
+                        id: user._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     const u = res.data.user.findById;
 
-                    console.log("Fetched User", u)
                     if (u) {
                         // await AsyncStorage.setItem('cueDraft', u.currentDraft);
                         delete u.currentDraft;
@@ -656,19 +658,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                         setUser(u);
                         setLoadingUser(false);
-
                     }
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
             // Get user cues
             server
                 .query({
                     query: getCuesFromCloud,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     if (res.data.cue.getCuesFromCloud) {
                         const allCues: any = {};
                         res.data.cue.getCuesFromCloud.map((cue: any) => {
@@ -693,10 +694,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             allCues['local'] = [];
                         }
 
-                        console.log("Local cues from loadDataFromCloud", allCues['local'])
-
                         const customC: any[] = [];
-                        Object.keys(custom).map(item => {
+                        Object.keys(custom).map((item) => {
                             customC.push(item);
                         });
                         customC.sort();
@@ -707,16 +706,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setLoadingCues(false);
                     }
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
             // Get subscription information
             server
                 .query({
                     query: getSubscriptions,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     if (res.data.subscription.findByUserId) {
                         const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
                             if (a.channelName < b.channelName) {
@@ -733,15 +732,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setLoadingSubs(false);
                     }
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
             server
                 .query({
                     query: getOrganisation,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     if (res.data && res.data.school.findByUserId) {
                         const stringOrg = JSON.stringify(res.data.school.findByUserId);
                         await AsyncStorage.setItem('school', stringOrg);
@@ -750,7 +749,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setLoadingOrg(false);
                     }
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
         }
     }, []);
 
@@ -767,7 +766,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const allCues: any[] = [];
 
         if (parsedCues !== {}) {
-            Object.keys(parsedCues).map(key => {
+            Object.keys(parsedCues).map((key) => {
                 parsedCues[key].map((cue: any) => {
                     const cueInput = {
                         ...cue,
@@ -777,7 +776,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         gradeWeight: cue.submission && cue.gradeWeight ? cue.gradeWeight.toString() : undefined,
                         endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? new Date(cue.endPlayAt).toISOString() : '',
                         allowedAttempts:
-                            cue.allowedAttempts && cue.allowedAttempts !== null ? cue.allowedAttempts.toString() : null
+                            cue.allowedAttempts && cue.allowedAttempts !== null ? cue.allowedAttempts.toString() : null,
                     };
                     allCuesToSave.push({ ...cueInput });
                     // Deleting these because they should not be changed ...
@@ -813,10 +812,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 mutation: saveCuesToCloud,
                 variables: {
                     userId: parsedUser._id,
-                    cues: allCues
-                }
+                    cues: allCues,
+                },
             })
-            .then(async res => {
+            .then(async (res) => {
                 if (res.data.cue.saveCuesToCloud) {
                     const newIds: any = res.data.cue.saveCuesToCloud;
                     const updatedCuesArray: any[] = [];
@@ -828,7 +827,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         if (updatedItem) {
                             updatedCuesArray.push({
                                 ...c,
-                                _id: updatedItem.newId
+                                _id: updatedItem.newId,
                             });
                         } else {
                             updatedCuesArray.push(c);
@@ -856,13 +855,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         setCues(updatedCuesObj);
                     }
                 }
-
             })
-            .catch(err => console.log(err));
+            .catch((err) => console.log(err));
     }, [cues]);
 
     const openModal = useCallback(
-        type => {
+        (type) => {
             setModalType(type);
             AsyncStorage.setItem('lastopened', type);
         },
@@ -875,7 +873,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             let cueIndex = 0;
 
             if (cues !== {}) {
-                Object.keys(cues).map(key => {
+                Object.keys(cues).map((key) => {
                     cues[key].map((cue: any, index: number) => {
                         if (cue._id === _id) {
                             cueKey = key;
@@ -943,7 +941,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                 });
                 const customC: any[] = [];
-                Object.keys(custom).map(item => {
+                Object.keys(custom).map((item) => {
                     customC.push(item);
                 });
                 customC.sort();
@@ -952,7 +950,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             Animated.timing(fadeAnimation, {
                 toValue: 1,
                 duration: 150,
-                useNativeDriver: true
+                useNativeDriver: true,
             }).start();
         }
         if (u) {
@@ -969,10 +967,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             .mutate({
                 mutation: resetPassword,
                 variables: {
-                    email
-                }
+                    email,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data && res.data.user.resetPassword) {
                     Alert(weHaveEmailedPasswordAlert);
                     setShowForgotPassword(false);
@@ -992,10 +990,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 .query({
                     query: getSubscriptions,
                     variables: {
-                        userId: parsedUser._id
-                    }
+                        userId: parsedUser._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     if (res.data.subscription.findByUserId) {
                         const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
                             if (a.channelName < b.channelName) {
@@ -1011,7 +1009,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         await AsyncStorage.setItem('subscriptions', stringSub);
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     alert('Could not refresh Subscriptions');
                 });
         }
@@ -1024,7 +1022,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             if (value) {
                 subCues = JSON.parse(value);
             }
-        } catch (e) { }
+        } catch (e) {}
         if (subCues[updateModalKey].length === 0) {
             return;
         }
@@ -1035,7 +1033,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         const modified = {
             ...unmodified,
-            status: 'read'
+            status: 'read',
         };
 
         subCues[updateModalKey][updateModalIndex] = modified;
@@ -1067,30 +1065,70 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const cuesArray: any[] = [];
 
     if (cues !== {}) {
-        Object.keys(cues).map(key => {
+        Object.keys(cues).map((key) => {
             cues[key].map((cue: any, index: number) => {
                 cuesArray.push({
                     ...cue,
                     key,
-                    index
+                    index,
                 });
             });
         });
     }
 
     const renderTimeMessage = () => {
-        return 'Overview'
+        return 'Overview';
 
-        const currentTime = new Date()
+        const currentTime = new Date();
 
         if (currentTime.getHours() < 12 && currentTime.getHours() > 0) {
-            return 'Good Morning'
+            return 'Good Morning';
         } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 17) {
-            return 'Good Afternoon'
+            return 'Good Afternoon';
         } else {
-            return 'Good Evening'
+            return 'Good Evening';
         }
-    }
+    };
+
+    /**
+     * @description Helpter for icon to use in navbar
+     */
+    const getNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'To Do':
+                return option === op ? 'calendar' : 'calendar-outline';
+            case 'Classroom':
+                return option === op ? 'library' : 'library-outline';
+            case 'Search':
+                return option === op ? 'search' : 'search-outline';
+            case 'Inbox':
+                return option === op ? 'chatbubble' : 'chatbubble-outline';
+            default:
+                return option === op ? 'person' : 'person-outline';
+        }
+    };
+
+    const getNavbarIconColor = (op: string) => {
+        if (op === option) {
+            return '#006AFF';
+        }
+        return '#fff';
+    };
+
+    const getNavbarText = (op: string) => {
+        switch (op) {
+            case 'To Do':
+                return 'Agenda';
+            case 'Classroom':
+                return 'Workspace';
+            case 'Search':
+                return 'Search';
+            case 'Inbox':
+                return 'Inbox';
+            default:
+                return 'Account';
+        }
+    };
 
     const cuesCopy = cuesArray.sort((a: any, b: any) => {
         if (a.color < b.color) {
@@ -1104,7 +1142,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     let dateFilteredCues: any[] = [];
     if (filterStart && filterEnd) {
-        dateFilteredCues = cuesArray.filter(item => {
+        dateFilteredCues = cuesArray.filter((item) => {
             const date = new Date(item.date);
             return date >= filterStart && date <= filterEnd;
         });
@@ -1123,7 +1161,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         position: 'absolute',
                         zIndex: 50,
                         overflow: 'hidden',
-                        backgroundColor: 'rgba(16,16,16, 0.7)'
+                        backgroundColor: 'rgba(16,16,16, 0.7)',
                     }}
                 >
                     <View
@@ -1138,7 +1176,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             height: dimensions.window.width < 768 ? '100%' : '100%',
                             borderRadius: dimensions.window.width < 768 ? 0 : 0,
                             marginTop: dimensions.window.width < 768 ? 0 : 0,
-                            paddingHorizontal: 40
+                            paddingHorizontal: 40,
                         }}
                     >
                         <ScrollView
@@ -1147,7 +1185,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             contentContainerStyle={{
                                 height: '100%',
                                 paddingVertical: 40,
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                             }}
                             nestedScrollEnabled={true}
                         >
@@ -1156,14 +1194,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     justifyContent: 'center',
                                     display: 'flex',
-                                    paddingBottom: 20
+                                    paddingBottom: 20,
                                 }}
                             >
                                 <Image
                                     source={logo}
                                     style={{
                                         width: dimensions.window.height * 0.16 * 0.53456,
-                                        height: dimensions.window.height * 0.16 * 0.2
+                                        height: dimensions.window.height * 0.16 * 0.2,
                                     }}
                                     resizeMode={'contain'}
                                 />
@@ -1174,7 +1212,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     color: '#1F1F1F',
                                     fontFamily: 'overpass',
                                     paddingBottom: 20,
-                                    textAlign: 'center'
+                                    textAlign: 'center',
                                 }}
                             >
                                 Get started for free.
@@ -1187,7 +1225,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     marginTop: 30,
                                     backgroundColor: 'white',
                                     justifyContent: 'center',
-                                    alignSelf: 'center'
+                                    alignSelf: 'center',
                                 }}
                             >
                                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
@@ -1257,7 +1295,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginTop: 15,
                                         width: '100%',
                                         justifyContent: 'center',
-                                        flexDirection: 'row'
+                                        flexDirection: 'row',
                                     }}
                                 >
                                     <Text
@@ -1273,7 +1311,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             // width: 180,
                                             width: 175,
                                             borderRadius: 15,
-                                            textTransform: 'uppercase'
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         Sign Up
@@ -1290,13 +1328,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginBottom: 30,
                                         width: '100%',
                                         justifyContent: 'center',
-                                        flexDirection: 'row'
+                                        flexDirection: 'row',
                                     }}
                                 >
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            color: '#006AFF'
+                                            color: '#006AFF',
                                         }}
                                     >
                                         Back to Sign In
@@ -1317,7 +1355,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         position: 'absolute',
                         zIndex: 50,
                         backgroundColor: 'rgba(16,16,16, 0.7)',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
                     }}
                 >
                     <View
@@ -1332,7 +1370,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             height: dimensions.window.width < 768 ? '100%' : '100%',
                             borderRadius: dimensions.window.width < 768 ? 0 : 0,
                             marginTop: dimensions.window.width < 768 ? 0 : 0,
-                            paddingHorizontal: 40
+                            paddingHorizontal: 40,
                         }}
                     >
                         <ScrollView
@@ -1341,7 +1379,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             contentContainerStyle={{
                                 height: '100%',
                                 paddingVertical: 40,
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                             }}
                             nestedScrollEnabled={true}
                         >
@@ -1350,14 +1388,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     flexDirection: 'row',
                                     justifyContent: 'center',
                                     display: 'flex',
-                                    paddingBottom: 30
+                                    paddingBottom: 30,
                                 }}
                             >
                                 <Image
                                     source={logo}
                                     style={{
                                         width: dimensions.window.height * 0.16 * 0.53456,
-                                        height: dimensions.window.height * 0.16 * 0.2
+                                        height: dimensions.window.height * 0.16 * 0.2,
                                     }}
                                     resizeMode={'contain'}
                                 />
@@ -1368,7 +1406,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     color: '#1F1F1F',
                                     fontFamily: 'overpass',
                                     paddingBottom: 20,
-                                    textAlign: 'center'
+                                    textAlign: 'center',
                                 }}
                             >
                                 {showForgotPassword
@@ -1382,7 +1420,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '100%',
                                     backgroundColor: 'white',
                                     justifyContent: 'center',
-                                    alignSelf: 'center'
+                                    alignSelf: 'center',
                                 }}
                             >
                                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
@@ -1403,7 +1441,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             style={{
                                                 flexDirection: 'row',
                                                 justifyContent: 'space-between',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}
                                         >
                                             <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
@@ -1417,13 +1455,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     style={{
                                                         backgroundColor: 'white',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'center'
+                                                        justifyContent: 'center',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
-                                                            color: '#006AFF'
+                                                            color: '#006AFF',
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -1449,7 +1487,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         justifyContent: 'center',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        paddingBottom: 10
+                                        paddingBottom: 10,
                                     }}
                                 >
                                     <TouchableOpacity
@@ -1468,7 +1506,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             marginTop: 15,
                                             width: '100%',
                                             justifyContent: 'center',
-                                            flexDirection: 'row'
+                                            flexDirection: 'row',
                                         }}
                                     >
                                         <Text
@@ -1484,7 +1522,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 // width: 180,
                                                 width: 175,
                                                 borderRadius: 15,
-                                                textTransform: 'uppercase'
+                                                textTransform: 'uppercase',
                                             }}
                                         >
                                             {showForgotPassword
@@ -1564,13 +1602,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 marginBottom: 30,
                                                 width: '100%',
                                                 justifyContent: 'center',
-                                                flexDirection: 'row'
+                                                flexDirection: 'row',
                                             }}
                                         >
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#006AFF'
+                                                    color: '#006AFF',
                                                 }}
                                             >
                                                 Back to Sign In
@@ -1585,7 +1623,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     justifyContent: 'flex-start',
                                     paddingLeft: 5,
                                     paddingBottom: 5,
-                                    marginTop: 20
+                                    marginTop: 20,
                                 }}
                             >
                                 {/* <LanguageSelect /> */}
@@ -1594,39 +1632,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 </View>
             ) : null}
+
             {showHome &&
                 !loadingCues &&
                 !loadingUser &&
                 !loadingSubs &&
                 !loadingOrg &&
                 !saveDataInProgress &&
+                !selectedWorkspace &&
                 ((option === 'Classroom' && modalType !== 'Create') ||
-                    (option === 'To Do' && tab !== 'Add') ||
-                    (option === 'Inbox' && !showDirectory && !hideNewChatButton) ||
-                    (option === 'Channels' && !showCreate) ||
-                    (option === 'Settings' && !showHelp) ? (
+                (option === 'To Do' && tab !== 'Add') ||
+                (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
+                (option === 'Account' && !showCreate) ||
+                (option === 'Settings' && !showHelp) ? (
                     <TouchableOpacity
                         onPress={() => {
                             if (option === 'Classroom') {
-                                setCueId('');
-                                setModalType('');
-                                setCreatedBy('');
-                                // setChannelFilterChoice('All')
-                                if (modalType === 'Update') {
-                                    fadeAnimation.setValue(0);
-                                    if (modalType === 'Update') {
-                                        setChannelId('');
-                                    }
-                                    loadData(true);
-                                }
                                 openModal('Create');
-                                // setShowHome(false)
-                                // setMenuCollapsed(true)
                             } else if (option === 'To Do') {
                                 setTab('Add');
-                            } else if (option === 'Channels') {
+                            } else if (option === 'Account' && activeAccountTab === 'courses') {
                                 setShowCreate(true);
-                            } else if (option === 'Settings') {
+                            } else if (option === 'Account' && activeAccountTab === 'profile') {
                                 window.open('https://www.learnwithcues.com/help', '_blank');
                             } else {
                                 setShowDirectory(true);
@@ -1635,8 +1662,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             position: 'absolute',
                             marginRight:
-                                Dimensions.get('window').width >= 1100
-                                    ? (Dimensions.get('window').width - 1100) / 2 - 25
+                                Dimensions.get('window').width >= 1200
+                                    ? (Dimensions.get('window').width - 1200) / 2
+                                    : Dimensions.get('window').width >= 1024
+                                    ? (Dimensions.get('window').width - 1024) / 2 - 20
                                     : 20,
                             marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
                             right: 0,
@@ -1651,11 +1680,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             shadowColor: '#000',
                             shadowOffset: {
                                 width: 4,
-                                height: 4
+                                height: 4,
                             },
                             shadowOpacity: 0.12,
                             shadowRadius: 10,
-                            zIndex: showLoginWindow ? 40 : 500000
+                            zIndex: showLoginWindow ? 40 : 500000,
                         }}
                     >
                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1663,7 +1692,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons name="pencil-outline" size={25} />
                             ) : option === 'To Do' ? (
                                 <Ionicons name="add-outline" size={35} />
-                            ) : option === 'Channels' ? (
+                            ) : option === 'Account' && activeAccountTab === 'courses' ? (
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Inbox' ? (
                                 <Ionicons name="person-add-outline" size={21} />
@@ -1683,7 +1712,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         // overflow: 'scroll',
                         zIndex: 50,
                         backgroundColor: '#fff',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
                     }}
                 >
                     <View
@@ -1696,7 +1725,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             width: '100%',
                             height: '100%',
                             borderRadius: 0,
-                            marginTop: 0
+                            marginTop: 0,
                         }}
                     >
                         {loadingCues || loadingUser || loadingSubs || loadingOrg || saveDataInProgress ? (
@@ -1735,16 +1764,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     loadDataFromCloud();
                                 }}
                                 openCreate={() => {
-                                    setCueId('');
-                                    setModalType('');
-                                    setCreatedBy('');
-                                    if (modalType === 'Update') {
-                                        fadeAnimation.setValue(0);
-                                        if (modalType === 'Update') {
-                                            setChannelId('');
-                                        }
-                                        loadData(true);
-                                    }
                                     openModal('Create');
                                 }}
                                 cues={dateFilteredCues}
@@ -1829,6 +1848,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 refreshUnreadInbox={refreshUnreadInbox}
                                 hideNewChatButton={(hide: boolean) => setHideNewChatButton(hide)}
                                 openHelpModal={(show: boolean) => setShowOnboardModal(true)}
+                                accountTabs={accountTabs}
+                                activeAccountTab={activeAccountTab}
+                                setActiveAccountTab={(tab: string) => setActiveAccountTab(tab)}
+                                workspaceOptions={workspaceOptions}
+                                activeWorkspaceTab={workspaceActiveTab}
+                                setWorkspaceActiveTab={setWorkspaceActiveTab}
+                                setSelectedWorkspace={setSelectedWorkspace}
                             />
                         )}
                     </View>
@@ -1844,7 +1870,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     maxWidth: dimensions.window.width,
-                    overflow: 'hidden'
+                    overflow: 'hidden',
                 }}
             >
                 {modalType === 'Update' ? (
@@ -1873,23 +1899,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <View
                     style={{
                         position: 'absolute',
-                        backgroundColor: '#000000',
                         alignSelf: 'flex-end',
                         width: '100%',
-                        paddingTop: 14,
+                        paddingTop: 12,
                         paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
-                        paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
+                        paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 40,
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        height: Dimensions.get('window').width < 768 ? 54 : 68,
+                        height: Dimensions.get('window').width < 768 ? 60 : 68,
                         shadowColor: '#000',
                         shadowOffset: {
                             width: 0,
-                            height: -7
+                            height: -10,
                         },
-                        shadowOpacity: 0.12,
-                        shadowRadius: 10,
-                        zIndex: showLoginWindow ? 40 : 500000
+                        bottom: 0,
+                        right: 0,
+                        shadowOpacity: 0.03,
+                        shadowRadius: 12,
+                        zIndex: showLoginWindow ? 40 : 100,
+                        elevation: showLoginWindow ? 40 : 120,
+                        borderTopColor: '#e8e8e8',
+                        borderTopWidth: 1,
+                        backgroundColor: '#000000de',
                     }}
                 >
                     {options.map((op: any) => {
@@ -1899,7 +1930,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         return (
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#000000'
+                                    backgroundColor: 'none',
+                                    width: '25%',
+                                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    paddingBottom: 2,
                                 }}
                                 onPress={() => {
                                     setOption(op);
@@ -1923,30 +1959,24 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                 }}
                             >
-                                <Text style={op === option ? styles('').allGrayFill : styles('').all}>
-                                    {op === 'Classroom'
-                                        ? version === 'read'
-                                            ? 'Library'
-                                            : 'Workspace'
-                                        : op === 'Performance'
-                                            ? 'Performance'
-                                            : op === 'To Do'
-                                                ? 'Agenda'
-                                                : op}
+                                <Ionicons
+                                    name={getNavbarIconName(op)}
+                                    style={{ color: getNavbarIconColor(op), marginBottom: 3 }}
+                                    size={21}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
+                                        lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
+                                        color: getNavbarIconColor(op),
+                                        // fontWeight: 'bold',
+                                        fontFamily: 'inter',
+                                        marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
+                                        paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                    }}
+                                >
+                                    {getNavbarText(op)}
                                 </Text>
-                                {op === 'Inbox' && unreadMessages > 0 ? (
-                                    <View
-                                        style={{
-                                            width: 7,
-                                            height: 7,
-                                            borderRadius: 7,
-                                            backgroundColor: '#f94144',
-                                            position: 'absolute',
-                                            top: -3,
-                                            right: 5
-                                        }}
-                                    />
-                                ) : null}
                             </TouchableOpacity>
                         );
                     })}
@@ -1955,18 +1985,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {
                 <Popup
                     isOpen={showOnboardModal}
-                    buttons={[
-                    ]}
+                    buttons={[]}
                     themeVariant="light"
                     theme="ios"
                     onClose={() => setShowOnboardModal(false)}
                     responsive={{
                         small: {
-                            display: 'center'
+                            display: 'center',
                         },
                         medium: {
-                            display: 'center'
-                        }
+                            display: 'center',
+                        },
                     }}
                 >
                     {/* Show all the settings here */}
@@ -1979,13 +2008,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                         className="mbsc-align-center mbsc-padding"
                     >
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            backgroundColor: '#f2f2f2',
-                            paddingVertical: 20
-                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                backgroundColor: '#f8f8f8',
+                                paddingVertical: 20,
+                            }}
+                        >
                             <Text
                                 style={{
                                     fontSize: Dimensions.get('window').width < 768 ? 24 : 28,
@@ -2000,7 +2031,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    backgroundColor: '#f2f2f2',
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <TouchableOpacity
@@ -2011,8 +2042,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         overflow: 'hidden',
                                         justifyContent: 'center',
                                         flexDirection: 'row',
-                                        backgroundColor: '#f2f2f2',
-
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text
@@ -2027,7 +2057,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             height: 30,
                                             borderRadius: 15,
                                             width: 125,
-                                            textTransform: 'uppercase'
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         MORE HELP
@@ -2039,7 +2069,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                        setShowOnboardModal(false)
                                     }}
                                     style={{
-                                        backgroundColor: '#f2f2f2',
+                                        backgroundColor: '#f8f8f8',
                                         marginLeft: 15
                                     }}
                                 >
@@ -2067,94 +2097,112 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <View>
                             <Swiper
                                 containerStyle={{
-                                    width: Dimensions.get('window').width < 768 ? '300' : "480",
-                                    height: Dimensions.get('window').width < 768 ? '430' : 500
+                                    width: Dimensions.get('window').width < 768 ? '300' : '480',
+                                    height: Dimensions.get('window').width < 768 ? '430' : 500,
                                 }}
                                 innerContainerStyle={{
-                                    width: Dimensions.get('window').width < 768 ? '300' : "480",
+                                    width: Dimensions.get('window').width < 768 ? '300' : '480',
                                     height: Dimensions.get('window').width < 768 ? '430' : 500,
-                                    backgroundColor: '#f2f2f2',
-                                    paddingTop: 20
+                                    backgroundColor: '#f8f8f8',
+                                    paddingTop: 20,
                                 }}
                             >
-                                <View style={{
-                                    backgroundColor: '#f2f2f2'
-                                }}>
-                                    <Text style={{
-                                        fontSize: 18,
-                                        fontFamily: 'Inter',
-                                        paddingTop: 10
-                                    }}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'Inter',
+                                            paddingTop: 10,
+                                        }}
+                                    >
                                         Agenda
                                     </Text>
                                     <Image
                                         source={agenda}
                                         style={{
                                             width: '100%',
-                                            height: 350
+                                            height: 350,
                                         }}
                                         resizeMode={'contain'}
                                     />
-                                    <Text style={{
-                                        fontSize: 15,
-                                        fontFamily: 'Overpass'
-                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontFamily: 'Overpass',
+                                        }}
+                                    >
                                         {'\n'}
                                         Cues compiles your daily, weekly and monthly plan.{'\n'}
                                         Click + to schedule a new event or meeting. {'\n'}
                                         Submission tasks will be listed automatically.{'\n'}
                                     </Text>
                                 </View>
-                                <View style={{
-                                    backgroundColor: '#f2f2f2'
-                                }}>
-                                    <Text style={{
-                                        fontSize: 18,
-                                        fontFamily: 'Inter',
-                                        paddingTop: 10
-                                    }}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'Inter',
+                                            paddingTop: 10,
+                                        }}
+                                    >
                                         Workspace
                                     </Text>
                                     <Image
                                         source={workspace}
                                         style={{
                                             width: '100%',
-                                            height: 350
+                                            height: 350,
                                         }}
                                         resizeMode={'contain'}
                                     />
-                                    <Text style={{
-                                        fontSize: 15,
-                                        fontFamily: 'Overpass'
-                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontFamily: 'Overpass',
+                                        }}
+                                    >
                                         {'\n'}
                                         One place for all your books, notes, tests and discussions.{'\n'}
                                         Click + to create, import or share content. {'\n'}
                                         Click on any content or discussion thread to view it.{'\n'}
                                     </Text>
                                 </View>
-                                <View style={{
-                                    backgroundColor: '#f2f2f2'
-                                }}>
-                                    <Text style={{
-                                        fontSize: 18,
-                                        fontFamily: 'Inter',
-                                        paddingTop: 10
-                                    }}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'Inter',
+                                            paddingTop: 10,
+                                        }}
+                                    >
                                         Inbox
                                     </Text>
                                     <Image
                                         source={inbox}
                                         style={{
                                             width: '100%',
-                                            height: 350
+                                            height: 350,
                                         }}
                                         resizeMode={'contain'}
                                     />
-                                    <Text style={{
-                                        fontSize: 15,
-                                        fontFamily: 'Overpass'
-                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontFamily: 'Overpass',
+                                        }}
+                                    >
                                         {'\n'}
                                         Chat or meet with your peers, instantly. {'\n'}
                                         Click + to create a new message or launch a private meeting. {'\n'}
@@ -2165,14 +2213,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
                         {/* </div> */}
 
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#f2f2f2',
-                            paddingVertical: 20
-                        }}>
-
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f8f8f8',
+                                paddingVertical: 20,
+                            }}
+                        >
                             <TouchableOpacity
                                 onPress={() => {
                                     window.open('https://cues-files.s3.amazonaws.com/builds/Cues-setup.dmg', '_blank');
@@ -2181,11 +2230,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     overflow: 'hidden',
                                     justifyContent: 'center',
                                     flexDirection: 'row',
-                                    backgroundColor: '#f2f2f2',
-                                    paddingRight: 35
+                                    backgroundColor: '#f8f8f8',
+                                    paddingRight: 35,
                                 }}
                             >
-                                <Ionicons name='logo-apple' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                                <Ionicons name="logo-apple" size={Dimensions.get('window').width < 768 ? 30 : 35} />
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -2196,13 +2245,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     overflow: 'hidden',
                                     justifyContent: 'center',
                                     flexDirection: 'row',
-                                    backgroundColor: '#f2f2f2',
-                                    paddingRight: 35
+                                    backgroundColor: '#f8f8f8',
+                                    paddingRight: 35,
                                 }}
                             >
-                                <Ionicons name='logo-windows' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                                <Ionicons name="logo-windows" size={Dimensions.get('window').width < 768 ? 30 : 35} />
                             </TouchableOpacity>
-
 
                             <TouchableOpacity
                                 onPress={() => {
@@ -2212,26 +2260,29 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     overflow: 'hidden',
                                     justifyContent: 'center',
                                     flexDirection: 'row',
-                                    backgroundColor: '#f2f2f2',
-                                    paddingRight: 35
+                                    backgroundColor: '#f8f8f8',
+                                    paddingRight: 35,
                                 }}
                             >
-                                <Ionicons name='logo-apple-appstore' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                                <Ionicons
+                                    name="logo-apple-appstore"
+                                    size={Dimensions.get('window').width < 768 ? 30 : 35}
+                                />
                             </TouchableOpacity>
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    Alert("Available soon!")
+                                    Alert('Available soon!');
                                     // window.open('https://www.learnwithcues.com/help', '_blank');
                                 }}
                                 style={{
                                     overflow: 'hidden',
                                     justifyContent: 'center',
                                     flexDirection: 'row',
-                                    backgroundColor: '#f2f2f2'
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
-                                <Ionicons name='logo-android' size={Dimensions.get('window').width < 768 ? 30 : 35} />
+                                <Ionicons name="logo-android" size={Dimensions.get('window').width < 768 ? 30 : 35} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -2248,7 +2299,7 @@ const styles = (channelId: string) =>
         container: {
             flex: 1,
             flexDirection: 'row',
-            height: '100%'
+            height: '100%',
         },
         all: {
             fontSize: 12,
@@ -2259,7 +2310,7 @@ const styles = (channelId: string) =>
             backgroundColor: '#000000',
             lineHeight: 25,
             fontFamily: 'overpass',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
         },
         allGrayFill: {
             fontSize: 12,
@@ -2270,7 +2321,7 @@ const styles = (channelId: string) =>
             lineHeight: 25,
             height: 25,
             fontFamily: 'inter',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
         },
         activityContainer: {
             borderTopWidth: 0,
@@ -2281,11 +2332,11 @@ const styles = (channelId: string) =>
             height: '100%',
             width: '100%',
             justifyContent: 'center',
-            backgroundColor: '#f2f2f2'
+            backgroundColor: '#f8f8f8',
         },
         horizontal: {
             flexDirection: 'row',
-            justifyContent: 'space-around'
+            justifyContent: 'space-around',
         },
         input: {
             width: '100%',
@@ -2295,6 +2346,6 @@ const styles = (channelId: string) =>
             paddingTop: 13,
             paddingBottom: 13,
             marginTop: 5,
-            marginBottom: 20
-        }
+            marginBottom: 20,
+        },
     });

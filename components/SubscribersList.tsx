@@ -17,7 +17,7 @@ import {
     gradeQuiz,
     editReleaseSubmission,
     updateAnnotation,
-    modifyActiveAttemptQuiz
+    modifyActiveAttemptQuiz,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -79,22 +79,22 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredSubscribers = subscribers;
             break;
         case 'Read':
-            filteredSubscribers = subscribers.filter(item => {
+            filteredSubscribers = subscribers.filter((item) => {
                 return item.fullName === 'read';
             });
             break;
         case 'Delivered':
-            filteredSubscribers = subscribers.filter(item => {
+            filteredSubscribers = subscribers.filter((item) => {
                 return item.fullName === 'not-delivered' || item.fullName === 'delivered';
             });
             break;
         case 'Graded':
-            filteredSubscribers = subscribers.filter(item => {
+            filteredSubscribers = subscribers.filter((item) => {
                 return item.fullName === 'graded';
             });
             break;
         case 'Submitted':
-            filteredSubscribers = subscribers.filter(item => {
+            filteredSubscribers = subscribers.filter((item) => {
                 return item.fullName === 'submitted';
             });
             break;
@@ -109,7 +109,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         return {
             value: sub._id,
             text: sub.displayName,
-            group: sub.displayName[0]
+            group: sub.displayName[0],
         };
     });
     options = options.sort((a: any, b: any) => {
@@ -120,15 +120,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     // HOOKS
 
-    useEffect(() => {
-        if (props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
-            const obj = JSON.parse(props.cue.original);
+    // useEffect(() => {
+    //     if (props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
+    //         const obj = JSON.parse(props.cue.original);
 
-            if (obj.quizId) {
-                setIsQuiz(true);
-            }
-        }
-    }, [props.cue]);
+    //         if (obj.quizId) {
+    //             setIsQuiz(true);
+    //         }
+    //     }
+    // }, [props.cue]);
+    // useEffect(() => {
+    //     setIsQuiz(props.isQuiz)
+    // }, [props.isQuiz])
 
     /**
      * @description prepares export data for Assignment grades
@@ -165,7 +168,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         problems.forEach((prob: any, i: number) => {
             const { questionType, required, options = [] } = prob;
-            let type = questionType === '' ? 'MCQ' : (questionType === 'trueFalse' ? 'True/False' : 'Free Response');
+            let type = questionType === '' ? 'MCQ' : questionType === 'trueFalse' ? 'True/False' : 'Free Response';
 
             let require = required ? 'Required' : 'Optional';
 
@@ -286,11 +289,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setUrl(obj.url);
                 setType(obj.type);
                 setTitle(obj.title);
-            } else if (
-                obj.attempts !== undefined &&
-                obj.quizResponses === undefined
-            ) {
-
+            } else if (obj.attempts !== undefined && !props.isQuiz) {
                 obj.attempts.map((attempt: any, index: number) => {
                     if (attempt.isActive) {
                         setImported(true);
@@ -298,11 +297,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setType(attempt.type);
                         setTitle(attempt.title);
                     }
-                })
+                });
 
                 setSubmissionAttempts(obj.attempts);
-            } else if (obj.attempts !== undefined && obj.quizResponses !== undefined) {
-                setIsQuiz(true);
+            } else if (obj.attempts !== undefined && props.isQuiz) {
+                // setIsQuiz(true);
                 setQuizAttempts(obj.attempts);
 
                 // Set solutions to the active quiz attempt
@@ -328,7 +327,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             setType('');
             setTitle('');
         }
-    }, [submission]);
+    }, [submission, props.isQuiz]);
 
     /**
      * @description Setup PDFTRON Webviewer with Submission
@@ -346,10 +345,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
-                    initialDoc: url
+                    initialDoc: url,
                 },
                 submissionViewerRef.current
-            ).then(async instance => {
+            ).then(async (instance) => {
                 const { documentViewer, annotationManager } = instance.Core;
 
                 const u = await AsyncStorage.getItem('user');
@@ -403,7 +402,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description if submission is a quiz then fetch Quiz
      */
     useEffect(() => {
-        if (isQuiz) {
+        if (props.isQuiz) {
             const obj = JSON.parse(props.cue.original);
 
             setLoading(true);
@@ -414,10 +413,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     .query({
                         query: getQuiz,
                         variables: {
-                            quizId: obj.quizId
-                        }
+                            quizId: obj.quizId,
+                        },
                     })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data && res.data.quiz.getQuiz) {
                             setProblems(res.data.quiz.getQuiz.problems);
                             setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {});
@@ -426,7 +425,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     });
             }
         }
-    }, [isQuiz]);
+    }, [props.isQuiz]);
 
     /**
      * @description If assingment has upload Url then setup Webviewer (not used since tabs are disabled rn)
@@ -439,10 +438,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         WebViewer(
             {
                 licenseKey: 'xswED5JutJBccg0DZhBM',
-                initialDoc: url
+                initialDoc: url,
             },
             RichText.current
-        ).then(instance => {
+        ).then((instance) => {
             const { documentViewer } = instance.Core;
             // you can now call WebViewer APIs here...
             documentViewer.addEventListener('documentLoaded', () => {
@@ -463,16 +462,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     variables: {
                         cueId: props.cueId,
                         userId,
-                        attempts: JSON.stringify(attempts)
-                    }
+                        attempts: JSON.stringify(attempts),
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.cue.updateAnnotation) {
                         // props.reload()
                         // setShowSubmission(false)
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     console.log('Error', e);
                     Alert('Could not save annotation.');
                 });
@@ -521,7 +520,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 style: 'cancel',
                 onPress: () => {
                     return;
-                }
+                },
             },
             {
                 text: 'Yes',
@@ -534,16 +533,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 cueId: props.cueId,
                                 userId,
                                 score,
-                                comment
-                            }
+                                comment,
+                            },
                         })
-                        .then(res => {
+                        .then((res) => {
                             if (res.data.cue.submitGrade) {
                                 props.reloadStatuses();
                             }
                         });
-                }
-            }
+                },
+            },
         ]);
     }, [score, userId, props.cueId, comment, props]);
 
@@ -560,10 +559,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 variables: {
                     cueId: props.cueId,
                     userId,
-                    quizAttempt: currentQuizAttempt
-                }
+                    quizAttempt: currentQuizAttempt,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data && res.data.cue.modifyActiveAttemptQuiz) {
                     props.reload();
                 }
@@ -585,10 +584,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     problemComments,
                     score,
                     comment,
-                    quizAttempt: currentQuizAttempt
-                }
+                    quizAttempt: currentQuizAttempt,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data && res.data.cue.gradeQuiz) {
                     props.reload();
                     setShowSubmission(false);
@@ -652,7 +651,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     style: 'cancel',
                     onPress: () => {
                         return;
-                    }
+                    },
                 },
                 {
                     text: 'Yes',
@@ -663,8 +662,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 mutation: editReleaseSubmission,
                                 variables: {
                                     cueId: props.cueId,
-                                    releaseSubmission: !releaseSubmission
-                                }
+                                    releaseSubmission: !releaseSubmission,
+                                },
                             })
                             .then((res: any) => {
                                 if (res.data && res.data.cue.editReleaseSubmission) {
@@ -674,12 +673,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     alert('Something went wrong');
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 console.log(err);
                                 alert('Something went wrong');
                             });
-                    }
-                }
+                    },
+                },
             ]
         );
     }, [releaseSubmission, props.cueId, props, isGraded]);
@@ -741,7 +740,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         marginBottom: 5,
                                         maxWidth: '100%',
                                         fontWeight: '600',
-                                        width: '100%'
+                                        width: '100%',
                                     }}
                                 >
                                     {attempt.title}
@@ -762,7 +761,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         marginBottom: 5,
                                         maxWidth: '100%',
                                         fontWeight: '600',
-                                        width: '100%'
+                                        width: '100%',
                                     }}
                                 >
                                     {attempt.title}
@@ -771,7 +770,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <div
                                 className="webviewer"
                                 ref={submissionViewerRef}
-                                style={{ height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh', marginTop: attempt.title !== '' ? 0 : 20 }}
+                                style={{
+                                    height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh',
+                                    marginTop: attempt.title !== '' ? 0 : 20,
+                                }}
                             ></div>
                         </View>
                     )
@@ -803,7 +805,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 width: '100%',
                 minHeight: windowHeight - 200,
                 borderTopRightRadius: 0,
-                borderTopLeftRadius: 0
+                borderTopLeftRadius: 0,
             }}
         >
             {subscribers.length === 0 ? (
@@ -812,12 +814,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={{
                             width: '100%',
                             color: '#1F1F1F',
-                            fontSize: 20,
+                            fontSize: 18,
                             paddingTop: 50,
                             paddingHorizontal: 5,
                             fontFamily: 'inter',
                             flex: 1,
-                            textAlign: 'center'
+                            textAlign: 'center',
                         }}
                     >
                         {props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')}
@@ -827,9 +829,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 <View
                     style={{
                         width: '100%',
-                        maxWidth: 900,
+                        maxWidth: 1024,
                         backgroundColor: 'white',
-                        flex: 1
+                        flex: 1,
                     }}
                     key={key}
                 >
@@ -842,7 +844,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: 'space-between',
                                 marginBottom: 20,
                                 paddingTop: 30,
-                                paddingHorizontal: 10
+                                paddingHorizontal: 10,
                             }}
                         >
                             <label style={{ width: Dimensions.get('window').width < 768 ? 140 : 160 }}>
@@ -855,16 +857,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                     responsive={{
                                         small: {
-                                            display: 'bubble'
+                                            display: 'bubble',
                                         },
                                         medium: {
-                                            touchUi: false
-                                        }
+                                            touchUi: false,
+                                        },
                                     }}
                                     data={categories.map((category: any) => {
                                         return {
                                             value: category,
-                                            text: category
+                                            text: category,
                                         };
                                     })}
                                 />
@@ -876,13 +878,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         flexDirection: 'row',
                                         justifyContent:
                                             Dimensions.get('window').width < 768 ? 'space-between' : 'flex-end',
-                                        marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto'
+                                        marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto',
                                     }}
                                 >
                                     <View
                                         style={{
                                             backgroundColor: 'white',
-                                            flexDirection: 'row'
+                                            flexDirection: 'row',
                                         }}
                                     >
                                         {releaseSubmission ? (
@@ -890,7 +892,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onPress={() => updateReleaseSubmission()}
                                                 style={{
                                                     borderRadius: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: 'white',
                                                 }}
                                             >
                                                 <Text
@@ -906,7 +908,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         fontFamily: 'inter',
                                                         overflow: 'hidden',
                                                         height: 35,
-                                                        textTransform: 'uppercase'
+                                                        textTransform: 'uppercase',
                                                     }}
                                                 >
                                                     Hide {isGraded ? 'Grades' : 'Feedback'}
@@ -917,7 +919,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onPress={() => updateReleaseSubmission()}
                                                 style={{
                                                     borderRadius: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: 'white',
                                                 }}
                                             >
                                                 <Text
@@ -934,7 +936,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         fontFamily: 'inter',
                                                         overflow: 'hidden',
                                                         height: 35,
-                                                        textTransform: 'uppercase'
+                                                        textTransform: 'uppercase',
                                                     }}
                                                 >
                                                     Share {isGraded ? 'Grades' : 'Feedback'}
@@ -942,7 +944,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </TouchableOpacity>
                                         )}
                                     </View>
-                                    {isQuiz ? (
+                                    {props.isQuiz ? (
                                         <Text
                                             style={{
                                                 textAlign: 'center',
@@ -957,7 +959,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 overflow: 'hidden',
                                                 height: 35,
                                                 textTransform: 'uppercase',
-                                                marginLeft: 20
+                                                marginLeft: 20,
                                             }}
                                             onPress={() => {
                                                 exportScores();
@@ -980,9 +982,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 1,
                                 borderWidth: 0,
                                 borderColor: '#f2f2f2',
-                                maxWidth: 900,
+                                maxWidth: 1024,
                                 marginBottom: 50,
-                                paddingHorizontal: 10
+                                paddingHorizontal: 10,
                             }}
                         >
                             {filteredSubscribers.map((subscriber: any, index: any) => {
@@ -1012,7 +1014,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             borderColor: '#f2f2f2',
                                             paddingVertical: 5,
                                             borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
-                                            width: '100%'
+                                            width: '100%',
                                         }}
                                     >
                                         <View style={{ backgroundColor: '#fff', padding: 5 }}>
@@ -1024,12 +1026,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     marginLeft: 5,
                                                     marginBottom: 5,
                                                     borderRadius: 75,
-                                                    alignSelf: 'center'
+                                                    alignSelf: 'center',
                                                 }}
                                                 source={{
                                                     uri: subscriber.avatar
                                                         ? subscriber.avatar
-                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
                                                 }}
                                             />
                                         </View>
@@ -1039,7 +1041,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     fontSize: 15,
                                                     padding: 5,
                                                     fontFamily: 'inter',
-                                                    marginTop: 5
+                                                    marginTop: 5,
                                                 }}
                                                 ellipsizeMode="tail"
                                             >
@@ -1060,7 +1062,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{
                                                     flexDirection: 'row',
                                                     backgroundColor: '#fff',
-                                                    paddingLeft: 10
+                                                    paddingLeft: 10,
                                                 }}
                                             >
                                                 <Text
@@ -1068,7 +1070,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         fontSize: 11,
                                                         padding: 5,
                                                         color: '#006AFF',
-                                                        textAlign: 'center'
+                                                        textAlign: 'center',
                                                     }}
                                                     ellipsizeMode="tail"
                                                 >
@@ -1081,7 +1083,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             style={{
                                                                 color: '#f94144',
                                                                 fontSize: 12,
-                                                                marginRight: 10
+                                                                marginRight: 10,
                                                             }}
                                                         >
                                                             LATE
@@ -1099,12 +1101,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             })}
                         </ScrollView>
                     ) : // is Quiz then show the Quiz Grading Component and new version with problemScores
-                    isQuiz && showQuizGrading ? (
+                    props.isQuiz && showQuizGrading ? (
                         <ScrollView
                             showsVerticalScrollIndicator={true}
                             keyboardDismissMode={'on-drag'}
                             contentContainerStyle={{
-                                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
                             }}
                             style={{ flex: 1, paddingTop: 12 }}
                         >
@@ -1120,7 +1122,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             borderColor: '#f94144',
                                             marginVertical: 10,
                                             width: 150,
-                                            marginLeft: 'auto'
+                                            marginLeft: 'auto',
                                         }}
                                     >
                                         <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
@@ -1146,7 +1148,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             marginTop: 5,
                                             display: 'flex',
                                             flexDirection: 'row',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
                                         }}
                                     >
                                         <Ionicons name="chevron-back-outline" color="#006AFF" size={23} />
@@ -1159,7 +1161,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingHorizontal: 4,
                                                 fontFamily: 'inter',
                                                 height: 35,
-                                                textTransform: 'uppercase'
+                                                textTransform: 'uppercase',
                                             }}
                                         >
                                             BACK
@@ -1201,7 +1203,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 showsVerticalScrollIndicator={true}
                                 keyboardDismissMode={'on-drag'}
                                 contentContainerStyle={{
-                                    paddingHorizontal: 10
+                                    paddingHorizontal: 10,
                                 }}
                                 style={{ flex: 1, paddingTop: 12 }}
                             >
@@ -1209,7 +1211,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                                         alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center',
-                                        flex: 1
+                                        flex: 1,
                                     }}
                                 >
                                     <View
@@ -1218,7 +1220,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
-                                            marginBottom: 10
+                                            marginBottom: 10,
                                         }}
                                     >
                                         <TouchableOpacity
@@ -1233,7 +1235,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 backgroundColor: 'white',
                                                 borderRadius: 15,
-                                                marginRight: 15
+                                                marginRight: 15,
                                             }}
                                         >
                                             <Text>
@@ -1248,7 +1250,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {submittedAt !== '' && deadline !== '' && submittedAt >= deadline ? (
                                             <View
                                                 style={{
-                                                    marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 0
+                                                    marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 0,
                                                 }}
                                             >
                                                 <View
@@ -1260,14 +1262,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderColor: '#f94144',
                                                         marginVertical: 10,
                                                         // width: 150,
-                                                        marginLeft: 'auto'
+                                                        marginLeft: 'auto',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             color: '#f94144',
                                                             fontSize: 13,
-                                                            textAlign: 'center'
+                                                            textAlign: 'center',
                                                         }}
                                                     >
                                                         LATE
@@ -1282,7 +1284,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             marginTop: Dimensions.get('window').width < 768 ? 20 : 0,
-                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto'
+                                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
                                         }}
                                     >
                                         <TextInput
@@ -1296,10 +1298,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 // paddingTop: 13,
                                                 marginLeft: 10,
                                                 padding: 10,
-                                                marginRight: 20
+                                                marginRight: 20,
                                             }}
                                             placeholder={'Score 0-100'}
-                                            onChangeText={val => setScore(val)}
+                                            onChangeText={(val) => setScore(val)}
                                             placeholderTextColor={'#1F1F1F'}
                                         />
                                         <TouchableOpacity
@@ -1309,7 +1311,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 overflow: 'hidden',
                                                 height: 35,
                                                 marginLeft: Dimensions.get('window').width < 768 ? 20 : 0,
-                                                marginBottom: 10
+                                                marginBottom: 10,
                                             }}
                                         >
                                             <Text
@@ -1324,7 +1326,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     fontFamily: 'inter',
                                                     height: 35,
                                                     borderRadius: 15,
-                                                    textTransform: 'uppercase'
+                                                    textTransform: 'uppercase',
                                                 }}
                                             >
                                                 UPDATE
@@ -1347,7 +1349,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     ) : null}
                                 </View> */}
 
-                                {submissionAttempts.length > 0 && !isQuiz ? renderViewSubmission() : null}
+                                {submissionAttempts.length > 0 && !props.isQuiz ? renderViewSubmission() : null}
                             </ScrollView>
                         </View>
                     )}
@@ -1364,32 +1366,32 @@ export default React.memo(SubscribersList, (prev, next) => {
 const styleObject = () => {
     return StyleSheet.create({
         screen: {
-            flex: 1
+            flex: 1,
         },
         margin: {
             height: 20,
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         marginSmall: {
             height: 10,
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         row: {
             flexDirection: 'row',
             display: 'flex',
             width: '100%',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         col: {
             width: '100%',
             height: 70,
             marginBottom: 15,
             // flex: 1,
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         channelText: {
             textAlign: 'center',
-            overflow: 'hidden'
+            overflow: 'hidden',
         },
         input: {
             width: '100%',
@@ -1399,19 +1401,19 @@ const styleObject = () => {
             paddingTop: 13,
             paddingBottom: 13,
             marginTop: 5,
-            marginBottom: 20
+            marginBottom: 20,
         },
         outline: {
             borderRadius: 1,
             borderWidth: 1,
             borderColor: '#1F1F1F',
-            color: 'white'
+            color: 'white',
         },
         cusCategory: {
             fontSize: 14,
             backgroundColor: 'white',
             paddingHorizontal: 10,
-            height: 22
+            height: 22,
         },
         cusCategoryOutline: {
             fontSize: 14,
@@ -1421,16 +1423,16 @@ const styleObject = () => {
             borderRadius: 1,
             borderWidth: 1,
             borderColor: '#1F1F1F',
-            color: 'white'
+            color: 'white',
         },
         all: {
             fontSize: 14,
             color: '#000000',
             height: 24,
             paddingHorizontal: 15,
-            backgroundColor: '#f2f2f2',
+            backgroundColor: '#f8f8f8',
             lineHeight: 24,
-            fontFamily: 'inter'
+            fontFamily: 'inter',
             // textTransform: 'uppercase'
         },
         allGrayFill: {
@@ -1441,8 +1443,8 @@ const styleObject = () => {
             backgroundColor: '#000000',
             lineHeight: 24,
             height: 24,
-            fontFamily: 'inter'
+            fontFamily: 'inter',
             // textTransform: 'uppercase'
-        }
+        },
     });
 };

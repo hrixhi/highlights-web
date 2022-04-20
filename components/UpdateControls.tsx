@@ -23,9 +23,6 @@ import {
     start,
     submit,
     modifyQuiz,
-    // findBySchoolId,
-    getRole,
-    getOrganisation,
     duplicateQuiz,
     saveSubmissionDraft
 } from '../graphql/QueriesAndMutations';
@@ -33,18 +30,14 @@ import {
 // COMPONENTS
 import Alert from '../components/Alert';
 import { Text, View, TouchableOpacity } from './Themed';
-import FileUpload from './UploadFiles';
 import { Collapse } from 'react-collapse';
 import Quiz from './Quiz';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import TeXToSVG from 'tex-to-svg';
 import ReactPlayer from 'react-player';
 import QuizGrading from './QuizGrading';
-// import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import WebViewer from '@pdftron/pdfjs-express';
 import TextareaAutosize from 'react-textarea-autosize';
 import parser from 'html-react-parser';
-import Select from 'react-select';
 import { Datepicker as MobiscrollDatePicker } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { Select as MobiscrollSelect } from '@mobiscroll/react';
@@ -603,21 +596,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setType('');
                 setTitle('');
             }
-        } else {
-            const data = props.cue.cue;
-            if (data && data[0] && data[0] === '{' && data[data.length - 1] === '}') {
-                const obj = JSON.parse(data);
-                setSubmissionImported(true);
-                setSubmissionUrl(obj.url);
-                setSubmissionType(obj.type);
-                setSubmissionTitle(obj.title);
-            } else {
-                setSubmissionImported(false);
-                setSubmissionUrl('');
-                setSubmissionType('');
-                setSubmissionTitle('');
-            }
-        }
+        } 
         setLoading(false);
     }, [props.cue, cue, loading, original]);
 
@@ -3048,7 +3027,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paddingTop: Dimensions.get('window').width < 768 ? 10 : 30,
                     paddingBottom: 20,
                     justifyContent: 'space-between',
-                    maxWidth: 900,
+                    maxWidth: 1024,
                     alignSelf: 'center'
                 }}
             >   
@@ -3236,17 +3215,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View
                 style={{
                     width: '100%',
-                    maxWidth: 900,
+                    maxWidth: 1024,
                     alignSelf: 'center',
                     minHeight: 475,
-                    paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
+                    paddingTop: 0,
                     backgroundColor: 'white'
                 }}
             >
                 {!props.showOriginal || loading ? null : isQuiz ? (
                     isQuizTimed && !isOwner ? (
                         initiatedAt ? (
-                            <View style={{ width: '100%', flexDirection: 'column' }}>
+                            <View style={{ width: '100%', flexDirection: 'column', paddingTop: Dimensions.get('window').width < 768 ? 0 : 25 }}>
                                 <Quiz
                                     // disable quiz if graded or deadline has passed
                                     isOwner={isOwner}
@@ -3282,7 +3261,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             height: 35,
                                             justifyContent: 'center',
                                             flexDirection: 'row',
-                                            marginVertical: 50
+                                            marginVertical: 50,
                                         }}
                                     >
                                         <Text
@@ -3309,7 +3288,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         )
                     ) : (
-                        <View style={{ width: '100%', flexDirection: 'column' }}>
+                        <View style={{ width: '100%', flexDirection: 'column', paddingTop: Dimensions.get('window').width < 768 ? 0 : 25 }}>
                             <Quiz
                                 isOwner={isOwner}
                                 submitted={
@@ -3441,20 +3420,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (fetchingQuiz || isQuiz) return null;
 
         if (!isOwner && props.cue.channelId && props.cue.channelId !== '') {
-            return (
-                <RichEditor
-                    initialContentHTML={initialOriginal}
-                    disabled={true}
-                    style={{
-                        width: '100%',
-                        height: '100%'
-                    }}
-                />
-            );
+            return <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black', marginTop: Dimensions.get('window').width < 768 ? 0 : 25 }}>
+                    {parser(initialOriginal)}
+                </div>
         }
 
         return (
-            <View style={{ width: '100%', marginTop: Dimensions.get('window').width < 768 ? 15 : 0 }}>
+            <View style={{ width: '100%', marginTop: Dimensions.get('window').width < 768 ? 15 : 25 }}>
                 <View key={userId.toString() + isOwner.toString()}>
                     <FroalaEditor
                         ref={editorRef}
@@ -3962,13 +3934,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </View>
                     ) : null}
-                    {limitedShares && selected.length !== 0 && subscribers.length !== 0 ? (
+                    {limitedShares && subscribers.length !== 0 ? (
                         <View
                             style={{
                                 flexDirection: 'column',
                                 overflow: 'scroll',
                                 maxWidth: 400,
-                                height: 120
                             }}
                         >
                             <View
@@ -3998,6 +3969,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onChange={(val: any) => {
                                         setSelected(val.value)
                                     }}
+                                    placeholder="Select..."
                                 />
                             </View>
                         </View>
@@ -5438,7 +5410,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 backgroundColor: 'white',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0
                 // paddingBottom: 50
             }}
         >
@@ -5447,7 +5418,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         width: '100%',
                         flexDirection: 'row',
-                        maxWidth: 900,
+                        maxWidth: 1024,
                         alignSelf: 'center'
                     }}
                 >
@@ -5595,8 +5566,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             >   
                 <View style={{
                     width: '100%',
-                    maxWidth: 900,
-                    alignSelf: 'center'
+                    maxWidth: 1024,
+                    alignSelf: 'center',
+                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0
                 }}>
                     {props.showOptions ||
                         props.showComments ||
@@ -5726,7 +5698,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View
                         style={{
                             width: '100%',
-                            maxWidth: 900,
+                            maxWidth: 1024,
                             alignSelf: 'center',
                             paddingLeft: Dimensions.get('window').width < 768 ? 12 : 15
                         }}

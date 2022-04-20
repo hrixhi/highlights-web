@@ -77,19 +77,19 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     // e.preventDefault();
 
     if (file === null) {
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     if (file.size > 26214400) {
         alert('File size must be less than 25 mb.');
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     let type = mime.extension(file.type);
 
     if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     if (
@@ -97,7 +97,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
         alert('Error! This file format is not supported. Upload mp4.');
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     if (file.type === 'video/avi') {
@@ -108,7 +108,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
 
     if (type === 'wma' || type === 'avi') {
         alert('This video format is not supported. Upload mp4.');
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     if (type === 'mpga') {
@@ -117,7 +117,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
 
     if (type === 'svg') {
         alert('This file type is not supported.');
-        return { type: '', url: '' };
+        return { type: '', url: '', name: '' };
     }
 
     alert("Upload in progress! Large files may take longer to process.")
@@ -128,10 +128,11 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     if (data.status === 'success') {
         return {
             url: data.url,
-            type
+            type,
+            name: file.name
         };
     } else {
-        return { type: '', url: '' };
+        return { type: '', url: '', name: file.name };
     }
 };
 

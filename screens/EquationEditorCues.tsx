@@ -325,22 +325,22 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
 
     // MAIN RETURN
     return (<View
-                style={{ flexDirection: 'column', padding: 25, backgroundColor: '#f2f2f2' }}
+                style={{ flexDirection: 'column', padding: 25, backgroundColor: '#f8f8f8' }}
                 className="mbsc-align-center mbsc-padding"
             >
                 <View
                     style={{
                         width: '100%',
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8'
                     }}
                 >
                     {/* Formula Input */}
-                    <Text style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2', fontFamily: 'Inter', fontSize: 18 }}>Enter formula</Text>
+                    <Text style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8', fontFamily: 'Inter', fontSize: 18 }}>Enter formula</Text>
                     <View
                         style={{
                             width: '100%',
                             marginBottom: 20,
-                            backgroundColor: '#f2f2f2'
+                            backgroundColor: '#f8f8f8'
                         }}
                     >
                         <View
@@ -368,22 +368,22 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
                         style={{
                             width: '100%',
                             flexDirection: 'row',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                             borderBottomWidth: 1,
                             borderBottomColor: '#f2f2f2'
                         }}>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>Symbol</View>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>Keyboard command</View>
+                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Symbol</View>
+                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Keyboard command</View>
                     </View>
                     {symbols.map((s: any) => {
                         return (
                             <View
                                 key={JSON.stringify(s)}
-                                style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f2' }}>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>
+                                style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
+                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>
                                     {s.symbol}
                                 </View>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f2f2f2' }}>{s.howTo}</View>
+                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>{s.howTo}</View>
                             </View>
                         );
                     })} */}
@@ -394,7 +394,7 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
                                     style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        backgroundColor: '#f2f2f2',
+                                        backgroundColor: '#f8f8f8',
                                         paddingBottom: 20
                                     }}
                                 >
@@ -403,7 +403,7 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
                                             fontSize: 14,
                                             fontFamily: 'Inter',
                                             color: '#1f1f1f',
-                                            backgroundColor: '#f2f2f2',
+                                            backgroundColor: '#f8f8f8',
                                             marginBottom: 10
                                         }}
                                     >
@@ -415,7 +415,7 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
                                             width: '100%',
                                             flexDirection: 'row',
                                             flexWrap: 'wrap',
-                                            backgroundColor: '#f2f2f2'
+                                            backgroundColor: '#f8f8f8'
                                         }}
                                     >
                                         {categoriesMap[cat].map((sym: string) => {

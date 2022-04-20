@@ -112,12 +112,12 @@ const styles: any = (colorScheme: any, col: any) =>
             borderLeftWidth: 3,
             flexDirection: 'row',
             shadowOffset: {
-                width: 2,
-                height: 2
+                width: 1,
+                height: 1
             },
             overflow: 'hidden',
-            shadowOpacity: 0.07,
-            shadowRadius: 7,
+            shadowOpacity: 0.05,
+            shadowRadius: 5,
             zIndex: 500000
         },
         card: {

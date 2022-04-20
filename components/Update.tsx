@@ -83,6 +83,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
+    const [activeTab, setActiveTab] = useState('Content')
 
     console.log("Cue Id", props.cue)
 
@@ -789,8 +790,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <ScrollView
                 style={{
                     width: '100%',
-                    maxWidth: 900,
-                    backgroundColor: '#f2f2f2',
+                    maxWidth: 1024,
+                    backgroundColor: '#f8f8f8',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     paddingBottom: 15
@@ -813,8 +814,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <ScrollView
                 style={{
                     width: '100%',
-                    maxWidth: 900,
-                    backgroundColor: '#f2f2f2',
+                    maxWidth: 1024,
+                    backgroundColor: '#f8f8f8',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     paddingBottom: 15
@@ -848,6 +849,236 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     };
 
     /**
+     * @description Helpter for icon to use in navbar
+     */
+     const getNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'Content':
+                if (isQuiz) {
+                    return activeTab === op ? 'checkbox' : 'checkbox-outline';
+                }
+                return activeTab === op ? 'create' : 'create-outline';
+            case 'Details':
+                return activeTab === op ? 'options' : 'options-outline';
+            case 'Submission':
+                return activeTab === op ? 'time' : 'time-outline'
+            case 'Feedback':
+                return activeTab === op ? 'bar-chart' : 'bar-chart-outline';
+            default:
+                return activeTab === op ? 'person' : 'person-outline';
+        }
+    };
+
+    const getNavbarText = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return isQuiz ? 'Quiz' : (submission && !channelOwner) ? 'Assignment' : 'Content'
+            case 'Details':
+                return 'Details'
+            case 'Submission':
+                return 'Submission'
+            case 'Feedback':
+                return submission || isQuiz ? 'Feedback' : 'Feedback'
+            default:
+                return activeTab === op ? 'person' : 'person-outline';
+        }
+    };
+
+    const getNavbarIconColor = (op: string) => {
+        if (op === activeTab) {
+            return '#006AFF'
+        }
+        return '#fff'
+    }
+
+
+    const width = Dimensions.get('window').width
+
+    /**
+     * @description Tabs (Content, Options, Submission, etc)
+     */
+     const mobileOptions = (
+        <View
+            style={{
+                position: 'absolute',
+                zIndex: 1000,
+                backgroundColor: '#000000de',
+                bottom: 0,
+                width: '100%',
+                // paddingTop: 5,
+                // paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
+                // paddingHorizontal: 20,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                height: Dimensions.get('window').width < 768 ? 54 : 68,
+                shadowColor: '#000',
+                shadowOffset: {
+                    width: 0,
+                    height: -7
+                },
+                shadowOpacity: 0.12,
+                shadowRadius: 10,
+                zIndex: 500000
+            }}
+        >
+            <TouchableOpacity
+                // style={showOriginal ? styles.allBlueTabButton : styles.tabButton}
+                style={{
+                    backgroundColor: 'none',
+                    width: (submission && !channelOwner) || channelOwner ? '33%' : '50%',
+                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+                onPress={() => {
+                    setShowOptions(false);
+                    setViewStatus(false);
+                    setShowOriginal(true);
+                    setShowComments(false);
+                    setActiveTab('Content')
+                }}
+            >
+                {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text> */}
+                <Ionicons
+                    name={getNavbarIconName('Content')}
+                    style={{ color: getNavbarIconColor('Content'), marginBottom: 3 }}
+                    size={21}
+                />
+                <Text style={{
+                    fontSize: width < 800 ? 11 : 16,
+                    lineHeight: width < 800 ? 11 : 23,
+                    color: getNavbarIconColor('Content'),
+                    fontFamily: 'Inter',
+                    marginBottom: width < 800 ? 0 : 6,
+                    paddingLeft: width < 800 ? 0 : 5
+                }}>
+                    {getNavbarText("Content")}
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                // style={showOptions ? styles.allBlueTabButton : styles.tabButton}
+                style={{
+                    backgroundColor: 'none',
+                    width: (submission && !channelOwner) || channelOwner ? '33%' : '50%',
+                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+                onPress={() => {
+                    setShowOptions(true);
+                    setViewStatus(false);
+                    setShowOriginal(false);
+                    setShowComments(false);
+                    setActiveTab('Details')
+                }}
+            >
+                {/* <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text> */}
+                <Ionicons
+                    name={getNavbarIconName('Details')}
+                    style={{ color: getNavbarIconColor('Details'), marginBottom: 3 }}
+                    size={21}
+                />
+                <Text style={{
+                    fontSize: width < 800 ? 11 : 16,
+                    lineHeight: width < 800 ? 11 : 23,
+                    color: getNavbarIconColor('Details'),
+                    fontFamily: 'Inter',
+                    marginBottom: width < 800 ? 0 : 6,
+                    paddingLeft: width < 800 ? 0 : 5
+                }}>
+                    {getNavbarText("Details")}
+                </Text>
+            </TouchableOpacity>
+            {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
+                <TouchableOpacity
+                    // style={
+                    //     !showOriginal && !viewStatus && !showOptions && !showComments
+                    //         ? styles.allBlueTabButton
+                    //         : styles.tabButton
+                    // }
+                    style={{
+                        backgroundColor: 'none',
+                        width: (submission && !channelOwner) || channelOwner ? '33%' : '50%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                    }}
+                    onPress={() => {
+                        setViewStatus(false);
+                        setShowOriginal(false);
+                        setShowComments(false);
+                        setShowOptions(false);
+                        setActiveTab('Submission')
+                    }}
+                >
+                    {/* <Text
+                        style={
+                            !showOriginal && !viewStatus && !showOptions && !showComments
+                                ? styles.allGrayFill
+                                : styles.all
+                        }
+                    >
+                        SUBMISSION
+                    </Text> */}
+                    <Ionicons
+                        name={getNavbarIconName('Submission')}
+                        style={{ color: getNavbarIconColor('Submission'), marginBottom: 3 }}
+                        size={21}
+                    />
+                    <Text style={{
+                        fontSize: width < 800 ? 11 : 16,
+                        lineHeight: width < 800 ? 11 : 23,
+                        color: getNavbarIconColor('Submission'),
+                        fontFamily: 'Inter',
+                        marginBottom: width < 800 ? 0 : 6,
+                        paddingLeft: width < 800 ? 0 : 5
+                    }}>
+                        {getNavbarText("Submission")}
+                    </Text>
+                </TouchableOpacity>
+            )}
+            {/* Add Status button here */}
+            {props.channelId === '' || !channelOwner || props.version === 'read' ? null : (
+                <TouchableOpacity
+                    // style={viewStatus ? styles.allBlueTabButton : styles.tabButton}
+                    style={{
+                        backgroundColor: 'none',
+                        width: (submission && !channelOwner) || channelOwner ? '33%' : '50%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                    }}
+                    onPress={() => {
+                        setViewStatus(true);
+                        setShowOriginal(false);
+                        setShowComments(false);
+                        setShowOptions(false);
+                        setActiveTab('Feedback')
+                    }}
+                >
+                    {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text> */}
+                    <Ionicons
+                        name={getNavbarIconName('Feedback')}
+                        style={{ color: getNavbarIconColor('Feedback'), marginBottom: 3 }}
+                        size={21}
+                    />
+                    <Text style={{
+                        fontSize: width < 800 ? 11 : 16,
+                        lineHeight: width < 800 ? 11 : 23,
+                        color: getNavbarIconColor('Feedback'),
+                        fontFamily: 'Inter',
+                        marginBottom: width < 800 ? 0 : 6,
+                        paddingLeft: width < 800 ? 0 : 5
+                    }}>
+                        {getNavbarText("Feedback")}
+                    </Text>
+                </TouchableOpacity>
+            )}
+        </View>
+    );
+
+
+    /**
      * @description Tabs (Content, Options, Submission, etc)
      */
     const options = (
@@ -856,7 +1087,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 20,
                 flexDirection: 'row',
                 flex: 1,
-                backgroundColor: '#000',
+                backgroundColor: 'none',
                 paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
                 height: 48,
                 justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
@@ -864,26 +1095,28 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         >
             <TouchableOpacity
                 style={{
-                    backgroundColor: '#000'
+                    backgroundColor: 'none'
                 }}
                 onPress={() => {
                     setShowOptions(false);
                     setViewStatus(false);
                     setShowOriginal(true);
                     setShowComments(false);
+                    setActiveTab('Content')
                 }}
             >
                 <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
-                    backgroundColor: '#000'
+                    backgroundColor: 'none'
                 }}
                 onPress={() => {
                     setShowOptions(true);
                     setViewStatus(false);
                     setShowOriginal(false);
                     setShowComments(false);
+                    setActiveTab('Details')
                 }}
             >
                 <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text>
@@ -891,13 +1124,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#000'
+                        backgroundColor: 'none'
                     }}
                     onPress={() => {
                         setViewStatus(false);
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
+                        setActiveTab('Submission')
                     }}
                 >
                     <Text
@@ -915,13 +1149,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {props.channelId === '' || !channelOwner || props.version === 'read' ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: '#000'
+                        backgroundColor: 'none'
                     }}
                     onPress={() => {
                         setViewStatus(true);
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
+                        setActiveTab('Feedback')
                     }}
                 >
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text>
@@ -952,7 +1187,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         flex: 1,
                         flexDirection: 'column',
                         alignItems: 'center',
-                        backgroundColor: '#f2f2f2',
+                        backgroundColor: '#f8f8f8',
                         paddingVertical: 14,
                         paddingHorizontal: 10
                     }}
@@ -966,7 +1201,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             color: '#1F1F1F',
                             paddingBottom: 10,
                             width: '100%',
-                            maxWidth: 900
+                            maxWidth: 1024
                         }}
                     >
                         {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
@@ -976,8 +1211,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <ScrollView
                         style={{
                             width: '100%',
-                            maxWidth: 900,
-                            backgroundColor: '#f2f2f2',
+                            maxWidth: 1024,
+                            backgroundColor: '#f8f8f8',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
                             paddingBottom: 15
@@ -1103,7 +1338,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                             paddingTop: 14,
                             paddingBottom: 7
                         }}
@@ -1112,8 +1347,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <ScrollView
                                 style={{
                                     width: '100%',
-                                    maxWidth: 900,
-                                    backgroundColor: '#f2f2f2',
+                                    maxWidth: 1024,
+                                    backgroundColor: '#f8f8f8',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
                                     paddingBottom: 15
@@ -1238,14 +1473,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })}
                             </ScrollView>
                         ) : (
-                            <View style={{ backgroundColor: '#f2f2f2' }}>
+                            <View style={{ backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
                                         fontSize: 14,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
-                                        backgroundColor: '#f2f2f2',
+                                        backgroundColor: '#f8f8f8',
                                         paddingVertical: 20
                                     }}
                                 >
@@ -1263,7 +1498,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 flex: 1,
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                backgroundColor: '#f2f2f2',
+                                backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
                                 paddingBottom: 14
                             }}
@@ -1277,14 +1512,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             />
                         </View>
                     ) : (
-                        <View style={{ backgroundColor: '#f2f2f2' }}>
+                        <View style={{ backgroundColor: '#f8f8f8' }}>
                             <Text
                                 style={{
                                     fontSize: 14,
                                     color: '#000000',
                                     textAlign: 'center',
                                     fontFamily: 'inter',
-                                    backgroundColor: '#f2f2f2',
+                                    backgroundColor: '#f8f8f8',
                                     paddingVertical: 20
                                 }}
                             >
@@ -1320,7 +1555,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                             paddingTop: 14,
                             paddingBottom: 7
                         }}
@@ -1329,8 +1564,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <ScrollView
                                 style={{
                                     width: '100%',
-                                    maxWidth: 900,
-                                    backgroundColor: '#f2f2f2',
+                                    maxWidth: 1024,
+                                    backgroundColor: '#f8f8f8',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
                                     paddingBottom: 15
@@ -1457,14 +1692,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })}
                             </ScrollView>
                         ) : (
-                            <View style={{ backgroundColor: '#f2f2f2' }}>
+                            <View style={{ backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
                                         fontSize: 14,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
-                                        backgroundColor: '#f2f2f2',
+                                        backgroundColor: '#f8f8f8',
                                         paddingVertical: 20
                                     }}
                                 >
@@ -1482,7 +1717,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 flex: 1,
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                backgroundColor: '#f2f2f2',
+                                backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
                                 paddingBottom: 14
                             }}
@@ -1496,14 +1731,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             />
                         </View>
                     ) : (
-                        <View style={{ backgroundColor: '#f2f2f2' }}>
+                        <View style={{ backgroundColor: '#f8f8f8' }}>
                             <Text
                                 style={{
                                     fontSize: 14,
                                     color: '#000000',
                                     textAlign: 'center',
                                     fontFamily: 'inter',
-                                    backgroundColor: '#f2f2f2',
+                                    backgroundColor: '#f8f8f8',
                                     paddingVertical: 20
                                 }}
                             >
@@ -1525,7 +1760,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         <Animated.View
             style={{
                 width: '100%',
-                // maxWidth: 900,
+                // maxWidth: 1024,
                 height: '100%',
                 maxHeight: windowHeight,
                 opacity: modalAnimation,
@@ -1554,13 +1789,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         // maxHeight: windowHeight - 52,
                         alignItems: 'center',
                         width: '100%',
-                        // maxWidth: 900,
+                        // maxWidth: 1024,
                         alignSelf: 'center'
                     }}
                 >
                     {/* <View
                         style={{
-                            // maxWidth: 900,
+                            // maxWidth: 1024,
                             width: '100%',
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
                         }}
@@ -1601,7 +1836,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={scroll2}
                             contentContainerStyle={{
                                 width: '100%',
-                                maxWidth: 900,
+                                maxWidth: 1024,
                                 alignSelf: 'center',
                                 height: '100%'
                             }}
@@ -1658,7 +1893,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 scrollEventThrottle={1}
                                 keyboardDismissMode={'on-drag'}
                             >
-                                <View style={{ maxWidth: 900, width: '100%' }}>
+                                <View style={{ maxWidth: 1024, width: '100%' }}>
                                     <SubscribersList
                                         key={JSON.stringify(subscribers)}
                                         subscribers={subscribers}
@@ -1670,6 +1905,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         cue={props.cue}
                                         updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
                                         reloadStatuses={reloadStatuses}
+                                        isQuiz={isQuiz}
                                     />
                                 </View>
                             </ScrollView>
@@ -1693,7 +1929,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setEditFolder(true);
                         }}
                         style={{
-                            backgroundColor: '#000',
+                            backgroundColor: 'none',
                             paddingLeft: 0
                         }}
                     >
@@ -1724,7 +1960,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setChannelCues(filter);
                         }}
                         style={{
-                            backgroundColor: '#000',
+                            backgroundColor: 'none',
                             paddingLeft: 0
                         }}
                     >
@@ -1792,7 +2028,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <MenuTrigger>
                             <View
                                 style={{
-                                    backgroundColor: '#000',
+                                    backgroundColor: 'none',
                                     paddingLeft: 0
                                 }}
                             >
@@ -1812,16 +2048,18 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                         </MenuTrigger>
                         <MenuOptions
-                            customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#e9e9ec',
-                                    // overflowY: 'scroll',
-                                    maxHeight: '100%'
-                                }
+                            optionsContainerStyle={{
+                                shadowOffset: {
+                                    width: 2,
+                                    height: 2
+                                },
+                                shadowColor: '#000',
+                                // overflow: 'hidden',
+                                shadowOpacity: 0.07,
+                                shadowRadius: 7,
+                                padding: 7,
+                                borderWidth: 1,
+                                borderColor: '#CCC'
                             }}
                         >
                             {channelFolders.map((folder: any) => {
@@ -1889,9 +2127,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setCreatingFolder(false);
                                     });
                             }}
-                            disabled={selectedCues.length < 2 || creatingFolder}
+                            disabled={creatingFolder}
                             style={{
-                                backgroundColor: '#000',
+                                backgroundColor: 'none',
                                 paddingLeft: 0
                             }}
                         >
@@ -1915,7 +2153,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setSelectedCues([]);
                             }}
                             style={{
-                                backgroundColor: '#000',
+                                backgroundColor: 'none',
                                 paddingLeft: 0
                             }}
                         >
@@ -1987,7 +2225,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         res.data.folder.update === null ||
                                                         res.data.folder.update === undefined
                                                     ) {
-                                                        Alert('Could not create folder. Try again.');
+                                                        Alert('Could not update folder. Try again.');
                                                         setUpdatingFolder(false);
                                                         return;
                                                     }
@@ -2005,16 +2243,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     props.refreshCues();
                                                 })
                                                 .catch(e => {
-                                                    Alert('Could not create folder. Try again.');
+                                                    Alert('Could not update folder. Try again.');
                                                     setUpdatingFolder(false);
                                                 });
                                         }
                                     }
                                 ]);
                             }}
-                            disabled={folderCuesToDisplay.length < 2 || updatingFolder}
+                            disabled={updatingFolder}
                             style={{
-                                backgroundColor: '#000',
+                                backgroundColor: 'none',
                                 paddingLeft: 0
                             }}
                         >
@@ -2074,7 +2312,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     props.refreshCues();
                                                 })
                                                 .catch(e => {
-                                                    Alert('Could not create folder. Try again.');
+                                                    Alert('Could not delete folder. Try again.');
                                                     setDeletingFolder(false);
                                                 });
                                         }
@@ -2082,7 +2320,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 ]);
                             }}
                             style={{
-                                backgroundColor: '#000',
+                                backgroundColor: 'none',
                                 paddingLeft: 0
                             }}
                         >
@@ -2112,7 +2350,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setFolderCuesToDisplay(cuesInOrder);
                             }}
                             style={{
-                                backgroundColor: '#000',
+                                backgroundColor: 'none',
                                 paddingLeft: 0
                             }}
                         >
@@ -2142,15 +2380,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * */
     const renderHeader = () => {
         return (
-            <View style={{ width: '100%', backgroundColor: '#000', flexDirection: 'column', zIndex: 500000 }}>
+            <View style={{ width: '100%', backgroundColor: '#000000de', flexDirection: 'column', zIndex: 500000 }}>
                 {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
                 <View
                     style={{
                         flexDirection: 'row',
-                        width: '100%',
                         justifyContent: 'center',
                         height: 52,
-                        backgroundColor: '#000',
+                        backgroundColor: 'none',
                         paddingHorizontal: 10,
                         shadowColor: '#000',
                         shadowOffset: {
@@ -2177,7 +2414,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 width: 35,
                                 height: 35,
                                 borderRadius: '100%',
-                                backgroundColor: '#f2f2f2',
+                                backgroundColor: '#f8f8f8',
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -2197,13 +2434,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             />
                         </TouchableOpacity>
                     ) : null}
-                    <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#000' }}>
+                    <View style={{ flexDirection: 'row', flex: 1, maxWidth: 1024, backgroundColor: 'none' }}>
                         {/* BACK BUTTON */}
                         <TouchableOpacity
                             style={{
                                 flexDirection: 'row',
                                 paddingTop: 7,
-                                backgroundColor: '#000'
+                                backgroundColor: 'none'
                             }}
                             onPress={() => {
                                 props.closeModal();
@@ -2223,20 +2460,19 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <TextInput
                                 value={newFolderTitle}
                                 style={{
-                                    color: '#fff',
-                                    backgroundColor: '#1F1F1F',
+                                    color: '#000',
+                                    backgroundColor: '#f8f8f8',
                                     borderRadius: 15,
                                     fontSize: 12,
-                                    paddingBottom: 5,
-                                    paddingTop: 4,
-                                    paddingHorizontal: 16,
+                                    paddingVertical: 6,
+                                    paddingHorizontal: 20,
                                     marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
                                     maxWidth: 225
                                 }}
                                 autoCompleteType={'xyz'}
-                                placeholderTextColor={'#fff'}
+                                placeholderTextColor={'#000'}
                                 placeholder={'Folder Title'}
                                 onChange={(e: any) => setNewFolderTitle(e.target.value)}
                             />
@@ -2246,20 +2482,19 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <TextInput
                                 value={updateFolderTitle}
                                 style={{
-                                    color: '#fff',
-                                    backgroundColor: '#1F1F1F',
+                                    color: '#000',
+                                    backgroundColor: '#f8f8f8',
                                     borderRadius: 15,
                                     fontSize: 12,
-                                    paddingBottom: 5,
-                                    paddingTop: 4,
-                                    paddingHorizontal: 16,
+                                    paddingVertical: 6,
+                                    paddingHorizontal: 20,
                                     marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
                                     maxWidth: 225
                                 }}
                                 autoCompleteType={'xyz'}
-                                placeholderTextColor={'#fff'}
+                                placeholderTextColor={'#000'}
                                 placeholder={'Folder Title'}
                                 onChange={(e: any) => setUpdateFolderTitle(e.target.value)}
                             />
@@ -2270,7 +2505,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View
                                 style={{
                                     flex: 1,
-                                    backgroundColor: '#000',
+                                    backgroundColor: 'none',
                                     justifyContent: 'flex-end',
                                     flexDirection: 'row',
                                     paddingTop: 8
@@ -2285,14 +2520,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         style={{
                                             paddingLeft: 0,
-                                            backgroundColor: '#000',
+                                            backgroundColor: 'none',
                                             marginLeft: 20
                                         }}
                                     >
                                         <Text
                                             style={{
                                                 lineHeight: 34,
-                                                backgroundColor: '#000',
+                                                backgroundColor: 'none',
                                                 fontWeight: 'bold',
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
@@ -2316,13 +2551,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             paddingLeft: 0,
                                             marginLeft: 20,
-                                            backgroundColor: '#000'
+                                            backgroundColor: 'none'
                                         }}
                                     >
                                         <Text
                                             style={{
                                                 lineHeight: 34,
-                                                backgroundColor: '#000',
+                                                backgroundColor: 'none',
                                                 fontWeight: 'bold',
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
@@ -2344,7 +2579,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8'
                     }}
                 >
                     {folderId !== '' &&
@@ -2359,7 +2594,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8'
                     }}
                 >
                     {createNewFolder ? renderNewFolderOptions() : null}
@@ -2367,7 +2602,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f2f2f2'
+                        backgroundColor: '#f8f8f8'
                     }}
                 >
                     {editFolder ? renderEditFolderOptions() : null}
@@ -2418,33 +2653,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {ContentView}
                     </View>
                     {/* Mobile tabs */}
-                    {Dimensions.get('window').width < 1024 ? (
-                        <View
-                            style={{
-                                position: 'absolute',
-                                zIndex: 1000,
-                                backgroundColor: '#000',
-                                bottom: 0,
-                                width: '100%',
-                                paddingTop: 5,
-                                paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
-                                paddingHorizontal: 20,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                height: Dimensions.get('window').width < 768 ? 54 : 68,
-                                shadowColor: '#000',
-                                shadowOffset: {
-                                    width: 0,
-                                    height: -7
-                                },
-                                shadowOpacity: 0.12,
-                                shadowRadius: 10,
-                                zIndex: 500000
-                            }}
-                        >
-                            {options}
-                        </View>
-                    ) : null}
+                    {Dimensions.get('window').width < 1024 ? mobileOptions : null}
                 </View>
             )}
         </View>
@@ -2455,26 +2664,27 @@ export default Update;
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
+        fontSize: 13,
         color: '#fff',
-        height: 25,
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
-        backgroundColor: '#000',
-        lineHeight: 25,
+        height: 24,
+        paddingHorizontal: 15,
+        backgroundColor: 'none',
+        lineHeight: 24,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
-        fontWeight: 'bold'
+        marginRight: 5,
     },
     allGrayFill: {
-        fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
-        color: '#fff',
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
+        fontSize: 13,
+        color: '#006AFF',
+        paddingHorizontal: 15,
         borderRadius: 12,
-        backgroundColor: '#006AFF',
+        backgroundColor: 'none',
         lineHeight: 24,
-        height: 25,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        height: 24,
+        fontFamily: 'overpass',
+        textTransform: 'uppercase',
+        marginRight: 5,
     },
     dateContainer: {
         fontSize: 10,

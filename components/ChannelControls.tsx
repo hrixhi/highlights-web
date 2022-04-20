@@ -729,7 +729,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             justifyContent: 'center',
             flexDirection: 'row'
         }} key={1}>
-            <View style={{ width: '100%', maxWidth: 900, backgroundColor: props.showCreate ? '#fff' : '#f2f2f2' }}>
+            <View style={{ width: '100%', maxWidth: 1024, backgroundColor: props.showCreate ? '#fff' : '#f2f2f2' }}>
                 {/* Back Button */}
                 {
                     props.showCreate ?
@@ -757,7 +757,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {!props.showCreate ?
                     <View 
                         style={{
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
                             width: '100%',
                             // minHeight: Dimensions.get("window").height - 52
                         }}
@@ -770,14 +770,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: "center",
                                 display: "flex",
                                 flexDirection: "column",
-                                backgroundColor: "#f2f2f2",
+                                backgroundColor: '#f8f8f8',
                                 paddingVertical: 100
                             }}>
                             <ActivityIndicator color={"#1F1F1F"} />
                         </View> : <View
                             style={{
                                 borderColor: '#f2f2f2',
-                                backgroundColor: '#f2f2f2',
+                                backgroundColor: '#f8f8f8',
                                 overflow: 'hidden',
                                 borderRadius: 1,
                                 // shadowColor: "#000",

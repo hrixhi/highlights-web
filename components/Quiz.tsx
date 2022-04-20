@@ -517,11 +517,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <View
                             style={{
                                 borderRightWidth: 0,
-                                paddingTop: 0,
                                 borderColor: '#f2f2f2',
                                 flexDirection: 'row',
-                                paddingTop: 10,
-                                paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0
+                                marginTop: Dimensions.get('window').width < 768 ? 0 : 10,
+                                marginLeft: Dimensions.get('window').width < 768 ? 20 : 0
                             }}
                         >
                             <View>
@@ -2067,7 +2066,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 marginRight: 20,
                                                                 marginBottom: 20,
                                                                 borderRadius: 10,
-                                                                // backgroundColor: '#f2f2f2',
+                                                                // backgroundColor: '#f8f8f8',
                                                                 borderWidth: 1,
                                                                 borderColor: '#ccc',
                                                                 shadowOffset: {
@@ -2122,7 +2121,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         marginRight: 20,
                                                         marginBottom: 20,
                                                         borderRadius: 10,
-                                                        // backgroundColor: '#f2f2f2',
+                                                        // backgroundColor: '#f8f8f8',
                                                         borderWidth: 1,
                                                         borderColor: '#ccc',
                                                         shadowOffset: {
