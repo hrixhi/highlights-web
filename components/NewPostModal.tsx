@@ -19,6 +19,7 @@ import Alert from '../components/Alert';
 import { DISCUSS_POST_TOOLBAR_BUTTONS } from '../constants/Froala';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import FormulaGuide from './FormulaGuide';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [title, setTitle] = useState('');
@@ -144,7 +145,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         <View
             style={{
                 backgroundColor: '#fff',
-                marginTop: 20,
                 marginBottom: 20,
                 paddingHorizontal: 20,
                 flexDirection: 'row',
@@ -153,15 +153,14 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 maxWidth: 750,
             }}
         >
-            <View style={{ flexDirection: 'column', backgroundColor: '#fff' }}>
-                <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Category</Text>
+            <View style={{ flexDirection: 'row', backgroundColor: '#fff', alignItems: 'center' }}>
+                <Text style={{ fontSize: 14, fontFamily: 'Inter', marginRight: 7 }}>Category</Text>
                 <View
                     style={{
                         width: '100%',
                         flexDirection: 'row',
                         backgroundColor: '#fff',
                         alignItems: 'center',
-                        marginTop: 10,
                     }}
                 >
                     <View style={{ backgroundColor: '#fff', marginRight: 10 }}>
@@ -234,61 +233,51 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             {props.isOwner ? null : (
                 <View
                     style={{
-                        marginLeft: 50,
+                        marginLeft: 'auto',
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
                     }}
                 >
-                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Private</Text>
                     <View
                         style={{
                             backgroundColor: '#fff',
-                            marginRight: 10,
-                            marginTop: 15,
-                            marginBottom: 10,
+                            marginRight: 7,
                         }}
                     >
-                        <Switch
-                            value={isPrivate}
-                            onValueChange={() => {
+                        <input
+                            type="checkbox"
+                            checked={isPrivate}
+                            onChange={(e: any) => {
                                 setIsPrivate(!isPrivate);
                             }}
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: '#F8F9FA',
-                                true: '#006AFF',
-                            }}
-                            activeThumbColor="white"
                         />
                     </View>
+                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Private</Text>
                 </View>
             )}
             {props.isOwner ? null : (
                 <View
                     style={{
                         marginLeft: 50,
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
                     }}
                 >
-                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
                     <View
                         style={{
                             backgroundColor: '#fff',
-                            marginRight: 10,
-                            marginTop: 15,
-                            marginBottom: 10,
+                            marginRight: 7,
                         }}
                     >
-                        <Switch
-                            value={anonymous}
-                            onValueChange={() => {
+                        <input
+                            type="checkbox"
+                            checked={anonymous}
+                            onChange={(e: any) => {
                                 setAnonymous(!anonymous);
                             }}
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: '#F8F9FA',
-                                true: '#006AFF',
-                            }}
-                            activeThumbColor="white"
                         />
                     </View>
+                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
                 </View>
             )}
         </View>
@@ -351,8 +340,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         fontFamily: 'overpass',
                         width: '100%',
-                        maxWidth: 900,
-                        minWidth: 900,
                         borderBottomWidth: 1,
                         borderColor: '#f2f2f2',
                         // borderBottom: '1px solid #f2f2f2',
@@ -571,6 +558,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             anonymous
                         );
                     }}
+                    disabled={props.user.email === disableEmailId}
                     // disabled={isCreatingEvents}
                 >
                     <Text

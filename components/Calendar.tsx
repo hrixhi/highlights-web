@@ -39,7 +39,7 @@ import { Eventcalendar, Datepicker, Popup } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import _ from 'lodash';
 import { Select } from '@mobiscroll/react';
-import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { zoomClientId, zoomRedirectUri, disableEmailId } from '../constants/zoomCredentials';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [tab, setTab] = useState(props.tab);
@@ -1016,10 +1016,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditChannelName = () => {
         return (
             editChannelName && (
-                <View style={{ marginBottom: 25 }}>
+                <View style={{ backgroundColor: 'none' }}>
                     <Text
                         style={{
-                            fontSize: 16,
+                            fontSize: 18,
                             fontFamily: 'Inter',
                             color: '#000000',
                         }}
@@ -1091,6 +1091,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
+                        disabled={props.user.email === disableEmailId}
                         style={{ marginRight: 15 }}
                         onPress={() => {
                             if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
@@ -1252,7 +1253,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     onPress={() => {
                         handleEdit();
                     }}
-                    disabled={isEditingEvents || isDeletingEvents}
+                    disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
                 >
                     <Text
                         style={{
@@ -1299,7 +1300,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             },
                         ]);
                     }}
-                    disabled={isEditingEvents || isDeletingEvents}
+                    disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
                 >
                     <Text
                         style={{
@@ -1350,7 +1351,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 },
                             ]);
                         }}
-                        disabled={isEditingEvents || isDeletingEvents}
+                        disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1454,6 +1455,55 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
     /**
+     * Human readable elapsed or remaining time (example: 3 minutes ago)
+     * @param  {Date|Number|String} date A Date object, timestamp or string parsable with Date.parse()
+     * @param  {Date|Number|String} [nowDate] A Date object, timestamp or string parsable with Date.parse()
+     * @param  {Intl.RelativeTimeFormat} [trf] A Intl formater
+     * @return {string} Human readable elapsed or remaining time
+     */
+    function fromNow(
+        date: Date,
+        nowDate = Date.now(),
+        rft = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
+    ) {
+        const SECOND = 1000;
+        const MINUTE = 60 * SECOND;
+        const HOUR = 60 * MINUTE;
+        const DAY = 24 * HOUR;
+        const WEEK = 7 * DAY;
+        const MONTH = 30 * DAY;
+        const YEAR = 365 * DAY;
+        const intervals = [
+            { ge: YEAR, divisor: YEAR, unit: 'year' },
+            { ge: MONTH, divisor: MONTH, unit: 'month' },
+            { ge: WEEK, divisor: WEEK, unit: 'week' },
+            { ge: DAY, divisor: DAY, unit: 'day' },
+            { ge: HOUR, divisor: HOUR, unit: 'hour' },
+            { ge: MINUTE, divisor: MINUTE, unit: 'minute' },
+            { ge: 30 * SECOND, divisor: SECOND, unit: 'seconds' },
+            { ge: 0, divisor: 1, text: 'just now' },
+        ];
+        const now = typeof nowDate === 'object' ? nowDate.getTime() : new Date(nowDate).getTime();
+        const diff = now - (typeof date === 'object' ? date : new Date(date)).getTime();
+        const diffAbs = Math.abs(diff);
+        for (const interval of intervals) {
+            if (diffAbs >= interval.ge) {
+                const x = Math.round(Math.abs(diff) / interval.divisor);
+                const isFuture = diff < 0;
+                const outputTime = interval.unit ? rft.format(isFuture ? x : -x, interval.unit) : interval.text;
+                return outputTime
+                    .replace(' ago', '')
+                    .replace(' minutes', 'min')
+                    .replace(' months', 'mth')
+                    .replace(' days', 'd')
+                    .replace(' weeks', 'wks')
+                    .replace(' hours', 'h')
+                    .replace(' seconds', 's');
+            }
+        }
+    }
+
+    /**
      * @description Renders filter for Agenda
      */
     const renderEventFilters = () => {
@@ -1551,213 +1601,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         );
     };
 
-    /**
-     * @description Renders tabs for Agenda
-     */
-    const renderTabs = (activeTab: any) => {
-        return (
-            <View
-                style={{
-                    flexDirection: 'column',
-                    flex: 1,
-                    marginBottom: 20,
-                    marginTop: 10,
-                    paddingVertical: 10,
-                    backgroundColor: '#fff',
-                }}
-            >
-                {tab !== 'Add' ? null : (
-                    <TouchableOpacity
-                        onPress={() => {
-                            setEditEvent(null);
-                            props.setTab(tabs[0]);
-                            setTab(tabs[0]);
-                        }}
-                        style={{
-                            paddingHorizontal: 10,
-                            // paddingTop: 5,
-                            backgroundColor: 'white',
-                            alignSelf: 'flex-start',
-                        }}
-                    >
-                        <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
-                        </Text>
-                    </TouchableOpacity>
-                )}
-                {tab !== 'Add' ? (
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            paddingTop: 10,
-                            backgroundColor: '#f8f8f8',
-                            flex: 1,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                backgroundColor: '#f8f8f8',
-                            }}
-                            onPress={() => {
-                                setTab('Agenda');
-                            }}
-                        >
-                            <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="list-outline" size={18} style={{ marginBottom: 5 }} />
-                            </Text>
-                            <Text style={tab === 'Agenda' ? styles.allGrayFill1 : styles.all1}>{'To-do'}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                backgroundColor: '#f8f8f8',
-                            }}
-                            onPress={() => {
-                                setTab('Schedule');
-                            }}
-                        >
-                            <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="map-outline" size={18} />
-                            </Text>
-                            <Text style={tab === 'Schedule' ? styles.allGrayFill1 : styles.all1}>Schedule</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                backgroundColor: '#f8f8f8',
-                            }}
-                            onPress={() => {
-                                setTab('Calendar');
-                            }}
-                        >
-                            <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="calendar-sharp" size={18} />
-                            </Text>
-                            <Text style={tab === 'Calendar' ? styles.allGrayFill1 : styles.all1}>Planner</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                backgroundColor: '#f8f8f8',
-                            }}
-                            onPress={() => {
-                                setTab('Activity');
-                            }}
-                        >
-                            {/* Alert  */}
-                            {unreadCount !== 0 ? (
-                                <View
-                                    style={{
-                                        width: 7,
-                                        height: 7,
-                                        borderRadius: '100%',
-                                        backgroundColor: '#f94144',
-                                        position: 'absolute',
-                                        top: -3,
-                                        right: 5,
-                                    }}
-                                />
-                            ) : null}
-                            <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                                <Ionicons name="notifications-outline" size={18} />
-                            </Text>
-                            <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>Alerts</Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : null}
-
-                {tab === tabs[3] && unreadCount !== 0 ? (
-                    <TouchableOpacity
-                        onPress={async () => {
-                            const uString: any = await AsyncStorage.getItem('user');
-                            if (uString) {
-                                const user = JSON.parse(uString);
-                                const server = fetchAPI(user._id);
-                                server
-                                    .mutate({
-                                        mutation: markActivityAsRead,
-                                        variables: {
-                                            userId: user._id,
-                                            markAllRead: true,
-                                        },
-                                    })
-                                    .then((res) => {
-                                        if (res.data.activity.markActivityAsRead) {
-                                            server
-                                                .query({
-                                                    query: getActivity,
-                                                    variables: {
-                                                        userId: user._id,
-                                                    },
-                                                })
-                                                .then((res) => {
-                                                    if (res.data && res.data.activity.getActivity) {
-                                                        const tempActivity = res.data.activity.getActivity;
-                                                        let unread = 0;
-                                                        tempActivity.map((act: any) => {
-                                                            if (act.status === 'unread') {
-                                                                unread++;
-                                                            }
-                                                        });
-                                                        setUnreadCount(unread);
-                                                        setActivity(tempActivity);
-                                                    }
-                                                });
-                                        }
-                                    })
-                                    .catch((err) => {});
-                            }
-                        }}
-                        style={{
-                            backgroundColor: '#f8f8f8',
-                            overflow: 'hidden',
-                            height: 35,
-                            marginTop: 20,
-                            alignSelf: 'center',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                                lineHeight: 34,
-                                color: '#006AFF',
-                                fontSize: 12,
-                                borderWidth: 1,
-                                borderColor: '#006AFF',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                width: 150,
-                                borderRadius: 15,
-                                textTransform: 'uppercase',
-                            }}
-                        >
-                            Mark as Read
-                        </Text>
-                    </TouchableOpacity>
-                ) : null}
-            </View>
-        );
-    };
-
     const getAgendaNavbarIconName = (op: string) => {
         console.log('Agenda navbar op', op);
         switch (op) {
             case 'Agenda':
-                return 'list-outline';
+                return op === tab ? 'list' : 'list-outline';
             case 'Schedule':
-                return 'map-outline';
+                return op === tab ? 'map' : 'map-outline';
             case 'Calendar':
-                return 'calendar-sharp';
+                return op === tab ? 'calendar' : 'calendar-sharp';
             case 'Activity':
-                return 'notifications-outline';
+                return op === tab ? 'notifications' : 'notifications-outline';
             default:
                 return '';
         }
@@ -1767,7 +1621,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (op === tab) {
             return '#000';
         }
-        return '#797979';
+        return '#898989';
     };
 
     const renderAgendaTabs = () => {
@@ -1778,7 +1632,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: 'row',
                     justifyContent: 'center',
                     paddingVertical: 15,
-                    backgroundColor: tab === 'Add' ? '#fff' : '#f8f8f8',
+                    backgroundColor: '#f8f8f8',
                     height: 54,
                 }}
             >
@@ -1836,7 +1690,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <TouchableOpacity
                                         key={ind.toString()}
                                         style={{
-                                            marginRight: 30,
+                                            marginRight: 38,
                                             paddingVertical: 3,
                                             backgroundColor: 'none',
                                             flexDirection: 'row',
@@ -1849,13 +1703,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         {option === 'Activity' && unreadCount !== 0 ? (
                                             <View
                                                 style={{
-                                                    width: 7,
-                                                    height: 7,
+                                                    width: 6,
+                                                    height: 6,
                                                     borderRadius: '100%',
                                                     backgroundColor: '#f94144',
                                                     position: 'absolute',
-                                                    top: -1,
-                                                    right: -10,
+                                                    top: 0,
+                                                    right: -8,
                                                 }}
                                             />
                                         ) : null}
@@ -1869,13 +1723,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <Ionicons
                                                 name={getAgendaNavbarIconName(option)}
                                                 style={{ color: getAgendaIconColor(option) }}
-                                                size={17}
+                                                size={option === 'Agenda' ? 15 : option === 'Schedule' ? 13 : 14}
                                             />
                                             <Text
                                                 style={{
                                                     color: getAgendaIconColor(option),
-                                                    fontSize: 15,
-                                                    fontFamily: 'Inter',
+                                                    fontSize: 13,
+                                                    fontFamily: 'overpass',
                                                     textTransform: 'capitalize',
                                                     paddingLeft: 5,
                                                 }}
@@ -1893,7 +1747,28 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 );
                             })}
                         </View>
-                    ) : null}
+                    ) : (
+                        <View
+                            style={{
+                                backgroundColor: 'none',
+                            }}
+                        >
+                            {renderEditChannelName()}
+                            {!editChannelName ? (
+                                <View style={{ backgroundColor: '#none' }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            fontFamily: 'Inter',
+                                            color: '#000000',
+                                        }}
+                                    >
+                                        New event
+                                    </Text>
+                                </View>
+                            ) : null}
+                        </View>
+                    )}
                     {/* Mark as read button */}
 
                     <View
@@ -1956,6 +1831,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                 }}
+                                disabled={props.user.email === disableEmailId}
                             >
                                 <Ionicons name="checkmark-done-outline" size={16} color="#006AFF" />
                                 <Text
@@ -2213,7 +2089,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             >
                                                                 <Text
                                                                     style={{
-                                                                        fontSize: 15,
+                                                                        fontSize: 14,
                                                                         padding: 5,
                                                                         fontFamily: 'inter',
                                                                         marginTop: 5,
@@ -2226,7 +2102,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     style={{
                                                                         fontSize: 12,
                                                                         padding: 5,
-                                                                        fontWeight: 'bold',
                                                                     }}
                                                                     ellipsizeMode="tail"
                                                                 >
@@ -2264,7 +2139,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         fontSize: 12,
                                                                         padding: 5,
                                                                         lineHeight: 13,
-                                                                        fontWeight: 'bold',
+                                                                        // fontWeight: 'bold',
                                                                     }}
                                                                     ellipsizeMode="tail"
                                                                 >
@@ -2300,22 +2175,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 alignItems: 'center',
                                                 backgroundColor: 'white',
                                                 paddingHorizontal: width < 768 ? 20 : 0,
+                                                paddingTop: 20,
                                             }}
                                         >
-                                            {renderEditChannelName()}
-                                            {!editChannelName ? (
-                                                <View style={{ marginBottom: 15 }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 18,
-                                                            fontFamily: 'Inter',
-                                                            color: '#000000',
-                                                        }}
-                                                    >
-                                                        New event
-                                                    </Text>
-                                                </View>
-                                            ) : null}
                                             <View
                                                 style={{
                                                     width: '100%',
@@ -2618,6 +2480,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 backgroundColor: '#f3f3f3',
                                                                 paddingHorizontal: 10,
                                                             }}
+                                                            disabled={props.user.email === disableEmailId}
                                                         >
                                                             <Text
                                                                 style={{
@@ -2653,7 +2516,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 flexDirection: 'row',
                                                             }}
                                                             onPress={() => handleCreate()}
-                                                            disabled={isCreatingEvents}
+                                                            disabled={
+                                                                isCreatingEvents || props.user.email === disableEmailId
+                                                            }
                                                         >
                                                             <Text
                                                                 style={{

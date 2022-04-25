@@ -13,21 +13,24 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 width: '100%',
                 backgroundColor: 'white',
                 borderTopRightRadius: 0,
-                borderTopLeftRadius: 0
+                borderTopLeftRadius: 0,
             }}
-            onTouchMove={() => Keyboard.dismiss()}>
+            onTouchMove={() => Keyboard.dismiss()}
+        >
             <ScrollView
                 style={{
                     width: '100%',
                     paddingHorizontal: 0,
-                    backgroundColor: 'white'
-                }}>
+                    backgroundColor: 'white',
+                }}
+            >
                 <ChannelControls
                     subscriptions={props.subscriptions}
                     closeModal={() => props.closeModal()}
                     refreshSubscriptions={props.refreshSubscriptions}
                     setShowCreate={(val: any) => props.setShowCreate(val)}
                     showCreate={props.showCreate}
+                    user={props.user}
                 />
             </ScrollView>
         </View>

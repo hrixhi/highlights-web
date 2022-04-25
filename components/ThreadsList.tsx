@@ -22,6 +22,7 @@ import {
     markThreadsAsRead,
     getThreadCategories,
     searchThreads,
+    updateThread,
 } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Collapse } from 'react-collapse';
@@ -50,6 +51,7 @@ import { DISCUSS_REPLY_TOOLBAR_BUTTONS } from '../constants/Froala';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import FormulaGuide from './FormulaGuide';
 import { TextInput } from './CustomTextInput';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     // State
@@ -83,6 +85,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [equation, setEquation] = useState('');
     const [showEquationEditor, setShowEquationEditor] = useState(false);
     const [isSendingReply, setIsSendingReply] = useState(false);
+
+    const [editDiscussionThreadId, setEditDiscussionThreadId] = useState('');
+    const [editDiscussionThreadHtml, setEditDiscussionThreadHtml] = useState<any>({});
+    const [editDiscussionThreadAttachments, setEditDiscussionThreadAttachments] = useState<any[]>([]);
+    const [editDiscussionThreadAnonymous, setEditDiscussionThreadAnonymous] = useState(false);
 
     console.log('Search results', searchResults);
 
@@ -287,7 +294,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         channelId: props.channelId,
                         isPrivate,
                         anonymous,
-                        cueId: props.cueId === null ? 'NULL' : props.cueId,
+                        cueId: 'NULL',
                         parentId: 'INIT',
                         category: category === 'None' ? '' : category,
                         title,
@@ -307,6 +314,94 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         },
         [props.cueId, props.channelId, userId, isOwner]
     );
+
+    const handleDeleteThread = useCallback(async (threadId: string, reply: boolean) => {
+        Alert('Delete post?', '', [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+                onPress: () => {
+                    return;
+                },
+            },
+            {
+                text: 'Yes',
+                onPress: () => {
+                    const server = fetchAPI('');
+                    server
+                        .mutate({
+                            mutation: deleteThread,
+                            variables: {
+                                threadId,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.thread.delete) {
+                                if (reply) {
+                                    loadCueDiscussions(threadId);
+                                } else {
+                                    //
+                                    setSelectedThread('');
+                                    props.reload();
+                                }
+                            } else {
+                                Alert('Could not delete thread. Try again.');
+                                return;
+                            }
+                        })
+                        .catch((e) => {
+                            Alert('Could not delete thread. Try again.');
+                            return;
+                        });
+                },
+            },
+        ]);
+    }, []);
+
+    const handleUpdateThread = useCallback(async () => {
+        if (!editDiscussionThreadId || isSendingReply) return;
+
+        if (editDiscussionThreadHtml === '') {
+            Alert('Thread content cannot be empty.');
+            return;
+        }
+
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: updateThread,
+                variables: {
+                    threadId: editDiscussionThreadId,
+                    message: JSON.stringify({
+                        html: editDiscussionThreadHtml,
+                        attachments: editDiscussionThreadAttachments,
+                    }),
+                    anonymous: editDiscussionThreadAnonymous,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.thread.updateThread) {
+                    setEditDiscussionThreadId('');
+                    setEditDiscussionThreadHtml('');
+                    setEditDiscussionThreadAttachments([]);
+                    setEditDiscussionThreadAnonymous(false);
+                    loadCueDiscussions(threadId);
+                } else {
+                    Alert('Could not update thread. Try again.');
+                    return;
+                }
+            })
+            .catch((e) => {
+                Alert('Could not update thread. Try again.');
+                return;
+            });
+    }, [
+        editDiscussionThreadId,
+        editDiscussionThreadHtml,
+        editDiscussionThreadAttachments,
+        editDiscussionThreadAnonymous,
+        isSendingReply,
+    ]);
 
     const handleReply = useCallback(async () => {
         if (html === '') {
@@ -355,66 +450,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }, [props.channelId, props.cueId, threadId, html, attachments, userId, anonymous]);
 
     /**
-     * @description Send a Thread message
-     */
-    const onSend = useCallback(
-        async (messages: any) => {
-            let message = '';
-
-            if (
-                (messages[0].file && messages[0].file !== '') ||
-                (messages[0].image && messages[0].image !== '') ||
-                (messages[0].audio && messages[0].audio !== '') ||
-                (messages[0].video && messages[0].video !== '')
-            ) {
-                message = messages[0].msgObject;
-            } else {
-                message = messages[0].text;
-            }
-
-            messages[0] = {
-                ...messages[0],
-                user: {
-                    _id: userId,
-                },
-            };
-
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: createMessage,
-                    variables: {
-                        message,
-                        userId,
-                        channelId: props.channelId,
-                        isPrivate: false,
-                        anonymous: false,
-                        cueId: props.cueId === null ? 'NULL' : props.cueId,
-                        parentId: threadId === '' ? 'INIT' : threadId,
-                        category: '',
-                    },
-                })
-                .then((res) => {
-                    if (res.data.thread.writeMessage) {
-                        setThreadChat((threadChat) => GiftedChat.append(threadChat, messages));
-                        // props.reload()
-                    } else {
-                        Alert(checkConnectionAlert);
-                    }
-                })
-                .catch((err) => {
-                    Alert(somethingWentWrongAlert, checkConnectionAlert);
-                });
-        },
-        [props.cueId, props.channelId, threadId, userId, props.showNewDiscussionPost, customCategory, isOwner]
-    );
-
-    /**
      * @description Load the entire the Thread using the thread ID
      */
     const loadCueDiscussions = useCallback(async (threadId: string) => {
         const u = await AsyncStorage.getItem('user');
         if (u) {
+            props.setShowNewDiscussionPost(false);
             const user = JSON.parse(u);
             setThreadId(threadId);
             setLoading(true);
@@ -651,6 +692,176 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         else return date.format('MM/DD/YYYY');
     }
 
+    const renderDiscussionEditor = () => {
+        console.log('Edit discussion thread html', editDiscussionThreadHtml);
+
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    zIndex: 5000000,
+                }}
+            >
+                <FroalaEditor
+                    ref={RichText}
+                    model={editDiscussionThreadId !== '' ? editDiscussionThreadHtml : html}
+                    onModelChange={(model: any) => {
+                        if (editDiscussionThreadId !== '') {
+                            setEditDiscussionThreadHtml(model);
+                        } else {
+                            setHtml(model);
+                        }
+                    }}
+                    config={{
+                        autofocus: true,
+                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                        attribution: false,
+                        placeholderText: 'Enter Content',
+                        charCounterCount: false,
+                        zIndex: 2003,
+                        // immediateReactModelUpdate: true,
+                        heightMin: 100,
+                        // FILE UPLOAD
+                        // fileUploadURL: 'https://api.learnwithcues.com/upload',
+                        fileMaxSize: 25 * 1024 * 1024,
+                        fileAllowedTypes: ['*'],
+                        fileUploadParams: { userId },
+                        // IMAGE UPLOAD
+                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                        imageUploadParam: 'file',
+                        imageUploadParams: { userId },
+                        imageUploadMethod: 'POST',
+                        imageMaxSize: 5 * 1024 * 1024,
+                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                        // VIDEO UPLOAD
+                        videoMaxSize: 50 * 1024 * 1024,
+                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
+                        paragraphFormatSelection: true,
+                        // Default Font Size
+                        spellcheck: true,
+                        tabSpaces: 4,
+
+                        // TOOLBAR
+                        toolbarButtons: DISCUSS_REPLY_TOOLBAR_BUTTONS,
+                        toolbarSticky: true,
+                        htmlAllowedEmptyTags: [
+                            'textarea',
+                            'a',
+                            'iframe',
+                            'object',
+                            'video',
+                            'style',
+                            'script',
+                            '.fa',
+                            'span',
+                            'p',
+                            'path',
+                            'line',
+                        ],
+                        htmlAllowedTags: ['.*'],
+                        htmlAllowedAttrs: ['.*'],
+                        htmlRemoveTags: ['script'],
+
+                        events: {
+                            'file.beforeUpload': function (files: any) {
+                                // Return false if you want to stop the file upload.
+                                fileUploadEditor(files);
+
+                                return false;
+                            },
+                            'video.beforeUpload': function (videos: any) {
+                                videoUploadEditor(videos);
+
+                                return false;
+                            },
+                            'image.beforeUpload': function (images: any) {
+                                if (images[0].size > 5 * 1024 * 1024) {
+                                    alert('Image size must be less than 5mb.');
+                                    return false;
+                                }
+
+                                return true;
+                            },
+                        },
+                    }}
+                />
+                {/* Render attachments */}
+                {(editDiscussionThreadId !== '' && editDiscussionThreadAttachments.length > 0) ||
+                (!editDiscussionThreadId && attachments.length > 0) ? (
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            width: '100%',
+                            maxWidth: 500,
+                            marginVertical: 20,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                fontFamily: 'Overpass',
+                                marginBottom: 20,
+                            }}
+                        >
+                            Attachments
+                        </Text>
+                        {(editDiscussionThreadId !== '' ? editDiscussionThreadAttachments : attachments).map(
+                            (file: any, ind: number) => {
+                                return (
+                                    <View
+                                        key={ind.toString()}
+                                        style={{
+                                            width: '100%',
+                                            paddingVertical: 8,
+                                            paddingHorizontal: 12,
+                                            borderWidth: 1,
+                                            borderColor: '#efefef',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            borderRadius: 8,
+                                            marginBottom: 10,
+                                        }}
+                                    >
+                                        <Ionicons name="attach-outline" size={22} color="#006AFF" />
+                                        <Text
+                                            style={{
+                                                paddingLeft: 10,
+                                                fontSize: 14,
+                                                fontFamily: 'Overpass',
+                                            }}
+                                        >
+                                            {file.name}
+                                        </Text>
+                                        <TouchableOpacity
+                                            style={{
+                                                marginLeft: 'auto',
+                                            }}
+                                            onPress={() => {
+                                                const updatedAttachments: any[] = [...attachments];
+                                                updatedAttachments.splice(ind, 1);
+                                                setAttachments(updatedAttachments);
+                                            }}
+                                        >
+                                            <Text>
+                                                <Ionicons
+                                                    name="close-outline"
+                                                    style={{
+                                                        marginLeft: 'auto',
+                                                    }}
+                                                    size={19}
+                                                />
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            }
+                        )}
+                    </View>
+                ) : null}
+            </View>
+        );
+    };
+
     /**
      * @description Renders the Filter Dropdown and the New Post button
      */
@@ -722,19 +933,33 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const setUploadResult = useCallback(
         (uploadURL: string, uploadType: string, updloadName: string) => {
-            const updatedAttachments: any[] = [...attachments];
+            if (editDiscussionThreadId !== '') {
+                const updatedAttachments: any[] = [...editDiscussionThreadAttachments];
 
-            console.log('initial attachments', updatedAttachments);
+                console.log('initial attachments', updatedAttachments);
 
-            updatedAttachments.push({
-                url: uploadURL,
-                type: uploadType,
-                name: updloadName,
-            });
+                updatedAttachments.push({
+                    url: uploadURL,
+                    type: uploadType,
+                    name: updloadName,
+                });
 
-            setAttachments(updatedAttachments);
+                setEditDiscussionThreadAttachments(updatedAttachments);
+            } else {
+                const updatedAttachments: any[] = [...attachments];
+
+                console.log('initial attachments', updatedAttachments);
+
+                updatedAttachments.push({
+                    url: uploadURL,
+                    type: uploadType,
+                    name: updloadName,
+                });
+
+                setAttachments(updatedAttachments);
+            }
         },
-        [attachments]
+        [attachments, editDiscussionThreadId, editDiscussionThreadAttachments]
     );
 
     /**
@@ -818,68 +1043,278 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             alignItems: 'center',
                             marginTop: 5,
                             marginLeft: 5,
+                            marginBottom: 20,
                         }}
                     >
-                        <Image
-                            style={{
-                                height: 50,
-                                width: 50,
-                                marginBottom: 5,
-                                borderRadius: 75,
-                                alignSelf: 'center',
-                            }}
-                            source={{
-                                uri:
-                                    selectedThread.avatar &&
-                                    (!selectedThread.anonymous || selectedThread.userId === userId)
-                                        ? selectedThread.avatar
-                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                            }}
-                        />
                         <View
                             style={{
-                                marginLeft: 15,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    height: 50,
+                                    width: 50,
+                                    marginBottom: 5,
+                                    borderRadius: 75,
+                                    alignSelf: 'center',
+                                }}
+                                source={{
+                                    uri:
+                                        selectedThread.avatar &&
+                                        (!selectedThread.anonymous || selectedThread.userId === userId)
+                                            ? selectedThread.avatar
+                                            : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                }}
+                            />
+                            <View
+                                style={{
+                                    marginLeft: 15,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            fontFamily: 'Inter',
+                                            color: selectedThread.userId === userId ? '#006AFF' : '#000',
+                                        }}
+                                    >
+                                        {!selectedThread.anonymous || selectedThread.userId === userId
+                                            ? selectedThread.userId === userId
+                                                ? 'Me'
+                                                : selectedThread.fullName
+                                            : 'Anonymous'}
+                                    </Text>
+                                    {/*  */}
+                                    {selectedThread.edited ? (
+                                        <View
+                                            style={{
+                                                backgroundColor: '#e6f0ff',
+                                                padding: 4,
+                                                marginLeft: 15,
+                                                borderRadius: 3,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: '#006AFF',
+                                                    fontSize: 11,
+                                                }}
+                                            >
+                                                Edited
+                                            </Text>
+                                        </View>
+                                    ) : null}
+                                </View>
+                                <Text
+                                    style={{
+                                        fontSize: 12,
+                                        marginTop: 7,
+                                        color: '#1f1f1f',
+                                    }}
+                                >
+                                    {fromNow(new Date(selectedThread.time), false)}{' '}
+                                    {selectedThread.category ? ' in ' + selectedThread.category : ''}
+                                </Text>
+                            </View>
+                        </View>
+
+                        {/* Render Views and edit button */}
+                        <View
+                            style={{
+                                marginLeft: 'auto',
+                                flexDirection: 'row',
+                                alignItems: 'center',
                             }}
                         >
                             <Text
                                 style={{
                                     fontSize: 14,
-                                    fontFamily: 'Inter',
-                                    color: selectedThread.userId === userId ? '#006AFF' : '#000',
                                 }}
                             >
-                                {!selectedThread.anonymous || selectedThread.userId === userId
-                                    ? selectedThread.userId === userId
-                                        ? 'Me'
-                                        : selectedThread.fullName
-                                    : 'Anonymous'}
+                                {selectedThread.views} {selectedThread.views === 1 ? 'view' : 'views'}
                             </Text>
-                            <Text
-                                style={{
-                                    fontSize: 12,
-                                    marginTop: 7,
-                                    color: '#1f1f1f',
-                                }}
-                            >
-                                {fromNow(new Date(selectedThread.time), false)}{' '}
-                                {selectedThread.category ? ' in ' + selectedThread.category : ''}
-                            </Text>
+                            {userId === selectedThread.userId && !editDiscussionThreadId && !isReplyEditorFocused ? (
+                                <TouchableOpacity
+                                    style={{
+                                        marginLeft: 20,
+                                    }}
+                                    onPress={() => {
+                                        setEditDiscussionThreadId(selectedThread._id);
+                                        const parse = JSON.parse(selectedThread.message);
+                                        setEditDiscussionThreadHtml(parse.html ? parse.html : '');
+                                        setEditDiscussionThreadAttachments(parse.attachments ? parse.attachments : []);
+                                        setEditDiscussionThreadAnonymous(selectedThread.anonymous);
+                                    }}
+                                    disabled={props.user.email === disableEmailId}
+                                >
+                                    <Text>
+                                        <Ionicons name={'pencil-outline'} size={16} color="#006AFF" />
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
+                            {isOwner ? (
+                                <TouchableOpacity
+                                    style={{
+                                        marginLeft: 20,
+                                    }}
+                                    onPress={() => {
+                                        handleDeleteThread(selectedThread._id, false);
+                                    }}
+                                    disabled={props.user.email === disableEmailId}
+                                >
+                                    <Text>
+                                        <Ionicons name={'trash-outline'} size={18} color="#006AFF" />
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
                         </View>
                     </View>
                     {/* Content */}
-                    <div
-                        className="mce-content-body htmlParser"
-                        style={{
-                            width: '100%',
-                            color: 'black',
-                            marginTop: Dimensions.get('window').width < 768 ? 0 : 25,
-                        }}
-                    >
-                        {parser(selectedThreadContent)}
-                    </div>
+
+                    {editDiscussionThreadId !== '' && editDiscussionThreadId === selectedThread._id ? (
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                            }}
+                        >
+                            {renderDiscussionEditor()}
+
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginTop: 20,
+                                }}
+                            >
+                                {isOwner ? null : (
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                marginRight: 7,
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={anonymous}
+                                                onChange={(e: any) => {
+                                                    setAnonymous(!anonymous);
+                                                }}
+                                            />
+                                        </View>
+                                        <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                                    </View>
+                                )}
+
+                                {/* Buttons */}
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginLeft: 'auto',
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: 'white',
+                                            justifyContent: 'center',
+                                            flexDirection: 'row',
+                                            marginRight: 20,
+                                        }}
+                                        onPress={() => {
+                                            Alert('Discard reply?', '', [
+                                                {
+                                                    text: 'Cancel',
+                                                    style: 'cancel',
+                                                    onPress: () => {
+                                                        return;
+                                                    },
+                                                },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: () => {
+                                                        setEditDiscussionThreadAnonymous(false);
+                                                        setEditDiscussionThreadId('');
+                                                        setEditDiscussionThreadHtml('');
+                                                        setEditDiscussionThreadAttachments([]);
+                                                    },
+                                                },
+                                            ]);
+                                        }}
+                                        disabled={isSendingReply}
+                                    >
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                color: '#006AFF',
+                                                borderRadius: 15,
+                                                fontSize: 12,
+                                                backgroundColor: 'white',
+                                                fontFamily: 'inter',
+                                                textTransform: 'uppercase',
+                                            }}
+                                        >
+                                            Cancel
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: 'white',
+                                            overflow: 'hidden',
+                                            // marginTop: 15,
+                                            justifyContent: 'center',
+                                            flexDirection: 'row',
+                                        }}
+                                        onPress={() => {
+                                            handleUpdateThread();
+                                        }}
+                                        disabled={isSendingReply}
+                                    >
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                color: '#006AFF',
+                                                fontSize: 12,
+                                                fontFamily: 'inter',
+                                                borderRadius: 15,
+                                                textTransform: 'uppercase',
+                                            }}
+                                        >
+                                            {isSendingReply ? 'Updating...' : 'Update'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    ) : (
+                        <div
+                            className="mce-content-body htmlParser"
+                            style={{
+                                width: '100%',
+                                color: 'black',
+                                marginTop: Dimensions.get('window').width < 768 ? 0 : 25,
+                            }}
+                        >
+                            {parser(selectedThreadContent)}
+                        </div>
+                    )}
                     {/* Attachments */}
                     {/* Render attachments */}
-                    {selectedThreadAttachments.length > 0 ? (
+                    {editDiscussionThreadId !== '' ? null : selectedThreadAttachments.length > 0 ? (
                         <View
                             style={{
                                 flexDirection: 'column',
@@ -979,161 +1414,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                             />
                         </View>
-                        <View
-                            style={{
-                                flex: 1,
-                            }}
-                        >
-                            <FroalaEditor
-                                ref={RichText}
-                                model={html}
-                                onModelChange={(model: any) => {
-                                    setHtml(model);
-                                }}
-                                config={{
-                                    autofocus: true,
-                                    key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                                    attribution: false,
-                                    placeholderText: 'Enter Title',
-                                    charCounterCount: false,
-                                    zIndex: 2003,
-                                    // immediateReactModelUpdate: true,
-                                    heightMin: 150,
-                                    // FILE UPLOAD
-                                    // fileUploadURL: 'https://api.learnwithcues.com/upload',
-                                    fileMaxSize: 25 * 1024 * 1024,
-                                    fileAllowedTypes: ['*'],
-                                    fileUploadParams: { userId },
-                                    // IMAGE UPLOAD
-                                    imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                                    imageUploadParam: 'file',
-                                    imageUploadParams: { userId },
-                                    imageUploadMethod: 'POST',
-                                    imageMaxSize: 5 * 1024 * 1024,
-                                    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                                    // VIDEO UPLOAD
-                                    videoMaxSize: 50 * 1024 * 1024,
-                                    videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
-                                    paragraphFormatSelection: true,
-                                    // Default Font Size
-                                    spellcheck: true,
-                                    tabSpaces: 4,
-
-                                    // TOOLBAR
-                                    toolbarButtons: DISCUSS_REPLY_TOOLBAR_BUTTONS,
-                                    toolbarSticky: true,
-                                    htmlAllowedEmptyTags: [
-                                        'textarea',
-                                        'a',
-                                        'iframe',
-                                        'object',
-                                        'video',
-                                        'style',
-                                        'script',
-                                        '.fa',
-                                        'span',
-                                        'p',
-                                        'path',
-                                        'line',
-                                    ],
-                                    htmlAllowedTags: ['.*'],
-                                    htmlAllowedAttrs: ['.*'],
-                                    htmlRemoveTags: ['script'],
-
-                                    events: {
-                                        'file.beforeUpload': function (files: any) {
-                                            // Return false if you want to stop the file upload.
-                                            fileUploadEditor(files);
-
-                                            return false;
-                                        },
-                                        'video.beforeUpload': function (videos: any) {
-                                            videoUploadEditor(videos);
-
-                                            return false;
-                                        },
-                                        'image.beforeUpload': function (images: any) {
-                                            if (images[0].size > 5 * 1024 * 1024) {
-                                                alert('Image size must be less than 5mb.');
-                                                return false;
-                                            }
-
-                                            return true;
-                                        },
-                                    },
-                                }}
-                            />
-                            {/* Render attachments */}
-                            {attachments.length > 0 ? (
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        width: '100%',
-                                        maxWidth: 500,
-                                        marginVertical: 20,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 14,
-                                            fontFamily: 'Overpass',
-                                            marginBottom: 20,
-                                        }}
-                                    >
-                                        Attachments
-                                    </Text>
-                                    {attachments.map((file: any, ind: number) => {
-                                        return (
-                                            <View
-                                                key={ind.toString()}
-                                                style={{
-                                                    width: '100%',
-                                                    paddingVertical: 8,
-                                                    paddingHorizontal: 12,
-                                                    borderWidth: 1,
-                                                    borderColor: '#efefef',
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    borderRadius: 8,
-                                                    marginBottom: 10,
-                                                }}
-                                            >
-                                                <Ionicons name="attach-outline" size={22} color="#006AFF" />
-                                                <Text
-                                                    style={{
-                                                        paddingLeft: 10,
-                                                        fontSize: 14,
-                                                        fontFamily: 'Overpass',
-                                                    }}
-                                                >
-                                                    {file.name}
-                                                </Text>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        marginLeft: 'auto',
-                                                    }}
-                                                    onPress={() => {
-                                                        const updatedAttachments: any[] = [...attachments];
-                                                        updatedAttachments.splice(ind, 1);
-                                                        setAttachments(updatedAttachments);
-                                                    }}
-                                                >
-                                                    <Text>
-                                                        <Ionicons
-                                                            name="close-outline"
-                                                            style={{
-                                                                marginLeft: 'auto',
-                                                            }}
-                                                            size={19}
-                                                        />
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        );
-                                    })}
-                                </View>
-                            ) : null}
-                        </View>
+                        {renderDiscussionEditor()}
                     </View>
                 ) : (
                     <DefaultTextInput
@@ -1157,36 +1438,31 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             marginTop: 20,
                         }}
                     >
-                        {/* {isOwner ? null : ( */}
-                        <View
-                            style={{
-                                marginLeft: 50,
-                            }}
-                        >
-                            <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                        {isOwner ? null : (
                             <View
                                 style={{
-                                    backgroundColor: '#fff',
-                                    marginRight: 10,
-                                    marginTop: 10,
-                                    marginBottom: 10,
+                                    marginLeft: 50,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                 }}
                             >
-                                <Switch
-                                    value={anonymous}
-                                    onValueChange={() => {
-                                        setAnonymous(!anonymous);
+                                <View
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        marginRight: 7,
                                     }}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: '#F8F9FA',
-                                        true: '#006AFF',
-                                    }}
-                                    activeThumbColor="white"
-                                />
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={anonymous}
+                                        onChange={(e: any) => {
+                                            setAnonymous(!anonymous);
+                                        }}
+                                    />
+                                </View>
+                                <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
                             </View>
-                        </View>
-                        {/* )}  */}
+                        )}
                         {/* Buttons */}
                         <View
                             style={{
@@ -1249,7 +1525,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 onPress={() => {
                                     handleReply();
                                 }}
-                                disabled={isSendingReply}
+                                disabled={isSendingReply || props.user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1301,13 +1577,16 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 style={{
                                     flexDirection: 'column',
                                     width: '100%',
-                                    marginTop: 20,
+                                    paddingVertical: 20,
+                                    borderBottomColor: '#f2f2f2',
+                                    borderBottomWidth: 1,
                                 }}
                             >
                                 <View
                                     style={{
                                         flexDirection: 'row',
                                         alignItems: 'center',
+                                        marginBottom: 20,
                                     }}
                                 >
                                     <Image
@@ -1350,15 +1629,200 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     >
                                         {fromNow(thread.time, true)}
                                     </Text>
+                                    {thread.edited ? (
+                                        <View
+                                            style={{
+                                                backgroundColor: '#e6f0ff',
+                                                padding: 4,
+                                                marginLeft: 15,
+                                                borderRadius: 3,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: '#006AFF',
+                                                    fontSize: 11,
+                                                }}
+                                            >
+                                                Edited
+                                            </Text>
+                                        </View>
+                                    ) : null}
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginLeft: 'auto',
+                                        }}
+                                    >
+                                        {userId === thread.userId &&
+                                        !editDiscussionThreadId &&
+                                        !isReplyEditorFocused ? (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setEditDiscussionThreadId(thread._id);
+                                                    const parse = JSON.parse(thread.message);
+                                                    setEditDiscussionThreadHtml(parse.html ? parse.html : '');
+                                                    setEditDiscussionThreadAttachments(
+                                                        parse.attachments ? parse.attachments : []
+                                                    );
+                                                    setEditDiscussionThreadAnonymous(thread.anonymous);
+                                                }}
+                                                disabled={props.user.email === disableEmailId}
+                                            >
+                                                <Text>
+                                                    <Ionicons name={'pencil-outline'} size={14} color="#006AFF" />
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ) : null}
+                                        {isOwner ? (
+                                            <TouchableOpacity
+                                                style={{
+                                                    marginLeft: 20,
+                                                }}
+                                                onPress={() => {
+                                                    handleDeleteThread(thread._id, true);
+                                                }}
+                                                disabled={props.user.email === disableEmailId}
+                                            >
+                                                <Text>
+                                                    <Ionicons name={'trash-outline'} size={16} color="#006AFF" />
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ) : null}
+                                    </View>
                                 </View>
-                                <div
-                                    className="mce-content-body htmlParser"
-                                    style={{ width: '100%', color: 'black', marginTop: 0, paddingLeft: 55 }}
-                                >
-                                    {parser(replyThreadContent)}
-                                </div>
+                                {editDiscussionThreadId !== '' && editDiscussionThreadId === thread._id ? (
+                                    <View
+                                        style={{
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        {renderDiscussionEditor()}
+
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                marginTop: 20,
+                                            }}
+                                        >
+                                            {isOwner ? null : (
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#fff',
+                                                            marginRight: 7,
+                                                        }}
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={anonymous}
+                                                            onChange={(e: any) => {
+                                                                setAnonymous(!anonymous);
+                                                            }}
+                                                        />
+                                                    </View>
+                                                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                                                </View>
+                                            )}
+
+                                            {/* Buttons */}
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    marginLeft: 'auto',
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row',
+                                                        marginRight: 20,
+                                                    }}
+                                                    onPress={() => {
+                                                        Alert('Discard reply?', '', [
+                                                            {
+                                                                text: 'Cancel',
+                                                                style: 'cancel',
+                                                                onPress: () => {
+                                                                    return;
+                                                                },
+                                                            },
+                                                            {
+                                                                text: 'Yes',
+                                                                onPress: () => {
+                                                                    setEditDiscussionThreadAnonymous(false);
+                                                                    setEditDiscussionThreadId('');
+                                                                    setEditDiscussionThreadHtml('');
+                                                                    setEditDiscussionThreadAttachments([]);
+                                                                },
+                                                            },
+                                                        ]);
+                                                    }}
+                                                    disabled={isSendingReply}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            color: '#006AFF',
+                                                            borderRadius: 15,
+                                                            fontSize: 12,
+                                                            backgroundColor: 'white',
+                                                            fontFamily: 'inter',
+                                                            textTransform: 'uppercase',
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        // marginTop: 15,
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                    onPress={() => {
+                                                        handleUpdateThread();
+                                                    }}
+                                                    disabled={isSendingReply || props.user.email === disableEmailId}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            color: '#006AFF',
+                                                            fontSize: 12,
+                                                            fontFamily: 'inter',
+                                                            borderRadius: 15,
+                                                            textTransform: 'uppercase',
+                                                        }}
+                                                    >
+                                                        {isSendingReply ? 'Updating...' : 'Update'}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <div
+                                        className="mce-content-body htmlParser"
+                                        style={{ width: '100%', color: 'black', marginTop: 0, paddingLeft: 55 }}
+                                    >
+                                        {parser(replyThreadContent)}
+                                    </div>
+                                )}
                                 {/* Render attachments */}
-                                {replyThreadAttachments.length > 0 ? (
+                                {editDiscussionThreadId !== '' ? null : replyThreadAttachments.length > 0 ? (
                                     <View
                                         style={{
                                             flexDirection: 'column',
@@ -1460,7 +1924,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             style={{
                                 width: '100%',
                                 color: '#1F1F1F',
-                                fontSize: 18,
+                                fontSize: 16,
                                 paddingVertical: 50,
                                 fontFamily: 'inter',
                                 flex: 1,
@@ -1638,7 +2102,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     style={{
                         width: '100%',
                         color: '#1F1F1F',
-                        fontSize: 18,
+                        fontSize: 16,
                         paddingVertical: 100,
                         fontFamily: 'inter',
                         flex: 1,
@@ -1776,147 +2240,160 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View>
                         ) : null}
 
-                        {(searchTerm !== '' ? searchResults : filteredThreads).map((thread: any, ind: number) => {
-                            let title = '';
+                        {isSearching
+                            ? null
+                            : (searchTerm !== '' ? searchResults : filteredThreads).map((thread: any, ind: number) => {
+                                  let title = '';
 
-                            if (!searchTerm && thread.title) {
-                                title = thread.title;
-                            } else if (
-                                !searchTerm &&
-                                thread.message[0] === '{' &&
-                                thread.message[thread.message.length - 1] === '}' &&
-                                !thread.title
-                            ) {
-                                const obj = JSON.parse(thread.message);
-                                title = obj.title;
-                            } else if (!searchTerm) {
-                                const { title: t, subtitle: s } = htmlStringParser(thread.message);
-                                title = t;
-                            }
+                                  if (!searchTerm && thread.title) {
+                                      title = thread.title;
+                                  } else if (
+                                      !searchTerm &&
+                                      thread.message[0] === '{' &&
+                                      thread.message[thread.message.length - 1] === '}' &&
+                                      !thread.title
+                                  ) {
+                                      const obj = JSON.parse(thread.message);
+                                      title = obj.title;
+                                  } else if (!searchTerm) {
+                                      const { title: t, subtitle: s } = htmlStringParser(thread.message);
+                                      title = t;
+                                  }
 
-                            if (searchTerm && thread.searchTitle) {
-                                title = thread.searchTitle;
-                            }
+                                  if (searchTerm && thread.searchTitle) {
+                                      title = thread.searchTitle;
+                                  }
 
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => loadCueDiscussions(thread._id)}
-                                    style={{
-                                        backgroundColor: threadId === thread._id ? '#f8f8f8' : '#fff',
-                                        flexDirection: 'row',
-                                        borderColor: '#f8f8f8',
-                                        width: '100%',
-                                        borderRadius: 5,
-                                    }}
-                                    key={ind.toString()}
-                                >
-                                    <View style={{ flex: 1, backgroundColor: 'none', paddingLeft: 10 }}>
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                marginTop: 5,
-                                                alignItems: 'center',
-                                                width: '100%',
-                                                backgroundColor: 'none',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    padding: 5,
-                                                    fontFamily: 'inter',
-                                                    flex: 1,
-                                                }}
-                                                ellipsizeMode="tail"
-                                                numberOfLines={1}
-                                            >
-                                                {title}
-                                            </Text>
-                                            <View
-                                                style={{
-                                                    marginLeft: 'auto',
-                                                    flexDirection: 'row',
-                                                    backgroundColor: 'none',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                {thread.isPrivate ? (
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 13,
-                                                            padding: 5,
-                                                            color: '#006AFF',
-                                                            textAlign: 'center',
-                                                        }}
-                                                        ellipsizeMode="tail"
-                                                    >
-                                                        <Ionicons name="eye-off-outline" size={15} />
-                                                    </Text>
-                                                ) : null}
-                                                {thread.unreadThreads > 0 ? (
-                                                    <View
-                                                        style={{
-                                                            width: 15,
-                                                            height: 15,
-                                                            borderRadius: 8,
-                                                            marginLeft: 5,
-                                                            backgroundColor: '#006AFF',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        <Text style={{ color: 'white', fontSize: 10 }}>
-                                                            {thread.unreadThreads}
-                                                        </Text>
-                                                    </View>
-                                                ) : null}
-                                            </View>
-                                        </View>
+                                  return (
+                                      <TouchableOpacity
+                                          onPress={() => loadCueDiscussions(thread._id)}
+                                          style={{
+                                              backgroundColor: threadId === thread._id ? '#f8f8f8' : '#fff',
+                                              flexDirection: 'row',
+                                              borderColor: '#f8f8f8',
+                                              width: '100%',
+                                              borderRadius: 5,
+                                          }}
+                                          key={ind.toString()}
+                                      >
+                                          <View style={{ flex: 1, backgroundColor: 'none', paddingLeft: 10 }}>
+                                              <View
+                                                  style={{
+                                                      flexDirection: 'row',
+                                                      marginTop: 5,
+                                                      alignItems: 'center',
+                                                      width: '100%',
+                                                      backgroundColor: 'none',
+                                                  }}
+                                              >
+                                                  <Text
+                                                      style={{
+                                                          fontSize: 14,
+                                                          padding: 5,
+                                                          fontFamily: 'inter',
+                                                          flex: 1,
+                                                      }}
+                                                      ellipsizeMode="tail"
+                                                      numberOfLines={1}
+                                                  >
+                                                      {title}
+                                                  </Text>
+                                                  <View
+                                                      style={{
+                                                          marginLeft: 'auto',
+                                                          flexDirection: 'row',
+                                                          backgroundColor: 'none',
+                                                          paddingHorizontal: 10,
+                                                          alignItems: 'center',
+                                                      }}
+                                                  >
+                                                      {thread.isPrivate ? (
+                                                          <Text
+                                                              style={{
+                                                                  fontSize: 13,
+                                                                  padding: 5,
+                                                                  color: '#006AFF',
+                                                                  textAlign: 'center',
+                                                              }}
+                                                              ellipsizeMode="tail"
+                                                          >
+                                                              <Ionicons name="eye-off-outline" size={15} />
+                                                          </Text>
+                                                      ) : null}
+                                                      {thread.unreadThreads > 0 ? (
+                                                          <View
+                                                              style={{
+                                                                  width: 15,
+                                                                  height: 15,
+                                                                  borderRadius: 8,
+                                                                  marginLeft: 5,
+                                                                  backgroundColor: '#006AFF',
+                                                                  alignItems: 'center',
+                                                                  justifyContent: 'center',
+                                                              }}
+                                                          >
+                                                              <Text style={{ color: 'white', fontSize: 10 }}>
+                                                                  {thread.unreadThreads}
+                                                              </Text>
+                                                          </View>
+                                                      ) : null}
+                                                  </View>
+                                              </View>
 
-                                        {/* Bottom bar must have Category -> Author -> Date -> Private/Anonymous tags */}
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                backgroundColor: 'none',
-                                            }}
-                                        >
-                                            {/* Category */}
-                                            <Text
-                                                style={{ fontSize: 11, margin: 5, lineHeight: 18, marginRight: 10 }}
-                                                ellipsizeMode="tail"
-                                            >
-                                                {thread.category ? thread.category : 'None'}
-                                            </Text>
+                                              {/* Bottom bar must have Category -> Author -> Date -> Private/Anonymous tags */}
+                                              <View
+                                                  style={{
+                                                      flexDirection: 'row',
+                                                      alignItems: 'center',
+                                                      backgroundColor: 'none',
+                                                  }}
+                                              >
+                                                  {/* Category */}
+                                                  <Text
+                                                      style={{
+                                                          fontSize: 11,
+                                                          margin: 5,
+                                                          lineHeight: 18,
+                                                          marginRight: 10,
+                                                      }}
+                                                      ellipsizeMode="tail"
+                                                  >
+                                                      {thread.category ? thread.category : 'None'}
+                                                  </Text>
 
-                                            {/* Author  */}
-                                            <Text
-                                                style={{
-                                                    fontSize: 11,
-                                                    margin: 5,
-                                                    lineHeight: 18,
-                                                    marginRight: 10,
-                                                    color: thread.userId === userId ? '#006AFF' : '#000',
-                                                }}
-                                                ellipsizeMode="tail"
-                                            >
-                                                {thread.anonymous && thread.userId !== userId && !isOwner
-                                                    ? 'Anonymous'
-                                                    : thread.userId === userId
-                                                    ? 'Me'
-                                                    : thread.fullName}
-                                            </Text>
+                                                  {/* Author  */}
+                                                  <Text
+                                                      style={{
+                                                          fontSize: 11,
+                                                          margin: 5,
+                                                          lineHeight: 18,
+                                                          marginRight: 10,
+                                                          color: thread.userId === userId ? '#006AFF' : '#000',
+                                                      }}
+                                                      ellipsizeMode="tail"
+                                                  >
+                                                      {thread.anonymous && thread.userId !== userId && !isOwner
+                                                          ? 'Anonymous'
+                                                          : thread.userId === userId
+                                                          ? 'Me'
+                                                          : thread.fullName}
+                                                  </Text>
 
-                                            {/* Date & Time */}
-                                            <Text
-                                                style={{ fontSize: 10, margin: 5, lineHeight: 18, marginLeft: 'auto' }}
-                                                ellipsizeMode="tail"
-                                            >
-                                                {fromNow(thread.time, true)}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    {/* <View
+                                                  {/* Date & Time */}
+                                                  <Text
+                                                      style={{
+                                                          fontSize: 10,
+                                                          margin: 5,
+                                                          lineHeight: 18,
+                                                          marginLeft: 'auto',
+                                                      }}
+                                                      ellipsizeMode="tail"
+                                                  >
+                                                      {fromNow(thread.time, true)}
+                                                  </Text>
+                                              </View>
+                                          </View>
+                                          {/* <View
                                         style={{
                                             justifyContent: 'center',
                                             flexDirection: 'column',
@@ -1964,9 +2441,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             ) : null}
                                         </View>
                                     </View> */}
-                                </TouchableOpacity>
-                            );
-                        })}
+                                      </TouchableOpacity>
+                                  );
+                              })}
                     </ScrollView>
                 </View>
 
@@ -1977,7 +2454,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         height: '100%',
                     }}
                 >
-                    {threadId === '' ? (
+                    {threadId === '' && !props.showNewDiscussionPost ? (
                         <View
                             style={{
                                 width: '100%',
@@ -2011,7 +2488,19 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View>
                         </View>
                     ) : null}
-                    {showThreadCues ? renderSelectedThread() : null}
+                    {props.showNewDiscussionPost ? (
+                        <NewPostModal
+                            categories={categories}
+                            categoriesOptions={categoriesOptions}
+                            onClose={() => props.setShowNewDiscussionPost(false)}
+                            onSend={createNewThread}
+                            isOwner={isOwner}
+                            userId={userId}
+                            user={props.user}
+                        />
+                    ) : showThreadCues ? (
+                        renderSelectedThread()
+                    ) : null}
                     <FormulaGuide
                         value={equation}
                         onChange={setEquation}
@@ -2023,8 +2512,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             </View>
         );
     };
-
-    console.log('showNewDiscussionPost', props.showNewDiscussionPost);
 
     // MAIN RETURN
 
@@ -2039,7 +2526,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 flexDirection: 'row',
             }}
         >
-            {props.showNewDiscussionPost ? (
+            {props.showNewDiscussionPost && threads.length === 0 ? (
                 <NewPostModal
                     categories={categories}
                     categoriesOptions={categoriesOptions}
@@ -2047,9 +2534,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     onSend={createNewThread}
                     isOwner={isOwner}
                     userId={userId}
+                    user={props.user}
                 />
             ) : null}
-            {props.showNewDiscussionPost ? null : (
+            {props.showNewDiscussionPost && threads.length === 0 ? null : (
                 <View
                     style={{
                         width: '100%',

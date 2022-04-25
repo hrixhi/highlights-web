@@ -35,9 +35,9 @@ import FileUpload from './UploadFiles';
 import { Select } from '@mobiscroll/react';
 import { TextInput } from './CustomTextInput';
 import ReactPlayer from 'react-player';
-import { GiftedChat, Bubble, MessageText, Message } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, MessageText, Message, Send } from 'react-native-gifted-chat';
 import { Popup, Datepicker } from '@mobiscroll/react5';
-import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 import Highlighter from 'react-highlight-words';
 
 // HELPERS
@@ -254,6 +254,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const loadChats = useCallback(
         async (init?: boolean) => {
             const u = await AsyncStorage.getItem('user');
+
+            const openChatAsyncStorage = await AsyncStorage.getItem('openChat');
+
             let server: any = null;
             let parsedUser: any = {};
             if (u) {
@@ -277,12 +280,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         setShowNewGroup(false);
                         setLoadingChats(false);
 
+                        // Load default chat if not opening from search or not loading directory or not Mobile view
                         if (!init || Dimensions.get('window').width < 768) {
                             setShowChat(false);
                             return;
                         }
 
-                        if (res.data.group.getChats.length > 0) {
+                        if (!openChatAsyncStorage && res.data.group.getChats.length > 0) {
                             const chat = res.data.group.getChats[0];
 
                             console.log('First Chat', chat);
@@ -1260,6 +1264,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 createInstantMeeting();
                             }
                         },
+                        disabled: props.user.email === disableEmailId,
                     },
                     {
                         text: 'CANCEL',
@@ -1339,7 +1344,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     <TextInput
                                         style={{ padding: 10, fontSize: 14, backgroundColor: '#ffffff' }}
                                         value={instantMeetingTitle}
-                                        placeholder={'(optional)'}
+                                        placeholder={''}
                                         onChangeText={(val) => setInstantMeetingTitle(val)}
                                         placeholderTextColor={'#1F1F1F'}
                                         // required={true}
@@ -1418,6 +1423,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     renderUsernameOnMessage={isChatGroup}
                     messages={chat}
                     onSend={(messages) => onSend(messages)}
+                    renderSend={({ text, ...chatProps }) => {
+                        return (
+                            <Send
+                                {...chatProps}
+                                text={text}
+                                disabled={text.trim() === '' || props.user.email === disableEmailId}
+                            />
+                        );
+                    }}
                     user={{
                         _id: userId,
                         avatar,
@@ -1425,6 +1439,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     // showAvatarForEveryMessage={!isChatGroup}
                     // showUserAvatar={isChatGroup}
                     // renderMessage={renderMessage}
+                    alwaysShowSend={true}
                     renderMessageText={renderMessageText}
                     renderBubble={renderBubble}
                     renderActions={() => (
@@ -1667,6 +1682,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             justifyContent: 'center',
                             flexDirection: 'row',
                         }}
+                        disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -2040,8 +2056,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      * @param  {Date|Number|String} [nowDate] A Date object, timestamp or string parsable with Date.parse()
      * @param  {Intl.RelativeTimeFormat} [trf] A Intl formater
      * @return {string} Human readable elapsed or remaining time
-     * @author github.com/victornpb
-     * @see https://stackoverflow.com/a/67338038/938822
      */
     function fromNow(
         date: Date,
@@ -3166,6 +3180,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             justifyContent: 'center',
                             flexDirection: 'row',
                         }}
+                        disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{

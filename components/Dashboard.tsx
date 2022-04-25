@@ -52,27 +52,28 @@ import InsetShadow from 'react-native-inset-shadow';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
     const [userId, setUserId] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const [userCreatedOrg, setUserCreatedOrg] = useState(false);
     const scrollViewRef: any = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [collapseMap, setCollapseMap] = useState<any>({});
     const [results, setResults] = useState<any>({
-        Channels: [],
-        Classroom: [],
+        Courses: [],
+        Content: [],
         Messages: [],
-        Threads: [],
+        Discussion: [],
     });
     const [resultCount, setResultCount] = useState(0);
     const [loadingSearchResults, setLoadingSearchResults] = useState(false);
     const [filterStart, setFilterStart] = useState<any>(null);
     const [filterEnd, setFilterEnd] = useState<any>(null);
-    const [searchOptions] = useState(['Classroom', 'Messages', 'Threads', 'Channels']);
+    const [searchOptions] = useState(['Content', 'Messages', 'Discussion', 'Courses']);
     const [sortBy, setSortBy] = useState('Date ↑');
     const [cueMap, setCueMap] = useState<any>({});
     const [categoryMap, setCategoryMap] = useState<any>({});
@@ -115,8 +116,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [ongoingMeetings, setOngoingMeetings] = useState<any[]>([]);
     const [userZoomInfo, setUserZoomInfo] = useState<any>('');
     const [meetingProvider, setMeetingProvider] = useState('');
-    const [selectedWorkspace, setSelectedWorkspace] = useState<any>();
+    const [selectedWorkspace, setSelectedWorkspace] = useState<any>(
+        props.selectedWorkspace ? props.selectedWorkspace : ''
+    );
     const [showNewDiscussionPost, setShowNewDiscussionPost] = useState(false);
+    const [searchResultTabs, setSearchResultTabs] = useState<string[]>([]);
+    const [activeSearchResultsTab, setActiveSearchResultsTab] = useState('');
+    const [recentSearches, setRecentSearches] = useState<string[]>([]);
+    const [reversedSearches, setReversedSearches] = useState<string[]>([]);
+    const [exportScores, setExportScores] = useState(false);
 
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -190,14 +198,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     //     [scrollViewRef.current, channelKeyList, channelHeightList, indexMap]
     // );
 
-    useEffect(() => {
-        props.setSelectedWorkspace(selectedWorkspace);
-    }, [selectedWorkspace]);
+    // useEffect(() => {
+    //     props.setSelectedWorkspace(selectedWorkspace);
+    //     console.log('Selected workspace dashboard', selectedWorkspace);
+    // }, [selectedWorkspace]);
 
     const getWorkspaceNavbarIconName = (op: string) => {
         switch (op) {
             case 'Content':
-                return props.activeWorkspaceTab === op ? 'library' : 'library-outline';
+                return props.activeWorkspaceTab === op ? 'book' : 'book-outline';
             case 'Discuss':
                 return props.activeWorkspaceTab === op ? 'chatbubbles' : 'chatbubbles-outline';
             case 'Meet':
@@ -211,7 +220,29 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const getWorkspaceNavbarIconColor = (op: string) => {
         if (op === props.activeWorkspaceTab) {
-            return selectedWorkspace.split('-SPLIT-')[3];
+            return '#000';
+        }
+        return '#797979';
+    };
+
+    const getSearchNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return activeSearchResultsTab === op ? 'book' : 'book-outline';
+            case 'Messages':
+                return activeSearchResultsTab === op ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
+            case 'Discussion':
+                return activeSearchResultsTab === op ? 'chatbubbles' : 'chatbubbles-outline';
+            case 'Courses':
+                return activeSearchResultsTab === op ? 'school' : 'school-outline';
+            default:
+                return activeSearchResultsTab === op ? 'build' : 'build-outline';
+        }
+    };
+
+    const getSearchNavbarIconColor = (op: string) => {
+        if (op === activeSearchResultsTab) {
+            return '#000';
         }
         return '#797979';
     };
@@ -219,9 +250,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const getAccountNavbarIconName = (op: string) => {
         switch (op) {
             case 'profile':
-                return 'person-outline';
+                return op === props.activeAccountTab ? 'person' : 'person-outline';
             case 'courses':
-                return 'school-outline';
+                return op === props.activeAccountTab ? 'school' : 'school-outline';
             default:
                 return '';
         }
@@ -252,14 +283,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, []);
 
     /**
-     * @description Update selected Workspace in Home
-     */
-    //  useEffect(() => {
-    //     props.setSelectedWorkspace(selectedWorkspace);
-    //     // setCategoryPositionList([])
-    // }, [selectedWorkspace]);
-
-    /**
      * @description Open discussion from Activity using loadDiscussionForChannelId => It will open that Channel in ScrollView
      */
     useEffect(() => {
@@ -274,9 +297,44 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [props.openChannelId]);
 
     /**
+     * @description Scrolls to specific channel in Channels ScrollView for loadDiscussionForChannelId
+     */
+    useEffect(() => {
+        let matchIndex = -1;
+        let indexMapKey = '';
+
+        if (loadDiscussionForChannelId !== '') {
+            Object.keys(cueMap).map((obj: any, index: number) => {
+                if (obj.split('-SPLIT-')[1] === loadDiscussionForChannelId) {
+                    indexMapKey = obj;
+                    matchIndex = index;
+                }
+            });
+        }
+
+        if (matchIndex === -1 || indexMapKey === '' || !loadDiscussionForChannelId) return;
+
+        const temp = JSON.parse(JSON.stringify(indexMap));
+        temp[indexMapKey] = 1;
+        setIndexMap(temp);
+        setSelectedWorkspace(indexMapKey);
+
+        props.setLoadDiscussionForChannelId('');
+        props.setWorkspaceActiveTab('Discuss');
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap]);
+
+    /**
      * @description Scrolls to specific channel in Channels ScrollView for openChannelId
      */
     useEffect(() => {
+        if (openChannelId !== '') {
+            Object.keys(cueMap).map((obj: any) => {
+                if (obj.split('-SPLIT-')[1] === openChannelId) {
+                    setSelectedWorkspace(obj);
+                }
+            });
+        }
+
         if (
             scrollViewRef &&
             scrollViewRef.current !== null &&
@@ -314,90 +372,32 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 animated: true,
             });
 
-            setOpenChannelId('');
+            props.setOpenChannelId('');
         }
-    }, [scrollViewRef.current, channelKeyList, channelHeightList, openChannelId]);
-
-    /**
-     * @description Scrolls to specific channel in Channels ScrollView for loadDiscussionForChannelId
-     */
-    useEffect(() => {
-        if (
-            scrollViewRef &&
-            scrollViewRef.current !== null &&
-            channelKeyList &&
-            channelKeyList.length > 0 &&
-            channelHeightList &&
-            channelHeightList.length > 0 &&
-            loadDiscussionForChannelId !== ''
-        ) {
-            let matchIndex = -1;
-
-            channelKeyList.map((key: any, index: number) => {
-                if (key === loadDiscussionForChannelId) {
-                    matchIndex = index;
-                }
-            });
-
-            let indexMapKey = '';
-
-            Object.keys(indexMap).map((key: any) => {
-                if (key.split('-SPLIT-')[1] === loadDiscussionForChannelId) {
-                    indexMapKey = key;
-                }
-            });
-
-            if (
-                matchIndex === -1 ||
-                !channelHeightList[matchIndex] ||
-                indexMapKey === '' ||
-                !loadDiscussionForChannelId
-            )
-                return;
-
-            const temp = JSON.parse(JSON.stringify(indexMap));
-            temp[indexMapKey] = 1;
-            setIndexMap(temp);
-
-            const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
-            tempCollapse[indexMapKey] = !collapseMap[indexMapKey];
-            setCollapseMap(tempCollapse);
-
-            scrollViewRef.current.scrollTo({
-                x: 0,
-                y: channelHeightList[matchIndex],
-                animated: true,
-            });
-
-            setLoadDiscussionForChannelId('');
-        }
-    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap, collapseMap]);
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, openChannelId, cueMap]);
 
     /**
      * @description Prepares all the data to be displayed in workspace
      */
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-                setUserId(user._id);
+        if (props.user) {
+            setUserId(props.user._id);
+            setUserEmail(props.user.email);
 
-                if (user.avatar) {
-                    setAvatar(user.avatar);
-                } else {
-                    setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
-                }
-
-                if (user.userCreatedOrg) {
-                    setUserCreatedOrg(user.userCreatedOrg);
-                }
-
-                if (user.zoomInfo) {
-                    setUserZoomInfo(user.zoomInfo);
-                }
+            if (props.user.avatar) {
+                setAvatar(props.user.avatar);
+            } else {
+                setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
             }
-        })();
+
+            if (props.user.userCreatedOrg) {
+                setUserCreatedOrg(props.user.userCreatedOrg);
+            }
+
+            if (props.user.zoomInfo) {
+                setUserZoomInfo(props.user.zoomInfo);
+            }
+        }
 
         const temp: any = {};
         const tempCat: any = {};
@@ -535,7 +535,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setCueMap(temp);
         setCategoryMap(tempCat);
         setIndexMap(tempIndexes);
-    }, [sortBy, filterStart, filterEnd, props.subscriptions, props.cues]);
+    }, [sortBy, filterStart, filterEnd, props.subscriptions, props.cues, props.user]);
 
     useEffect(() => {
         const tempCollapse: any = {};
@@ -559,14 +559,65 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Calls method to fetch any ongoing meetings
      */
     useEffect(() => {
-        getCurrentMeetings();
-    }, [userId, collapseMap]);
+        if (selectedWorkspace && selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes') {
+            getCurrentMeetings();
+        }
+    }, [userId, selectedWorkspace]);
+
+    const loadRecentSearches = useCallback(async () => {
+        const recentSearches = await AsyncStorage.getItem('recentSearches');
+
+        if (recentSearches) {
+            setRecentSearches(JSON.parse(recentSearches));
+        }
+    }, []);
+
+    useEffect(() => {
+        setReversedSearches(recentSearches.reverse());
+    }, [recentSearches]);
+
+    const updateRecentSearches = useCallback(async () => {
+        if (searchTerm.trim().length === 0) return;
+
+        let currentSearches = [...recentSearches];
+        currentSearches.push(searchTerm);
+
+        if (currentSearches.length > 10) {
+            currentSearches.shift();
+        }
+
+        setRecentSearches(currentSearches);
+
+        await AsyncStorage.setItem('recentSearches', JSON.stringify(currentSearches));
+    }, [recentSearches, searchTerm]);
+
+    const removeRecentSearch = useCallback(
+        async (searchTerm: string) => {
+            const removed = recentSearches.filter((term) => term !== searchTerm);
+
+            setRecentSearches(removed);
+
+            await AsyncStorage.setItem('recentSearches', JSON.stringify(removed));
+        },
+        [recentSearches]
+    );
 
     /**
      * @description Fetches search results for search term
      */
     useEffect(() => {
-        if (searchTerm.trim() === '') {
+        if (searchTerm.trim().length === 0) {
+            setResults({
+                Courses: [],
+                Content: [],
+                Messages: [],
+                Discussion: [],
+            });
+            setResultCount(0);
+            setSearchResultTabs([]);
+            setActiveSearchResultsTab('');
+            cancelTokenRef.current = axios.CancelToken.source();
+            setLoadingSearchResults(false);
             return;
         }
 
@@ -600,14 +651,96 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         res.data.messages.length;
 
                     const tempResults = {
-                        Classroom: [...res.data.personalCues, ...res.data.channelCues],
-                        Channels: res.data.channels,
-                        Threads: res.data.threads,
+                        Content: [...res.data.personalCues, ...res.data.channelCues],
+                        Courses: res.data.channels,
+                        Discussion: res.data.threads,
                         Messages: res.data.messages,
                     };
 
+                    const tabsFound = [];
+                    let activeTab = '';
+
+                    if (res.data.personalCues.length + res.data.channelCues.length > 0) {
+                        tabsFound.push('Content');
+                        activeTab = 'Content';
+                    }
+
+                    if (res.data.messages.length > 0) {
+                        tabsFound.push('Messages');
+                        activeTab = activeTab !== '' ? activeTab : 'Messages';
+                    }
+
+                    if (res.data.threads.length > 0) {
+                        tabsFound.push('Discussion');
+                        activeTab = activeTab !== '' ? activeTab : 'Discussion';
+                    }
+
+                    if (res.data.channels.length > 0) {
+                        tabsFound.push('Courses');
+                        activeTab = activeTab !== '' ? activeTab : 'Courses';
+                    }
+
+                    // Sort all the search results by date
+                    const sortContent = [...tempResults['Content']];
+                    sortContent.sort((a: any, b: any) => {
+                        const aDate = new Date(a.date);
+                        const bDate = new Date(b.date);
+
+                        if (aDate < bDate) {
+                            return 1;
+                        } else if (aDate > bDate) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    const sortThreads = [...tempResults['Discussion']];
+                    sortThreads.sort((a: any, b: any) => {
+                        const aDate = new Date(a.time);
+                        const bDate = new Date(b.time);
+
+                        if (aDate < bDate) {
+                            return 1;
+                        } else if (aDate > bDate) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    const sortMessages = [...tempResults['Messages']];
+                    sortMessages.sort((a: any, b: any) => {
+                        const aDate = new Date(a.sentAt);
+                        const bDate = new Date(b.sentAt);
+
+                        if (aDate < bDate) {
+                            return 1;
+                        } else if (aDate > bDate) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    const sortCourses = [...tempResults['Courses']];
+                    sortCourses.sort((a: any, b: any) => {
+                        return a.name < b.name ? 1 : -1;
+                    });
+
+                    let sortedResults = {
+                        Content: sortContent,
+                        Courses: sortCourses,
+                        Discussion: sortThreads,
+                        Messages: sortMessages,
+                    };
+
+                    setResults(sortedResults);
+                    setActiveSearchResultsTab(activeTab);
+                    setSearchResultTabs(tabsFound);
+
                     setResultCount(totalCount);
-                    setResults(tempResults);
+                    // setResults(sortedResults);
                     setLoadingSearchResults(false);
                 });
         } catch (error) {
@@ -683,34 +816,31 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Handle create instant meeting for channel owners
      */
     const getCurrentMeetings = useCallback(async () => {
-        let channelId = '';
+        console.log('Get ongoing meetings channelId', selectedWorkspace);
+        console.log('');
 
-        Object.keys(collapseMap).map((key: any) => {
-            if (collapseMap[key] && key.split('-SPLIT-')[0] !== 'My Notes') {
-                channelId = key.split('-SPLIT-')[1];
-            }
-        });
-
-        if (userId !== '' && channelId !== '') {
+        if (userId !== '' && selectedWorkspace !== '') {
             const server = fetchAPI('');
             server
                 .query({
                     query: getOngoingMeetings,
                     variables: {
                         userId,
-                        channelId,
+                        channelId: selectedWorkspace.split('-SPLIT-')[1],
                     },
                 })
                 .then((res) => {
                     if (res.data && res.data.channel.ongoingMeetings) {
+                        console.log('Ongoing meetings', res.data.channel.ongoingMeetings);
                         setOngoingMeetings(res.data.channel.ongoingMeetings);
                     }
                 })
                 .catch((err) => {
+                    console.log('Error in getCurrentMeeting', err);
                     Alert('Something went wrong.');
                 });
         }
-    }, [userId, collapseMap]);
+    }, [userId, selectedWorkspace]);
 
     /**
      * @description Handle create instant meeting for channel owners
@@ -1191,13 +1321,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons
                                     name={getAccountNavbarIconName(tab)}
                                     style={{ color: getAccountNavbarIconColor(tab) }}
-                                    size={17}
+                                    size={props.activeAccountTab === 'profile' ? 13 : 15}
                                 />
                                 <Text
                                     style={{
                                         color: getAccountNavbarIconColor(tab),
-                                        fontSize: 15,
-                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        fontFamily: 'overpass',
                                         textTransform: 'capitalize',
                                         paddingLeft: 7,
                                     }}
@@ -1213,176 +1343,112 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     /**
-     * @description Renders filter for Agenda
-     */
-    const renderEventFilters = () => {
-        const channelOptions = [
-            { value: 'All', text: 'All' },
-            { value: 'My Events', text: 'My Events' },
-        ];
-
-        props.subscriptions.map((sub: any) => {
-            channelOptions.push({
-                value: sub.channelId,
-                text: sub.channelName,
-            });
-        });
-
-        const typeOptions = [
-            { value: 'All', text: 'All' },
-            { value: 'Meetings', text: 'Meetings' },
-            { value: 'Submissions', text: 'Submissions' },
-            { value: 'Events', text: 'Events' },
-        ];
-
-        return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            color: '#000000',
-                            paddingLeft: 5,
-                            paddingBottom: 10,
-                        }}
-                    >
-                        Workspace
-                    </Text>
-                    <label style={{ width: 200, backgroundColor: 'white' }}>
-                        <Select
-                            touchUi={true}
-                            theme="ios"
-                            themeVariant="light"
-                            value={filterByChannel}
-                            onChange={(val: any) => {
-                                setFilterByChannel(val.value);
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble',
-                                },
-                                medium: {
-                                    touchUi: false,
-                                },
-                            }}
-                            dropdown={false}
-                            data={channelOptions}
-                        />
-                    </label>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            fontFamily: 'Inter',
-                            color: '#000000',
-                            paddingLeft: 5,
-                            paddingBottom: 10,
-                        }}
-                    >
-                        Type
-                    </Text>
-
-                    <label style={{ width: 200, backgroundColor: 'white' }}>
-                        <Select
-                            touchUi={true}
-                            theme="ios"
-                            themeVariant="light"
-                            value={filterEventsType}
-                            onChange={(val: any) => {
-                                setFilterEventsType(val.value);
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble',
-                                },
-                                medium: {
-                                    touchUi: false,
-                                },
-                            }}
-                            dropdown={false}
-                            data={typeOptions}
-                        />
-                    </label>
-                </div>
-            </div>
-        );
-    };
-
-    /**
      * @description Renders View for search results
      */
-    const searchResults = (
+    const searchResultsMobile = (
         <View
-            key={cueMap.toString() + JSON.stringify(results)}
             style={{
-                flexDirection: 'row',
-                height:
-                    Dimensions.get('window').width < 768
-                        ? Dimensions.get('window').height - 115
-                        : Dimensions.get('window').height - 52,
-                width: '100%',
-                overflow: 'hidden',
-                justifyContent: 'center',
-                backgroundColor: '#f8f8f8',
+                height: Dimensions.get('window').height,
+                backgroundColor: '#fff',
             }}
         >
             <View
                 style={{
                     width: '100%',
-                    maxWidth: 1024,
-                    paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: '#fff',
                 }}
             >
-                {!loadingSearchResults && resultCount !== 0 ? (
+                {!loadingSearchResults &&
+                searchTerm.trim().length !== 0 &&
+                activeSearchResultsTab !== '' &&
+                searchResultTabs.length > 0 ? (
                     <View
                         style={{
+                            width: '100%',
                             flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            justifyContent: 'center',
+                            paddingVertical: 15,
                             backgroundColor: '#f8f8f8',
-                            alignItems: 'center',
+                            height: 54,
                         }}
                     >
-                        <Text
+                        <View
                             style={{
-                                fontSize: 20,
-                                paddingVertical: 30,
-                                fontFamily: 'inter',
-                                // flex: 1,
-                                lineHeight: 23,
-                                color: '#006AFF',
-                                backgroundColor: '#f8f8f8',
-                            }}
-                        >
-                            {resultCount} Results
-                        </Text>
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: '#f8f8f8',
-                                overflow: 'hidden',
-                                height: 30,
+                                position: 'relative',
+                                width: '100%',
+                                maxWidth: 1024,
                                 alignSelf: 'center',
-                            }}
-                            onPress={() => {
-                                setSearchTerm('');
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'none',
                             }}
                         >
-                            <Ionicons name="close-outline" size={24} />
-                        </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    position: 'absolute',
+                                    left: 0,
+                                    backgroundColor: 'none',
+                                    paddingHorizontal: 5,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 13,
+                                        fontFamily: 'overpass',
+                                    }}
+                                >
+                                    {resultCount} results
+                                </Text>
+                            </View>
+                            {searchResultTabs.map((tab: string, ind: number) => {
+                                return (
+                                    <TouchableOpacity
+                                        key={ind.toString()}
+                                        style={{
+                                            marginRight: 38,
+                                            paddingVertical: 3,
+                                            backgroundColor: 'none',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                        }}
+                                        onPress={() => {
+                                            setActiveSearchResultsTab(tab);
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name={getSearchNavbarIconName(tab)}
+                                            style={{ color: getSearchNavbarIconColor(tab) }}
+                                            size={tab === 'Courses' ? 15 : 13}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: getSearchNavbarIconColor(tab),
+                                                fontSize: 13,
+                                                fontFamily: 'overpass',
+                                                textTransform: 'capitalize',
+                                                paddingLeft: 7,
+                                            }}
+                                        >
+                                            {tab === 'Discussion' ? 'FAQ' : tab === 'Content' ? 'Coursework' : tab}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
                     </View>
                 ) : null}
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    horizontal={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{
+                <View
+                    style={{
+                        maxWidth: 1024,
+                        alignSelf: 'center',
                         width: '100%',
-                        backgroundColor: '#fff',
                     }}
                 >
                     {!loadingSearchResults &&
+                    searchTerm.trim().length !== 0 &&
                     results &&
                     results[searchOptions[0]].length === 0 &&
                     results[searchOptions[1]].length === 0 &&
@@ -1392,16 +1458,94 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 width: '100%',
                                 color: '#1F1F1F',
-                                fontSize: 20,
+                                fontSize: 18,
                                 paddingVertical: 50,
+                                textAlign: 'center',
+                                lineHeight: 30,
                                 fontFamily: 'inter',
-                                flex: 1,
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#fff',
                             }}
                         >
-                            No search results found.
+                            {searchTerm.trim().length !== 0 &&
+                            results[searchOptions[0]].length === 0 &&
+                            results[searchOptions[1]].length === 0 &&
+                            results[searchOptions[2]].length === 0 &&
+                            results[searchOptions[3]].length === 0
+                                ? 'No search results found.'
+                                : ''}
                         </Text>
                     ) : null}
+
+                    {!loadingSearchResults && searchTerm.trim().length === 0 ? (
+                        <View
+                            style={{
+                                maxHeight: Dimensions.get('window').height - 54 - 54,
+                                backgroundColor: '#fff',
+                                paddingHorizontal: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    paddingVertical: 20,
+                                    fontFamily: 'inter',
+                                    paddingLeft: 5,
+                                    color: '#000',
+                                    backgroundColor: '#fff',
+                                    marginTop: recentSearches.length > 0 ? 0 : 50,
+                                }}
+                            >
+                                {recentSearches.length > 0 ? 'Recent' : ''}
+                            </Text>
+
+                            {reversedSearches.map((search: string, ind: number) => {
+                                return (
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            paddingVertical: 10,
+                                            justifyContent: 'space-between',
+                                        }}
+                                        key={ind.toString()}
+                                    >
+                                        <TouchableOpacity
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => setSearchTerm(search)}
+                                        >
+                                            <Ionicons name="time-outline" color="#000" size={22} />
+
+                                            <Text
+                                                style={{
+                                                    paddingLeft: 12,
+                                                    color: '#000',
+                                                    // fontFamily: 'Inter',
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {search}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{
+                                                marginLeft: 'auto',
+                                                paddingRight: 10,
+                                                paddingTop: 2,
+                                            }}
+                                            onPress={() => removeRecentSearch(search)}
+                                        >
+                                            <Ionicons name="close-outline" size={20} color="" />
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            })}
+                        </View>
+                    ) : null}
+
                     {loadingSearchResults ? (
                         <View
                             style={{
@@ -1410,201 +1554,174 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 justifyContent: 'center',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#fff',
+                                paddingVertical: 100,
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} />
                         </View>
                     ) : null}
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
-                        {searchOptions.map((option: any, ind: number) => {
-                            if (results[option].length === 0 || loadingSearchResults) {
-                                return null;
-                            }
+                    {!activeSearchResultsTab || loadingSearchResults || searchTerm.trim().length === 0 ? null : (
+                        <ScrollView
+                            style={{
+                                maxHeight: Dimensions.get('window').height - 54 - 54,
+                                backgroundColor: '#fff',
+                            }}
+                            showsVerticalScrollIndicator={true}
+                            horizontal={false}
+                            indicatorStyle="black"
+                        >
+                            {results[activeSearchResultsTab].map((obj: any, ind: number) => {
+                                let t = '';
+                                let s = '';
+                                let channelName = '';
+                                let colorCode = '';
+                                let subscribed = false;
+                                let messageSenderName = '';
+                                let messageSenderAvatar = '';
+                                let createdAt = '';
 
-                            return (
-                                <View key={ind.toString()} style={{ marginRight: 20, backgroundColor: '#f8f8f8' }}>
-                                    <Text
-                                        style={{
-                                            flexDirection: 'row',
-                                            color: '#1F1F1F',
-                                            // fontWeight: 'bold',
-                                            fontSize: 14,
-                                            lineHeight: 25,
-                                            fontFamily: 'inter',
-                                            paddingBottom: 10,
-                                        }}
-                                    >
-                                        {option === 'Classroom' ? 'Content' : option}
-                                    </Text>
-                                    <ScrollView
-                                        contentContainerStyle={{
-                                            paddingRight: 10,
-                                        }}
-                                    >
-                                        {results[option].map((obj: any, index: number) => {
-                                            let t = '';
-                                            let s = '';
-                                            let channelName = '';
-                                            let colorCode = '';
-                                            let subscribed = false;
-                                            let messageSenderName = '';
-                                            let messageSenderAvatar = '';
+                                if (activeSearchResultsTab === 'Content') {
+                                    const { title, subtitle } = htmlStringParser(obj.cue);
+                                    t = title;
+                                    s = subtitle;
+                                    const filterChannel = props.subscriptions.filter((channel: any) => {
+                                        return channel.channelId === obj.channelId;
+                                    });
 
-                                            if (option === 'Classroom') {
-                                                const { title, subtitle } = htmlStringParser(obj.cue);
-                                                t = title;
-                                                s = subtitle;
-                                                const filterChannel = props.subscriptions.filter((channel: any) => {
-                                                    return channel.channelId === obj.channelId;
-                                                });
+                                    if (filterChannel && filterChannel.length !== 0) {
+                                        channelName = filterChannel[0].channelName;
+                                        colorCode = filterChannel[0].colorCode;
+                                    }
 
-                                                if (filterChannel && filterChannel.length !== 0) {
-                                                    channelName = filterChannel[0].channelName;
-                                                    colorCode = filterChannel[0].colorCode;
-                                                }
-                                            } else if (option === 'Channels') {
-                                                t = obj.name;
+                                    createdAt = obj.date;
+                                } else if (activeSearchResultsTab === 'Courses') {
+                                    t = obj.name;
 
-                                                channelName = obj.name;
-                                                // Determine if already subscribed or not
-                                                const existingSubscription = props.subscriptions.filter(
-                                                    (channel: any) => {
-                                                        return channel.channelId === obj._id;
-                                                    }
+                                    channelName = obj.name;
+                                    // Determine if already subscribed or not
+                                    const existingSubscription = props.subscriptions.filter((channel: any) => {
+                                        return channel.channelId === obj._id;
+                                    });
+
+                                    if (existingSubscription && existingSubscription.length !== 0) {
+                                        subscribed = true;
+                                    }
+                                } else if (activeSearchResultsTab === 'Discussion') {
+                                    if (obj.title) {
+                                        const o = JSON.parse(obj.message);
+                                        const { title, subtitle } = htmlStringParser(o.html);
+                                        t = obj.title;
+                                        s = subtitle;
+                                    } else if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
+                                        const o = JSON.parse(obj.message);
+                                        t = o.title;
+                                        s = o.type;
+                                    } else {
+                                        const { title, subtitle } = htmlStringParser(obj.message);
+                                        t = title;
+                                        s = subtitle;
+                                    }
+                                    const filterChannel = props.subscriptions.filter((channel: any) => {
+                                        return channel.channelId === obj.channelId;
+                                    });
+
+                                    if (filterChannel && filterChannel.length !== 0) {
+                                        channelName = filterChannel[0].channelName;
+                                        colorCode = filterChannel[0].colorCode;
+                                    }
+
+                                    createdAt = obj.time;
+                                } else if (activeSearchResultsTab === 'Messages') {
+                                    const users = obj.groupId.users;
+
+                                    const sender = users.filter((user: any) => user._id === obj.sentBy)[0];
+
+                                    if (obj.groupId && obj.groupId.name) {
+                                        messageSenderName = obj.groupId.name + ' > ' + sender.fullName;
+                                        messageSenderAvatar = obj.groupId.image
+                                            ? obj.groupId.image
+                                            : 'https://cues-files.s3.amazonaws.com/images/default.png';
+                                    } else if (sender) {
+                                        messageSenderName = sender.fullName;
+                                        messageSenderAvatar = sender.avatar
+                                            ? sender.avatar
+                                            : 'https://cues-files.s3.amazonaws.com/images/default.png';
+                                    }
+
+                                    if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
+                                        const o = JSON.parse(obj.message);
+                                        t = o.title;
+                                        s = o.type;
+                                    } else {
+                                        const { title, subtitle } = htmlStringParser(obj.message);
+                                        t = title;
+                                        s = subtitle;
+                                    }
+
+                                    createdAt = obj.sentAt;
+                                }
+
+                                return (
+                                    <SearchResultCard
+                                        key={ind.toString()}
+                                        title={t}
+                                        subtitle={s}
+                                        channelName={channelName}
+                                        colorCode={colorCode}
+                                        option={activeSearchResultsTab}
+                                        subscribed={subscribed}
+                                        messageSenderName={messageSenderName}
+                                        messageSenderAvatar={messageSenderAvatar}
+                                        createdAt={createdAt}
+                                        handleSub={() => handleSub(obj._id)}
+                                        onPress={async () => {
+                                            if (activeSearchResultsTab === 'Content') {
+                                                props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy);
+                                                setSearchTerm('');
+                                            } else if (activeSearchResultsTab === 'Discussion') {
+                                                await AsyncStorage.setItem(
+                                                    'openThread',
+                                                    obj.parentId && obj.parentId !== '' ? obj.parentId : obj._id
                                                 );
 
-                                                if (existingSubscription && existingSubscription.length !== 0) {
-                                                    subscribed = true;
-                                                }
-                                            } else if (option === 'Threads') {
-                                                if (
-                                                    obj.message[0] === '{' &&
-                                                    obj.message[obj.message.length - 1] === '}'
-                                                ) {
-                                                    const o = JSON.parse(obj.message);
-                                                    t = o.title;
-                                                    s = o.type;
+                                                if (obj.cueId && obj.cueId !== '') {
+                                                    props.openQAFromSearch(obj.channelId, obj.cueId);
                                                 } else {
-                                                    const { title, subtitle } = htmlStringParser(obj.message);
-                                                    t = title;
-                                                    s = subtitle;
-                                                }
-                                                const filterChannel = props.subscriptions.filter((channel: any) => {
-                                                    return channel.channelId === obj.channelId;
-                                                });
+                                                    props.openDiscussionFromSearch(obj.channelId);
 
-                                                if (filterChannel && filterChannel.length !== 0) {
-                                                    channelName = filterChannel[0].channelName;
-                                                    colorCode = filterChannel[0].colorCode;
-                                                }
-                                            } else if (option === 'Messages') {
-                                                const users = obj.groupId.users;
-
-                                                const sender = users.filter((user: any) => user._id === obj.sentBy)[0];
-
-                                                if (obj.groupId && obj.groupId.name) {
-                                                    messageSenderName = obj.groupId.name + ' > ' + sender.fullName;
-                                                    messageSenderAvatar = obj.groupId.image ? obj.groupId.image : '';
-                                                } else if (sender) {
-                                                    messageSenderName = sender.fullName;
-                                                    messageSenderAvatar = sender.avatar ? sender.avatar : '';
+                                                    props.setLoadDiscussionForChannelId(obj.channelId);
                                                 }
 
-                                                if (
-                                                    obj.message[0] === '{' &&
-                                                    obj.message[obj.message.length - 1] === '}'
-                                                ) {
-                                                    const o = JSON.parse(obj.message);
-                                                    t = o.title;
-                                                    s = o.type;
-                                                } else {
-                                                    const { title, subtitle } = htmlStringParser(obj.message);
-                                                    t = title;
-                                                    s = subtitle;
+                                                setSearchTerm('');
+                                            } else if (activeSearchResultsTab === 'Messages') {
+                                                // open chat and set Chat ID and users in Async storage to open that specific chat
+
+                                                await AsyncStorage.setItem(
+                                                    'openChat',
+                                                    JSON.stringify({
+                                                        _id: obj.groupId._id,
+                                                        users: obj.users,
+                                                    })
+                                                );
+
+                                                props.setOption('Inbox');
+
+                                                setSearchTerm('');
+                                            } else if (activeSearchResultsTab === 'Courses') {
+                                                if (subscribed) {
+                                                    // Open the channel meeting
+                                                    props.openChannelFromActivity(obj._id);
                                                 }
                                             }
-
-                                            return (
-                                                <View
-                                                    style={{
-                                                        // height: 150,
-                                                        marginBottom: 15,
-                                                        // marginBottom: i === priorities.length - 1 ? 0 : 20,
-                                                        // maxWidth: 150,
-                                                        backgroundColor: '#f8f8f8',
-                                                        width: '100%',
-                                                        maxWidth: 160,
-                                                    }}
-                                                    key={index}
-                                                >
-                                                    <SearchResultCard
-                                                        title={t}
-                                                        subtitle={s}
-                                                        channelName={channelName}
-                                                        messageSenderName={messageSenderName}
-                                                        messageSenderAvatar={messageSenderAvatar}
-                                                        colorCode={colorCode}
-                                                        option={option}
-                                                        subscribed={subscribed}
-                                                        handleSub={() => handleSub(obj._id)}
-                                                        onPress={async () => {
-                                                            if (option === 'Classroom') {
-                                                                props.openCueFromCalendar(
-                                                                    obj.channelId,
-                                                                    obj._id,
-                                                                    obj.createdBy
-                                                                );
-                                                                setSearchTerm('');
-                                                            } else if (option === 'Threads') {
-                                                                await AsyncStorage.setItem(
-                                                                    'openThread',
-                                                                    obj.parentId && obj.parentId !== ''
-                                                                        ? obj.parentId
-                                                                        : obj._id
-                                                                );
-
-                                                                if (obj.cueId && obj.cueId !== '') {
-                                                                    props.openQAFromSearch(obj.channelId, obj.cueId);
-                                                                } else {
-                                                                    props.openDiscussionFromSearch(obj.channelId);
-
-                                                                    props.setLoadDiscussionForChannelId(obj.channelId);
-                                                                }
-
-                                                                setSearchTerm('');
-                                                            } else if (option === 'Messages') {
-                                                                // open chat and set Chat ID and users in Async storage to open that specific chat
-
-                                                                await AsyncStorage.setItem(
-                                                                    'openChat',
-                                                                    JSON.stringify({
-                                                                        _id: obj.groupId._id,
-                                                                        users: obj.users,
-                                                                    })
-                                                                );
-
-                                                                props.setOption('Inbox');
-
-                                                                setSearchTerm('');
-                                                            } else if (option === 'Channels') {
-                                                                if (subscribed) {
-                                                                    // Open the channel meeting
-                                                                    props.openChannelFromActivity(obj._id);
-                                                                    setSearchTerm('');
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                </View>
-                                            );
-                                        })}
-                                    </ScrollView>
-                                </View>
-                            );
-                        })}
-                    </View>
-                </ScrollView>
+                                        }}
+                                        user={props.user}
+                                    />
+                                );
+                            })}
+                        </ScrollView>
+                    )}
+                </View>
             </View>
         </View>
     );
@@ -1620,7 +1737,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderOngoingMeetings = (createdBy: string, colorCode: string) => {
         return (
-            <View style={{ width: '100%', maxWidth: 1024, backgroundColor: '#fff', paddingBottom: 30 }}>
+            <View style={{ width: '100%', maxWidth: 1024, backgroundColor: '#fff', paddingBottom: 30, paddingTop: 20 }}>
                 <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
                     In Progress
                 </Text>
@@ -1632,27 +1749,24 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         // paddingTop: 10,
                         maxHeight: 500,
                         paddingHorizontal: 10,
-                        borderRadius: 1,
-                        borderLeftColor: colorCode,
-                        borderLeftWidth: 3,
-                        shadowOffset: {
-                            width: 2,
-                            height: 2,
-                        },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 10,
-                        zIndex: 5000000,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: '#f2f2f2',
+                        // borderLeftColor: colorCode,
+                        // borderLeftWidth: 3,
+                        // shadowOffset: {
+                        //     width: 2,
+                        //     height: 2,
+                        // },
+                        // shadowOpacity: 0.1,
+                        // shadowRadius: 10,
+                        // zIndex: 5000000,
                     }}
                 >
                     <ScrollView
                         showsVerticalScrollIndicator={true}
                         horizontal={false}
-                        // style={{ height: '100%' }}
                         contentContainerStyle={{
-                            // borderWidth: 1,
-                            // borderRightWidth: 0,
-                            // borderLeftWidth: 0,
-                            // borderRightWidth: 1,
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 5 : 10,
                             borderColor: '#f2f2f2',
                             borderRadius: 1,
@@ -1797,6 +1911,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }
                                                 }}
                                                 style={{}}
+                                                disabled={props.user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -1851,6 +1966,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         handler: function (event) {
                             createInstantMeeting();
                         },
+                        disabled: props.user.email === disableEmailId,
                     },
                     {
                         text: 'CANCEL',
@@ -2197,6 +2313,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <TouchableOpacity
                             onPress={() => {
                                 setSelectedWorkspace('');
+                                props.setSelectedWorkspace('');
                                 props.setOpenChannelId('');
                                 props.setWorkspaceActiveTab('Content');
                             }}
@@ -2212,9 +2329,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </TouchableOpacity>
                         <Text
                             style={{
-                                fontSize: 18,
-                                fontFamily: 'inter',
+                                fontSize: 13,
+                                fontFamily: 'overpass',
                                 marginRight: 75,
+                                color: selectedWorkspace.split('-SPLIT-')[3],
+                                // textTransform: 'uppercase',
                             }}
                         >
                             {selectedWorkspace.split('-SPLIT-')[0]}
@@ -2234,7 +2353,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <TouchableOpacity
                                         key={ind.toString()}
                                         style={{
-                                            marginRight: 30,
+                                            marginRight: 38,
                                             paddingVertical: 3,
                                             backgroundColor: 'none',
                                             flexDirection: 'row',
@@ -2247,15 +2366,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <Ionicons
                                             name={getWorkspaceNavbarIconName(tab)}
                                             style={{ color: getWorkspaceNavbarIconColor(tab) }}
-                                            size={17}
+                                            size={tab === 'Meet' ? 15 : tab === 'Scores' ? 14 : 13}
                                         />
                                         <Text
                                             style={{
                                                 color: getWorkspaceNavbarIconColor(tab),
-                                                fontSize: 15,
-                                                fontFamily: 'Inter',
+                                                fontSize: 13,
+                                                fontFamily: 'overpass',
                                                 textTransform: 'capitalize',
-                                                paddingLeft: 7,
+                                                paddingLeft: 5,
                                             }}
                                         >
                                             {tab === 'Content' ? 'Coursework' : tab === 'Discuss' ? 'FAQ' : tab}
@@ -2350,6 +2469,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}
                                         onPress={() => {
                                             setSelectedWorkspace(key);
+                                            props.setSelectedWorkspace(key);
                                             scrollViewRef.current?.scrollTo({
                                                 y: 0,
                                                 animated: false,
@@ -2358,7 +2478,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 18,
+                                                fontSize: 16,
                                                 paddingVertical: 20,
                                                 fontFamily: 'inter',
                                                 flex: 1,
@@ -2369,8 +2489,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         >
                                             <View
                                                 style={{
-                                                    width: 12,
-                                                    height: 12,
+                                                    width: 10,
+                                                    height: 10,
                                                     borderRadius: 9,
                                                     // marginTop: 2,
                                                     marginRight: 5,
@@ -2426,7 +2546,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     );
                 })}
                 {/* Since only one Selected workspace */}
-                {selectedWorkspace ? (
+                {selectedWorkspace && cueMap[selectedWorkspace] ? (
                     <View
                         style={{
                             flexDirection: 'row',
@@ -2455,6 +2575,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         channelColor={selectedWorkspace.split('-SPLIT-')[3]}
                                         showNewDiscussionPost={showNewDiscussionPost}
                                         setShowNewDiscussionPost={setShowNewDiscussionPost}
+                                        user={props.user}
                                     />
                                 ) : // Meet
                                 props.activeWorkspaceTab === 'Meet' ? (
@@ -2536,6 +2657,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             activeTab={'meetings'}
                                             isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                             userId={userId}
+                                            user={props.user}
                                         />
                                     </View>
                                 ) : // Scores
@@ -2560,6 +2682,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         activeTab={'scores'}
                                         isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                         userId={userId}
+                                        exportScores={exportScores}
+                                        setExportScores={(exp: boolean) => setExportScores(exp)}
+                                        user={props.user}
                                     />
                                 ) : (
                                     <ChannelSettings
@@ -2568,6 +2693,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         userId={userId}
                                         channelColor={selectedWorkspace.split('-SPLIT-')[3]}
                                         userCreatedOrg={userCreatedOrg}
+                                        user={props.user}
                                     />
                                 )
                             ) : cueMap[selectedWorkspace].length === 0 ? (
@@ -2575,7 +2701,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         width: '100%',
                                         color: '#1F1F1F',
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         paddingVertical: 100,
                                         paddingHorizontal: 5,
                                         fontFamily: 'inter',
@@ -2622,6 +2748,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         backgroundColor: '#fff',
                                                         paddingLeft: 5,
+                                                        marginBottom: 3,
                                                     }}
                                                 >
                                                     <Text
@@ -2629,7 +2756,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             flex: 1,
                                                             flexDirection: 'row',
                                                             color: '#1F1F1F',
-                                                            // fontWeight: 'bold',
                                                             fontSize: 12,
                                                             lineHeight: 25,
                                                             fontFamily: 'inter',
@@ -2647,7 +2773,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         backgroundColor: '#fff',
                                                         width: '100%',
                                                     }}
-                                                    key={i.toString() + selectedWorkspace.toString()}
+                                                    key={i.toString()}
                                                 >
                                                     {cueMap[selectedWorkspace].map((cue: any, index: any) => {
                                                         if (
@@ -2669,30 +2795,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 <Card
                                                                     gray={true}
                                                                     cueIds={cueIds}
-                                                                    onLongPress={() => {
-                                                                        setCueIds([]);
-                                                                        setEditFolderChannelId(
-                                                                            cue.channelId ? cue.channelId : 'My Notes'
-                                                                        );
-                                                                    }}
-                                                                    add={() => {
-                                                                        const temp = JSON.parse(JSON.stringify(cueIds));
-                                                                        const found = temp.find((i: any) => {
-                                                                            return i === cue._id;
-                                                                        });
-                                                                        if (!found) {
-                                                                            temp.push(cue._id);
-                                                                        }
-                                                                        setCueIds(temp);
-                                                                    }}
-                                                                    remove={() => {
-                                                                        const temp = JSON.parse(JSON.stringify(cueIds));
-                                                                        const upd = temp.filter((i: any) => {
-                                                                            return i !== cue._id;
-                                                                        });
-                                                                        setCueIds(upd);
-                                                                    }}
-                                                                    editFolderChannelId={editFolderChannelId}
                                                                     fadeAnimation={props.fadeAnimation}
                                                                     updateModal={() => {
                                                                         props.openUpdate(
@@ -2723,672 +2825,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </ScrollView>
         </View>
     );
-
-    // /**
-    //  * @description Renders all the channels under workspace
-    //  */
-    // const overview = (
-    //     <View
-    //         key={collapseMap.toString()}
-    //         style={{
-    //             flexDirection: 'row',
-    //             width: '100%',
-    //             bottom: 0,
-    //         }}
-    //     >
-    //         {/* Add sort by filter here */}
-    //         <ScrollView
-    //             persistentScrollbar={true}
-    //             showsVerticalScrollIndicator={true}
-    //             horizontal={false}
-    //             contentContainerStyle={{
-    //                 width: '100%',
-    //                 height: width < 768 ? Dimensions.get('window').height - 115 : Dimensions.get('window').height - 52,
-    //                 backgroundColor: '#f8f8f8',
-    //             }}
-    //             ref={scrollViewRef}
-    //         >
-    //             {Object.keys(cueMap).map((key: any, ind: any) => {
-    //                 return (
-    //                     // Do not add a parent component above this
-    //                     <View
-    //                         key={ind}
-    //                         onLayout={(event) => {
-    //                             const layout = event.nativeEvent.layout;
-    //                             const temp1 = [...channelKeyList];
-    //                             const temp2 = [...channelHeightList];
-    //                             temp1[ind] = key.split('-SPLIT-')[1];
-    //                             temp2[ind] = layout.y;
-    //                             setChannelKeyList(temp1);
-    //                             setChannelHeightList(temp2);
-    //                         }}
-    //                     >
-    //                         <InsetShadow
-    //                             shadowColor={'#000'}
-    //                             shadowOffset={2}
-    //                             shadowOpacity={0} // no shadow
-    //                             shadowRadius={collapseMap[key] ? 10 : 0}
-    //                             elevation={500000}
-    //                             containerStyle={{
-    //                                 height: 'auto',
-    //                             }}
-    //                         >
-    //                             <View
-    //                                 style={{
-    //                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                     borderColor: '#f2f2f2',
-    //                                     borderTopWidth: ind !== 0 && collapseMap[key] ? 1 : 0,
-    //                                     // paddingBottom: 10,
-    //                                 }}
-    //                             >
-    //                                 {ind !== 0 ? (
-    //                                     <View
-    //                                         style={{
-    //                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                             flexDirection: 'row',
-    //                                             borderColor: '#f2f2f2',
-    //                                             paddingTop: 10,
-    //                                             paddingHorizontal:
-    //                                                 width < 1024 && props.option === 'Classroom' ? 20 : 0,
-    //                                             borderTopWidth:
-    //                                                 ind === 0 ||
-    //                                                 collapseMap[key] ||
-    //                                                 collapseMap[Object.keys(cueMap)[ind - 1]]
-    //                                                     ? 0
-    //                                                     : 1,
-    //                                             paddingBottom: 0,
-    //                                             maxWidth: 1024,
-    //                                             alignSelf: 'center',
-    //                                             width: '100%',
-    //                                         }}
-    //                                     >
-    //                                         <TouchableOpacity
-    //                                             style={{
-    //                                                 flex: 1,
-    //                                                 flexDirection: 'row',
-    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                             }}
-    //                                             onPress={() => {
-    //                                                 const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
-
-    //                                                 Object.keys(tempCollapse).forEach((item: any, index: any) => {
-    //                                                     if (item === key) return;
-    //                                                     tempCollapse[item] = false;
-    //                                                 });
-
-    //                                                 tempCollapse[key] = !collapseMap[key];
-    //                                                 setCollapseMap(tempCollapse);
-    //                                             }}
-    //                                         >
-    //                                             <Text
-    //                                                 style={{
-    //                                                     fontSize: 18,
-    //                                                     paddingBottom: 20,
-    //                                                     paddingTop: 9,
-    //                                                     fontFamily: 'inter',
-    //                                                     flex: 1,
-    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                     lineHeight: 18,
-    //                                                     color: collapseMap[key] ? '#000000' : '#1a3026',
-    //                                                 }}
-    //                                             >
-    //                                                 <View
-    //                                                     style={{
-    //                                                         width: 12,
-    //                                                         height: 12,
-    //                                                         borderRadius: 9,
-    //                                                         // marginTop: 2,
-    //                                                         marginRight: 5,
-    //                                                         backgroundColor: key.split('-SPLIT-')[3],
-    //                                                     }}
-    //                                                 />{' '}
-    //                                                 {key.split('-SPLIT-')[0]}
-    //                                             </Text>
-    //                                         </TouchableOpacity>
-    //                                         <View
-    //                                             style={{
-    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                 paddingTop: 5,
-    //                                                 paddingLeft: 15,
-    //                                             }}
-    //                                         >
-    //                                             <View
-    //                                                 style={{
-    //                                                     flexDirection: 'row',
-    //                                                     justifyContent: 'center',
-    //                                                     display: 'flex',
-    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                 }}
-    //                                             >
-    //                                                 <TouchableOpacity
-    //                                                     onPress={() => {
-    //                                                         // const tempCollapse = JSON.parse(
-    //                                                         //     JSON.stringify(collapseMap)
-    //                                                         // );
-
-    //                                                         // Object.keys(tempCollapse).forEach(
-    //                                                         //     (item: any, index: any) => {
-    //                                                         //         if (item === key) return;
-    //                                                         //         tempCollapse[item] = false;
-    //                                                         //     }
-    //                                                         // );
-
-    //                                                         // tempCollapse[key] = !collapseMap[key];
-    //                                                         // setCollapseMap(tempCollapse);
-    //                                                         setSelectedWorkspace(key);
-    //                                                     }}
-    //                                                     style={{
-    //                                                         backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                     }}
-    //                                                 >
-    //                                                     <Text
-    //                                                         style={{
-    //                                                             textAlign: 'center',
-    //                                                             lineHeight: 30,
-    //                                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                         }}
-    //                                                     >
-    //                                                         <Ionicons
-    //                                                             name={
-    //                                                                 collapseMap[key]
-    //                                                                     ? 'chevron-up-outline'
-    //                                                                     : 'chevron-down-outline'
-    //                                                             }
-    //                                                             size={18}
-    //                                                             color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
-    //                                                         />
-    //                                                     </Text>
-    //                                                 </TouchableOpacity>
-    //                                             </View>
-    //                                         </View>
-    //                                     </View>
-    //                                 ) : (
-    //                                     <View
-    //                                         style={{
-    //                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                             flexDirection: 'row',
-    //                                             paddingBottom: 0,
-    //                                             paddingHorizontal:
-    //                                                 width < 1024 && props.option === 'Classroom' ? 20 : 0,
-    //                                             maxWidth: 1024,
-    //                                             alignSelf: 'center',
-    //                                             width: '100%',
-    //                                         }}
-    //                                     >
-    //                                         <TouchableOpacity
-    //                                             style={{
-    //                                                 flex: 1,
-    //                                                 flexDirection: 'row',
-    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                             }}
-    //                                             onPress={() => {
-    //                                                 const tempCollapse = JSON.parse(JSON.stringify(collapseMap));
-
-    //                                                 Object.keys(tempCollapse).forEach((item: any, index: any) => {
-    //                                                     if (item === key) return;
-    //                                                     tempCollapse[item] = false;
-    //                                                 });
-
-    //                                                 tempCollapse[key] = !collapseMap[key];
-    //                                                 setCollapseMap(tempCollapse);
-    //                                             }}
-    //                                         >
-    //                                             <Text
-    //                                                 ellipsizeMode="tail"
-    //                                                 style={{
-    //                                                     fontSize: 18,
-    //                                                     paddingBottom: 20,
-    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                     paddingTop: 19,
-    //                                                     fontFamily: 'inter',
-    //                                                     flex: 1,
-    //                                                     lineHeight: 18,
-    //                                                     color: collapseMap[key] ? '#000000' : '#1F1F1F',
-    //                                                 }}
-    //                                             >
-    //                                                 <View
-    //                                                     style={{
-    //                                                         width: 12,
-    //                                                         height: 12,
-    //                                                         marginRight: 5,
-    //                                                         borderRadius: 9,
-    //                                                         backgroundColor: '#000000',
-    //                                                     }}
-    //                                                 />{' '}
-    //                                                 {key}
-    //                                             </Text>
-    //                                         </TouchableOpacity>
-    //                                         <View
-    //                                             style={{
-    //                                                 flexDirection: 'row',
-    //                                                 justifyContent: 'space-evenly',
-    //                                                 backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                 paddingTop: 10,
-    //                                             }}
-    //                                         >
-    //                                             <View
-    //                                                 style={{
-    //                                                     flexDirection: 'row',
-    //                                                     paddingLeft: 7,
-    //                                                     justifyContent: 'center',
-    //                                                     display: 'flex',
-    //                                                     backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                 }}
-    //                                             >
-    //                                                 <TouchableOpacity
-    //                                                     onPress={() => {
-    //                                                         const tempCollapse = JSON.parse(
-    //                                                             JSON.stringify(collapseMap)
-    //                                                         );
-    //                                                         tempCollapse[key] = !collapseMap[key];
-
-    //                                                         Object.keys(tempCollapse).forEach(
-    //                                                             (item: any, index: any) => {
-    //                                                                 if (item === key) return;
-    //                                                                 tempCollapse[item] = false;
-    //                                                             }
-    //                                                         );
-
-    //                                                         setCollapseMap(tempCollapse);
-    //                                                     }}
-    //                                                     style={{
-    //                                                         backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                         paddingTop: 5,
-    //                                                         paddingLeft: 15,
-    //                                                     }}
-    //                                                 >
-    //                                                     <Text
-    //                                                         style={{
-    //                                                             textAlign: 'center',
-    //                                                             lineHeight: 30,
-    //                                                             backgroundColor: collapseMap[key] ? '#fff' : '#f8f8f8',
-    //                                                         }}
-    //                                                     >
-    //                                                         <Ionicons
-    //                                                             name={
-    //                                                                 collapseMap[key]
-    //                                                                     ? 'chevron-up-outline'
-    //                                                                     : 'chevron-down-outline'
-    //                                                             }
-    //                                                             size={18}
-    //                                                             color={collapseMap[key] ? '#1F1F1F' : '#006AFF'}
-    //                                                         />
-    //                                                     </Text>
-    //                                                 </TouchableOpacity>
-    //                                             </View>
-    //                                         </View>
-    //                                     </View>
-    //                                 )}
-    //                                 {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
-    //                                 <View
-    //                                     style={{
-    //                                         flexDirection: 'row',
-    //                                         justifyContent: 'center',
-    //                                         backgroundColor: '#fff',
-    //                                         borderColor: '#f2f2f2',
-    //                                         borderBottomWidth:
-    //                                             collapseMap[key] && ind !== Object.keys(cueMap).length - 1 ? 1 : 0,
-    //                                     }}
-    //                                     key={collapseMap.toString()}
-    //                                 >
-    //                                     <View
-    //                                         style={{
-    //                                             width: '100%',
-    //                                             maxWidth: 1024,
-    //                                             backgroundColor: '#fff',
-    //                                             paddingHorizontal: width < 1024 ? 20 : 0,
-    //                                         }}
-    //                                     >
-    //                                         {collapseMap[key] ? (
-    //                                             <View
-    //                                                 style={{
-    //                                                     width: '100%',
-    //                                                     paddingBottom: 25,
-    //                                                     backgroundColor: '#fff',
-    //                                                 }}
-    //                                                 key={
-    //                                                     editFolderChannelId.toString() +
-    //                                                     cueIds.toString() +
-    //                                                     cueMap.toString()
-    //                                                 }
-    //                                             >
-    //                                                 {indexMap[key] !== 0 ? (
-    //                                                     indexMap[key] === 1 ? (
-    //                                                         <Discussion
-    //                                                             channelId={key.split('-SPLIT-')[1]}
-    //                                                             filterChoice={key.split('-SPLIT-')[0]}
-    //                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
-    //                                                             refreshUnreadDiscussionCount={() =>
-    //                                                                 props.refreshUnreadDiscussionCount()
-    //                                                             }
-    //                                                             channelColor={key.split('-SPLIT-')[3]}
-    //                                                         />
-    //                                                     ) : // Meet
-    //                                                     indexMap[key] === 2 ? (
-    //                                                         <View
-    //                                                             style={{
-    //                                                                 alignItems: 'center',
-    //                                                                 backgroundColor: '#fff',
-    //                                                             }}
-    //                                                         >
-    //                                                             {key.split('-SPLIT-')[2] === userId ? (
-    //                                                                 <View
-    //                                                                     style={{
-    //                                                                         width: '100%',
-    //                                                                         marginBottom: 20,
-    //                                                                         backgroundColor: '#fff',
-    //                                                                     }}
-    //                                                                 >
-    //                                                                     <TouchableOpacity
-    //                                                                         onPress={() =>
-    //                                                                             handleStartMeeting(
-    //                                                                                 key.split('-SPLIT-')[1],
-    //                                                                                 key.split('-SPLIT-')[2]
-    //                                                                             )
-    //                                                                         }
-    //                                                                         style={{
-    //                                                                             backgroundColor: '#fff',
-    //                                                                             overflow: 'hidden',
-    //                                                                             height: 35,
-    //                                                                             marginTop: 20,
-    //                                                                             justifyContent: 'center',
-    //                                                                             flexDirection: 'row',
-    //                                                                             marginLeft: 'auto',
-    //                                                                         }}
-    //                                                                     >
-    //                                                                         <Text
-    //                                                                             style={{
-    //                                                                                 textAlign: 'center',
-    //                                                                                 lineHeight: 34,
-    //                                                                                 color: '#fff',
-    //                                                                                 borderRadius: 15,
-    //                                                                                 backgroundColor: '#006AFF',
-    //                                                                                 fontSize: 12,
-    //                                                                                 paddingHorizontal: 20,
-    //                                                                                 fontFamily: 'inter',
-    //                                                                                 height: 35,
-    //                                                                                 width: 175,
-    //                                                                                 textTransform: 'uppercase',
-    //                                                                             }}
-    //                                                                         >
-    //                                                                             Start Meeting
-    //                                                                         </Text>
-    //                                                                     </TouchableOpacity>
-    //                                                                 </View>
-    //                                                             ) : null}
-
-    //                                                             {ongoingMeetings.length > 0
-    //                                                                 ? renderOngoingMeetings(
-    //                                                                       key.split('-SPLIT-')[2],
-    //                                                                       key.split('-SPLIT-')[3]
-    //                                                                   )
-    //                                                                 : null}
-
-    //                                                             <Performance
-    //                                                                 channelName={key.split('-SPLIT-')[0]}
-    //                                                                 onPress={(name: any, id: any, createdBy: any) => {
-    //                                                                     props.setChannelFilterChoice('All');
-    //                                                                     props.handleFilterChange(name);
-    //                                                                     props.setChannelId(id);
-    //                                                                     props.setChannelCreatedBy(createdBy);
-    //                                                                     props.openGrades();
-    //                                                                     props.hideHome();
-    //                                                                 }}
-    //                                                                 filterStart={filterStart}
-    //                                                                 filterEnd={filterEnd}
-    //                                                                 channelId={key.split('-SPLIT-')[1]}
-    //                                                                 channelCreatedBy={key.split('-SPLIT-')[2]}
-    //                                                                 subscriptions={props.subscriptions}
-    //                                                                 openCueFromGrades={props.openCueFromCalendar}
-    //                                                                 colorCode={key.split('-SPLIT-')[3]}
-    //                                                                 activeTab={'meetings'}
-    //                                                             />
-    //                                                         </View>
-    //                                                     ) : // Scores
-    //                                                     indexMap[key] === 3 ? (
-    //                                                         <Performance
-    //                                                             channelName={key.split('-SPLIT-')[0]}
-    //                                                             onPress={(name: any, id: any, createdBy: any) => {
-    //                                                                 props.setChannelFilterChoice('All');
-    //                                                                 props.handleFilterChange(name);
-    //                                                                 props.setChannelId(id);
-    //                                                                 props.setChannelCreatedBy(createdBy);
-    //                                                                 props.openGrades();
-    //                                                                 props.hideHome();
-    //                                                             }}
-    //                                                             filterStart={filterStart}
-    //                                                             channelId={key.split('-SPLIT-')[1]}
-    //                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
-    //                                                             filterEnd={filterEnd}
-    //                                                             subscriptions={props.subscriptions}
-    //                                                             openCueFromGrades={props.openCueFromCalendar}
-    //                                                             colorCode={key.split('-SPLIT-')[3]}
-    //                                                             activeTab={'scores'}
-    //                                                             isEditor={key.split('-SPLIT-')[2] === userId}
-    //                                                         />
-    //                                                     ) : (
-    //                                                         <View
-    //                                                             style={{
-    //                                                                 width: '100%',
-    //                                                                 maxWidth: 400,
-    //                                                                 alignSelf: 'center',
-    //                                                                 borderTopRightRadius: 10,
-    //                                                                 borderBottomRightRadius: 10,
-    //                                                             }}
-    //                                                         >
-    //                                                             <ChannelSettings
-    //                                                                 channelId={key.split('-SPLIT-')[1]}
-    //                                                                 refreshSubscriptions={props.refreshSubscriptions}
-    //                                                                 closeModal={() => {
-    //                                                                     // setShowHome(false)
-    //                                                                     // closeModal()
-    //                                                                 }}
-    //                                                                 userId={userId}
-    //                                                                 channelColor={key.split('-SPLIT-')[3]}
-    //                                                                 userCreatedOrg={userCreatedOrg}
-    //                                                             />
-    //                                                         </View>
-    //                                                     )
-    //                                                 ) : cueMap[key].length === 0 ? (
-    //                                                     <Text
-    //                                                         style={{
-    //                                                             width: '100%',
-    //                                                             color: '#1F1F1F',
-    //                                                             fontSize: 16,
-    //                                                             paddingTop: 50,
-    //                                                             paddingBottom: 50,
-    //                                                             paddingHorizontal: 5,
-    //                                                             fontFamily: 'inter',
-    //                                                             flex: 1,
-    //                                                         }}
-    //                                                     >
-    //                                                         {key.split('-SPLIT-')[0] !== 'My Notes'
-    //                                                             ? key.split('-SPLIT-')[2] === userId
-    //                                                                 ? PreferredLanguageText('noCuesCreatedInstructor')
-    //                                                                 : PreferredLanguageText('noCuesCreated')
-    //                                                             : PreferredLanguageText('noNotesCreated')}
-    //                                                     </Text>
-    //                                                 ) : (
-    //                                                     <ScrollView
-    //                                                         horizontal={true}
-    //                                                         contentContainerStyle={{
-    //                                                             maxWidth: '100%',
-    //                                                             width: '100%',
-    //                                                             backgroundColor: '#fff',
-    //                                                         }}
-    //                                                         showsHorizontalScrollIndicator={false}
-    //                                                         key={
-    //                                                             editFolderChannelId.toString() +
-    //                                                             cueIds.toString() +
-    //                                                             cueMap.toString()
-    //                                                         }
-    //                                                     >
-    //                                                         {categoryMap[key].map((category: any, i: any) => {
-    //                                                             // Check if even one category exists in cues
-
-    //                                                             const foundCue = cueMap[key].find(
-    //                                                                 (cue: any) =>
-    //                                                                     cue.customCategory.toString().trim() ===
-    //                                                                     category.toString().trim()
-    //                                                             );
-
-    //                                                             if (!foundCue) return null;
-
-    //                                                             return (
-    //                                                                 <View
-    //                                                                     style={{
-    //                                                                         width: '100%',
-    //                                                                         maxWidth: 145,
-    //                                                                         backgroundColor: '#fff',
-    //                                                                         marginRight: 15,
-    //                                                                     }}
-    //                                                                     key={i.toString()}
-    //                                                                 >
-    //                                                                     <View
-    //                                                                         style={{
-    //                                                                             backgroundColor: '#fff',
-    //                                                                             paddingLeft: 5,
-    //                                                                         }}
-    //                                                                     >
-    //                                                                         <Text
-    //                                                                             style={{
-    //                                                                                 flex: 1,
-    //                                                                                 flexDirection: 'row',
-    //                                                                                 color: '#1F1F1F',
-    //                                                                                 // fontWeight: 'bold',
-    //                                                                                 fontSize: 12,
-    //                                                                                 lineHeight: 25,
-    //                                                                                 fontFamily: 'inter',
-    //                                                                                 backgroundColor: '#fff',
-    //                                                                             }}
-    //                                                                             ellipsizeMode="tail"
-    //                                                                         >
-    //                                                                             {category === '' ? ' ' : category}
-    //                                                                         </Text>
-    //                                                                     </View>
-    //                                                                     <View
-    //                                                                         style={{
-    //                                                                             // borderWidth: 1,
-    //                                                                             maxWidth: 145,
-    //                                                                             paddingLeft: 5,
-    //                                                                             backgroundColor: '#fff',
-    //                                                                             width: '100%',
-    //                                                                             // height: 190
-    //                                                                         }}
-    //                                                                         key={i.toString() + key.toString()}
-    //                                                                     >
-    //                                                                         {cueMap[key].map((cue: any, index: any) => {
-    //                                                                             if (
-    //                                                                                 cue.customCategory
-    //                                                                                     .toString()
-    //                                                                                     .trim() !==
-    //                                                                                 category.toString().trim()
-    //                                                                             ) {
-    //                                                                                 return null;
-    //                                                                             }
-    //                                                                             return (
-    //                                                                                 <View
-    //                                                                                     style={{
-    //                                                                                         marginBottom: 15,
-    //                                                                                         backgroundColor: '#fff',
-    //                                                                                         width: '100%',
-    //                                                                                         maxWidth: 145,
-    //                                                                                     }}
-    //                                                                                     key={index}
-    //                                                                                 >
-    //                                                                                     <Card
-    //                                                                                         gray={true}
-    //                                                                                         cueIds={cueIds}
-    //                                                                                         onLongPress={() => {
-    //                                                                                             setCueIds([]);
-    //                                                                                             setEditFolderChannelId(
-    //                                                                                                 cue.channelId
-    //                                                                                                     ? cue.channelId
-    //                                                                                                     : 'My Notes'
-    //                                                                                             );
-    //                                                                                         }}
-    //                                                                                         add={() => {
-    //                                                                                             const temp = JSON.parse(
-    //                                                                                                 JSON.stringify(
-    //                                                                                                     cueIds
-    //                                                                                                 )
-    //                                                                                             );
-    //                                                                                             const found = temp.find(
-    //                                                                                                 (i: any) => {
-    //                                                                                                     return (
-    //                                                                                                         i ===
-    //                                                                                                         cue._id
-    //                                                                                                     );
-    //                                                                                                 }
-    //                                                                                             );
-    //                                                                                             if (!found) {
-    //                                                                                                 temp.push(cue._id);
-    //                                                                                             }
-    //                                                                                             setCueIds(temp);
-    //                                                                                         }}
-    //                                                                                         remove={() => {
-    //                                                                                             const temp = JSON.parse(
-    //                                                                                                 JSON.stringify(
-    //                                                                                                     cueIds
-    //                                                                                                 )
-    //                                                                                             );
-    //                                                                                             const upd = temp.filter(
-    //                                                                                                 (i: any) => {
-    //                                                                                                     return (
-    //                                                                                                         i !==
-    //                                                                                                         cue._id
-    //                                                                                                     );
-    //                                                                                                 }
-    //                                                                                             );
-    //                                                                                             setCueIds(upd);
-    //                                                                                         }}
-    //                                                                                         editFolderChannelId={
-    //                                                                                             editFolderChannelId
-    //                                                                                         }
-    //                                                                                         fadeAnimation={
-    //                                                                                             props.fadeAnimation
-    //                                                                                         }
-    //                                                                                         updateModal={() => {
-    //                                                                                             props.openUpdate(
-    //                                                                                                 cue.key,
-    //                                                                                                 cue.index,
-    //                                                                                                 0,
-    //                                                                                                 cue._id,
-    //                                                                                                 cue.createdBy
-    //                                                                                                     ? cue.createdBy
-    //                                                                                                     : '',
-    //                                                                                                 cue.channelId
-    //                                                                                                     ? cue.channelId
-    //                                                                                                     : ''
-    //                                                                                             );
-    //                                                                                         }}
-    //                                                                                         cue={cue}
-    //                                                                                         channelId={props.channelId}
-    //                                                                                         subscriptions={
-    //                                                                                             props.subscriptions
-    //                                                                                         }
-    //                                                                                     />
-    //                                                                                 </View>
-    //                                                                             );
-    //                                                                         })}
-    //                                                                     </View>
-    //                                                                 </View>
-    //                                                             );
-    //                                                         })}
-    //                                                     </ScrollView>
-    //                                                 )}
-    //                                             </View>
-    //                                         ) : null}
-    //                                     </View>
-    //                                 </View>
-    //                             </View>
-    //                         </InsetShadow>
-    //                     </View>
-    //                 );
-    //             })}
-    //         </ScrollView>
-    //     </View>
-    // );
 
     // MAIN RETURN
     return (
@@ -3494,8 +2930,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             {op === 'Inbox' && props.unreadMessages > 0 ? (
                                                 <View
                                                     style={{
-                                                        width: 7,
-                                                        height: 7,
+                                                        width: 6,
+                                                        height: 6,
                                                         borderRadius: 7,
                                                         backgroundColor: '#f94144',
                                                         position: 'absolute',
@@ -3531,6 +2967,27 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 resizeMode={'contain'}
                             />
                         ) : null}
+                        <TouchableOpacity
+                            style={{ backgroundColor: 'none', marginRight: 15 }}
+                            onPress={() => {
+                                props.openHelpModal(true);
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 11,
+                                    color: '#1F1F1F',
+                                    marginTop: 1,
+                                    textAlign: 'right',
+                                }}
+                            >
+                                <Ionicons
+                                    name="help-circle-outline"
+                                    size={20}
+                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
+                                />
+                            </Text>
+                        </TouchableOpacity>
                         {props.option === 'Account' || props.option === 'Inbox' ? null : (
                             <DefaultInput
                                 value={searchTerm}
@@ -3550,9 +3007,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 placeholderTextColor={'#000'}
                             />
                         )}
-                        {Dimensions.get('window').width < 768 ? (
+                        {/* {Dimensions.get('window').width < 768 ? (
                             <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'none' }} />
-                        ) : null}
+                        ) : null} */}
                         {/* {props.option === 'To Do' || props.option === 'Classroom' ? (
                             <TouchableOpacity
                                 style={{ backgroundColor: 'none', marginLeft: 15 }}
@@ -3595,27 +3052,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{ backgroundColor: 'none', marginLeft: 15 }}
-                            onPress={() => {
-                                props.openHelpModal(true);
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    color: '#1F1F1F',
-                                    marginTop: 1,
-                                    textAlign: 'right',
-                                }}
-                            >
-                                <Ionicons
-                                    name="help-circle-outline"
-                                    size={20}
-                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
-                                />
-                            </Text>
-                        </TouchableOpacity>
+
                         {Dimensions.get('window').width < 768 && props.option === 'Account' ? (
                             <Menu
                                 style={{
@@ -3678,6 +3115,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         closeAfterCreatingMyNotes={() => props.closeAfterCreatingMyNotes()}
                         option={props.option}
                         version={props.version}
+                        user={props.user}
                     />
                 ) : (
                     <View
@@ -3700,6 +3138,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 reloadData={() => props.reloadData()}
                                 setShowHelp={(val: any) => props.setShowHelp(val)}
                                 showHelp={props.showHelp}
+                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Account' && props.activeAccountTab === 'courses' ? (
@@ -3709,6 +3148,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 closeModal={() => {}}
                                 subscriptions={props.subscriptions}
                                 refreshSubscriptions={props.refreshSubscriptions}
+                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Classroom' && selectedWorkspace ? renderWorkspaceNavbar() : null}
@@ -3728,6 +3168,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 openQA={props.openQAFromActivity}
                                 filterByChannel={filterByChannel}
                                 filterEventsType={filterEventsType}
+                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Inbox' ? (
@@ -3738,6 +3179,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 refreshUnreadInbox={props.refreshUnreadInbox}
                                 hideNewChatButton={props.hideNewChatButton}
                                 userId={userId}
+                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Classroom' &&
@@ -3758,6 +3200,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             selectedWorkspace.split('-SPLIT-')[2]
                                         );
                                     } else if (props.activeWorkspaceTab === 'Scores') {
+                                        setExportScores(true);
                                     }
                                 }}
                                 style={{
@@ -3790,7 +3233,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             >
                                 <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
                                     {props.activeWorkspaceTab === 'Content' ? (
-                                        <Ionicons name="pencil-outline" size={25} />
+                                        <Ionicons name="create-outline" size={25} />
                                     ) : props.activeWorkspaceTab === 'Discuss' ? (
                                         <Ionicons name="add-outline" size={35} />
                                     ) : props.activeWorkspaceTab === 'Meet' ? (
@@ -3804,7 +3247,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </View>
                 )
             ) : (
-                searchResults
+                searchResultsMobile
             )}
             <Popup
                 isOpen={showFilterPopup}

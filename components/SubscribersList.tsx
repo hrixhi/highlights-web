@@ -33,6 +33,7 @@ import { Select } from '@mobiscroll/react';
 
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [filterChoice, setFilterChoice] = useState('All');
@@ -894,6 +895,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     borderRadius: 15,
                                                     backgroundColor: 'white',
                                                 }}
+                                                disabled={props.user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -921,6 +923,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     borderRadius: 15,
                                                     backgroundColor: 'white',
                                                 }}
+                                                disabled={props.user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -1195,6 +1198,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }
                                     });
                                 }}
+                                user={props.user}
                             />
                         </ScrollView>
                     ) : (
@@ -1313,6 +1317,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 marginLeft: Dimensions.get('window').width < 768 ? 20 : 0,
                                                 marginBottom: 10,
                                             }}
+                                            disabled={props.user.email === disableEmailId}
                                         >
                                             <Text
                                                 style={{

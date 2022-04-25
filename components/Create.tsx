@@ -11,7 +11,7 @@ import {
     createQuiz,
     getChannelCategories,
     getChannels,
-    getSharedWith
+    getSharedWith,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -27,6 +27,7 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import TextareaAutosize from 'react-textarea-autosize';
 import FormulaGuide from './FormulaGuide';
+import InsertYoutubeModal from './InsertYoutubeModal';
 import Books from './Books';
 
 // HELPERS
@@ -56,6 +57,7 @@ import Froalaeditor from 'froala-editor';
 import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
+import { disableEmailId } from '../constants/zoomCredentials';
 // Include special components if required.
 // import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
@@ -109,15 +111,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [duration, setDuration] = useState({
         hours: 1,
         minutes: 0,
-        seconds: 0
+        seconds: 0,
     });
     const [equation, setEquation] = useState('y = x + 1');
     const [showEquationEditor, setShowEquationEditor] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
     const [quizInstructions, setQuizInstructions] = useState('');
-    const [initialQuizInstructions, setInitialQuizInstructions] = useState('');
-    const [initialDuration, setInitialDuration] = useState(null);
     const [limitedShare, setLimitedShare] = useState(false);
     const [unlimitedAttempts, setUnlimitedAttempts] = useState(false);
     const [attempts, setAttempts] = useState('1');
@@ -131,15 +131,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     let categoriesOptions = [
         {
             value: 'None',
-            text: 'None'
-        }
+            text: 'None',
+        },
     ];
     customCategories.map((category: any) => {
         categoriesOptions.push({
             value: category,
-            text: category
+            text: category,
         });
     });
+    const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
+
     // Alerts
     const enterOneProblemAlert = PreferredLanguageText('enterOneProblem');
     const invalidDurationAlert = PreferredLanguageText('invalidDuration');
@@ -153,15 +155,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
-    const noItemsAlert = 'Create one or more items for Drag & Drop problems.'
-    const noImageAlert = 'Upload image for Hotspot problems.'
-    const noHotspotsAlert = 'Create one or more markers for Hotspot problems.'
-    // new alert 
+    const noItemsAlert = 'Create one or more items for Drag & Drop problems.';
+    const noImageAlert = 'Upload image for Hotspot problems.';
+    const noHotspotsAlert = 'Create one or more markers for Hotspot problems.';
+    // new alert
 
     Froalaeditor.DefineIcon('insertFormula', {
         NAME: 'formula',
-        PATH:
-            'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z'
+        PATH: 'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z',
     });
     Froalaeditor.RegisterCommand('insertFormula', {
         title: 'Insert Formula',
@@ -171,7 +172,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         callback: function () {
             RichText.current.editor.selection.save();
             setShowEquationEditor(true);
-        }
+        },
+    });
+
+    Froalaeditor.DefineIcon('insertYoutube', {
+        SRC: 'https://cues-files.s3.amazonaws.com/icons/youtubeLogo.png',
+        ALT: 'Youtube icon',
+        template: 'image',
+    });
+
+    Froalaeditor.RegisterCommand('insertYoutube', {
+        title: 'Insert Youtube Videos',
+        imageIcon: 'insertYoutube',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function () {
+            RichText.current.editor.selection.save();
+            setShowInsertYoutubeVideosModal(true);
+        },
     });
 
     // HOOKS
@@ -234,10 +253,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {
                 licenseKey: 'xswED5JutJBccg0DZhBM',
                 initialDoc: url,
-                enableReadOnlyMode: true
+                enableReadOnlyMode: true,
             },
             RichText.current
-        ).then(instance => {
+        ).then((instance) => {
             const { documentViewer } = instance.Core;
 
             if (!documentViewer) return;
@@ -252,20 +271,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Sets user role
      */
     useEffect(() => {
-        (async () => {
-            const uString: any = await AsyncStorage.getItem('user');
-            const parsedUser = JSON.parse(uString);
-            if (parsedUser._id) {
-                setUserId(parsedUser._id);
-            }
-            if (parsedUser.role) {
-                setRole(parsedUser.role);
-            }
-            if (parsedUser.allowQuizCreation) {
-                setAllowQuizCreation(parsedUser.allowQuizCreation)
-            }
-        })();
-    });
+        if (props.user) {
+            setUserId(props.user._id);
+            setRole(props.user.role);
+            setAllowQuizCreation(props.user.allowQuizCreation);
+        }
+    }, [props.user]);
 
     /**
      * @description Loads channel categories and subscribers for Create
@@ -293,7 +304,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const obj = {
                 type,
                 url,
-                title
+                title,
             };
             saveCue = JSON.stringify(obj);
         } else if (isQuiz) {
@@ -306,7 +317,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 timer,
                 duration,
                 headers,
-                quizInstructions
+                quizInstructions,
             };
 
             const saveQuiz = JSON.stringify(quiz);
@@ -350,13 +361,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 if (quizDraft !== null) {
                     const { duration, timer, problems, title, headers, quizInstructions } = JSON.parse(quizDraft);
                     setDuration(duration);
-                    setInitialDuration(duration);
                     setTimer(timer);
                     setProblems(problems);
                     setTitle(title);
                     setHeaders(headers);
                     setQuizInstructions(quizInstructions);
-                    setInitialQuizInstructions(quizInstructions);
                 }
             } catch (e) {
                 console.log(e);
@@ -369,13 +378,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         Animated.timing(modalAnimation, {
             toValue: 1,
             duration: 150,
-            useNativeDriver: true
+            useNativeDriver: true,
         }).start();
     }, []);
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         setDimensions({ window, screen });
     }, []);
+
+    const handleAddVideo = useCallback(
+        (videoId: string) => {
+            setShowInsertYoutubeVideosModal(false);
+
+            RichText.current.editor.selection.restore();
+
+            RichText.current.editor.html.insert(
+                `<iframe width="640" height="360" src="https://youtube.com/embed/${videoId}" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe>`
+            );
+
+            RichText.current.editor.events.trigger('contentChanged');
+        },
+        [RichText, RichText.current]
+    );
 
     /**
      * @description Used to insert equation into Editor HTML
@@ -393,12 +417,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             RichText.current.editor.html.insert(
                 '<img class="rendered-math-jax" id="' +
-                random +
-                '" data-eq="' +
-                encodeURIComponent(equation) +
-                '" src="' +
-                res.imgSrc +
-                '"></img>'
+                    random +
+                    '" data-eq="' +
+                    encodeURIComponent(equation) +
+                    '" src="' +
+                    res.imgSrc +
+                    '"></img>'
             );
             RichText.current.editor.events.trigger('contentChanged');
 
@@ -423,9 +447,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }
         problems.map((problem: any, problemIndex: number) => {
-
-            if (problem.question === "" && (problem.questionType !== 'textEntry' && problem.questionType !== 'inlineChoice' && problem.questionType !== 'highlightText')) {
-                alert(`Question ${problemIndex + 1} has no content.`)
+            if (
+                problem.question === '' &&
+                problem.questionType !== 'textEntry' &&
+                problem.questionType !== 'inlineChoice' &&
+                problem.questionType !== 'highlightText'
+            ) {
+                alert(`Question ${problemIndex + 1} has no content.`);
                 error = true;
             }
 
@@ -473,79 +501,72 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
 
-
             // Drag and Drop
             if (problem.questionType === 'dragdrop') {
-
                 // At least 2 groups
                 if (problem.dragDropHeaders.length < 2) {
-                    alert(`Question ${problemIndex + 1} must have at least 2 Drag & Drop groups.`)
+                    alert(`Question ${problemIndex + 1} must have at least 2 Drag & Drop groups.`);
                     return false;
                 }
-                
-                let groupHeaderMissing = false 
-                let labelMissing = false
-                let groupEmpty = false
+
+                let groupHeaderMissing = false;
+                let labelMissing = false;
+                let groupEmpty = false;
 
                 problem.dragDropHeaders.map((header: string) => {
                     if (!header) {
-                        groupHeaderMissing = true
+                        groupHeaderMissing = true;
                     }
                 });
 
                 if (groupHeaderMissing) {
-                    alert(`Group header is missing in Question ${problemIndex + 1}.`)
+                    alert(`Group header is missing in Question ${problemIndex + 1}.`);
                     return false;
                 }
 
                 problem.dragDropData.map((items: any[]) => {
-
                     if (items.length === 0) {
-                        groupEmpty = true
+                        groupEmpty = true;
                     }
 
                     items.map((label: any) => {
                         if (label.content === '') {
-                            labelMissing = true
+                            labelMissing = true;
                         }
-                    })
-
+                    });
                 });
 
                 if (labelMissing) {
-                    alert(`Item missing in Question ${problemIndex + 1}.`)
+                    alert(`Item missing in Question ${problemIndex + 1}.`);
                     return false;
                 }
 
                 if (groupEmpty) {
-                    alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`)
+                    alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`);
                     return false;
                 }
-
             }
 
             // Hotspot
             if (problem.questionType === 'hotspot') {
-                if(problem.imgUrl === '' || !problem.imgUrl) {
-                    Alert(`Hotspot image is missing in Question ${problemIndex + 1}.`)
+                if (problem.imgUrl === '' || !problem.imgUrl) {
+                    Alert(`Hotspot image is missing in Question ${problemIndex + 1}.`);
                     setIsSubmitting(false);
                     error = true;
                 }
-                if(!problem.hotspots || problem.hotspots.length === 0) {
+                if (!problem.hotspots || problem.hotspots.length === 0) {
                     Alert(`You must place at least two hotspot marker on the image in Question ${problemIndex + 1}.`);
                     setIsSubmitting(false);
                     error = true;
                 }
-                
+
                 let hasCorrectAnswer = false;
 
                 problem.hotspotOptions.map((option: any) => {
-
                     if (option.isCorrect) {
                         hasCorrectAnswer = true;
                     }
-
-                })
+                });
 
                 if (!hasCorrectAnswer) {
                     Alert(`Hotspot question ${problemIndex + 1} must have at least correct choice.`);
@@ -555,17 +576,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             // Highlight Text
             if (problem.questionType === 'highlightText') {
-
                 const el = document.createElement('html');
                 el.innerHTML = problem.highlightTextHtml;
                 const spans: HTMLCollection = el.getElementsByTagName('span');
-    
+
                 let spanIdCounter = 0;
                 let correctAnswers = 0;
-    
+
                 for (let i = 0; i < spans.length; i++) {
                     const span = spans.item(i);
-    
+
                     if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
                         spanIdCounter += 1;
                         correctAnswers += 1;
@@ -573,12 +593,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         spanIdCounter += 1;
                     }
                 }
-    
+
                 if (spanIdCounter < 2) {
                     Alert(`You must set at least two Hot text choices in Question ${index + 1}.`);
                     return;
                 }
-                
+
                 if (correctAnswers === 0) {
                     Alert(`You must set at least one Hot text choice as correct in Question ${index + 1}.`);
                     return;
@@ -588,69 +608,67 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             // Inline Choice
             if (problem.questionType === 'inlineChoice') {
                 if (problem.inlineChoiceHtml === '') {
-                    alert(`Question ${problemIndex + 1} has no content.`)
+                    alert(`Question ${problemIndex + 1} has no content.`);
                     return;
                 }
-    
+
                 if (problem.inlineChoiceOptions.length === 0) {
-                    alert(`Question ${problemIndex + 1} must have at lease one dropdown.`)
+                    alert(`Question ${problemIndex + 1} must have at lease one dropdown.`);
                     return;
                 }
-                
-                let lessThan2DropdownValues = false
+
+                let lessThan2DropdownValues = false;
                 let missingDropdownValue = false;
                 let missingCorrectAnswer = false;
-    
+
                 if (problem.inlineChoiceOptions.length > 0) {
                     problem.inlineChoiceOptions.map((choices: any[]) => {
                         if (choices.length < 2) {
-                            lessThan2DropdownValues = true
+                            lessThan2DropdownValues = true;
                         }
-    
-                        let hasCorrect = false
+
+                        let hasCorrect = false;
                         choices.map((choice: any) => {
                             if (choice.isCorrect) {
-                                hasCorrect = true
+                                hasCorrect = true;
                             }
-    
+
                             if (choice.option === '') {
-                                missingDropdownValue = true
+                                missingDropdownValue = true;
                             }
-                        })
-    
+                        });
+
                         if (!hasCorrect) {
-                            missingCorrectAnswer = true
+                            missingCorrectAnswer = true;
                         }
-    
-                    })
-    
+                    });
+
                     if (lessThan2DropdownValues) {
-                        alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`)
+                        alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`);
                         return;
                     }
-    
+
                     if (missingDropdownValue) {
-                        alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`)
+                        alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`);
                         return;
                     }
-    
+
                     if (missingCorrectAnswer) {
-                        alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`)
+                        alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`);
                         return;
                     }
                 }
-    
             }
 
             // Text Entry
             if (problem.questionType === 'textEntry') {
                 if (problem.textEntryHtml === '') {
-                    alert(`Question ${problemIndex + 1} has no content.`)
+                    alert(`Question ${problemIndex + 1} has no content.`);
                     return;
                 }
 
                 if (problem.textEntryOptions.length === 0) {
-                    alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`)
+                    alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`);
                     return;
                 }
 
@@ -664,33 +682,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
 
                     if (choice.points === '') {
-                        missingEntryPoints = true
+                        missingEntryPoints = true;
                     }
 
                     if (Number.isNaN(Number(choice.points))) {
-                        pointsNotANumber = true
+                        pointsNotANumber = true;
                     }
-
-                })
+                });
 
                 if (missingEntryAnswer) {
-                    alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`)
+                    alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`);
                     return;
                 }
 
                 if (missingEntryPoints) {
-                    alert(`Each Text entry must have points in question ${problemIndex + 1}.`)
+                    alert(`Each Text entry must have points in question ${problemIndex + 1}.`);
                     return;
                 }
 
                 if (pointsNotANumber) {
-                    alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`)
+                    alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`);
                     return;
                 }
-
             }
 
-            // Multipart 
+            // Multipart
             if (problem.questionType === 'multipart') {
                 if (problem.multipartQuestions[0] === '' || problem.multipartQuestions[1] === '') {
                     alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
@@ -703,112 +719,111 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 // At least two choices
                 if (problem.multipartOptions[0].length < 2) {
-                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`)
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 
                 problem.multipartOptions[0].map((option: any) => {
                     if (option.isCorrect) {
-                        hasOneCorrect = true
+                        hasOneCorrect = true;
                     }
 
                     if (option.option === '') {
                         hasMissingOption = true;
                     }
-                })
+                });
 
                 if (!hasOneCorrect) {
-                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`)
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    alert(`Part A option is empty in question ${problemIndex + 1}`)
+                    alert(`Part A option is empty in question ${problemIndex + 1}`);
                 }
 
                 if (problem.multipartOptions[0].length < 2) {
-                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`)
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 
                 // Part B
                 problem.multipartOptions[1].map((option: any) => {
                     if (option.isCorrect) {
-                        hasOneCorrect = true
+                        hasOneCorrect = true;
                     }
 
                     if (option.option === '') {
                         hasMissingOption = true;
                     }
-                })
+                });
 
                 if (!hasOneCorrect) {
-                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`)
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    alert(`Part A option is empty in question ${problemIndex + 1}`)
+                    alert(`Part A option is empty in question ${problemIndex + 1}`);
                 }
             }
 
             // Equation Editor
             if (problem.questionType === 'equationEditor') {
                 if (problem.correctEquations[0] === '') {
-                    alert('Correct equation cannot be empty.')
+                    alert('Correct equation cannot be empty.');
                     return;
                 }
             }
-    
+
             // Match table grid
             if (problem.questionType === 'matchTableGrid') {
-    
                 let missingColHeader = false;
                 let missingRowHeader = false;
                 let missingCorrect = false;
-    
+
                 problem.matchTableHeaders.map((header: string) => {
                     if (header === '') {
                         missingColHeader = true;
                     }
-                })
-    
+                });
+
                 if (missingColHeader) {
-                    alert(`Column header cannot be empty in question ${problemIndex + 1}.`)
+                    alert(`Column header cannot be empty in question ${problemIndex + 1}.`);
                     return;
                 }
-    
+
                 problem.matchTableOptions.map((rowHeader: string) => {
                     if (rowHeader === '') {
-                        missingRowHeader = true
+                        missingRowHeader = true;
                     }
-                })
-    
+                });
+
                 if (missingRowHeader) {
-                    alert(`Row header cannot be empty in question ${problemIndex + 1}.`)
+                    alert(`Row header cannot be empty in question ${problemIndex + 1}.`);
                     return;
                 }
-    
+
                 problem.matchTableChoices.map((row: any) => {
                     let hasCorrect = false;
-    
+
                     if (missingCorrect) {
                         return;
                     }
-    
+
                     row.map((option: boolean) => {
                         if (option) {
-                            hasCorrect = true
+                            hasCorrect = true;
                         }
-                    })
-    
+                    });
+
                     if (!hasCorrect) {
-                        missingCorrect = true
+                        missingCorrect = true;
                     }
-                })
-    
+                });
+
                 if (missingCorrect) {
-                    alert(`Each row must have a correct response in question ${problemIndex + 1}.`)
+                    alert(`Each row must have a correct response in question ${problemIndex + 1}.`);
                     return;
                 }
             }
@@ -828,10 +843,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setIsSubmitting(true);
         setCreatingQuiz(true);
 
-        const isValid = isQuizValid()
-           
-        console.log("isValid", isValid);
-        
+        const isValid = isQuizValid();
+
+        console.log('isValid', isValid);
+
         if (!isValid) {
             setIsSubmitting(false);
             setCreatingQuiz(false);
@@ -868,40 +883,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
-        // Sanitize problems  
+        // Sanitize problems
 
         const sanitizeProblems = problems.map((problem: any) => {
-            
             if (problem.questionType === 'textEntry') {
-
                 let updateProblem = {
-                    ...problem
+                    ...problem,
                 };
-    
+
                 const updatedTextEntryOptions = problem.textEntryOptions.map((option: any) => {
                     return {
                         ...option,
-                        points: Number(option.points)
-                    }
+                        points: Number(option.points),
+                    };
                 });
 
                 updateProblem.textEntryOptions = updatedTextEntryOptions;
 
                 updateProblem.maxCharCount = null;
 
-                return updateProblem
-
+                return updateProblem;
             }
 
             // For Highlight Text, manipulate the HTML String to add IDs to the <span> tags
 
             if (problem.questionType === 'highlightText') {
-
                 let updateProblem = {
-                    ...problem
+                    ...problem,
                 };
 
-                const highlightTextHtml = problem.highlightTextHtml
+                const highlightTextHtml = problem.highlightTextHtml;
 
                 // Extract SPAN Tags from HTML and update Span IDS
                 var el = document.createElement('html');
@@ -917,28 +928,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 for (let i = 0; i < spans.length; i++) {
                     const span = spans.item(i);
 
-                    console.log("Span", span)
+                    console.log('Span', span);
                     if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
                         span.setAttribute('id', `${spanIdCounter}`);
                         spanIdCounter += 1;
-                        updateHighlightTextChoices.push(true)
+                        updateHighlightTextChoices.push(true);
                     } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
                         span.setAttribute('id', `${spanIdCounter}`);
                         spanIdCounter += 1;
-                        updateHighlightTextChoices.push(false)
+                        updateHighlightTextChoices.push(false);
                     }
                 }
- 
+
                 // // Array.from(spans).map((span: any, spanIndex: number) => {
 
-                    
                 // // })
 
-                console.log("Inner HTML", el.innerHTML)
+                console.log('Inner HTML', el.innerHTML);
 
                 const pTag = el.getElementsByTagName('body')[0].innerHTML;
 
-                console.log("PTag", pTag)
+                console.log('PTag', pTag);
 
                 // newProbs[index].highlightTextHtml = pTag;
 
@@ -950,13 +960,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 updateProblem.maxCharCount = null;
 
-                return updateProblem
-
+                return updateProblem;
             }
 
             if (problem.questionType === 'freeResponse') {
                 let updateProblem = {
-                    ...problem
+                    ...problem,
                 };
 
                 updateProblem.maxCharCount = Number(problem.maxCharCount);
@@ -965,18 +974,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             } else {
                 // Make max Char count null since it is expected as a float
                 let updateProblem = {
-                    ...problem
+                    ...problem,
                 };
 
                 updateProblem.maxCharCount = null;
 
                 return updateProblem;
             }
+        });
 
-        })
-
-        console.log("Sanitized problems", sanitizeProblems)
-
+        console.log('Sanitized problems', sanitizeProblems);
 
         const server = fetchAPI('');
         const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
@@ -989,11 +996,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         duration: timer ? durationMinutes.toString() : null,
                         shuffleQuiz,
                         instructions: quizInstructions,
-                        headers: JSON.stringify(headers)
-                    }
-                }
+                        headers: JSON.stringify(headers),
+                    },
+                },
             })
-            .then(res => {
+            .then((res) => {
                 setCreatingQuiz(false);
                 setIsSubmitting(false);
                 if (res.data && res.data.quiz.createQuiz !== 'error') {
@@ -1002,7 +1009,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     handleCreate(res.data.quiz.createQuiz);
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log('Error', e);
                 setCreatingQuiz(false);
             });
@@ -1061,10 +1068,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             .query({
                 query: getChannelCategories,
                 variables: {
-                    channelId
-                }
+                    channelId,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data.channel && res.data.channel.getChannelCategories) {
                     if (role === 'instructor') {
                         const categories = new Set();
@@ -1088,15 +1095,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 }
             })
-            .catch(err => { });
+            .catch((err) => {});
         // get subscribers
         server
             .query({
                 query: getSharedWith,
                 variables: {
                     channelId,
-                    cueId: null
-                }
+                    cueId: null,
+                },
             })
             .then((res: any) => {
                 if (res.data && res.data.cue.getSharedWith) {
@@ -1105,7 +1112,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     const format = subscribers.map((sub: any) => {
                         return {
                             value: sub.value,
-                            text: sub.label
+                            text: sub.label,
                         };
                     });
 
@@ -1138,30 +1145,30 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .query({
                     query: getChannels,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.channel.findByUserId) {
                         setChannels(res.data.channel.findByUserId);
                         const options = [
                             {
                                 value: 'My Notes',
-                                text: 'My Notes'
-                            }
+                                text: 'My Notes',
+                            },
                         ];
 
                         res.data.channel.findByUserId.map((channel: any) => {
                             options.push({
                                 value: channel._id,
-                                text: channel.name
+                                text: channel.name,
                             });
                         });
 
                         setChannelOptions(options);
                     }
                 })
-                .catch(err => { });
+                .catch((err) => {});
         }
         setInit(true);
     }, []);
@@ -1201,17 +1208,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         [userId]
     );
 
-    const handleFileUpload = useCallback(
-        async () => {
-            const res = await handleFile(false, userId);
+    const handleFileUpload = useCallback(async () => {
+        const res = await handleFile(false, userId);
 
-            if (!res || res.url === '' || res.type === '') {
-                return false;
-            }
-            setUploadResult(res.url, res.type);
-        },
-        [userId]
-    );
+        if (!res || res.url === '' || res.type === '') {
+            return false;
+        }
+        setUploadResult(res.url, res.type);
+    }, [userId]);
 
     const videoUploadEditor = useCallback(
         async (files: any) => {
@@ -1259,7 +1263,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
 
             if ((submission || isQuiz) && allowLateSubmission && availableUntil < deadline) {
-                Alert('Late submission date must be set after deadline.')
+                Alert('Late submission date must be set after deadline.');
                 setIsSubmitting(false);
                 return;
             }
@@ -1268,7 +1272,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             if (quizId) {
                 const obj: any = {
                     quizId,
-                    title
+                    title,
                 };
                 if (timer) {
                     obj.initiatedAt = null;
@@ -1278,7 +1282,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const obj = {
                     type,
                     url,
-                    title
+                    title,
                 };
                 saveCue = JSON.stringify(obj);
             } else {
@@ -1293,7 +1297,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     if (value) {
                         subCues = JSON.parse(value);
                     }
-                } catch (e) { }
+                } catch (e) {}
                 let _id = subCues['local'].length;
                 while (true) {
                     const duplicateId = subCues['local'].findIndex((item: any) => {
@@ -1314,7 +1318,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     frequency,
                     starred,
                     customCategory: customCategory === 'None' ? '' : customCategory,
-                    endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : ''
+                    endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
                 });
                 const stringifiedCues = JSON.stringify(subCues);
                 await AsyncStorage.setItem('cues', stringifiedCues);
@@ -1340,7 +1344,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setSelected(ownerarray);
                 }
 
-
                 const user = JSON.parse(uString);
                 const server = fetchAPI('');
 
@@ -1361,20 +1364,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     shareWithUserIds: !limitedShare ? null : selected,
                     limitedShares: limitedShare,
                     allowedAttempts: attempts,
-                    availableUntil: (submission || isQuiz) && allowLateSubmission ? availableUntil.toISOString() : ''
+                    availableUntil: (submission || isQuiz) && allowLateSubmission ? availableUntil.toISOString() : '',
                 };
 
                 server
                     .mutate({
                         mutation: createCue,
-                        variables
+                        variables,
                     })
-                    .then(res => {
+                    .then((res) => {
                         if (res.data.cue.create) {
                             Animated.timing(modalAnimation, {
                                 toValue: 0,
                                 duration: 150,
-                                useNativeDriver: true
+                                useNativeDriver: true,
                             }).start(() => {
                                 storeDraft('cueDraft', '');
                                 setIsSubmitting(false);
@@ -1382,7 +1385,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         setIsSubmitting(false);
                         Alert(somethingWentWrongAlert, checkConnectionAlert);
                     });
@@ -1417,7 +1420,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             playChannelCueIndef,
             allowLateSubmission,
             availableUntil,
-            attempts
+            attempts,
         ]
     );
 
@@ -1428,7 +1431,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         Alert(clearQuestionAlert, cannotUndoAlert, [
             {
                 text: 'Cancel',
-                style: 'cancel'
+                style: 'cancel',
             },
             {
                 text: 'Clear',
@@ -1444,8 +1447,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setTimer(false);
                     setShowEquationEditor(false);
                     setEquation('');
-                }
-            }
+                },
+            },
         ]);
     }, []);
 
@@ -1466,7 +1469,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 backgroundColor: 'white',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                overflow: 'scroll'
+                overflow: 'scroll',
             }}
             showsVerticalScrollIndicator={true}
         >
@@ -1479,20 +1482,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height: '100%',
                         maxWidth: 1024,
                         paddingTop: 10,
-                        paddingHorizontal: dimensions.window.width < 1024 ? 15 : 0
+                        paddingHorizontal: dimensions.window.width < 1024 ? 15 : 0,
                     }}
                 >
                     <View
                         style={{
                             flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                            paddingBottom: 30
+                            paddingBottom: 30,
                         }}
                     >
                         {props.option === 'Browse' && !showOptions ? null : (
                             <TouchableOpacity
                                 style={{
                                     paddingTop: 10,
-                                    marginRight: 20
+                                    marginRight: 20,
                                 }}
                                 onPress={() => {
                                     if (showOptions) {
@@ -1510,43 +1513,49 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </TouchableOpacity>
                         )}
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
-                            {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' && Dimensions.get('window').width > 768 ? <TouchableOpacity
-                                style={{
-                                    borderRadius: 15,
-                                    backgroundColor: 'white'
-                                }}
-                                onPress={() => {
-                                    handleFileUpload()
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        lineHeight: 28,
-                                        color: '#006AFF',
-                                        borderColor: '#006AFF',
-                                        borderWidth: 1,
-                                        marginTop: 2,
-                                        fontSize: 12,
-                                        borderRadius: 15,
-                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
-                                        marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
-                                        fontFamily: 'inter',
-                                        overflow: 'hidden',
-                                        height: 30,
-                                        textTransform: 'uppercase'
-                                    }}
-                                >
-                                    Upload file
-                                </Text>
-                            </TouchableOpacity> : null}
-
-                            {/* QUIZ BUTTON FOR INSTRUCTORS */}
-                            {!imported && !showOptions && !isQuiz && !showBooks && props.version !== 'read' ? (
+                            {!imported &&
+                            !showOptions &&
+                            !isQuiz &&
+                            !showBooks &&
+                            Dimensions.get('window').width > 768 ? (
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white'
+                                        backgroundColor: 'white',
+                                    }}
+                                    onPress={() => {
+                                        handleFileUpload();
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            lineHeight: 28,
+                                            color: '#006AFF',
+                                            borderColor: '#006AFF',
+                                            borderWidth: 1,
+                                            marginTop: 2,
+                                            fontSize: 12,
+                                            borderRadius: 15,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            height: 30,
+                                            textTransform: 'uppercase',
+                                        }}
+                                    >
+                                        Upload file
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
+
+                            {/* QUIZ BUTTON FOR INSTRUCTORS */}
+                            {!imported && !showOptions && !isQuiz && !showBooks ? (
+                                <TouchableOpacity
+                                    style={{
+                                        borderRadius: 15,
+                                        backgroundColor: 'white',
                                     }}
                                     onPress={() => {
                                         setShowBooks(!showBooks);
@@ -1567,22 +1576,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             height: 30,
-                                            textTransform: 'uppercase'
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         Browse Books
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
-                            {allowQuizCreation &&
-                                !imported &&
-                                !showOptions &&
-                                !showBooks &&
-                                props.version !== 'read' ? (
+                            {allowQuizCreation && !imported && !showOptions && !showBooks ? (
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white'
+                                        backgroundColor: 'white',
                                     }}
                                     onPress={() => {
                                         if (isQuiz) {
@@ -1608,7 +1613,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             height: 30,
-                                            textTransform: 'uppercase'
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         {isQuiz ? 'Clear' : 'Create Quiz'}
@@ -1637,7 +1642,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     disabled={isSubmitting}
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white'
+                                        backgroundColor: 'white',
                                         // marginLeft: 15
                                     }}
                                 >
@@ -1654,7 +1659,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             height: 30,
-                                            textTransform: 'uppercase'
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         NEXT
@@ -1672,6 +1677,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             onInsertEquation={insertEquation}
                         />
                     ) : null}
+                    {showInsertYoutubeVideosModal ? (
+                        <InsertYoutubeModal
+                            show={showInsertYoutubeVideosModal}
+                            onClose={() => setShowInsertYoutubeVideosModal(false)}
+                            insertVideo={handleAddVideo}
+                        />
+                    ) : null}
                     <View style={{ paddingBottom: 100 }}>
                         {showOptions ? (
                             <View
@@ -1681,14 +1693,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     flexDirection: 'column',
                                     marginHorizontal: 10,
                                     maxWidth: 1024,
-                                    alignSelf: 'center'
+                                    alignSelf: 'center',
                                 }}
                             >
                                 {channels.length !== 0 ? (
                                     <View
                                         style={{
                                             display: 'flex',
-                                            overflow: 'visible'
+                                            overflow: 'visible',
                                         }}
                                     >
                                         <View
@@ -1696,7 +1708,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flexDirection: width < 768 ? 'column' : 'row',
                                                 borderRightWidth: 0,
                                                 borderColor: '#f2f2f2',
-                                                paddingTop: width < 768 ? 0 : 40
+                                                paddingTop: width < 768 ? 0 : 40,
                                             }}
                                         >
                                             <View
@@ -1704,14 +1716,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: 'white',
                                                 }}
                                             >
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
                                                         color: '#000000',
-                                                        fontFamily: 'Inter'
+                                                        fontFamily: 'Inter',
                                                     }}
                                                 >
                                                     For
@@ -1719,13 +1731,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </View>
                                             <View
                                                 style={{
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: 'white',
                                                 }}
                                             >
                                                 <View
                                                     style={{
                                                         backgroundColor: 'white',
-                                                        display: 'flex'
+                                                        display: 'flex',
                                                     }}
                                                 >
                                                     <label style={{ width: 180 }}>
@@ -1733,7 +1745,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             touchUi={true}
                                                             value={selectedChannel}
                                                             themeVariant="light"
-                                                            onChange={val => {
+                                                            onChange={(val) => {
                                                                 const channel = val.value;
 
                                                                 if (channel === 'My Notes') {
@@ -1765,11 +1777,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             responsive={{
                                                                 small: {
-                                                                    display: 'bubble'
+                                                                    display: 'bubble',
                                                                 },
                                                                 medium: {
-                                                                    touchUi: false
-                                                                }
+                                                                    touchUi: false,
+                                                                },
                                                             }}
                                                             data={channelOptions}
                                                         />
@@ -1783,7 +1795,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
-                                                    paddingTop: 40
+                                                    paddingTop: 40,
                                                 }}
                                             >
                                                 <View
@@ -1791,14 +1803,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white'
+                                                        backgroundColor: 'white',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 14,
                                                             color: '#000000',
-                                                            fontFamily: 'Inter'
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         Restrict Access
@@ -1811,7 +1823,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
-                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                         }}
                                                     >
                                                         <Switch
@@ -1822,7 +1834,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#006AFF',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1831,7 +1843,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <View
                                                             style={{
                                                                 flexDirection: 'column',
-                                                                overflow: 'scroll'
+                                                                overflow: 'scroll',
                                                             }}
                                                         >
                                                             <View
@@ -1839,7 +1851,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     width: '100%',
                                                                     padding: 5,
                                                                     height: 'auto',
-                                                                    maxWidth: 350
+                                                                    maxWidth: 350,
                                                                 }}
                                                             >
                                                                 <label>
@@ -1855,11 +1867,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         }}
                                                                         responsive={{
                                                                             small: {
-                                                                                display: 'bubble'
+                                                                                display: 'bubble',
                                                                             },
                                                                             medium: {
-                                                                                touchUi: false
-                                                                            }
+                                                                                touchUi: false,
+                                                                            },
                                                                         }}
                                                                         minWidth={[60, 320]}
                                                                     />
@@ -1876,7 +1888,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
-                                                    paddingTop: 40
+                                                    paddingTop: 40,
                                                 }}
                                             >
                                                 <View
@@ -1884,14 +1896,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white'
+                                                        backgroundColor: 'white',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 14,
                                                             color: '#000000',
-                                                            fontFamily: 'Inter'
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         {PreferredLanguageText('submissionRequired')}
@@ -1904,7 +1916,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
-                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                         }}
                                                     >
                                                         <Switch
@@ -1916,7 +1928,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#006AFF',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1930,7 +1942,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         display: 'flex',
                                                                         flexDirection: 'row',
                                                                         backgroundColor: 'white',
-                                                                        alignItems: 'center'
+                                                                        alignItems: 'center',
                                                                     }}
                                                                 >
                                                                     <Text style={styles.text}>Available</Text>
@@ -1941,28 +1953,30 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         themeVariant="light"
                                                                         // inputComponent="input"
                                                                         inputProps={{
-                                                                            placeholder: 'Please Select...'
+                                                                            placeholder: 'Please Select...',
                                                                         }}
                                                                         onChange={(event: any) => {
                                                                             const date = new Date(event.value);
                                                                             const roundValue = roundSeconds(date);
                                                                             if (date < new Date()) {
-                                                                                Alert('Available date must be set in the future.');
-                                                                                return
-                                                                            };
+                                                                                Alert(
+                                                                                    'Available date must be set in the future.'
+                                                                                );
+                                                                                return;
+                                                                            }
                                                                             setInitiateAt(roundValue);
                                                                         }}
                                                                         responsive={{
                                                                             xsmall: {
                                                                                 controls: ['date', 'time'],
                                                                                 display: 'bottom',
-                                                                                touchUi: true
+                                                                                touchUi: true,
                                                                             },
                                                                             medium: {
                                                                                 controls: ['date', 'time'],
                                                                                 display: 'anchored',
-                                                                                touchUi: false
-                                                                            }
+                                                                                touchUi: false,
+                                                                            },
                                                                         }}
                                                                     />
                                                                 </View>
@@ -1981,7 +1995,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         display: 'flex',
                                                                         flexDirection: 'row',
                                                                         backgroundColor: 'white',
-                                                                        alignItems: 'center'
+                                                                        alignItems: 'center',
                                                                     }}
                                                                 >
                                                                     <Text style={styles.text}>
@@ -1995,12 +2009,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         themeVariant="light"
                                                                         // inputComponent="input"
                                                                         inputProps={{
-                                                                            placeholder: 'Please Select...'
+                                                                            placeholder: 'Please Select...',
                                                                         }}
                                                                         onChange={(event: any) => {
                                                                             const date = new Date(event.value);
                                                                             if (date < new Date()) {
-                                                                                Alert('Deadline must be set in the future.')
+                                                                                Alert(
+                                                                                    'Deadline must be set in the future.'
+                                                                                );
                                                                                 return;
                                                                             }
                                                                             const roundValue = roundSeconds(date);
@@ -2010,13 +2026,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                             xsmall: {
                                                                                 controls: ['date', 'time'],
                                                                                 display: 'bottom',
-                                                                                touchUi: true
+                                                                                touchUi: true,
                                                                             },
                                                                             medium: {
                                                                                 controls: ['date', 'time'],
                                                                                 display: 'anchored',
-                                                                                touchUi: false
-                                                                            }
+                                                                                touchUi: false,
+                                                                            },
                                                                         }}
                                                                     />
                                                                 </View>
@@ -2033,7 +2049,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
-                                                    paddingTop: 40
+                                                    paddingTop: 40,
                                                 }}
                                             >
                                                 <View
@@ -2041,14 +2057,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white'
+                                                        backgroundColor: 'white',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 14,
                                                             color: '#000000',
-                                                            fontFamily: 'Inter'
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         Grade Weight
@@ -2062,7 +2078,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 height: 40,
                                                                 marginRight: 10,
                                                                 flexDirection: 'row',
-                                                                justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                                justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                             }}
                                                         >
                                                             <Switch
@@ -2071,7 +2087,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#006AFF'
+                                                                    true: '#006AFF',
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -2085,7 +2101,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     justifyContent:
                                                                         width < 768 ? 'flex-start' : 'flex-end',
                                                                     backgroundColor: 'white',
-                                                                    alignItems: 'center'
+                                                                    alignItems: 'center',
                                                                 }}
                                                             >
                                                                 <TextInput
@@ -2097,10 +2113,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         fontSize: 14,
                                                                         padding: 15,
                                                                         paddingVertical: 12,
-                                                                        marginTop: 0
+                                                                        marginTop: 0,
                                                                     }}
                                                                     placeholder={'0-100'}
-                                                                    onChangeText={val => setGradeWeight(val)}
+                                                                    onChangeText={(val) => setGradeWeight(val)}
                                                                     placeholderTextColor={'#1F1F1F'}
                                                                 />
                                                                 <Text
@@ -2109,7 +2125,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         color: '#1F1F1F',
                                                                         textAlign: 'left',
                                                                         paddingHorizontal: 10,
-                                                                        fontFamily: 'Inter'
+                                                                        fontFamily: 'Inter',
                                                                     }}
                                                                 >
                                                                     {PreferredLanguageText('percentageOverall')}
@@ -2126,7 +2142,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
-                                                    paddingTop: 40
+                                                    paddingTop: 40,
                                                 }}
                                             >
                                                 <View
@@ -2134,14 +2150,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white'
+                                                        backgroundColor: 'white',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 14,
                                                             color: '#000000',
-                                                            fontFamily: 'Inter'
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         Late Submission
@@ -2155,7 +2171,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 height: 40,
                                                                 marginRight: 10,
                                                                 flexDirection: 'row',
-                                                                justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                                justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                             }}
                                                         >
                                                             <Switch
@@ -2166,7 +2182,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
                                                                     false: '#f2f2f2',
-                                                                    true: '#006AFF'
+                                                                    true: '#006AFF',
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
@@ -2180,7 +2196,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     display: 'flex',
                                                                     flexDirection: 'row',
                                                                     backgroundColor: 'white',
-                                                                    alignItems: 'center'
+                                                                    alignItems: 'center',
                                                                     // marginLeft: 50,
                                                                 }}
                                                             >
@@ -2193,14 +2209,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     themeVariant="light"
                                                                     // inputComponent="input"
                                                                     inputProps={{
-                                                                        placeholder: 'Please Select...'
+                                                                        placeholder: 'Please Select...',
                                                                     }}
                                                                     onChange={(event: any) => {
                                                                         const date = new Date(event.value);
                                                                         if (date < deadline) {
-                                                                            Alert('Late submission date must be set after deadline.')
-                                                                            return
-                                                                        };
+                                                                            Alert(
+                                                                                'Late submission date must be set after deadline.'
+                                                                            );
+                                                                            return;
+                                                                        }
                                                                         const roundValue = roundSeconds(date);
                                                                         setAvailableUntil(roundValue);
                                                                     }}
@@ -2208,13 +2226,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         xsmall: {
                                                                             controls: ['date', 'time'],
                                                                             display: 'bottom',
-                                                                            touchUi: true
+                                                                            touchUi: true,
                                                                         },
                                                                         medium: {
                                                                             controls: ['date', 'time'],
                                                                             display: 'anchored',
-                                                                            touchUi: false
-                                                                        }
+                                                                            touchUi: false,
+                                                                        },
                                                                     }}
                                                                 />
                                                             </View>
@@ -2231,7 +2249,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
-                                                    paddingTop: 40
+                                                    paddingTop: 40,
                                                 }}
                                             >
                                                 <View
@@ -2239,14 +2257,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white'
+                                                        backgroundColor: 'white',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
                                                             fontSize: 14,
                                                             color: '#000000',
-                                                            fontFamily: 'Inter'
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         Unlimited Attempts
@@ -2259,7 +2277,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
-                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                            justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                         }}
                                                     >
                                                         <Switch
@@ -2275,7 +2293,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{ height: 20 }}
                                                             trackColor={{
                                                                 false: '#f2f2f2',
-                                                                true: '#006AFF'
+                                                                true: '#006AFF',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -2288,7 +2306,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 flexDirection: 'row',
                                                                 backgroundColor: 'white',
                                                                 justifyContent: width < 768 ? 'flex-start' : 'flex-end',
-                                                                alignItems: 'center'
+                                                                alignItems: 'center',
                                                             }}
                                                         >
                                                             <Text style={styles.text}>Allowed attempts</Text>
@@ -2301,10 +2319,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     fontSize: 14,
                                                                     padding: 15,
                                                                     paddingVertical: 12,
-                                                                    marginTop: 0
+                                                                    marginTop: 0,
                                                                 }}
                                                                 placeholder={''}
-                                                                onChangeText={val => {
+                                                                onChangeText={(val) => {
                                                                     if (Number.isNaN(Number(val))) return;
                                                                     setAttempts(val);
                                                                 }}
@@ -2320,14 +2338,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                 <View
                                     style={{
-                                        display: 'flex'
+                                        display: 'flex',
                                     }}
                                 >
                                     <View
                                         style={{
                                             width: '100%',
                                             borderRightWidth: 0,
-                                            borderColor: '#f2f2f2'
+                                            borderColor: '#f2f2f2',
                                         }}
                                     >
                                         <View
@@ -2335,7 +2353,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 width: '100%',
                                                 backgroundColor: 'white',
                                                 flexDirection: width < 768 ? 'column' : 'row',
-                                                paddingTop: channels.length === 0 && width < 768 ? 0 : 40
+                                                paddingTop: channels.length === 0 && width < 768 ? 0 : 40,
                                             }}
                                         >
                                             <View
@@ -2343,14 +2361,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: 'white',
                                                 }}
                                             >
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
                                                         color: '#000000',
-                                                        fontFamily: 'Inter'
+                                                        fontFamily: 'Inter',
                                                     }}
                                                 >
                                                     {PreferredLanguageText('category')}
@@ -2360,7 +2378,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     flexDirection: 'row',
                                                     backgroundColor: 'white',
-                                                    alignItems: 'center'
+                                                    alignItems: 'center',
                                                 }}
                                             >
                                                 <View style={{ width: '85%', backgroundColor: 'white' }}>
@@ -2374,10 +2392,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     borderBottomWidth: 1,
                                                                     fontSize: 14,
                                                                     height: '2.75em',
-                                                                    padding: '1em'
+                                                                    padding: '1em',
                                                                 }}
                                                                 placeholder={'Enter Category'}
-                                                                onChangeText={val => {
+                                                                onChangeText={(val) => {
                                                                     setCustomCategory(val);
                                                                 }}
                                                                 placeholderTextColor={'#1F1F1F'}
@@ -2397,11 +2415,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 }}
                                                                 responsive={{
                                                                     small: {
-                                                                        display: 'bubble'
+                                                                        display: 'bubble',
                                                                     },
                                                                     medium: {
-                                                                        touchUi: false
-                                                                    }
+                                                                        touchUi: false,
+                                                                    },
                                                                 }}
                                                             />
                                                         </label>
@@ -2426,7 +2444,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 20,
-                                                                width: '100%'
+                                                                width: '100%',
                                                             }}
                                                         >
                                                             <Ionicons
@@ -2448,14 +2466,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40,
                                             alignItems: width < 1024 ? 'flex-start' : 'center',
-                                            paddingBottom: 15
+                                            paddingBottom: 15,
                                         }}
                                     >
                                         <View
                                             style={{
                                                 flex: 1,
                                                 flexDirection: 'row',
-                                                backgroundColor: 'white'
+                                                backgroundColor: 'white',
                                             }}
                                         >
                                             <Text
@@ -2463,7 +2481,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontSize: 14,
                                                     color: '#000000',
                                                     fontFamily: 'Inter',
-                                                    paddingBottom: 15
+                                                    paddingBottom: 15,
                                                 }}
                                             >
                                                 {PreferredLanguageText('priority')}
@@ -2472,7 +2490,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View
                                             style={{
                                                 flexDirection: 'row',
-                                                backgroundColor: 'white'
+                                                backgroundColor: 'white',
                                             }}
                                         >
                                             <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -2496,7 +2514,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         width: 12,
                                                                         height: 12,
                                                                         borderRadius: 6,
-                                                                        backgroundColor: colorChoices[i]
+                                                                        backgroundColor: colorChoices[i],
                                                                     }}
                                                                     onPress={() => {
                                                                         setColor(i);
@@ -2800,7 +2818,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             width: '100%',
                                             flexDirection: width < 768 ? 'column' : 'row',
-                                            paddingTop: 40
+                                            paddingTop: 40,
                                         }}
                                     >
                                         <View
@@ -2808,14 +2826,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flex: 1,
                                                 flexDirection: 'row',
                                                 paddingBottom: 15,
-                                                backgroundColor: 'white'
+                                                backgroundColor: 'white',
                                             }}
                                         >
                                             <Text
                                                 style={{
                                                     fontSize: 14,
                                                     color: '#000000',
-                                                    fontFamily: 'Inter'
+                                                    fontFamily: 'Inter',
                                                 }}
                                             >
                                                 Timed
@@ -2828,7 +2846,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     height: 40,
                                                     marginRight: 10,
                                                     flexDirection: 'row',
-                                                    justifyContent: width < 768 ? 'flex-start' : 'flex-end'
+                                                    justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                 }}
                                             >
                                                 <Switch
@@ -2838,7 +2856,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             setDuration({
                                                                 hours: 1,
                                                                 minutes: 0,
-                                                                seconds: 0
+                                                                seconds: 0,
                                                             });
                                                         }
                                                         setTimer(!timer);
@@ -2846,7 +2864,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#006AFF'
+                                                        true: '#006AFF',
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2857,7 +2875,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         borderRightWidth: 0,
                                                         paddingTop: 0,
                                                         borderColor: '#f2f2f2',
-                                                        flexDirection: 'row'
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
                                                     <View>
@@ -2865,7 +2883,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onSelect={(hour: any) =>
                                                                 setDuration({
                                                                     ...duration,
-                                                                    hours: hour
+                                                                    hours: hour,
                                                                 })
                                                             }
                                                         >
@@ -2874,7 +2892,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     style={{
                                                                         // fontFamily: "inter",
                                                                         fontSize: 15,
-                                                                        color: '#000000'
+                                                                        color: '#000000',
                                                                     }}
                                                                 >
                                                                     {duration.hours} H{' '}
@@ -2886,7 +2904,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 optionsContainerStyle={{
                                                                     shadowOffset: {
                                                                         width: 2,
-                                                                        height: 2
+                                                                        height: 2,
                                                                     },
                                                                     shadowColor: '#000',
                                                                     // overflow: 'hidden',
@@ -2894,7 +2912,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     shadowRadius: 7,
                                                                     padding: 7,
                                                                     borderWidth: 1,
-                                                                    borderColor: '#CCC'
+                                                                    borderColor: '#CCC',
                                                                 }}
                                                             >
                                                                 {hours.map((hour: any, ind: number) => {
@@ -2912,7 +2930,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onSelect={(min: any) =>
                                                                 setDuration({
                                                                     ...duration,
-                                                                    minutes: min
+                                                                    minutes: min,
                                                                 })
                                                             }
                                                         >
@@ -2921,7 +2939,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     style={{
                                                                         // fontFamily: "inter",
                                                                         fontSize: 15,
-                                                                        color: '#000000'
+                                                                        color: '#000000',
                                                                     }}
                                                                 >
                                                                     {duration.minutes} m{' '}
@@ -2932,7 +2950,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 optionsContainerStyle={{
                                                                     shadowOffset: {
                                                                         width: 2,
-                                                                        height: 2
+                                                                        height: 2,
                                                                     },
                                                                     shadowColor: '#000',
                                                                     // overflow: 'hidden',
@@ -2940,7 +2958,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     shadowRadius: 7,
                                                                     padding: 7,
                                                                     borderWidth: 1,
-                                                                    borderColor: '#CCC'
+                                                                    borderColor: '#CCC',
                                                                 }}
                                                             >
                                                                 {minutes.map((min: any, ind: number) => {
@@ -2965,7 +2983,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             width: '100%',
                                             flexDirection: width < 768 ? 'column' : 'row',
-                                            paddingTop: 40
+                                            paddingTop: 40,
                                         }}
                                     >
                                         <View
@@ -2973,14 +2991,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flex: 1,
                                                 flexDirection: 'row',
                                                 paddingBottom: 15,
-                                                backgroundColor: 'white'
+                                                backgroundColor: 'white',
                                             }}
                                         >
                                             <Text
                                                 style={{
                                                     fontSize: 14,
                                                     color: '#000000',
-                                                    fontFamily: 'Inter'
+                                                    fontFamily: 'Inter',
                                                 }}
                                             >
                                                 Random Order
@@ -2993,7 +3011,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     height: 40,
                                                     flexDirection: 'row',
                                                     justifyContent: width < 768 ? 'flex-start' : 'flex-end',
-                                                    marginRight: 10
+                                                    marginRight: 10,
                                                 }}
                                             >
                                                 <Switch
@@ -3002,7 +3020,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f2f2f2',
-                                                        true: '#006AFF'
+                                                        true: '#006AFF',
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -3016,7 +3034,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 {imported || isQuiz ? (
                                     <View
                                         style={{
-                                            flexDirection: width < 768 ? 'column' : 'row'
+                                            flexDirection: width < 768 ? 'column' : 'row',
                                         }}
                                     >
                                         <View
@@ -3025,7 +3043,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 borderRightWidth: 0,
                                                 borderColor: '#f2f2f2',
                                                 flexDirection: 'row',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}
                                         >
                                             <TextareaAutosize
@@ -3043,7 +3061,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     marginTop: 12,
                                                     marginBottom: 25,
                                                     borderRadius: 1,
-                                                    height: 35
+                                                    height: 35,
                                                 }}
                                                 minRows={1}
                                                 placeholder={PreferredLanguageText('title')}
@@ -3053,7 +3071,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 <TouchableOpacity
                                                     style={{
                                                         marginLeft: Dimensions.get('window').width < 768 ? 20 : 'auto',
-                                                        paddingTop: 15
+                                                        paddingTop: 15,
                                                     }}
                                                     onPress={() => clearAll()}
                                                 >
@@ -3062,7 +3080,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             fontSize: 12,
                                                             lineHeight: 34,
                                                             fontFamily: 'inter',
-                                                            color: '#006AFF'
+                                                            color: '#006AFF',
                                                         }}
                                                     >
                                                         Clear
@@ -3076,7 +3094,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         width: '100%',
                                         minHeight: isQuiz ? 0 : 500,
-                                        backgroundColor: 'white'
+                                        backgroundColor: 'white',
                                     }}
                                     key={imported.toString()}
                                 >
@@ -3084,21 +3102,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View
                                             style={{
                                                 width: '100%',
-                                                flexDirection: 'column'
+                                                flexDirection: 'column',
                                             }}
                                         >
                                             <View
                                                 style={{
                                                     backgroundColor: '#fff',
                                                     flexDirection: 'row',
-                                                    width: '100%'
+                                                    width: '100%',
                                                 }}
                                             >
                                                 <View
                                                     style={{
                                                         width: '100%',
                                                         maxWidth: 600,
-                                                        paddingTop: 15
+                                                        paddingTop: 15,
                                                     }}
                                                 >
                                                     <View key={userId.toString()}>
@@ -3107,8 +3125,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             model={quizInstructions}
                                                             onModelChange={(model: any) => setQuizInstructions(model)}
                                                             config={{
-                                                                key:
-                                                                    'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                                key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                                 attribution: false,
                                                                 placeholderText: 'Quiz Instructions',
                                                                 charCounterCount: false,
@@ -3133,7 +3150,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 toolbarButtons: QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
                                                                 toolbarSticky: false,
                                                                 quickInsertEnabled: false,
-                                                                id: 'XYZ'
+                                                                id: 'XYZ',
                                                             }}
                                                         />
                                                     </View>
@@ -3221,20 +3238,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </View>
                                     ) : imported ? (
                                         type === 'mp4' ||
-                                            type === 'oga' ||
-                                            type === 'mov' ||
-                                            type === 'wmv' ||
-                                            type === 'mp3' ||
-                                            type === 'mov' ||
-                                            type === 'mpeg' ||
-                                            type === 'mp2' ||
-                                            type === 'wav' ? (
+                                        type === 'oga' ||
+                                        type === 'mov' ||
+                                        type === 'wmv' ||
+                                        type === 'mp3' ||
+                                        type === 'mov' ||
+                                        type === 'mpeg' ||
+                                        type === 'mp2' ||
+                                        type === 'wav' ? (
                                             <ReactPlayer
                                                 url={url}
                                                 controls={true}
                                                 onContextMenu={(e: any) => e.preventDefault()}
                                                 config={{
-                                                    file: { attributes: { controlsList: 'nodownload' } }
+                                                    file: { attributes: { controlsList: 'nodownload' } },
                                                 }}
                                                 width={'100%'}
                                                 height={'100%'}
@@ -3251,7 +3268,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         height: Dimensions.get('window').width < 1024 ? '50vh' : '70vh',
                                                         borderWidth: 1,
                                                         borderColor: '#f2f2f2',
-                                                        borderRadius: 1
+                                                        borderRadius: 1,
                                                     }}
                                                 ></div>
                                             </View>
@@ -3272,8 +3289,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 model={cue}
                                                 onModelChange={(model: any) => setCue(model)}
                                                 config={{
-                                                    key:
-                                                        'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                    key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                                                     attribution: false,
                                                     placeholderText: 'Enter Title',
                                                     charCounterCount: true,
@@ -3302,7 +3318,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     tabSpaces: 4,
 
                                                     // TOOLBAR
-                                                    toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
+                                                    toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(
+                                                        Dimensions.get('window').width
+                                                    ),
                                                     toolbarSticky: true,
                                                     htmlAllowedEmptyTags: [
                                                         'textarea',
@@ -3316,7 +3334,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         'span',
                                                         'p',
                                                         'path',
-                                                        'line'
+                                                        'line',
                                                     ],
                                                     htmlAllowedTags: ['.*'],
                                                     htmlAllowedAttrs: ['.*'],
@@ -3335,15 +3353,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             return false;
                                                         },
                                                         'image.beforeUpload': function (images: any) {
-
-                                                            if (images[0].size > (5 * 1024 * 1024)) {
-                                                                alert('Image size must be less than 5mb.')
+                                                            if (images[0].size > 5 * 1024 * 1024) {
+                                                                alert('Image size must be less than 5mb.');
                                                                 return false;
                                                             }
 
                                                             return true;
                                                         },
-                                                    }
+                                                    },
                                                 }}
                                             />
                                         </View>
@@ -3361,7 +3378,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         display: 'flex',
                                         flexDirection: 'row',
                                         height: 50,
-                                        paddingTop: 10
+                                        paddingTop: 10,
                                     }}
                                 >
                                     <TouchableOpacity
@@ -3376,10 +3393,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 await handleCreate();
                                             }
                                         }}
-                                        disabled={isSubmitting || creatingQuiz}
+                                        disabled={isSubmitting || creatingQuiz || props.user.email === disableEmailId}
                                         style={{
                                             borderRadius: 15,
-                                            backgroundColor: 'white'
+                                            backgroundColor: 'white',
                                         }}
                                     >
                                         {channelId === '' ? (
@@ -3395,7 +3412,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontFamily: 'inter',
                                                     overflow: 'hidden',
                                                     height: 35,
-                                                    textTransform: 'uppercase'
+                                                    textTransform: 'uppercase',
                                                 }}
                                             >
                                                 {isSubmitting ? 'Creating...' : 'Create'}
@@ -3413,7 +3430,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     fontFamily: 'inter',
                                                     overflow: 'hidden',
                                                     height: 35,
-                                                    textTransform: 'uppercase'
+                                                    textTransform: 'uppercase',
                                                 }}
                                             >
                                                 {isSubmitting ? 'Creating...' : 'CREATE'}
@@ -3440,7 +3457,7 @@ const styles: any = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         marginTop: 80,
-        lineHeight: 18
+        lineHeight: 18,
     },
     colorContainer: {
         lineHeight: 20,
@@ -3449,7 +3466,7 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     colorContainerOutline: {
         lineHeight: 20,
@@ -3461,7 +3478,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#1F1F1F'
+        borderColor: '#1F1F1F',
     },
     input: {
         width: '100%',
@@ -3471,26 +3488,26 @@ const styles: any = StyleSheet.create({
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 0,
-        marginBottom: 20
+        marginBottom: 20,
     },
     colorBar: {
         width: '100%',
         flexDirection: 'row',
         backgroundColor: 'white',
-        lineHeight: 20
+        lineHeight: 20,
     },
     text: {
         fontSize: 14,
         color: '#1F1F1F',
         textAlign: 'left',
         paddingHorizontal: 10,
-        fontFamily: 'Inter'
+        fontFamily: 'Inter',
     },
     all: {
         fontSize: 12,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white'
-    }
+        backgroundColor: 'white',
+    },
 });

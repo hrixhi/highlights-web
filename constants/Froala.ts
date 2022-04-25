@@ -14,9 +14,9 @@ export const FULL_FLEDGED_TOOLBAR_BUTTONS = (width: number) => {
                 'backgroundColor',
                 'inlineClass',
                 'inlineStyle',
-                'clearFormatting'
+                'clearFormatting',
             ],
-            buttonsVisible: width < 768 ? 3 : 3
+            buttonsVisible: width < 768 ? 3 : 3,
         },
         moreParagraph: {
             buttons: [
@@ -32,9 +32,9 @@ export const FULL_FLEDGED_TOOLBAR_BUTTONS = (width: number) => {
                 'lineHeight',
                 'outdent',
                 'indent',
-                'quote'
+                'quote',
             ],
-            buttonsVisible: width < 768 ? 2 : 3
+            buttonsVisible: width < 768 ? 2 : 3,
         },
         moreRich: {
             buttons: [
@@ -44,18 +44,19 @@ export const FULL_FLEDGED_TOOLBAR_BUTTONS = (width: number) => {
                 'insertTable',
                 'insertVideo',
                 'insertFormula',
+                'insertYoutube',
                 'emoticons',
                 'fontAwesome',
                 'specialCharacters',
                 'embedly',
-                'insertHR'
+                'insertHR',
             ],
-            buttonsVisible: width < 768 ? 3 : 4
+            buttonsVisible: width < 768 ? 3 : 4,
         },
         moreMisc: {
             buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
             align: 'right',
-            buttonsVisible: width < 768 ? 2 : 2
+            buttonsVisible: width < 768 ? 2 : 2,
         },
         pluginsEnabled: [
             'align',
@@ -89,9 +90,9 @@ export const FULL_FLEDGED_TOOLBAR_BUTTONS = (width: number) => {
             'table',
             'url',
             'video',
-            'wordPaste'
-        ]
-    }
+            'wordPaste',
+        ],
+    };
 };
 
 export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {
@@ -107,12 +108,12 @@ export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreParagraph: {
-        buttons: ['formatOL', 'formatUL']
+        buttons: ['formatOL', 'formatUL'],
     },
     moreRich: {
         buttons: [
@@ -122,14 +123,14 @@ export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {
             'insertFormula',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -163,8 +164,8 @@ export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
 
 export const QUIZ_QUESTION_TOOLBAR_BUTTONS = {
@@ -180,12 +181,12 @@ export const QUIZ_QUESTION_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
-        buttons: ['formatOLSimple', 'formatUL']
+        buttons: ['formatOLSimple', 'formatUL'],
     },
     moreRich: {
         buttons: [
@@ -196,14 +197,14 @@ export const QUIZ_QUESTION_TOOLBAR_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 4
+        buttonsVisible: 4,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -237,8 +238,8 @@ export const QUIZ_QUESTION_TOOLBAR_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
 
 export const QUIZ_SOLUTION_TOOLBAR_BUTTONS = {
@@ -254,12 +255,12 @@ export const QUIZ_SOLUTION_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
-        buttons: ['formatOLSimple', 'formatUL']
+        buttons: ['formatOLSimple', 'formatUL'],
     },
     moreRich: {
         buttons: [
@@ -270,14 +271,14 @@ export const QUIZ_SOLUTION_TOOLBAR_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 4
+        buttonsVisible: 4,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -311,8 +312,8 @@ export const QUIZ_SOLUTION_TOOLBAR_BUTTONS = {
         'table',
         'url',
         // 'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
 
 export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
@@ -328,13 +329,13 @@ export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreParagraph: {
         buttons: ['formatOLSimple', 'formatUL'],
-        buttonsVisible: 0
+        buttonsVisible: 0,
     },
     moreRich: {
         buttons: [
@@ -344,14 +345,14 @@ export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -385,8 +386,8 @@ export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
 
 export const HIGHLIGHT_BUTTONS = {
@@ -399,13 +400,13 @@ export const HIGHLIGHT_BUTTONS = {
             'strikeThrough',
             'subscript',
             'superscript',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
         buttons: ['formatOLSimple', 'formatUL'],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreRich: {
         buttons: [
@@ -415,20 +416,17 @@ export const HIGHLIGHT_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
-    pluginsEnabled: [
-        'colors',
-    ]
+    pluginsEnabled: ['colors'],
 };
-
 
 export const INLINE_CHOICE_BUTTONS = {
     moreText: {
@@ -440,13 +438,13 @@ export const INLINE_CHOICE_BUTTONS = {
             'strikeThrough',
             'subscript',
             'superscript',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
         buttons: ['formatOLSimple', 'formatUL'],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreRich: {
         buttons: [
@@ -456,18 +454,16 @@ export const INLINE_CHOICE_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
-    pluginsEnabled: [
-        'colors',
-    ]
+    pluginsEnabled: ['colors'],
 };
 
 export const TEXT_ENTRY_BUTTONS = {
@@ -480,13 +476,13 @@ export const TEXT_ENTRY_BUTTONS = {
             'strikeThrough',
             'subscript',
             'superscript',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
         buttons: ['formatOLSimple', 'formatUL'],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreRich: {
         buttons: [
@@ -496,14 +492,14 @@ export const TEXT_ENTRY_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -537,8 +533,8 @@ export const TEXT_ENTRY_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
 
 export const DISCUSS_POST_TOOLBAR_BUTTONS = {
@@ -554,12 +550,12 @@ export const DISCUSS_POST_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreParagraph: {
-        buttons: ['formatOLSimple', 'formatUL']
+        buttons: ['formatOLSimple', 'formatUL'],
     },
     moreRich: {
         buttons: [
@@ -571,14 +567,14 @@ export const DISCUSS_POST_TOOLBAR_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 3
+        buttonsVisible: 3,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -612,10 +608,9 @@ export const DISCUSS_POST_TOOLBAR_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };
-
 
 export const DISCUSS_REPLY_TOOLBAR_BUTTONS = {
     moreText: {
@@ -630,12 +625,12 @@ export const DISCUSS_REPLY_TOOLBAR_BUTTONS = {
             'fontSize',
             'textColor',
             'backgroundColor',
-            'clearFormatting'
+            'clearFormatting',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreParagraph: {
-        buttons: ['formatOLSimple', 'formatUL']
+        buttons: ['formatOLSimple', 'formatUL'],
     },
     moreRich: {
         buttons: [
@@ -647,14 +642,14 @@ export const DISCUSS_REPLY_TOOLBAR_BUTTONS = {
             'insertLink',
             'emoticons',
             'fontAwesome',
-            'specialCharacters'
+            'specialCharacters',
         ],
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     moreMisc: {
         buttons: ['undo', 'redo'],
         align: 'right',
-        buttonsVisible: 2
+        buttonsVisible: 2,
     },
     pluginsEnabled: [
         'align',
@@ -688,6 +683,6 @@ export const DISCUSS_REPLY_TOOLBAR_BUTTONS = {
         'table',
         'url',
         'video',
-        'wordPaste'
-    ]
+        'wordPaste',
+    ],
 };

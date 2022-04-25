@@ -854,6 +854,7 @@ export const getThreadWithReplies = gql`
                 anonymous
                 title
                 views
+                edited
             }
         }
     }
@@ -1194,6 +1195,7 @@ export const getPastDates = gql`
                 end
                 dateId
                 title
+                recordingLink
             }
         }
     }
@@ -1399,6 +1401,23 @@ export const shareWithAll = gql`
         }
     }
 `;
+
+export const editPastMeeting = gql`
+    mutation ($dateId: String!, $title: String!, $recordingLink: String) {
+        date {
+            editPastMeeting(dateId: $dateId, title: $title, recordingLink: $recordingLink)
+        }
+    }
+`;
+
+export const updateThread = gql`
+    mutation ($threadId: String!, $message: String!, $anonymous: Boolean!) {
+        thread {
+            updateThread(threadId: $threadId, message: $message, anonymous: $anonymous)
+        }
+    }
+`;
+
 // export const isSubInactive = gql`
 //   query($userId: String!, $channelId: String!) {
 //     subscription {

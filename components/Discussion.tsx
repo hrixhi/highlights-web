@@ -167,6 +167,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                 showNewDiscussionPost={props.showNewDiscussionPost}
                 setShowNewDiscussionPost={props.setShowNewDiscussionPost}
+                user={props.user}
             />
         </View>
     );

@@ -200,6 +200,8 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     channelCreatedBy={props.channelCreatedBy}
                     channelColor={props.colorCode}
                     isOwner={props.isOwner}
+                    userId={props.userId}
+                    user={props.user}
                 />
             ) : null}
             {props.activeTab === 'meetings' ? null : (
@@ -218,6 +220,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     date={date}
                     isOwner={props.isOwner}
                     userId={props.userId}
+                    exportScores={props.exportScores}
+                    setExportScores={props.setExportScores}
+                    user={props.user}
                 />
             )}
         </View>

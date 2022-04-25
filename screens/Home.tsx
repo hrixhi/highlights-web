@@ -128,6 +128,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const [selectedWorkspace, setSelectedWorkspace] = useState('');
 
+    const [closingModal, setClosingModal] = useState(false);
+
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
             setEmailValidError(enterValidEmailError);
@@ -860,11 +862,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [cues]);
 
     const openModal = useCallback(
-        (type) => {
+        async (type) => {
+            console.log('selectedWorkspace openModal', selectedWorkspace);
+            if (option === 'Classroom' && selectedWorkspace !== '') {
+                console.log('Set selected workspace', selectedWorkspace);
+                await AsyncStorage.setItem('activeWorkspace', selectedWorkspace);
+                setSelectedWorkspace('');
+            }
+
             setModalType(type);
-            AsyncStorage.setItem('lastopened', type);
+            // AsyncStorage.setItem('lastopened', type);
         },
-        [cues]
+        [cues, selectedWorkspace, option]
     );
 
     const openCueFromCalendar = useCallback(
@@ -922,7 +931,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             openModal('Update');
             setShowHome(false);
         },
-        [subscriptions]
+        [subscriptions, selectedWorkspace]
     );
 
     const reloadCueListAfterUpdate = useCallback(async () => {
@@ -1044,7 +1053,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [cues, updateModalKey, updateModalIndex]);
 
     const closeModal = useCallback(async () => {
+        setClosingModal(true);
+
         setModalType('');
+
+        console.log('Close modal option', option);
+
+        // Check if active workspace
+        if (option === 'Classroom') {
+            const activeWorkspace = await AsyncStorage.getItem('activeWorkspace');
+
+            if (activeWorkspace) {
+                setSelectedWorkspace(activeWorkspace);
+            }
+        }
 
         // Mark as read
         if (modalType === 'Update') {
@@ -1060,7 +1082,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
 
         await loadData();
-    }, [fadeAnimation, modalType]);
+        setClosingModal(false);
+    }, [fadeAnimation, modalType, option]);
 
     const cuesArray: any[] = [];
 
@@ -1639,7 +1662,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 !loadingSubs &&
                 !loadingOrg &&
                 !saveDataInProgress &&
-                !selectedWorkspace &&
+                (!selectedWorkspace || option !== 'Classroom') &&
                 ((option === 'Classroom' && modalType !== 'Create') ||
                 (option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
@@ -1689,7 +1712,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     >
                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
                             {option === 'Classroom' ? (
-                                <Ionicons name="pencil-outline" size={25} />
+                                <Ionicons name="create-outline" size={25} />
                             ) : option === 'To Do' ? (
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Account' && activeAccountTab === 'courses' ? (
@@ -1728,7 +1751,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0,
                         }}
                     >
-                        {loadingCues || loadingUser || loadingSubs || loadingOrg || saveDataInProgress ? (
+                        {loadingCues ||
+                        loadingUser ||
+                        loadingSubs ||
+                        loadingOrg ||
+                        saveDataInProgress ||
+                        closingModal ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
@@ -1854,7 +1882,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 workspaceOptions={workspaceOptions}
                                 activeWorkspaceTab={workspaceActiveTab}
                                 setWorkspaceActiveTab={setWorkspaceActiveTab}
-                                setSelectedWorkspace={setSelectedWorkspace}
+                                selectedWorkspace={selectedWorkspace}
+                                setSelectedWorkspace={(val: any) => {
+                                    setSelectedWorkspace(val);
+                                }}
+                                user={user}
                             />
                         )}
                     </View>
@@ -1891,6 +1923,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         target={target}
                         openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
                         refreshCues={refreshChannelCues}
+                        user={user}
                     />
                 ) : null}
             </View>

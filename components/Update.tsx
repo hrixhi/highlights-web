@@ -16,7 +16,7 @@ import {
     addToFolder,
     deleteFolder,
     // removeFromFolder,
-    getReleaseSubmissionStatus
+    getReleaseSubmissionStatus,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -37,6 +37,7 @@ import InsetShadow from 'react-native-inset-shadow';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { TextInput } from './CustomTextInput';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(1));
@@ -83,9 +84,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
-    const [activeTab, setActiveTab] = useState('Content')
+    const [activeTab, setActiveTab] = useState('Content');
 
-    console.log("Cue Id", props.cue)
+    console.log('Cue Id', props.cue);
 
     // HOOKS
 
@@ -126,8 +127,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         // Filter out current
         if (folderId) {
             filterExisting = filterExisting.filter((cue: any) => {
-                return cue._id !== props.cue._id
-            })
+                return cue._id !== props.cue._id;
+            });
         }
 
         setChannelCues(filterExisting);
@@ -179,10 +180,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             .query({
                 query: getReleaseSubmissionStatus,
                 variables: {
-                    cueId
-                }
+                    cueId,
+                },
             })
-            .then(async res => {
+            .then(async (res) => {
                 if (res.data.cue.getReleaseSubmissionStatus) {
                     // Update cue and refresh
 
@@ -201,7 +202,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     const saveCue = {
                         ...currCue,
-                        releaseSubmission: true
+                        releaseSubmission: true,
                     };
 
                     subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -212,7 +213,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     props.reloadCueListAfterUpdate();
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 // Do nothing
             });
     };
@@ -238,15 +239,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             .query({
                 query: getChannelFolders,
                 variables: {
-                    channelId: props.channelId
-                }
+                    channelId: props.channelId,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data.folder.getFoldersForChannel) {
                     setChannelFolders(res.data.folder.getFoldersForChannel);
                 }
             })
-            .catch(e => {});
+            .catch((e) => {});
     }, [props.channelId]);
 
     /**
@@ -269,16 +270,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     query: getFolderCues,
                     variables: {
                         folderId,
-                        userId: parsedUser._id
-                    }
+                        userId: parsedUser._id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.folder.getCuesById) {
                         setFolderCues(res.data.folder.getCuesById);
                         setLoadingFolderCues(false);
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     setLoadingFolderCues(false);
                 });
 
@@ -286,16 +287,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .query({
                     query: getFolder,
                     variables: {
-                        folderId
-                    }
+                        folderId,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.folder.findById) {
                         setFolder(res.data.folder.findById);
                         setLoadingFolder(false);
                     }
                 })
-                .catch(e => {
+                .catch((e) => {
                     setLoadingFolder(false);
                 });
         }
@@ -322,7 +323,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         const saveCue = {
             ...currCue,
-            releaseSubmission
+            releaseSubmission,
         };
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -351,10 +352,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     query: getUnreadQACount,
                     variables: {
                         userId: parsedUser._id,
-                        cueId
-                    }
+                        cueId,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     // Update cue locally with the new Unread count so that the Unread count reflects in real time
 
                     if (
@@ -379,7 +380,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     const saveCue = {
                         ...currCue,
-                        unreadThreads: res.data.threadStatus.getUnreadQACount
+                        unreadThreads: res.data.threadStatus.getUnreadQACount,
                     };
 
                     subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -394,10 +395,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .query({
                     query: getCueThreads,
                     variables: {
-                        cueId
-                    }
+                        cueId,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     const u = await AsyncStorage.getItem('user');
                     if (u) {
                         const parsedUser = JSON.parse(u);
@@ -431,10 +432,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .query({
                     query: getCueThreads,
                     variables: {
-                        cueId
-                    }
+                        cueId,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     const u = await AsyncStorage.getItem('user');
                     if (u) {
                         const parsedUser = JSON.parse(u);
@@ -453,10 +454,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 .query({
                                     query: getStatuses,
                                     variables: {
-                                        cueId
-                                    }
+                                        cueId,
+                                    },
                                 })
-                                .then(res2 => {
+                                .then((res2) => {
                                     if (res2.data.status && res2.data.status.findByCueId) {
                                         const subs: any[] = [];
                                         const statuses = res2.data.status.findByCueId;
@@ -473,7 +474,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 userId: status.userId,
                                                 submittedAt: status.submittedAt,
                                                 deadline: status.deadline,
-                                                releaseSubmission: status.releaseSubmission
+                                                releaseSubmission: status.releaseSubmission,
                                             });
                                         });
                                         setSubscribers(subs);
@@ -482,7 +483,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setLoading(false);
                                     }
                                 })
-                                .catch(err => {
+                                .catch((err) => {
                                     Alert(unableToLoadStatusesAlert, checkConnectionAlert);
                                     setLoading(false);
                                 });
@@ -494,7 +495,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setLoading(false);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert(unableToLoadCommentsAlert, checkConnectionAlert);
                     setLoading(false);
                 });
@@ -521,10 +522,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             .query({
                 query: getStatuses,
                 variables: {
-                    cueId
-                }
+                    cueId,
+                },
             })
-            .then(res2 => {
+            .then((res2) => {
                 if (res2.data.status && res2.data.status.findByCueId) {
                     const subs: any[] = [];
                     const statuses = res2.data.status.findByCueId;
@@ -540,7 +541,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             userId: status.userId,
                             submittedAt: status.submittedAt,
                             deadline: status.deadline,
-                            releaseSubmission: status.releaseSubmission
+                            releaseSubmission: status.releaseSubmission,
                         });
                     });
                     setSubscribers(subs);
@@ -549,7 +550,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setLoading(false);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 Alert(unableToLoadStatusesAlert, checkConnectionAlert);
                 setLoading(false);
             });
@@ -588,13 +589,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     flexDirection: 'row',
                     shadowOffset: {
                         width: 2,
-                        height: 2
+                        height: 2,
                     },
                     overflow: 'hidden',
                     shadowOpacity: 0.07,
                     shadowRadius: 7,
                     zIndex: 500000,
-                    marginRight: 15
+                    marginRight: 15,
                 }}
             >
                 <View
@@ -605,7 +606,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: '100%',
                         padding: 7,
                         paddingHorizontal: 10,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
                     }}
                 >
                     <View
@@ -614,7 +615,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#fff',
                             display: 'flex',
                             flexDirection: 'row',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <Text style={styles.date2}>
@@ -648,7 +649,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flexDirection: 'row',
                             flex: 1,
                             height: '70%',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <DragHandle />
@@ -662,7 +663,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
-                                color: '#000000'
+                                color: '#000000',
                             }}
                         >
                             {title}
@@ -697,13 +698,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     flexDirection: 'row',
                     shadowOffset: {
                         width: 2,
-                        height: 2
+                        height: 2,
                     },
                     overflow: 'hidden',
                     shadowOpacity: 0.07,
                     shadowRadius: 7,
                     zIndex: 500000,
-                    marginRight: 15
+                    marginRight: 15,
                 }}
             >
                 <View
@@ -714,7 +715,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: '100%',
                         padding: 7,
                         paddingHorizontal: 10,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
                     }}
                 >
                     <View
@@ -723,7 +724,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#fff',
                             display: 'flex',
                             flexDirection: 'row',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <Text style={styles.date2}>
@@ -757,7 +758,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flexDirection: 'row',
                             flex: 1,
                             height: '70%',
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
                         <DragHandle />
@@ -771,7 +772,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
-                                color: value._id === props.cue._id ? '#006AFF' : '#000000'
+                                color: value._id === props.cue._id ? '#006AFF' : '#000000',
                             }}
                         >
                             {title}
@@ -794,7 +795,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#f8f8f8',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    paddingBottom: 15
+                    paddingBottom: 15,
                 }}
                 horizontal={true}
                 showsHorizontalScrollIndicator={true}
@@ -818,7 +819,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#f8f8f8',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    paddingBottom: 15
+                    paddingBottom: 15,
                 }}
                 horizontal={true}
                 showsHorizontalScrollIndicator={true}
@@ -851,7 +852,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Helpter for icon to use in navbar
      */
-     const getNavbarIconName = (op: string) => {
+    const getNavbarIconName = (op: string) => {
         switch (op) {
             case 'Content':
                 if (isQuiz) {
@@ -861,7 +862,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             case 'Details':
                 return activeTab === op ? 'options' : 'options-outline';
             case 'Submission':
-                return activeTab === op ? 'time' : 'time-outline'
+                return activeTab === op ? 'time' : 'time-outline';
             case 'Feedback':
                 return activeTab === op ? 'bar-chart' : 'bar-chart-outline';
             default:
@@ -872,13 +873,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const getNavbarText = (op: string) => {
         switch (op) {
             case 'Content':
-                return isQuiz ? 'Quiz' : (submission && !channelOwner) ? 'Assignment' : 'Content'
+                return isQuiz ? 'Quiz' : submission && !channelOwner ? 'Assignment' : 'Content';
             case 'Details':
-                return 'Details'
+                return 'Details';
             case 'Submission':
-                return 'Submission'
+                return 'Submission';
             case 'Feedback':
-                return submission || isQuiz ? 'Feedback' : 'Feedback'
+                return submission || isQuiz ? 'Feedback' : 'Feedback';
             default:
                 return activeTab === op ? 'person' : 'person-outline';
         }
@@ -886,18 +887,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const getNavbarIconColor = (op: string) => {
         if (op === activeTab) {
-            return '#006AFF'
+            return '#006AFF';
         }
-        return '#fff'
-    }
+        return '#fff';
+    };
 
-
-    const width = Dimensions.get('window').width
+    const width = Dimensions.get('window').width;
 
     /**
      * @description Tabs (Content, Options, Submission, etc)
      */
-     const mobileOptions = (
+    const mobileOptions = (
         <View
             style={{
                 position: 'absolute',
@@ -914,11 +914,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowColor: '#000',
                 shadowOffset: {
                     width: 0,
-                    height: -7
+                    height: -7,
                 },
                 shadowOpacity: 0.12,
                 shadowRadius: 10,
-                zIndex: 500000
+                zIndex: 500000,
             }}
         >
             <TouchableOpacity
@@ -928,14 +928,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     width: (submission && !channelOwner) || channelOwner ? '33%' : '50%',
                     flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                 }}
                 onPress={() => {
                     setShowOptions(false);
                     setViewStatus(false);
                     setShowOriginal(true);
                     setShowComments(false);
-                    setActiveTab('Content')
+                    setActiveTab('Content');
                 }}
             >
                 {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text> */}
@@ -944,15 +944,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{ color: getNavbarIconColor('Content'), marginBottom: 3 }}
                     size={21}
                 />
-                <Text style={{
-                    fontSize: width < 800 ? 11 : 16,
-                    lineHeight: width < 800 ? 11 : 23,
-                    color: getNavbarIconColor('Content'),
-                    fontFamily: 'Inter',
-                    marginBottom: width < 800 ? 0 : 6,
-                    paddingLeft: width < 800 ? 0 : 5
-                }}>
-                    {getNavbarText("Content")}
+                <Text
+                    style={{
+                        fontSize: width < 800 ? 11 : 16,
+                        lineHeight: width < 800 ? 11 : 23,
+                        color: getNavbarIconColor('Content'),
+                        fontFamily: 'Inter',
+                        marginBottom: width < 800 ? 0 : 6,
+                        paddingLeft: width < 800 ? 0 : 5,
+                    }}
+                >
+                    {getNavbarText('Content')}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -969,7 +971,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setViewStatus(false);
                     setShowOriginal(false);
                     setShowComments(false);
-                    setActiveTab('Details')
+                    setActiveTab('Details');
                 }}
             >
                 {/* <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text> */}
@@ -978,15 +980,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{ color: getNavbarIconColor('Details'), marginBottom: 3 }}
                     size={21}
                 />
-                <Text style={{
-                    fontSize: width < 800 ? 11 : 16,
-                    lineHeight: width < 800 ? 11 : 23,
-                    color: getNavbarIconColor('Details'),
-                    fontFamily: 'Inter',
-                    marginBottom: width < 800 ? 0 : 6,
-                    paddingLeft: width < 800 ? 0 : 5
-                }}>
-                    {getNavbarText("Details")}
+                <Text
+                    style={{
+                        fontSize: width < 800 ? 11 : 16,
+                        lineHeight: width < 800 ? 11 : 23,
+                        color: getNavbarIconColor('Details'),
+                        fontFamily: 'Inter',
+                        marginBottom: width < 800 ? 0 : 6,
+                        paddingLeft: width < 800 ? 0 : 5,
+                    }}
+                >
+                    {getNavbarText('Details')}
                 </Text>
             </TouchableOpacity>
             {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
@@ -1008,7 +1012,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                        setActiveTab('Submission')
+                        setActiveTab('Submission');
                     }}
                 >
                     {/* <Text
@@ -1025,20 +1029,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{ color: getNavbarIconColor('Submission'), marginBottom: 3 }}
                         size={21}
                     />
-                    <Text style={{
-                        fontSize: width < 800 ? 11 : 16,
-                        lineHeight: width < 800 ? 11 : 23,
-                        color: getNavbarIconColor('Submission'),
-                        fontFamily: 'Inter',
-                        marginBottom: width < 800 ? 0 : 6,
-                        paddingLeft: width < 800 ? 0 : 5
-                    }}>
-                        {getNavbarText("Submission")}
+                    <Text
+                        style={{
+                            fontSize: width < 800 ? 11 : 16,
+                            lineHeight: width < 800 ? 11 : 23,
+                            color: getNavbarIconColor('Submission'),
+                            fontFamily: 'Inter',
+                            marginBottom: width < 800 ? 0 : 6,
+                            paddingLeft: width < 800 ? 0 : 5,
+                        }}
+                    >
+                        {getNavbarText('Submission')}
                     </Text>
                 </TouchableOpacity>
             )}
             {/* Add Status button here */}
-            {props.channelId === '' || !channelOwner || props.version === 'read' ? null : (
+            {props.channelId === '' || !channelOwner ? null : (
                 <TouchableOpacity
                     // style={viewStatus ? styles.allBlueTabButton : styles.tabButton}
                     style={{
@@ -1053,7 +1059,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                        setActiveTab('Feedback')
+                        setActiveTab('Feedback');
                     }}
                 >
                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text> */}
@@ -1062,21 +1068,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{ color: getNavbarIconColor('Feedback'), marginBottom: 3 }}
                         size={21}
                     />
-                    <Text style={{
-                        fontSize: width < 800 ? 11 : 16,
-                        lineHeight: width < 800 ? 11 : 23,
-                        color: getNavbarIconColor('Feedback'),
-                        fontFamily: 'Inter',
-                        marginBottom: width < 800 ? 0 : 6,
-                        paddingLeft: width < 800 ? 0 : 5
-                    }}>
-                        {getNavbarText("Feedback")}
+                    <Text
+                        style={{
+                            fontSize: width < 800 ? 11 : 16,
+                            lineHeight: width < 800 ? 11 : 23,
+                            color: getNavbarIconColor('Feedback'),
+                            fontFamily: 'Inter',
+                            marginBottom: width < 800 ? 0 : 6,
+                            paddingLeft: width < 800 ? 0 : 5,
+                        }}
+                    >
+                        {getNavbarText('Feedback')}
                     </Text>
                 </TouchableOpacity>
             )}
         </View>
     );
-
 
     /**
      * @description Tabs (Content, Options, Submission, etc)
@@ -1090,33 +1097,33 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 backgroundColor: 'none',
                 paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
                 height: 48,
-                justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start'
+                justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start',
             }}
         >
             <TouchableOpacity
                 style={{
-                    backgroundColor: 'none'
+                    backgroundColor: 'none',
                 }}
                 onPress={() => {
                     setShowOptions(false);
                     setViewStatus(false);
                     setShowOriginal(true);
                     setShowComments(false);
-                    setActiveTab('Content')
+                    setActiveTab('Content');
                 }}
             >
                 <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
-                    backgroundColor: 'none'
+                    backgroundColor: 'none',
                 }}
                 onPress={() => {
                     setShowOptions(true);
                     setViewStatus(false);
                     setShowOriginal(false);
                     setShowComments(false);
-                    setActiveTab('Details')
+                    setActiveTab('Details');
                 }}
             >
                 <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text>
@@ -1124,14 +1131,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {props.channelId === '' || !submission || (channelOwner && submission) || isQuiz ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: 'none'
+                        backgroundColor: 'none',
                     }}
                     onPress={() => {
                         setViewStatus(false);
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                        setActiveTab('Submission')
+                        setActiveTab('Submission');
                     }}
                 >
                     <Text
@@ -1146,17 +1153,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </TouchableOpacity>
             )}
             {/* Add Status button here */}
-            {props.channelId === '' || !channelOwner || props.version === 'read' ? null : (
+            {props.channelId === '' || !channelOwner ? null : (
                 <TouchableOpacity
                     style={{
-                        backgroundColor: 'none'
+                        backgroundColor: 'none',
                     }}
                     onPress={() => {
                         setViewStatus(true);
                         setShowOriginal(false);
                         setShowComments(false);
                         setShowOptions(false);
-                        setActiveTab('Feedback')
+                        setActiveTab('Feedback');
                     }}
                 >
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text>
@@ -1178,7 +1185,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 elevation={500000}
                 containerStyle={{
                     height: 'auto',
-                    zIndex: 500001
+                    zIndex: 500001,
                 }}
             >
                 <View
@@ -1189,7 +1196,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         backgroundColor: '#f8f8f8',
                         paddingVertical: 14,
-                        paddingHorizontal: 10
+                        paddingHorizontal: 10,
                     }}
                 >
                     {/* Render Folder Title */}
@@ -1201,7 +1208,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             color: '#1F1F1F',
                             paddingBottom: 10,
                             width: '100%',
-                            maxWidth: 1024
+                            maxWidth: 1024,
                         }}
                     >
                         {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
@@ -1215,7 +1222,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: '#f8f8f8',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
-                            paddingBottom: 15
+                            paddingBottom: 15,
                         }}
                         horizontal={true}
                         showsHorizontalScrollIndicator={true}
@@ -1232,7 +1239,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 '#f3722c',
                                 '#f8961e',
                                 '#f9c74f',
-                                '#3abb83'
+                                '#3abb83',
                             ].reverse();
 
                             const col = colorChoices[cue.color];
@@ -1250,13 +1257,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         flexDirection: 'row',
                                         shadowOffset: {
                                             width: 2,
-                                            height: 2
+                                            height: 2,
                                         },
                                         overflow: 'hidden',
                                         shadowOpacity: 0.07,
                                         shadowRadius: 7,
                                         zIndex: 500000,
-                                        marginRight: 15
+                                        marginRight: 15,
                                     }}
                                     key={ind.toString()}
                                 >
@@ -1270,7 +1277,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             width: '100%',
                                             padding: 7,
                                             paddingHorizontal: 10,
-                                            backgroundColor: '#fff'
+                                            backgroundColor: '#fff',
                                         }}
                                     >
                                         <View style={styles.dateContainer}>
@@ -1286,7 +1293,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 width: '100%',
                                                 flexDirection: 'row',
                                                 flex: 1,
-                                                height: '70%'
+                                                height: '70%',
                                             }}
                                         >
                                             <Text
@@ -1299,7 +1306,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 20,
                                                     flex: 1,
                                                     marginTop: 5,
-                                                    color: cue._id === props.cue._id ? '#006AFF' : '#000000'
+                                                    color: cue._id === props.cue._id ? '#006AFF' : '#000000',
                                                 }}
                                             >
                                                 {title}
@@ -1328,7 +1335,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowRadius={10}
                 elevation={500000}
                 containerStyle={{
-                    height: 'auto'
+                    height: 'auto',
                 }}
             >
                 <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10, flex: 1 }}>
@@ -1340,7 +1347,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             justifyContent: 'center',
                             backgroundColor: '#f8f8f8',
                             paddingTop: 14,
-                            paddingBottom: 7
+                            paddingBottom: 7,
                         }}
                     >
                         {channelCues.length !== 0 ? (
@@ -1351,7 +1358,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     backgroundColor: '#f8f8f8',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
-                                    paddingBottom: 15
+                                    paddingBottom: 15,
                                 }}
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={true}
@@ -1366,7 +1373,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         '#f3722c',
                                         '#f8961e',
                                         '#f9c74f',
-                                        '#3abb83'
+                                        '#3abb83',
                                     ].reverse();
 
                                     const col = colorChoices[cue.color];
@@ -1384,13 +1391,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flexDirection: 'row',
                                                 shadowOffset: {
                                                     width: 2,
-                                                    height: 2
+                                                    height: 2,
                                                 },
                                                 overflow: 'hidden',
                                                 shadowOpacity: 0.07,
                                                 shadowRadius: 7,
                                                 zIndex: 500000,
-                                                marginRight: 15
+                                                marginRight: 15,
                                             }}
                                             key={ind.toString()}
                                         >
@@ -1403,7 +1410,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     padding: 7,
                                                     paddingHorizontal: 10,
-                                                    backgroundColor: '#fff'
+                                                    backgroundColor: '#fff',
                                                 }}
                                             >
                                                 <View
@@ -1412,7 +1419,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         backgroundColor: '#fff',
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        alignItems: 'center'
+                                                        alignItems: 'center',
                                                     }}
                                                 >
                                                     <Text style={styles.date2}>
@@ -1434,7 +1441,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             setChannelCues(cCues);
                                                         }}
                                                         style={{
-                                                            marginLeft: 'auto'
+                                                            marginLeft: 'auto',
                                                         }}
                                                     >
                                                         <Text style={{ color: '#006AFF', textAlign: 'center' }}>
@@ -1449,7 +1456,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         width: '100%',
                                                         flexDirection: 'row',
                                                         flex: 1,
-                                                        height: '70%'
+                                                        height: '70%',
                                                     }}
                                                 >
                                                     <Text
@@ -1461,7 +1468,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             lineHeight: 20,
                                                             flex: 1,
                                                             marginTop: 5,
-                                                            color: '#000000'
+                                                            color: '#000000',
                                                         }}
                                                     >
                                                         {title}
@@ -1481,7 +1488,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         textAlign: 'center',
                                         fontFamily: 'inter',
                                         backgroundColor: '#f8f8f8',
-                                        paddingVertical: 20
+                                        paddingVertical: 20,
                                     }}
                                 >
                                     No Content to select.
@@ -1500,7 +1507,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 justifyContent: 'center',
                                 backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
-                                paddingBottom: 14
+                                paddingBottom: 14,
                             }}
                         >
                             <SortableList
@@ -1520,7 +1527,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     textAlign: 'center',
                                     fontFamily: 'inter',
                                     backgroundColor: '#f8f8f8',
-                                    paddingVertical: 20
+                                    paddingVertical: 20,
                                 }}
                             >
                                 No selection.
@@ -1545,7 +1552,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowRadius={10}
                 elevation={500000}
                 containerStyle={{
-                    height: 'auto'
+                    height: 'auto',
                 }}
             >
                 <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
@@ -1557,7 +1564,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             justifyContent: 'center',
                             backgroundColor: '#f8f8f8',
                             paddingTop: 14,
-                            paddingBottom: 7
+                            paddingBottom: 7,
                         }}
                     >
                         {channelCues.length !== 0 ? (
@@ -1568,7 +1575,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     backgroundColor: '#f8f8f8',
                                     borderTopLeftRadius: 0,
                                     borderTopRightRadius: 0,
-                                    paddingBottom: 15
+                                    paddingBottom: 15,
                                     // marginTop: 10
                                 }}
                                 horizontal={true}
@@ -1585,7 +1592,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         '#f3722c',
                                         '#f8961e',
                                         '#f9c74f',
-                                        '#3abb83'
+                                        '#3abb83',
                                     ].reverse();
 
                                     const col = colorChoices[cue.color];
@@ -1603,13 +1610,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flexDirection: 'row',
                                                 shadowOffset: {
                                                     width: 2,
-                                                    height: 2
+                                                    height: 2,
                                                 },
                                                 overflow: 'hidden',
                                                 shadowOpacity: 0.07,
                                                 shadowRadius: 7,
                                                 zIndex: 500000,
-                                                marginRight: 15
+                                                marginRight: 15,
                                             }}
                                             key={ind.toString()}
                                         >
@@ -1622,7 +1629,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     padding: 7,
                                                     paddingHorizontal: 10,
-                                                    backgroundColor: '#fff'
+                                                    backgroundColor: '#fff',
                                                 }}
                                             >
                                                 <View
@@ -1631,7 +1638,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         backgroundColor: '#fff',
                                                         display: 'flex',
                                                         flexDirection: 'row',
-                                                        alignItems: 'center'
+                                                        alignItems: 'center',
                                                     }}
                                                 >
                                                     <Text style={styles.date2}>
@@ -1653,7 +1660,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             setChannelCues(cCues);
                                                         }}
                                                         style={{
-                                                            marginLeft: 'auto'
+                                                            marginLeft: 'auto',
                                                         }}
                                                     >
                                                         <Text style={{ color: '#006AFF', textAlign: 'center' }}>
@@ -1668,7 +1675,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         width: '100%',
                                                         flexDirection: 'row',
                                                         flex: 1,
-                                                        height: '70%'
+                                                        height: '70%',
                                                     }}
                                                 >
                                                     <Text
@@ -1680,7 +1687,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             lineHeight: 20,
                                                             flex: 1,
                                                             marginTop: 5,
-                                                            color: '#000000'
+                                                            color: '#000000',
                                                         }}
                                                     >
                                                         {title}
@@ -1700,7 +1707,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         textAlign: 'center',
                                         fontFamily: 'inter',
                                         backgroundColor: '#f8f8f8',
-                                        paddingVertical: 20
+                                        paddingVertical: 20,
                                     }}
                                 >
                                     No Content to select.
@@ -1719,7 +1726,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 justifyContent: 'center',
                                 backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
-                                paddingBottom: 14
+                                paddingBottom: 14,
                             }}
                         >
                             <SortableListUpdate
@@ -1739,7 +1746,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     textAlign: 'center',
                                     fontFamily: 'inter',
                                     backgroundColor: '#f8f8f8',
-                                    paddingVertical: 20
+                                    paddingVertical: 20,
                                 }}
                             >
                                 No selection.
@@ -1765,7 +1772,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 maxHeight: windowHeight,
                 opacity: modalAnimation,
                 borderTopLeftRadius: 0,
-                borderTopRightRadius: 0
+                borderTopRightRadius: 0,
             }}
             key={JSON.stringify(threads)}
         >
@@ -1781,7 +1788,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height:
                             Dimensions.get('window').width < 1024
                                 ? Dimensions.get('window').height - 104
-                                : Dimensions.get('window').height - 52
+                                : Dimensions.get('window').height - 52,
                     }}
                     contentContainerStyle={{
                         borderTopRightRadius: 0,
@@ -1790,7 +1797,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         width: '100%',
                         // maxWidth: 1024,
-                        alignSelf: 'center'
+                        alignSelf: 'center',
                     }}
                 >
                     {/* <View
@@ -1827,41 +1834,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         reloadStatuses={reloadStatuses}
                         setSave={(save: boolean) => setSave(save)}
                         setDelete={(del: boolean) => setDel(del)}
+                        user={props.user}
                     />
-                    {!Number.isNaN(Number(cueId)) || !props.channelId ? (
-                        <View style={{ flex: 1, backgroundColor: 'white' }} />
-                    ) : showComments ? (
-                        <ScrollView
-                            // key={Math.random()}
-                            ref={scroll2}
-                            contentContainerStyle={{
-                                width: '100%',
-                                maxWidth: 1024,
-                                alignSelf: 'center',
-                                height: '100%'
-                            }}
-                            contentOffset={{ x: 0, y: 1 }}
-                            showsVerticalScrollIndicator={false}
-                            overScrollMode={'always'}
-                            alwaysBounceVertical={true}
-                            scrollEnabled={true}
-                            scrollEventThrottle={1}
-                            keyboardDismissMode={'on-drag'}
-                        >
-                            <ThreadsList
-                                channelCreatedBy={props.channelCreatedBy}
-                                key={JSON.stringify(threads)}
-                                threads={threads}
-                                cueId={cueId}
-                                channelId={props.channelId}
-                                channelName={props.filterChoice}
-                                closeModal={() => props.closeModal()}
-                                reload={() => loadThreadsAndStatuses()}
-                                updateQAUnreadCount={() => updateQAUnreadCount()}
-                                type={'Q&A'}
-                            />
-                        </ScrollView>
-                    ) : null}
                     {/* </View> */}
                 </ScrollView>
             ) : (
@@ -1874,7 +1848,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 height: windowHeight - 52,
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0
+                                borderTopLeftRadius: 0,
                             }}
                         >
                             <ScrollView
@@ -1882,7 +1856,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 contentContainerStyle={{
                                     width: '100%',
                                     height: windowHeight - 52,
-                                    alignItems: 'center'
+                                    alignItems: 'center',
                                 }}
                                 showsVerticalScrollIndicator={true}
                                 contentOffset={{ x: 0, y: 1 }}
@@ -1906,6 +1880,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
                                         reloadStatuses={reloadStatuses}
                                         isQuiz={isQuiz}
+                                        user={props.user}
                                     />
                                 </View>
                             </ScrollView>
@@ -1930,8 +1905,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }}
                         style={{
                             backgroundColor: 'none',
-                            paddingLeft: 0
+                            paddingLeft: 0,
                         }}
+                        disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1941,7 +1917,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
                             }}
                         >
                             Edit Folder
@@ -1949,7 +1925,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </TouchableOpacity>
                 ) : null}
                 {/* Create new folder button */}
-                {channelOwner && folderId === '' && !createNewFolder && !editFolder && showOriginal && props.channelId ? (
+                {channelOwner &&
+                folderId === '' &&
+                !createNewFolder &&
+                !editFolder &&
+                showOriginal &&
+                props.channelId ? (
                     <TouchableOpacity
                         onPress={() => {
                             setCreateNewFolder(true);
@@ -1961,8 +1942,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }}
                         style={{
                             backgroundColor: 'none',
-                            paddingLeft: 0
+                            paddingLeft: 0,
                         }}
+                        disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1972,7 +1954,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 fontFamily: 'overpass',
                                 color: '#fff',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
                             }}
                         >
                             New Folder
@@ -1998,10 +1980,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     mutation: addToFolder,
                                     variables: {
                                         cueId: props.cue._id,
-                                        folderId: choice
-                                    }
+                                        folderId: choice,
+                                    },
                                 })
-                                .then(async res => {
+                                .then(async (res) => {
                                     // Update cue locally with the new Unread count so that the Unread count reflects in real time
                                     if (!res.data.folder.addToFolder) {
                                         Alert('Could not add to list. Try again.');
@@ -2011,15 +1993,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                     // Filter out current cue from FolderCuesToDisplay
                                     const filterOutCurrent = folderCuesToDisplay.filter((cue: any) => {
-                                        return cue._id !== props.cue._id
-                                    })
+                                        return cue._id !== props.cue._id;
+                                    });
 
-                                    setFolderCuesToDisplay(filterOutCurrent)
+                                    setFolderCuesToDisplay(filterOutCurrent);
 
                                     setAddingToFolder(false);
                                     setFolderId(choice);
                                 })
-                                .catch(e => {
+                                .catch((e) => {
                                     Alert('Could not add to list. Try again.');
                                     setAddingToFolder(false);
                                 });
@@ -2029,7 +2011,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View
                                 style={{
                                     backgroundColor: 'none',
-                                    paddingLeft: 0
+                                    paddingLeft: 0,
                                 }}
                             >
                                 <Text
@@ -2040,7 +2022,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         fontSize: 12,
                                         fontFamily: 'overpass',
                                         color: '#fff',
-                                        fontWeight: 'bold'
+                                        fontWeight: 'bold',
                                     }}
                                 >
                                     Add to Folder
@@ -2051,7 +2033,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             optionsContainerStyle={{
                                 shadowOffset: {
                                     width: 2,
-                                    height: 2
+                                    height: 2,
                                 },
                                 shadowColor: '#000',
                                 // overflow: 'hidden',
@@ -2059,7 +2041,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 shadowRadius: 7,
                                 padding: 7,
                                 borderWidth: 1,
-                                borderColor: '#CCC'
+                                borderColor: '#CCC',
                             }}
                         >
                             {channelFolders.map((folder: any) => {
@@ -2104,10 +2086,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         mutation: creatFolder,
                                         variables: {
                                             title: newFolderTitle,
-                                            cueIds: selectedCues.map((cue: any) => cue._id)
-                                        }
+                                            cueIds: selectedCues.map((cue: any) => cue._id),
+                                        },
                                     })
-                                    .then(async res => {
+                                    .then(async (res) => {
                                         // Update cue locally with the new Unread count so that the Unread count reflects in real time
 
                                         if (res.data.folder.create === null || res.data.folder.create === '') {
@@ -2122,15 +2104,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                         props.refreshCues();
                                     })
-                                    .catch(e => {
+                                    .catch((e) => {
                                         Alert('Could not create folder. Try again.');
                                         setCreatingFolder(false);
                                     });
                             }}
-                            disabled={creatingFolder}
+                            disabled={creatingFolder || props.user.email === disableEmailId}
                             style={{
                                 backgroundColor: 'none',
-                                paddingLeft: 0
+                                paddingLeft: 0,
                             }}
                         >
                             <Text
@@ -2140,7 +2122,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     textTransform: 'uppercase',
                                     fontSize: 12,
                                     fontFamily: 'overpass',
-                                    color: '#fff'
+                                    color: '#fff',
                                 }}
                             >
                                 {creatingFolder ? '...' : 'Create'}
@@ -2154,7 +2136,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             style={{
                                 backgroundColor: 'none',
-                                paddingLeft: 0
+                                paddingLeft: 0,
                             }}
                         >
                             <Text
@@ -2165,7 +2147,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     fontFamily: 'overpass',
                                     color: '#fff',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
                                 }}
                             >
                                 Cancel
@@ -2187,7 +2169,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style: 'cancel',
                                         onPress: () => {
                                             return;
-                                        }
+                                        },
                                     },
                                     {
                                         text: 'Yes',
@@ -2216,10 +2198,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     variables: {
                                                         title: updateFolderTitle,
                                                         cueIds,
-                                                        folderId
-                                                    }
+                                                        folderId,
+                                                    },
                                                 })
-                                                .then(async res => {
+                                                .then(async (res) => {
                                                     // Update cue locally with the new Unread count so that the Unread count reflects in real time
                                                     if (
                                                         res.data.folder.update === null ||
@@ -2242,18 +2224,18 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                     props.refreshCues();
                                                 })
-                                                .catch(e => {
+                                                .catch((e) => {
                                                     Alert('Could not update folder. Try again.');
                                                     setUpdatingFolder(false);
                                                 });
-                                        }
-                                    }
+                                        },
+                                    },
                                 ]);
                             }}
-                            disabled={updatingFolder}
+                            disabled={updatingFolder || props.user.email === disableEmailId}
                             style={{
                                 backgroundColor: 'none',
-                                paddingLeft: 0
+                                paddingLeft: 0,
                             }}
                         >
                             <Text
@@ -2264,7 +2246,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     fontFamily: 'overpass',
                                     color: '#fff',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
                                 }}
                             >
                                 {creatingFolder ? '...' : 'Update '}
@@ -2279,7 +2261,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style: 'cancel',
                                         onPress: () => {
                                             return;
-                                        }
+                                        },
                                     },
                                     {
                                         text: 'Yes',
@@ -2292,10 +2274,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 .mutate({
                                                     mutation: deleteFolder,
                                                     variables: {
-                                                        folderId
-                                                    }
+                                                        folderId,
+                                                    },
                                                 })
-                                                .then(async res => {
+                                                .then(async (res) => {
                                                     // Update cue locally with the new Unread count so that the Unread count reflects in real time
                                                     if (!res.data.folder.delete) {
                                                         Alert('Could not delete list. Try again.');
@@ -2311,18 +2293,19 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                     props.refreshCues();
                                                 })
-                                                .catch(e => {
+                                                .catch((e) => {
                                                     Alert('Could not delete folder. Try again.');
                                                     setDeletingFolder(false);
                                                 });
-                                        }
-                                    }
+                                        },
+                                    },
                                 ]);
                             }}
                             style={{
                                 backgroundColor: 'none',
-                                paddingLeft: 0
+                                paddingLeft: 0,
                             }}
+                            disabled={props.user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -2332,7 +2315,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     fontFamily: 'overpass',
                                     color: '#fff',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
                                 }}
                             >
                                 {deletingFolder ? '...' : 'Delete'}
@@ -2351,8 +2334,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             style={{
                                 backgroundColor: 'none',
-                                paddingLeft: 0
+                                paddingLeft: 0,
                             }}
+                            disabled={props.user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -2362,7 +2346,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     fontFamily: 'overpass',
                                     color: '#fff',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
                                 }}
                             >
                                 {deletingFolder ? '...' : 'Cancel'}
@@ -2392,11 +2376,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         shadowColor: '#000',
                         shadowOffset: {
                             width: 4,
-                            height: 4
+                            height: 4,
                         },
                         shadowOpacity: 0.12,
                         shadowRadius: 10,
-                        zIndex: 500000
+                        zIndex: 500000,
                     }}
                 >
                     {folderId !== '' &&
@@ -2421,10 +2405,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 shadowColor: '#000',
                                 shadowOffset: {
                                     width: 10,
-                                    height: 10
+                                    height: 10,
                                 },
                                 shadowOpacity: 0.1,
-                                shadowRadius: 15
+                                shadowRadius: 15,
                             }}
                         >
                             <Ionicons
@@ -2440,7 +2424,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 flexDirection: 'row',
                                 paddingTop: 7,
-                                backgroundColor: 'none'
+                                backgroundColor: 'none',
                             }}
                             onPress={() => {
                                 props.closeModal();
@@ -2469,7 +2453,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
-                                    maxWidth: 225
+                                    maxWidth: 225,
                                 }}
                                 autoCompleteType={'xyz'}
                                 placeholderTextColor={'#000'}
@@ -2491,7 +2475,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
-                                    maxWidth: 225
+                                    maxWidth: 225,
                                 }}
                                 autoCompleteType={'xyz'}
                                 placeholderTextColor={'#000'}
@@ -2508,7 +2492,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     backgroundColor: 'none',
                                     justifyContent: 'flex-end',
                                     flexDirection: 'row',
-                                    paddingTop: 8
+                                    paddingTop: 8,
                                 }}
                             >
                                 {((channelOwner && showOriginal && !isQuiz) || showOptions || !props.channelId) &&
@@ -2521,8 +2505,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             paddingLeft: 0,
                                             backgroundColor: 'none',
-                                            marginLeft: 20
+                                            marginLeft: 20,
                                         }}
+                                        disabled={props.user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{
@@ -2532,7 +2517,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
-                                                color: '#fff'
+                                                color: '#fff',
                                             }}
                                         >
                                             SAVE
@@ -2551,8 +2536,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             paddingLeft: 0,
                                             marginLeft: 20,
-                                            backgroundColor: 'none'
+                                            backgroundColor: 'none',
                                         }}
+                                        disabled={props.user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{
@@ -2562,7 +2548,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 textTransform: 'uppercase',
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
-                                                color: '#fff'
+                                                color: '#fff',
                                             }}
                                         >
                                             DELETE
@@ -2579,7 +2565,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8'
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {folderId !== '' &&
@@ -2594,7 +2580,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8'
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {createNewFolder ? renderNewFolderOptions() : null}
@@ -2602,7 +2588,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8'
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {editFolder ? renderEditFolderOptions() : null}
@@ -2618,7 +2604,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 height: windowHeight,
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
-                borderTopRightRadius: 0
+                borderTopRightRadius: 0,
             }}
         >
             {loading ? (
@@ -2631,7 +2617,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         flexDirection: 'column',
                         backgroundColor: 'white',
                         borderTopLeftRadius: 0,
-                        borderTopRightRadius: 0
+                        borderTopRightRadius: 0,
                     }}
                 >
                     <ActivityIndicator color={'#000000'} />
@@ -2647,7 +2633,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: 'white',
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            flex: 1
+                            flex: 1,
                         }}
                     >
                         {ContentView}
@@ -2691,7 +2677,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         height: '30%',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     date2: {
         fontSize: 10,
@@ -2700,6 +2686,6 @@ const styles: any = StyleSheet.create({
         lineHeight: 12,
         textAlign: 'left',
         paddingVertical: 2,
-        flex: 1
-    }
+        flex: 1,
+    },
 });

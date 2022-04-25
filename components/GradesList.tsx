@@ -15,6 +15,8 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import moment from 'moment';
 import ProgressBar from '@ramonak/react-progress-bar';
+import Alert from './Alert';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores));
@@ -40,6 +42,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [sortByOrder, setSortByOrder] = useState(false);
 
     // HOOKS
+    useEffect(() => {
+        if (props.exportScores) {
+            exportGrades();
+            props.setExportScores(false);
+        }
+    }, [props.exportScores]);
 
     useEffect(() => {
         if (sortByOption === 'Name') {
@@ -56,6 +64,23 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     return sortByOrder ? -1 : 1;
                 } else if (aTitle > bTitle) {
                     return sortByOrder ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+
+            setCues(sortCues);
+        } else if (sortByOption === 'Weight') {
+            const sortCues = [...props.cues];
+
+            sortCues.sort((a: any, b: any) => {
+                const aGradeWeight = Number(a.gradeWeight);
+                const bGradeWeight = Number(b.gradeWeight);
+
+                if (aGradeWeight < bGradeWeight) {
+                    return sortByOrder ? 1 : -1;
+                } else if (aGradeWeight > bGradeWeight) {
+                    return sortByOrder ? -1 : 1;
                 } else {
                     return 0;
                 }
@@ -231,9 +256,20 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const days = Math.floor(total / (1000 * 60 * 60 * 24));
 
         if (days > 0) {
-            return days + ' days, ' + hours + ' hours left';
+            return (
+                days + ' day' + (days === 1 ? '' : 's') + ', ' + hours + ' hour' + (hours === 1 ? '' : 's') + ' left'
+            );
         } else if (hours > 0) {
-            return hours + ' hours, ' + minutes + ' minutes left';
+            return (
+                hours +
+                ' hour' +
+                (hours === 1 ? '' : 's') +
+                ', ' +
+                minutes +
+                ' minute' +
+                (minutes === 1 ? '' : 's') +
+                ' left'
+            );
         } else {
             return minutes + ' minutes left';
         }
@@ -245,6 +281,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const exportGrades = () => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
+
+        if (!exportAoa) {
+            Alert('Processing scores. Try again.');
+            return;
+        }
 
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
         const wb = XLSX.utils.book_new();
@@ -317,39 +358,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         );
     };
 
-    const renderTabs = () => {
-        return (
-            <View
-                style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    paddingBottom: 10,
-                    paddingTop: Dimensions.get('window').width < 768 ? 10 : 20,
-                }}
-            >
-                <TouchableOpacity
-                    style={activeTab === 'overview' ? styles.selectedButton : styles.unselectedButton}
-                    onPress={() => {
-                        setActiveTab('overview');
-                    }}
-                >
-                    <Text style={activeTab === 'overview' ? styles.selectedText : styles.unselectedText}>Overview</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={activeTab !== 'overview' ? styles.selectedButton : styles.unselectedButton}
-                    onPress={() => {
-                        setActiveTab('scores');
-                    }}
-                >
-                    <Text style={activeTab !== 'overview' ? styles.selectedText : styles.unselectedText}>
-                        Submissions
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        );
-    };
-
     const renderPerformanceOverview = () => {
         const grade = props.report[props.channelId] ? props.report[props.channelId].score : 0;
         const progress = props.report[props.channelId] ? Number(props.report[props.channelId].total) : 0;
@@ -363,7 +371,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const totalPosts = props.thread[props.channelId] ? props.thread[props.channelId].length : 0;
         const upcomingDeadline =
             props.report[props.channelId] && props.report[props.channelId].upcomingAssessmentDate !== ''
-                ? moment(new Date(props.report[props.channelId].upcomingAssessmentDate)).format('MMMM Do YYYY, h:mm a')
+                ? moment(new Date(props.report[props.channelId].upcomingAssessmentDate)).format('MMM Do, h:mma')
                 : '';
 
         return (
@@ -386,42 +394,80 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         alignItems: 'center',
                     }}
                 >
-                    <Text
+                    <View
                         style={{
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            width: 200,
+                            flexDirection: 'column',
+                            alignItems: 'center',
                         }}
                     >
-                        Grade: {grade}%
-                    </Text>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                            }}
+                        >
+                            Grade
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                                paddingTop: 7,
+                            }}
+                        >
+                            {grade}%
+                        </Text>
+                    </View>
 
                     <View
                         style={{
                             maxWidth: 200,
                             paddingTop: 20,
-                            width: 200,
                         }}
                     >
-                        <Text
+                        <View
                             style={{
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                                paddingBottom: 10,
+                                flexDirection: 'column',
+                                alignItems: 'center',
                             }}
                         >
-                            Progress: {progress}%
-                        </Text>
-                        {progress > 0 ? (
-                            <ProgressBar
-                                completed={progress}
-                                maxCompleted={100}
-                                height={'10px'}
-                                width={'200px'}
-                                isLabelVisible={false}
-                                bgColor={progress >= 100 ? '#35AC78' : '#006AFF'}
-                            />
-                        ) : null}
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Progress
+                            </Text>
+                            <View
+                                style={{
+                                    paddingTop: 7,
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    width: 200,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'Inter',
+                                        fontSize: 18,
+                                        paddingBottom: 5,
+                                    }}
+                                >
+                                    {progress}%
+                                </Text>
+
+                                {progress > 0 ? (
+                                    <ProgressBar
+                                        completed={progress}
+                                        maxCompleted={100}
+                                        height={'10px'}
+                                        width={'200px'}
+                                        isLabelVisible={false}
+                                        bgColor={progress >= 100 ? '#35AC78' : '#006AFF'}
+                                    />
+                                ) : null}
+                            </View>
+                        </View>
                     </View>
                 </View>
 
@@ -432,130 +478,167 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         alignItems: 'center',
                     }}
                 >
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            fontFamily: 'Inter',
-                            width: 200,
-                        }}
-                    >
-                        Total Assessments: {totalAssessments}
-                    </Text>
                     <View
                         style={{
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 12,
+                            }}
+                        >
+                            Next submission
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                                paddingTop: 7,
+                            }}
+                        >
+                            {upcomingDeadline !== '' ? upcomingDeadline : 'N/A'}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            alignItems: 'center',
                             paddingTop: 20,
-                            paddingLeft: 20,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 12,
+                            }}
+                        >
+                            Total Assessments
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                                paddingTop: 7,
+                            }}
+                        >
+                            {totalAssessments}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            paddingTop: 20,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 12,
+                            }}
+                        >
+                            Not Submitted{' '}
+                        </Text>
+                        <Text
+                            style={{
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                                paddingTop: 7,
+                            }}
+                        >
+                            {notSubmitted}
+                        </Text>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        width: '33%',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <View
+                        style={{
                             flexDirection: 'column',
                             width: 200,
                         }}
                     >
                         <View
                             style={{
-                                flexDirection: 'row',
+                                flexDirection: 'column',
                                 alignItems: 'center',
+                                // paddingTop: 20,
                             }}
                         >
-                            {/* <View
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: 10,
-                                    marginRight: 7,
-                                    backgroundColor: '#f94144',
-                                }}
-                            /> */}
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 12,
                                 }}
                             >
-                                Not Submitted: {notSubmitted}
+                                Submitted{' '}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 18,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {submitted}
                             </Text>
                         </View>
                         <View
                             style={{
-                                flexDirection: 'row',
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                paddingTop: 10,
+                                paddingTop: 20,
                             }}
                         >
-                            {/* <View
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: 10,
-                                    marginRight: 7,
-                                    backgroundColor: '#35AC78',
-                                }}
-                            /> */}
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 12,
                                 }}
                             >
-                                Submitted: {submitted}
+                                Late{' '}
                             </Text>
-                        </View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingTop: 10,
-                            }}
-                        >
-                            {/* <View
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: 10,
-                                    marginRight: 7,
-                                    backgroundColor: '#FFC107',
-                                }}
-                            /> */}
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontFamily: 'Inter',
+                                    fontSize: 18,
+                                    paddingTop: 7,
                                 }}
                             >
-                                Late: {late}
+                                {late}
                             </Text>
                         </View>
 
                         <View
                             style={{
-                                flexDirection: 'row',
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                paddingTop: 10,
+                                paddingTop: 20,
                             }}
                         >
-                            {/* <View
-                                style={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: 10,
-                                    marginRight: 7,
-                                    backgroundColor: '#000',
-                                }}
-                            /> */}
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 12,
                                 }}
                             >
-                                Graded: {graded}
+                                Graded{' '}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 18,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {graded}
                             </Text>
                         </View>
                     </View>
-                </View>
-
-                <View
-                    style={{
-                        width: '33%',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Text
+                    {/* <Text
                         style={{
                             fontSize: 14,
                             fontFamily: 'Inter',
@@ -574,9 +657,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }}
                     >
                         Posts: {totalPosts}
-                    </Text>
+                    </Text> */}
 
-                    {upcomingDeadline !== '' ? (
+                    {/* {upcomingDeadline !== '' ? (
                         <View
                             style={{
                                 flexDirection: 'column',
@@ -601,7 +684,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 {upcomingDeadline}
                             </Text>
                         </View>
-                    ) : null}
+                    ) : null} */}
                 </View>
             </View>
         );
@@ -628,7 +711,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 >
                     <View
                         style={{
-                            width: '33%',
+                            width: '25%',
                             padding: 15,
                             backgroundColor: '#f8f8f8',
                         }}
@@ -670,7 +753,49 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     <View
                         style={{
-                            width: '33%',
+                            width: '25%',
+                            padding: 15,
+                            backgroundColor: '#f8f8f8',
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'none',
+                            }}
+                            onPress={() => {
+                                if (sortByOption !== 'Weight') {
+                                    setSortByOption('Weight');
+                                    setSortByOrder(true);
+                                } else {
+                                    setSortByOrder(!sortByOrder);
+                                }
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                    paddingRight: 5,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Weightage
+                            </Text>
+                            {sortByOption === 'Weight' ? (
+                                <Ionicons
+                                    name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
+                                    size={16}
+                                    color={'#1f1f1f'}
+                                />
+                            ) : null}
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={{
+                            width: '25%',
                             padding: 15,
                             backgroundColor: '#f8f8f8',
                         }}
@@ -712,7 +837,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     <View
                         style={{
-                            width: '33%',
+                            width: '25%',
                             padding: 15,
                             backgroundColor: '#f8f8f8',
                         }}
@@ -805,8 +930,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             remaining = 100 - (currentElapsed / totalDifference) * 100;
                         }
 
-                        console.log('remaining', remaining);
-
                         return (
                             <View
                                 key={ind.toString()}
@@ -821,7 +944,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 <View
                                     style={{
-                                        width: '33%',
+                                        width: '25%',
                                         padding: 15,
                                     }}
                                 >
@@ -835,21 +958,29 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         >
                                             {title}
                                         </Text>
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontSize: 10,
-                                                color: '#000000',
-                                                paddingTop: 5,
-                                            }}
-                                        >
-                                            {cue.gradeWeight ? cue.gradeWeight : '0'}%
-                                        </Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View
                                     style={{
-                                        width: '33%',
+                                        width: '25%',
+                                        padding: 15,
+                                    }}
+                                >
+                                    <View>
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                textAlign: 'center',
+                                                fontFamily: 'Inter',
+                                            }}
+                                        >
+                                            {cue.gradeWeight ? cue.gradeWeight : '0'}%
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        width: '25%',
                                         padding: 15,
                                         flexDirection: 'row',
                                         alignItems: 'center',
@@ -921,7 +1052,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             scoreObject !== undefined &&
                                             scoreObject.graded &&
                                             scoreObject.score
-                                                ? scoreObject.score.replace(/\.0+$/, '')
+                                                ? scoreObject.score.replace(/\.0+$/, '') + '%'
                                                 : scoreObject &&
                                                   new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)
                                                 ? 'Late'
@@ -931,7 +1062,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                                 <View
                                     style={{
-                                        width: '33%',
+                                        width: '25%',
                                         padding: 15,
                                     }}
                                 >
@@ -956,7 +1087,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 width: '100%',
                                                             }}
                                                         >
-                                                            {moment(new Date(cue.deadline)).format('MMMM Do, h:mm a')}
+                                                            {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
                                                         </Text>
                                                     </View>
                                                     <View
@@ -981,7 +1112,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 }}
                                                             >
                                                                 {moment(new Date(cue.availableUntil)).format(
-                                                                    'MMMM Do, h:mm a'
+                                                                    'MMM Do, h:mm a'
                                                                 )}
                                                             </Text>
                                                         </Text>
@@ -994,7 +1125,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         textAlign: 'center',
                                                     }}
                                                 >
-                                                    {moment(new Date(cue.deadline)).format('MMMM Do, h:mm a')}
+                                                    {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
                                                 </Text>
                                             )}
                                         </View>
@@ -1045,7 +1176,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         textAlign: 'center',
                                                     }}
                                                 >
-                                                    {moment(new Date(cue.initiateAt)).format('MMMM Do')}
+                                                    {moment(new Date(cue.initiateAt)).format('MMM Do')}
                                                 </Text>
                                                 <Text
                                                     style={{
@@ -1053,7 +1184,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         textAlign: 'center',
                                                     }}
                                                 >
-                                                    {moment(new Date(cue.deadline)).format('MMMM Do, h:mm a')}
+                                                    {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
                                                 </Text>
                                             </View>
                                         </View>
@@ -1085,7 +1216,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     maxCompleted={100}
                                                     height={'10px'}
                                                     isLabelVisible={false}
-                                                    bgColor={'#006AFF'}
+                                                    bgColor={'#FFC107'}
                                                     dir="rtl"
                                                 />
                                             </View>
@@ -1104,7 +1235,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         textAlign: 'center',
                                                     }}
                                                 >
-                                                    {moment(new Date(cue.deadline)).format('MMMM Do')}
+                                                    {moment(new Date(cue.deadline)).format('MMM Do')}
                                                 </Text>
                                                 <Text
                                                     style={{
@@ -1112,7 +1243,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         textAlign: 'center',
                                                     }}
                                                 >
-                                                    {moment(new Date(cue.availableUntil)).format('MMMM Do, h:mm a')}
+                                                    {moment(new Date(cue.availableUntil)).format('MMM Do, h:mm a')}
                                                 </Text>
                                             </View>
                                         </View>
@@ -1359,6 +1490,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 onPress={() => {
                                                                     modifyGrade();
                                                                 }}
+                                                                disabled={props.user.email === disableEmailId}
                                                             >
                                                                 <Ionicons
                                                                     name="checkmark-circle-outline"
@@ -1409,7 +1541,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             {scoreObject &&
                                                             scoreObject !== undefined &&
                                                             scoreObject.graded &&
-                                                            scoreObject.score.replace(/\.0+$/, '')
+                                                            scoreObject.score.replace(/\.0+$/, '') + '%'
                                                                 ? scoreObject.score
                                                                 : !scoreObject || !scoreObject.cueId
                                                                 ? 'N/A'
@@ -1432,7 +1564,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             scoreObject !== undefined &&
                                                             scoreObject.graded &&
                                                             scoreObject.score
-                                                                ? scoreObject.score.replace(/\.0+$/, '')
+                                                                ? scoreObject.score.replace(/\.0+$/, '') + '%'
                                                                 : scoreObject &&
                                                                   new Date(parseInt(scoreObject.submittedAt)) >=
                                                                       new Date(cue.deadline)
@@ -1495,7 +1627,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         style={{
                             width: '100%',
                             color: '#1F1F1F',
-                            fontSize: 18,
+                            fontSize: 16,
                             paddingVertical: 100,
                             paddingHorizontal: 5,
                             fontFamily: 'inter',
@@ -1535,9 +1667,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     );
 };
 
-export default React.memo(GradesList, (prev, next) => {
-    return _.isEqual(prev.grades, next.grades);
-});
+export default GradesList;
 
 const stylesObject: any = (isOwner: any) =>
     StyleSheet.create({

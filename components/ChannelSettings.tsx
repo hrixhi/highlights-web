@@ -41,6 +41,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 import InviteByEmailModal from './InviteByEmailModal';
+import { disableEmailId } from '../constants/zoomCredentials';
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [loadingOrg, setLoadingOrg] = useState(true);
@@ -1273,6 +1274,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         overflow: 'hidden',
                                         height: 35,
                                     }}
+                                    disabled={props.user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
@@ -1311,99 +1313,107 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             minHeight: 100,
                         }}
                     >
-                        <View style={{ backgroundColor: 'white' }}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 14,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                        marginRight: 8,
-                                    }}
-                                >
-                                    Access Code
-                                </Text>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert('Share this code so people can join your course directly.');
-                                    }}
-                                >
-                                    <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                </TouchableOpacity>
-                            </View>
-
-                            <View
-                                style={{
-                                    width: '100%',
-                                    flexDirection: 'row',
-                                    justifyContent:
-                                        Dimensions.get('window').width < 768 ? 'space-between' : 'flex-start',
-                                    alignItems: 'center',
-                                    marginTop: 10,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: Dimensions.get('window').width < 768 ? 26 : 30,
-                                        fontFamily: 'inter',
-                                        fontWeight: 'bold',
-                                    }}
-                                >
-                                    {accessCode}
-                                </Text>
-
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <View style={{ backgroundColor: 'white' }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
-                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    <TouchableOpacity
+                                    <Text
                                         style={{
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            marginRight: 10,
+                                            fontSize: 14,
+                                            color: '#000000',
+                                            fontFamily: 'Inter',
+                                            marginRight: 8,
                                         }}
+                                    >
+                                        Access Code
+                                    </Text>
+                                    <TouchableOpacity
                                         onPress={() => {
-                                            navigator.clipboard.writeText(accessCode);
-                                            setCopied(true);
+                                            Alert('Share this code so people can join your course directly.');
                                         }}
                                     >
-                                        <Ionicons
-                                            name={copied ? 'checkmark-circle-outline' : 'clipboard-outline'}
-                                            size={18}
-                                            color={copied ? '#35AC78' : '#006AFF'}
-                                        />
-                                        <Text
-                                            style={{
-                                                color: copied ? '#35AC78' : '#006AFF',
-                                                fontSize: 10,
-                                                paddingTop: 3,
-                                            }}
-                                        >
-                                            {' '}
-                                            {copied ? 'Copied' : 'Copy'}{' '}
-                                        </Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity
-                                        style={{
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                        }}
-                                        onPress={() => handleResetCode()}
-                                    >
-                                        <Ionicons name="refresh-outline" size={18} color={'#006AFF'} />
-                                        <Text style={{ color: '#006AFF', fontSize: 10, paddingTop: 3 }}> Reset </Text>
+                                        <Ionicons name="help-circle-outline" size={18} color="#939699" />
                                     </TouchableOpacity>
                                 </View>
+
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        flexDirection: 'row',
+                                        justifyContent:
+                                            Dimensions.get('window').width < 768 ? 'space-between' : 'flex-start',
+                                        alignItems: 'center',
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: Dimensions.get('window').width < 768 ? 26 : 30,
+                                            fontFamily: 'inter',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {accessCode}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                                    marginLeft: 'auto',
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={{
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        marginRight: 10,
+                                    }}
+                                    onPress={() => {
+                                        navigator.clipboard.writeText(accessCode);
+                                        setCopied(true);
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={copied ? 'checkmark-circle-outline' : 'clipboard-outline'}
+                                        size={18}
+                                        color={copied ? '#35AC78' : '#006AFF'}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: copied ? '#35AC78' : '#006AFF',
+                                            fontSize: 10,
+                                            paddingTop: 3,
+                                        }}
+                                    >
+                                        {' '}
+                                        {copied ? 'Copied' : 'Copy'}{' '}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={{
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                    onPress={() => handleResetCode()}
+                                >
+                                    <Ionicons name="refresh-outline" size={18} color={'#006AFF'} />
+                                    <Text style={{ color: '#006AFF', fontSize: 10, paddingTop: 3 }}> Reset </Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
+
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -1800,7 +1810,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     overflow: 'hidden',
                                     height: 35,
                                 }}
-                                disabled={isUpdatingChannel}
+                                disabled={isUpdatingChannel || props.user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1878,6 +1888,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         height: 35,
                                         marginTop: 15,
                                     }}
+                                    disabled={props.user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
