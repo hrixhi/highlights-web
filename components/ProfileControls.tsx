@@ -463,9 +463,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#006AFF',
+                                            color: '#007AFF',
                                             fontSize: 12,
-                                            // backgroundColor: '#006AFF',
+                                            // backgroundColor: '#007AFF',
                                             // paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             // height: 35,
@@ -519,10 +519,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
                             style={{
-                                paddingVertical: 10,
-                                paddingLeft: 5,
-                                borderBottomWidth: 1,
-                                borderBottomColor: '#f2f2f2',
+                                padding: 10,
+                                borderWidth: 1,
+                                borderColor: '#cccccc',
+                                borderRadius: 2,
                             }}
                         />
                         {/* <Text style={{
@@ -558,7 +558,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{
                                     fontSize: 14,
                                     marginBottom: 10
-                                    // color: '#006AFF'
+                                    // color: '#007AFF'
                                 }}>
                                 Zoom account linked
                             </Text>
@@ -579,8 +579,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
+                            // overflow: 'hidden',
+                            // height: 35,
                             marginTop: 15,
                             justifyContent: 'center',
                             flexDirection: 'row',
@@ -589,17 +589,19 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     >
                         <Text
                             style={{
+                                fontWeight: 'bold',
                                 textAlign: 'center',
-                                lineHeight: 34,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#006AFF',
-                                paddingHorizontal: 20,
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                 fontFamily: 'inter',
-                                height: 35,
-                                borderRadius: 15,
-                                width: 175,
+                                overflow: 'hidden',
+                                paddingVertical: 14,
                                 textTransform: 'uppercase',
+                                width: 175,
                             }}
                         >
                             {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
@@ -610,8 +612,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => props.setShowSavePassword(!props.showSavePassword)}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
@@ -621,19 +623,19 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         >
                             <Text
                                 style={{
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
+                                    borderColor: '#000',
                                     borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
+                                    color: '#000',
                                     backgroundColor: '#fff',
-                                    fontSize: 12,
-                                    width: 175,
+                                    fontSize: 11,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    paddingVertical: 14,
                                     textTransform: 'uppercase',
+                                    width: 175,
                                 }}
                             >
                                 Reset password
@@ -645,8 +647,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => handleZoomAuth()}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
@@ -657,18 +659,17 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
+                                    // borderColor: '#000',
+                                    // borderWidth: 1,
+                                    color: '#000',
+                                    // backgroundColor: '#fff',
+                                    fontSize: 14,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
-                                    backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    // overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'capitalize',
                                     width: 175,
-                                    textTransform: 'uppercase',
                                 }}
                             >
                                 Connect Zoom
@@ -693,8 +694,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
@@ -705,18 +706,17 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
+                                    // borderColor: '#000',
+                                    // borderWidth: 1,
+                                    color: '#000',
+                                    // backgroundColor: '#fff',
+                                    fontSize: 14,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
-                                    backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    // overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'capitalize',
                                     width: 175,
-                                    textTransform: 'uppercase',
                                 }}
                             >
                                 Disconnect Zoom
@@ -743,10 +743,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#006AFF',
+                                    color: '#007AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#006AFF',
+                                    borderColor: '#007AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     width: 175,
@@ -763,8 +763,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => logout()}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 marginBottom: 50,
                                 width: '100%',
@@ -773,11 +773,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 alignItems: 'center',
                             }}
                         >
-                            {/* <Ionicons name="log-out-outline" color="#006AFF" style={{ marginRight: 10 }} size={18} /> */}
+                            {/* <Ionicons name="log-out-outline" color="#007AFF" style={{ marginRight: 10 }} size={18} /> */}
                             <Text
                                 style={{
                                     fontSize: 14,
-                                    color: '#006AFF',
+                                    color: '#000',
+                                    fontFamily: 'Inter',
                                 }}
                             >
                                 Sign Out

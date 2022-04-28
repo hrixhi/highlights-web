@@ -351,7 +351,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 isOpen={showEditMeetingModal}
                 buttons={[
                     {
-                        text: 'UPDATE',
+                        text: 'Update',
+                        color: 'dark',
                         handler: function (event) {
                             // props.onSend(message, customCategory, isPrivate);
                             updatePastMeeting();
@@ -359,7 +360,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         disabled: props.user.email === disableEmailId,
                     },
                     {
-                        text: 'CANCEL',
+                        text: 'Cancel',
+                        color: 'dark',
                         handler: function (event) {
                             setEditMeeting(false);
                             setEditMeetingTopic('');
@@ -414,8 +416,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     padding: 10,
                                     fontSize: 14,
-                                    borderColor: '#f2f2f2',
-                                    borderBottomWidth: 1,
+                                    borderColor: '#ccc',
+                                    borderWidth: 1,
+                                    borderRadius: 2,
+                                    backgroundColor: '#fff',
                                 }}
                                 value={editMeetingTopic}
                                 placeholder={''}
@@ -467,8 +471,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     padding: 10,
                                     fontSize: 14,
-                                    borderColor: '#f2f2f2',
-                                    borderBottomWidth: 1,
+                                    borderColor: '#ccc',
+                                    borderWidth: 1,
+                                    borderRadius: 2,
+                                    backgroundColor: '#fff',
                                 }}
                                 value={editMeetingRecordingLink}
                                 placeholder={''}
@@ -526,9 +532,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: '100%',
                     backgroundColor: 'white',
                     maxHeight: 500,
-                    borderRadius: 8,
+                    borderRadius: 2,
                     borderWidth: 1,
-                    borderColor: '#efefef',
+                    borderColor: '#cccccc',
                     zIndex: 5000000,
                 }}
                 key={JSON.stringify(allChannelAttendances)}
@@ -648,7 +654,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     paddingTop: 4,
                                                 }}
                                             >
-                                                <Ionicons name="videocam-outline" color={'#006AFF'} size={15} />
+                                                <Ionicons name="videocam-outline" color={'#000'} size={15} />
                                             </Text>
                                         ) : null}
                                     </TouchableOpacity>
@@ -729,11 +735,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     }}
                                                 >
                                                     {attendanceObject ? (
-                                                        <Ionicons
-                                                            name="checkmark-outline"
-                                                            size={15}
-                                                            color={'#006AFF'}
-                                                        />
+                                                        <Ionicons name="checkmark-outline" size={15} color={'#000'} />
                                                     ) : props.isOwner ? (
                                                         <Ionicons
                                                             name="checkmark-outline"
@@ -978,11 +980,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 window.open(meeting.recordingLink, '_blank');
                                             }}
                                         >
-                                            <Ionicons name="videocam-outline" color={'#006AFF'} size={15} />
+                                            <Ionicons name="videocam-outline" color={'#000'} size={15} />
                                             <Text
                                                 style={{
                                                     paddingLeft: 4,
-                                                    color: '#006AFF',
+                                                    color: '#000',
                                                     fontSize: 11,
                                                 }}
                                             >
@@ -1033,7 +1035,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}
                                     >
                                         {attendanceObject ? (
-                                            <Ionicons name="checkmark-outline" size={15} color={'#006AFF'} />
+                                            <Ionicons name="checkmark-outline" size={15} color={'#000'} />
                                         ) : (
                                             '-'
                                         )}
@@ -1146,6 +1148,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             paddingBottom: 30,
                             width: '100%',
                             justifyContent: 'flex-end',
+                            alignItems: 'center',
                         }}
                     >
                         <View style={{ backgroundColor: '#fff' }}>
@@ -1187,8 +1190,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: '#fff',
-                                    overflow: 'hidden',
-                                    height: 35,
+                                    // overflow: 'hidden',
+                                    // height: 35,
                                     justifyContent: 'center',
                                     flexDirection: 'row',
                                 }}
@@ -1198,17 +1201,19 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 <Text
                                     style={{
+                                        fontWeight: 'bold',
                                         textAlign: 'center',
-                                        lineHeight: 34,
-                                        color: '#006AFF',
-                                        fontSize: 12,
-                                        borderColor: '#006AFF',
+                                        borderColor: '#000',
                                         borderWidth: 1,
-                                        paddingHorizontal: 20,
+                                        color: '#000',
+                                        backgroundColor: '#fff',
+                                        fontSize: 11,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                         fontFamily: 'inter',
-                                        height: 35,
-                                        borderRadius: 15,
+                                        overflow: 'hidden',
+                                        paddingVertical: 14,
                                         textTransform: 'uppercase',
+                                        width: 120,
                                     }}
                                 >
                                     EXPORT

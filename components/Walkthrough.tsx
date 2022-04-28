@@ -325,7 +325,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'row',
                             width: '100%',
                             alignSelf: 'center',
-                            maxWidth: 400,
+                            maxWidth: 1024,
+                            paddingLeft: 10,
                             height: 50,
                             marginBottom: 10,
                             marginTop: 20,
@@ -376,7 +377,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                 </View>
             </View>
-            {/* <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" /> */}
+            {/* <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#007AFF" /> */}
         </View>
     );
 };

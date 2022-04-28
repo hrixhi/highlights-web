@@ -484,7 +484,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: 'white',
+                        backgroundColor: '#f8f8f8',
                         marginRight: 15,
                     }}
                 >
@@ -500,7 +500,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: 'white',
+                        backgroundColor: '#f8f8f8',
                         flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column',
                         alignItems: Dimensions.get('window').width < 768 ? 'center' : 'flex-end',
                         justifyContent: 'flex-start',
@@ -520,8 +520,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: '#f2f2f2',
-                            true: '#006AFF',
+                            false: '#fff',
+                            true: '#000',
                         }}
                         activeThumbColor="white"
                     />
@@ -652,7 +652,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: 'white',
+                        backgroundColor: '#f8f8f8',
                         marginRight: 15,
                     }}
                 >
@@ -668,7 +668,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: 'white',
+                        backgroundColor: '#f8f8f8',
                         height: 40,
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
@@ -681,8 +681,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: '#f2f2f2',
-                            true: '#006AFF',
+                            false: '#fff',
+                            true: '#000',
                         }}
                         activeThumbColor="white"
                     />
@@ -728,8 +728,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         fontSize: 14,
                         paddingTop: 12,
                         paddingBottom: 12,
-                        borderRadius: 1,
-                        borderBottom: '1px solid #f2f2f2',
+                        borderRadius: 2,
+                        borderBottom: '1px solid #ccc',
                         width: Dimensions.get('window').width < 768 ? '100%' : '60%',
                         maxWidth: Dimensions.get('window').width < 768 ? '100%' : '60%',
                         minWidth: Dimensions.get('window').width < 768 ? '100%' : '60%',
@@ -1051,6 +1051,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         width: 200,
         minWidth: 200,
         margin: 15,
+        backgroundColor: '#fff',
     });
 
     const reorder = (list: any, startIndex: any, endIndex: any) => {
@@ -1130,59 +1131,66 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     onClose={() => setShowEquationEditor(false)}
                     onInsertEquation={insertEquation}
                 />
-
-                <FroalaEditor
-                    ref={RichText}
-                    model={editQuestionContent}
-                    onModelChange={(model: any) => {
-                        setEditQuestionContent(model);
+                <View
+                    style={{
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                        borderRadius: 2,
                     }}
-                    config={{
-                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                        attribution: false,
-                        placeholderText: 'Problem',
-                        charCounterCount: false,
-                        zIndex: 2003,
-                        // immediateReactModelUpdate: true,
-                        heightMin: 200,
-                        fileUpload: false,
-                        videoUpload: true,
-                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                        imageUploadParam: 'file',
-                        imageUploadParams: { userId: props.userId },
-                        imageUploadMethod: 'POST',
-                        imageMaxSize: 5 * 1024 * 1024,
-                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                        // VIDEO UPLOAD
-                        videoMaxSize: 20 * 1024 * 1024,
-                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
-                        paragraphFormatSelection: true,
-                        // Default Font Size
-                        fontSizeDefaultSelection: '24',
-                        spellcheck: true,
-                        tabSpaces: 4,
+                >
+                    <FroalaEditor
+                        ref={RichText}
+                        model={editQuestionContent}
+                        onModelChange={(model: any) => {
+                            setEditQuestionContent(model);
+                        }}
+                        config={{
+                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                            attribution: false,
+                            placeholderText: 'Problem',
+                            charCounterCount: false,
+                            zIndex: 2003,
+                            // immediateReactModelUpdate: true,
+                            heightMin: 150,
+                            fileUpload: false,
+                            videoUpload: true,
+                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                            imageUploadParam: 'file',
+                            imageUploadParams: { userId: props.userId },
+                            imageUploadMethod: 'POST',
+                            imageMaxSize: 5 * 1024 * 1024,
+                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                            // VIDEO UPLOAD
+                            videoMaxSize: 20 * 1024 * 1024,
+                            videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
+                            paragraphFormatSelection: true,
+                            // Default Font Size
+                            fontSizeDefaultSelection: '24',
+                            spellcheck: true,
+                            tabSpaces: 4,
 
-                        // TOOLBAR
-                        toolbarButtons: QUIZ_QUESTION_TOOLBAR_BUTTONS,
-                        toolbarSticky: false,
-                        quickInsertEnabled: false,
-                        events: {
-                            'video.beforeUpload': function (videos: any) {
-                                handleVideoImport(videos, index);
+                            // TOOLBAR
+                            toolbarButtons: QUIZ_QUESTION_TOOLBAR_BUTTONS,
+                            toolbarSticky: false,
+                            quickInsertEnabled: false,
+                            events: {
+                                'video.beforeUpload': function (videos: any) {
+                                    handleVideoImport(videos, index);
 
-                                return false;
-                            },
-                            'image.beforeUpload': function (images: any) {
-                                if (images[0].size > 5 * 1024 * 1024) {
-                                    alert('Image size must be less than 5mb.');
                                     return false;
-                                }
+                                },
+                                'image.beforeUpload': function (images: any) {
+                                    if (images[0].size > 5 * 1024 * 1024) {
+                                        alert('Image size must be less than 5mb.');
+                                        return false;
+                                    }
 
-                                return true;
+                                    return true;
+                                },
                             },
-                        },
-                    }}
-                />
+                        }}
+                    />
+                </View>
             </View>
         );
     };
@@ -1302,7 +1310,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: 'white',
+                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <ActivityIndicator color={'#1F1F1F'} />
@@ -1314,7 +1322,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <View
             style={{
                 width: '100%',
-                backgroundColor: 'white',
+                backgroundColor: '#f8f8f8',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
@@ -1327,36 +1335,45 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             ) : null}
             <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 25, paddingTop: 15 }}>
                 {props.isOwner ? (
-                    <FroalaEditor
-                        model={instructions}
-                        onModelChange={(model: any) => setInstructions(model)}
-                        config={{
-                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                            attribution: false,
-                            placeholderText: 'Quiz Instructions',
-                            charCounterCount: false,
-                            zIndex: 2003,
-                            // immediateReactModelUpdate: true,
-                            heightMin: 200,
-                            fileUpload: false,
-                            videoUpload: false,
-                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                            imageUploadParam: 'file',
-                            imageUploadParams: { userId: props.userId },
-                            imageUploadMethod: 'POST',
-                            imageMaxSize: 5 * 1024 * 1024,
-                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                            paragraphFormatSelection: true,
-                            // Default Font Size
-                            fontSizeDefaultSelection: '24',
-                            spellcheck: true,
-                            tabSpaces: 4,
-                            // TOOLBAR
-                            toolbarButtons: QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
-                            toolbarSticky: false,
-                            quickInsertEnabled: false,
+                    <View
+                        style={{
+                            borderColor: '#cccccc',
+                            borderRadius: 2,
+                            borderWidth: 1,
+                            maxWidth: 600,
                         }}
-                    />
+                    >
+                        <FroalaEditor
+                            model={instructions}
+                            onModelChange={(model: any) => setInstructions(model)}
+                            config={{
+                                key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                attribution: false,
+                                placeholderText: 'Quiz Instructions',
+                                charCounterCount: false,
+                                zIndex: 2003,
+                                // immediateReactModelUpdate: true,
+                                heightMin: 120,
+                                fileUpload: false,
+                                videoUpload: false,
+                                imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                                imageUploadParam: 'file',
+                                imageUploadParams: { userId: props.userId },
+                                imageUploadMethod: 'POST',
+                                imageMaxSize: 5 * 1024 * 1024,
+                                imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                paragraphFormatSelection: true,
+                                // Default Font Size
+                                fontSizeDefaultSelection: '24',
+                                spellcheck: true,
+                                tabSpaces: 4,
+                                // TOOLBAR
+                                toolbarButtons: QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
+                                toolbarSticky: false,
+                                quickInsertEnabled: false,
+                            }}
+                        />
+                    </View>
                 ) : instructions !== '' ? (
                     <Text
                         style={{
@@ -1466,11 +1483,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return (
                     <View
                         style={{
-                            borderBottomColor: '#f2f2f2',
+                            borderBottomColor: '#cccccc',
                             width: '100%',
                             paddingLeft: Dimensions.get('window').width < 768 ? 10 : 0,
                             borderBottomWidth: index === problems.length - 1 ? 0 : 1,
-                            marginBottom: Dimensions.get('window').width < 768 ? 0 : 25,
+                            // marginBottom: Dimensions.get('window').width < 768 ? 0 : 25,
                         }}
                         key={index}
                     >
@@ -1596,8 +1613,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         marginRight: editQuestionNumber === index + 1 ? 20 : 0,
                                                         textAlign: 'center',
                                                         fontWeight: editQuestionNumber === index + 1 ? 'normal' : '700',
-                                                        borderBottomColor: '#f2f2f2',
-                                                        borderBottomWidth: editQuestionNumber === index + 1 ? 1 : 0,
+                                                        borderColor: '#cccccc',
+                                                        borderWidth: editQuestionNumber === index + 1 ? 1 : 0,
+                                                        borderRadius: 2,
+                                                        backgroundColor:
+                                                            editQuestionNumber === index + 1 ? '#fff' : 'none',
                                                     }}
                                                     onChangeText={(val) => {
                                                         if (Number.isNaN(Number(val))) return;
@@ -1653,7 +1673,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 style={{
                                                                     paddingTop: 4,
                                                                 }}
-                                                                color={'#006AFF'}
+                                                                color={'#000'}
                                                             />
                                                         </TouchableOpacity>
                                                     ))}
@@ -1687,7 +1707,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             >
                                                 <Text
                                                     style={{
-                                                        color: '#006AFF',
+                                                        color: '#000',
                                                         fontFamily: 'Overpass',
                                                         fontSize: 10,
                                                     }}
@@ -1760,7 +1780,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             ? false
                                                             : props.isOwner
                                                     }
-                                                    style={{ marginTop: 22 }}
+                                                    style={{ marginTop: 22, backgroundColor: '#fff' }}
                                                     type="checkbox"
                                                     checked={
                                                         props.isOwner
@@ -1809,50 +1829,59 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     onInsertEquation={() => insertOptionEquation(i)}
                                                 />
 
-                                                <FroalaEditor
-                                                    ref={optionRefs[i]}
-                                                    model={
-                                                        editQuestion &&
-                                                        editQuestion.options &&
-                                                        editQuestion.options[i] &&
-                                                        editQuestion.options[i].option !== ''
-                                                            ? editQuestion.options[i].option
-                                                            : ''
-                                                    }
-                                                    onModelChange={(model: any) => {
-                                                        const newProbs = [...problems];
-                                                        newProbs[problemIndex].options[i].option = model;
-                                                        setEditQuestion(newProbs[problemIndex]);
-                                                        setProblems(newProbs);
+                                                <View
+                                                    style={{
+                                                        borderWidth: 1,
+                                                        borderColor: '#cccccc',
+                                                        borderRadius: 2,
+                                                        maxWidth: '100%',
                                                     }}
-                                                    config={{
-                                                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                                                        attribution: false,
-                                                        placeholderText: 'Option ' + (i + 1),
-                                                        charCounterCount: false,
-                                                        zIndex: 2003,
-                                                        // immediateReactModelUpdate: true,
-                                                        heightMin: 150,
-                                                        fileUpload: false,
-                                                        videoUpload: false,
-                                                        imageUploadURL:
-                                                            'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                        imageUploadParam: 'file',
-                                                        imageUploadParams: { userId: props.userId },
-                                                        imageUploadMethod: 'POST',
-                                                        imageMaxSize: 5 * 1024 * 1024,
-                                                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                                                        paragraphFormatSelection: true,
-                                                        // Default Font Size
-                                                        fontSizeDefaultSelection: '24',
-                                                        spellcheck: true,
-                                                        tabSpaces: 4,
-                                                        // TOOLBAR
-                                                        toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
-                                                        toolbarSticky: false,
-                                                        quickInsertEnabled: false,
-                                                    }}
-                                                />
+                                                >
+                                                    <FroalaEditor
+                                                        ref={optionRefs[i]}
+                                                        model={
+                                                            editQuestion &&
+                                                            editQuestion.options &&
+                                                            editQuestion.options[i] &&
+                                                            editQuestion.options[i].option !== ''
+                                                                ? editQuestion.options[i].option
+                                                                : ''
+                                                        }
+                                                        onModelChange={(model: any) => {
+                                                            const newProbs = [...problems];
+                                                            newProbs[problemIndex].options[i].option = model;
+                                                            setEditQuestion(newProbs[problemIndex]);
+                                                            setProblems(newProbs);
+                                                        }}
+                                                        config={{
+                                                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                            attribution: false,
+                                                            placeholderText: 'Option ' + (i + 1),
+                                                            charCounterCount: false,
+                                                            zIndex: 2003,
+                                                            // immediateReactModelUpdate: true,
+                                                            heightMin: 100,
+                                                            fileUpload: false,
+                                                            videoUpload: false,
+                                                            imageUploadURL:
+                                                                'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                            imageUploadParam: 'file',
+                                                            imageUploadParams: { userId: props.userId },
+                                                            imageUploadMethod: 'POST',
+                                                            imageMaxSize: 5 * 1024 * 1024,
+                                                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                            paragraphFormatSelection: true,
+                                                            // Default Font Size
+                                                            fontSizeDefaultSelection: '24',
+                                                            spellcheck: true,
+                                                            tabSpaces: 4,
+                                                            // TOOLBAR
+                                                            toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                            toolbarSticky: false,
+                                                            quickInsertEnabled: false,
+                                                        }}
+                                                    />
+                                                </View>
                                             </View>
                                         ) : (
                                             <Text
@@ -1911,10 +1940,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     key={p.itemNumber}
                                                     disabled={props.isOwner}
                                                     style={{
-                                                        backgroundColor: selection ? '#006AFF' : '#fff',
+                                                        backgroundColor: selection ? '#007AFF' : '#fff',
                                                         height: 25,
                                                         width: 25,
-                                                        borderColor: '#006AFF',
+                                                        borderColor: '#007AFF',
                                                         borderWidth: 1,
                                                         borderRadius: 12.5,
                                                     }}
@@ -1961,7 +1990,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 >
                                                     <Text
                                                         style={{
-                                                            color: selection ? '#fff' : '#006AFF',
+                                                            color: selection ? '#fff' : '#007AFF',
                                                             lineHeight: 25,
                                                             textAlign: 'center',
                                                         }}
@@ -2008,6 +2037,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <input
                                                     style={{
                                                         marginRight: 12,
+                                                        backgroundColor: '#fff',
                                                     }}
                                                     type="checkbox"
                                                     checked={isSelected}
@@ -2096,6 +2126,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     borderWidth: 1,
                                                     borderColor: '#ccc',
                                                     borderRadius: 15,
+                                                    backgroundColor: '#fff',
                                                 }}
                                             >
                                                 <Text
@@ -2198,6 +2229,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     overflow: 'hidden',
                                                     shadowOpacity: 0.07,
                                                     shadowRadius: 7,
+                                                    backgroundColor: '#fff',
                                                 }}
                                                 key={ind.toString()}
                                             >
@@ -2238,6 +2270,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     borderWidth: 1,
                                                     borderColor: '#ccc',
                                                     borderRadius: 15,
+                                                    backgroundColor: '#fff',
                                                 }}
                                             >
                                                 <Text
@@ -2539,9 +2572,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         <span style={{ width: 160 }}>
                                                             <select
                                                                 style={{
-                                                                    border: '1px solid #DDD',
+                                                                    border: '1px solid #cccccc',
                                                                     padding: 5,
-                                                                    borderRadius: 3,
+                                                                    borderRadius: 2,
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                             >
@@ -2572,9 +2605,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         <span style={{ width: 160 }}>
                                                             <select
                                                                 style={{
-                                                                    border: '1px solid #DDD',
+                                                                    border: '1px solid #cccccc',
                                                                     padding: 5,
-                                                                    borderRadius: 3,
+                                                                    borderRadius: 2,
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                             >
@@ -2620,9 +2653,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         <span style={{ width: 160 }}>
                                                             <select
                                                                 style={{
-                                                                    border: '1px solid #DDD',
+                                                                    border: '1px solid #cccccc',
                                                                     padding: 5,
-                                                                    borderRadius: 3,
+                                                                    borderRadius: 2,
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
@@ -2671,9 +2704,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         <span style={{ width: 160 }}>
                                                             <select
                                                                 style={{
-                                                                    border: '1px solid #DDD',
+                                                                    border: '1px solid #cccccc',
                                                                     padding: 5,
-                                                                    borderRadius: 3,
+                                                                    borderRadius: 2,
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
@@ -2739,10 +2772,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     return (
                                                         <input
                                                             style={{
-                                                                border: '1px solid #DDD',
+                                                                border: '1px solid #cccccc',
                                                                 padding: 5,
-                                                                borderRadius: 3,
+                                                                borderRadius: 2,
                                                                 fontFamily: 'Overpass',
+                                                                backgroundColor: '#fff',
                                                             }}
                                                             type={type}
                                                             value={value}
@@ -2764,10 +2798,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     return (
                                                         <input
                                                             style={{
-                                                                border: '1px solid #DDD',
+                                                                border: '1px solid #cccccc',
                                                                 padding: 5,
-                                                                borderRadius: 3,
+                                                                borderRadius: 2,
                                                                 fontFamily: 'Overpass',
+                                                                backgroundColor: '#fff',
                                                             }}
                                                             type={type}
                                                             value={value}
@@ -2805,10 +2840,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     return (
                                                         <input
                                                             style={{
-                                                                border: '1px solid #DDD',
+                                                                border: '1px solid #cccccc',
                                                                 padding: 5,
-                                                                borderRadius: 3,
+                                                                borderRadius: 2,
                                                                 fontFamily: 'Overpass',
+                                                                backgroundColor: '#fff',
                                                             }}
                                                             onChange={(e) => {
                                                                 if (
@@ -2849,10 +2885,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     return (
                                                         <input
                                                             style={{
-                                                                border: '1px solid #DDD',
+                                                                border: '1px solid #cccccc',
                                                                 padding: 5,
-                                                                borderRadius: 3,
+                                                                borderRadius: 2,
                                                                 fontFamily: 'Overpass',
+                                                                backgroundColor: '#fff',
                                                             }}
                                                             onChange={(e) => {
                                                                 if (
@@ -2942,6 +2979,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <View
                                                 style={{
                                                     maxWidth: 600,
+                                                    borderWidth: 1,
+                                                    borderColor: '#cccccc',
+                                                    borderRadius: 2,
                                                 }}
                                             >
                                                 <FroalaEditor
@@ -2995,7 +3035,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             key={optionIndex.toString()}
                                                         >
                                                             <input
-                                                                style={{}}
+                                                                style={{
+                                                                    backgroundColor: '#fff',
+                                                                }}
                                                                 type="checkbox"
                                                                 checked={option.isCorrect}
                                                                 onChange={(e) => {
@@ -3010,11 +3052,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     maxWidth: '100%',
                                                                     marginBottom: 10,
                                                                     marginTop: 10,
-                                                                    borderRadius: 1,
+                                                                    borderRadius: 2,
                                                                     paddingTop: 13,
                                                                     paddingBottom: 13,
                                                                     fontSize: 14,
-                                                                    borderBottom: '1px solid #f2f2f2',
+                                                                    borderBottom: '1px solid #ccc',
                                                                     width: 300,
                                                                     maxWidth: 300,
                                                                     marginLeft: 20,
@@ -3121,7 +3163,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         key={optionIndex.toString()}
                                                     >
                                                         <input
-                                                            style={{}}
+                                                            style={{
+                                                                backgroundColor: '#fff',
+                                                            }}
                                                             type="checkbox"
                                                             checked={
                                                                 props.isOwner
@@ -3284,9 +3328,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 style={{
                                                     width: '33%',
                                                     borderWidth: 1,
-                                                    borderColor: '#DDD',
+                                                    borderColor: '#ccc',
                                                     padding: editQuestionNumber === index + 1 ? 8 : 20,
                                                     height: '100%',
+                                                    backgroundColor: '#fff',
                                                 }}
                                                 key={headerIndex.toString()}
                                             >
@@ -3297,11 +3342,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             maxWidth: '90%',
                                                             marginBottom: 10,
                                                             marginTop: 10,
-                                                            borderRadius: 1,
+                                                            borderRadius: 2,
                                                             paddingTop: 13,
                                                             paddingBottom: 13,
                                                             fontSize: 14,
-                                                            borderBottom: '1px solid #f2f2f2',
+                                                            borderBottom: '1px solid #ccc',
                                                             paddingLeft: 10,
                                                             minWidth: '90%',
                                                         }}
@@ -3346,9 +3391,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 style={{
                                                     width: '33%',
                                                     borderWidth: 1,
-                                                    borderColor: '#DDD',
+                                                    borderColor: '#ccc',
                                                     padding: editQuestionNumber === index + 1 ? 8 : 20,
                                                     height: '100%',
+                                                    backgroundColor: '#fff',
                                                 }}
                                             >
                                                 {editQuestionNumber === index + 1 ? (
@@ -3358,11 +3404,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             maxWidth: '90%',
                                                             marginBottom: 10,
                                                             marginTop: 10,
-                                                            borderRadius: 1,
+                                                            borderRadius: 2,
                                                             paddingTop: 13,
                                                             paddingBottom: 13,
                                                             fontSize: 14,
-                                                            borderBottom: '1px solid #f2f2f2',
+                                                            borderBottom: '1px solid #ccc',
                                                             paddingLeft: 10,
                                                             minWidth: '90%',
                                                         }}
@@ -3395,13 +3441,14 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         style={{
                                                             width: '33%',
                                                             borderWidth: 1,
-                                                            borderColor: '#DDD',
+                                                            borderColor: '#ccc',
                                                             padding: editQuestionNumber === index + 1 ? 8 : 20,
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             flexDirection: 'row',
                                                             justifyContent: 'center',
                                                             height: '100%',
+                                                            backgroundColor: '#fff',
                                                         }}
                                                         key={choiceIndex.toString()}
                                                     >
@@ -3486,45 +3533,54 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             onClose={() => setShowEquationEditor(false)}
                                             onInsertEquation={insertEquation}
                                         />
-                                        <FroalaEditor
-                                            ref={problemRefs[problemIndex]}
-                                            model={solutions[problemIndex].response}
-                                            onModelChange={(model: any) => {
-                                                const updatedSolution = [...solutions];
-                                                updatedSolution[problemIndex].response = model;
-                                                setSolutions(updatedSolution);
-                                                props.setSolutions(updatedSolution);
+                                        <View
+                                            style={{
+                                                borderWidth: 1,
+                                                borderColor: '#cccccc',
+                                                borderRadius: 2,
                                             }}
-                                            config={{
-                                                key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                                                attribution: false,
-                                                placeholderText: 'Solution',
-                                                charCounterCount: true,
-                                                zIndex: 2003,
-                                                // immediateReactModelUpdate: true,
-                                                heightMin: 200,
-                                                fileUpload: false,
-                                                videoUpload: false,
-                                                imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                imageUploadParam: 'file',
-                                                imageUploadParams: { userId: props.userId },
-                                                imageUploadMethod: 'POST',
-                                                imageMaxSize: 5 * 1024 * 1024,
-                                                imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                                                // VIDEO UPLOAD
-                                                paragraphFormatSelection: true,
-                                                // Default Font Size
-                                                fontSizeDefaultSelection: '24',
-                                                spellcheck: true,
-                                                tabSpaces: 4,
+                                        >
+                                            <FroalaEditor
+                                                ref={problemRefs[problemIndex]}
+                                                model={solutions[problemIndex].response}
+                                                onModelChange={(model: any) => {
+                                                    const updatedSolution = [...solutions];
+                                                    updatedSolution[problemIndex].response = model;
+                                                    setSolutions(updatedSolution);
+                                                    props.setSolutions(updatedSolution);
+                                                }}
+                                                config={{
+                                                    key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                                                    attribution: false,
+                                                    placeholderText: 'Solution',
+                                                    charCounterCount: true,
+                                                    zIndex: 2003,
+                                                    // immediateReactModelUpdate: true,
+                                                    heightMin: 150,
+                                                    fileUpload: false,
+                                                    videoUpload: false,
+                                                    imageUploadURL:
+                                                        'https://api.learnwithcues.com/api/imageUploadEditor',
+                                                    imageUploadParam: 'file',
+                                                    imageUploadParams: { userId: props.userId },
+                                                    imageUploadMethod: 'POST',
+                                                    imageMaxSize: 5 * 1024 * 1024,
+                                                    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                                                    // VIDEO UPLOAD
+                                                    paragraphFormatSelection: true,
+                                                    // Default Font Size
+                                                    fontSizeDefaultSelection: '24',
+                                                    spellcheck: true,
+                                                    tabSpaces: 4,
 
-                                                // TOOLBAR
-                                                toolbarButtons: QUIZ_SOLUTION_TOOLBAR_BUTTONS,
-                                                toolbarSticky: false,
-                                                quickInsertEnabled: false,
-                                                charCounterMax: problem.maxCharCount ? problem.maxCharCount : -1,
-                                            }}
-                                        />
+                                                    // TOOLBAR
+                                                    toolbarButtons: QUIZ_SOLUTION_TOOLBAR_BUTTONS,
+                                                    toolbarSticky: false,
+                                                    quickInsertEnabled: false,
+                                                    charCounterMax: problem.maxCharCount ? problem.maxCharCount : -1,
+                                                }}
+                                            />
+                                        </View>
                                     </View>
                                 )}
                             </View>
@@ -3678,23 +3734,28 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             >
                                 <TouchableOpacity
                                     onPress={() => resetChanges(index)}
-                                    style={{ backgroundColor: 'white', borderRadius: 15, width: 120, marginRight: 30 }}
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                        borderRadius: 15,
+                                        width: 120,
+                                        marginRight: 30,
+                                    }}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            paddingHorizontal: 20,
-                                            fontFamily: 'inter',
-                                            height: 35,
-                                            color: '#006AFF',
+                                            borderColor: '#000',
                                             borderWidth: 1,
-                                            borderRadius: 15,
-                                            borderColor: '#006AFF',
-                                            backgroundColor: '#fff',
-                                            fontSize: 12,
-                                            width: 120,
+                                            color: '#000',
+                                            backgroundColor: '#f8f8f8',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
+                                            width: 120,
                                         }}
                                     >
                                         Reset
@@ -3706,21 +3767,23 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         setEditQuestion({});
                                         setEditQuestionContent('');
                                     }}
-                                    style={{ backgroundColor: 'white', borderRadius: 15, width: 120 }}
+                                    style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 120 }}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            paddingHorizontal: 20,
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 35,
-                                            color: 'white',
-                                            borderRadius: 15,
-                                            backgroundColor: '#006AFF',
-                                            fontSize: 12,
-                                            width: 120,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
+                                            width: 120,
                                         }}
                                     >
                                         DONE
@@ -3748,22 +3811,24 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 shuffleQuiz
                             );
                         }}
-                        style={{ backgroundColor: 'white', borderRadius: 15, width: 150, marginTop: 50 }}
+                        style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 150, marginTop: 50 }}
                         disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
+                                fontWeight: 'bold',
                                 textAlign: 'center',
-                                lineHeight: 34,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#006AFF',
-                                borderRadius: 15,
-                                paddingHorizontal: 20,
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                 fontFamily: 'inter',
                                 overflow: 'hidden',
-                                height: 35,
+                                paddingVertical: 14,
                                 textTransform: 'uppercase',
+                                width: 150,
                             }}
                         >
                             UPDATE QUIZ

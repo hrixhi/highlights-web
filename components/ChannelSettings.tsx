@@ -66,24 +66,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [channelCreator, setChannelCreator] = useState('');
     const [colorCode, setColorCode] = useState('');
     const colorChoices = [
-        '#f44336',
-        '#e91e63',
-        '#9c27b0',
-        '#673ab7',
-        '#3f51b5',
-        '#2196f3',
-        '#03a9f4',
-        '#00bcd4',
-        '#009688',
-        '#4caf50',
-        '#8bc34a',
-        '#cddc39',
-        '#0d5d35',
-        '#ffc107',
-        '#ff9800',
-        '#ff5722',
-        '#795548',
-        '#607db8',
+        '#A1B8C0',
+        '#95C3DF',
+        '#77A3A3',
+        '#A2BF9A',
+        '#49885B',
+        '#4F435B',
+        '#D65D2A',
+        '#D94C3A',
+        '#8E5C48',
+        '#5A2C2A',
+        '#726863',
+        '#44565D',
+        '#938071',
+        '#6B7064',
+        '#6E757C',
+        '#50524F',
+        '#1E1E1E',
+        '#141514',
     ];
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const sections = [
@@ -921,7 +921,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 <View style={styles.screen}>
                     <View
                         style={{
-                            maxWidth: 900,
+                            maxWidth: 600,
                             alignSelf: 'center',
                             minHeight: 100,
                             width: '100%',
@@ -1115,7 +1115,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: '#efefef',
-                                                true: '#006AFF',
+                                                true: '#000',
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -1203,7 +1203,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#efefef',
-                                                    true: '#006AFF',
+                                                    true: '#000',
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1249,7 +1249,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#efefef',
-                                                    true: '#006AFF',
+                                                    true: '#000',
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1271,21 +1271,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: 'white',
                                         borderRadius: 15,
-                                        overflow: 'hidden',
-                                        height: 35,
+                                        // overflow: 'hidden',
+                                        // height: 35,
                                     }}
                                     disabled={props.user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#006AFF',
-                                            paddingHorizontal: 20,
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 35,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
                                             width: 150,
                                         }}
@@ -1364,53 +1367,53 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         {accessCode}
                                     </Text>
-                                </View>
-                            </View>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                                    marginLeft: 'auto',
-                                }}
-                            >
-                                <TouchableOpacity
-                                    style={{
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        marginRight: 10,
-                                    }}
-                                    onPress={() => {
-                                        navigator.clipboard.writeText(accessCode);
-                                        setCopied(true);
-                                    }}
-                                >
-                                    <Ionicons
-                                        name={copied ? 'checkmark-circle-outline' : 'clipboard-outline'}
-                                        size={18}
-                                        color={copied ? '#35AC78' : '#006AFF'}
-                                    />
-                                    <Text
+                                    <View
                                         style={{
-                                            color: copied ? '#35AC78' : '#006AFF',
+                                            flexDirection: 'row',
+                                            paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                                            // marginLeft: 'auto',
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            style={{
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                marginRight: 10,
+                                            }}
+                                            onPress={() => {
+                                                navigator.clipboard.writeText(accessCode);
+                                                setCopied(true);
+                                            }}
+                                        >
+                                            <Ionicons
+                                                name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
+                                                size={20}
+                                                color={copied ? '#35AC78' : '#000'}
+                                            />
+                                            {/* <Text
+                                        style={{
+                                            color: copied ? '#35AC78' : '#000',
                                             fontSize: 10,
                                             paddingTop: 3,
                                         }}
                                     >
                                         {' '}
                                         {copied ? 'Copied' : 'Copy'}{' '}
-                                    </Text>
-                                </TouchableOpacity>
+                                    </Text> */}
+                                        </TouchableOpacity>
 
-                                <TouchableOpacity
-                                    style={{
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    }}
-                                    onPress={() => handleResetCode()}
-                                >
-                                    <Ionicons name="refresh-outline" size={18} color={'#006AFF'} />
-                                    <Text style={{ color: '#006AFF', fontSize: 10, paddingTop: 3 }}> Reset </Text>
-                                </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => handleResetCode()}
+                                        >
+                                            <Ionicons name="refresh-outline" size={20} color={'#000'} />
+                                            {/* <Text style={{ color: '#000', fontSize: 10, paddingTop: 3 }}> Reset </Text> */}
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
                         </View>
 
@@ -1564,7 +1567,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{ height: 20 }}
                                         trackColor={{
                                             false: '#efefef',
-                                            true: '#006AFF',
+                                            true: '#000',
                                         }}
                                         activeThumbColor="white"
                                     />
@@ -1667,14 +1670,15 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Ionicons
                                         name="mail-outline"
-                                        color="#006AFF"
+                                        color="#000"
                                         style={{ marginRight: 7, paddingTop: 2 }}
-                                        size={18}
+                                        size={20}
                                     />
                                     <Text
                                         style={{
-                                            fontSize: 13,
-                                            color: '#006AFF',
+                                            fontSize: 14,
+                                            color: '#000',
+                                            fontFamily: 'Inter',
                                         }}
                                     >
                                         Add Users
@@ -1807,21 +1811,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{
                                     backgroundColor: 'white',
                                     borderRadius: 15,
-                                    overflow: 'hidden',
-                                    height: 35,
+                                    // overflow: 'hidden',
+                                    // height: 35,
                                 }}
                                 disabled={isUpdatingChannel || props.user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
+                                        fontWeight: 'bold',
                                         textAlign: 'center',
-                                        lineHeight: 34,
-                                        color: 'white',
-                                        fontSize: 12,
-                                        backgroundColor: '#006AFF',
-                                        paddingHorizontal: 20,
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        color: '#fff',
+                                        backgroundColor: '#000',
+                                        fontSize: 11,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                         fontFamily: 'inter',
-                                        height: 35,
+                                        overflow: 'hidden',
+                                        paddingVertical: 14,
                                         textTransform: 'uppercase',
                                         width: 150,
                                     }}
@@ -1836,24 +1843,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: 'white',
                                         borderRadius: 15,
-                                        overflow: 'hidden',
-                                        height: 35,
+                                        // overflow: 'hidden',
+                                        // height: 35,
                                         marginTop: 15,
                                     }}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: '#006AFF',
+                                            borderColor: '#000',
                                             borderWidth: 1,
-                                            borderRadius: 15,
-                                            borderColor: '#006AFF',
+                                            color: '#000',
                                             backgroundColor: '#fff',
-                                            fontSize: 12,
-                                            paddingHorizontal: 20,
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 35,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
                                             width: 150,
                                         }}
@@ -1884,25 +1891,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={{
                                         backgroundColor: 'white',
                                         borderRadius: 15,
-                                        overflow: 'hidden',
-                                        height: 35,
+                                        // overflow: 'hidden',
+                                        // height: 35,
                                         marginTop: 15,
                                     }}
                                     disabled={props.user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: '#006AFF',
+                                            borderColor: '#000',
                                             borderWidth: 1,
-                                            borderRadius: 15,
-                                            borderColor: '#006AFF',
+                                            color: '#000',
                                             backgroundColor: '#fff',
-                                            fontSize: 12,
-                                            paddingHorizontal: 20,
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 35,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
                                             width: 150,
                                         }}

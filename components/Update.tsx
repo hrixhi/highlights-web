@@ -1,6 +1,6 @@
 // REACT
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
+import { Animated, ActivityIndicator, Dimensions, StyleSheet, TextInput } from 'react-native';
 
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -36,7 +36,7 @@ import InsetShadow from 'react-native-inset-shadow';
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-import { TextInput } from './CustomTextInput';
+// import { TextInput } from './CustomTextInput';
 import { disableEmailId } from '../constants/zoomCredentials';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -80,6 +80,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [folderCuesToDisplay, setFolderCuesToDisplay] = useState<any[]>([]);
     const [showExistingFolder, setShowExistingFolder] = useState(false);
     const windowHeight = Dimensions.get('window').height;
+    const [courseColor, setCourseColor] = useState('#000');
     // ALERTS
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
@@ -87,6 +88,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [activeTab, setActiveTab] = useState('Content');
 
     console.log('Cue Id', props.cue);
+
+    console.log('Subscriptions', props.subscriptions);
 
     // HOOKS
 
@@ -104,6 +107,30 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }
     }, [props.cue]);
+
+    /**
+     * @description Set course color
+     */
+    useEffect(() => {
+        if (
+            props.cue.channelId &&
+            props.cue.channelId !== '' &&
+            props.subscriptions &&
+            props.subscriptions.length > 0
+        ) {
+            const findCourse = props.subscriptions.find((sub: any) => {
+                return sub.channelId === props.cue.channelId;
+            });
+
+            console.log('Find course', findCourse);
+
+            if (findCourse && findCourse.colorCode) {
+                setCourseColor(findCourse.colorCode);
+            }
+        }
+    }, [props.cue.channelId, props.subscriptions]);
+
+    console.log('Course color', courseColor);
 
     /**
      * @description Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
@@ -772,7 +799,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
-                                color: value._id === props.cue._id ? '#006AFF' : '#000000',
+                                color: value._id === props.cue._id ? '#007AFF' : '#000000',
                             }}
                         >
                             {title}
@@ -887,7 +914,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const getNavbarIconColor = (op: string) => {
         if (op === activeTab) {
-            return '#006AFF';
+            return '#007AFF';
         }
         return '#fff';
     };
@@ -902,22 +929,20 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             style={{
                 position: 'absolute',
                 zIndex: 1000,
-                backgroundColor: '#000000de',
+                backgroundColor: '#000000',
                 bottom: 0,
                 width: '100%',
-                // paddingTop: 5,
-                // paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
-                // paddingHorizontal: 20,
                 flexDirection: 'row',
                 justifyContent: 'center',
+                alignItems: 'center',
                 height: Dimensions.get('window').width < 768 ? 54 : 68,
-                shadowColor: '#000',
-                shadowOffset: {
-                    width: 0,
-                    height: -7,
-                },
-                shadowOpacity: 0.12,
-                shadowRadius: 10,
+                // shadowColor: '#000',
+                // shadowOffset: {
+                //     width: 0,
+                //     height: -7,
+                // },
+                // shadowOpacity: 0.12,
+                // shadowRadius: 10,
                 zIndex: 500000,
             }}
         >
@@ -1093,10 +1118,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             style={{
                 paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 20,
                 flexDirection: 'row',
+                alignItems: 'center',
                 flex: 1,
                 backgroundColor: 'none',
-                paddingTop: Dimensions.get('window').width < 1024 ? 9 : 12,
-                height: 48,
                 justifyContent: Dimensions.get('window').width < 1024 ? 'center' : 'flex-start',
             }}
         >
@@ -1306,7 +1330,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 20,
                                                     flex: 1,
                                                     marginTop: 5,
-                                                    color: cue._id === props.cue._id ? '#006AFF' : '#000000',
+                                                    color: cue._id === props.cue._id ? '#007AFF' : '#000000',
                                                 }}
                                             >
                                                 {title}
@@ -1444,7 +1468,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             marginLeft: 'auto',
                                                         }}
                                                     >
-                                                        <Text style={{ color: '#006AFF', textAlign: 'center' }}>
+                                                        <Text style={{ color: '#007AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -1507,7 +1531,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 justifyContent: 'center',
                                 backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
-                                paddingBottom: 14,
+                                // paddingBottom: 14,
                             }}
                         >
                             <SortableList
@@ -1663,7 +1687,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             marginLeft: 'auto',
                                                         }}
                                                     >
-                                                        <Text style={{ color: '#006AFF', textAlign: 'center' }}>
+                                                        <Text style={{ color: '#007AFF', textAlign: 'center' }}>
                                                             <Ionicons name="add-outline" size={16} />
                                                         </Text>
                                                     </TouchableOpacity>
@@ -1726,7 +1750,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 justifyContent: 'center',
                                 backgroundColor: '#f8f8f8',
                                 paddingTop: 7,
-                                paddingBottom: 14,
+                                // paddingBottom: 14,
                             }}
                         >
                             <SortableListUpdate
@@ -1788,12 +1812,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height:
                             Dimensions.get('window').width < 1024
                                 ? Dimensions.get('window').height - 104
-                                : Dimensions.get('window').height - 52,
+                                : Dimensions.get('window').height - 64,
                     }}
                     contentContainerStyle={{
                         borderTopRightRadius: 0,
                         borderTopLeftRadius: 0,
-                        // maxHeight: windowHeight - 52,
+                        // maxHeight: windowHeight - 64,
                         alignItems: 'center',
                         width: '100%',
                         // maxWidth: 1024,
@@ -1843,9 +1867,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {channelOwner ? (
                         <View
                             style={{
-                                backgroundColor: 'white',
+                                backgroundColor: '#f8f8f8',
                                 width: '100%',
-                                height: windowHeight - 52,
+                                height: windowHeight - 64,
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0,
@@ -1855,7 +1879,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 ref={scroll3}
                                 contentContainerStyle={{
                                     width: '100%',
-                                    height: windowHeight - 52,
+                                    height: windowHeight - 64,
                                     alignItems: 'center',
                                 }}
                                 showsVerticalScrollIndicator={true}
@@ -2364,22 +2388,23 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * */
     const renderHeader = () => {
         return (
-            <View style={{ width: '100%', backgroundColor: '#000000de', flexDirection: 'column', zIndex: 500000 }}>
+            <View style={{ width: '100%', backgroundColor: courseColor, flexDirection: 'column', zIndex: 500000 }}>
                 {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
                 <View
                     style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        height: 52,
+                        alignItems: 'center',
+                        height: 64,
                         backgroundColor: 'none',
                         paddingHorizontal: 10,
-                        shadowColor: '#000',
-                        shadowOffset: {
-                            width: 4,
-                            height: 4,
-                        },
-                        shadowOpacity: 0.12,
-                        shadowRadius: 10,
+                        // shadowColor: '#000',
+                        // shadowOffset: {
+                        //     width: 4,
+                        //     height: 4,
+                        // },
+                        // shadowOpacity: 0.12,
+                        // shadowRadius: 10,
                         zIndex: 500000,
                     }}
                 >
@@ -2423,7 +2448,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <TouchableOpacity
                             style={{
                                 flexDirection: 'row',
-                                paddingTop: 7,
                                 backgroundColor: 'none',
                             }}
                             onPress={() => {
@@ -2446,11 +2470,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     color: '#000',
                                     backgroundColor: '#f8f8f8',
-                                    borderRadius: 15,
+                                    borderRadius: 24,
                                     fontSize: 12,
                                     paddingVertical: 6,
                                     paddingHorizontal: 20,
-                                    marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
                                     maxWidth: 225,
@@ -2468,11 +2491,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     color: '#000',
                                     backgroundColor: '#f8f8f8',
-                                    borderRadius: 15,
+                                    borderRadius: 24,
                                     fontSize: 12,
                                     paddingVertical: 6,
                                     paddingHorizontal: 20,
-                                    marginTop: 2,
                                     marginLeft: 10,
                                     marginRight: 2,
                                     maxWidth: 225,
@@ -2492,7 +2514,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     backgroundColor: 'none',
                                     justifyContent: 'flex-end',
                                     flexDirection: 'row',
-                                    paddingTop: 8,
                                 }}
                             >
                                 {((channelOwner && showOriginal && !isQuiz) || showOptions || !props.channelId) &&
@@ -2653,24 +2674,23 @@ const styles: any = StyleSheet.create({
         fontSize: 13,
         color: '#fff',
         height: 24,
-        paddingHorizontal: 15,
+        marginHorizontal: 15,
         backgroundColor: 'none',
         lineHeight: 24,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
-        marginRight: 5,
     },
     allGrayFill: {
         fontSize: 13,
-        color: '#006AFF',
-        paddingHorizontal: 15,
-        borderRadius: 12,
+        color: '#fff',
+        marginHorizontal: 15,
         backgroundColor: 'none',
         lineHeight: 24,
         height: 24,
-        fontFamily: 'overpass',
+        fontFamily: 'inter',
         textTransform: 'uppercase',
-        marginRight: 5,
+        borderBottomColor: '#fff',
+        borderBottomWidth: 1,
     },
     dateContainer: {
         fontSize: 10,

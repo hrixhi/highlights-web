@@ -220,9 +220,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const getWorkspaceNavbarIconColor = (op: string) => {
         if (op === props.activeWorkspaceTab) {
-            return '#000';
+            return '#fff';
         }
-        return '#797979';
+        return '#fff';
     };
 
     const getSearchNavbarIconName = (op: string) => {
@@ -244,7 +244,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (op === activeSearchResultsTab) {
             return '#000';
         }
-        return '#797979';
+        return '#000';
     };
 
     const getAccountNavbarIconName = (op: string) => {
@@ -262,7 +262,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (op === props.activeAccountTab) {
             return '#000';
         }
-        return '#797979';
+        return '#000';
     };
 
     // HOOKS
@@ -479,6 +479,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
             tempCat[key] = Object.keys(cat);
         });
+
+        // Sort the category map alphabetically
+        const sortedCategories: any = {};
+
+        Object.keys(tempCat).map((channelId: string) => {
+            const currentCategories = [...tempCat[channelId]];
+
+            currentCategories.sort();
+
+            sortedCategories[channelId] = [...currentCategories];
+        });
+
         const cat: any = { '': [] };
         props.cues.map((cue: any) => {
             if (!cue.channelId || cue.channelId === '') {
@@ -529,11 +541,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (!cat['']) {
             delete cat[''];
         }
-        tempCat['My Notes'] = Object.keys(cat);
+        const myNotesCategories = Object.keys(cat);
+        myNotesCategories.sort();
+        sortedCategories['My Notes'] = myNotesCategories;
         tempIndexes['My Notes'] = 0;
 
         setCueMap(temp);
-        setCategoryMap(tempCat);
+        setCategoryMap(sortedCategories);
+        console.log('Sorted categories', sortedCategories);
         setIndexMap(tempIndexes);
     }, [sortBy, filterStart, filterEnd, props.subscriptions, props.cues, props.user]);
 
@@ -1313,23 +1328,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     backgroundColor: 'none',
                                     flexDirection: 'row',
                                     alignItems: 'center',
+                                    borderBottomColor: '#000',
+                                    borderBottomWidth: props.activeAccountTab === tab ? 1 : 0,
                                 }}
                                 onPress={() => {
                                     props.setActiveAccountTab(tab);
                                 }}
                             >
-                                <Ionicons
+                                {/* <Ionicons
                                     name={getAccountNavbarIconName(tab)}
                                     style={{ color: getAccountNavbarIconColor(tab) }}
                                     size={props.activeAccountTab === 'profile' ? 13 : 15}
-                                />
+                                /> */}
                                 <Text
                                     style={{
                                         color: getAccountNavbarIconColor(tab),
                                         fontSize: 13,
-                                        fontFamily: 'overpass',
-                                        textTransform: 'capitalize',
-                                        paddingLeft: 7,
+                                        fontFamily: props.activeAccountTab === tab ? 'Inter' : 'overpass',
+                                        textTransform: 'uppercase',
+                                        // paddingLeft: 7,
                                     }}
                                 >
                                     {tab}
@@ -1413,26 +1430,32 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             backgroundColor: 'none',
                                             flexDirection: 'row',
                                             alignItems: 'center',
+                                            borderBottomColor: '#000',
+                                            borderBottomWidth: tab === activeSearchResultsTab ? 1 : 0,
                                         }}
                                         onPress={() => {
                                             setActiveSearchResultsTab(tab);
                                         }}
                                     >
-                                        <Ionicons
+                                        {/* <Ionicons
                                             name={getSearchNavbarIconName(tab)}
                                             style={{ color: getSearchNavbarIconColor(tab) }}
                                             size={tab === 'Courses' ? 15 : 13}
-                                        />
+                                        /> */}
                                         <Text
                                             style={{
                                                 color: getSearchNavbarIconColor(tab),
                                                 fontSize: 13,
-                                                fontFamily: 'overpass',
-                                                textTransform: 'capitalize',
-                                                paddingLeft: 7,
+                                                fontFamily: tab === activeSearchResultsTab ? 'Inter' : 'overpass',
+                                                textTransform: 'uppercase',
+                                                // paddingLeft: 7,
                                             }}
                                         >
-                                            {tab === 'Discussion' ? 'FAQ' : tab === 'Content' ? 'Coursework' : tab}
+                                            {tab === 'Discussion'
+                                                ? 'Discussion'
+                                                : tab === 'Content'
+                                                ? 'Coursework'
+                                                : tab}
                                         </Text>
                                     </TouchableOpacity>
                                 );
@@ -1479,7 +1502,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {!loadingSearchResults && searchTerm.trim().length === 0 ? (
                         <View
                             style={{
-                                maxHeight: Dimensions.get('window').height - 54 - 54,
+                                maxHeight: Dimensions.get('window').height - 64,
                                 backgroundColor: '#fff',
                                 paddingHorizontal: 20,
                             }}
@@ -1564,7 +1587,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {!activeSearchResultsTab || loadingSearchResults || searchTerm.trim().length === 0 ? null : (
                         <ScrollView
                             style={{
-                                maxHeight: Dimensions.get('window').height - 54 - 54,
+                                maxHeight: Dimensions.get('window').height - 64,
                                 backgroundColor: '#fff',
                             }}
                             showsVerticalScrollIndicator={true}
@@ -1748,10 +1771,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         backgroundColor: 'white',
                         // paddingTop: 10,
                         maxHeight: 500,
-                        paddingHorizontal: 10,
-                        borderRadius: 8,
+                        borderRadius: 2,
                         borderWidth: 1,
-                        borderColor: '#f2f2f2',
+                        borderColor: '#cccccc',
                         // borderLeftColor: colorCode,
                         // borderLeftWidth: 3,
                         // shadowOffset: {
@@ -1768,8 +1790,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         horizontal={false}
                         contentContainerStyle={{
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 5 : 10,
-                            borderColor: '#f2f2f2',
-                            borderRadius: 1,
+                            borderColor: '#cccccc',
+                            borderRadius: 2,
                             width: '100%',
                             maxHeight: Dimensions.get('window').width < 768 ? 400 : 500,
                         }}
@@ -1782,7 +1804,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <View
                                     style={{
                                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                                        borderColor: '#f2f2f2',
+                                        borderColor: '#cccccc',
                                         paddingVertical: meeting.description ? 8 : 16,
                                         borderBottomWidth: ind === ongoingMeetings.length - 1 ? 0 : 1,
                                         // minWidth: 600, // flex: 1,
@@ -1915,13 +1937,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             >
                                                 <Text
                                                     style={{
-                                                        fontSize: 12,
+                                                        fontSize: 14,
                                                         fontFamily: 'inter',
-                                                        color: '#006AFF',
+                                                        color: '#000',
                                                         marginRight: 20,
                                                     }}
                                                 >
-                                                    JOIN {createdBy === userId ? '' : 'MEETING'}
+                                                    Join {createdBy === userId ? '' : 'Meeting'}
                                                 </Text>
                                             </TouchableOpacity>
 
@@ -1935,13 +1957,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 12,
+                                                            fontSize: 14,
                                                             fontFamily: 'inter',
-                                                            color: '#006AFF',
+                                                            color: '#000',
                                                             marginRight: 20,
                                                         }}
                                                     >
-                                                        COPY INVITE
+                                                        Copy Invite
                                                     </Text>
                                                 </TouchableOpacity>
                                             ) : null}
@@ -1962,14 +1984,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 isOpen={showInstantMeeting}
                 buttons={[
                     {
-                        text: 'START',
+                        text: 'Start',
+                        color: 'dark',
                         handler: function (event) {
                             createInstantMeeting();
                         },
                         disabled: props.user.email === disableEmailId,
                     },
                     {
-                        text: 'CANCEL',
+                        text: 'Cancel',
+                        color: 'dark',
                         handler: function (event) {
                             setShowInstantMeeting(false);
                             setInstantMeetingChannelId('');
@@ -2207,8 +2231,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#f2f2f2',
-                                        true: '#006AFF',
+                                        false: '#000',
+                                        true: '#007AFF',
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -2284,8 +2308,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: 'row',
                     justifyContent: 'center',
                     paddingVertical: 15,
-                    backgroundColor: '#f8f8f8',
-                    height: 54,
+                    backgroundColor:
+                        selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                            ? '#000'
+                            : selectedWorkspace.split('-SPLIT-')[3],
+                    height: 64,
                 }}
             >
                 {/* Arrow back */}
@@ -2325,14 +2352,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginRight: 15,
                             }}
                         >
-                            <Ionicons size={28} name="arrow-back-outline" color="#1f1f1f" />
+                            <Ionicons size={28} name="arrow-back-outline" color="#fff" />
                         </TouchableOpacity>
                         <Text
                             style={{
-                                fontSize: 13,
-                                fontFamily: 'overpass',
+                                fontSize: 20,
+                                fontFamily: 'Inter',
                                 marginRight: 75,
-                                color: selectedWorkspace.split('-SPLIT-')[3],
+                                color: '#fff',
                                 // textTransform: 'uppercase',
                             }}
                         >
@@ -2344,6 +2371,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: 'row',
                             alignItems: 'center',
                             backgroundColor: 'none',
+                            zIndex: 50000,
+                            // backgroundColor: '#f8f8f8',
                         }}
                     >
                         {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes' &&
@@ -2358,26 +2387,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             backgroundColor: 'none',
                                             flexDirection: 'row',
                                             alignItems: 'center',
+                                            borderBottomColor: '#fff',
+                                            borderBottomWidth: tab === props.activeWorkspaceTab ? 1 : 0,
                                         }}
                                         onPress={() => {
                                             props.setWorkspaceActiveTab(tab);
                                         }}
                                     >
-                                        <Ionicons
+                                        {/* <Ionicons
                                             name={getWorkspaceNavbarIconName(tab)}
                                             style={{ color: getWorkspaceNavbarIconColor(tab) }}
                                             size={tab === 'Meet' ? 15 : tab === 'Scores' ? 14 : 13}
-                                        />
+                                        /> */}
                                         <Text
                                             style={{
                                                 color: getWorkspaceNavbarIconColor(tab),
                                                 fontSize: 13,
-                                                fontFamily: 'overpass',
-                                                textTransform: 'capitalize',
-                                                paddingLeft: 5,
+                                                fontFamily: tab === props.activeWorkspaceTab ? 'inter' : 'overpass',
+                                                textTransform: 'uppercase',
+                                                // paddingLeft: 5,
                                             }}
                                         >
-                                            {tab === 'Content' ? 'Coursework' : tab === 'Discuss' ? 'FAQ' : tab}
+                                            {tab === 'Content'
+                                                ? 'Coursework'
+                                                : tab === 'Discuss'
+                                                ? 'Discussion'
+                                                : tab === 'Meet'
+                                                ? 'Meetings'
+                                                : tab}
                                         </Text>
                                     </TouchableOpacity>
                                 );
@@ -2402,7 +2439,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text
                                     style={{
                                         fontSize: 11,
-                                        color: '#1f1f1f',
+                                        color: '#fff',
                                         textAlign: 'right',
                                     }}
                                 >
@@ -2434,117 +2471,116 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 horizontal={false}
                 contentContainerStyle={{
                     width: '100%',
-                    height:
-                        width < 768
-                            ? Dimensions.get('window').height - 115
-                            : Dimensions.get('window').height - 52 - (selectedWorkspace ? 45 : 0),
+                    height: width < 768 ? Dimensions.get('window').height - 115 : Dimensions.get('window').height - 64,
                     backgroundColor: '#fff',
                 }}
                 ref={scrollViewRef}
             >
-                {Object.keys(cueMap).map((key: any, ind: any) => {
-                    return (
-                        // Do not add a parent component above this
-                        <View key={ind}>
-                            {!selectedWorkspace ? (
-                                <View
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        borderColor: '#f2f2f2',
-                                        paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
-                                        borderTopWidth: ind === 0 ? 0 : 1,
-                                        paddingBottom: 0,
-                                        maxWidth: 1024,
-                                        alignSelf: 'center',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <TouchableOpacity
+                {selectedWorkspace === '' ? (
+                    <View>
+                        {Object.keys(cueMap).map((key: any, ind: any) => {
+                            return (
+                                // Do not add a parent component above this
+                                <View key={ind}>
+                                    <View
                                         style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
                                             backgroundColor: '#fff',
-                                        }}
-                                        onPress={() => {
-                                            setSelectedWorkspace(key);
-                                            props.setSelectedWorkspace(key);
-                                            scrollViewRef.current?.scrollTo({
-                                                y: 0,
-                                                animated: false,
-                                            });
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            borderColor: '#f2f2f2',
+                                            paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                            borderTopWidth: ind === 0 ? 0 : 1,
+                                            paddingBottom: 0,
+                                            maxWidth: 1024,
+                                            alignSelf: 'center',
+                                            width: '100%',
                                         }}
                                     >
-                                        <Text
+                                        <TouchableOpacity
                                             style={{
-                                                fontSize: 16,
-                                                paddingVertical: 20,
-                                                fontFamily: 'inter',
                                                 flex: 1,
+                                                flexDirection: 'row',
                                                 backgroundColor: '#fff',
-                                                lineHeight: 20,
-                                                color: '#000000',
+                                            }}
+                                            onPress={() => {
+                                                setSelectedWorkspace(key);
+                                                props.setSelectedWorkspace(key);
+                                                scrollViewRef.current?.scrollTo({
+                                                    y: 0,
+                                                    animated: false,
+                                                });
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 20,
+                                                    paddingVertical: 25,
+                                                    fontFamily: 'inter',
+                                                    flex: 1,
+                                                    backgroundColor: '#fff',
+                                                    lineHeight: 20,
+                                                    color: '#000000',
+                                                }}
+                                            >
+                                                <View
+                                                    style={{
+                                                        width: 12,
+                                                        height: 12,
+                                                        borderRadius: 12,
+                                                        // marginTop: 2,
+                                                        marginRight: 8,
+                                                        backgroundColor: key.split('-SPLIT-')[3]
+                                                            ? key.split('-SPLIT-')[3]
+                                                            : '#000',
+                                                    }}
+                                                />{' '}
+                                                {key.split('-SPLIT-')[0]}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                paddingLeft: 15,
                                             }}
                                         >
                                             <View
                                                 style={{
-                                                    width: 10,
-                                                    height: 10,
-                                                    borderRadius: 9,
-                                                    // marginTop: 2,
-                                                    marginRight: 5,
-                                                    backgroundColor: key.split('-SPLIT-')[3]
-                                                        ? key.split('-SPLIT-')[3]
-                                                        : '#000',
-                                                }}
-                                            />{' '}
-                                            {key.split('-SPLIT-')[0]}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View
-                                        style={{
-                                            backgroundColor: '#fff',
-                                            paddingLeft: 15,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'center',
-                                                display: 'flex',
-                                                backgroundColor: '#fff',
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    setSelectedWorkspace(key);
-                                                }}
-                                                style={{
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'center',
+                                                    display: 'flex',
                                                     backgroundColor: '#fff',
                                                 }}
                                             >
-                                                <Text
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setSelectedWorkspace(key);
+                                                    }}
                                                     style={{
-                                                        textAlign: 'center',
-                                                        lineHeight: 30,
                                                         backgroundColor: '#fff',
                                                     }}
                                                 >
-                                                    <Ionicons
-                                                        name={'chevron-forward-outline'}
-                                                        size={18}
-                                                        color={'#006AFF'}
-                                                    />
-                                                </Text>
-                                            </TouchableOpacity>
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            lineHeight: 30,
+                                                            backgroundColor: '#fff',
+                                                        }}
+                                                    >
+                                                        <Ionicons
+                                                            name={'chevron-forward-outline'}
+                                                            size={23}
+                                                            color={'#dddddd'}
+                                                        />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            ) : null}
-                        </View>
-                    );
-                })}
+                            );
+                        })}
+                    </View>
+                ) : null}
                 {/* Since only one Selected workspace */}
                 {selectedWorkspace && cueMap[selectedWorkspace] ? (
                     <View
@@ -2615,7 +2651,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             lineHeight: 34,
                                                             color: '#fff',
                                                             borderRadius: 15,
-                                                            backgroundColor: '#006AFF',
+                                                            backgroundColor: '#007AFF',
                                                             fontSize: 12,
                                                             paddingHorizontal: 20,
                                                             fontFamily: 'inter',
@@ -2738,9 +2774,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <View
                                                 style={{
                                                     width: '100%',
-                                                    maxWidth: 145,
+                                                    maxWidth: 155,
                                                     backgroundColor: '#fff',
-                                                    marginRight: 15,
+                                                    marginRight: 25,
                                                 }}
                                                 key={i.toString()}
                                             >
@@ -2748,7 +2784,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         backgroundColor: '#fff',
                                                         paddingLeft: 5,
-                                                        marginBottom: 3,
+                                                        marginBottom: 12,
                                                     }}
                                                 >
                                                     <Text
@@ -2756,7 +2792,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             flex: 1,
                                                             flexDirection: 'row',
                                                             color: '#1F1F1F',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             lineHeight: 25,
                                                             fontFamily: 'inter',
                                                             backgroundColor: '#fff',
@@ -2768,7 +2804,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 </View>
                                                 <View
                                                     style={{
-                                                        maxWidth: 145,
+                                                        maxWidth: 155,
                                                         paddingLeft: 5,
                                                         backgroundColor: '#fff',
                                                         width: '100%',
@@ -2788,7 +2824,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     marginBottom: 15,
                                                                     backgroundColor: '#fff',
                                                                     width: '100%',
-                                                                    maxWidth: 145,
+                                                                    maxWidth: 155,
                                                                 }}
                                                                 key={index}
                                                             >
@@ -2823,27 +2859,90 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </View>
                 ) : null}
             </ScrollView>
+            {props.option === 'Classroom' &&
+            selectedWorkspace &&
+            !showNewDiscussionPost &&
+            props.activeWorkspaceTab !== 'Settings' &&
+            (props.activeWorkspaceTab !== 'Meet' || selectedWorkspace.split('-SPLIT-')[2] === userId) ? (
+                <TouchableOpacity
+                    onPress={() => {
+                        if (props.activeWorkspaceTab === 'Content') {
+                            props.openCreate();
+                        } else if (props.activeWorkspaceTab === 'Discuss') {
+                            console.log('Set show new discussion post true');
+                            setShowNewDiscussionPost(true);
+                        } else if (props.activeWorkspaceTab === 'Meet') {
+                            handleStartMeeting(
+                                selectedWorkspace.split('-SPLIT-')[1],
+                                selectedWorkspace.split('-SPLIT-')[2]
+                            );
+                        } else if (props.activeWorkspaceTab === 'Scores') {
+                            setExportScores(true);
+                        }
+                    }}
+                    style={{
+                        position: 'absolute',
+                        marginRight:
+                            Dimensions.get('window').width >= 1200
+                                ? (Dimensions.get('window').width - 1200) / 2
+                                : Dimensions.get('window').width >= 1024
+                                ? (Dimensions.get('window').width - 1024) / 2 - 20
+                                : 20,
+                        marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
+                        right: 0,
+                        justifyContent: 'center',
+                        bottom: 0,
+                        width: 58,
+                        height: 58,
+                        borderRadius: 29,
+                        backgroundColor:
+                            selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                ? '#000'
+                                : selectedWorkspace.split('-SPLIT-')[3],
+                        borderColor: '#000',
+                        borderWidth: 0,
+                        // shadowColor: '#000',
+                        // shadowOffset: {
+                        //     width: 4,
+                        //     height: 4,
+                        // },
+                        // shadowOpacity: 0.12,
+                        // shadowRadius: 10,
+                        zIndex: 500000,
+                    }}
+                >
+                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+                        {props.activeWorkspaceTab === 'Content' ? (
+                            <Ionicons
+                                name="create-outline"
+                                size={25}
+                                style={{
+                                    paddingLeft: 3,
+                                }}
+                            />
+                        ) : props.activeWorkspaceTab === 'Discuss' ? (
+                            <Ionicons name="add-outline" size={35} />
+                        ) : props.activeWorkspaceTab === 'Meet' ? (
+                            <Ionicons name="videocam-outline" size={25} />
+                        ) : props.activeWorkspaceTab === 'Scores' ? (
+                            <Ionicons name="download-outline" size={28} />
+                        ) : null}
+                    </Text>
+                </TouchableOpacity>
+            ) : null}
         </View>
     );
 
-    // MAIN RETURN
-    return (
-        <View
-            style={{
-                height: windowHeight,
-                backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
-            }}
-        >
-            {renderInstantMeetingPopup()}
-            {/* Hide navbar if create is open */}
+    const renderMainNavbar = () => {
+        return (
             <View
                 style={{
-                    backgroundColor: '#000000de',
+                    backgroundColor: '#000',
                     paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 0,
                     flexDirection: 'row',
                     justifyContent: 'center',
                     width: '100%',
-                    height: 54,
+                    height: 64,
                     paddingVertical: 2,
                     zIndex: 500000,
                 }}
@@ -2936,7 +3035,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         backgroundColor: '#f94144',
                                                         position: 'absolute',
                                                         top: -1,
-                                                        right: 9,
+                                                        right: 6,
                                                     }}
                                                 />
                                             ) : null}
@@ -2967,6 +3066,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 resizeMode={'contain'}
                             />
                         ) : null}
+
                         <TouchableOpacity
                             style={{ backgroundColor: 'none', marginRight: 15 }}
                             onPress={() => {
@@ -2984,50 +3084,63 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={20}
-                                    color={props.option === 'Settings' && props.showHelp ? '#006AFF' : '#f2f2f2'}
+                                    color={props.option === 'Settings' && props.showHelp ? '#007AFF' : '#f2f2f2'}
                                 />
                             </Text>
                         </TouchableOpacity>
+
                         {props.option === 'Account' || props.option === 'Inbox' ? null : (
-                            <DefaultInput
-                                value={searchTerm}
+                            <View
                                 style={{
-                                    color: '#000',
-                                    backgroundColor: '#f2f2f2',
-                                    borderRadius: 15,
-                                    fontSize: 12,
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#e8e8e8',
                                     paddingVertical: 6,
-                                    paddingHorizontal: 16,
-                                    marginRight: 2,
-                                    maxWidth: 225,
-                                }}
-                                autoCompleteType={'xyz'}
-                                placeholder={'Search'}
-                                onChangeText={(val) => setSearchTerm(val)}
-                                placeholderTextColor={'#000'}
-                            />
-                        )}
-                        {/* {Dimensions.get('window').width < 768 ? (
-                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'none' }} />
-                        ) : null} */}
-                        {/* {props.option === 'To Do' || props.option === 'Classroom' ? (
-                            <TouchableOpacity
-                                style={{ backgroundColor: 'none', marginLeft: 15 }}
-                                onPress={() => {
-                                    setShowFilterPopup(true);
+                                    paddingHorizontal: 12,
+                                    borderRadius: 24,
                                 }}
                             >
-                                <Text
+                                <Ionicons size={15} name="search-outline" color={'#000'} style={{}} />
+                                <DefaultInput
+                                    value={searchTerm}
                                     style={{
-                                        fontSize: 11,
-                                        color: '#f2f2f2',
-                                        textAlign: 'right',
+                                        color: '#727272',
+                                        backgroundColor: 'none',
+                                        fontSize: 12,
+                                        flex: 1,
+                                        fontFamily: 'Inter',
+                                        paddingLeft: 5,
+                                        maxWidth: 225,
                                     }}
-                                >
-                                    <Ionicons name="filter-outline" size={20} />
-                                </Text>
-                            </TouchableOpacity>
-                        ) : null} */}
+                                    placeholder={'Search'}
+                                    onChangeText={(val) => setSearchTerm(val)}
+                                    placeholderTextColor={'#727272'}
+                                />
+                                {searchTerm !== '' ? (
+                                    <TouchableOpacity
+                                        style={{
+                                            marginLeft: 'auto',
+                                            backgroundColor: '#e8e8e8',
+                                            width: 15,
+                                        }}
+                                        onPress={() => {
+                                            setSearchTerm('');
+                                        }}
+                                    >
+                                        <Ionicons name="close-outline" size={15} color="#000" />
+                                    </TouchableOpacity>
+                                ) : (
+                                    <View
+                                        style={{
+                                            marginLeft: 'auto',
+                                            width: 15,
+                                        }}
+                                    />
+                                )}
+                            </View>
+                        )}
                         <TouchableOpacity
                             style={{
                                 marginLeft: 15,
@@ -3091,7 +3204,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         fontFamily: 'inter',
                                                         fontSize: 14,
                                                         fontWeight: 'bold',
-                                                        color: tab === props.activeAccountTab ? '#006AFF' : '#1f1f1f',
+                                                        color: tab === props.activeAccountTab ? '#007AFF' : '#1f1f1f',
                                                         textTransform: 'uppercase',
                                                     }}
                                                 >
@@ -3106,6 +3219,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </View>
                 </div>
             </View>
+        );
+    };
+
+    // MAIN RETURN
+    return (
+        <View
+            style={{
+                height: windowHeight,
+                backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
+            }}
+        >
+            {renderInstantMeetingPopup()}
+            {/* Hide navbar if workspace is open */}
+            {selectedWorkspace === '' || props.modalType === 'Create' ? renderMainNavbar() : null}
+
             {searchTerm === '' ? (
                 props.modalType === 'Create' && (props.option === 'Classroom' || props.option === 'Browse') ? (
                     <Create
@@ -3123,7 +3251,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             alignSelf: 'center',
                             width: '100%',
                             backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
-                            height: width < 768 ? windowHeight - 104 : windowHeight - 52,
+                            height: width < 768 ? windowHeight - 104 : windowHeight - 64,
                         }}
                     >
                         {/* Add tabs to switch between Account tabs  */}
@@ -3182,68 +3310,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 user={props.user}
                             />
                         ) : null}
-                        {props.option === 'Classroom' &&
-                        selectedWorkspace &&
-                        !showNewDiscussionPost &&
-                        props.activeWorkspaceTab !== 'Settings' &&
-                        (props.activeWorkspaceTab !== 'Meet' || selectedWorkspace.split('-SPLIT-')[2] === userId) ? (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (props.activeWorkspaceTab === 'Content') {
-                                        props.openCreate();
-                                    } else if (props.activeWorkspaceTab === 'Discuss') {
-                                        console.log('Set show new discussion post true');
-                                        setShowNewDiscussionPost(true);
-                                    } else if (props.activeWorkspaceTab === 'Meet') {
-                                        handleStartMeeting(
-                                            selectedWorkspace.split('-SPLIT-')[1],
-                                            selectedWorkspace.split('-SPLIT-')[2]
-                                        );
-                                    } else if (props.activeWorkspaceTab === 'Scores') {
-                                        setExportScores(true);
-                                    }
-                                }}
-                                style={{
-                                    position: 'absolute',
-                                    marginRight:
-                                        Dimensions.get('window').width >= 1200
-                                            ? (Dimensions.get('window').width - 1200) / 2
-                                            : Dimensions.get('window').width >= 1024
-                                            ? (Dimensions.get('window').width - 1024) / 2 - 20
-                                            : 20,
-                                    marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
-                                    right: 0,
-                                    justifyContent: 'center',
-                                    bottom: 0,
-                                    width: 58,
-                                    height: 58,
-                                    borderRadius: 29,
-                                    backgroundColor: '#006AFF',
-                                    borderColor: '#f2f2f2',
-                                    borderWidth: 0,
-                                    shadowColor: '#000',
-                                    shadowOffset: {
-                                        width: 4,
-                                        height: 4,
-                                    },
-                                    shadowOpacity: 0.12,
-                                    shadowRadius: 10,
-                                    zIndex: 500000,
-                                }}
-                            >
-                                <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                                    {props.activeWorkspaceTab === 'Content' ? (
-                                        <Ionicons name="create-outline" size={25} />
-                                    ) : props.activeWorkspaceTab === 'Discuss' ? (
-                                        <Ionicons name="add-outline" size={35} />
-                                    ) : props.activeWorkspaceTab === 'Meet' ? (
-                                        <Ionicons name="videocam-outline" size={25} />
-                                    ) : props.activeWorkspaceTab === 'Scores' ? (
-                                        <Ionicons name="download-outline" size={28} />
-                                    ) : null}
-                                </Text>
-                            </TouchableOpacity>
-                        ) : null}
                     </View>
                 )
             ) : (
@@ -3253,13 +3319,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 isOpen={showFilterPopup}
                 buttons={[
                     {
-                        text: 'OK',
+                        text: 'Ok',
+                        color: 'dark',
                         handler: function (event) {
                             setShowFilterPopup(false);
                         },
                     },
                     {
-                        text: 'RESET',
+                        text: 'Reset',
+                        color: 'dark',
                         handler: function (event) {
                             setFilterStart(null);
                             setFilterEnd(null);
@@ -3397,24 +3465,25 @@ const styleObject: any = () =>
             fontSize: 13,
             color: '#fff',
             height: 24,
-            paddingHorizontal: 15,
+            marginHorizontal: 15,
             backgroundColor: 'none',
             lineHeight: 24,
             fontFamily: 'overpass',
             textTransform: 'uppercase',
-            marginRight: 5,
+            // marginRight: 5,
         },
         allGrayFill: {
             fontSize: 13,
-            color: '#006AFF',
-            paddingHorizontal: 15,
-            borderRadius: 12,
+            color: '#fff',
+            marginHorizontal: 15,
             backgroundColor: 'none',
             lineHeight: 24,
             height: 24,
-            fontFamily: 'overpass',
+            fontFamily: 'inter',
             textTransform: 'uppercase',
-            marginRight: 5,
+            borderBottomColor: '#fff',
+            borderBottomWidth: 1,
+            // marginRight: 5,
         },
         all1: {
             fontSize: 11,
@@ -3429,7 +3498,7 @@ const styleObject: any = () =>
         },
         allGrayFill1: {
             fontSize: 11,
-            color: '#006AFF',
+            color: '#007AFF',
             height: 20,
             lineHeight: 20,
             paddingHorizontal: 8,

@@ -55,8 +55,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     .query({
                         query: loginFromSso,
                         variables: {
-                            code
-                        }
+                            code,
+                        },
                     })
                     .then(async (r: any) => {
                         if (
@@ -90,7 +90,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             setIsLoggingIn(false);
                         }
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         console.log(e);
                         setIsLoggingIn(false);
                         Alert('Something went wrong. Try again.');
@@ -113,8 +113,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                         query: login,
                         variables: {
                             email: emailParam.toLowerCase(),
-                            password: decodeURIComponent(passwordParam)
-                        }
+                            password: decodeURIComponent(passwordParam),
+                        },
                     })
                     .then(async (r: any) => {
                         if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
@@ -131,23 +131,20 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             const sU = JSON.stringify(u);
                             await AsyncStorage.setItem('jwt_token', token);
                             await AsyncStorage.setItem('user', sU);
-                            await AsyncStorage.setItem('show_onboard_modal', 'true')
-                            
+                            await AsyncStorage.setItem('show_onboard_modal', 'true');
+
                             if (redirectToZoom) {
                                 window.location.href = `${origin}/zoom_auth`;
                             } else {
                                 window.location.href = origin;
                             }
-
-                            
-
                         } else {
                             const { error } = r.data.user.login;
                             setIsLoggingIn(false);
                             Alert(error);
                         }
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         console.log(e);
                         setIsLoggingIn(false);
                         Alert('Something went wrong. Try again.');
@@ -159,9 +156,9 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
     useEffect(() => {
         OneSignal.initialize('78cd253e-262d-4517-a710-8719abf3ee55', {
             notifyButton: {
-                enable: false
+                enable: false,
             },
-            allowLocalhostAsSecureOrigin: true
+            allowLocalhostAsSecureOrigin: true,
         });
     }, []);
 
@@ -199,7 +196,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             .post(
                                 `https://api.learnwithcues.com/checkSSO`,
                                 {
-                                    ssoDomain: split[1]
+                                    ssoDomain: split[1],
                                 },
                                 { cancelToken: cancelTokenRef.current.token }
                             )
@@ -232,8 +229,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             .query({
                 query: getSsoLink,
                 variables: {
-                    ssoDomain: split[1].trim()
-                }
+                    ssoDomain: split[1].trim(),
+                },
             })
             .then(async (r: any) => {
                 if (r.data && r.data.user.getSsoLink) {
@@ -242,7 +239,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     }
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
             });
     }, [email, isSsoEnabled]);
@@ -255,8 +252,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                 query: login,
                 variables: {
                     email: email.toLowerCase(),
-                    password
-                }
+                    password,
+                },
             })
             .then(async (r: any) => {
                 if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
@@ -284,7 +281,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     Alert(error);
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
                 setIsLoggingIn(false);
                 Alert('Something went wrong. Try again.');
@@ -297,10 +294,10 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             .mutate({
                 mutation: resetPassword,
                 variables: {
-                    email
-                }
+                    email,
+                },
             })
-            .then(res => {
+            .then((res) => {
                 if (res.data && res.data.user.resetPassword) {
                     Alert(weHaveEmailedPasswordAlert);
                     setShowForgotPassword(false);
@@ -308,7 +305,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     Alert(invalidCredentialsAlert);
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 Alert(invalidCredentialsAlert);
             });
     }, [email]);
@@ -359,7 +356,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             style={{
                 flex: 1,
                 flexDirection: 'row',
-                height: '100%'
+                height: '100%',
             }}
         >
             {!showSignupWindow ? (
@@ -371,7 +368,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                         position: 'absolute',
                         zIndex: 50,
                         backgroundColor: 'rgba(16,16,16, 0.7)',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
                     }}
                 >
                     <View
@@ -386,7 +383,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             height: dimensions.window.width < 768 ? '100%' : '100%',
                             borderRadius: dimensions.window.width < 768 ? 0 : 0,
                             marginTop: dimensions.window.width < 768 ? 0 : 0,
-                            paddingHorizontal: 40
+                            paddingHorizontal: 40,
                         }}
                     >
                         <ScrollView
@@ -395,7 +392,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             contentContainerStyle={{
                                 height: '100%',
                                 paddingVertical: 40,
-                                justifyContent: 'center'
+                                justifyContent: 'center',
                             }}
                             nestedScrollEnabled={true}
                         >
@@ -404,14 +401,14 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     flexDirection: 'row',
                                     justifyContent: 'center',
                                     display: 'flex',
-                                    paddingBottom: 30
+                                    paddingBottom: 30,
                                 }}
                             >
                                 <Image
                                     source={logo}
                                     style={{
-                                        width: dimensions.window.height * 0.20 * 0.53456,
-                                        height: dimensions.window.height * 0.20 * 0.2
+                                        width: dimensions.window.height * 0.2 * 0.53456,
+                                        height: dimensions.window.height * 0.2 * 0.2,
                                     }}
                                     resizeMode={'contain'}
                                 />
@@ -422,13 +419,11 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     color: '#1F1F1F',
                                     fontFamily: 'overpass',
                                     paddingBottom: showForgotPassword ? 20 : 0,
-                                    textAlign: 'center'
+                                    textAlign: 'center',
                                 }}
                             >
-                                {showForgotPassword
-                                    ? PreferredLanguageText('temporaryPassword')
-                                    : ''}
-                                    {/* PreferredLanguageText('continueLeftOff')} */}
+                                {showForgotPassword ? PreferredLanguageText('temporaryPassword') : ''}
+                                {/* PreferredLanguageText('continueLeftOff')} */}
                             </Text>
 
                             <View
@@ -437,7 +432,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     width: '100%',
                                     backgroundColor: 'white',
                                     justifyContent: 'center',
-                                    alignSelf: 'center'
+                                    alignSelf: 'center',
                                 }}
                             >
                                 <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
@@ -458,11 +453,18 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                             style={{
                                                 flexDirection: 'row',
                                                 justifyContent: 'center',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}
                                         >
-                                            <Ionicons name="lock-closed" size={18} color="#006AFF" />
-                                            <Text style={{ paddingLeft: 7, color: '#1f1f1f', paddingTop: 3 }}>
+                                            <Ionicons name="lock-closed" size={18} color="#000" />
+                                            <Text
+                                                style={{
+                                                    paddingLeft: 7,
+                                                    color: '#000',
+                                                    paddingTop: 3,
+                                                    fontFamily: 'Inter',
+                                                }}
+                                            >
                                                 Single sign-on enabled
                                             </Text>
                                         </View>
@@ -474,7 +476,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                             style={{
                                                 flexDirection: 'row',
                                                 justifyContent: 'space-between',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}
                                         >
                                             <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
@@ -488,13 +490,14 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                     style={{
                                                         backgroundColor: 'white',
                                                         flexDirection: 'row',
-                                                        justifyContent: 'center'
+                                                        justifyContent: 'center',
                                                     }}
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 13,
-                                                            color: '#006AFF'
+                                                            fontSize: 14,
+                                                            color: '#000',
+                                                            fontFamily: 'Inter',
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -520,7 +523,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                         justifyContent: 'center',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        paddingBottom: 10
+                                        paddingBottom: 10,
                                     }}
                                 >
                                     <TouchableOpacity
@@ -536,32 +539,33 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                         }}
                                         style={{
                                             backgroundColor: 'white',
-                                            overflow: 'hidden',
-                                            height: 35,
+                                            // overflow: 'hidden',
+                                            // height: 35,
                                             marginTop: 15,
                                             width: '100%',
                                             justifyContent: 'center',
-                                            flexDirection: 'row'
+                                            flexDirection: 'row',
                                         }}
                                     >
                                         <Text
                                             style={{
+                                                fontWeight: 'bold',
                                                 textAlign: 'center',
-                                                lineHeight: 34,
-                                                color: 'white',
-                                                fontSize: 12,
-                                                backgroundColor: '#006AFF',
-                                                paddingHorizontal: 20,
+                                                borderColor: '#000',
+                                                borderWidth: 1,
+                                                color: '#fff',
+                                                backgroundColor: '#000',
+                                                fontSize: 11,
+                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                                 fontFamily: 'inter',
-                                                height: 35,
-                                                // width: 180,
-                                                width: 175,
-                                                borderRadius: 15,
-                                                textTransform: 'uppercase'
+                                                overflow: 'hidden',
+                                                paddingVertical: 14,
+                                                textTransform: 'uppercase',
+                                                width: 150,
                                             }}
                                         >
                                             {isLoggingIn
-                                                ? 'Logging In...'
+                                                ? 'Signing In...'
                                                 : showForgotPassword
                                                 ? PreferredLanguageText('reset')
                                                 : isSsoEnabled
@@ -588,7 +592,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
-                                                        color: '#006AFF'
+                                                        color: '#007AFF'
                                                     }}>
                                                     Sign up now
                                                 </Text>
@@ -641,13 +645,14 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                                 marginBottom: 30,
                                                 width: '100%',
                                                 justifyContent: 'center',
-                                                flexDirection: 'row'
+                                                flexDirection: 'row',
                                             }}
                                         >
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#006AFF'
+                                                    color: '#000',
+                                                    fontFamily: 'Inter',
                                                 }}
                                             >
                                                 Back to Sign In
@@ -662,7 +667,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     justifyContent: 'flex-start',
                                     paddingLeft: 5,
                                     paddingBottom: 5,
-                                    marginTop: 20
+                                    marginTop: 20,
                                 }}
                             >
                                 {/* <LanguageSelect /> */}

@@ -19,7 +19,7 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 style={{
                     width: 20,
                     height: 20,
-                    marginRight: 8
+                    marginRight: 8,
                 }}
                 resizeMode={'contain'}
             />
@@ -31,7 +31,7 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 style={{
                     width: 20,
                     height: 20,
-                    marginRight: 8
+                    marginRight: 8,
                 }}
                 resizeMode={'contain'}
             />
@@ -47,16 +47,17 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 height: 35,
                 marginTop: 15,
                 justifyContent: 'center',
-                flexDirection: 'row'
+                flexDirection: 'row',
             }}
-            {...props}>
+            {...props}
+        >
             <Text
                 style={{
                     textAlign: 'center',
                     lineHeight: 34,
-                    color: '#006AFF',
+                    color: '#007AFF',
                     fontSize: 12,
-                    borderColor: '#006AFF',
+                    borderColor: '#007AFF',
                     borderWidth: 1,
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
@@ -67,8 +68,9 @@ const ButtonFC: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                     justifyContent: 'center',
                     alignItems: 'center',
                     display: 'flex',
-                    flexDirection: 'row'
-                }}>
+                    flexDirection: 'row',
+                }}
+            >
                 {icon ? icon : null} Sign in
             </Text>
         </TouchableOpacity>

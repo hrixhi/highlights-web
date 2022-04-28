@@ -9,7 +9,7 @@ import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 
 // HELPERS
-import { htmlStringParser } from '../helpers/HTMLParser';
+import { htmlStringParser, getContentIcon } from '../helpers/HTMLParser';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();
@@ -54,11 +54,38 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     // MAIN RETURN
     return (
-        <View style={styleObject.swiper}>
-            <TouchableOpacity onPress={() => props.updateModal()} style={styleObject.card}>
-                <View style={styleObject.text}>
-                    <View style={styleObject.dateContainer}>
-                        {/* {
+        <TouchableOpacity
+            onPress={() => props.updateModal()}
+            style={{
+                height: '100%',
+                backgroundColor: '#f8f8f8',
+                borderRadius: 1,
+                maxWidth: 145,
+                width: 145,
+                borderLeftColor: colorChoices[props.cue.color],
+                borderLeftWidth: 2,
+                flexDirection: 'row',
+                paddingVertical: 7,
+                paddingHorizontal: 10,
+            }}
+        >
+            <View
+                style={{
+                    backgroundColor: '#f8f8f8',
+                    width: '100%',
+                    flexDirection: 'column',
+                }}
+            >
+                <View
+                    style={{
+                        backgroundColor: '#f8f8f8',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}
+                >
+                    {/* <Ionicons name={getContentIcon(props.cue)} size={10} color="#000" /> */}
+                    {/* {
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
@@ -73,58 +100,40 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </Text>
                                 : null
                         } */}
-                        <Text style={styleObject.date2}>
-                            {new Date(props.cue.date).toString().split(' ')[1] +
-                                ' ' +
-                                new Date(props.cue.date).toString().split(' ')[2]}
-                        </Text>
-                        {props.cue.status && props.cue.status !== 'read' && props.cue.status !== 'submitted' ? (
+                    <Text style={styleObject.date2}>
+                        {new Date(props.cue.date).toString().split(' ')[1] +
+                            ' ' +
+                            new Date(props.cue.date).toString().split(' ')[2]}
+                    </Text>
+                    {/* {props.cue.status && props.cue.status !== 'read' && props.cue.status !== 'submitted' ? (
                             <Ionicons name="alert-circle-outline" size={14} color="#f94144" />
-                        ) : null}
-                        {props.cue.graded && showScore && !isOwner ? (
-                            <Text
-                                style={{
-                                    fontSize: 9,
-                                    color: '#006AFF',
-                                    marginLeft: 5,
-                                    textAlign: 'right'
-                                }}>
-                                {props.cue.score}%
-                            </Text>
-                        ) : null}
-                    </View>
-                    <View
-                        style={{
-                            backgroundColor: '#f8f8f8',
-                            width: '100%',
-                            flexDirection: 'row',
-                            flex: 1,
-                            height: '70%'
-                        }}>
-                        <Text ellipsizeMode={'tail'} numberOfLines={1} style={styleObject.title}>
-                            {title}
+                        ) : null} */}
+                    {props.cue.graded && showScore && !isOwner ? (
+                        <Text
+                            style={{
+                                fontSize: 10,
+                                color: '#007AFF',
+                                // marginLeft: 5,
+                                textAlign: 'right',
+                                marginLeft: 'auto',
+                            }}
+                        >
+                            {props.cue.score}%
                         </Text>
-                        {/* {
-                            props.cue.channelId && props.cue.unreadThreads !== 0 ?
-                                <Text style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 12,
-                                    overflow: 'hidden',
-                                    backgroundColor: '#006AFF',
-                                    textAlign: 'center',
-                                    zIndex: 150,
-                                    marginLeft: 5,
-                                    marginTop: 12,
-                                    color: 'white', lineHeight: 20, fontSize: 10
-                                }}>
-                                    {props.cue.unreadThreads}
-                                </Text> : <Text style={{ width: 25 }} />
-                        } */}
-                    </View>
+                    ) : null}
                 </View>
-            </TouchableOpacity>
-        </View>
+                <View
+                    style={{
+                        backgroundColor: '#f8f8f8',
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Text ellipsizeMode={'tail'} numberOfLines={1} style={styleObject.title}>
+                        {title}
+                    </Text>
+                </View>
+            </View>
+        </TouchableOpacity>
     );
 };
 
@@ -152,7 +161,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             // overflow: 'hidden',
             // shadowOpacity: 0.07,
             // shadowRadius: 7,
-            zIndex: 500000
+            zIndex: 500000,
         },
         card: {
             height: '100%',
@@ -160,7 +169,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             width: '100%',
             padding: 7,
             paddingHorizontal: 10,
-            backgroundColor: '#f8f8f8'
+            backgroundColor: '#f8f8f8',
         },
         flipCard: {
             height: '100%',
@@ -168,29 +177,29 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             borderRadius: 1,
             padding: 13,
             color: '#fff',
-            backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
+            backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
         },
         descriptionFlip: {
             color: '#fff',
-            fontSize: 13
+            fontSize: 13,
         },
         text: {
             height: '100%',
-            backgroundColor: '#f8f8f8'
+            backgroundColor: '#f8f8f8',
         },
         flipText: {
             height: '100%',
             color: '#fff',
-            backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
+            backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
         },
         dateContainer: {
             fontSize: 10,
             color: '#fff',
-            height: '30%',
+            // height: '30%',
             backgroundColor: '#f8f8f8',
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         flipDateContainer: {
             fontSize: 10,
@@ -198,13 +207,13 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             display: 'flex',
             flexDirection: 'row',
             color: '#fff',
-            backgroundColor: colorScheme === 'light' ? '#000000' : 'white'
+            backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
         },
         date: {
             fontSize: 9,
             color: colorScheme === 'light' ? '#fff' : '#1F1F1F',
             marginLeft: 10,
-            lineHeight: 10
+            lineHeight: 10,
         },
         date2: {
             fontSize: 10,
@@ -212,7 +221,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             lineHeight: 12,
             textAlign: 'left',
             paddingVertical: 2,
-            flex: 1
+            flex: 1,
         },
         title: {
             fontFamily: 'inter',
@@ -221,7 +230,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             flex: 1,
             marginTop: 5,
             color: '#000000',
-            backgroundColor: '#f8f8f8'
+            backgroundColor: '#f8f8f8',
+            maxWidth: '100%',
         },
         titleFlip: {
             color: colorScheme === 'light' ? '#fff' : '#000000',
@@ -231,10 +241,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             // ,
             height: '75%',
             width: '100%',
-            paddingTop: 5
+            paddingTop: 5,
         },
         description: {
             fontSize: 13,
-            color: colorScheme === 'light' ? '#fff' : '#333333'
-        }
+            color: colorScheme === 'light' ? '#fff' : '#333333',
+        },
     });

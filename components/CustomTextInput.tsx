@@ -74,28 +74,29 @@ export function TextInput(props: TextInputProps) {
 const styles = StyleSheet.create({
     textInputContainer: {
         marginTop: 10,
-        marginBottom: 20
+        marginBottom: 20,
     },
     input: {
         width: '100%',
-        borderColor: '#f2f2f2',
-        borderBottomWidth: 1,
+        borderColor: '#cccccc',
+        borderWidth: 1,
         fontSize: 14,
-        paddingTop: 13,
-        paddingBottom: 13,
+        paddingTop: 10,
+        paddingBottom: 10,
         marginTop: 0,
         marginBottom: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        borderRadius: 2,
     },
     errorText: {
         fontSize: 10,
         color: 'red',
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     footer: {
         fontSize: 10,
         display: 'flex',
-        justifyContent: 'flex-end'
-    }
+        justifyContent: 'flex-end',
+    },
 });

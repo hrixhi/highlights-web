@@ -305,58 +305,58 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setActiveScore('');
     };
 
-    /**
-     * @description Renders export button
-     */
-    const renderExportButton = () => {
-        return (
-            <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                        justifyContent: 'flex-end',
-                        width: '100%',
-                        backgroundColor: '#fff',
-                        marginBottom: 30,
-                    }}
-                >
-                    {scores.length === 0 || cues.length === 0 || !props.isOwner ? null : (
-                        <TouchableOpacity
-                            onPress={() => {
-                                exportGrades();
-                            }}
-                            style={{
-                                backgroundColor: '#fff',
-                                overflow: 'hidden',
-                                height: 35,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    lineHeight: 34,
-                                    color: '#006AFF',
-                                    fontSize: 12,
-                                    borderColor: '#006AFF',
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    textTransform: 'uppercase',
-                                }}
-                            >
-                                EXPORT
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-            </View>
-        );
-    };
+    // /**
+    //  * @description Renders export button
+    //  */
+    // const renderExportButton = () => {
+    //     return (
+    //         <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
+    //             <View
+    //                 style={{
+    //                     flexDirection: 'row',
+    //                     flex: 1,
+    //                     justifyContent: 'flex-end',
+    //                     width: '100%',
+    //                     backgroundColor: '#fff',
+    //                     marginBottom: 30,
+    //                 }}
+    //             >
+    //                 {scores.length === 0 || cues.length === 0 || !props.isOwner ? null : (
+    //                     <TouchableOpacity
+    //                         onPress={() => {
+    //                             exportGrades();
+    //                         }}
+    //                         style={{
+    //                             backgroundColor: '#fff',
+    //                             overflow: 'hidden',
+    //                             height: 35,
+    //                             justifyContent: 'center',
+    //                             flexDirection: 'row',
+    //                         }}
+    //                     >
+    //                         <Text
+    //                             style={{
+    //                                 textAlign: 'center',
+    //                                 lineHeight: 34,
+    //                                 color: '#007AFF',
+    //                                 fontSize: 12,
+    //                                 borderColor: '#007AFF',
+    //                                 paddingHorizontal: 20,
+    //                                 fontFamily: 'inter',
+    //                                 height: 35,
+    //                                 borderWidth: 1,
+    //                                 borderRadius: 15,
+    //                                 textTransform: 'uppercase',
+    //                             }}
+    //                         >
+    //                             EXPORT
+    //                         </Text>
+    //                     </TouchableOpacity>
+    //                 )}
+    //             </View>
+    //         </View>
+    //     );
+    // };
 
     const renderPerformanceOverview = () => {
         const grade = props.report[props.channelId] ? props.report[props.channelId].score : 0;
@@ -463,7 +463,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         height={'10px'}
                                         width={'200px'}
                                         isLabelVisible={false}
-                                        bgColor={progress >= 100 ? '#35AC78' : '#006AFF'}
+                                        bgColor={progress >= 100 ? '#35AC78' : '#007AFF'}
                                     />
                                 ) : null}
                             </View>
@@ -1157,7 +1157,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     maxCompleted={100}
                                                     height={'10px'}
                                                     isLabelVisible={false}
-                                                    bgColor={'#006AFF'}
+                                                    bgColor={'#007AFF'}
                                                     dir="rtl"
                                                 />
                                             </View>
@@ -1646,10 +1646,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         width: '100%',
                         backgroundColor: 'white',
                         maxHeight: Dimensions.get('window').height - 52 - 45 - 120,
-                        borderRadius: 8,
+                        borderRadius: 2,
                         borderWidth: 1,
                         marginTop: 25,
-                        borderColor: '#efefef',
+                        borderColor: '#cccccc',
                         zIndex: 5000000,
                         flexDirection: 'column',
                         justifyContent: props.isOwner ? 'flex-start' : 'center',

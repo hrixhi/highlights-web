@@ -169,9 +169,9 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 <TextInput
                                     value={customCategory}
                                     style={{
-                                        borderRadius: 0,
-                                        borderColor: '#f2f2f2',
-                                        borderBottomWidth: 1,
+                                        borderRadius: 2,
+                                        borderColor: '#cccccc',
+                                        borderWidth: 1,
                                         fontSize: 14,
                                         height: '2.75em',
                                         padding: '1em',
@@ -340,15 +340,15 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         fontFamily: 'overpass',
                         width: '100%',
-                        borderBottomWidth: 1,
-                        borderColor: '#f2f2f2',
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
                         // borderBottom: '1px solid #f2f2f2',
                         fontSize: 14,
                         paddingVertical: 20,
                         paddingLeft: 10,
                         marginTop: 12,
                         marginBottom: 25,
-                        borderRadius: 1,
+                        borderRadius: 2,
                         height: 35,
                     }}
                     // minRows={1}
@@ -358,6 +358,9 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 <View
                     style={{
                         width: '100%',
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                        borderRadius: 2,
                     }}
                 >
                     <FroalaEditor
@@ -470,14 +473,14 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     paddingVertical: 8,
                                     paddingHorizontal: 12,
                                     borderWidth: 1,
-                                    borderColor: '#f2f2f2',
+                                    borderColor: '#cccccc',
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    borderRadius: 8,
+                                    borderRadius: 2,
                                     marginBottom: 10,
                                 }}
                             >
-                                <Ionicons name="attach-outline" size={24} color="#006AFF" />
+                                <Ionicons name="attach-outline" size={24} color="#007AFF" />
                                 <Text
                                     style={{
                                         paddingLeft: 10,
@@ -526,8 +529,8 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 <TouchableOpacity
                     style={{
                         backgroundColor: 'white',
-                        overflow: 'hidden',
-                        height: 35,
+                        // overflow: 'hidden',
+                        // height: 35,
                         justifyContent: 'center',
                         flexDirection: 'row',
                     }}
@@ -563,17 +566,19 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 >
                     <Text
                         style={{
+                            fontWeight: 'bold',
                             textAlign: 'center',
-                            lineHeight: 34,
-                            color: 'white',
-                            fontSize: 12,
-                            backgroundColor: '#006AFF',
-                            paddingHorizontal: 20,
+                            borderColor: '#000',
+                            borderWidth: 1,
+                            color: '#fff',
+                            backgroundColor: '#000',
+                            fontSize: 11,
+                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                             fontFamily: 'inter',
-                            height: 35,
-                            borderRadius: 15,
-                            width: 120,
+                            overflow: 'hidden',
+                            paddingVertical: 14,
                             textTransform: 'uppercase',
+                            width: 120,
                         }}
                     >
                         CREATE

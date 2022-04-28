@@ -83,7 +83,8 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
             isOpen={props.show}
             buttons={[
                 {
-                    text: 'CANCEL',
+                    text: 'Cancel',
+                    color: 'dark',
                     handler: function (event) {
                         props.onClose();
                     },
@@ -109,7 +110,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     backgroundColor: '#f8f8f8',
                 }}
             >
-                <View
+                {/* <View
                     style={{
                         paddingTop: 20,
                         paddingHorizontal: 20,
@@ -153,7 +154,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                 textAlign: 'center',
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#006AFF',
+                                backgroundColor: '#007AFF',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 lineHeight: 35,
@@ -165,6 +166,100 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             Search
                         </Text>
                     </TouchableOpacity>
+                </View> */}
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        paddingTop: 20,
+                        backgroundColor: 'none',
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: '#fff',
+                            paddingVertical: 12,
+                            paddingHorizontal: 15,
+                            borderRadius: 24,
+                            width: 300,
+                            flex: 1,
+                        }}
+                    >
+                        <Ionicons size={20} name="search-outline" color={'#1f1f1f'} style={{}} />
+                        <TextInput
+                            value={searchTerm}
+                            style={{
+                                color: '#1f1f1f',
+                                backgroundColor: 'none',
+                                fontSize: 14,
+                                flex: 1,
+                                fontFamily: 'Inter',
+                                paddingLeft: 10,
+                                paddingVertical: 5,
+                            }}
+                            placeholder={'Search topic, description, channel, etc.'}
+                            onChangeText={(val) => setSearchTerm(val)}
+                            placeholderTextColor={'#1f1f1f'}
+                        />
+                        {searchTerm !== '' ? (
+                            <TouchableOpacity
+                                style={{
+                                    marginLeft: 'auto',
+                                    backgroundColor: '#fff',
+                                    width: 15,
+                                }}
+                                onPress={() => {
+                                    setSearchTerm('');
+                                }}
+                            >
+                                <Ionicons name="close-outline" size={20} color="#1f1f1f" />
+                            </TouchableOpacity>
+                        ) : (
+                            <View
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 15,
+                                }}
+                            />
+                        )}
+                    </View>
+                    <View
+                        style={{
+                            backgroundColor: 'none',
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => {
+                                searchVideos();
+                            }}
+                            style={{ backgroundColor: 'none', borderRadius: 15, marginLeft: 30 }}
+                        >
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    borderColor: '#000',
+                                    borderWidth: 1,
+                                    color: '#fff',
+                                    backgroundColor: '#000',
+                                    fontSize: 11,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'uppercase',
+                                    width: 120,
+                                }}
+                            >
+                                SEARCH
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 {/*  */}
                 {isSearching ? (
@@ -218,7 +313,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             >
                                 <Text
                                     style={{
-                                        fontSize: 13,
+                                        fontSize: 15,
                                     }}
                                 >
                                     {totalResults} results found.
@@ -281,7 +376,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 16,
                                                 fontFamily: 'Inter',
                                                 marginBottom: 10,
                                             }}
@@ -292,7 +387,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                         </Text>
                                         <Text
                                             style={{
-                                                fontSize: 12,
+                                                fontSize: 14,
                                             }}
                                         >
                                             {channelTitle}
@@ -301,7 +396,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                             style={{
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
-                                                paddingTop: 10,
+                                                paddingTop: 20,
                                                 backgroundColor: '#f8f8f8',
                                             }}
                                         >
@@ -321,12 +416,12 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                                         setPlayVideoId(videoId);
                                                     }}
                                                 >
-                                                    <Ionicons name="play-outline" size={15} color={'#006AFF'} />
+                                                    <Ionicons name="play-outline" size={18} color={'#007AFF'} />
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
-                                                            color: '#006AFF',
-                                                            fontSize: 12,
+                                                            color: '#007AFF',
+                                                            fontSize: 15,
                                                             fontFamily: 'inter',
                                                             lineHeight: 30,
                                                             height: 30,
@@ -352,12 +447,12 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                                     props.insertVideo(videoId);
                                                 }}
                                             >
-                                                <Ionicons name="add-outline" size={15} color={'#006AFF'} />
+                                                <Ionicons name="add-outline" size={20} color={'#007AFF'} />
                                                 <Text
                                                     style={{
                                                         textAlign: 'center',
-                                                        color: '#006AFF',
-                                                        fontSize: 12,
+                                                        color: '#007AFF',
+                                                        fontSize: 15,
                                                         fontFamily: 'inter',
                                                         lineHeight: 30,
                                                         height: 30,
@@ -397,7 +492,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             >
                                 <Text
                                     style={{
-                                        color: '#006AFF',
+                                        color: '#007AFF',
                                     }}
                                 >
                                     Previous
@@ -417,7 +512,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             >
                                 <Text
                                     style={{
-                                        color: '#006AFF',
+                                        color: '#007AFF',
                                     }}
                                 >
                                     Next

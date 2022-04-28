@@ -17,7 +17,7 @@ const FileUpload: React.FC<any> = (props: any) => {
     const handleFile = useCallback(async () => {
         // e.preventDefault();
         const res: any = await DocumentPicker.getDocumentAsync({
-            type: props.profile ? 'image/*' : '*/*'
+            type: props.profile ? 'image/*' : '*/*',
         });
 
         if (res.type === 'cancel' || res.type !== 'success') {
@@ -85,7 +85,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             return;
         }
 
-        fileUpload(file, type).then(response => {
+        fileUpload(file, type).then((response) => {
             const { data } = response;
             if (data.status === 'success') {
                 props.onUpload(data.url, type);
@@ -106,14 +106,19 @@ const FileUpload: React.FC<any> = (props: any) => {
         formData.append('typeOfUpload', type);
         const config = {
             headers: {
-                'content-type': 'multipart/form-data'
-            }
+                'content-type': 'multipart/form-data',
+            },
         };
         return axios.post(url, formData, config);
     }, []);
 
     return (
-        <View style={{ position: props.profile ? 'absolute' : 'relative', backgroundColor: props.profile ? 'none' : '#fff', }}>
+        <View
+            style={{
+                position: props.profile ? 'absolute' : 'relative',
+                backgroundColor: props.profile ? 'none' : '#fff',
+            }}
+        >
             {uploading ? (
                 <View>
                     <ActivityIndicator color={'#a2a2ac'} size={'small'} />
@@ -121,11 +126,11 @@ const FileUpload: React.FC<any> = (props: any) => {
             ) : props.quiz ? (
                 <Text
                     style={{
-                        color: '#006AFF',
+                        color: '#007AFF',
                         // lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
                         fontSize: 12,
-                        fontFamily: 'overpass'
+                        fontFamily: 'overpass',
                     }}
                     onPress={() => handleFile()}
                 >
@@ -134,21 +139,25 @@ const FileUpload: React.FC<any> = (props: any) => {
             ) : (
                 <Text
                     style={{
-                        color: '#006AFF',
+                        color: '#000',
                         backgroundColor: props.profile ? 'none' : '#fff',
                         lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
-                        fontSize: props.quiz ? 12 : 12,
-                        fontFamily: 'overpass',
-                        textTransform: 'uppercase',
-                        paddingLeft: props.profile ? 0 : 10
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        textTransform: 'capitalize',
+                        // paddingLeft: props.profile ? 0 : 10,
                     }}
                     onPress={() => handleFile()}
                 >
                     {props.chat || props.profile ? (
-                        <Ionicons name={props.profile ? "attach-outline" : "document-attach-outline"} size={props.profile ? 25 : 18}  color={props.profile ? 'white' : '#006AFF' } />
+                        <Ionicons
+                            name={props.profile ? 'attach-outline' : 'document-attach-outline'}
+                            size={props.profile ? 25 : 18}
+                            color={props.profile ? 'white' : '#000'}
+                        />
                     ) : (
-                        PreferredLanguageText('import')
+                        'Import'
                     )}
                 </Text>
             )}

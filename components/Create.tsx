@@ -1466,18 +1466,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             style={{
                 width: '100%',
                 height: dimensions.window.width < 1024 ? dimensions.window.height - 104 : dimensions.window.height - 52,
-                backgroundColor: 'white',
+                backgroundColor: '#f8f8f8',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 overflow: 'scroll',
             }}
             showsVerticalScrollIndicator={true}
         >
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', backgroundColor: '#f8f8f8' }}>
                 <Animated.View
                     style={{
                         width: '100%',
-                        backgroundColor: 'white',
+                        backgroundColor: '#f8f8f8',
                         opacity: modalAnimation,
                         height: '100%',
                         maxWidth: 1024,
@@ -1488,13 +1488,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         style={{
                             flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                            alignItems: 'center',
                             paddingBottom: 30,
+                            paddingTop: 10,
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         {props.option === 'Browse' && !showOptions ? null : (
                             <TouchableOpacity
                                 style={{
-                                    paddingTop: 10,
+                                    // paddingTop: 10,
+                                    backgroundColor: '#f8f8f8',
                                     marginRight: 20,
                                 }}
                                 onPress={() => {
@@ -1507,12 +1511,30 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }
                                 }}
                             >
-                                <Text>
-                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    <Ionicons
+                                        name="arrow-back-outline"
+                                        size={30}
+                                        color={'#1F1F1F'}
+                                        style={{
+                                            fontWeight: '800',
+                                        }}
+                                    />
                                 </Text>
                             </TouchableOpacity>
                         )}
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 10 }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                flex: 1,
+                                backgroundColor: '#f8f8f8',
+                            }}
+                        >
                             {!imported &&
                             !showOptions &&
                             !isQuiz &&
@@ -1521,7 +1543,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                     onPress={() => {
                                         handleFileUpload();
@@ -1529,33 +1551,37 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 >
                                     <Text
                                         style={{
+                                            // fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 28,
-                                            color: '#006AFF',
-                                            borderColor: '#006AFF',
-                                            borderWidth: 1,
-                                            marginTop: 2,
-                                            fontSize: 12,
-                                            borderRadius: 15,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
-                                            marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            // lineHeight: 28,
+                                            color: '#000',
+                                            borderColor: '#000',
+                                            // borderWidth: 1,
+                                            // marginTop: 2,
+                                            fontSize: 14,
+                                            // borderRadius: 15,
+                                            paddingHorizontal: 10,
+                                            // marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 30,
-                                            textTransform: 'uppercase',
+                                            paddingVertical: 14,
+                                            // height: 30,
+                                            textTransform: 'capitalize',
                                         }}
                                     >
-                                        Upload file
+                                        Import
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
+
+                            {/* QUIZ BUTTON FOR INSTRUCTORS */}
 
                             {/* QUIZ BUTTON FOR INSTRUCTORS */}
                             {!imported && !showOptions && !isQuiz && !showBooks ? (
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                     onPress={() => {
                                         setShowBooks(!showBooks);
@@ -1563,31 +1589,69 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 >
                                     <Text
                                         style={{
+                                            // fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 28,
-                                            color: '#006AFF',
-                                            borderColor: '#006AFF',
-                                            borderWidth: 1,
-                                            marginTop: 2,
-                                            fontSize: 12,
-                                            borderRadius: 15,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
-                                            marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            // lineHeight: 28,
+                                            color: '#000',
+                                            borderColor: '#000',
+                                            // borderWidth: 1,
+                                            // marginTop: 2,
+                                            fontSize: 14,
+                                            // borderRadius: 15,
+                                            paddingHorizontal: 10,
+                                            // marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 30,
-                                            textTransform: 'uppercase',
+                                            paddingVertical: 14,
+                                            // height: 30,
+                                            textTransform: 'capitalize',
                                         }}
                                     >
-                                        Browse Books
+                                        Books
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
+
+                            {!imported && !showOptions && !isQuiz && !showBooks ? (
+                                <TouchableOpacity
+                                    style={{
+                                        borderRadius: 15,
+                                        backgroundColor: '#f8f8f8',
+                                    }}
+                                    onPress={() => {
+                                        setShowInsertYoutubeVideosModal(true);
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            // fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            // lineHeight: 28,
+                                            color: '#000',
+                                            borderColor: '#000',
+                                            // borderWidth: 1,
+                                            // marginTop: 2,
+                                            fontSize: 14,
+                                            // borderRadius: 15,
+                                            paddingHorizontal: 10,
+                                            // marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
+                                            // height: 30,
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        Videos
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
+
                             {allowQuizCreation && !imported && !showOptions && !showBooks ? (
                                 <TouchableOpacity
                                     style={{
                                         borderRadius: 15,
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                     onPress={() => {
                                         if (isQuiz) {
@@ -1601,22 +1665,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <Text
                                         style={{
                                             textAlign: 'center',
-                                            lineHeight: 28,
-                                            color: '#006AFF',
-                                            borderColor: '#006AFF',
-                                            borderWidth: 1,
-                                            marginTop: 2,
-                                            fontSize: 12,
-                                            borderRadius: 15,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
-                                            marginRight: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            color: '#000',
+                                            borderColor: '#000',
+                                            fontSize: 14,
+                                            paddingHorizontal: 10,
+                                            marginRight: 20,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 30,
-                                            textTransform: 'uppercase',
+                                            paddingVertical: 14,
+                                            textTransform: 'capitalize',
                                         }}
                                     >
-                                        {isQuiz ? 'Clear' : 'Create Quiz'}
+                                        {isQuiz ? 'Clear' : 'Quiz'}
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
@@ -1641,24 +1701,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }}
                                     disabled={isSubmitting}
                                     style={{
-                                        borderRadius: 15,
-                                        backgroundColor: 'white',
-                                        // marginLeft: 15
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 28,
+                                            borderColor: '#000',
+                                            borderWidth: 1,
                                             color: '#fff',
-                                            backgroundColor: '#006AFF',
-                                            marginTop: 2,
-                                            fontSize: 12,
-                                            borderRadius: 15,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 20,
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 30,
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
                                         }}
                                     >
@@ -1684,7 +1742,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             insertVideo={handleAddVideo}
                         />
                     ) : null}
-                    <View style={{ paddingBottom: 100 }}>
+                    <View style={{ paddingBottom: 100, backgroundColor: '#f8f8f8' }}>
                         {showOptions ? (
                             <View
                                 style={{
@@ -1694,6 +1752,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     marginHorizontal: 10,
                                     maxWidth: 1024,
                                     alignSelf: 'center',
+                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 {channels.length !== 0 ? (
@@ -1701,6 +1760,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             display: 'flex',
                                             overflow: 'visible',
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
@@ -1709,6 +1769,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 borderRightWidth: 0,
                                                 borderColor: '#f2f2f2',
                                                 paddingTop: width < 768 ? 0 : 40,
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <View
@@ -1716,7 +1777,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <Text
@@ -1731,12 +1792,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </View>
                                             <View
                                                 style={{
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
                                                     style={{
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                         display: 'flex',
                                                     }}
                                                 >
@@ -1796,6 +1857,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40,
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
@@ -1803,7 +1865,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
                                                     <Text
@@ -1816,10 +1878,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         Restrict Access
                                                     </Text>
                                                 </View>
-                                                <View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#f8f8f8',
+                                                    }}
+                                                >
                                                     <View
                                                         style={{
-                                                            backgroundColor: 'white',
+                                                            backgroundColor: '#f8f8f8',
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
@@ -1833,8 +1899,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#f2f2f2',
-                                                                true: '#006AFF',
+                                                                false: '#fff',
+                                                                true: '#000',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -1844,6 +1910,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             style={{
                                                                 flexDirection: 'column',
                                                                 overflow: 'scroll',
+                                                                backgroundColor: '#f8f8f8',
                                                             }}
                                                         >
                                                             <View
@@ -1852,6 +1919,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     padding: 5,
                                                                     height: 'auto',
                                                                     maxWidth: 350,
+                                                                    backgroundColor: '#f8f8f8',
                                                                 }}
                                                             >
                                                                 <label>
@@ -1889,6 +1957,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40,
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
@@ -1896,7 +1965,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
                                                     <Text
@@ -1909,10 +1978,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         {PreferredLanguageText('submissionRequired')}
                                                     </Text>
                                                 </View>
-                                                <View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#f8f8f8',
+                                                    }}
+                                                >
                                                     <View
                                                         style={{
-                                                            backgroundColor: 'white',
+                                                            backgroundColor: '#f8f8f8',
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
@@ -1927,21 +2000,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#f2f2f2',
-                                                                true: '#006AFF',
+                                                                false: '#fff',
+                                                                true: '#000',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
                                                     </View>
-                                                    <View style={{ width: '100%', marginBottom: 15 }}>
-                                                        <View style={{}}>
+                                                    <View
+                                                        style={{
+                                                            width: '100%',
+                                                            marginBottom: 15,
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                backgroundColor: '#f8f8f8',
+                                                            }}
+                                                        >
                                                             {submission ? (
                                                                 <View
                                                                     style={{
                                                                         width: '100%',
                                                                         display: 'flex',
                                                                         flexDirection: 'row',
-                                                                        backgroundColor: 'white',
+                                                                        backgroundColor: '#f8f8f8',
                                                                         alignItems: 'center',
                                                                     }}
                                                                 >
@@ -1986,15 +2069,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                     {/* Add it here */}
 
-                                                    <View style={{ width: '100%' }}>
-                                                        <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                                                        <View
+                                                            style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}
+                                                        >
                                                             {submission ? (
                                                                 <View
                                                                     style={{
                                                                         width: '100%',
                                                                         display: 'flex',
                                                                         flexDirection: 'row',
-                                                                        backgroundColor: 'white',
+                                                                        backgroundColor: '#f8f8f8',
                                                                         alignItems: 'center',
                                                                     }}
                                                                 >
@@ -2050,6 +2135,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40,
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
@@ -2057,7 +2143,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
                                                     <Text
@@ -2070,11 +2156,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         Grade Weight
                                                     </Text>
                                                 </View>
-                                                <View>
-                                                    <View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#f8f8f8',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         <View
                                                             style={{
-                                                                backgroundColor: 'white',
+                                                                backgroundColor: '#f8f8f8',
                                                                 height: 40,
                                                                 marginRight: 10,
                                                                 flexDirection: 'row',
@@ -2086,21 +2180,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 onValueChange={() => setGraded(!graded)}
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
-                                                                    false: '#f2f2f2',
-                                                                    true: '#006AFF',
+                                                                    false: '#fff',
+                                                                    true: '#000',
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
                                                         </View>
                                                     </View>
-                                                    <View>
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         {graded ? (
                                                             <View
                                                                 style={{
                                                                     flexDirection: 'row',
                                                                     justifyContent:
                                                                         width < 768 ? 'flex-start' : 'flex-end',
-                                                                    backgroundColor: 'white',
+                                                                    backgroundColor: '#f8f8f8',
                                                                     alignItems: 'center',
                                                                 }}
                                                             >
@@ -2108,12 +2206,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     value={gradeWeight}
                                                                     style={{
                                                                         width: '25%',
-                                                                        borderBottomColor: '#f2f2f2',
-                                                                        borderBottomWidth: 1,
+                                                                        borderColor: '#cccccc',
+                                                                        borderRadius: 2,
+                                                                        borderWidth: 1,
                                                                         fontSize: 14,
                                                                         padding: 15,
                                                                         paddingVertical: 12,
                                                                         marginTop: 0,
+                                                                        backgroundColor: '#fff',
                                                                     }}
                                                                     placeholder={'0-100'}
                                                                     onChangeText={(val) => setGradeWeight(val)}
@@ -2143,6 +2243,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40,
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
@@ -2150,7 +2251,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
                                                     <Text
@@ -2163,11 +2264,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         Late Submission
                                                     </Text>
                                                 </View>
-                                                <View>
-                                                    <View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#f8f8f8',
+                                                    }}
+                                                >
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         <View
                                                             style={{
-                                                                backgroundColor: 'white',
+                                                                backgroundColor: '#f8f8f8',
                                                                 height: 40,
                                                                 marginRight: 10,
                                                                 flexDirection: 'row',
@@ -2181,21 +2290,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 }
                                                                 style={{ height: 20 }}
                                                                 trackColor={{
-                                                                    false: '#f2f2f2',
-                                                                    true: '#006AFF',
+                                                                    false: '#fff',
+                                                                    true: '#000',
                                                                 }}
                                                                 activeThumbColor="white"
                                                             />
                                                         </View>
                                                     </View>
-                                                    <View>
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         {allowLateSubmission ? (
                                                             <View
                                                                 style={{
                                                                     width: '100%',
                                                                     display: 'flex',
                                                                     flexDirection: 'row',
-                                                                    backgroundColor: 'white',
+                                                                    backgroundColor: '#f8f8f8',
                                                                     alignItems: 'center',
                                                                     // marginLeft: 50,
                                                                 }}
@@ -2250,6 +2363,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     flexDirection: width < 768 ? 'column' : 'row',
                                                     paddingTop: 40,
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <View
@@ -2257,7 +2371,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         flex: 1,
                                                         flexDirection: 'row',
                                                         paddingBottom: 15,
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
                                                     <Text
@@ -2270,10 +2384,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         Unlimited Attempts
                                                     </Text>
                                                 </View>
-                                                <View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#f8f8f8',
+                                                    }}
+                                                >
                                                     <View
                                                         style={{
-                                                            backgroundColor: 'white',
+                                                            backgroundColor: '#f8f8f8',
                                                             height: 40,
                                                             marginRight: 10,
                                                             flexDirection: 'row',
@@ -2292,8 +2410,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}
                                                             style={{ height: 20 }}
                                                             trackColor={{
-                                                                false: '#f2f2f2',
-                                                                true: '#006AFF',
+                                                                false: '#fff',
+                                                                true: '#000',
                                                             }}
                                                             activeThumbColor="white"
                                                         />
@@ -2304,7 +2422,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 width: '100%',
                                                                 display: 'flex',
                                                                 flexDirection: 'row',
-                                                                backgroundColor: 'white',
+                                                                backgroundColor: '#f8f8f8',
                                                                 justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                                                 alignItems: 'center',
                                                             }}
@@ -2314,12 +2432,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 value={attempts}
                                                                 style={{
                                                                     width: '25%',
-                                                                    borderBottomColor: '#F8F9FA',
-                                                                    borderBottomWidth: 1,
+                                                                    borderColor: '#cccccc',
+                                                                    borderRadius: 2,
+                                                                    borderWidth: 1,
                                                                     fontSize: 14,
                                                                     padding: 15,
                                                                     paddingVertical: 12,
                                                                     marginTop: 0,
+                                                                    backgroundColor: '#fff',
                                                                 }}
                                                                 placeholder={''}
                                                                 onChangeText={(val) => {
@@ -2339,6 +2459,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View
                                     style={{
                                         display: 'flex',
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <View
@@ -2346,12 +2467,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             width: '100%',
                                             borderRightWidth: 0,
                                             borderColor: '#f2f2f2',
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
                                             style={{
                                                 width: '100%',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                                 flexDirection: width < 768 ? 'column' : 'row',
                                                 paddingTop: channels.length === 0 && width < 768 ? 0 : 40,
                                             }}
@@ -2361,7 +2483,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                 }}
                                             >
                                                 <Text
@@ -2377,22 +2499,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View
                                                 style={{
                                                     flexDirection: 'row',
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                     alignItems: 'center',
                                                 }}
                                             >
-                                                <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                <View style={{ width: '85%', backgroundColor: '#f8f8f8' }}>
                                                     {addCustomCategory ? (
                                                         <View style={styles.colorBar}>
                                                             <TextInput
                                                                 value={customCategory}
                                                                 style={{
-                                                                    borderRadius: 0,
-                                                                    borderColor: '#f2f2f2',
-                                                                    borderBottomWidth: 1,
+                                                                    borderColor: '#cccccc',
+                                                                    borderRadius: 2,
+                                                                    borderWidth: 1,
                                                                     fontSize: 14,
                                                                     height: '2.75em',
                                                                     padding: '1em',
+                                                                    backgroundColor: '#fff',
                                                                 }}
                                                                 placeholder={'Enter Category'}
                                                                 onChangeText={(val) => {
@@ -2426,7 +2549,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     )}
                                                 </View>
                                                 <View
-                                                    style={{ width: '15%', backgroundColor: 'white', paddingLeft: 20 }}
+                                                    style={{
+                                                        width: '15%',
+                                                        backgroundColor: '#f8f8f8',
+                                                        paddingLeft: 20,
+                                                    }}
                                                 >
                                                     <TouchableOpacity
                                                         onPress={() => {
@@ -2438,7 +2565,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setAddCustomCategory(true);
                                                             }
                                                         }}
-                                                        style={{ backgroundColor: 'white' }}
+                                                        style={{ backgroundColor: '#f8f8f8' }}
                                                     >
                                                         <Text
                                                             style={{
@@ -2467,13 +2594,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             paddingTop: 40,
                                             alignItems: width < 1024 ? 'flex-start' : 'center',
                                             paddingBottom: 15,
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
                                             style={{
                                                 flex: 1,
                                                 flexDirection: 'row',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <Text
@@ -2490,10 +2618,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View
                                             style={{
                                                 flexDirection: 'row',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
-                                            <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                            <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
                                                 <ScrollView
                                                     style={{ ...styles.colorBar, height: 20 }}
                                                     horizontal={true}
@@ -2544,7 +2672,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flex: 1,
                                                 flexDirection: 'row',
                                                 paddingBottom: 15,
-                                                backgroundColor: 'white'
+                                                backgroundColor: '#f8f8f8'
                                             }}>
                                             <Text
                                                 style={{
@@ -2557,7 +2685,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </View>
                                         <View
                                             style={{
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                                 height: 40,
                                                 marginRight: 10
                                             }}>
@@ -2574,8 +2702,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: '#f2f2f2',
-                                                    true: '#006AFF'
+                                                    false: '#fff',
+                                                    true: '#000'
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -2593,7 +2721,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: '#f8f8f8'
                                                 }}>
                                                 <Text
                                                     style={{
@@ -2607,7 +2735,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View style={{}}>
                                                 <View
                                                     style={{
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                         height: 40,
                                                         marginRight: 10,
                                                         flexDirection: 'row',
@@ -2618,8 +2746,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         onValueChange={() => setShuffle(!shuffle)}
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#f2f2f2',
-                                                            true: '#006AFF'
+                                                            false: '#fff',
+                                                            true: '#000'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2629,7 +2757,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            backgroundColor: 'white',
+                                                            backgroundColor: '#f8f8f8',
                                                             alignItems: 'center'
                                                         }}>
                                                         <Text
@@ -2674,7 +2802,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             width: '100%',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            backgroundColor: 'white'
+                                                            backgroundColor: '#f8f8f8'
                                                         }}>
                                                         <View>
                                                             <Text
@@ -2735,7 +2863,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flex: 1,
                                                     flexDirection: 'row',
                                                     paddingBottom: 15,
-                                                    backgroundColor: 'white'
+                                                    backgroundColor: '#f8f8f8'
                                                 }}>
                                                 <Text
                                                     style={{
@@ -2749,7 +2877,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View style={{}}>
                                                 <View
                                                     style={{
-                                                        backgroundColor: 'white',
+                                                        backgroundColor: '#f8f8f8',
                                                         height: 40,
                                                         flexDirection: 'row',
                                                         justifyContent: width < 768 ? 'flex-start' : 'flex-end',
@@ -2762,8 +2890,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#f2f2f2',
-                                                            true: '#006AFF'
+                                                            false: '#fff',
+                                                            true: '#000'
                                                         }}
                                                         activeThumbColor="white"
                                                     />
@@ -2774,7 +2902,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             width: '100%',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            backgroundColor: 'white'
+                                                            backgroundColor: '#f8f8f8'
                                                         }}>
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindTill')}
@@ -2819,6 +2947,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             width: '100%',
                                             flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40,
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
@@ -2826,7 +2955,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flex: 1,
                                                 flexDirection: 'row',
                                                 paddingBottom: 15,
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <Text
@@ -2839,10 +2968,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 Timed
                                             </Text>
                                         </View>
-                                        <View>
+                                        <View
+                                            style={{
+                                                backgroundColor: '#f8f8f8',
+                                            }}
+                                        >
                                             <View
                                                 style={{
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                     height: 40,
                                                     marginRight: 10,
                                                     flexDirection: 'row',
@@ -2863,8 +2996,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#f2f2f2',
-                                                        true: '#006AFF',
+                                                        false: '#fff',
+                                                        true: '#000',
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -2876,9 +3009,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         paddingTop: 0,
                                                         borderColor: '#f2f2f2',
                                                         flexDirection: 'row',
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
-                                                    <View>
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         <Menu
                                                             onSelect={(hour: any) =>
                                                                 setDuration({
@@ -2925,7 +3063,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             </MenuOptions>
                                                         </Menu>
                                                     </View>
-                                                    <View>
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         <Menu
                                                             onSelect={(min: any) =>
                                                                 setDuration({
@@ -2984,6 +3126,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             width: '100%',
                                             flexDirection: width < 768 ? 'column' : 'row',
                                             paddingTop: 40,
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
@@ -2991,7 +3134,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 flex: 1,
                                                 flexDirection: 'row',
                                                 paddingBottom: 15,
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <Text
@@ -3004,10 +3147,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 Random Order
                                             </Text>
                                         </View>
-                                        <View>
+                                        <View
+                                            style={{
+                                                backgroundColor: '#f8f8f8',
+                                            }}
+                                        >
                                             <View
                                                 style={{
-                                                    backgroundColor: 'white',
+                                                    backgroundColor: '#f8f8f8',
                                                     height: 40,
                                                     flexDirection: 'row',
                                                     justifyContent: width < 768 ? 'flex-start' : 'flex-end',
@@ -3019,8 +3166,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#f2f2f2',
-                                                        true: '#006AFF',
+                                                        false: '#fff',
+                                                        true: '#000',
                                                     }}
                                                     activeThumbColor="white"
                                                 />
@@ -3035,15 +3182,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View
                                         style={{
                                             flexDirection: width < 768 ? 'column' : 'row',
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         <View
                                             style={{
                                                 width: '100%',
                                                 borderRightWidth: 0,
-                                                borderColor: '#f2f2f2',
+                                                // borderColor: '#f2f2f2',
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <TextareaAutosize
@@ -3053,14 +3202,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     width: '100%',
                                                     maxWidth: 400,
                                                     minWidth: 400,
-                                                    borderBottom: '1px solid #f2f2f2',
+                                                    border: '1px solid #cccccc',
+                                                    borderRadius: 2,
                                                     fontSize: 14,
                                                     paddingTop: 13,
                                                     paddingBottom: 13,
                                                     paddingLeft: 10,
                                                     marginTop: 12,
                                                     marginBottom: 25,
-                                                    borderRadius: 1,
                                                     height: 35,
                                                 }}
                                                 minRows={1}
@@ -3072,15 +3221,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{
                                                         marginLeft: Dimensions.get('window').width < 768 ? 20 : 'auto',
                                                         paddingTop: 15,
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                     onPress={() => clearAll()}
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 12,
+                                                            fontSize: 14,
                                                             lineHeight: 34,
                                                             fontFamily: 'inter',
-                                                            color: '#006AFF',
+                                                            color: '#000',
                                                         }}
                                                     >
                                                         Clear
@@ -3094,7 +3244,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         width: '100%',
                                         minHeight: isQuiz ? 0 : 500,
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#f8f8f8',
                                     }}
                                     key={imported.toString()}
                                 >
@@ -3103,11 +3253,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 width: '100%',
                                                 flexDirection: 'column',
+                                                backgroundColor: '#f8f8f8',
                                             }}
                                         >
                                             <View
                                                 style={{
-                                                    backgroundColor: '#fff',
+                                                    backgroundColor: '#f8f8f8',
                                                     flexDirection: 'row',
                                                     width: '100%',
                                                 }}
@@ -3117,9 +3268,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         width: '100%',
                                                         maxWidth: 600,
                                                         paddingTop: 15,
+                                                        backgroundColor: '#f8f8f8',
                                                     }}
                                                 >
-                                                    <View key={userId.toString()}>
+                                                    <View
+                                                        key={userId.toString()}
+                                                        style={{
+                                                            borderWidth: 1,
+                                                            borderColor: '#cccccc',
+                                                            borderRadius: 2,
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
                                                         <FroalaEditor
                                                             ref={RichText}
                                                             model={quizInstructions}
@@ -3259,7 +3419,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         ) : (
                                             <View
                                                 key={url + JSON.stringify(showOptions)}
-                                                style={{ flex: 1, maxHeight: 800 }}
+                                                style={{ flex: 1, maxHeight: 800, backgroundColor: '#f8f8f8' }}
                                             >
                                                 <div
                                                     className="webviewer"
@@ -3283,7 +3443,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         />
                                     ) : null}
                                     {isQuiz || imported || showBooks ? null : (
-                                        <View key={userId.toString() + reloadEditorKey.toString()}>
+                                        <View
+                                            key={userId.toString() + reloadEditorKey.toString()}
+                                            style={{
+                                                borderWidth: 1,
+                                                borderColor: '#cccccc',
+                                                borderRadius: 2,
+                                            }}
+                                        >
                                             <FroalaEditor
                                                 ref={RichText}
                                                 model={cue}
@@ -3373,12 +3540,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View
                                     style={{
                                         flex: 1,
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#f8f8f8',
                                         justifyContent: 'center',
                                         display: 'flex',
                                         flexDirection: 'row',
                                         height: 50,
-                                        paddingTop: 10,
+                                        // paddingTop: 10,
                                     }}
                                 >
                                     <TouchableOpacity
@@ -3395,47 +3562,29 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         disabled={isSubmitting || creatingQuiz || props.user.email === disableEmailId}
                                         style={{
-                                            borderRadius: 15,
-                                            backgroundColor: 'white',
+                                            // borderRadius: 15,
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
-                                        {channelId === '' ? (
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    lineHeight: 34,
-                                                    color: 'white',
-                                                    fontSize: 12,
-                                                    backgroundColor: '#006AFF',
-                                                    borderRadius: 15,
-                                                    paddingHorizontal: 20,
-                                                    fontFamily: 'inter',
-                                                    overflow: 'hidden',
-                                                    height: 35,
-                                                    textTransform: 'uppercase',
-                                                }}
-                                            >
-                                                {isSubmitting ? 'Creating...' : 'Create'}
-                                            </Text>
-                                        ) : (
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    lineHeight: 34,
-                                                    color: 'white',
-                                                    fontSize: 12,
-                                                    backgroundColor: '#006AFF',
-                                                    borderRadius: 15,
-                                                    paddingHorizontal: 20,
-                                                    fontFamily: 'inter',
-                                                    overflow: 'hidden',
-                                                    height: 35,
-                                                    textTransform: 'uppercase',
-                                                }}
-                                            >
-                                                {isSubmitting ? 'Creating...' : 'CREATE'}
-                                            </Text>
-                                        )}
+                                        <Text
+                                            style={{
+                                                fontWeight: 'bold',
+                                                textAlign: 'center',
+                                                borderColor: '#000',
+                                                borderWidth: 1,
+                                                color: '#fff',
+                                                backgroundColor: '#000',
+                                                fontSize: 11,
+                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                paddingVertical: 14,
+                                                textTransform: 'uppercase',
+                                                width: 120,
+                                            }}
+                                        >
+                                            {isSubmitting ? 'Creating...' : 'Create'}
+                                        </Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -3453,7 +3602,7 @@ export default Create;
 const styles: any = StyleSheet.create({
     footer: {
         width: '100%',
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
         display: 'flex',
         flexDirection: 'row',
         marginTop: 80,
@@ -3466,7 +3615,7 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
     },
     colorContainerOutline: {
         lineHeight: 20,
@@ -3475,7 +3624,7 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#1F1F1F',
@@ -3493,7 +3642,7 @@ const styles: any = StyleSheet.create({
     colorBar: {
         width: '100%',
         flexDirection: 'row',
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
         lineHeight: 20,
     },
     text: {
@@ -3508,6 +3657,6 @@ const styles: any = StyleSheet.create({
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
     },
 });

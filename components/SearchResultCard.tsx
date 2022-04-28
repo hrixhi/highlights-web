@@ -128,7 +128,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     disabled={props.user.email === disableEmailId}
                                 >
                                     <Text style={{}}>
-                                        <Ionicons name="enter-outline" size={24} color="#006AFF" />
+                                        <Ionicons name="enter-outline" size={24} color="#007AFF" />
                                     </Text>
                                 </TouchableOpacity>
                             </View>

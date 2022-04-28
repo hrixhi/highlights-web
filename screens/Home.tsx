@@ -1133,7 +1133,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const getNavbarIconColor = (op: string) => {
         if (op === option) {
-            return '#006AFF';
+            return '#007AFF';
         }
         return '#fff';
     };
@@ -1327,7 +1327,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             lineHeight: 34,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#006AFF',
+                                            backgroundColor: '#007AFF',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -1357,7 +1357,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            color: '#006AFF',
+                                            color: '#007AFF',
                                         }}
                                     >
                                         Back to Sign In
@@ -1484,7 +1484,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     <Text
                                                         style={{
                                                             fontSize: 13,
-                                                            color: '#006AFF',
+                                                            color: '#007AFF',
                                                         }}
                                                     >
                                                         Forgot Password?
@@ -1524,8 +1524,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         }}
                                         style={{
                                             backgroundColor: 'white',
-                                            overflow: 'hidden',
-                                            height: 35,
+                                            // overflow: 'hidden',
+                                            // height: 35,
                                             marginTop: 15,
                                             width: '100%',
                                             justifyContent: 'center',
@@ -1534,18 +1534,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     >
                                         <Text
                                             style={{
+                                                fontWeight: 'bold',
                                                 textAlign: 'center',
-                                                lineHeight: 34,
-                                                color: 'white',
-                                                fontSize: 12,
-                                                backgroundColor: '#006AFF',
-                                                paddingHorizontal: 20,
+                                                borderColor: '#000',
+                                                borderWidth: 1,
+                                                color: '#fff',
+                                                backgroundColor: '#000',
+                                                fontSize: 11,
+                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                                 fontFamily: 'inter',
-                                                height: 35,
-                                                // width: 180,
-                                                width: 175,
-                                                borderRadius: 15,
+                                                overflow: 'hidden',
+                                                paddingVertical: 14,
                                                 textTransform: 'uppercase',
+                                                width: 120,
                                             }}
                                         >
                                             {showForgotPassword
@@ -1572,7 +1573,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text
                                                     style={{
                                                         fontSize: 14,
-                                                        color: '#006AFF'
+                                                        color: '#007AFF'
                                                     }}>
                                                     Sign up now
                                                 </Text>
@@ -1631,7 +1632,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     fontSize: 14,
-                                                    color: '#006AFF',
+                                                    color: '#007AFF',
                                                 }}
                                             >
                                                 Back to Sign In
@@ -1663,8 +1664,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 !loadingOrg &&
                 !saveDataInProgress &&
                 (!selectedWorkspace || option !== 'Classroom') &&
-                ((option === 'Classroom' && modalType !== 'Create') ||
-                (option === 'To Do' && tab !== 'Add') ||
+                // (option === 'Classroom' && modalType !== 'Create') ||
+                ((option === 'To Do' && tab !== 'Add') ||
                 (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
                 (option === 'Account' && !showCreate) ||
                 (option === 'Settings' && !showHelp) ? (
@@ -1697,22 +1698,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             width: 58,
                             height: 58,
                             borderRadius: 29,
-                            backgroundColor: '#006AFF',
-                            borderColor: '#f2f2f2',
+                            backgroundColor: '#000',
+                            borderColor: '#000',
                             borderWidth: 0,
-                            shadowColor: '#000',
-                            shadowOffset: {
-                                width: 4,
-                                height: 4,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 10,
+                            // shadowColor: '#000',
+                            // shadowOffset: {
+                            //     width: 4,
+                            //     height: 4,
+                            // },
+                            // shadowOpacity: 0.12,
+                            // shadowRadius: 10,
                             zIndex: showLoginWindow ? 40 : 500000,
                         }}
                     >
                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
                             {option === 'Classroom' ? (
-                                <Ionicons name="create-outline" size={25} />
+                                <Ionicons
+                                    name="create-outline"
+                                    size={25}
+                                    style={{
+                                        paddingLeft: 3,
+                                    }}
+                                />
                             ) : option === 'To Do' ? (
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Account' && activeAccountTab === 'courses' ? (
@@ -1924,6 +1931,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
                         refreshCues={refreshChannelCues}
                         user={user}
+                        subscriptions={subscriptions}
                     />
                 ) : null}
             </View>
@@ -2047,7 +2055,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 backgroundColor: '#f8f8f8',
-                                paddingVertical: 20,
+                                paddingBottom: 20,
+                                paddingTop: 10,
                             }}
                         >
                             <Text
@@ -2080,17 +2089,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 30,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#006AFF',
-                                            paddingHorizontal: 20,
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 30,
-                                            borderRadius: 15,
-                                            width: 125,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
+                                            width: 150,
                                         }}
                                     >
                                         MORE HELP
@@ -2350,7 +2361,7 @@ const styles = (channelId: string) =>
             color: '#fff',
             paddingHorizontal: 12,
             borderRadius: 12,
-            backgroundColor: '#006AFF',
+            backgroundColor: '#007AFF',
             lineHeight: 25,
             height: 25,
             fontFamily: 'inter',

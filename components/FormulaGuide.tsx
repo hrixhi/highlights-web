@@ -76,7 +76,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             '×',
             '¼',
             '½',
-            '¾'
+            '¾',
         ],
         Latin: [
             'Α',
@@ -126,7 +126,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             'Ψ',
             'ψ',
             'Ω',
-            'ω'
+            'ω',
         ],
         Arrows: [
             '←',
@@ -156,9 +156,9 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             '⌋',
             '〈',
             '〉',
-            '◊'
+            '◊',
         ],
-        Trigonometry: ['sin', 'cos', 'tan', 'sec', 'cosec', 'arccos', 'arcsin', 'arctan', 'θ', 'φ']
+        Trigonometry: ['sin', 'cos', 'tan', 'sec', 'cosec', 'arccos', 'arcsin', 'arctan', 'θ', 'φ'],
     };
 
     const symbolsMap = {
@@ -210,7 +210,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         '¨': '¨',
         '¡': '¡',
         '¿': '¿',
-        'ˆ': 'ˆ',
+        ˆ: 'ˆ',
         '˜': '˜',
         '−': '−',
         '±': '±',
@@ -317,7 +317,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         cosec: 'cosec',
         arccos: 'arccos',
         arcsin: 'arcsin',
-        arctan: 'arctan'
+        arctan: 'arctan',
     };
 
     // MAIN RETURN
@@ -327,47 +327,55 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
             // buttons={['ok']}
             buttons={[
                 {
-                    text: 'ADD',
-                    handler: function(event) {
+                    text: 'Add',
+                    color: 'dark',
+                    handler: function (event) {
                         props.onInsertEquation();
-                    }
+                    },
                 },
                 {
-                    text: 'CANCEL',
-                    handler: function(event) {
+                    text: 'Cancel',
+                    color: 'dark',
+                    handler: function (event) {
                         props.onClose();
-                    }
-                }
+                    },
+                },
             ]}
             theme="ios"
             themeVariant="light"
             onClose={() => props.onClose()}
             responsive={{
                 small: {
-                    display: 'bottom'
+                    display: 'bottom',
                 },
                 medium: {
                     // Custom breakpoint
-                    display: 'center'
-                }
+                    display: 'center',
+                },
             }}
         >
             <View
-                style={{ flexDirection: 'column', padding: Dimensions.get('window').width < 768 ? 0 : 25, backgroundColor: '#f8f8f8' }}
+                style={{
+                    flexDirection: 'column',
+                    padding: Dimensions.get('window').width < 768 ? 0 : 25,
+                    backgroundColor: '#f8f8f8',
+                }}
                 className="mbsc-align-center mbsc-padding"
             >
                 <View
                     style={{
                         width: '100%',
-                        backgroundColor: '#f8f8f8'
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {/* Formula Input */}
                     <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                        }}>
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                            }}
+                        >
                             Enter formula
                         </Text>
                     </View>
@@ -375,7 +383,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         style={{
                             width: '100%',
                             marginBottom: Dimensions.get('window').width < 768 ? 0 : 20,
-                            backgroundColor: '#f8f8f8'
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <View
@@ -384,7 +392,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 borderWidth: 1,
                                 borderRadius: 15,
                                 padding: 10,
-                                minWidth: 200
+                                minWidth: 200,
                             }}
                         >
                             <EquationEditor
@@ -421,20 +429,24 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             </View>
                         );
                     })} */}
-                    <View style={{
-                        flexDirection: 'column',
-                        backgroundColor: '#f8f8f8',
-                    }}>
-                        <View style={{
-                            paddingTop: 10,
-                            marginBottom: 20,
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
+                    <View
+                        style={{
+                            flexDirection: 'column',
                             backgroundColor: '#f8f8f8',
-                        }}>
-                            {
-                                Object.keys(categoriesMap).map((cat: string, ind: number) => {
-                                    return <TouchableOpacity
+                        }}
+                    >
+                        <View
+                            style={{
+                                paddingTop: 10,
+                                marginBottom: 20,
+                                flexDirection: 'row',
+                                flexWrap: 'wrap',
+                                backgroundColor: '#f8f8f8',
+                            }}
+                        >
+                            {Object.keys(categoriesMap).map((cat: string, ind: number) => {
+                                return (
+                                    <TouchableOpacity
                                         style={{
                                             borderBottomWidth: cat === activeTab ? 1 : 0,
                                             borderBottomColor: '#1f1f1f',
@@ -444,23 +456,24 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             backgroundColor: '#f8f8f8',
                                         }}
                                         onPress={() => {
-                                            setActiveTab(cat)
+                                            setActiveTab(cat);
                                         }}
                                         key={ind.toString()}
                                     >
-                                        <Text style={{
-                                            fontSize: 12,
-                                            fontFamily: 'Inter'
-                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 12,
+                                                fontFamily: 'Inter',
+                                            }}
+                                        >
                                             {cat}
                                         </Text>
                                     </TouchableOpacity>
-                                })
-                            }
+                                );
+                            })}
                         </View>
 
                         {Object.keys(categoriesMap).map((cat: any, ind: number) => {
-
                             if (cat !== activeTab) return null;
 
                             return (
@@ -469,7 +482,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                         display: 'flex',
                                         flexDirection: 'column',
                                         backgroundColor: '#f8f8f8',
-                                        paddingBottom: 20
+                                        paddingBottom: 20,
                                     }}
                                     key={ind.toString()}
                                 >
@@ -490,7 +503,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                             width: '100%',
                                             flexDirection: 'row',
                                             flexWrap: 'wrap',
-                                            backgroundColor: '#f8f8f8'
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                     >
                                         {categoriesMap[cat].map((sym: string, ind: number) => {
@@ -505,11 +518,12 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                                         marginRight: 10,
                                                         marginBottom: 10,
                                                         paddingVertical: Dimensions.get('window').width < 768 ? 7 : 8,
-                                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 12,
+                                                        paddingHorizontal:
+                                                            Dimensions.get('window').width < 768 ? 10 : 12,
                                                         borderRadius: 10,
                                                         shadowOffset: {
                                                             width: 1,
-                                                            height: 1
+                                                            height: 1,
                                                         },
                                                         overflow: 'hidden',
                                                         shadowOpacity: 0.03,
@@ -520,7 +534,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                                     <Text
                                                         style={{
                                                             backgroundColor: 'white',
-                                                            fontSize: Dimensions.get('window').width < 768 ? 12 : 13
+                                                            fontSize: Dimensions.get('window').width < 768 ? 12 : 13,
                                                         }}
                                                     >
                                                         {sym}

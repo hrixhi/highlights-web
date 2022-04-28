@@ -62,6 +62,27 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [subIds, setSubIds] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState('create');
 
+    const colorChoices = [
+        '#A1B8C0',
+        '#95C3DF',
+        '#77A3A3',
+        '#A2BF9A',
+        '#49885B',
+        '#4F435B',
+        '#D65D2A',
+        '#D94C3A',
+        '#8E5C48',
+        '#5A2C2A',
+        '#726863',
+        '#44565D',
+        '#938071',
+        '#6B7064',
+        '#6E757C',
+        '#50524F',
+        '#1E1E1E',
+        '#141514',
+    ];
+
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const sections = [
         'A',
@@ -843,7 +864,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             >
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name="chevron-back-outline" size={30} color={'#1F1F1F'} />
+                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -909,9 +930,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             const isModerator = channel.owners.includes(userId);
 
                                             if (channel.channelCreator === userId) {
-                                                role = 'Owner';
+                                                role = 'Instructor';
                                             } else if (isModerator) {
-                                                role = 'Editor';
+                                                role = 'Instructor';
                                             }
                                         }
 
@@ -996,7 +1017,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     style={{
                                                                         textAlign: 'center',
                                                                         fontSize: 13,
-                                                                        color: '#006AFF',
+                                                                        color: '#000',
                                                                         marginRight: 10,
                                                                     }}
                                                                     ellipsizeMode="tail"
@@ -1022,7 +1043,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     color:
                                                                         channel.channelCreator === userId ||
                                                                         channel.owners.includes(userId)
-                                                                            ? '#006AFF'
+                                                                            ? '#000'
                                                                             : '#1F1F1F',
                                                                 }}
                                                             >
@@ -1047,80 +1068,94 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             alignSelf: 'center',
                             paddingTop: Dimensions.get('window').width < 768 ? (props.isOwner ? 20 : 0) : 0,
                             paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 0,
+                            flexDirection: 'column',
                         }}
                     >
-                        {role !== 'instructor' ? null : renderTabs()}
+                        {/* {role !== 'instructor' ? null : renderTabs()} */}
 
                         {/* Join channel with code */}
-                        {role !== 'instructor' || (role === 'instructor' && activeTab === 'join') ? (
-                            <View
+
+                        <View
+                            style={{
+                                padding: 15,
+                                width: '100%',
+                                marginBottom: 30,
+                                // marginTop: Dimensions.get('window').width < 768 ? 0 : 20,
+                            }}
+                        >
+                            <Text
                                 style={{
-                                    padding: 15,
-                                    width: '100%',
-                                    marginBottom: Dimensions.get('window').width < 768 ? 20 : 30,
-                                    marginTop: Dimensions.get('window').width < 768 ? 0 : 20,
+                                    fontSize: 18,
+                                    fontFamily: 'Inter',
+                                    color: '#000000',
+                                    textAlign: 'center',
+                                    marginBottom: 10,
                                 }}
                             >
-                                {role !== 'instructor' ? (
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            fontFamily: 'Inter',
-                                            color: '#000000',
-                                            textAlign: 'center',
-                                            marginBottom: 10,
-                                        }}
-                                    >
-                                        Join a course
-                                    </Text>
-                                ) : null}
-                                <TextInput
-                                    value={joinWithCode}
-                                    placeholder={'Access Code'}
-                                    textContentType={'none'}
-                                    autoCompleteType={'off'}
-                                    onChangeText={(val) => {
-                                        setJoinWithCode(val);
-                                    }}
-                                    placeholderTextColor={'#7d7f7c'}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => handleSubmitCode()}
-                                    disabled={joinWithCodeDisabled || props.user.email === disableEmailId}
+                                Join a course
+                            </Text>
+
+                            <TextInput
+                                value={joinWithCode}
+                                placeholder={'Access Code'}
+                                textContentType={'none'}
+                                autoCompleteType={'off'}
+                                onChangeText={(val) => {
+                                    setJoinWithCode(val);
+                                }}
+                                placeholderTextColor={'#7d7f7c'}
+                            />
+                            <TouchableOpacity
+                                onPress={() => handleSubmitCode()}
+                                disabled={joinWithCodeDisabled || props.user.email === disableEmailId}
+                                style={{
+                                    marginTop: 10,
+                                    backgroundColor: 'white',
+                                    // overflow: 'hidden',
+                                    // height: 35,
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <Text
                                     style={{
-                                        marginTop: 10,
-                                        backgroundColor: 'white',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        color: '#fff',
+                                        backgroundColor: '#000',
+                                        fontSize: 11,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        fontFamily: 'inter',
                                         overflow: 'hidden',
-                                        height: 35,
-                                        width: '100%',
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
+                                        paddingVertical: 14,
+                                        textTransform: 'uppercase',
+                                        width: 150,
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#006AFF',
-                                            paddingHorizontal: 20,
-                                            fontFamily: 'inter',
-                                            height: 35,
-                                            // width: 180,
-                                            width: 130,
-                                            borderRadius: 15,
-                                            textTransform: 'uppercase',
-                                        }}
-                                    >
-                                        Join
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        ) : null}
+                                    Join
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
 
-                        {role === 'instructor' && activeTab === 'create' ? (
-                            <View style={{ width: '100%', marginTop: 20 }}>
+                        {role === 'instructor' ? (
+                            <View
+                                style={{ width: '100%', paddingTop: 30, borderTopColor: '#cccccc', borderTopWidth: 1 }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontFamily: 'Inter',
+                                        color: '#000000',
+                                        textAlign: 'center',
+                                        marginBottom: 10,
+                                    }}
+                                >
+                                    Create a course
+                                </Text>
+
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text
                                         style={{
@@ -1257,7 +1292,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#f2f2f2',
-                                                    true: '#006AFF',
+                                                    true: '#000',
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1302,7 +1337,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{ height: 20 }}
                                                 trackColor={{
                                                     false: '#f2f2f2',
-                                                    true: '#006AFF',
+                                                    true: '#000',
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -1381,6 +1416,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
                                         <CirclePicker
+                                            colors={colorChoices}
                                             color={colorCode}
                                             onChangeComplete={(color: any) => setColorCode(color.hex)}
                                         />
@@ -1536,8 +1572,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             backgroundColor: 'white',
                                             borderRadius: 15,
-                                            overflow: 'hidden',
-                                            height: 35,
+                                            // overflow: 'hidden',
+                                            // height: 35,
                                             marginTop: 15,
                                             marginBottom: 50,
                                         }}
@@ -1547,17 +1583,19 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
+                                                fontWeight: 'bold',
                                                 textAlign: 'center',
-                                                lineHeight: 34,
-                                                color: 'white',
-                                                fontSize: 12,
-                                                backgroundColor: '#006AFF',
-                                                paddingHorizontal: 20,
+                                                borderColor: '#000',
+                                                borderWidth: 1,
+                                                color: '#fff',
+                                                backgroundColor: '#000',
+                                                fontSize: 11,
+                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                                 fontFamily: 'inter',
-                                                height: 35,
-                                                borderRadius: 15,
-                                                width: 120,
+                                                overflow: 'hidden',
+                                                paddingVertical: 14,
                                                 textTransform: 'uppercase',
+                                                width: 150,
                                             }}
                                         >
                                             {isSubmitting ? 'Creating' : PreferredLanguageText('create')}

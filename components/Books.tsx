@@ -1,6 +1,6 @@
 // REACT
 import React, { useCallback, useState } from 'react';
-import { Image, ActivityIndicator } from 'react-native';
+import { Image, ActivityIndicator, TextInput as DefaultInput, Dimensions } from 'react-native';
 import _ from 'lodash';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,7 +67,10 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                 let isAvailableForFree = false;
 
-                if (item.collection && (item.collection.includes('opensource') || item.collection.includes('community'))) {
+                if (
+                    item.collection &&
+                    (item.collection.includes('opensource') || item.collection.includes('community'))
+                ) {
                     isAvailableForFree = true;
                 }
 
@@ -90,8 +93,8 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             .query({
                 query: retrievePDFFromArchive,
                 variables: {
-                    identifier: selectedBook.identifier
-                }
+                    identifier: selectedBook.identifier,
+                },
             })
             .then((res: any) => {
                 if (res.data && res.data.cue.retrievePDFFromArchive) {
@@ -106,7 +109,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     axios
                         .post(`https://api.learnwithcues.com/uploadPdfToS3`, {
                             url: 'https://archive.org/download/' + selectedBook.identifier + '/' + fileName + '.pdf',
-                            title: selectedBook.title + '.pdf'
+                            title: selectedBook.title + '.pdf',
                         })
                         .then((res2: any) => {
                             if (res2.data) {
@@ -114,18 +117,18 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 props.onUpload({
                                     url: res2.data,
                                     title: selectedBook.title,
-                                    type: 'pdf'
+                                    type: 'pdf',
                                 });
                             }
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             setRetrievingBook(false);
                             alert('This text is currently not available for free. Try another result.');
                             console.log(e);
                         });
                 }
             })
-            .catch(e => {
+            .catch((e) => {
                 setRetrievingBook(false);
                 alert('This text is currently not available for free. Try another result.');
                 console.log(e);
@@ -138,10 +141,11 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             style={{
                 flex: 1,
                 height: '100%',
-                maxHeight: 800
+                maxHeight: 800,
+                backgroundColor: '#f8f8f8',
             }}
         >
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+            {/* <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                 <TextInput
                     value={searchTerm}
                     style={{
@@ -151,47 +155,108 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         padding: 15,
                         borderRadius: 25,
                         paddingVertical: 12,
-                        marginTop: 0
+                        marginTop: 0,
                     }}
                     placeholder={'🔍'}
-                    onChangeText={val => setSearchTerm(val)}
+                    onChangeText={(val) => setSearchTerm(val)}
                     placeholderTextColor={'#1F1F1F'}
                 />
-            </View>
+            </View> */}
             <View
                 style={{
-                    width: '100%',
                     flexDirection: 'row',
                     justifyContent: 'center',
-                    paddingVertical: 20,
-                    marginBottom: 50
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    maxWidth: 500,
+                    marginBottom: 30,
+                    backgroundColor: '#f8f8f8',
                 }}
             >
-                <TouchableOpacity
-                    onPress={() => {
-                        handleSearch();
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        paddingVertical: 12,
+                        paddingHorizontal: 15,
+                        borderRadius: 24,
+                        width: 300,
+                        flex: 1,
                     }}
-                    style={{ backgroundColor: 'white', borderRadius: 15 }}
                 >
-                    <Text
+                    <Ionicons size={20} name="search-outline" color={'#000'} style={{}} />
+                    <DefaultInput
+                        value={searchTerm}
                         style={{
-                            textAlign: 'center',
-                            lineHeight: 34,
-                            color: 'white',
-                            fontSize: 12,
-                            backgroundColor: '#006AFF',
-                            borderRadius: 15,
-                            paddingHorizontal: 20,
-                            fontFamily: 'inter',
-                            overflow: 'hidden',
-                            height: 35,
-                            textTransform: 'uppercase'
+                            color: '#727272',
+                            backgroundColor: '#fff',
+                            fontSize: 14,
+                            flex: 1,
+                            fontFamily: 'Inter',
+                            paddingLeft: 10,
+                            paddingVertical: 5,
                         }}
+                        placeholder={'Search title, author, etc.'}
+                        onChangeText={(val) => setSearchTerm(val)}
+                        placeholderTextColor={'#727272'}
+                    />
+                    {searchTerm !== '' ? (
+                        <TouchableOpacity
+                            style={{
+                                marginLeft: 'auto',
+                                backgroundColor: '#fff',
+                                width: 15,
+                            }}
+                            onPress={() => {
+                                setSearchTerm('');
+                            }}
+                        >
+                            <Ionicons name="close-outline" size={20} color="#000" />
+                        </TouchableOpacity>
+                    ) : (
+                        <View
+                            style={{
+                                marginLeft: 'auto',
+                                width: 15,
+                            }}
+                        />
+                    )}
+                </View>
+                <View
+                    style={{
+                        backgroundColor: '#f8f8f8',
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => {
+                            handleSearch();
+                        }}
+                        style={{ backgroundColor: 'white', borderRadius: 15, marginLeft: 30 }}
                     >
-                        SEARCH
-                    </Text>
-                </TouchableOpacity>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                fontFamily: 'inter',
+                                overflow: 'hidden',
+                                paddingVertical: 14,
+                                textTransform: 'uppercase',
+                                width: 120,
+                            }}
+                        >
+                            SEARCH
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
+
             {loading ? (
                 <View
                     style={{
@@ -199,7 +264,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         height: '100%',
                         justifyContent: 'center',
                         flexDirection: 'column',
-                        backgroundColor: '#fff'
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />
@@ -208,14 +273,22 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             marginTop: 15,
                             textAlign: 'center',
                             fontSize: 18,
-                            fontFamily: 'Inter'
+                            fontFamily: 'Inter',
                         }}
                     >
                         Fetching results...
                     </Text>
                 </View>
             ) : (
-                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                <View
+                    style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        flexWrap: 'wrap',
+                        backgroundColor: '#f8f8f8',
+                    }}
+                >
                     {results.length === 0 ? (
                         !searchComplete ? (
                             <Text
@@ -228,7 +301,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     paddingBottom: 50,
                                     paddingHorizontal: 5,
                                     fontFamily: 'inter',
-                                    flex: 1
+                                    flex: 1,
                                 }}
                             >
                                 {/* Browse through over 5 million books & texts */}
@@ -244,7 +317,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     paddingBottom: 50,
                                     paddingHorizontal: 5,
                                     fontFamily: 'inter',
-                                    flex: 1
+                                    flex: 1,
                                 }}
                             >
                                 No results found
@@ -266,7 +339,8 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             marginRight: 10,
                                             marginLeft: 10,
                                             borderRadius: 1,
-                                            overflow: 'hidden'
+                                            overflow: 'hidden',
+                                            backgroundColor: '#f8f8f8',
                                         }}
                                         key={index.toString()}
                                     >
@@ -274,25 +348,26 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             style={{
                                                 height: 175,
                                                 width: 125,
-                                                shadowOffset: {
-                                                    width: 2,
-                                                    height: 2
-                                                },
-                                                overflow: 'hidden',
-                                                shadowOpacity: 0.07,
-                                                shadowRadius: 7,
-                                                zIndex: 500000
+                                                // shadowOffset: {
+                                                //     width: 2,
+                                                //     height: 2,
+                                                // },
+                                                // overflow: 'hidden',
+                                                // shadowOpacity: 0.07,
+                                                // shadowRadius: 7,
+                                                zIndex: 500000,
+                                                backgroundColor: '#f8f8f8',
                                                 // borderWidth: 1,
                                             }}
                                         >
                                             <Image
                                                 style={{
                                                     height: 175,
-                                                    width: 125
+                                                    width: 125,
                                                     // borderWidth: 1,
                                                 }}
                                                 source={{
-                                                    uri: 'https://archive.org/services/img/' + result.identifier
+                                                    uri: 'https://archive.org/services/img/' + result.identifier,
                                                 }}
                                             />
                                         </View>
@@ -302,9 +377,9 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 padding: 5,
                                                 fontSize: 12,
                                                 fontFamily: 'inter',
-                                                backgroundColor: '#fff',
+                                                backgroundColor: '#f8f8f8',
                                                 height: 75,
-                                                paddingTop: 10
+                                                paddingTop: 10,
                                             }}
                                         >
                                             {result.title}
@@ -318,8 +393,8 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 paddingBottom: 10,
                                                 fontSize: 12,
                                                 fontFamily: 'inter',
-                                                backgroundColor: '#fff',
-                                                color: '#0061ff'
+                                                backgroundColor: '#f8f8f8',
+                                                color: '#0061ff',
                                             }}
                                         >
                                             <Ionicons name="bookmark-outline" /> {result.downloads}
@@ -338,7 +413,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         width: '100%',
                         flexDirection: 'row',
                         marginTop: 25,
-                        marginBottom: 50
+                        marginBottom: 50,
                     }}
                 >
                     <TouchableOpacity
@@ -347,14 +422,14 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }}
                     >
                         <Text>
-                            <Ionicons name="arrow-back-circle-outline" size={30} color="#006AFF" />
+                            <Ionicons name="arrow-back-circle-outline" size={30} color="#007AFF" />
                         </Text>
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
                         <Text
                             style={{
                                 fontSize: 20,
-                                fontFamily: 'inter'
+                                fontFamily: 'inter',
                             }}
                         >
                             {page}/{Math.floor(results.length / 100)}
@@ -366,7 +441,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         }}
                     >
                         <Text>
-                            <Ionicons name="arrow-forward-circle-outline" size={30} color="#006AFF" />
+                            <Ionicons name="arrow-forward-circle-outline" size={30} color="#007AFF" />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -375,34 +450,36 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 isOpen={selectedBook !== null}
                 buttons={[
                     {
-                        text: 'CLOSE',
-                        handler: function(event: any) {
+                        text: 'Close',
+                        color: 'dark',
+                        handler: function (event: any) {
                             if (retrievingBook) {
                                 return;
                             }
                             setSelectedBook(null);
-                        }
+                        },
                     },
                     {
-                        text: 'NEXT',
-                        handler: function(event: any) {
+                        text: 'Next',
+                        color: 'dark',
+                        handler: function (event: any) {
                             if (retrievingBook) {
                                 return;
                             }
                             retrieveBook();
-                        }
-                    }
+                        },
+                    },
                 ]}
                 theme="ios"
                 themeVariant="light"
                 onClose={() => setSelectedBook(null)}
                 responsive={{
                     small: {
-                        display: 'bottom'
+                        display: 'bottom',
                     },
                     medium: {
-                        display: 'center'
-                    }
+                        display: 'center',
+                    },
                 }}
             >
                 {!retrievingBook && selectedBook ? (
@@ -416,19 +493,19 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 width: 175,
                                 shadowOffset: {
                                     width: 2,
-                                    height: 2
+                                    height: 2,
                                 },
                                 overflow: 'hidden',
                                 shadowOpacity: 0.07,
                                 shadowRadius: 7,
                                 zIndex: 500000,
-                                alignSelf: 'center'
+                                alignSelf: 'center',
                             }}
                         >
                             <Image
                                 style={{
                                     height: 245,
-                                    width: 175
+                                    width: 175,
                                 }}
                                 source={{ uri: 'https://archive.org/services/img/' + selectedBook.identifier }}
                             />
@@ -442,7 +519,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 backgroundColor: '#f8f8f8',
                                 maxHeight: 75,
                                 marginTop: 25,
-                                paddingTop: 10
+                                paddingTop: 10,
                             }}
                         >
                             {selectedBook.title}
@@ -457,7 +534,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 fontSize: 12,
                                 fontFamily: 'inter',
                                 backgroundColor: '#f8f8f8',
-                                color: '#0061ff'
+                                color: '#0061ff',
                             }}
                         >
                             <Ionicons name="bookmark-outline" /> {selectedBook.downloads}
@@ -470,7 +547,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 fontFamily: 'inter',
                                 backgroundColor: '#f8f8f8',
                                 maxHeight: 200,
-                                paddingTop: 10
+                                paddingTop: 10,
                             }}
                         >
                             {selectedBook.description}
@@ -482,7 +559,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             padding: 25,
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            backgroundColor: '#f8f8f8'
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <View
@@ -491,7 +568,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 width: 175,
                                 justifyContent: 'center',
                                 flexDirection: 'column',
-                                backgroundColor: '#f8f8f8'
+                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />
@@ -500,7 +577,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     marginTop: 15,
                                     textAlign: 'center',
                                     fontSize: 18,
-                                    fontFamily: 'Inter'
+                                    fontFamily: 'Inter',
                                 }}
                             >
                                 Retrieving text...
