@@ -11,3 +11,5 @@ export const origin = 'https://app.learnwithcues.com';
 // export const zoomClientId = 'PAfnxrFcSd2HkGnn9Yq96A';
 // export const zoomRedirectUri = 'https://dev-app.learnwithcues.com/zoom_auth';
 // export const origin = 'https://dev-app.learnwithcues.com';
+
+export const disableEmailId = 'demo@learnwithcues.com';

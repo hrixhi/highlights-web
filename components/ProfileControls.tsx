@@ -19,7 +19,7 @@ import FileUpload from './UploadFiles';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 // import { LanguageSelect } from '../helpers/LanguageContext';
-import { zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [email, setEmail] = useState('');
@@ -92,9 +92,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         // Logged in
-        if (
-            !props.showSavePassword && (avatar !== currentAvatar || fullName !== currentFullName) 
-        ) {
+        if (!props.showSavePassword && (avatar !== currentAvatar || fullName !== currentFullName)) {
             setIsSubmitDisabled(false);
             return;
         }
@@ -116,7 +114,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         newPasswordValidError,
         confirmNewPasswordError,
         currentDisplayName,
-        currentFullName
+        currentFullName,
     ]);
 
     /**
@@ -164,10 +162,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     variables: {
                         userId: user._id,
                         currentPassword,
-                        newPassword
-                    }
+                        newPassword,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data && res.data.user.updatePassword) {
                         Alert(passwordUpdatedAlert);
                         props.reOpenProfile();
@@ -175,7 +173,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Alert(incorrectCurrentPasswordAlert);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert(somethingWentWrongAlert);
                 });
             return;
@@ -188,23 +186,23 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     displayName,
                     fullName,
                     userId: user._id,
-                    avatar
-                }
+                    avatar,
+                },
             })
-            .then(async res => {
+            .then(async (res) => {
                 if (res.data && res.data.user.update) {
                     user.fullName = fullName;
                     user.displayName = displayName;
                     user.avatar = avatar;
                     const updatedUser = JSON.stringify(user);
                     await AsyncStorage.setItem('user', updatedUser);
-                    Alert('Profile updated!')
+                    Alert('Profile updated!');
                     props.reOpenProfile();
                 } else {
                     Alert(somethingWentWrongAlert);
                 }
             })
-            .catch(e => Alert(somethingWentWrongAlert));
+            .catch((e) => Alert(somethingWentWrongAlert));
         //}
     }, [email, avatar, displayName, fullName, confirmPassword, props.showSavePassword, newPassword, currentPassword]);
 
@@ -275,10 +273,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 .mutate({
                     mutation: removeZoom,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(async res => {
+                .then(async (res) => {
                     if (res.data && res.data.user.removeZoom) {
                         const user = JSON.parse(u);
                         user.zoomInfo = undefined;
@@ -290,7 +288,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Alert('Failed to disconnect Zoom. Try again.');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert(somethingWentWrongAlert);
                 });
             return;
@@ -306,7 +304,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     backgroundColor: 'white',
                     width: '100%',
                     alignSelf: 'center',
-                    flexDirection: 'row'
+                    flexDirection: 'row',
                     // paddingHorizontal: 20
                 }}
                 contentContainerStyle={{
@@ -317,7 +315,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     maxHeight:
                         Dimensions.get('window').width < 1024
                             ? Dimensions.get('window').height - 104
-                            : Dimensions.get('window').height - 52
+                            : Dimensions.get('window').height - 52,
                 }}
                 showsVerticalScrollIndicator={true}
             >
@@ -332,14 +330,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             paddingBottom: 20,
                             flex: 1,
                             maxWidth: 400,
-                            alignSelf: 'center'
+                            alignSelf: 'center',
                         }}
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
-                                fontFamily: 'Inter'
+                                fontFamily: 'Inter',
                             }}
                         >
                             {PreferredLanguageText('currentPassword')}
@@ -350,14 +348,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             textContentType="password"
                             value={currentPassword}
                             placeholder={''}
-                            onChangeText={val => setCurrentPassword(val)}
+                            onChangeText={(val) => setCurrentPassword(val)}
                             placeholderTextColor={'#1F1F1F'}
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
-                                fontFamily: 'Inter'
+                                fontFamily: 'Inter',
                             }}
                         >
                             {PreferredLanguageText('newPassword')}
@@ -368,16 +366,16 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             textContentType="newPassword"
                             value={newPassword}
                             placeholder={''}
-                            onChangeText={val => setNewPassword(val)}
+                            onChangeText={(val) => setNewPassword(val)}
                             placeholderTextColor={'#1F1F1F'}
                             errorText={newPasswordValidError}
                             footerMessage={PreferredLanguageText('atleast8char')}
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
-                                fontFamily: 'Inter'
+                                fontFamily: 'Inter',
                             }}
                         >
                             {PreferredLanguageText('confirmNewPassword')}
@@ -386,7 +384,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             secureTextEntry={true}
                             value={confirmNewPassword}
                             placeholder={''}
-                            onChangeText={val => setConfirmNewPassword(val)}
+                            onChangeText={(val) => setConfirmNewPassword(val)}
                             placeholderTextColor={'#1F1F1F'}
                             errorText={confirmNewPasswordError}
                         />
@@ -403,7 +401,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             // flex: 1
                         }}
                     >
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 30 }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                paddingTop: 30,
+                            }}
+                        >
                             <Image
                                 style={{
                                     height: 100,
@@ -411,9 +416,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     borderRadius: 75,
                                     // marginTop: 20,
                                     position: 'relative',
-                                    alignSelf: 'center'
+                                    alignSelf: 'center',
                                 }}
-                                source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                source={{
+                                    uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                }}
                             />
                             {avatar ? (
                                 <TouchableOpacity
@@ -422,7 +429,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         backgroundColor: 'white',
                                         justifyContent: 'center',
                                         flexDirection: 'row',
-                                        marginLeft: 10
+                                        marginLeft: 10,
                                     }}
                                 >
                                     <Text>
@@ -456,9 +463,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             textAlign: 'center',
                                             lineHeight: 34,
-                                            color: '#006AFF',
-                                            fontSize: 12,
-                                            // backgroundColor: '#006AFF',
+                                            color: '#007AFF',
+                                            fontSize: 13,
+                                            // backgroundColor: '#007AFF',
                                             // paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             // height: 35,
@@ -474,9 +481,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 marginTop: 50,
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
-                                fontFamily: 'Inter'
+                                fontFamily: 'Inter',
                             }}
                         >
                             {PreferredLanguageText('email')}
@@ -485,21 +492,21 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             editable={false}
                             value={email}
                             placeholder={''}
-                            onChangeText={val => setEmail(val)}
+                            onChangeText={(val) => setEmail(val)}
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
                             style={{
                                 borderBottomWidth: 0,
                                 paddingTop: 5,
-                                paddingLeft: 5
+                                paddingLeft: 5,
                             }}
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
-                                paddingTop: 10 
+                                paddingTop: 10,
                             }}
                         >
                             {PreferredLanguageText('fullName')}
@@ -508,18 +515,18 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             // editable={false}
                             value={fullName}
                             placeholder={''}
-                            onChangeText={val => setFullName(val)}
+                            onChangeText={(val) => setFullName(val)}
                             placeholderTextColor={'#1F1F1F'}
                             required={true}
                             style={{
-                                paddingVertical: 10,
-                                paddingLeft: 5,
-                                borderBottomWidth: 1,
-                                borderBottomColor: '#f2f2f2'
+                                padding: 10,
+                                borderWidth: 1,
+                                borderColor: '#cccccc',
+                                borderRadius: 2,
                             }}
                         />
                         {/* <Text style={{
-                  fontSize: 14,
+                  fontSize: 15,
                   fontFamily: 'inter',
                   color: '#000000'
                 }}>
@@ -549,9 +556,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //     }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     marginBottom: 10
-                                    // color: '#006AFF'
+                                    // color: '#007AFF'
                                 }}>
                                 Zoom account linked
                             </Text>
@@ -565,34 +572,36 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         backgroundColor: 'white',
                         justifyContent: 'center',
                         maxWidth: 400,
-                        alignSelf: 'center'
+                        alignSelf: 'center',
                     }}
                 >
                     <TouchableOpacity
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
+                            // overflow: 'hidden',
+                            // height: 35,
                             marginTop: 15,
                             justifyContent: 'center',
-                            flexDirection: 'row'
+                            flexDirection: 'row',
                         }}
-                        disabled={isSubmitDisabled}
+                        disabled={isSubmitDisabled || props.user.email === disableEmailId}
                     >
                         <Text
                             style={{
+                                fontWeight: 'bold',
                                 textAlign: 'center',
-                                lineHeight: 34,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#006AFF',
-                                paddingHorizontal: 20,
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                 fontFamily: 'inter',
-                                height: 35,
-                                borderRadius: 15,
+                                overflow: 'hidden',
+                                paddingVertical: 14,
+                                textTransform: 'uppercase',
                                 width: 175,
-                                textTransform: 'uppercase'
                             }}
                         >
                             {props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')}
@@ -603,29 +612,30 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => props.setShowSavePassword(!props.showSavePassword)}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
                             }}
+                            disabled={props.user.email === disableEmailId}
                         >
                             <Text
                                 style={{
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
+                                    borderColor: '#000',
                                     borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
+                                    color: '#000',
                                     backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    fontSize: 11,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'uppercase',
                                     width: 175,
-                                    textTransform: 'uppercase'
                                 }}
                             >
                                 Reset password
@@ -637,29 +647,29 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => handleZoomAuth()}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
                             }}
+                            disabled={props.user.email === disableEmailId}
                         >
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
+                                    // borderColor: '#000',
+                                    // borderWidth: 1,
+                                    color: '#000',
+                                    // backgroundColor: '#fff',
+                                    fontSize: 15,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
-                                    backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    // overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'capitalize',
                                     width: 175,
-                                    textTransform: 'uppercase'
                                 }}
                             >
                                 Connect Zoom
@@ -674,39 +684,39 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style: 'cancel',
                                         onPress: () => {
                                             return;
-                                        }
+                                        },
                                     },
                                     {
                                         text: 'Yes',
-                                        onPress: () => handleZoomRemove()
-                                    }
+                                        onPress: () => handleZoomRemove(),
+                                    },
                                 ]);
                             }}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 // width: "100%",
                                 justifyContent: 'center',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
                             }}
+                            disabled={props.user.email === disableEmailId}
                         >
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    paddingHorizontal: 20,
+                                    // borderColor: '#000',
+                                    // borderWidth: 1,
+                                    color: '#000',
+                                    // backgroundColor: '#fff',
+                                    fontSize: 15,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
-                                    height: 35,
-                                    color: '#006AFF',
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#006AFF',
-                                    backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    // overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'capitalize',
                                     width: 175,
-                                    textTransform: 'uppercase'
                                 }}
                             >
                                 Disconnect Zoom
@@ -733,12 +743,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
-                                    color: '#006AFF',
+                                    color: '#007AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#006AFF',
+                                    borderColor: '#007AFF',
                                     backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     width: 175,
                                     textTransform: 'uppercase'
                                 }}
@@ -753,21 +763,22 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onPress={() => logout()}
                             style={{
                                 backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
+                                // overflow: 'hidden',
+                                // height: 35,
                                 marginTop: 20,
                                 marginBottom: 50,
                                 width: '100%',
                                 justifyContent: 'center',
                                 flexDirection: 'row',
-                                alignItems: 'center'
+                                alignItems: 'center',
                             }}
                         >
-                            {/* <Ionicons name="log-out-outline" color="#006AFF" style={{ marginRight: 10 }} size={18} /> */}
+                            {/* <Ionicons name="log-out-outline" color="#007AFF" style={{ marginRight: 10 }} size={18} /> */}
                             <Text
                                 style={{
-                                    fontSize: 14,
-                                    color: '#006AFF'
+                                    fontSize: 15,
+                                    color: '#000',
+                                    fontFamily: 'Inter',
                                 }}
                             >
                                 Sign Out
@@ -790,7 +801,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 {/* </View> */}
                 {/* </View> */}
-                {/* {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 12, textAlign: 'center'}}>
+                {/* {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 13, textAlign: 'center'}}>
                     version 1.8.6
                 </Text> : null} */}
             </ScrollView>
@@ -806,29 +817,29 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
     },
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#1F1F1F'
+        borderColor: '#1F1F1F',
     },
     all: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     allOutline: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#1F1F1F'
+        borderColor: '#1F1F1F',
     },
     colorBar: {
         width: '100%',
@@ -836,6 +847,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginBottom: '15%',
         lineHeight: 18,
-        paddingTop: 15
-    }
+        paddingTop: 15,
+    },
 });

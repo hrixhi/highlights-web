@@ -47,10 +47,10 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 .query({
                     query: getChannelThreads,
                     variables: {
-                        channelId: props.channelId
-                    }
+                        channelId: props.channelId,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.thread && res.data.thread.findByChannelId) {
                         let filteredThreads: any[] = [];
                         if (parsedUser._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
@@ -67,17 +67,17 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     Animated.timing(modalAnimation, {
                         toValue: 1,
                         duration: 150,
-                        useNativeDriver: true
+                        useNativeDriver: true,
                     }).start();
                 })
-                .catch(err => {
+                .catch((err) => {
                     Alert(unableToLoadDiscussionAlert, checkConnectionAlert);
                     setLoading(false);
                     modalAnimation.setValue(0);
                     Animated.timing(modalAnimation, {
                         toValue: 1,
                         duration: 150,
-                        useNativeDriver: true
+                        useNativeDriver: true,
                     }).start();
                 });
         } else {
@@ -86,7 +86,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             Animated.timing(modalAnimation, {
                 toValue: 1,
                 duration: 150,
-                useNativeDriver: true
+                useNativeDriver: true,
             }).start();
         }
     }, [props.channelId, modalAnimation, props.channelCreatedBy]);
@@ -108,17 +108,17 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
      * @description Fetches total unread discussion threads
      */
     const updateDiscussionNotidCounts = useCallback(
-        userId => {
+        (userId) => {
             const server = fetchAPI('');
             server
                 .query({
                     query: totalUnreadDiscussionThreads,
                     variables: {
                         userId,
-                        channelId: props.channelId
-                    }
+                        channelId: props.channelId,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (
                         res.data.threadStatus.totalUnreadDiscussionThreads !== undefined &&
                         res.data.threadStatus.totalUnreadDiscussionThreads !== null
@@ -126,62 +126,49 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         // setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
                     }
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
         },
         [props.channelId]
     );
+
+    if (loading) {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    paddingVertical: 100,
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    backgroundColor: '#fff',
+                }}
+            >
+                <ActivityIndicator color={'#1F1F1F'} />
+            </View>
+        );
+    }
 
     // MAIN RETURN
     return (
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f2f2f2',
-                marginBottom: 20
-            }}>
-            <Animated.View
-                style={{
-                    opacity: modalAnimation,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#f2f2f2',
-                    borderTopRightRadius: 0,
-                    borderTopLeftRadius: 0
-                }}>
-                {loading ? (
-                    <View
-                        style={{
-                            width: '100%',
-                            paddingVertical: 100,
-                            justifyContent: 'center',
-                            flex: 1,
-                            flexDirection: 'column',
-                            backgroundColor: '#f2f2f2'
-                        }}>
-                        <ActivityIndicator color={'#1F1F1F'} />
-                    </View>
-                ) : (
-                    <ThreadsList
-                        key={JSON.stringify(threads)}
-                        threads={threads}
-                        cueId={null}
-                        channelName={props.filterChoice}
-                        channelId={props.channelId}
-                        closeModal={() => {
-                            Animated.timing(modalAnimation, {
-                                toValue: 0,
-                                duration: 150,
-                                useNativeDriver: true
-                            }).start(() => props.closeModal());
-                        }}
-                        channelCreatedBy={props.channelCreatedBy}
-                        reload={() => loadThreads()}
-                        refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
-                        type={'Discussion'}
-                        channelColor={props.channelColor}
-                    />
-                )}
-            </Animated.View>
+                height: '100%',
+                backgroundColor: '#fff',
+                marginBottom: 20,
+            }}
+        >
+            <ThreadsList
+                key={JSON.stringify(threads)}
+                threads={threads}
+                channelId={props.channelId}
+                closeModal={() => props.closeModal()}
+                channelCreatedBy={props.channelCreatedBy}
+                reload={() => loadThreads()}
+                refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+                showNewDiscussionPost={props.showNewDiscussionPost}
+                setShowNewDiscussionPost={props.setShowNewDiscussionPost}
+                user={props.user}
+            />
         </View>
     );
 };

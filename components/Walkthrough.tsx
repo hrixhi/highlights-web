@@ -20,10 +20,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             steps: [
                 'Cues (content) are organised by channel & category.',
                 'Cues are sorted by priority, with red indicating a higher priority than green.',
-                'Cues can also be filtered by date.'
+                'Cues can also be filtered by date.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Set up a channel',
@@ -32,10 +32,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 "Click on the 'Create' option within channels.",
                 'Enter a name and password (optional).',
                 'Color code your channel.',
-                'Temporary channels can be deleted by instructors. All other channels can only be deleted by the school administrator.'
+                'Temporary channels can be deleted by instructors. All other channels can only be deleted by the school administrator.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Channel options',
@@ -45,10 +45,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Inbox: Chat with or meet with students/groups.',
                 'Discussion: General Q&A.',
                 'Grades: Grades and class performance.',
-                'Settings: Channel settings.'
+                'Settings: Channel settings.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Add students to a channel',
@@ -57,10 +57,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'To add subscribers directly instead, select the channel on your home screen.',
                 "Pick 'Settings' from channel options.",
                 'Use the dropdown to add/remove subscribers.',
-                'You can also add/remove moderators or edit channel details.'
+                'You can also add/remove moderators or edit channel details.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Share content with channel',
@@ -68,10 +68,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 "Click '+' on your home screen to create a new cue.",
                 'Create or import a file.',
                 'In the cue options, select channel to share cue with, category, priority, etc.',
-                'Share cue with channel. Subscribers will be notified.'
+                'Share cue with channel. Subscribers will be notified.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Cue options',
@@ -81,19 +81,19 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Details: Editable information.',
                 'Q&A: Discussion regarding content.',
                 'Notes: Add personal notes to content.',
-                'Responses: View engagement.'
+                'Responses: View engagement.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Testing',
             steps: [
                 'Tests can be created as cues that require submissions or as quizzes.',
-                "Follow aforementioned instructions to create a cue and turn on the 'submission' switch."
+                "Follow aforementioned instructions to create a cue and turn on the 'submission' switch.",
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Grading',
@@ -104,10 +104,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Enter a score. To add remarks, click and drag on the submission to pick region and enter annotation.',
                 'Use the release grade option to make scrores visibile to students.',
                 "The 'Grades' channel option provides a comprehensive list of all scores and performance metrics.",
-                'Instructors can use this option to also directly add/modify scores.'
+                'Instructors can use this option to also directly add/modify scores.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Classroom meetings',
@@ -117,10 +117,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Meetings can only be joined if the instructor is present.',
                 'Subscribers can also view lecture recordings or attendances.',
                 'Use the planner to schedule lecture meetings.',
-                'Attendances will only be captured for scheduled meetings.'
+                'Attendances will only be captured for scheduled meetings.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Notes & reminders',
@@ -132,10 +132,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Add your personal notes.',
                 'To add a reminder to a cue, first click on the cue.',
                 "Select the 'Details' cue option.",
-                'Use the reminder switch to enable alerts.'
+                'Use the reminder switch to enable alerts.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Planner',
@@ -145,10 +145,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Use the filter to view specific events.',
                 "To create a new event/lecture click on 'Add'",
                 'Pick a channel to share with and select event type.',
-                'Create event.'
+                'Create event.',
             ],
             instructorOnly: true,
-            isOpen: false
+            isOpen: false,
         },
         // students only
         {
@@ -156,10 +156,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             steps: [
                 'Cues (content) are organised by channel & category.',
                 'Cues are sorted by priority, with red indicating a higher priority than green.',
-                'Cues can also be filtered by date.'
+                'Cues can also be filtered by date.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Join a channel',
@@ -167,10 +167,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 "Click on the 'Channels' option on your home screen.",
                 "Click on the 'Subscribe' option within channels.",
                 'Enter given channel name and password (optional).',
-                'Subscribe to channel.'
+                'Subscribe to channel.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Channel options',
@@ -180,10 +180,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Inbox: Chat with or meet with students/groups.',
                 'Discussion: General Q&A.',
                 'Grades: Grades and class performance.',
-                'Settings: Channel settings.'
+                'Settings: Channel settings.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Cue options',
@@ -193,10 +193,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Details: Editable information.',
                 'Q&A: Discussion regarding content.',
                 'Notes: Add personal notes to content.',
-                'Responses: View engagement.'
+                'Responses: View engagement.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Testing',
@@ -206,20 +206,20 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'For quizzes, users must directly provide answers.',
                 'Submissions can be created directly or imported.',
                 'Click on submit.',
-                'You will be notified as and when grades are released.'
+                'You will be notified as and when grades are released.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Grading',
             steps: [
                 'Click on a graded cue on your home screen to view it.',
                 'Scores and remarks will be visible over the given submission.',
-                "The 'Grades' channel option provides a comprehensive list of all scores and performance metrics pertaining to the channel."
+                "The 'Grades' channel option provides a comprehensive list of all scores and performance metrics pertaining to the channel.",
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Classroom meetings',
@@ -229,10 +229,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Meetings can only be joined if the instructor is present.',
                 'Subscribers can also view lecture recordings or attendances.',
                 'Use the planner to schedule lecture meetings.',
-                'Attendances will only be captured for scheduled meetings.'
+                'Attendances will only be captured for scheduled meetings.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Notes & reminders',
@@ -244,10 +244,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Add your personal notes.',
                 'To add a reminder to a cue, first click on the cue.',
                 "Select the 'Details' cue option.",
-                'Use the reminder switch to enable alerts.'
+                'Use the reminder switch to enable alerts.',
             ],
             instructorOnly: false,
-            isOpen: false
+            isOpen: false,
         },
         {
             question: 'Planner',
@@ -257,11 +257,11 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 'Use the filter to view specific events.',
                 "To create a new event/lecture click on 'Add'",
                 'Pick a channel to share with and select event type.',
-                'Create event.'
+                'Create event.',
             ],
             instructorOnly: false,
-            isOpen: false
-        }
+            isOpen: false,
+        },
     ]);
 
     const loadIsInstructor = useCallback(async () => {
@@ -273,10 +273,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 .query({
                     query: getRole,
                     variables: {
-                        userId: user._id
-                    }
+                        userId: user._id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data && res.data.user.getRole) {
                         if (res.data.user.getRole === 'instructor') {
                             setIsInstructor(true);
@@ -291,11 +291,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         Animated.timing(modalAnimation, {
             toValue: 1,
             duration: 150,
-            useNativeDriver: true
+            useNativeDriver: true,
         }).start();
     }, []);
-
-    const windowHeight = Dimensions.get('window').height;
 
     return (
         <View
@@ -309,28 +307,31 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                overflow: 'hidden'
-            }}>
+                overflow: 'hidden',
+            }}
+        >
             <View
                 style={{
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
                     borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0
-                }}>
+                    borderTopRightRadius: 0,
+                }}
+            >
                 {showSavePassword ? (
                     <View
                         style={{
                             flexDirection: 'row',
                             width: '100%',
                             alignSelf: 'center',
-                            maxWidth: 400,
+                            maxWidth: 1024,
+                            paddingLeft: 10,
                             height: 50,
                             marginBottom: 10,
                             marginTop: 20,
-                            // paddingHorizontal: 10
-                        }}>
+                        }}
+                    >
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity
                                 onPress={() => {
@@ -342,8 +343,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     paddingTop: 5,
                                     paddingBottom: 20,
                                     paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0,
-                                    alignSelf: 'flex-start'
-                                }}>
+                                    alignSelf: 'flex-start',
+                                }}
+                            >
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
                                     <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
                                 </Text>
@@ -354,131 +356,28 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View
                     style={{
                         width: '100%',
-                        flexDirection: 'row'
-                        // paddingTop: 30
-                    }}>
-                    {!props.showHelp ? (
-                        <View
-                            style={{
-                                width: '100%',
-                                // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
-                                // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
-                                // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
-                                borderColor: '#f2f2f2'
-                            }}>
-                            <Profile
-                                closeModal={() => props.closeModal()}
-                                saveDataInCloud={() => props.saveDataInCloud()}
-                                reOpenProfile={() => props.reOpenProfile()}
-                                reloadData={() => props.reloadData()}
-                                setShowSavePassword={(val: any) => setShowSavePassword(val)}
-                                showSavePassword={showSavePassword}
-                            />
-                        </View>
-                    ) : (
-                        <View
-                            style={{
-                                width: '100%',
-                                alignSelf: 'center',
-                                flexDirection: 'row',
-                                paddingHorizontal: 20
-                            }}>
-                            <ScrollView
-                                contentContainerStyle={{
-                                    backgroundColor: '#fff',
-                                    maxHeight:
-                                        Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
-                                    // paddingBottom: 75,
-                                    width: '100%',
-                                    maxWidth: 900,
-                                    alignSelf: 'center',
-                                    paddingHorizontal: 10
-                                }}>
-                                {options.map((item: any, index: any) => {
-                                    if (isInstructor && !item.instructorOnly) {
-                                        return null;
-                                    } else if (!isInstructor && item.instructorOnly) {
-                                        return null;
-                                    }
-                                    return (
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                const updatedOptions = JSON.parse(JSON.stringify(options));
-                                                updatedOptions[index] = {
-                                                    ...options[index],
-                                                    isOpen: !options[index].isOpen
-                                                };
-                                                setOptions(updatedOptions);
-                                            }}
-                                            style={{
-                                                backgroundColor: '#fff',
-                                                borderColor: '#f2f2f2',
-                                                borderBottomWidth: item.question === 'Planner' ? 0 : 1,
-                                                width: '100%',
-                                                paddingBottom: 10,
-                                                marginTop: 10
-                                                // paddingTop: item.question === 'Home' ? 40 : 0,
-                                            }}
-                                            key={index.toString()}    
-                                        >
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 16,
-                                                        paddingBottom: 10,
-                                                        paddingTop: 10,
-                                                        fontFamily: 'inter',
-                                                        flex: 1,
-                                                        lineHeight: 16,
-                                                        color: item.isOpen ? '#006AFF' : '#000000'
-                                                    }}>
-                                                    {item.question}
-                                                </Text>
-                                                <Text>
-                                                    <Ionicons
-                                                        name={
-                                                            item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'
-                                                        }
-                                                        color={item.isOpen ? '#1F1F1F' : '#006AFF'}
-                                                        size={18}
-                                                    />
-                                                </Text>
-                                            </View>
-                                            <Collapse isOpened={item.isOpen}>
-                                                {item.steps.map((step: string, ind: number) => {
-                                                    let renderContent = null;
-
-                                                    const split = step.split(':');
-
-                                                    if (split.length === 1) {
-                                                        renderContent = <View key={ind.toString()}>• {step}</View>;
-                                                    } else {
-                                                        renderContent = (
-                                                            <View key={ind.toString()} style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                • <strong>{split[0]}:</strong>
-                                                                {split[1]}
-                                                            </View>
-                                                        );
-                                                    }
-
-                                                    return (
-                                                        <View key={ind.toString()} style={{ backgroundColor: '#fff', paddingTop: 15 }}>
-                                                            <Text style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                {renderContent}
-                                                            </Text>
-                                                        </View>
-                                                    );
-                                                })}
-                                            </Collapse>
-                                        </TouchableOpacity>
-                                    );
-                                })}
-                            </ScrollView>
-                        </View>
-                    )}
+                        flexDirection: 'row',
+                    }}
+                >
+                    <View
+                        style={{
+                            width: '100%',
+                            borderColor: '#f2f2f2',
+                        }}
+                    >
+                        <Profile
+                            closeModal={() => props.closeModal()}
+                            saveDataInCloud={() => props.saveDataInCloud()}
+                            reOpenProfile={() => props.reOpenProfile()}
+                            reloadData={() => props.reloadData()}
+                            setShowSavePassword={(val: any) => setShowSavePassword(val)}
+                            showSavePassword={showSavePassword}
+                            user={props.user}
+                        />
+                    </View>
                 </View>
             </View>
-            {/* <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" /> */}
+            {/* <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#007AFF" /> */}
         </View>
     );
 };
@@ -490,11 +389,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%',
-        maxWidth: 900,
+        maxWidth: 1024,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
-        zIndex: -1
-    }
+        zIndex: -1,
+    },
 });

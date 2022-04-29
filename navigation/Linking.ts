@@ -8,22 +8,23 @@ export default {
                 screens: {
                     TabOne: {
                         screens: {
-                            TabOneScreen: 'one'
-                        }
+                            TabOneScreen: 'one',
+                        },
                     },
                     TabTwo: {
                         screens: {
-                            TabTwoScreen: 'two'
-                        }
-                    }
-                }
+                            TabTwoScreen: 'two',
+                        },
+                    },
+                },
             },
             zoom_auth: 'zoom_auth',
             pdfviewer: 'pdfviewer',
             equationEditor: 'equationEditor',
             login: 'login',
+            demo: 'demo',
             desktopSSORedirect: 'desktopSSORedirect',
-            NotFound: '*'
-        }
-    }
+            NotFound: '*',
+        },
+    },
 };

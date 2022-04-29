@@ -9,9 +9,8 @@ import EquationEditor from 'equation-editor-react';
 import { Ionicons } from '@expo/vector-icons';
 
 const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
     const [addElementFromButton, setAddElementFromButton] = useState('');
-    const [clearField, setClearField] = useState(false)
+    const [clearField, setClearField] = useState(false);
 
     // const svgX2 = <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300.000000 300.000000" preserveAspectRatio="xMidYMid " class="svg" style="width: 256px; height: 256px;">
     //         <g transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)" fill="#171717" stroke="none">
@@ -40,7 +39,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
     //         -206 -10z" id="node2" class="node"></path>
     //         </g>
     //         <g transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)" fill="#A1A1A1" stroke="none">
-            
+
     //         </g>
     //         </svg>
 
@@ -58,9 +57,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
     // 1255 -94 96 -189 130 -298 104z"></path>
     // </g>
     // <g transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)" fill="#A1A1A1" stroke="none">
-    
-    
-    
+
     // </g>
     // </svg>
 
@@ -86,12 +83,12 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
         '>',
         '≥',
         'π',
-    ]
+    ];
 
     const symbolsMap = {
         '+': '+',
         '-': '-',
-        'x': 'x',
+        x: 'x',
         '÷': '÷',
         '±': '±',
         '=': '=',
@@ -113,26 +110,33 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
         '¾': '¾',
         '√': 'sqrt',
         // '∛': '\\nthroot3',
-    }
+    };
 
-    return (<View>
+    return (
+        <View
+            style={{
+                backgroundColor: '#f8f8f8',
+            }}
+        >
             {/* <Text style={{ padding: 10, width: '50%', fontFamily: 'Inter', fontSize: 18  }}></Text> */}
             <View
                 style={{
                     width: '100%',
                     marginBottom: 40,
-                    marginTop: 20
+                    marginTop: 20,
+                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <View
                     style={{
+                        backgroundColor: '#fff',
                         borderColor: '#CCC',
                         borderWidth: 1,
                         borderRadius: 15,
                         padding: 10,
                         width: Dimensions.get('window').width < 768 ? 300 : 600,
                         maxWidth: Dimensions.get('window').width < 768 ? 300 : 600,
-                        marginBottom: 20
+                        marginBottom: 20,
                     }}
                 >
                     <EquationEditor
@@ -152,6 +156,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                         width: Dimensions.get('window').width < 768 ? 300 : 600,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
+                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {symbols.map((sym: string) => {
@@ -164,14 +169,14 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                                     borderColor: '#ccc',
                                     borderWidth: 1,
                                     marginRight: 12,
-                                    marginBottom: 12
+                                    marginBottom: 12,
                                 }}
                             >
                                 <Text
                                     style={{
                                         paddingHorizontal: 12,
                                         paddingVertical: 7,
-                                        backgroundColor: 'white'
+                                        backgroundColor: 'white',
                                     }}
                                 >
                                     {sym}
@@ -181,21 +186,22 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                     })}
                     <TouchableOpacity
                         onPress={() => {
-                            setClearField(true)
+                            setClearField(true);
                         }}
                         style={{
                             paddingTop: 2,
                             paddingLeft: 5,
                             marginRight: 12,
-                            marginBottom: 12
+                            marginBottom: 12,
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
-                        <Ionicons name="trash-outline" size={24} color={'#006AFF'} />
+                        <Ionicons name="trash-outline" size={24} color={'#000'} />
                     </TouchableOpacity>
                 </View>
             </View>
-    </View>)
-
-}
+        </View>
+    );
+};
 
 export default EquationEditorQuiz;

@@ -10,7 +10,7 @@ import {
     findThreadsByUserId,
     getAllPastDates,
     getAttendancesByUser,
-    getPerformanceReport
+    getPerformanceReport,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -37,7 +37,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         data.push([
             score.channelName,
             Number(score.score) / Number(score.total),
-            Number(score.total) - Number(score.score) / Number(score.total)
+            Number(score.total) - Number(score.score) / Number(score.total),
         ]);
     });
 
@@ -97,77 +97,71 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * @description Fetches Performance report for User
      */
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-                const server = fetchAPI(user._id);
-                server
-                    .query({
-                        query: getPerformanceReport,
-                        variables: {
-                            userId: user._id
-                        }
-                    })
-                    .then(res => {
-                        if (res.data && res.data.user.getPerformanceReport) {
-                            setScores(res.data.user.getPerformanceReport);
-                            setFetchingScores(false);
-                        }
-                    })
-                    .catch(err => {
-                        setFetchingScores(false);
-                    });
-                server
-                    .query({
-                        query: getAttendancesByUser,
-                        variables: {
-                            userId: user._id
-                        }
-                    })
-                    .then(res => {
-                        if (res.data && res.data.attendance.getAttendancesByUser) {
-                            setAttendances(res.data.attendance.getAttendancesByUser);
-                            setFetchingAttendance(false);
-                        }
-                    })
-                    .catch(err => {
-                        setFetchingAttendance(false);
-                    });
-                server
-                    .query({
-                        query: getAllPastDates,
-                        variables: {
-                            userId: user._id
-                        }
-                    })
-                    .then(res => {
-                        if (res.data && res.data.date.getPastDates) {
-                            setDates(res.data.date.getPastDates);
-                            setFetchingDates(false);
-                        }
-                    })
-                    .catch(err => {
-                        setFetchingDates(false);
-                    });
-                server
-                    .query({
-                        query: findThreadsByUserId,
-                        variables: {
-                            userId: user._id
-                        }
-                    })
-                    .then(res => {
-                        if (res.data && res.data.thread.findByUserId) {
-                            setThreads(res.data.thread.findByUserId);
-                            setFetchingThreads(false);
-                        }
-                    })
-                    .catch(err => {
-                        setFetchingThreads(false);
-                    });
-            }
-        })();
+        const server = fetchAPI(props.userId);
+        server
+            .query({
+                query: getPerformanceReport,
+                variables: {
+                    userId: props.userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.user.getPerformanceReport) {
+                    setScores(res.data.user.getPerformanceReport);
+                    setFetchingScores(false);
+                }
+            })
+            .catch((err) => {
+                setFetchingScores(false);
+            });
+        server
+            .query({
+                query: getAttendancesByUser,
+                variables: {
+                    userId: props.userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.attendance.getAttendancesByUser) {
+                    setAttendances(res.data.attendance.getAttendancesByUser);
+                    setFetchingAttendance(false);
+                }
+            })
+            .catch((err) => {
+                setFetchingAttendance(false);
+            });
+        server
+            .query({
+                query: getAllPastDates,
+                variables: {
+                    userId: props.userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.date.getPastDates) {
+                    setDates(res.data.date.getPastDates);
+                    setFetchingDates(false);
+                }
+            })
+            .catch((err) => {
+                setFetchingDates(false);
+            });
+        server
+            .query({
+                query: findThreadsByUserId,
+                variables: {
+                    userId: props.userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.thread.findByUserId) {
+                    setThreads(res.data.thread.findByUserId);
+                    setFetchingThreads(false);
+                }
+            })
+            .catch((err) => {
+                setFetchingThreads(false);
+            });
     }, []);
 
     if (loading || fetchingScores || fetchingAttendance || fetchingDates || fetchingThreads) {
@@ -175,15 +169,14 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View
                 style={{
                     width: '100%',
-                    height: '100%',
-                    flex: 1,
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#f2f2f2',
+                    backgroundColor: '#fff',
                     alignSelf: 'center',
-                    paddingVertical: 100
-                }}>
+                    paddingVertical: 100,
+                }}
+            >
                 <ActivityIndicator color={'#1F1F1F'} />
             </View>
         );
@@ -195,16 +188,20 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View
             style={{
                 width: '100%',
-                maxWidth: 900,
+                maxWidth: 1024,
                 alignSelf: 'center',
-                backgroundColor: '#f2f2f2',
-                paddingBottom: 25
-            }}>
+                backgroundColor: '#fff',
+                // paddingBottom: 25
+            }}
+        >
             {props.activeTab === 'meetings' ? (
                 <AttendanceList
                     channelId={props.channelId}
                     channelCreatedBy={props.channelCreatedBy}
                     channelColor={props.colorCode}
+                    isOwner={props.isOwner}
+                    userId={props.userId}
+                    user={props.user}
                 />
             ) : null}
             {props.activeTab === 'meetings' ? null : (
@@ -221,6 +218,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     attendance={attendance}
                     thread={thread}
                     date={date}
+                    isOwner={props.isOwner}
+                    userId={props.userId}
+                    exportScores={props.exportScores}
+                    setExportScores={props.setExportScores}
+                    user={props.user}
                 />
             )}
         </View>

@@ -12,6 +12,7 @@ import PDFViewerCues from '../screens/PDFViewerCues';
 import EquationEditorCues from '../screens/EquationEditorCues';
 import DesktopSSO from '../screens/DesktopSSO';
 import Auth from '../screens/Auth';
+import Demo from '../screens/Demo';
 
 // Main stack navigator
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -19,29 +20,36 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {/* Main app is in here */}
-                <Stack.Screen
-                    name="Root"
-                    options={{ title: 'Cues' }}
-                >
-                    {props =>  <View
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                            backgroundColor: 'white'
-                        }}
-                    >
-                        <Home {...props} />
-                    </View>
-                    }
+                <Stack.Screen name="Root" options={{ title: 'Cues' }}>
+                    {(props) => (
+                        <View
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                            }}
+                        >
+                            <Home {...props} />
+                        </View>
+                    )}
                 </Stack.Screen>
-
+                <Stack.Screen name="demo" component={Demo} options={{ title: 'Cues - Demo' }} />
                 <Stack.Screen name="login" component={Auth} options={{ title: 'Sign In - Cues' }} />
                 <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
                 <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
-                <Stack.Screen name="equationEditor" component={EquationEditorCues} options={{ title: 'Equation Editor CUES' }} />
-                <Stack.Screen name="desktopSSORedirect" component={DesktopSSO} options={{ title: 'Cues - Single Sign On' }} />
+                <Stack.Screen
+                    name="equationEditor"
+                    component={EquationEditorCues}
+                    options={{ title: 'Equation Editor CUES' }}
+                />
+                <Stack.Screen
+                    name="desktopSSORedirect"
+                    component={DesktopSSO}
+                    options={{ title: 'Cues - Single Sign On' }}
+                />
+
                 {/* In case navigation ends up at a wrong location */}
                 <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
             </Stack.Navigator>

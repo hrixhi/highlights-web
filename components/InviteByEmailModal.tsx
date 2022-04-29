@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Switch, TextInput, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-
 // COMPONENTS
 import { View, Text, TouchableOpacity } from './Themed';
 import { Popup } from '@mobiscroll/react';
@@ -22,57 +21,57 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
             isOpen={props.show}
             buttons={[
                 {
-                    text: 'ADD',
-                    handler: function(event) {
-
-                        const splitEmails = emails.split(',')
+                    text: 'Add',
+                    color: 'dark',
+                    handler: function (event) {
+                        const splitEmails = emails.split(',');
 
                         let error = false;
-                        let invalidEmail = ""
+                        let invalidEmail = '';
 
                         const santizedEmails = splitEmails.map((e: string) => {
-
                             if (error) return;
 
-                            const santize = e.toLowerCase().trim()
-                            
+                            const santize = e.toLowerCase().trim();
+
                             if (validateEmail(santize)) {
-                                return santize
+                                return santize;
                             } else {
                                 error = true;
-                                invalidEmail = santize
+                                invalidEmail = santize;
                                 return '';
                             }
-
-                        })
+                        });
 
                         if (error) {
-                            alert("Invalid email " + invalidEmail)
+                            alert('Invalid email ' + invalidEmail);
                             return;
                         }
 
                         props.onAddUsersWithEmails(santizedEmails);
-                    }
+                    },
                 },
                 {
-                    text: 'CANCEL',
-                    handler: function(event) {
+                    text: 'Cancel',
+                    color: 'dark',
+                    handler: function (event) {
                         props.onClose();
-                    }
-                }
+                    },
+                },
             ]}
             theme="ios"
             themeVariant="light"
             onClose={() => props.onClose()}
             responsive={{
                 small: {
-                    display: 'bottom'
+                    display: 'bottom',
                 },
                 medium: {
                     // Custom breakpoint
-                    display: 'center'
-                }
-            }}>
+                    display: 'center',
+                },
+            }}
+        >
             <View
                 style={{
                     flexDirection: 'column',
@@ -80,13 +79,15 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     marginVertical: 20,
                     minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                     maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                    backgroundColor: '#f2f2f2'
-                }}>
+                    backgroundColor: '#f8f8f8',
+                }}
+            >
                 <Text
                     style={{
                         fontSize: 16,
-                        fontFamily: 'inter'
-                    }}>
+                        fontFamily: 'inter',
+                    }}
+                >
                     Add Viewers with emails
                 </Text>
                 <TextareaAutosize
@@ -96,13 +97,13 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     style={{
                         fontFamily: 'overpass',
                         marginTop: 20,
-                        fontSize: 14,
+                        fontSize: 15,
                         borderRadius: 1,
                         padding: 12,
                         width: '95%',
                         maxWidth: '95%',
                         minWidth: '95%',
-                        borderBottom: '1px solid #f2f2f2'
+                        borderBottom: '1px solid #f2f2f2',
                     }}
                     onChange={(e: any) => {
                         setEmails(e.target.value);
@@ -110,15 +111,16 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                 />
                 <Text
                     style={{
-                        fontSize: 10,
+                        fontSize: 11,
                         color: '#000000',
                         textTransform: 'uppercase',
                         lineHeight: 20,
                         fontFamily: 'Inter',
-                        paddingTop: 20
+                        paddingTop: 20,
                     }}
                 >
-                    NOTE: EMAIL IDS ALREADY IN USE WITH ANOTHER CUES ORGANIZATION/INSTRUCTOR MAY NOT BE ADDED. REACH OUT TO SUPPORT FOR ANY QUERIES.
+                    NOTE: EMAIL IDS ALREADY IN USE WITH ANOTHER CUES ORGANIZATION/INSTRUCTOR MAY NOT BE ADDED. REACH OUT
+                    TO SUPPORT FOR ANY QUERIES.
                 </Text>
             </View>
         </Popup>
@@ -130,60 +132,60 @@ export default InviteByEmailModal;
 const styleObject = () => {
     return StyleSheet.create({
         screen: {
-            flex: 1
+            flex: 1,
         },
         marginSmall: {
-            height: 10
+            height: 10,
         },
         row: {
             flexDirection: 'row',
             display: 'flex',
             width: '100%',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         col: {
             width: '100%',
             height: 70,
             marginBottom: 15,
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
         colorBar: {
             width: '100%',
             height: '10%',
-            flexDirection: 'row'
+            flexDirection: 'row',
         },
         channelOption: {
-            width: '33.333%'
+            width: '33.333%',
         },
         channelText: {
             textAlign: 'center',
-            overflow: 'hidden'
+            overflow: 'hidden',
         },
         cusCategory: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
-            height: 22
+            height: 22,
         },
         cusCategoryOutline: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
             borderRadius: 1,
             borderWidth: 1,
             borderColor: '#1F1F1F',
-            color: 'white'
+            color: 'white',
         },
         allOutline: {
-            fontSize: 12,
+            fontSize: 13,
             color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,
             backgroundColor: 'white',
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#1F1F1F'
-        }
+            borderColor: '#1F1F1F',
+        },
     });
 };
