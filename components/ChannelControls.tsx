@@ -63,24 +63,16 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [activeTab, setActiveTab] = useState('create');
 
     const colorChoices = [
-        '#A1B8C0',
-        '#95C3DF',
-        '#77A3A3',
-        '#A2BF9A',
-        '#49885B',
-        '#4F435B',
-        '#D65D2A',
-        '#D94C3A',
-        '#8E5C48',
-        '#5A2C2A',
-        '#726863',
-        '#44565D',
-        '#938071',
-        '#6B7064',
-        '#6E757C',
-        '#50524F',
-        '#1E1E1E',
-        '#141514',
+        '#0450b4',
+        '#046dc8',
+        '#1184a7',
+        '#15a2a2',
+        '#6fb1a0',
+        '#b4418e',
+        '#d94a8c',
+        '#ea515f',
+        '#fe7434',
+        '#f48c06',
     ];
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
@@ -1016,7 +1008,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 <Text
                                                                     style={{
                                                                         textAlign: 'center',
-                                                                        fontSize: 13,
+                                                                        fontSize: 14,
                                                                         color: '#000',
                                                                         marginRight: 10,
                                                                     }}
@@ -1038,7 +1030,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             <Text
                                                                 style={{
                                                                     textAlign: 'center',
-                                                                    fontSize: 13,
+                                                                    fontSize: 14,
                                                                     fontFamily: 'inter',
                                                                     color:
                                                                         channel.channelCreator === userId ||
@@ -1159,7 +1151,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000000',
                                             fontFamily: 'Inter',
                                         }}
@@ -1185,7 +1177,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                                 {/* {!school ? <View style={{ backgroundColor: 'white' }}>
                                 <Text style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000000'
                                 }}>
                                     Description
@@ -1197,7 +1189,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: "100%",
                                     maxWidth: 500,
                                     borderBottom: '1px solid #f2f2f2',
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     paddingTop: 13,
                                     paddingBottom: 13,
                                     marginTop: 12,
@@ -1214,7 +1206,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                             color: '#000000',
                                         }}
@@ -1247,7 +1239,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 backgroundColor: "white"
                                             }}>
                                             <Text style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000'
                                             }}>Temporary</Text>
                                         </View> */}
@@ -1261,7 +1253,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         >
                                             <Text
                                                 style={{
-                                                    fontSize: 14,
+                                                    fontSize: 15,
                                                     marginRight: 8,
                                                     color: '#000000',
                                                     fontFamily: 'Inter',
@@ -1297,7 +1289,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 activeThumbColor="white"
                                             />
                                         </View>
-                                        {/* <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                        {/* <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
                                             Courses that are not temporary can only be deleted by the school administrator.
                                         </Text> */}
                                     </View>
@@ -1317,7 +1309,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         >
                                             <Text
                                                 style={{
-                                                    fontSize: 14,
+                                                    fontSize: 15,
                                                     color: '#000000',
                                                 }}
                                             >
@@ -1342,7 +1334,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 activeThumbColor="white"
                                             />
                                         </View>
-                                        <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                        <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
                                             Makes your channel visible to all users
                                         </Text>
                                     </View>
@@ -1363,7 +1355,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         >
                                             <Text
                                                 style={{
-                                                    fontSize: 14,
+                                                    fontSize: 15,
                                                     color: '#000000',
                                                 }}
                                             >
@@ -1384,7 +1376,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onChange={(newTags) => setTags(newTags)}
                                             />
                                         </View>
-                                        <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>
+                                        <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>
                                             Add up to 5
                                         </Text>
                                     </View>
@@ -1406,7 +1398,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -1419,6 +1411,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             colors={colorChoices}
                                             color={colorCode}
                                             onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                            width={'220px'}
                                         />
                                     </View>
                                 </View>
@@ -1432,7 +1425,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             marginRight: 8,
                                             color: '#000000',
                                             fontFamily: 'Inter',
@@ -1512,7 +1505,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 marginRight: 8,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
@@ -1620,14 +1613,14 @@ const styles = StyleSheet.create({
         borderColor: '#1F1F1F',
     },
     all: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
     },
     allOutline: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#fff',
         height: 22,
         paddingHorizontal: 10,
@@ -1646,7 +1639,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
-        fontSize: 14,
+        fontSize: 15,
         paddingTop: 13,
         paddingBottom: 13,
         marginTop: 5,

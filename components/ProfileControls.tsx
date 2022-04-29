@@ -335,7 +335,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -353,7 +353,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -373,7 +373,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -464,7 +464,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             textAlign: 'center',
                                             lineHeight: 34,
                                             color: '#007AFF',
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             // backgroundColor: '#007AFF',
                                             // paddingHorizontal: 20,
                                             fontFamily: 'inter',
@@ -481,7 +481,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             style={{
                                 marginTop: 50,
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -503,7 +503,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                                 paddingTop: 10,
@@ -526,7 +526,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         />
                         {/* <Text style={{
-                  fontSize: 14,
+                  fontSize: 15,
                   fontFamily: 'inter',
                   color: '#000000'
                 }}>
@@ -556,7 +556,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //     }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     marginBottom: 10
                                     // color: '#007AFF'
                                 }}>
@@ -663,7 +663,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     // borderWidth: 1,
                                     color: '#000',
                                     // backgroundColor: '#fff',
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
                                     // overflow: 'hidden',
@@ -710,7 +710,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     // borderWidth: 1,
                                     color: '#000',
                                     // backgroundColor: '#fff',
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
                                     // overflow: 'hidden',
@@ -748,7 +748,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     borderRadius: 15,
                                     borderColor: '#007AFF',
                                     backgroundColor: '#fff',
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     width: 175,
                                     textTransform: 'uppercase'
                                 }}
@@ -776,7 +776,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {/* <Ionicons name="log-out-outline" color="#007AFF" style={{ marginRight: 10 }} size={18} /> */}
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000',
                                     fontFamily: 'Inter',
                                 }}
@@ -801,7 +801,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 {/* </View> */}
                 {/* </View> */}
-                {/* {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 12, textAlign: 'center'}}>
+                {/* {!props.showSavePassword ? <Text style={{ marginTop: 20, fontSize: 13, textAlign: 'center'}}>
                     version 1.8.6
                 </Text> : null} */}
             </ScrollView>
@@ -825,14 +825,14 @@ const styles = StyleSheet.create({
         borderColor: '#1F1F1F',
     },
     all: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
     },
     allOutline: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,

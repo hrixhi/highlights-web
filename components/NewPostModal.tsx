@@ -154,7 +154,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             }}
         >
             <View style={{ flexDirection: 'row', backgroundColor: '#fff', alignItems: 'center' }}>
-                <Text style={{ fontSize: 14, fontFamily: 'Inter', marginRight: 7 }}>Category</Text>
+                <Text style={{ fontSize: 15, fontFamily: 'Inter', marginRight: 7 }}>Category</Text>
                 <View
                     style={{
                         width: '100%',
@@ -172,7 +172,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         borderRadius: 2,
                                         borderColor: '#cccccc',
                                         borderWidth: 1,
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         height: '2.75em',
                                         padding: '1em',
                                     }}
@@ -252,7 +252,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             }}
                         />
                     </View>
-                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Private</Text>
+                    <Text style={{ fontSize: 15, fontFamily: 'Inter' }}>Private</Text>
                 </View>
             )}
             {props.isOwner ? null : (
@@ -277,7 +277,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             }}
                         />
                     </View>
-                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                    <Text style={{ fontSize: 15, fontFamily: 'Inter' }}>Anonymous</Text>
                 </View>
             )}
         </View>
@@ -343,7 +343,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         borderWidth: 1,
                         borderColor: '#cccccc',
                         // borderBottom: '1px solid #f2f2f2',
-                        fontSize: 14,
+                        fontSize: 15,
                         paddingVertical: 20,
                         paddingLeft: 10,
                         marginTop: 12,
@@ -457,7 +457,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             fontFamily: 'Overpass',
                             marginBottom: 20,
                         }}
@@ -632,13 +632,13 @@ const styleObject = () => {
             overflow: 'hidden',
         },
         cusCategory: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
         },
         cusCategoryOutline: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
@@ -648,7 +648,7 @@ const styleObject = () => {
             color: 'white',
         },
         allOutline: {
-            fontSize: 12,
+            fontSize: 13,
             color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,

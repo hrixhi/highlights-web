@@ -2909,7 +2909,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             value={title}
                             style={{
                                 fontFamily: 'overpass',
-                                fontSize: 14,
+                                fontSize: 15,
                                 padding: 15,
                                 paddingTop: 12,
                                 paddingBottom: 12,
@@ -3000,7 +3000,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{
                                         lineHeight: 34,
                                         textTransform: 'uppercase',
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontFamily: 'overpass',
                                         color: '#007AFF',
                                     }}
@@ -3074,7 +3074,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         >
                             <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
-                            <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                            <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                                 Submitted at {moment(new Date(latestSubmission.submittedAt)).format('MMMM Do, h:mm a')}
                             </Text>
                         </View>
@@ -3089,7 +3089,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         >
                             <Ionicons name="alert-circle-outline" size={22} color={'#D91D56'} />
-                            <Text style={{ fontSize: 14, paddingLeft: 5 }}>Not Attempted</Text>
+                            <Text style={{ fontSize: 15, paddingLeft: 5 }}>Not Attempted</Text>
                         </View>
                     )}
                 </View>
@@ -3102,7 +3102,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c',
                                 paddingTop: 40,
@@ -3156,7 +3156,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                     >
                         <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
-                        <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                        <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                             {moment(new Date(props.cue.submittedAt)).format('MMMM Do, h:mm a')}
                         </Text>
                     </View>
@@ -3167,7 +3167,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ paddingLeft: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c',
                             }}
@@ -3212,7 +3212,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 34,
                                             color: '#007AFF',
                                             borderWidth: 1,
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             borderColor: '#007AFF',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
@@ -3273,7 +3273,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         marginRight: Dimensions.get('window').width < 768 ? 10 : 30,
                         fontFamily: 'Inter',
-                        fontSize: 14,
+                        fontSize: 15,
                     }}
                 >
                     {problems.length} {problems.length === 1 ? 'Question' : 'Questions'}
@@ -3283,7 +3283,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         marginRight: Dimensions.get('window').width < 768 ? 10 : 30,
                         fontFamily: 'Inter',
-                        fontSize: 14,
+                        fontSize: 15,
                     }}
                 >
                     {totalQuizPoints} Points
@@ -3294,7 +3294,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             marginRight: Dimensions.get('window').width < 768 ? 10 : 30,
                             fontFamily: 'Inter',
-                            fontSize: 14,
+                            fontSize: 15,
                         }}
                     >
                         No Time Limit
@@ -3304,7 +3304,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             marginRight: Dimensions.get('window').width < 768 ? 10 : 30,
                             fontFamily: 'Inter',
-                            fontSize: 14,
+                            fontSize: 15,
                         }}
                     >
                         {hours} H {minutes} min
@@ -3312,7 +3312,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 )}
 
                 {!isOwner ? (
-                    <Text style={{ fontFamily: 'Inter', fontSize: 14 }}>
+                    <Text style={{ fontFamily: 'Inter', fontSize: 15 }}>
                         {allowedAttempts && allowedAttempts !== null
                             ? 'Attempts left: ' + (remainingAttempts >= 0 ? remainingAttempts : '0')
                             : 'Unlimited Attempts'}
@@ -3405,7 +3405,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 color: '#007AFF',
                                                 borderColor: '#007AFF',
                                                 borderWidth: 1,
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 backgroundColor: '#f8f8f8',
                                                 paddingHorizontal: 20,
                                                 fontFamily: 'inter',
@@ -3790,7 +3790,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         paddingRight: 15,
                                         paddingTop: 12,
                                         paddingBottom: 12,
@@ -3819,7 +3819,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         paddingRight: 15,
                                         paddingTop: 12,
                                         paddingBottom: 12,
@@ -4057,7 +4057,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                             // textTransform: 'uppercase'
@@ -4159,7 +4159,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -4197,7 +4197,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         textTransform: 'uppercase',
                                         fontFamily: 'Inter',
@@ -4217,7 +4217,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#1F1F1F',
                                     textAlign: 'right',
                                     paddingRight: 10,
@@ -4257,7 +4257,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             ) : (
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#1F1F1F',
                                         textAlign: 'left',
                                         fontFamily: 'Inter',
@@ -4279,7 +4279,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#1F1F1F',
                                     textAlign: 'right',
                                     paddingRight: 10,
@@ -4320,7 +4320,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             ) : (
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#1F1F1F',
                                         textAlign: 'left',
                                         fontFamily: 'Inter',
@@ -4352,7 +4352,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -4403,7 +4403,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         borderColor: '#cccccc',
                                         borderWidth: 1,
                                         borderRadius: 2,
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         padding: 15,
                                         paddingVertical: 10,
                                         marginTop: 0,
@@ -4416,7 +4416,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             ) : null}
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#1F1F1F',
                                     textAlign: 'left',
                                     paddingRight: 10,
@@ -4429,7 +4429,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     ) : !isOwner ? (
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#1F1F1F',
                                 textAlign: 'left',
                                 paddingRight: 10,
@@ -4460,7 +4460,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -4504,7 +4504,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#1F1F1F',
                                     textAlign: 'left',
                                     paddingRight: 10,
@@ -4557,7 +4557,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     ) : !isOwner ? (
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#1F1F1F',
                                 textAlign: 'left',
                                 paddingRight: 10,
@@ -4589,7 +4589,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -4608,7 +4608,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#1F1F1F',
                                 textAlign: 'right',
                                 paddingRight: 10,
@@ -4631,7 +4631,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -4687,7 +4687,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         borderColor: '#ccc',
                                         borderWidth: 1,
                                         borderRadius: 2,
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         marginLeft: 10,
                                         padding: 15,
                                         paddingVertical: 10,
@@ -4739,7 +4739,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -4764,7 +4764,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             style={{
                                                 color: '#000000',
                                                 lineHeight: 20,
-                                                fontSize: 12,
+                                                fontSize: 13,
                                             }}
                                         >
                                             {props.cue.customCategory === ''
@@ -4792,7 +4792,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 borderColor: '#cccccc',
                                                 borderWidth: 1,
                                                 borderRadius: 2,
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 height: '2.75em',
                                                 padding: '1em',
                                                 backgroundColor: '#fff',
@@ -4809,7 +4809,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     //     onSelect={(cat: any) => setCustomCategory(cat)}>
                                     //     <MenuTrigger>
                                     //         <Text style={{
-                                    //             fontSize: 12,
+                                    //             fontSize: 13,
                                     //             color: "#1F1F1F",
                                     //             textAlign: "right",
                                     //             paddingRight: 10,
@@ -4931,7 +4931,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -5007,7 +5007,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     <Text
                         style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             color: '#000000',
                             fontFamily: 'Inter',
                         }}
@@ -5117,7 +5117,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                                 fontFamily: 'Inter',
                             }}
@@ -5165,7 +5165,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000000',
                                     fontFamily: 'Inter',
                                 }}
@@ -5203,7 +5203,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#1F1F1F',
                                             textAlign: 'right',
                                             paddingRight: 10,
@@ -5245,7 +5245,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}>
                                         <MenuTrigger>
                                             <Text style={{
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 color: "#1F1F1F",
                                                 textAlign: "right",
                                                 paddingRight: 10,
@@ -5295,7 +5295,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         />
                                         <Text
                                             style={{
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 color: '#1F1F1F',
                                                 textAlign: 'right',
                                                 paddingRight: 10,
@@ -5353,7 +5353,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000000',
                                     fontFamily: 'Inter',
                                 }}
@@ -5451,7 +5451,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             fontFamily: 'overpass',
                             paddingLeft: 5,
                             paddingTop: 4,
-                            fontSize: 14,
+                            fontSize: 15,
                         }}
                     >
                         Failed to save. Last saved at {format}. Check Internet connection.
@@ -5472,7 +5472,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             fontFamily: 'overpass',
                             paddingLeft: 5,
                             paddingTop: 4,
-                            fontSize: 14,
+                            fontSize: 15,
                         }}
                     >
                         Saved at {format}
@@ -5534,7 +5534,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     textAlign: 'center',
                                     lineHeight: 34,
                                     color: 'white',
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     backgroundColor: '#007AFF',
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
@@ -5616,7 +5616,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     (props.showOriginal || props.showOptions) ? (
                         <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 color: 'white',
                                 height: 22,
                                 paddingHorizontal: 10,
@@ -5794,7 +5794,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             value={submissionTitle}
                                             style={{
                                                 fontFamily: 'overpass',
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 padding: 15,
                                                 paddingTop: 12,
                                                 paddingBottom: 12,
@@ -5831,7 +5831,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         style={{
                                                             lineHeight: 34,
                                                             textTransform: 'uppercase',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             fontFamily: 'overpass',
                                                             color: '#007AFF',
                                                         }}
@@ -5855,7 +5855,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 style={{
                                                     lineHeight: 34,
                                                     textTransform: 'uppercase',
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     fontFamily: 'overpass',
                                                     color: '#007AFF',
                                                 }}
@@ -5964,7 +5964,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
-        fontSize: 14,
+        fontSize: 15,
         paddingTop: 12,
         paddingBottom: 12,
         // marginTop: 5,
@@ -6000,7 +6000,7 @@ const styles: any = StyleSheet.create({
         textTransform: 'uppercase',
     },
     allGrayOutline: {
-        fontSize: 12,
+        fontSize: 13,
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,

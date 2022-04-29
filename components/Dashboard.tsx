@@ -1343,7 +1343,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text
                                     style={{
                                         color: getAccountNavbarIconColor(tab),
-                                        fontSize: 13,
+                                        fontSize: 14,
                                         fontFamily: props.activeAccountTab === tab ? 'Inter' : 'overpass',
                                         textTransform: 'uppercase',
                                         // paddingLeft: 7,
@@ -1413,7 +1413,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             >
                                 <Text
                                     style={{
-                                        fontSize: 13,
+                                        fontSize: 14,
                                         fontFamily: 'overpass',
                                     }}
                                 >
@@ -1445,7 +1445,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <Text
                                             style={{
                                                 color: getSearchNavbarIconColor(tab),
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 fontFamily: tab === activeSearchResultsTab ? 'Inter' : 'overpass',
                                                 textTransform: 'uppercase',
                                                 // paddingLeft: 7,
@@ -1816,7 +1816,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <View style={{}}>
                                         <Text
                                             style={{
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 padding: 5,
                                                 fontFamily: 'inter',
                                                 maxWidth: 300,
@@ -1827,7 +1827,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         {meeting.description ? (
                                             <Text
                                                 style={{
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     padding: 5,
                                                     maxWidth: 300,
                                                 }}
@@ -1848,7 +1848,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View style={{ marginRight: 20 }}>
                                             <Text
                                                 style={{
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     padding: 5,
                                                     lineHeight: 13,
                                                 }}
@@ -1937,7 +1937,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             >
                                                 <Text
                                                     style={{
-                                                        fontSize: 14,
+                                                        fontSize: 15,
                                                         fontFamily: 'inter',
                                                         color: '#000',
                                                         marginRight: 20,
@@ -1957,7 +1957,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             fontFamily: 'inter',
                                                             color: '#000',
                                                             marginRight: 20,
@@ -2060,7 +2060,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontFamily: 'inter',
                                         color: '#000000',
                                     }}
@@ -2071,7 +2071,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <DefaultInput
                                         style={{
                                             padding: 10,
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             borderColor: '#f2f2f2',
                                             borderBottomWidth: 1,
                                         }}
@@ -2087,7 +2087,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ width: '100%', maxWidth: 400, backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontFamily: 'inter',
                                         color: '#000000',
                                     }}
@@ -2098,7 +2098,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <DefaultInput
                                         style={{
                                             padding: 10,
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             borderColor: '#f2f2f2',
                                             borderBottomWidth: 1,
                                         }}
@@ -2160,7 +2160,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             >
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontFamily: 'inter',
                                         color: '#000000',
                                     }}
@@ -2209,7 +2209,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             >
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         fontFamily: 'inter',
                                         color: '#000000',
                                     }}
@@ -2273,7 +2273,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text
                                     style={{
                                         paddingLeft: 10,
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         color: '#000000',
                                         lineHeight: 20,
                                         fontFamily: 'Overpass',
@@ -2352,7 +2352,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginRight: 15,
                             }}
                         >
-                            <Ionicons size={28} name="arrow-back-outline" color="#fff" />
+                            <Ionicons size={32} name="arrow-back-outline" color="#fff" />
                         </TouchableOpacity>
                         <Text
                             style={{
@@ -2402,7 +2402,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <Text
                                             style={{
                                                 color: getWorkspaceNavbarIconColor(tab),
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 fontFamily: tab === props.activeWorkspaceTab ? 'inter' : 'overpass',
                                                 textTransform: 'uppercase',
                                                 // paddingLeft: 5,
@@ -2652,7 +2652,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             color: '#fff',
                                                             borderRadius: 15,
                                                             backgroundColor: '#007AFF',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             paddingHorizontal: 20,
                                                             fontFamily: 'inter',
                                                             height: 35,
@@ -2792,7 +2792,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             flex: 1,
                                                             flexDirection: 'row',
                                                             color: '#1F1F1F',
-                                                            fontSize: 13,
+                                                            fontSize: 14,
                                                             lineHeight: 25,
                                                             fontFamily: 'inter',
                                                             backgroundColor: '#fff',
@@ -2863,7 +2863,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             selectedWorkspace &&
             !showNewDiscussionPost &&
             props.activeWorkspaceTab !== 'Settings' &&
-            (props.activeWorkspaceTab !== 'Meet' || selectedWorkspace.split('-SPLIT-')[2] === userId) ? (
+            (props.activeWorkspaceTab !== 'Meet' || selectedWorkspace.split('-SPLIT-')[2] === userId) &&
+            !(
+                props.activeWorkspaceTab === 'Content' &&
+                !(
+                    selectedWorkspace.split('-SPLIT-')[0] === 'My Notes' ||
+                    selectedWorkspace.split('-SPLIT-')[2] === userId
+                )
+            ) ? (
                 <TouchableOpacity
                     onPress={() => {
                         if (props.activeWorkspaceTab === 'Content') {
@@ -3108,7 +3115,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         color: '#727272',
                                         backgroundColor: 'none',
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         flex: 1,
                                         fontFamily: 'Inter',
                                         paddingLeft: 5,
@@ -3202,7 +3209,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <Text
                                                     style={{
                                                         fontFamily: 'inter',
-                                                        fontSize: 14,
+                                                        fontSize: 15,
                                                         fontWeight: 'bold',
                                                         color: tab === props.activeAccountTab ? '#007AFF' : '#1f1f1f',
                                                         textTransform: 'uppercase',
@@ -3232,7 +3239,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         >
             {renderInstantMeetingPopup()}
             {/* Hide navbar if workspace is open */}
-            {selectedWorkspace === '' || props.modalType === 'Create' ? renderMainNavbar() : null}
+            {selectedWorkspace === '' && props.modalType !== 'Create' ? renderMainNavbar() : null}
 
             {searchTerm === '' ? (
                 props.modalType === 'Create' && (props.option === 'Classroom' || props.option === 'Browse') ? (
@@ -3244,6 +3251,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         option={props.option}
                         version={props.version}
                         user={props.user}
+                        courseColor={
+                            selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                ? '#000'
+                                : selectedWorkspace.split('-SPLIT-')[3]
+                        }
+                        courseName={selectedWorkspace.split('-SPLIT-')[0]}
                     />
                 ) : (
                     <View
@@ -3358,7 +3371,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     fontFamily: 'Inter',
                                     color: '#000000',
                                     paddingLeft: 5,
@@ -3396,7 +3409,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
                         <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'Inter',
                                 color: '#000000',
                                 paddingLeft: 5,
@@ -3462,7 +3475,7 @@ export default Dashboard;
 const styleObject: any = () =>
     StyleSheet.create({
         all: {
-            fontSize: 13,
+            fontSize: 14,
             color: '#fff',
             height: 24,
             marginHorizontal: 15,
@@ -3473,7 +3486,7 @@ const styleObject: any = () =>
             // marginRight: 5,
         },
         allGrayFill: {
-            fontSize: 13,
+            fontSize: 14,
             color: '#fff',
             marginHorizontal: 15,
             backgroundColor: 'none',

@@ -85,7 +85,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             numberOfLines={1}
                             style={{
                                 fontFamily: 'inter',
-                                fontSize: 14,
+                                fontSize: 15,
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: props.option === 'Messages' ? 6 : 10,
@@ -97,7 +97,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         {props.option === 'Content' || props.option === 'Messages' || props.option === 'Discussion' ? (
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     padding: 5,
                                     lineHeight: 13,
                                 }}
@@ -173,14 +173,14 @@ const styles: any = (colorScheme: any, col: any, option: any) =>
             alignItems: 'center',
         },
         date: {
-            fontSize: 12,
+            fontSize: 13,
             color: '#1F1F1F',
             textAlign: 'left',
             flex: 1,
         },
         title: {
             fontFamily: 'overpass',
-            fontSize: 14,
+            fontSize: 15,
             lineHeight: 20,
             flex: 1,
             marginTop: 5,

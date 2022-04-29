@@ -462,7 +462,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 fontFamily: 'Inter',
                                             }}
                                         >
@@ -488,7 +488,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 >
                                     {/* <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                             color: '#1f1f1f',
                                             backgroundColor: '#f8f8f8',

@@ -542,7 +542,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * @description render custom font size
      */
     const renderMessageText = (props: any) => {
-        return <MessageText {...props} customTextStyle={{ fontSize: 14, lineHeight: 14 }} />;
+        return <MessageText {...props} customTextStyle={{ fontSize: 15, lineHeight: 14 }} />;
     };
 
     /**
@@ -801,7 +801,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     >
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontFamily: 'Overpass',
                                 marginBottom: 20,
                             }}
@@ -829,7 +829,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         <Text
                                             style={{
                                                 paddingLeft: 10,
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 fontFamily: 'Overpass',
                                             }}
                                         >
@@ -1034,6 +1034,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 fontSize: 18,
                                 paddingTop: 10,
                                 paddingBottom: 20,
+                                fontFamily: 'Inter',
                             }}
                         >
                             {selectedThreadTitle}
@@ -1084,7 +1085,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                             color: selectedThread.userId === userId ? '#007AFF' : '#000',
                                         }}
@@ -1116,7 +1117,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View>
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         marginTop: 7,
                                         color: '#1f1f1f',
                                     }}
@@ -1137,7 +1138,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                 }}
                             >
                                 {selectedThread.views} {selectedThread.views === 1 ? 'view' : 'views'}
@@ -1216,7 +1217,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 }}
                                             />
                                         </View>
-                                        <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                                        <Text style={{ fontSize: 15, fontFamily: 'Inter' }}>Anonymous</Text>
                                     </View>
                                 )}
 
@@ -1261,7 +1262,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             style={{
                                                 textAlign: 'center',
                                                 color: '#000',
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 backgroundColor: 'white',
                                                 fontFamily: 'inter',
                                                 textTransform: 'capitalize',
@@ -1288,7 +1289,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             style={{
                                                 textAlign: 'center',
                                                 color: '#000',
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 fontFamily: 'inter',
                                                 textTransform: 'uppercase',
                                             }}
@@ -1324,7 +1325,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     fontFamily: 'Overpass',
                                     marginBottom: 20,
                                 }}
@@ -1351,7 +1352,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         <Text
                                             style={{
                                                 paddingLeft: 10,
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 fontFamily: 'Overpass',
                                             }}
                                         >
@@ -1459,7 +1460,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}
                                     />
                                 </View>
-                                <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                                <Text style={{ fontSize: 15, fontFamily: 'Inter' }}>Anonymous</Text>
                             </View>
                         )}
                         {/* Buttons */}
@@ -1502,7 +1503,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     style={{
                                         textAlign: 'center',
                                         color: '#000',
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         backgroundColor: 'white',
                                         fontFamily: 'inter',
                                         textTransform: 'capitalize',
@@ -1529,7 +1530,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     style={{
                                         textAlign: 'center',
                                         color: '#000',
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         fontFamily: 'inter',
                                         textTransform: 'capitalize',
                                     }}
@@ -1606,7 +1607,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     />
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                             paddingLeft: 15,
                                             color: thread.userId === userId ? '#007AFF' : '#000',
@@ -1618,7 +1619,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                     <Text
                                         style={{
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             paddingLeft: 10,
                                             color: '#1f1f1f',
                                         }}
@@ -1724,7 +1725,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             }}
                                                         />
                                                     </View>
-                                                    <Text style={{ fontSize: 14, fontFamily: 'Inter' }}>Anonymous</Text>
+                                                    <Text style={{ fontSize: 15, fontFamily: 'Inter' }}>Anonymous</Text>
                                                 </View>
                                             )}
 
@@ -1770,7 +1771,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             textAlign: 'center',
                                                             color: '#000',
                                                             borderRadius: 15,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             backgroundColor: 'white',
                                                             fontFamily: 'inter',
                                                             textTransform: 'capitalize',
@@ -1797,7 +1798,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         style={{
                                                             textAlign: 'center',
                                                             color: '#000',
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             fontFamily: 'inter',
                                                             borderRadius: 15,
                                                             textTransform: 'capitalize',
@@ -1829,7 +1830,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 fontFamily: 'Overpass',
                                                 marginBottom: 20,
                                             }}
@@ -1856,7 +1857,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <Text
                                                         style={{
                                                             paddingLeft: 10,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             fontFamily: 'Overpass',
                                                         }}
                                                     >
@@ -2009,7 +2010,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         </Text>
                                         <Text
                                             style={{
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 margin: 5,
                                                 lineHeight: 18,
                                                 color: thread.userId === userId ? '#007AFF' : '#000',
@@ -2033,7 +2034,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             {thread.isPrivate ? (
                                                 <Text
                                                     style={{
-                                                        fontSize: 13,
+                                                        fontSize: 14,
                                                         padding: 5,
                                                         color: '#000',
                                                         textAlign: 'center',
@@ -2056,14 +2057,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         marginBottom: 3,
                                                     }}
                                                 >
-                                                    <Text style={{ color: 'white', fontSize: 10 }}>
+                                                    <Text style={{ color: 'white', fontSize: 11 }}>
                                                         {thread.unreadThreads}
                                                     </Text>
                                                 </View>
                                             ) : null}
                                             <Text
                                                 style={{
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     padding: 5,
                                                     lineHeight: 13,
                                                     color: '#000000',
@@ -2073,7 +2074,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 {emailTimeDisplay(thread.time)}
                                             </Text>
                                             <Text
-                                                style={{ fontSize: 13, padding: 5, lineHeight: 13 }}
+                                                style={{ fontSize: 14, padding: 5, lineHeight: 13 }}
                                                 ellipsizeMode="tail"
                                             >
                                                 <Ionicons name="chevron-forward-outline" size={18} color="#000" />
@@ -2151,7 +2152,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     color: '#000',
                                     backgroundColor: '#efefef',
                                     borderRadius: 15,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     paddingVertical: 8,
                                     paddingHorizontal: 16,
                                     marginRight: 2,
@@ -2282,7 +2283,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                               >
                                                   <Text
                                                       style={{
-                                                          fontSize: 14,
+                                                          fontSize: 15,
                                                           padding: 5,
                                                           fontFamily: 'inter',
                                                           flex: 1,
@@ -2304,7 +2305,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                       {thread.isPrivate ? (
                                                           <Text
                                                               style={{
-                                                                  fontSize: 13,
+                                                                  fontSize: 14,
                                                                   padding: 5,
                                                                   color: '#000',
                                                                   textAlign: 'center',
@@ -2326,7 +2327,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                   justifyContent: 'center',
                                                               }}
                                                           >
-                                                              <Text style={{ color: 'white', fontSize: 10 }}>
+                                                              <Text style={{ color: 'white', fontSize: 11 }}>
                                                                   {thread.unreadThreads}
                                                               </Text>
                                                           </View>
@@ -2374,7 +2375,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                   {/* Date & Time */}
                                                   <Text
                                                       style={{
-                                                          fontSize: 10,
+                                                          fontSize: 11,
                                                           margin: 5,
                                                           lineHeight: 18,
                                                           marginLeft: 'auto',
@@ -2403,7 +2404,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             {thread.isPrivate ? (
                                                 <Text
                                                     style={{
-                                                        fontSize: 13,
+                                                        fontSize: 14,
                                                         padding: 5,
                                                         color: '#007AFF',
                                                         textAlign: 'center',
@@ -2426,7 +2427,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         marginBottom: 3,
                                                     }}
                                                 >
-                                                    <Text style={{ color: 'white', fontSize: 10 }}>
+                                                    <Text style={{ color: 'white', fontSize: 11 }}>
                                                         {thread.unreadThreads}
                                                     </Text>
                                                 </View>
@@ -2647,13 +2648,13 @@ const styleObject = () => {
             overflow: 'hidden',
         },
         cusCategory: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
         },
         cusCategoryOutline: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
@@ -2663,7 +2664,7 @@ const styleObject = () => {
             color: 'white',
         },
         allOutline: {
-            fontSize: 12,
+            fontSize: 13,
             color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,

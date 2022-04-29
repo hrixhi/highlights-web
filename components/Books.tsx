@@ -191,7 +191,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         style={{
                             color: '#727272',
                             backgroundColor: '#fff',
-                            fontSize: 14,
+                            fontSize: 15,
                             flex: 1,
                             fontFamily: 'Inter',
                             paddingLeft: 10,
@@ -375,7 +375,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             ellipsizeMode="tail"
                                             style={{
                                                 padding: 5,
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 fontFamily: 'inter',
                                                 backgroundColor: '#f8f8f8',
                                                 height: 75,
@@ -391,7 +391,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 padding: 5,
                                                 height: 25,
                                                 paddingBottom: 10,
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 fontFamily: 'inter',
                                                 backgroundColor: '#f8f8f8',
                                                 color: '#0061ff',
@@ -531,7 +531,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 padding: 5,
                                 height: 25,
                                 paddingBottom: 10,
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'inter',
                                 backgroundColor: '#f8f8f8',
                                 color: '#0061ff',
@@ -543,7 +543,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             ellipsizeMode="tail"
                             style={{
                                 padding: 5,
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'inter',
                                 backgroundColor: '#f8f8f8',
                                 maxHeight: 200,

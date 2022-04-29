@@ -404,7 +404,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -415,7 +415,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             <TextInput
                                 style={{
                                     padding: 10,
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     borderColor: '#ccc',
                                     borderWidth: 1,
                                     borderRadius: 2,
@@ -434,7 +434,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     {/* <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -445,7 +445,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 textAlign: 'center',
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: '#000000',
                             }}
                         >
@@ -459,7 +459,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -470,7 +470,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             <TextInput
                                 style={{
                                     padding: 10,
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     borderColor: '#ccc',
                                     borderWidth: 1,
                                     borderRadius: 2,
@@ -576,7 +576,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             width: '100%',
                                             borderColor: '#f2f2f2',
                                             borderBottomWidth: 1,
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             paddingVertical: 8,
                                             marginTop: 0,
                                             paddingHorizontal: 10,
@@ -587,7 +587,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={styles.colHeader} key={'0,0'}>
                                 <Text
                                     style={{
-                                        fontSize: 13,
+                                        fontSize: 14,
                                         color: '#000000',
                                         fontFamily: 'inter',
                                         textAlign: 'center',
@@ -617,7 +617,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 color: '#000000',
                                                 fontFamily: 'inter',
                                                 paddingBottom: 5,
@@ -640,7 +640,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 10,
+                                                fontSize: 11,
                                                 color: '#000000',
                                             }}
                                         >
@@ -691,7 +691,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Text
                                                 style={{
                                                     textAlign: 'center',
-                                                    fontSize: 13,
+                                                    fontSize: 14,
                                                     color: '#000000',
                                                     fontFamily: 'inter',
                                                 }}
@@ -704,7 +704,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 color: '#000000',
                                                 fontFamily: 'inter',
                                             }}
@@ -750,7 +750,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             color: '#000000',
                                                             width: '100%',
                                                         }}
@@ -779,17 +779,18 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             <View
                 style={{
                     width: '100%',
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
                 }}
             >
                 <View
                     style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
+                        borderBottomColor: '#f2f2f2',
+                        borderBottomWidth: 1,
                         backgroundColor: '#f8f8f8',
-                        borderWidth: 1,
-                        borderColor: '#f2f2f2',
                     }}
                 >
                     <View
@@ -817,7 +818,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     textAlign: 'center',
                                     paddingRight: 5,
                                     fontFamily: 'Inter',
@@ -859,7 +860,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     textAlign: 'center',
                                     paddingRight: 5,
                                     fontFamily: 'Inter',
@@ -901,7 +902,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     textAlign: 'center',
                                     paddingRight: 5,
                                     fontFamily: 'Inter',
@@ -927,10 +928,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                     contentContainerStyle={{
                         flexDirection: 'column',
-                        borderLeftWidth: 1,
-                        borderRightWidth: 1,
-                        borderBottomWidth: 1,
-                        borderColor: '#f2f2f2',
                         borderTopWidth: 0,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
@@ -961,7 +958,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                             textAlign: 'center',
                                         }}
@@ -1004,7 +1001,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Inter',
                                         }}
                                     >
@@ -1012,7 +1009,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </Text>
                                     <Text
                                         style={{
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             paddingTop: 10,
                                         }}
                                     >
@@ -1044,7 +1041,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Text
                                                 style={{
                                                     textAlign: 'center',
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     color: '#000000',
                                                     width: '100%',
                                                 }}

@@ -68,7 +68,7 @@
     border: 0px;
     border-radius: 0px;
     border-bottom: 1px solid #cccccc;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .mbsc-textfield {
@@ -76,7 +76,7 @@
     border: 0px;
     border-radius: 2px;
     border: 1px solid #cccccc;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .mbsc-icon {
@@ -110,7 +110,7 @@
 
 .react-tag-input__input {
     font-family: 'overpass';
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .react-tag-input__tag {
@@ -119,7 +119,7 @@
 
 .react-tag-input__tag__content {
     font-family: 'Inter';
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .mbsc-textfield.mbsc-textfield-tags.mbsc-textarea {
@@ -167,7 +167,7 @@
 }
 
 .mbsc-event-list-empty {
-    font-size: 14px !important;
+    font-size: 15px !important;
 }
 
 /* Custom css for Question types */
@@ -391,14 +391,14 @@ input:focus {
 
 /* .mbsc-ios.mbsc-button-flat {
     color: #000 !important;
-    font-size: 14 !important;
+    font-size: 15 !important;
     font-family: 'Inter';
     text-transform: capitalize;
 } */
 
 .mbsc-ios.mbsc-button-dark.mbsc-button-flat {
     color: #000 !important;
-    font-size: 14 !important;
+    font-size: 15 !important;
 }
 
 .mbsc-ios.mbsc-textfield-wrapper-underline {

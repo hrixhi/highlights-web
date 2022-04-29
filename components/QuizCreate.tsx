@@ -649,7 +649,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     borderRadius: 2,
                                     paddingTop: 13,
                                     paddingBottom: 13,
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     border: '1px solid #cccccc',
                                     paddingLeft: 10,
                                     maxWidth: '100%',
@@ -673,7 +673,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     style={{
                                         color: '#000',
                                         fontFamily: 'Overpass',
-                                        fontSize: 10,
+                                        fontSize: 11,
                                     }}
                                     onPress={() => {
                                         removeHeader(index);
@@ -1520,7 +1520,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }
                                                 editable={editQuestionNumber === index + 1}
                                                 style={{
-                                                    fontSize: 14,
+                                                    fontSize: 15,
                                                     padding: 15,
                                                     paddingTop: 8,
                                                     paddingBottom: 12,
@@ -1680,7 +1680,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             style={{
                                                 color: '#000',
                                                 fontFamily: 'Overpass',
-                                                fontSize: 10,
+                                                fontSize: 11,
                                             }}
                                         >
                                             {' '}
@@ -2171,7 +2171,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 13,
+                                                fontSize: 14,
                                             }}
                                         >
                                             Character limit
@@ -2182,7 +2182,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 borderColor: '#cccccc',
                                                 borderWidth: 1,
                                                 borderRadius: 2,
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 paddingTop: 13,
                                                 paddingBottom: 13,
                                                 marginTop: 0,
@@ -2210,7 +2210,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 ) : (
                                     <Text
                                         style={{
-                                            fontSize: 12,
+                                            fontSize: 13,
                                             marginLeft: 'auto',
                                         }}
                                     >
@@ -2360,7 +2360,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             color: '#000000',
                                                             fontFamily: 'Inter',
                                                             marginRight: 20,
@@ -2375,7 +2375,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             borderColor: '#cccccc',
                                                             borderWidth: 1,
                                                             borderRadius: 2,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             paddingTop: 10,
                                                             paddingBottom: 10,
                                                             marginTop: 0,
@@ -2407,7 +2407,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             color: '#000000',
                                                             fontFamily: 'Inter',
                                                             marginRight: 20,
@@ -2453,7 +2453,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             color: '#000000',
                                                             fontFamily: 'Inter',
                                                             marginRight: 20,
@@ -2467,7 +2467,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             borderColor: '#cccccc',
                                                             borderWidth: 1,
                                                             borderRadius: 2,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             paddingTop: 10,
                                                             paddingBottom: 10,
                                                             marginTop: 0,
@@ -2721,7 +2721,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     borderColor: '#cccccc',
                                                                     borderWidth: 1,
                                                                     borderRadius: 2,
-                                                                    fontSize: 14,
+                                                                    fontSize: 15,
                                                                     paddingTop: 10,
                                                                     paddingBottom: 10,
                                                                     marginTop: 0,
@@ -2817,7 +2817,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Overpass',
                                         }}
                                     >
@@ -2835,7 +2835,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontFamily: 'Overpass',
                                         }}
                                     >
@@ -3064,7 +3064,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             borderColor: '#cccccc',
                                                             borderWidth: 1,
                                                             borderRadius: 2,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             paddingTop: 10,
                                                             paddingBottom: 10,
                                                             marginTop: 0,
@@ -3334,7 +3334,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         borderWidth: 1,
                                                                         borderColor: '#cccccc',
                                                                         borderRadius: 2,
-                                                                        fontSize: 14,
+                                                                        fontSize: 15,
                                                                         paddingTop: 10,
                                                                         paddingBottom: 10,
                                                                         marginTop: 0,
@@ -3428,7 +3428,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                             width: 150,
                                                                                             borderColor: '#e8e8e8',
                                                                                             borderBottomWidth: 1,
-                                                                                            fontSize: 14,
+                                                                                            fontSize: 15,
                                                                                             paddingTop: 13,
                                                                                             paddingBottom: 13,
                                                                                             marginTop: 0,
@@ -3454,7 +3454,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                         width: 150,
                                                                                         border: '1px solid #cccccc',
                                                                                         borderRadius: 2,
-                                                                                        fontSize: 14,
+                                                                                        fontSize: 15,
                                                                                         paddingTop: 10,
                                                                                         paddingBottom: 10,
                                                                                         marginTop: 0,
@@ -3622,7 +3622,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                 borderRadius: 15,
                                                                                 borderColor: '#000',
                                                                                 backgroundColor: '#fff',
-                                                                                fontSize: 12,
+                                                                                fontSize: 13,
                                                                                 textAlign: "center",
                                                                                 lineHeight: 34,
                                                                                 paddingHorizontal: 20,
@@ -3791,7 +3791,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     marginTop: 20,
                                                                     paddingTop: 10,
                                                                     paddingBottom: 10,
-                                                                    fontSize: 14,
+                                                                    fontSize: 15,
                                                                     border: '1px solid #cccccc',
                                                                     borderRadius: 2,
                                                                     width: 300,
@@ -3835,7 +3835,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         paddingTop: 0,
                                                                         color: '#000',
                                                                         fontFamily: 'Overpass',
-                                                                        fontSize: 10,
+                                                                        fontSize: 11,
                                                                     }}
                                                                 >
                                                                     Remove
@@ -4100,7 +4100,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             borderRadius: 1,
                                                             paddingTop: 13,
                                                             paddingBottom: 13,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             borderBottom: '1px solid #f2f2f2',
                                                             paddingLeft: 10,
                                                             minWidth: '90%',
@@ -4120,7 +4120,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <Text
                                                         style={{
                                                             fontFamily: 'overpass',
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             textAlign: 'center',
                                                             width: '100%',
                                                         }}
@@ -4168,7 +4168,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             borderRadius: 1,
                                                             paddingTop: 13,
                                                             paddingBottom: 13,
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             borderBottom: '1px solid #f2f2f2',
                                                             paddingLeft: 10,
                                                             minWidth: '90%',
@@ -4188,7 +4188,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <Text
                                                         style={{
                                                             fontFamily: 'overpass',
-                                                            fontSize: 14,
+                                                            fontSize: 15,
                                                             textAlign: 'center',
                                                             width: '100%',
                                                         }}
@@ -4495,7 +4495,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                             paddingTop: showOptionFormulas[i] ? 10 : 0,
                                                                             color: '#000',
                                                                             fontFamily: 'Overpass',
-                                                                            fontSize: 10,
+                                                                            fontSize: 11,
                                                                         }}
                                                                     >
                                                                         Remove

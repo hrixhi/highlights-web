@@ -15,8 +15,8 @@ export default function useCachedResources() {
                 // Load fonts
                 await Font.loadAsync({
                     ...Ionicons.font,
-                    inter: require('../assets/fonts/BeausiteClassicWeb-Medium.woff'),
-                    overpass: require('../assets/fonts/BeausiteClassicWeb-Regular.woff'),
+                    inter: require('../assets/fonts/Omnes-Pro-Medium.otf'),
+                    overpass: require('../assets/fonts/Omnes-Pro-Regular.otf'),
                 });
             } catch (e) {
                 // We might want to provide this error information to an error reporting service

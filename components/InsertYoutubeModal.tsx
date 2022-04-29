@@ -125,7 +125,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             // width: '100%',
                             flex: 1,
                             backgroundColor: '#f8f8f8',
-                            fontSize: 14,
+                            fontSize: 15,
                             padding: 15,
                             borderRadius: 25,
                             paddingVertical: 12,
@@ -153,7 +153,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             style={{
                                 textAlign: 'center',
                                 color: 'white',
-                                fontSize: 12,
+                                fontSize: 13,
                                 backgroundColor: '#007AFF',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
@@ -196,7 +196,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             style={{
                                 color: '#1f1f1f',
                                 backgroundColor: 'none',
-                                fontSize: 14,
+                                fontSize: 15,
                                 flex: 1,
                                 fontFamily: 'Inter',
                                 paddingLeft: 10,
@@ -387,7 +387,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                         </Text>
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                             }}
                                         >
                                             {channelTitle}

@@ -129,7 +129,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                         color: '#007AFF',
                         // lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
-                        fontSize: 12,
+                        fontSize: 13,
                         fontFamily: 'overpass',
                     }}
                     onPress={() => handleFile()}
@@ -143,7 +143,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                         backgroundColor: props.profile ? 'none' : '#fff',
                         lineHeight: props.chat ? 40 : 35,
                         textAlign: 'right',
-                        fontSize: 14,
+                        fontSize: 15,
                         fontFamily: 'Inter',
                         textTransform: 'capitalize',
                         // paddingLeft: props.profile ? 0 : 10,

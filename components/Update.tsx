@@ -686,7 +686,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             numberOfLines={1}
                             style={{
                                 fontFamily: 'inter',
-                                fontSize: 12,
+                                fontSize: 13,
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
@@ -795,7 +795,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             numberOfLines={1}
                             style={{
                                 fontFamily: 'inter',
-                                fontSize: 12,
+                                fontSize: 13,
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
@@ -1227,7 +1227,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     <Text
                         style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             fontFamily: 'Inter',
                             color: '#1F1F1F',
                             paddingBottom: 10,
@@ -1326,7 +1326,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{
                                                     fontFamily: 'inter',
                                                     // fontWeight: 'bold',
-                                                    fontSize: 12,
+                                                    fontSize: 13,
                                                     lineHeight: 20,
                                                     flex: 1,
                                                     marginTop: 5,
@@ -1488,7 +1488,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         numberOfLines={1}
                                                         style={{
                                                             fontFamily: 'inter',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             lineHeight: 20,
                                                             flex: 1,
                                                             marginTop: 5,
@@ -1507,7 +1507,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
@@ -1546,7 +1546,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ backgroundColor: '#f8f8f8' }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000000',
                                     textAlign: 'center',
                                     fontFamily: 'inter',
@@ -1707,7 +1707,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         numberOfLines={1}
                                                         style={{
                                                             fontFamily: 'inter',
-                                                            fontSize: 12,
+                                                            fontSize: 13,
                                                             lineHeight: 20,
                                                             flex: 1,
                                                             marginTop: 5,
@@ -1726,7 +1726,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ backgroundColor: '#f8f8f8' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         textAlign: 'center',
                                         fontFamily: 'inter',
@@ -1765,7 +1765,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ backgroundColor: '#f8f8f8' }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: '#000000',
                                     textAlign: 'center',
                                     fontFamily: 'inter',
@@ -1937,11 +1937,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 lineHeight: 34,
                                 marginLeft: 20,
-                                textTransform: 'uppercase',
-                                fontSize: 12,
-                                fontFamily: 'overpass',
+                                textTransform: 'capitalize',
+                                fontSize: 15,
+                                fontFamily: 'Inter',
                                 color: '#fff',
-                                fontWeight: 'bold',
                             }}
                         >
                             Edit Folder
@@ -1974,11 +1973,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 lineHeight: 34,
                                 marginLeft: 20,
-                                textTransform: 'uppercase',
-                                fontSize: 12,
-                                fontFamily: 'overpass',
+                                textTransform: 'capitalize',
+                                fontSize: 15,
+                                fontFamily: 'Inter',
                                 color: '#fff',
-                                fontWeight: 'bold',
                             }}
                         >
                             New Folder
@@ -2042,11 +2040,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         lineHeight: 34,
                                         marginLeft: 20,
-                                        textTransform: 'uppercase',
-                                        fontSize: 12,
-                                        fontFamily: 'overpass',
+                                        textTransform: 'capitalize',
+                                        fontSize: 15,
+                                        fontFamily: 'Inter',
                                         color: '#fff',
-                                        fontWeight: 'bold',
                                     }}
                                 >
                                     Add to Folder
@@ -2072,7 +2069,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 return (
                                     <MenuOption key={folder._id} value={folder._id}>
                                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                            <Text style={{ fontSize: 14, fontFamily: 'inter', color: '#000000' }}>
+                                            <Text style={{ fontSize: 15, fontFamily: 'inter', color: '#000000' }}>
                                                 {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
                                             </Text>
                                         </View>
@@ -2143,9 +2140,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     lineHeight: 34,
                                     marginLeft: 20,
-                                    textTransform: 'uppercase',
-                                    fontSize: 12,
-                                    fontFamily: 'overpass',
+                                    textTransform: 'capitalize',
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
                                     color: '#fff',
                                 }}
                             >
@@ -2167,11 +2164,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     lineHeight: 34,
                                     marginLeft: 20,
-                                    textTransform: 'uppercase',
-                                    fontSize: 12,
-                                    fontFamily: 'overpass',
+                                    textTransform: 'capitalize',
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
                                     color: '#fff',
-                                    fontWeight: 'bold',
                                 }}
                             >
                                 Cancel
@@ -2266,11 +2262,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     lineHeight: 34,
                                     marginLeft: 20,
-                                    textTransform: 'uppercase',
-                                    fontSize: 12,
-                                    fontFamily: 'overpass',
+                                    textTransform: 'capitalize',
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
                                     color: '#fff',
-                                    fontWeight: 'bold',
                                 }}
                             >
                                 {creatingFolder ? '...' : 'Update '}
@@ -2335,11 +2330,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     lineHeight: 34,
                                     marginLeft: 20,
-                                    textTransform: 'uppercase',
-                                    fontSize: 12,
-                                    fontFamily: 'overpass',
+                                    textTransform: 'capitalize',
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
                                     color: '#fff',
-                                    fontWeight: 'bold',
                                 }}
                             >
                                 {deletingFolder ? '...' : 'Delete'}
@@ -2366,11 +2360,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     lineHeight: 34,
                                     marginLeft: 20,
-                                    textTransform: 'uppercase',
-                                    fontSize: 12,
-                                    fontFamily: 'overpass',
+                                    textTransform: 'capitalize',
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
                                     color: '#fff',
-                                    fontWeight: 'bold',
                                 }}
                             >
                                 {deletingFolder ? '...' : 'Cancel'}
@@ -2398,13 +2391,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         height: 64,
                         backgroundColor: 'none',
                         paddingHorizontal: 10,
-                        // shadowColor: '#000',
-                        // shadowOffset: {
-                        //     width: 4,
-                        //     height: 4,
-                        // },
-                        // shadowOpacity: 0.12,
-                        // shadowRadius: 10,
                         zIndex: 500000,
                     }}
                 >
@@ -2455,7 +2441,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             <Text>
-                                <Ionicons name="arrow-back-outline" size={30} color={'#fff'} />
+                                <Ionicons name="arrow-back-outline" size={32} color={'#fff'} />
                             </Text>
                         </TouchableOpacity>
 
@@ -2471,7 +2457,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     color: '#000',
                                     backgroundColor: '#f8f8f8',
                                     borderRadius: 24,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     paddingVertical: 6,
                                     paddingHorizontal: 20,
                                     marginLeft: 10,
@@ -2492,7 +2478,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     color: '#000',
                                     backgroundColor: '#f8f8f8',
                                     borderRadius: 24,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     paddingVertical: 6,
                                     paddingHorizontal: 20,
                                     marginLeft: 10,
@@ -2534,14 +2520,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 lineHeight: 34,
                                                 backgroundColor: 'none',
-                                                fontWeight: 'bold',
-                                                textTransform: 'uppercase',
-                                                fontSize: 12,
-                                                fontFamily: 'overpass',
+                                                textTransform: 'capitalize',
+                                                fontSize: 15,
+                                                fontFamily: 'Inter',
                                                 color: '#fff',
                                             }}
                                         >
-                                            SAVE
+                                            Save
                                         </Text>
                                     </TouchableOpacity>
                                 ) : null}
@@ -2565,14 +2550,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             style={{
                                                 lineHeight: 34,
                                                 backgroundColor: 'none',
-                                                fontWeight: 'bold',
-                                                textTransform: 'uppercase',
-                                                fontSize: 12,
-                                                fontFamily: 'overpass',
+                                                textTransform: 'capitalize',
+                                                fontSize: 15,
+                                                fontFamily: 'Inter',
                                                 color: '#fff',
                                             }}
                                         >
-                                            DELETE
+                                            Delete
                                         </Text>
                                     </TouchableOpacity>
                                 ) : null}
@@ -2671,7 +2655,7 @@ export default Update;
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 13,
+        fontSize: 14,
         color: '#fff',
         height: 24,
         marginHorizontal: 15,
@@ -2681,7 +2665,7 @@ const styles: any = StyleSheet.create({
         textTransform: 'uppercase',
     },
     allGrayFill: {
-        fontSize: 13,
+        fontSize: 14,
         color: '#fff',
         marginHorizontal: 15,
         backgroundColor: 'none',
@@ -2693,14 +2677,14 @@ const styles: any = StyleSheet.create({
         borderBottomWidth: 1,
     },
     dateContainer: {
-        fontSize: 10,
+        fontSize: 11,
         color: '#fff',
         height: '30%',
         display: 'flex',
         flexDirection: 'row',
     },
     date2: {
-        fontSize: 10,
+        fontSize: 11,
         color: '#1F1F1F',
         // marginLeft: 10,
         lineHeight: 12,

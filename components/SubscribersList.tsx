@@ -1060,7 +1060,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 {subscriber.displayName ? subscriber.displayName : ''}
                                             </Text>
                                             <Text
-                                                style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }}
+                                                style={{ fontSize: 13, padding: 5, fontWeight: 'bold' }}
                                                 ellipsizeMode="tail"
                                             >
                                                 {subscriber.fullName === 'delivered' ||
@@ -1094,7 +1094,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text
                                                             style={{
                                                                 color: '#f94144',
-                                                                fontSize: 12,
+                                                                fontSize: 13,
                                                                 marginRight: 10,
                                                             }}
                                                         >
@@ -1137,7 +1137,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             marginLeft: 'auto',
                                         }}
                                     >
-                                        <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
+                                        <Text style={{ color: '#f94144', fontSize: 14, textAlign: 'center' }}>
                                             LATE SUBMISSION
                                         </Text>
                                     </View>
@@ -1168,7 +1168,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 textAlign: 'center',
                                                 color: '#000',
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 paddingHorizontal: 4,
                                                 fontFamily: 'inter',
                                                 textTransform: 'capitalize',
@@ -1254,7 +1254,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </Text>
                                         </TouchableOpacity>
                                         <View style={{ flexDirection: 'row', marginRight: 15 }}>
-                                            <Text style={{ fontSize: 14, lineHeight: 34 }}>
+                                            <Text style={{ fontSize: 15, lineHeight: 34 }}>
                                                 {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
                                             </Text>
                                         </View>
@@ -1279,7 +1279,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     <Text
                                                         style={{
                                                             color: '#f94144',
-                                                            fontSize: 13,
+                                                            fontSize: 14,
                                                             textAlign: 'center',
                                                         }}
                                                     >
@@ -1305,7 +1305,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 width: 120,
                                                 borderBottomColor: '#f2f2f2',
                                                 borderBottomWidth: 1,
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 // paddingTop: 13,
                                                 marginLeft: 10,
                                                 padding: 10,
@@ -1411,7 +1411,7 @@ const styleObject = () => {
             width: '100%',
             borderBottomColor: '#f2f2f2',
             borderBottomWidth: 1,
-            fontSize: 14,
+            fontSize: 15,
             paddingTop: 13,
             paddingBottom: 13,
             marginTop: 5,
@@ -1424,13 +1424,13 @@ const styleObject = () => {
             color: 'white',
         },
         cusCategory: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: '#f8f8f8',
             paddingHorizontal: 10,
             height: 22,
         },
         cusCategoryOutline: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: '#f8f8f8',
             paddingHorizontal: 10,
             height: 22,
@@ -1440,7 +1440,7 @@ const styleObject = () => {
             color: 'white',
         },
         all: {
-            fontSize: 14,
+            fontSize: 15,
             color: '#000000',
             height: 24,
             paddingHorizontal: 15,
@@ -1450,7 +1450,7 @@ const styleObject = () => {
             // textTransform: 'uppercase'
         },
         allGrayFill: {
-            fontSize: 14,
+            fontSize: 15,
             color: '#fff',
             paddingHorizontal: 15,
             borderRadius: 12,

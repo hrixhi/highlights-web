@@ -97,7 +97,7 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     style={{
                         fontFamily: 'overpass',
                         marginTop: 20,
-                        fontSize: 14,
+                        fontSize: 15,
                         borderRadius: 1,
                         padding: 12,
                         width: '95%',
@@ -111,7 +111,7 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                 />
                 <Text
                     style={{
-                        fontSize: 10,
+                        fontSize: 11,
                         color: '#000000',
                         textTransform: 'uppercase',
                         lineHeight: 20,
@@ -162,13 +162,13 @@ const styleObject = () => {
             overflow: 'hidden',
         },
         cusCategory: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
         },
         cusCategoryOutline: {
-            fontSize: 14,
+            fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
@@ -178,7 +178,7 @@ const styleObject = () => {
             color: 'white',
         },
         allOutline: {
-            fontSize: 12,
+            fontSize: 13,
             color: '#1F1F1F',
             height: 22,
             paddingHorizontal: 10,

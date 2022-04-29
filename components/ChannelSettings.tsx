@@ -66,24 +66,16 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [channelCreator, setChannelCreator] = useState('');
     const [colorCode, setColorCode] = useState('');
     const colorChoices = [
-        '#A1B8C0',
-        '#95C3DF',
-        '#77A3A3',
-        '#A2BF9A',
-        '#49885B',
-        '#4F435B',
-        '#D65D2A',
-        '#D94C3A',
-        '#8E5C48',
-        '#5A2C2A',
-        '#726863',
-        '#44565D',
-        '#938071',
-        '#6B7064',
-        '#6E757C',
-        '#50524F',
-        '#1E1E1E',
-        '#141514',
+        '#0450b4',
+        '#046dc8',
+        '#1184a7',
+        '#15a2a2',
+        '#6fb1a0',
+        '#b4418e',
+        '#d94a8c',
+        '#ea515f',
+        '#fe7434',
+        '#f48c06',
     ];
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const sections = [
@@ -943,7 +935,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     style={{
                                         width: '100%',
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         fontWeight: 'bold',
                                         color: '#1F1F1F',
                                     }}
@@ -981,7 +973,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1002,7 +994,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000000',
                                             fontFamily: 'Inter',
                                         }}
@@ -1017,7 +1009,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             maxWidth: 500,
                                             minWidth: 500,
                                             borderBottom: '1px solid #efefef',
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             paddingTop: 13,
                                             paddingBottom: 13,
                                             marginTop: 12,
@@ -1033,7 +1025,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1051,7 +1043,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1072,6 +1064,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             colors={colorChoices}
                                             color={duplicateChannelColor}
                                             onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
+                                            width={'220px'}
                                         />
                                     </View>
                                 </View>
@@ -1093,7 +1086,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -1120,7 +1113,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             activeThumbColor="white"
                                         />
                                     </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                    <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
                                         Makes your course visible to all users
                                     </Text>
                                 </View>
@@ -1141,7 +1134,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -1163,7 +1156,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onChange={(newTags) => setTags(newTags)}
                                         />
                                     </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>Add up to 5</Text>
+                                    <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
                                 </View>
                             ) : null}
                             {/* Switch to copy Subscribers */}
@@ -1179,7 +1172,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -1225,7 +1218,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 color: '#000000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -1331,7 +1324,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000000',
                                             fontFamily: 'Inter',
                                             marginRight: 8,
@@ -1393,7 +1386,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             {/* <Text
                                         style={{
                                             color: copied ? '#35AC78' : '#000',
-                                            fontSize: 10,
+                                            fontSize: 11,
                                             paddingTop: 3,
                                         }}
                                     >
@@ -1410,7 +1403,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onPress={() => handleResetCode()}
                                         >
                                             <Ionicons name="refresh-outline" size={20} color={'#000'} />
-                                            {/* <Text style={{ color: '#000', fontSize: 10, paddingTop: 3 }}> Reset </Text> */}
+                                            {/* <Text style={{ color: '#000', fontSize: 11, paddingTop: 3 }}> Reset </Text> */}
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -1433,7 +1426,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1461,7 +1454,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1483,7 +1476,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                     }}
@@ -1519,11 +1512,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     marginTop: 20,
                                 }}
                             >
-                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                <View style={{ backgroundColor: 'white' }}>
                                     <CirclePicker
                                         colors={colorChoices}
                                         color={colorCode}
                                         onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                        width={'220px'}
                                     />
                                 </View>
                             </View>
@@ -1545,7 +1539,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000000',
                                             fontFamily: 'Inter',
                                         }}
@@ -1572,7 +1566,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         activeThumbColor="white"
                                     />
                                 </View>
-                                <Text style={{ color: '#1F1F1F', fontSize: 12 }}>
+                                <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
                                     Makes your course visible to all users
                                 </Text>
                             </View>
@@ -1593,7 +1587,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000000',
                                             fontFamily: 'Inter',
                                         }}
@@ -1615,7 +1609,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         onChange={(newTags) => setTags(newTags)}
                                     />
                                 </View>
-                                <Text style={{ color: '#1F1F1F', fontSize: 12, marginTop: 10 }}>Add up to 5</Text>
+                                <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
                             </View>
                         ) : null}
 
@@ -1636,7 +1630,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                         marginRight: 8,
@@ -1676,7 +1670,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     />
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             color: '#000',
                                             fontFamily: 'Inter',
                                         }}
@@ -1740,7 +1734,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
                                         marginRight: 8,
@@ -1950,7 +1944,7 @@ const styles = StyleSheet.create({
         borderColor: '#1F1F1F',
     },
     all: {
-        fontSize: 14,
+        fontSize: 15,
         fontFamily: 'inter',
         color: '#1F1F1F',
         height: 22,
@@ -1958,7 +1952,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     allOutline: {
-        fontSize: 14,
+        fontSize: 15,
         fontFamily: 'inter',
         color: '#1F1F1F',
         height: 22,
@@ -1980,7 +1974,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#efefef',
         borderBottomWidth: 1,
-        fontSize: 14,
+        fontSize: 15,
         fontFamily: 'inter',
         paddingTop: 13,
         paddingBottom: 13,

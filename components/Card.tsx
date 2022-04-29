@@ -111,7 +111,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     {props.cue.graded && showScore && !isOwner ? (
                         <Text
                             style={{
-                                fontSize: 10,
+                                fontSize: 11,
                                 color: '#007AFF',
                                 // marginLeft: 5,
                                 textAlign: 'right',
@@ -181,7 +181,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
         },
         descriptionFlip: {
             color: '#fff',
-            fontSize: 13,
+            fontSize: 14,
         },
         text: {
             height: '100%',
@@ -193,7 +193,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             backgroundColor: colorScheme === 'light' ? '#000000' : 'white',
         },
         dateContainer: {
-            fontSize: 10,
+            fontSize: 11,
             color: '#fff',
             // height: '30%',
             backgroundColor: '#f8f8f8',
@@ -202,7 +202,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             alignItems: 'center',
         },
         flipDateContainer: {
-            fontSize: 10,
+            fontSize: 11,
             height: '70%',
             display: 'flex',
             flexDirection: 'row',
@@ -216,7 +216,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             lineHeight: 10,
         },
         date2: {
-            fontSize: 10,
+            fontSize: 11,
             color: colorScheme === 'light' ? '#fff' : '#1F1F1F',
             lineHeight: 12,
             textAlign: 'left',
@@ -225,7 +225,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
         },
         title: {
             fontFamily: 'inter',
-            fontSize: 12,
+            fontSize: 13,
             lineHeight: 20,
             flex: 1,
             marginTop: 5,
@@ -237,14 +237,14 @@ const styles: any = (colorScheme: any, channelId: any, col: any) =>
             color: colorScheme === 'light' ? '#fff' : '#000000',
             backgroundColor: colorScheme === 'light' ? '#000000' : '#fff',
             fontFamily: 'inter',
-            fontSize: 13,
+            fontSize: 14,
             // ,
             height: '75%',
             width: '100%',
             paddingTop: 5,
         },
         description: {
-            fontSize: 13,
+            fontSize: 14,
             color: colorScheme === 'light' ? '#fff' : '#333333',
         },
     });
