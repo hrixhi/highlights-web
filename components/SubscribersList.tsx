@@ -733,7 +733,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         paddingRight: 15,
                                         paddingTop: 12,
                                         paddingBottom: 12,
@@ -754,7 +754,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {attempt.title !== '' ? (
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         paddingRight: 15,
                                         paddingTop: 12,
                                         paddingBottom: 12,
@@ -815,7 +815,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={{
                             width: '100%',
                             color: '#1F1F1F',
-                            fontSize: 18,
+                            fontSize: 20,
                             paddingTop: 50,
                             paddingHorizontal: 5,
                             fontFamily: 'inter',
@@ -1303,9 +1303,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             numberOfLines={1}
                                             style={{
                                                 width: 120,
-                                                borderBottomColor: '#f2f2f2',
-                                                borderBottomWidth: 1,
+                                                borderColor: '#cccccc',
+                                                borderWidth: 1,
                                                 fontSize: 15,
+                                                backgroundColor: '#fff',
                                                 // paddingTop: 13,
                                                 marginLeft: 10,
                                                 padding: 10,

@@ -1428,7 +1428,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             <View
                 style={{
                     width: '100%',
-                    height: Dimensions.get('window').width < 768 ? windowHeight - 104 - 80 : windowHeight - 52 - 70,
+                    height:
+                        Dimensions.get('window').width < 1024 ? windowHeight - (64 + 60) - 80 : windowHeight - 64 - 70,
                     borderColor: '#f2f2f2',
                 }}
             >
@@ -1571,7 +1572,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         >
                             <Text
                                 style={{
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: 'Inter',
                                     color: '#000000',
                                 }}
@@ -1752,7 +1753,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             >
                 <ScrollView
                     contentContainerStyle={{
-                        maxHeight: width < 768 ? windowHeight - 180 : windowHeight - 52 - 60,
+                        maxHeight: width < 768 ? windowHeight - 180 : windowHeight - 64 - 60,
                         width: '100%',
                         borderRadius: 1,
                         marginTop: 10,
@@ -1767,7 +1768,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         >
                             <Text
                                 style={{
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: 'Inter',
                                     textAlign: 'center',
                                 }}
@@ -1907,6 +1908,54 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const renderChatsMobile = () => {
         return (
             <View style={{ backgroundColor: '#fff' }}>
+                <View
+                    style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 13,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <DefaultTextInput
+                            value={searchTerm}
+                            style={{
+                                color: '#000',
+                                backgroundColor: '#f2f2f2',
+                                borderRadius: 15,
+                                fontSize: 13,
+                                paddingVertical: 8,
+                                paddingHorizontal: 16,
+                                marginRight: 2,
+                                width: '100%',
+                            }}
+                            autoCompleteType={'xyz'}
+                            placeholder={'Search'}
+                            onChangeText={(val) => setSearchTerm(val)}
+                            placeholderTextColor={'#000'}
+                        />
+                    </View>
+                    {searchTerm === '' ? null : (
+                        <View
+                            style={{
+                                marginLeft: Dimensions.get('window').width < 768 ? 10 : 20,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setSearchTerm('');
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    marginLeft: 'auto',
+                                }}
+                            >
+                                <Ionicons name={'close-outline'} size={20} color={'#1f1f1f'} />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
                 <ScrollView
                     showsVerticalScrollIndicator={true}
                     indicatorStyle={'black'}
@@ -1916,7 +1965,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingHorizontal: 10,
                         borderRadius: 1,
                         width: '100%',
-                        maxHeight: width < 768 ? windowHeight - 104 : windowHeight - 52,
+                        maxHeight: width < 1024 ? windowHeight - (64 + 60 + 60) : windowHeight - 64,
                     }}
                 >
                     {sortChatsByLastMessage.length === 0 ? (
@@ -1935,134 +1984,304 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             </Text>
                         </View>
                     ) : null}
-                    {sortChatsByLastMessage.map((chat: any, index: number) => {
-                        // Group name or individual user name
-                        let fName = '';
-
-                        if (chat.name && chat.name !== '') {
-                            fName = chat.name;
-                        } else {
-                            chat.userNames.map((user: any) => {
-                                if (user._id !== userId) {
-                                    fName = user.fullName;
-                                    return;
-                                }
-                            });
-                        }
-
-                        const otherUser = chat.userNames.find((user: any) => {
-                            return user._id !== userId;
-                        });
-
-                        const chatImg =
-                            chat.name && chat.name !== ''
-                                ? chat.image
-                                    ? chat.image
-                                    : 'https://cues-files.s3.amazonaws.com/images/default.png'
-                                : otherUser && otherUser.avatar && otherUser.avatar !== ''
-                                ? otherUser.avatar
-                                : 'https://cues-files.s3.amazonaws.com/images/default.png';
-
-                        const { title } = htmlStringParser(chat.lastMessage);
-                        return (
-                            <TouchableOpacity
-                                key={index.toString()}
-                                onPress={() => {
-                                    if (chat.userNames.length > 2) {
-                                        loadGroupChat(chat.users, chat._id);
-                                    } else {
-                                        loadChat(chat.users[0] === userId ? chat.users[1] : chat.users[0], chat._id);
-                                    }
-                                }}
-                                style={{
-                                    backgroundColor: '#fff',
-                                    flexDirection: 'row',
-                                    borderColor: '#f2f2f2',
-                                    paddingVertical: 5,
-                                    borderBottomWidth: index === chats.length - 1 ? 0 : 1,
-                                    width: '100%',
-                                }}
-                            >
-                                <View style={{ backgroundColor: '#fff', padding: 5 }}>
-                                    <Image
-                                        style={{
-                                            height: 36,
-                                            width: 36,
-                                            marginTop: 5,
-                                            marginLeft: 5,
-                                            marginBottom: 5,
-                                            borderRadius: 75,
-                                            alignSelf: 'center',
-                                        }}
-                                        source={{ uri: chatImg }}
-                                    />
-                                </View>
+                    {isSearching ? null : searchTerm !== '' ? (
+                        <View style={{}}>
+                            {searchResults.length === 0 ? (
                                 <View
                                     style={{
-                                        flex: 1,
-                                        backgroundColor: '#fff',
-                                        paddingLeft: 10,
+                                        padding: 20,
                                     }}
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 15,
-                                            padding: 5,
-                                            fontFamily: 'inter',
-                                            marginTop: 5,
+                                            fontSize: 20,
+                                            fontFamily: 'Inter',
+                                            textAlign: 'center',
                                         }}
-                                        ellipsizeMode="tail"
                                     >
-                                        {fName}
-                                    </Text>
-                                    <Text style={{ fontSize: 14, margin: 5 }} ellipsizeMode="tail" numberOfLines={2}>
-                                        {title}
+                                        No Results
                                     </Text>
                                 </View>
-                                <View
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        padding: 0,
-                                        flexDirection: 'row',
-                                        alignSelf: 'center',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    {/* Unread notification badge */}
-                                    {chat.unreadMessages > 0 ? (
+                            ) : null}
+                            {searchResults.map((obj: any, ind: number) => {
+                                let t = '';
+                                let s = '';
+                                let messageSenderName = '';
+                                let messageSenderAvatar = '';
+                                let createdAt = '';
+
+                                const users = obj.groupId.users;
+
+                                const sender = users.filter((user: any) => user._id === obj.sentBy)[0];
+
+                                if (obj.groupId && obj.groupId.name) {
+                                    messageSenderName = obj.groupId.name + ' > ' + sender.fullName;
+                                    messageSenderAvatar = obj.groupId.image
+                                        ? obj.groupId.image
+                                        : 'https://cues-files.s3.amazonaws.com/images/default.png';
+                                } else if (sender) {
+                                    messageSenderName = sender.fullName;
+                                    messageSenderAvatar = sender.avatar
+                                        ? sender.avatar
+                                        : 'https://cues-files.s3.amazonaws.com/images/default.png';
+                                }
+
+                                if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
+                                    const o = JSON.parse(obj.message);
+                                    t = o.title;
+                                    s = o.type;
+                                } else {
+                                    const { title, subtitle } = htmlStringParser(obj.message);
+                                    t = title;
+                                    s = subtitle;
+                                }
+
+                                createdAt = obj.sentAt;
+
+                                return (
+                                    <TouchableOpacity
+                                        key={ind.toString()}
+                                        onPress={() => {
+                                            if (obj.groupId.users.length > 2) {
+                                                loadGroupChat(obj.groupId.users, obj.groupId._id);
+                                            } else {
+                                                loadChat(
+                                                    obj.groupId.users[0] === userId
+                                                        ? obj.groupId.users[1]
+                                                        : obj.groupId.users[0],
+                                                    obj.groupId._id
+                                                );
+                                            }
+                                        }}
+                                        style={{
+                                            backgroundColor: groupId === obj.groupId._id ? '#f8f8f8' : '#fff',
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            borderRadius: 5,
+                                            borderColor: '#f2f2f2',
+                                            paddingVertical: 5,
+                                            borderBottomWidth: ind === searchResults.length - 1 ? 0 : 1,
+                                        }}
+                                    >
+                                        <View style={{ backgroundColor: 'none', padding: 5 }}>
+                                            <Image
+                                                style={{
+                                                    height: 45,
+                                                    width: 45,
+                                                    marginTop: 5,
+                                                    marginLeft: 5,
+                                                    marginBottom: 5,
+                                                    borderRadius: 75,
+                                                    alignSelf: 'center',
+                                                }}
+                                                source={{ uri: messageSenderAvatar }}
+                                            />
+                                        </View>
                                         <View
                                             style={{
-                                                width: 16,
-                                                height: 16,
-                                                borderRadius: 8,
-                                                marginRight: 5,
-                                                backgroundColor: '#007AFF',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
+                                                flex: 1,
+                                                backgroundColor: 'none',
+                                                paddingLeft: 5,
                                             }}
                                         >
-                                            <Text style={{ color: 'white', fontSize: 11 }}>{chat.unreadMessages}</Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 15,
+                                                    padding: 5,
+                                                    fontFamily: 'inter',
+                                                    marginTop: 5,
+                                                }}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {messageSenderName}
+                                            </Text>
+                                            <Highlighter
+                                                searchWords={[searchTerm]}
+                                                autoEscape={true}
+                                                textToHighlight={t}
+                                                highlightStyle={{
+                                                    backgroundColor: '#ffd54f',
+                                                    fontFamily: 'overpass',
+                                                    fontSize: 14,
+                                                    color: '#1f1f1f',
+                                                }}
+                                                unhighlightStyle={{
+                                                    fontFamily: 'overpass',
+                                                    fontSize: 14,
+                                                    color: '#1f1f1f',
+                                                }}
+                                            />
                                         </View>
-                                    ) : null}
+                                        <View
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                padding: 0,
+                                                flexDirection: 'row',
+                                                alignSelf: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 13,
+                                                    padding: 5,
+                                                    lineHeight: 13,
+                                                    color: '#000000',
+                                                }}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {fromNow(new Date(createdAt))}
+                                            </Text>
+                                            <Text
+                                                style={{ fontSize: 14, padding: 5, lineHeight: 13 }}
+                                                ellipsizeMode="tail"
+                                            >
+                                                <Ionicons name="chevron-forward-outline" size={18} color="#000" />
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                    ) : (
+                        sortChatsByLastMessage.map((chat: any, index: number) => {
+                            // Group name or individual user name
+                            let fName = '';
 
-                                    <Text
+                            if (chat.name && chat.name !== '') {
+                                fName = chat.name;
+                            } else {
+                                chat.userNames.map((user: any) => {
+                                    if (user._id !== userId) {
+                                        fName = user.fullName;
+                                        return;
+                                    }
+                                });
+                            }
+
+                            const otherUser = chat.userNames.find((user: any) => {
+                                return user._id !== userId;
+                            });
+
+                            const chatImg =
+                                chat.name && chat.name !== ''
+                                    ? chat.image
+                                        ? chat.image
+                                        : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                                    : otherUser && otherUser.avatar && otherUser.avatar !== ''
+                                    ? otherUser.avatar
+                                    : 'https://cues-files.s3.amazonaws.com/images/default.png';
+
+                            const { title } = htmlStringParser(chat.lastMessage);
+                            return (
+                                <TouchableOpacity
+                                    key={index.toString()}
+                                    onPress={() => {
+                                        if (chat.userNames.length > 2) {
+                                            loadGroupChat(chat.users, chat._id);
+                                        } else {
+                                            loadChat(
+                                                chat.users[0] === userId ? chat.users[1] : chat.users[0],
+                                                chat._id
+                                            );
+                                        }
+                                    }}
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        flexDirection: 'row',
+                                        borderColor: '#f2f2f2',
+                                        paddingVertical: 5,
+                                        borderBottomWidth: index === chats.length - 1 ? 0 : 1,
+                                        width: '100%',
+                                    }}
+                                >
+                                    <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                        <Image
+                                            style={{
+                                                height: 45,
+                                                width: 45,
+                                                marginTop: 5,
+                                                marginLeft: 5,
+                                                marginBottom: 5,
+                                                borderRadius: 75,
+                                                alignSelf: 'center',
+                                            }}
+                                            source={{ uri: chatImg }}
+                                        />
+                                    </View>
+                                    <View
                                         style={{
-                                            fontSize: 13,
-                                            padding: 5,
-                                            lineHeight: 13,
-                                            color: '#000000',
+                                            flex: 1,
+                                            backgroundColor: 'none',
+                                            paddingLeft: 5,
                                         }}
-                                        ellipsizeMode="tail"
                                     >
-                                        {emailTimeDisplay(chat.lastMessageTime)}
-                                    </Text>
-                                    <Text style={{ fontSize: 14, padding: 5, lineHeight: 13 }} ellipsizeMode="tail">
-                                        <Ionicons name="chevron-forward-outline" size={18} color="#000" />
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        );
-                    })}
+                                        <Text
+                                            style={{
+                                                fontSize: 15,
+                                                padding: 5,
+                                                fontFamily: 'inter',
+                                                marginTop: 5,
+                                            }}
+                                            ellipsizeMode="tail"
+                                        >
+                                            {fName}
+                                        </Text>
+                                        <Text
+                                            style={{ fontSize: 14, margin: 5 }}
+                                            ellipsizeMode="tail"
+                                            numberOfLines={2}
+                                        >
+                                            {title}
+                                        </Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            padding: 0,
+                                            flexDirection: 'row',
+                                            alignSelf: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        {/* Unread notification badge */}
+                                        {chat.unreadMessages > 0 ? (
+                                            <View
+                                                style={{
+                                                    width: 16,
+                                                    height: 16,
+                                                    borderRadius: 8,
+                                                    marginRight: 5,
+                                                    backgroundColor: '#007AFF',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                <Text style={{ color: 'white', fontSize: 12 }}>
+                                                    {chat.unreadMessages}
+                                                </Text>
+                                            </View>
+                                        ) : null}
+
+                                        <Text
+                                            style={{
+                                                fontSize: 13,
+                                                padding: 5,
+                                                lineHeight: 13,
+                                                color: '#000000',
+                                            }}
+                                            ellipsizeMode="tail"
+                                        >
+                                            {fromNow(new Date(chat.lastMessageTime))}
+                                        </Text>
+                                        <Text style={{ fontSize: 14, padding: 5, lineHeight: 13 }} ellipsizeMode="tail">
+                                            <Ionicons name="chevron-forward-outline" size={18} color="#000" />
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })
+                    )}
                 </ScrollView>
             </View>
         );
@@ -2334,6 +2553,24 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
                         ) : null}
+                        {!isSearching && searchTerm === '' && sortChatsByLastMessage.length === 0 ? (
+                            <View
+                                style={{
+                                    padding: 20,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        fontFamily: 'Inter',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    No Messages.
+                                </Text>
+                            </View>
+                        ) : null}
+
                         {isSearching ? null : searchTerm !== '' ? (
                             <View style={{}}>
                                 {searchResults.length === 0 ? (
@@ -2344,7 +2581,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 18,
+                                                fontSize: 20,
                                                 fontFamily: 'Inter',
                                                 textAlign: 'center',
                                             }}
@@ -2495,7 +2732,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <View style={{ width: '25%', backgroundColor: 'none' }}>
                                                         <Text
                                                             style={{
-                                                                fontSize: 11,
+                                                                fontSize: 12,
                                                                 padding: 5,
                                                                 lineHeight: 13,
                                                                 color: '#1f1f1f',
@@ -2526,7 +2763,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 18,
+                                                fontSize: 20,
                                                 fontFamily: 'Inter',
                                                 textAlign: 'center',
                                             }}
@@ -2783,7 +3020,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     justifyContent: 'center',
                                                                 }}
                                                             >
-                                                                <Text style={{ color: 'white', fontSize: 11 }}>
+                                                                <Text style={{ color: 'white', fontSize: 12 }}>
                                                                     {chat.unreadMessages}
                                                                 </Text>
                                                             </View>
@@ -2811,7 +3048,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <View style={{ width: '25%', backgroundColor: 'none' }}>
                                                         <Text
                                                             style={{
-                                                                fontSize: 11,
+                                                                fontSize: 12,
                                                                 padding: 5,
                                                                 lineHeight: 13,
                                                                 color: '#1f1f1f',
@@ -2856,7 +3093,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             <Ionicons name='chatbubbles-outline' size={28} color='#1f1f1f' />
                         </Text>
                         <Text style={{
-                            fontSize: 18,
+                            fontSize: 20,
                             textAlign: 'center',
                         }}>
                             {props.showDirectory ? 'Select user to chat' : 'Select Chat to view'}
@@ -2998,17 +3235,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 textAlign: 'center',
                                 lineHeight: 34,
                                 color: '#000',
-                                fontSize: 13,
-                                borderWidth: 1,
-                                borderColor: '#000',
+                                fontSize: 15,
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
-                                height: 36,
-                                borderRadius: 15,
-                                textTransform: 'uppercase',
+                                textTransform: 'capitalize',
                             }}
                         >
-                            NEW GROUP
+                            New Group
                         </Text>
                     </TouchableOpacity>
                 )}
@@ -3245,7 +3478,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingTop: 0,
                         width: '100%',
                         height:
-                            width < 768 ? Dimensions.get('window').height - 104 : Dimensions.get('window').height - 52,
+                            width < 1024
+                                ? Dimensions.get('window').height - (64 + 60)
+                                : Dimensions.get('window').height - 64,
                         backgroundColor: 'white',
                     }}
                     key={1}

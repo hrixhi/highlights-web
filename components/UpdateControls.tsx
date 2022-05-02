@@ -2910,9 +2910,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 fontFamily: 'overpass',
                                 fontSize: 15,
-                                padding: 15,
-                                paddingTop: 12,
-                                paddingBottom: 12,
+                                padding: 10,
                                 marginTop: 25,
                                 marginBottom: 0,
                                 maxWidth: Dimensions.get('window').width < 768 ? '100%' : 400,
@@ -2928,7 +2926,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     ) : (
                         <Text
                             style={{
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingRight: 15,
                                 paddingTop: 20,
                                 marginBottom: 10,
@@ -2999,10 +2997,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Text
                                     style={{
                                         lineHeight: 34,
-                                        textTransform: 'uppercase',
-                                        fontSize: 13,
-                                        fontFamily: 'overpass',
-                                        color: '#007AFF',
+                                        textTransform: 'capitalize',
+                                        fontSize: 15,
+                                        fontFamily: 'Inter',
+                                        color: '#000',
                                     }}
                                 >
                                     Erase
@@ -3199,8 +3197,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                     style={{
                                         backgroundColor: '#f8f8f8',
-                                        overflow: 'hidden',
-                                        height: 35,
+                                        // overflow: 'hidden',
+                                        // height: 35,
                                         // marginTop: 15,
                                         justifyContent: 'center',
                                         flexDirection: 'row',
@@ -3208,18 +3206,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 >
                                     <Text
                                         style={{
+                                            fontWeight: 'bold',
                                             textAlign: 'center',
-                                            lineHeight: 34,
-                                            color: '#007AFF',
+                                            borderColor: '#000',
                                             borderWidth: 1,
-                                            fontSize: 13,
-                                            borderColor: '#007AFF',
-                                            paddingHorizontal: 20,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                             fontFamily: 'inter',
-                                            height: 35,
-                                            // width: 100,
-                                            borderRadius: 15,
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
                                             textTransform: 'uppercase',
+                                            width: 150,
                                         }}
                                     >
                                         {'NEW SUBMISSION'}
@@ -3390,8 +3389,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         onPress={() => initQuiz()}
                                         style={{
                                             backgroundColor: '#f8f8f8',
-                                            overflow: 'hidden',
-                                            height: 35,
+                                            // overflow: 'hidden',
+                                            // height: 35,
                                             justifyContent: 'center',
                                             flexDirection: 'row',
                                             marginVertical: 50,
@@ -3400,19 +3399,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     >
                                         <Text
                                             style={{
+                                                fontWeight: 'bold',
                                                 textAlign: 'center',
-                                                lineHeight: 34,
-                                                color: '#007AFF',
-                                                borderColor: '#007AFF',
+                                                borderColor: '#000',
                                                 borderWidth: 1,
-                                                fontSize: 13,
-                                                backgroundColor: '#f8f8f8',
-                                                paddingHorizontal: 20,
+                                                color: '#fff',
+                                                backgroundColor: '#000',
+                                                fontSize: 11,
+                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                                 fontFamily: 'inter',
-                                                height: 35,
-                                                width: 200,
-                                                borderRadius: 15,
+                                                overflow: 'hidden',
+                                                paddingVertical: 14,
                                                 textTransform: 'uppercase',
+                                                width: 150,
                                             }}
                                         >
                                             {PreferredLanguageText('startQuiz')}
@@ -3615,7 +3614,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             // Default Font Size
                             spellcheck: true,
                             tabSpaces: 4,
-
+                            scrollableContainer: '#scroll_container',
                             // TOOLBAR
                             toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                             toolbarSticky: true,
@@ -4002,7 +4001,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // Default Font Size
                         spellcheck: true,
                         tabSpaces: 4,
-
+                        scrollableContainer: '#scroll_container',
                         // TOOLBAR
                         toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                         toolbarSticky: true,
@@ -4793,8 +4792,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 borderWidth: 1,
                                                 borderRadius: 2,
                                                 fontSize: 15,
-                                                height: '2.75em',
-                                                padding: '1em',
+                                                padding: 10,
                                                 backgroundColor: '#fff',
                                             }}
                                             placeholder={'Enter Category'}
@@ -5084,7 +5082,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={'share-outline'}
                                     size={18}
-                                    color={shareWithChannelId === 'None' ? '#000000' : '#007AFF'}
+                                    color={shareWithChannelId === 'None' ? '#797979' : '#000'}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -5531,18 +5529,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             <Text
                                 style={{
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
-                                    lineHeight: 34,
-                                    color: 'white',
-                                    fontSize: 13,
-                                    backgroundColor: '#007AFF',
-                                    borderRadius: 15,
-                                    paddingHorizontal: 20,
+                                    borderColor: '#000',
+                                    borderWidth: 1,
+                                    color: '#fff',
+                                    backgroundColor: '#000',
+                                    fontSize: 11,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
-                                    height: 35,
+                                    paddingVertical: 14,
                                     textTransform: 'uppercase',
-                                    backfaceVisibility: 'hidden',
+                                    width: 150,
                                 }}
                             >
                                 {(!allowLateSubmission && new Date() > deadline) ||
@@ -5621,7 +5620,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 height: 22,
                                 paddingHorizontal: 10,
                                 borderRadius: 15,
-                                backgroundColor: '#007AFF',
+                                backgroundColor: '#000',
                                 lineHeight: 20,
                                 paddingTop: 1,
                                 marginBottom: 5,
@@ -5639,7 +5638,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text
                                 style={{
                                     color: '#f94144',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: 'Inter',
                                     textAlign: 'center',
                                 }}
@@ -5735,7 +5734,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     insertVideo={handleAddVideo}
                 />
             ) : null}
-            <ScrollView
+            {/* <ScrollView
                 style={{
                     paddingBottom: 25,
                     height:
@@ -5755,6 +5754,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 keyboardDismissMode={'on-drag'}
                 overScrollMode={'always'}
                 nestedScrollEnabled={true}
+            > */}
+            <div
+                style={{
+                    top: 0,
+                    position: 'absolute',
+                    overflow: 'auto',
+                    width: '100%',
+                    height:
+                        Dimensions.get('window').width < 1024
+                            ? Dimensions.get('window').height - (64 + 60)
+                            : Dimensions.get('window').height - 64,
+                    maxHeight:
+                        Dimensions.get('window').width < 1024
+                            ? Dimensions.get('window').height - (64 + 60)
+                            : Dimensions.get('window').height - 64,
+                    backgroundColor: '#f8f8f8',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+                id="scroll_container"
             >
                 <View
                     style={{
@@ -5795,9 +5815,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             style={{
                                                 fontFamily: 'overpass',
                                                 fontSize: 15,
-                                                padding: 15,
-                                                paddingTop: 12,
-                                                paddingBottom: 12,
+                                                padding: 10,
                                                 marginBottom: 0,
                                                 maxWidth: 300,
                                                 minWidth: 300,
@@ -5830,10 +5848,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     <Text
                                                         style={{
                                                             lineHeight: 34,
-                                                            textTransform: 'uppercase',
-                                                            fontSize: 13,
-                                                            fontFamily: 'overpass',
-                                                            color: '#007AFF',
+                                                            textTransform: 'capitalize',
+                                                            fontSize: 15,
+                                                            fontFamily: 'Inter',
+                                                            color: '#000',
                                                         }}
                                                     >
                                                         Erase
@@ -5854,10 +5872,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Text
                                                 style={{
                                                     lineHeight: 34,
-                                                    textTransform: 'uppercase',
-                                                    fontSize: 13,
-                                                    fontFamily: 'overpass',
-                                                    color: '#007AFF',
+                                                    textTransform: 'capitalize',
+                                                    fontSize: 15,
+                                                    fontFamily: 'Inter',
+                                                    color: '#000',
                                                 }}
                                             >
                                                 Erase
@@ -5922,7 +5940,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </Collapse>
                     </View>
                 </View>
-            </ScrollView>
+            </div>
         </View>
     );
 };

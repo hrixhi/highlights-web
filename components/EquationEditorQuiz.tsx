@@ -118,7 +118,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                 backgroundColor: '#f8f8f8',
             }}
         >
-            {/* <Text style={{ padding: 10, width: '50%', fontFamily: 'Inter', fontSize: 18  }}></Text> */}
+            {/* <Text style={{ padding: 10, width: '50%', fontFamily: 'Inter', fontSize: 20  }}></Text> */}
             <View
                 style={{
                     width: '100%',

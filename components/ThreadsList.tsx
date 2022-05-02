@@ -478,7 +478,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             setSelectedThread(msg);
                         }
                     });
-                    tempChat.reverse();
+                    // tempChat.reverse();
                     setThreadChat(tempChat);
                     setLoading(false);
                 })
@@ -700,101 +700,105 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 style={{
                     flex: 1,
                     zIndex: 5000000,
-                    borderWidth: 1,
-                    borderColor: '#cccccc',
-                    borderRadius: 2,
                 }}
             >
-                <FroalaEditor
-                    ref={RichText}
-                    model={editDiscussionThreadId !== '' ? editDiscussionThreadHtml : html}
-                    onModelChange={(model: any) => {
-                        if (editDiscussionThreadId !== '') {
-                            setEditDiscussionThreadHtml(model);
-                        } else {
-                            setHtml(model);
-                        }
+                <View
+                    style={{
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                        borderRadius: 2,
                     }}
-                    config={{
-                        autofocus: true,
-                        key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
-                        attribution: false,
-                        placeholderText: 'Enter Content',
-                        charCounterCount: false,
-                        zIndex: 2003,
-                        // immediateReactModelUpdate: true,
-                        heightMin: 100,
-                        // FILE UPLOAD
-                        // fileUploadURL: 'https://api.learnwithcues.com/upload',
-                        fileMaxSize: 25 * 1024 * 1024,
-                        fileAllowedTypes: ['*'],
-                        fileUploadParams: { userId },
-                        // IMAGE UPLOAD
-                        imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                        imageUploadParam: 'file',
-                        imageUploadParams: { userId },
-                        imageUploadMethod: 'POST',
-                        imageMaxSize: 5 * 1024 * 1024,
-                        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-                        // VIDEO UPLOAD
-                        videoMaxSize: 50 * 1024 * 1024,
-                        videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
-                        paragraphFormatSelection: true,
-                        // Default Font Size
-                        spellcheck: true,
-                        tabSpaces: 4,
+                >
+                    <FroalaEditor
+                        ref={RichText}
+                        model={editDiscussionThreadId !== '' ? editDiscussionThreadHtml : html}
+                        onModelChange={(model: any) => {
+                            if (editDiscussionThreadId !== '') {
+                                setEditDiscussionThreadHtml(model);
+                            } else {
+                                setHtml(model);
+                            }
+                        }}
+                        config={{
+                            autofocus: true,
+                            key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
+                            attribution: false,
+                            placeholderText: 'Enter Content',
+                            charCounterCount: false,
+                            zIndex: 2003,
+                            // immediateReactModelUpdate: true,
+                            heightMin: 100,
+                            // FILE UPLOAD
+                            // fileUploadURL: 'https://api.learnwithcues.com/upload',
+                            fileMaxSize: 25 * 1024 * 1024,
+                            fileAllowedTypes: ['*'],
+                            fileUploadParams: { userId },
+                            // IMAGE UPLOAD
+                            imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
+                            imageUploadParam: 'file',
+                            imageUploadParams: { userId },
+                            imageUploadMethod: 'POST',
+                            imageMaxSize: 5 * 1024 * 1024,
+                            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+                            // VIDEO UPLOAD
+                            videoMaxSize: 50 * 1024 * 1024,
+                            videoAllowedTypes: ['webm', 'ogg', 'mp3', 'mp4', 'mov'],
+                            paragraphFormatSelection: true,
+                            // Default Font Size
+                            spellcheck: true,
+                            tabSpaces: 4,
 
-                        // TOOLBAR
-                        toolbarButtons: DISCUSS_REPLY_TOOLBAR_BUTTONS,
-                        toolbarSticky: true,
-                        htmlAllowedEmptyTags: [
-                            'textarea',
-                            'a',
-                            'iframe',
-                            'object',
-                            'video',
-                            'style',
-                            'script',
-                            '.fa',
-                            'span',
-                            'p',
-                            'path',
-                            'line',
-                        ],
-                        htmlAllowedTags: ['.*'],
-                        htmlAllowedAttrs: ['.*'],
-                        htmlRemoveTags: ['script'],
+                            // TOOLBAR
+                            toolbarButtons: DISCUSS_REPLY_TOOLBAR_BUTTONS,
+                            toolbarSticky: false,
+                            htmlAllowedEmptyTags: [
+                                'textarea',
+                                'a',
+                                'iframe',
+                                'object',
+                                'video',
+                                'style',
+                                'script',
+                                '.fa',
+                                'span',
+                                'p',
+                                'path',
+                                'line',
+                            ],
+                            htmlAllowedTags: ['.*'],
+                            htmlAllowedAttrs: ['.*'],
+                            htmlRemoveTags: ['script'],
 
-                        events: {
-                            'file.beforeUpload': function (files: any) {
-                                // Return false if you want to stop the file upload.
-                                fileUploadEditor(files);
+                            events: {
+                                'file.beforeUpload': function (files: any) {
+                                    // Return false if you want to stop the file upload.
+                                    fileUploadEditor(files);
 
-                                return false;
-                            },
-                            'video.beforeUpload': function (videos: any) {
-                                videoUploadEditor(videos);
-
-                                return false;
-                            },
-                            'image.beforeUpload': function (images: any) {
-                                if (images[0].size > 5 * 1024 * 1024) {
-                                    alert('Image size must be less than 5mb.');
                                     return false;
-                                }
+                                },
+                                'video.beforeUpload': function (videos: any) {
+                                    videoUploadEditor(videos);
 
-                                return true;
+                                    return false;
+                                },
+                                'image.beforeUpload': function (images: any) {
+                                    if (images[0].size > 5 * 1024 * 1024) {
+                                        alert('Image size must be less than 5mb.');
+                                        return false;
+                                    }
+
+                                    return true;
+                                },
                             },
-                        },
-                    }}
-                />
+                        }}
+                    />
+                </View>
                 {/* Render attachments */}
                 {(editDiscussionThreadId !== '' && editDiscussionThreadAttachments.length > 0) ||
                 (!editDiscussionThreadId && attachments.length > 0) ? (
                     <View
                         style={{
                             flexDirection: 'column',
-                            width: '100%',
                             maxWidth: 500,
                             marginVertical: 20,
                         }}
@@ -831,6 +835,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 paddingLeft: 10,
                                                 fontSize: 15,
                                                 fontFamily: 'Overpass',
+                                                maxWidth: '80%',
                                             }}
                                         >
                                             {file.name}
@@ -1006,11 +1011,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <ScrollView
                 contentContainerStyle={{
                     width: '100%',
-                    // maxWidth: '80%',
                     borderRadius: 1,
-                    // paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    // minHeight: 400
+                    paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 15,
                 }}
             >
                 {/* Render the selected thread main */}
@@ -1019,7 +1021,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         paddingTop: 10,
                         paddingBottom: 20,
                         marginBottom: 20,
-                        paddingHorizontal: 10,
+                        paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 10,
                         borderBottomWidth: 1,
                         borderBottomColor: '#f2f2f2',
                     }}
@@ -1031,7 +1033,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     >
                         <Text
                             style={{
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingTop: 10,
                                 paddingBottom: 20,
                                 fontFamily: 'Inter',
@@ -1046,7 +1048,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'row',
                             alignItems: 'center',
                             marginTop: 5,
-                            marginLeft: 5,
                             marginBottom: 20,
                         }}
                     >
@@ -1813,7 +1814,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 ) : (
                                     <div
                                         className="mce-content-body htmlParser"
-                                        style={{ width: '100%', color: 'black', marginTop: 0, paddingLeft: 55 }}
+                                        style={{ color: 'black', marginTop: 0, paddingLeft: 55 }}
                                     >
                                         {parser(replyThreadContent)}
                                     </div>
@@ -1910,182 +1911,271 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View
                 style={{
                     width: '100%',
-                    backgroundColor: 'white',
-                    // maxWidth: '80%',
-                    borderRadius: 1,
                 }}
             >
-                {threads.length === 0 ? (
+                <View
+                    style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 13,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderBottomColor: '#f2f2f2',
+                        borderBottomWidth: 1,
+                    }}
+                >
                     <View style={{ flex: 1 }}>
-                        <Text
+                        <DefaultTextInput
+                            value={searchTerm}
                             style={{
+                                color: '#000',
+                                backgroundColor: '#efefef',
+                                borderRadius: 15,
+                                fontSize: 13,
+                                paddingVertical: 8,
+                                paddingHorizontal: 16,
+                                marginRight: 2,
                                 width: '100%',
-                                color: '#1F1F1F',
-                                fontSize: 16,
-                                paddingVertical: 50,
-                                fontFamily: 'inter',
-                                flex: 1,
-                                backgroundColor: '#fff',
+                            }}
+                            autoCompleteType={'xyz'}
+                            placeholder={'Search'}
+                            onChangeText={(val) => setSearchTerm(val)}
+                            placeholderTextColor={'#000'}
+                        />
+                    </View>
+                    {searchTerm !== '' ? (
+                        <View
+                            style={{
+                                marginLeft: 20,
                             }}
                         >
-                            {!props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')}
-                        </Text>
-                    </View>
-                ) : (
-                    <ScrollView
-                        showsVerticalScrollIndicator={true}
-                        horizontal={false}
-                        // style={{ height: '100%' }}
-                        contentContainerStyle={{
-                            // borderWidth: 1,
-                            // borderRightWidth: 0,
-                            // borderLeftWidth: 0,
-                            // borderRightWidth: 1,
-                            paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 10,
-                            borderColor: '#f2f2f2',
-                            borderRadius: 1,
-                            width: '100%',
-                            // maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500,
+                            <TouchableOpacity
+                                onPress={() => {
+                                    if (searchTerm !== '') {
+                                        setSearchTerm('');
+                                    } else {
+                                        props.setShowDirectory(true);
+                                    }
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    marginLeft: 'auto',
+                                }}
+                            >
+                                <Ionicons name={'close-outline'} size={20} color={'#1f1f1f'} />
+                            </TouchableOpacity>
+                        </View>
+                    ) : null}
+                </View>
+
+                {searchTerm !== '' && searchResults.length === 0 && !isSearching ? (
+                    <View
+                        style={{
+                            padding: 20,
                         }}
                     >
-                        {filteredThreads.map((thread: any, ind: number) => {
-                            let title = '';
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontFamily: 'Inter',
+                                textAlign: 'center',
+                            }}
+                        >
+                            No Results
+                        </Text>
+                    </View>
+                ) : null}
 
-                            if (thread.title) {
-                                title = thread.title;
-                            } else if (
-                                thread.message[0] === '{' &&
-                                thread.message[thread.message.length - 1] === '}' &&
-                                !thread.title
-                            ) {
-                                const obj = JSON.parse(thread.message);
-                                title = obj.title;
-                            } else {
-                                const { title: t, subtitle: s } = htmlStringParser(thread.message);
-                                title = t;
-                            }
+                <View
+                    style={{
+                        width: '100%',
+                        backgroundColor: 'white',
+                        // maxWidth: '80%',
+                        borderRadius: 1,
+                    }}
+                >
+                    {isSearching ? null : threads.length === 0 ? (
+                        <View style={{ flex: 1 }}>
+                            <Text
+                                style={{
+                                    width: '100%',
+                                    color: '#1F1F1F',
+                                    fontSize: 16,
+                                    paddingVertical: 50,
+                                    fontFamily: 'inter',
+                                    flex: 1,
+                                    backgroundColor: '#fff',
+                                    paddingHorizontal: 10,
+                                }}
+                            >
+                                {!props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')}
+                            </Text>
+                        </View>
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={true}
+                            horizontal={false}
+                            contentContainerStyle={{
+                                borderColor: '#f2f2f2',
+                                borderRadius: 1,
+                                width: '100%',
+                            }}
+                        >
+                            {(searchTerm !== '' ? searchResults : filteredThreads).map((thread: any, ind: number) => {
+                                let title = '';
 
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => loadCueDiscussions(thread._id)}
-                                    style={{
-                                        // backgroundColor: '#fff',
-                                        flexDirection: 'row',
-                                        borderColor: '#f2f2f2',
-                                        paddingVertical: 5,
-                                        // borderRightWidth: 1,
-                                        borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
-                                        // minWidth: 600, // flex: 1,
-                                        width: '100%',
-                                    }}
-                                    key={ind.toString()}
-                                >
-                                    <View style={{ backgroundColor: '#fff', padding: 5 }}>
-                                        <Image
-                                            style={{
-                                                height: 35,
-                                                width: 35,
-                                                marginTop: 5,
-                                                marginLeft: 5,
-                                                marginBottom: 5,
-                                                borderRadius: 75,
-                                                // marginTop: 20,
-                                                alignSelf: 'center',
-                                            }}
-                                            source={{
-                                                uri:
-                                                    thread.avatar && (!thread.anonymous || thread.userId === userId)
-                                                        ? thread.avatar
-                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                            }}
-                                        />
-                                    </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10, marginTop: 5 }}>
-                                        <Text
-                                            style={{ fontSize: 15, padding: 5, fontFamily: 'inter' }}
-                                            ellipsizeMode="tail"
-                                            numberOfLines={2}
-                                        >
-                                            {title}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 13,
-                                                margin: 5,
-                                                lineHeight: 18,
-                                                color: thread.userId === userId ? '#007AFF' : '#000',
-                                            }}
-                                            ellipsizeMode="tail"
-                                        >
-                                            {thread.anonymous && thread.userId !== userId && !isOwner
-                                                ? 'Anonymous'
-                                                : thread.fullName}
-                                        </Text>
-                                    </View>
-                                    <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                                if (!searchTerm && thread.title) {
+                                    title = thread.title;
+                                } else if (
+                                    !searchTerm &&
+                                    thread.message[0] === '{' &&
+                                    thread.message[thread.message.length - 1] === '}' &&
+                                    !thread.title
+                                ) {
+                                    const obj = JSON.parse(thread.message);
+                                    title = obj.title;
+                                } else if (!searchTerm) {
+                                    const { title: t, subtitle: s } = htmlStringParser(thread.message);
+                                    title = t;
+                                }
+
+                                if (searchTerm && thread.searchTitle) {
+                                    title = thread.searchTitle;
+                                }
+
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            loadCueDiscussions(thread.parentId ? thread.parentId : thread._id)
+                                        }
+                                        style={{
+                                            // backgroundColor: '#fff',
+                                            flexDirection: 'row',
+                                            borderColor: '#f2f2f2',
+                                            paddingVertical: 5,
+                                            // borderRightWidth: 1,
+                                            borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
+                                            // minWidth: 600, // flex: 1,
+                                            width: '100%',
+                                        }}
+                                        key={ind.toString()}
+                                    >
                                         <View
                                             style={{
-                                                flexDirection: 'row',
                                                 backgroundColor: '#fff',
-                                                paddingLeft: 10,
-                                                alignItems: 'center',
+                                                padding: 5,
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
                                             }}
                                         >
-                                            {thread.isPrivate ? (
-                                                <Text
-                                                    style={{
-                                                        fontSize: 14,
-                                                        padding: 5,
-                                                        color: '#000',
-                                                        textAlign: 'center',
-                                                    }}
-                                                    ellipsizeMode="tail"
-                                                >
-                                                    <Ionicons name="eye-off-outline" size={15} />
-                                                </Text>
-                                            ) : null}
-                                            {thread.unreadThreads > 0 ? (
-                                                <View
-                                                    style={{
-                                                        width: 16,
-                                                        height: 16,
-                                                        borderRadius: 8,
-                                                        marginHorizontal: 5,
-                                                        backgroundColor: '#007AFF',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        marginBottom: 3,
-                                                    }}
-                                                >
-                                                    <Text style={{ color: 'white', fontSize: 11 }}>
-                                                        {thread.unreadThreads}
-                                                    </Text>
-                                                </View>
-                                            ) : null}
+                                            <Image
+                                                style={{
+                                                    height: 40,
+                                                    width: 40,
+                                                    marginTop: 5,
+                                                    marginLeft: 5,
+                                                    marginBottom: 5,
+                                                    borderRadius: 75,
+                                                    // marginTop: 20,
+                                                    alignSelf: 'center',
+                                                }}
+                                                source={{
+                                                    uri:
+                                                        thread.avatar && (!thread.anonymous || thread.userId === userId)
+                                                            ? thread.avatar
+                                                            : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                                }}
+                                            />
+                                        </View>
+                                        <View
+                                            style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 5, marginTop: 5 }}
+                                        >
+                                            <Text
+                                                style={{ fontSize: 15, padding: 5, fontFamily: 'inter' }}
+                                                ellipsizeMode="tail"
+                                                numberOfLines={2}
+                                            >
+                                                {title}
+                                            </Text>
                                             <Text
                                                 style={{
                                                     fontSize: 13,
-                                                    padding: 5,
-                                                    lineHeight: 13,
-                                                    color: '#000000',
+                                                    margin: 5,
+                                                    lineHeight: 18,
+                                                    color: thread.userId === userId ? '#007AFF' : '#000',
                                                 }}
                                                 ellipsizeMode="tail"
                                             >
-                                                {emailTimeDisplay(thread.time)}
-                                            </Text>
-                                            <Text
-                                                style={{ fontSize: 14, padding: 5, lineHeight: 13 }}
-                                                ellipsizeMode="tail"
-                                            >
-                                                <Ionicons name="chevron-forward-outline" size={18} color="#000" />
+                                                {thread.anonymous && thread.userId !== userId && !isOwner
+                                                    ? 'Anonymous'
+                                                    : thread.fullName}
                                             </Text>
                                         </View>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
-                    </ScrollView>
-                )}
+                                        <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    backgroundColor: '#fff',
+                                                    paddingLeft: 10,
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                {thread.isPrivate ? (
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 14,
+                                                            padding: 5,
+                                                            color: '#000',
+                                                            textAlign: 'center',
+                                                        }}
+                                                        ellipsizeMode="tail"
+                                                    >
+                                                        <Ionicons name="eye-off-outline" size={15} />
+                                                    </Text>
+                                                ) : null}
+                                                {thread.unreadThreads > 0 ? (
+                                                    <View
+                                                        style={{
+                                                            width: 16,
+                                                            height: 16,
+                                                            borderRadius: 8,
+                                                            marginHorizontal: 5,
+                                                            backgroundColor: '#007AFF',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            marginBottom: 3,
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: 'white', fontSize: 12 }}>
+                                                            {thread.unreadThreads}
+                                                        </Text>
+                                                    </View>
+                                                ) : null}
+                                                <Text
+                                                    style={{
+                                                        fontSize: 13,
+                                                        padding: 5,
+                                                        lineHeight: 13,
+                                                        color: '#000000',
+                                                    }}
+                                                    ellipsizeMode="tail"
+                                                >
+                                                    {emailTimeDisplay(thread.time)}
+                                                </Text>
+                                                <Text
+                                                    style={{ fontSize: 14, padding: 5, lineHeight: 13 }}
+                                                    ellipsizeMode="tail"
+                                                >
+                                                    <Ionicons name="chevron-forward-outline" size={18} color="#000" />
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </ScrollView>
+                    )}
+                </View>
             </View>
         );
     };
@@ -2102,6 +2192,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         fontFamily: 'inter',
                         flex: 1,
                         backgroundColor: '#fff',
+                        paddingHorizontal: 10,
                     }}
                 >
                     {!props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')}
@@ -2225,7 +2316,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             >
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontFamily: 'Inter',
                                         textAlign: 'center',
                                     }}
@@ -2261,7 +2352,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
                                   return (
                                       <TouchableOpacity
-                                          onPress={() => loadCueDiscussions(thread._id)}
+                                          onPress={() =>
+                                              loadCueDiscussions(thread.parentId ? thread.parentId : thread._id)
+                                          }
                                           style={{
                                               backgroundColor: threadId === thread._id ? '#f8f8f8' : '#fff',
                                               flexDirection: 'row',
@@ -2327,7 +2420,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                   justifyContent: 'center',
                                                               }}
                                                           >
-                                                              <Text style={{ color: 'white', fontSize: 11 }}>
+                                                              <Text style={{ color: 'white', fontSize: 12 }}>
                                                                   {thread.unreadThreads}
                                                               </Text>
                                                           </View>
@@ -2346,7 +2439,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                   {/* Category */}
                                                   <Text
                                                       style={{
-                                                          fontSize: 11,
+                                                          fontSize: 12,
                                                           margin: 5,
                                                           lineHeight: 18,
                                                           marginRight: 10,
@@ -2359,7 +2452,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                   {/* Author  */}
                                                   <Text
                                                       style={{
-                                                          fontSize: 11,
+                                                          fontSize: 12,
                                                           margin: 5,
                                                           lineHeight: 18,
                                                           marginRight: 10,
@@ -2375,7 +2468,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                   {/* Date & Time */}
                                                   <Text
                                                       style={{
-                                                          fontSize: 11,
+                                                          fontSize: 12,
                                                           margin: 5,
                                                           lineHeight: 18,
                                                           marginLeft: 'auto',
@@ -2519,7 +2612,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 flexDirection: 'row',
             }}
         >
-            {props.showNewDiscussionPost && threads.length === 0 ? (
+            {props.showNewDiscussionPost && (threads.length === 0 || Dimensions.get('window').width < 768) ? (
                 <NewPostModal
                     categories={categories}
                     categoriesOptions={categoriesOptions}
@@ -2530,7 +2623,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     user={props.user}
                 />
             ) : null}
-            {props.showNewDiscussionPost && threads.length === 0 ? null : (
+            {props.showNewDiscussionPost && (threads.length === 0 || Dimensions.get('window').width < 768) ? null : (
                 <View
                     style={{
                         width: '100%',
@@ -2581,7 +2674,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}
                                         style={{
                                             paddingRight: 20,
-                                            paddingLeft: 10,
+                                            paddingLeft: Dimensions.get('window').width < 768 ? 0 : 10,
                                             alignSelf: 'flex-start',
                                         }}
                                     >

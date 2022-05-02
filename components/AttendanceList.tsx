@@ -1,6 +1,14 @@
 // REACT
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Dimensions, TextInput } from 'react-native';
+import {
+    ActivityIndicator,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    Dimensions,
+    TextInput,
+    Image,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
@@ -23,6 +31,7 @@ import * as FileSaver from 'file-saver';
 import Alert from './Alert';
 import { Datepicker, Popup } from '@mobiscroll/react';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [fixedPastMeetings, setFixedPastMeetings] = useState<any[]>([]);
@@ -404,7 +413,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -434,7 +443,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     {/* <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -459,7 +468,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#000000',
                             }}
@@ -546,13 +555,14 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         height: '100%',
                         maxHeight: 450,
                         flexDirection: 'column',
+                        minWidth: '100%',
                     }}
                     nestedScrollEnabled={true}
                 >
                     <View
                         style={{
-                            borderTopLeftRadius: 8,
-                            borderTopRightRadius: 8,
+                            backgroundColor: '#f8f8f8',
+                            minWidth: '100%',
                         }}
                     >
                         <View
@@ -566,7 +576,17 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             key={'-'}
                         >
                             {props.isOwner ? (
-                                <View style={styles.colHeader} key={'0,0'}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                        width: Dimensions.get('window').width < 768 ? 90 : 150,
+                                        justifyContent: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        padding: 10,
+                                    }}
+                                    key={'0,0'}
+                                >
                                     <TextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
@@ -617,7 +637,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 color: '#000000',
                                                 fontFamily: 'inter',
                                                 paddingBottom: 5,
@@ -630,7 +650,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 11,
+                                                fontSize: 12,
                                                 color: '#000000',
                                                 marginBottom: 5,
                                             }}
@@ -640,7 +660,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text
                                             style={{
                                                 textAlign: 'center',
-                                                fontSize: 11,
+                                                fontSize: 12,
                                                 color: '#000000',
                                             }}
                                         >
@@ -687,17 +707,41 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     key={row}
                                 >
                                     {props.isOwner ? (
-                                        <View style={styles.col}>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontSize: 14,
-                                                    color: '#000000',
-                                                    fontFamily: 'inter',
-                                                }}
-                                            >
-                                                {channelAttendance.fullName}
-                                            </Text>
+                                        <View
+                                            style={{
+                                                width: Dimensions.get('window').width < 768 ? 90 : 150,
+                                                justifyContent: 'center',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                padding: 10,
+                                            }}
+                                        >
+                                            <View>
+                                                <Image
+                                                    style={{
+                                                        height: 37,
+                                                        width: 37,
+                                                        borderRadius: 75,
+                                                        alignSelf: 'center',
+                                                    }}
+                                                    source={{
+                                                        uri: channelAttendance.avatar
+                                                            ? channelAttendance.avatar
+                                                            : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={{
+                                                        marginTop: 7,
+                                                        textAlign: 'center',
+                                                        fontSize: 14,
+                                                        color: '#000000',
+                                                        fontFamily: 'inter',
+                                                    }}
+                                                >
+                                                    {channelAttendance.fullName}
+                                                </Text>
+                                            </View>
                                         </View>
                                     ) : null}
                                     <View style={styles.col}>
@@ -750,7 +794,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
-                                                            fontSize: 13,
+                                                            fontSize: 14,
                                                             color: '#000000',
                                                             width: '100%',
                                                         }}
@@ -928,6 +972,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                     contentContainerStyle={{
                         flexDirection: 'column',
+
                         borderTopWidth: 0,
                         borderBottomLeftRadius: 8,
                         borderBottomRightRadius: 8,
@@ -982,7 +1027,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 style={{
                                                     paddingLeft: 4,
                                                     color: '#000',
-                                                    fontSize: 11,
+                                                    fontSize: 12,
                                                 }}
                                             >
                                                 Recording
@@ -1041,7 +1086,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Text
                                                 style={{
                                                     textAlign: 'center',
-                                                    fontSize: 13,
+                                                    fontSize: 14,
                                                     color: '#000000',
                                                     width: '100%',
                                                 }}
@@ -1082,6 +1127,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             style={{
                 backgroundColor: '#fff',
                 width: '100%',
+                paddingHorizontal: paddingResponsive(),
             }}
         >
             {/* {channelAttendances.length === 0 ||
@@ -1117,14 +1163,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 color: '#1F1F1F',
                                 fontSize: 16,
                                 paddingVertical: 100,
-                                paddingHorizontal: 5,
+                                paddingHorizontal: 10,
                                 fontFamily: 'inter',
                             }}
                         >
                             {pastMeetings.length === 0
-                                ? props.isOwner
-                                    ? 'Past meetings and attendances will be displayed here.'
-                                    : 'Past meetings & attendances will be displayed here.'
+                                ? 'Past meetings & attendances will be displayed here.'
                                 : 'No Students.'}
                         </Text>
                     </View>
@@ -1204,7 +1248,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         borderWidth: 1,
                                         color: '#000',
                                         backgroundColor: '#fff',
-                                        fontSize: 11,
+                                        fontSize: 12,
                                         paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                         fontFamily: 'inter',
                                         overflow: 'hidden',
@@ -1241,7 +1285,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',
-        padding: 7,
+        padding: 10,
     },
     colHeader: {
         backgroundColor: '#f8f8f8',
@@ -1249,6 +1293,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',
-        padding: 7,
+        padding: 10,
     },
 });

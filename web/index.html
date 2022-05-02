@@ -10,7 +10,9 @@
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SDGX8SYLT"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag() {
+                dataLayer.push(arguments);
+            }
             gtag('js', new Date());
 
             gtag('config', 'G-4SDGX8SYLT');
@@ -84,13 +86,12 @@
                 font-style: normal;
                 color: -internal-quirk-inherit;
                 text-align: start;
-                border-spacing: 0px!important;
-                font-variant: normal;   
+                border-spacing: 0px !important;
+                font-variant: normal;
             }
 
-
             td {
-                border: 1px solid #DDD !important;
+                border: 1px solid #ddd !important;
                 padding: 5px !important;
             }
 
@@ -127,11 +128,13 @@
 
             textarea {
                 border: 0px;
+                box-sizing: border-box;
             }
 
             p {
                 margin-block-start: 0 !important;
                 margin-block-end: 0 !important;
+                background-color: none !important;
             }
 
             /* Enable for apps that support dark-theme */
@@ -153,20 +156,34 @@
                 showProcessingMessages: false,
                 messageStyle: 'none',
                 SVG: {
-                    useGlobalCache: false
+                    useGlobalCache: false,
                 },
                 TeX: {
-                    extensions: ['AMSmath.js', 'AMSsymbols.js', 'autoload-all.js']
-                }
+                    extensions: ['AMSmath.js', 'AMSsymbols.js', 'autoload-all.js'],
+                },
             };
         </script>
         <script>
-            (function(apiKey){
-                (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-                v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-                    o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-                    y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-                    z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+            (function (apiKey) {
+                (function (p, e, n, d, o) {
+                    var v, w, x, y, z;
+                    o = p[d] = p[d] || {};
+                    o._q = o._q || [];
+                    v = ['initialize', 'identify', 'updateOptions', 'pageLoad', 'track'];
+                    for (w = 0, x = v.length; w < x; ++w)
+                        (function (m) {
+                            o[m] =
+                                o[m] ||
+                                function () {
+                                    o._q[m === v[0] ? 'unshift' : 'push']([m].concat([].slice.call(arguments, 0)));
+                                };
+                        })(v[w]);
+                    y = e.createElement(n);
+                    y.async = !0;
+                    y.src = 'https://cdn.pendo.io/agent/static/' + apiKey + '/pendo.js';
+                    z = e.getElementsByTagName(n)[0];
+                    z.parentNode.insertBefore(y, z);
+                })(window, document, 'script', 'pendo');
             })('a2e4beba-23c6-403c-7b77-dff81932b8fd');
         </script>
 
@@ -178,40 +195,32 @@
         <noscript>
             <form
                 action=""
-                style="
-          background-color: #fff;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 9999;
-        "
+                style="background-color: #fff; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999"
             >
                 <div
                     style="
-            font-size: 18px;
-            font-family: Helvetica, sans-serif;
-            line-height: 24px;
-            margin: 10%;
-            width: 80%;
-          "
+                        font-size: 18px;
+                        font-family: Helvetica, sans-serif;
+                        line-height: 24px;
+                        margin: 10%;
+                        width: 80%;
+                    "
                 >
                     <p>Oh no! It looks like JavaScript is not enabled in your browser.</p>
-                    <p style="margin: 20px 0;">
+                    <p style="margin: 20px 0">
                         <button
                             type="submit"
                             style="
-                background-color: #4630eb;
-                border-radius: 100px;
-                border: none;
-                box-shadow: none;
-                color: #fff;
-                cursor: pointer;
-                font-weight: bold;
-                line-height: 20px;
-                padding: 6px 16px;
-              "
+                                background-color: #4630eb;
+                                border-radius: 100px;
+                                border: none;
+                                box-shadow: none;
+                                color: #fff;
+                                cursor: pointer;
+                                font-weight: bold;
+                                line-height: 20px;
+                                padding: 6px 16px;
+                            "
                         >
                             Reload
                         </button>

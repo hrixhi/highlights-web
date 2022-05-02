@@ -140,6 +140,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             text: category,
         });
     });
+    const [reloadQuizKey, setReloadQuizKey] = useState(Math.random());
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
 
     // Alerts
@@ -206,6 +207,58 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, []);
 
     /**
+     * @description Show import file directly from the navbar
+     */
+    useEffect(() => {
+        if (props.showImportCreate) {
+            handleFileUpload();
+            props.setShowImportCreate(false);
+        }
+    }, [props.showImportCreate]);
+
+    /**
+     * @description Show import file directly from the navbar
+     */
+    useEffect(() => {
+        if (props.showVideosCreate) {
+            if (imported) {
+                Alert('Cannot add videos to imported content.');
+            } else {
+                setShowInsertYoutubeVideosModal(true);
+            }
+
+            props.setShowVideosCreate(false);
+        }
+    }, [props.showVideosCreate, imported]);
+
+    console.log('Show Books', showBooks);
+    console.log('url', url);
+
+    /**
+     * @description
+     */
+    useEffect(() => {
+        (async () => {
+            setIsQuiz(false);
+            setSubmission(false);
+            setShowBooks(false);
+
+            if (props.createActiveTab === 'Quiz') {
+                setIsQuiz(true);
+                setSubmission(true);
+                const quizDraft = await AsyncStorage.getItem('quizDraft');
+                if (quizDraft !== null) {
+                    const { title } = JSON.parse(quizDraft);
+                    setTitle(title);
+                }
+            } else if (props.createActiveTab === 'Books') {
+                setShowBooks(true);
+            } else if (props.createActiveTab === 'Content') {
+            }
+        })();
+    }, [props.createActiveTab]);
+
+    /**
      * @description Sets import options based on Cue content if JSON object
      */
     useEffect(() => {
@@ -231,6 +284,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Loads webviewer for Imports
      */
     useEffect(() => {
+        if (showBooks) return;
+
         if (url === '' || !url) {
             return;
         }
@@ -265,7 +320,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 // perform document operations
             });
         });
-    }, [url, RichText, imported, type, showOptions]);
+    }, [url, RichText, imported, type, showOptions, props.createActiveTab, showBooks]);
 
     /**
      * @description Sets user role
@@ -1436,21 +1491,47 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {
                 text: 'Clear',
                 onPress: () => {
-                    setCue('');
-                    setCueDraft('');
-                    setImported(false);
-                    setUrl('');
-                    setType('');
-                    setTitle('');
-                    setProblems([]);
-                    setIsQuiz(false);
-                    setTimer(false);
-                    setShowEquationEditor(false);
-                    setEquation('');
+                    if (isQuiz) {
+                        setProblems([]);
+                        setHeaders([]);
+                        setQuizInstructions('');
+                        setTimer(false);
+                        setTitle('');
+
+                        if (Dimensions.get('window').width > 768) {
+                            setIsQuiz(false);
+                        }
+
+                        const quiz = {
+                            title: '',
+                            problems: [],
+                            timer: false,
+                            duration: {
+                                hours: 1,
+                                minutes: 0,
+                                seconds: 0,
+                            },
+                            headers: [],
+                            quizInstructions: '',
+                        };
+
+                        const saveQuiz = JSON.stringify(quiz);
+
+                        setReloadQuizKey(Math.random());
+
+                        storeDraft('quizDraft', saveQuiz);
+                    } else {
+                        setCue('');
+                        setCueDraft('');
+                        setImported(false);
+                        setUrl('');
+                        setType('');
+                        setTitle('');
+                    }
                 },
             },
         ]);
-    }, []);
+    }, [isQuiz]);
 
     /**
      * @description Renders time to nearest minute
@@ -1473,11 +1554,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         height: 64,
                         backgroundColor: 'none',
-                        paddingHorizontal: 10,
                         zIndex: 500000,
                         maxWidth: 1024,
                         width: '100%',
                         alignSelf: 'center',
+                        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
                     }}
                 >
                     {/* Back button */}
@@ -1506,7 +1587,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         style={{
                             fontSize: 20,
                             fontFamily: 'Inter',
-                            marginRight: 75,
+                            marginRight: Dimensions.get('window').width < 768 ? 0 : 75,
                             color: '#fff',
                             // textTransform: 'uppercase',
                         }}
@@ -1563,7 +1644,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             {/* QUIZ BUTTON FOR INSTRUCTORS */}
 
                             {/* QUIZ BUTTON FOR INSTRUCTORS */}
-                            {!imported && !showOptions && !isQuiz && !showBooks ? (
+                            {!imported &&
+                            !showOptions &&
+                            !isQuiz &&
+                            !showBooks &&
+                            Dimensions.get('window').width > 768 ? (
                                 <TouchableOpacity
                                     onPress={() => {
                                         setShowBooks(!showBooks);
@@ -1590,7 +1675,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </TouchableOpacity>
                             ) : null}
 
-                            {!imported && !showOptions && !isQuiz && !showBooks ? (
+                            {!imported &&
+                            !showOptions &&
+                            !isQuiz &&
+                            !showBooks &&
+                            Dimensions.get('window').width > 768 ? (
                                 <TouchableOpacity
                                     style={{
                                         backgroundColor: 'none',
@@ -1617,18 +1706,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </TouchableOpacity>
                             ) : null}
 
-                            {allowQuizCreation && !imported && !showOptions && !showBooks ? (
+                            {allowQuizCreation &&
+                            !imported &&
+                            !showOptions &&
+                            !showBooks &&
+                            (Dimensions.get('window').width > 768 || isQuiz) ? (
                                 <TouchableOpacity
                                     style={{
                                         backgroundColor: 'none',
                                     }}
-                                    onPress={() => {
+                                    onPress={async () => {
                                         if (isQuiz) {
                                             clearAll();
                                             return;
                                         }
                                         setIsQuiz(true);
                                         setSubmission(true);
+                                        const quizDraft = await AsyncStorage.getItem('quizDraft');
+                                        if (quizDraft !== null) {
+                                            const { title } = JSON.parse(quizDraft);
+                                            setTitle(title);
+                                        }
                                     }}
                                 >
                                     <Text
@@ -1682,7 +1780,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             color: '#000',
                                             backgroundColor: '#fff',
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -1701,12 +1799,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     };
 
     return (
-        <View>
+        <View
+            style={{
+                backgroundColor: '#f8f8f8',
+                height: Dimensions.get('window').height,
+            }}
+        >
             {renderCreateNavbar()}
-            <ScrollView
+            {/* <ScrollView
                 style={{
                     width: '100%',
                     height:
+                        dimensions.window.width < 1024 ? dimensions.window.height - 104 : dimensions.window.height - 64,
+                    maxHeight:
                         dimensions.window.width < 1024 ? dimensions.window.height - 104 : dimensions.window.height - 64,
                     backgroundColor: '#f8f8f8',
                     borderTopLeftRadius: 0,
@@ -1714,6 +1819,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     overflow: 'scroll',
                 }}
                 showsVerticalScrollIndicator={true}
+            > */}
+            <div
+                style={{
+                    top: 64,
+                    position: 'absolute',
+                    overflow: 'auto',
+                    width: '100%',
+                    height:
+                        dimensions.window.width < 1024
+                            ? dimensions.window.height - (64 + 60)
+                            : dimensions.window.height - 64,
+                    maxHeight:
+                        dimensions.window.width < 1024
+                            ? dimensions.window.height - (64 + 60)
+                            : dimensions.window.height - 64,
+                    backgroundColor: '#f8f8f8',
+                }}
+                id="scroll_container"
             >
                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', backgroundColor: '#f8f8f8' }}>
                     <Animated.View
@@ -2520,8 +2643,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         borderRadius: 2,
                                                                         borderWidth: 1,
                                                                         fontSize: 15,
-                                                                        height: '2.75em',
-                                                                        padding: '1em',
+                                                                        padding: 10,
                                                                         backgroundColor: '#fff',
                                                                     }}
                                                                     placeholder={'Enter Category'}
@@ -3199,7 +3321,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View>
                             ) : (
                                 <>
-                                    {imported || isQuiz ? (
+                                    {(imported || isQuiz) & !showBooks ? (
                                         <View
                                             style={{
                                                 flexDirection: width < 768 ? 'column' : 'row',
@@ -3214,23 +3336,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     flexDirection: 'row',
                                                     alignItems: 'center',
                                                     backgroundColor: '#f8f8f8',
+                                                    marginBottom: 25,
                                                 }}
                                             >
                                                 <TextareaAutosize
                                                     value={title}
                                                     style={{
                                                         fontFamily: 'overpass',
-                                                        width: '100%',
-                                                        maxWidth: 400,
-                                                        minWidth: 400,
+                                                        width: '80%',
+                                                        maxWidth: Dimensions.get('window').width < 768 ? '80%' : 400,
+                                                        minWidth: Dimensions.get('window').width < 768 ? '80%' : 400,
                                                         border: '1px solid #cccccc',
                                                         borderRadius: 2,
                                                         fontSize: 15,
-                                                        paddingTop: 13,
-                                                        paddingBottom: 13,
-                                                        paddingLeft: 10,
+                                                        padding: 10,
                                                         marginTop: 12,
-                                                        marginBottom: 25,
+
                                                         height: 35,
                                                     }}
                                                     minRows={1}
@@ -3268,9 +3389,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             minHeight: isQuiz ? 0 : 500,
                                             backgroundColor: '#f8f8f8',
                                         }}
-                                        key={imported.toString()}
+                                        key={imported.toString() + showBooks.toString() + props.createActiveTab}
                                     >
-                                        {isQuiz ? (
+                                        {showBooks ? null : isQuiz ? (
                                             <View
                                                 style={{
                                                     width: '100%',
@@ -3338,81 +3459,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 }}
                                                             />
                                                         </View>
-                                                        {/* <Editor
-                                                        initialValue={initialQuizInstructions}
-                                                        apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                                        init={{
-                                                            skin: 'snow',
-                                                            // toolbar_sticky: true,
-                                                            indent: false,
-                                                            branding: false,
-                                                            placeholder: 'Instructions',
-                                                            autoresize_on_init: false,
-                                                            autoresize_min_height: 200,
-                                                            height: 200,
-                                                            min_height: 200,
-                                                            paste_data_images: true,
-                                                            images_upload_url:
-                                                                'https://api.learnwithcues.com/api/imageUploadEditor',
-                                                            mobile: {
-                                                                plugins:
-                                                                    'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                            },
-                                                            plugins:
-                                                                'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                            menu: {
-                                                                // this is the complete default configuration
-                                                                file: { title: 'File', items: 'newdocument' },
-                                                                edit: {
-                                                                    title: 'Edit',
-                                                                    items:
-                                                                        'undo redo | cut copy paste pastetext | selectall'
-                                                                },
-                                                                insert: {
-                                                                    title: 'Insert',
-                                                                    items: 'link media | template hr'
-                                                                },
-                                                                view: { title: 'View', items: 'visualaid' },
-                                                                format: {
-                                                                    title: 'Format',
-                                                                    items:
-                                                                        'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                                                                },
-                                                                table: {
-                                                                    title: 'Table',
-                                                                    items:
-                                                                        'inserttable tableprops deletetable | cell row column'
-                                                                },
-                                                                tools: { title: 'Tools', items: 'spellchecker code' }
-                                                            },
-                                                            statusbar: false,
-                                                            // menubar: 'file edit view insert format tools table tc help',
-                                                            menubar: false,
-                                                            toolbar:
-                                                                'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
-                                                            importcss_append: true,
-                                                            image_caption: true,
-                                                            quickbars_selection_toolbar:
-                                                                'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                            noneditable_noneditable_class: 'mceNonEditable',
-                                                            toolbar_mode: 'sliding',
-                                                            // tinycomments_mode: 'embedded',
-                                                            content_style:
-                                                                '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #1F1F1F;}',
-                                                            // contextmenu: 'link image table configurepermanentpen',
-                                                            // a11y_advanced_options: true,
-                                                            extended_valid_elements:
-                                                                'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                                                            // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                            // content_css: useDarkMode ? 'dark' : 'default',
-                                                        }}
-                                                        onChange={(e: any) => {
-                                                            setQuizInstructions(e.target.getContent());
-                                                        }}
-                                                    /> */}
                                                     </View>
                                                 </View>
                                                 <QuizCreate
+                                                    key={reloadQuizKey}
                                                     problems={problems}
                                                     headers={headers}
                                                     setProblems={(p: any) => setProblems(p)}
@@ -3442,15 +3492,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 />
                                             ) : (
                                                 <View
-                                                    key={url + JSON.stringify(showOptions)}
+                                                    key={
+                                                        url +
+                                                        JSON.stringify(showOptions) +
+                                                        showBooks.toString() +
+                                                        props.createActiveTab
+                                                    }
                                                     style={{ flex: 1, maxHeight: 800, backgroundColor: '#f8f8f8' }}
                                                 >
                                                     <div
                                                         className="webviewer"
                                                         ref={RichText}
                                                         style={{
-                                                            height:
-                                                                Dimensions.get('window').width < 1024 ? '50vh' : '70vh',
+                                                            height: '70vh',
                                                             borderWidth: 1,
                                                             borderColor: '#f2f2f2',
                                                             borderRadius: 1,
@@ -3531,7 +3585,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         htmlAllowedTags: ['.*'],
                                                         htmlAllowedAttrs: ['.*'],
                                                         htmlRemoveTags: ['script'],
-
+                                                        scrollableContainer: '#scroll_container',
                                                         events: {
                                                             'file.beforeUpload': function (files: any) {
                                                                 // Return false if you want to stop the file upload.
@@ -3620,7 +3674,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </View>
                     </Animated.View>
                 </View>
-            </ScrollView>
+                {/* </ScrollView> */}
+            </div>
         </View>
     );
 };

@@ -829,8 +829,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 width: '100%',
                 maxHeight:
                     Dimensions.get('window').width < 768
-                        ? Dimensions.get('window').height - 115
-                        : Dimensions.get('window').height - (52 + 60),
+                        ? Dimensions.get('window').height - (64 + 60)
+                        : Dimensions.get('window').width < 1024
+                        ? Dimensions.get('window').height - (64 + 60 + 54)
+                        : Dimensions.get('window').height - (64 + 54),
                 // backgroundColor: props.showCreate ? "#fff" : '#f2f2f2',
                 justifyContent: 'center',
                 flexDirection: 'row',
@@ -866,7 +868,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {!props.showCreate ? (
                     <View
                         style={{
-                            backgroundColor: '#f8f8f8',
+                            backgroundColor: '#fff',
                             width: '100%',
                             // minHeight: Dimensions.get("window").height - 52
                         }}
@@ -880,11 +882,19 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     justifyContent: 'center',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    backgroundColor: '#f8f8f8',
+                                    backgroundColor: '#fff',
                                     paddingVertical: 100,
                                 }}
                             >
-                                <ActivityIndicator color={'#1F1F1F'} />
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        fontFamily: 'Inter',
+                                    }}
+                                >
+                                    No courses found. Click on + to {role === 'instructor' ? 'create ' : 'join '} a
+                                    course.
+                                </Text>
                             </View>
                         ) : (
                             <View
@@ -906,8 +916,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     contentContainerStyle={{
                                         maxHeight:
                                             Dimensions.get('window').width < 1024
-                                                ? Dimensions.get('window').height - 115
-                                                : Dimensions.get('window').height - (52 + 60),
+                                                ? Dimensions.get('window').height - (64 + 60)
+                                                : Dimensions.get('window').height - (64 + 54),
                                         width: '100%',
                                     }}
                                     showsVerticalScrollIndicator={true}
@@ -937,14 +947,20 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     borderColor: '#f2f2f2',
                                                     borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                     width: '100%',
-                                                    paddingVertical: 5,
                                                 }}
                                             >
-                                                <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: '#fff',
+                                                        padding: 5,
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
                                                     <Image
                                                         style={{
-                                                            height: 35,
-                                                            width: 35,
+                                                            height: 45,
+                                                            width: 45,
                                                             marginTop: 5,
                                                             marginLeft: 5,
                                                             marginBottom: 5,
@@ -958,10 +974,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         }}
                                                     />
                                                 </View>
-                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 5 }}>
                                                     <Text
                                                         style={{
-                                                            fontSize: 15,
+                                                            fontSize: Dimensions.get('window').width < 768 ? 15 : 16,
                                                             padding: 5,
                                                             fontFamily: 'inter',
                                                             marginTop: 5,
@@ -971,7 +987,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         {channel.name}
                                                     </Text>
                                                     <Text
-                                                        style={{ fontSize: 11, padding: 5, fontWeight: 'bold' }}
+                                                        style={{
+                                                            fontSize: Dimensions.get('window').width < 768 ? 13 : 14,
+                                                            padding: 5,
+                                                        }}
                                                         ellipsizeMode="tail"
                                                     >
                                                         {channel.createdByUsername}
@@ -1014,7 +1033,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     }}
                                                                     ellipsizeMode="tail"
                                                                 >
-                                                                    <Ionicons name="enter-outline" size={18} />
+                                                                    <Ionicons
+                                                                        name="enter-outline"
+                                                                        size={
+                                                                            Dimensions.get('window').width < 768
+                                                                                ? 18
+                                                                                : 20
+                                                                        }
+                                                                    />
                                                                 </Text>
                                                             </TouchableOpacity>
                                                         </View>
@@ -1030,7 +1056,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             <Text
                                                                 style={{
                                                                     textAlign: 'center',
-                                                                    fontSize: 14,
+                                                                    fontSize:
+                                                                        Dimensions.get('window').width < 768 ? 14 : 15,
                                                                     fontFamily: 'inter',
                                                                     color:
                                                                         channel.channelCreator === userId ||
@@ -1077,7 +1104,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         >
                             <Text
                                 style={{
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: 'Inter',
                                     color: '#000000',
                                     textAlign: 'center',
@@ -1138,7 +1165,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontFamily: 'Inter',
                                         color: '#000000',
                                         textAlign: 'center',

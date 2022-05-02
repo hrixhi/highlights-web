@@ -1019,6 +1019,7 @@ export const getGradesList = gql`
                 displayName
                 fullName
                 email
+                avatar
                 scores {
                     cueId
                     score
@@ -1254,6 +1255,7 @@ export const getAttendancesForChannel = gql`
                 displayName
                 fullName
                 email
+                avatar
                 attendances {
                     userId
                     dateId

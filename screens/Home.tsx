@@ -31,9 +31,9 @@ import Dashboard from '../components/Dashboard';
 
 import Swiper from 'react-native-web-swiper';
 
-import agenda from '../assets/images/agenda.png';
-import workspace from '../assets/images/workspace.png';
-import inbox from '../assets/images/inbox.png';
+import agenda from '../assets/images/agenda.jpeg';
+import workspace from '../assets/images/workspace.jpeg';
+import inbox from '../assets/images/inbox.jpeg';
 
 // HELPERS
 import { validateEmail } from '../helpers/emailCheck';
@@ -130,6 +130,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const [closingModal, setClosingModal] = useState(false);
 
+    const [createOptions] = useState(['Content', 'Import', 'Videos', 'Books', 'Quiz']);
+    const [createActiveTab, setCreateActiveTab] = useState('Content');
+    const [disableCreateNavbar, setDisableCreateNavbar] = useState(false);
+    const [showImportCreate, setShowImportCreate] = useState(false);
+    const [showVideosCreate, setShowVideosCreate] = useState(false);
+
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
             setEmailValidError(enterValidEmailError);
@@ -188,6 +194,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         setLoadDiscussionForChannelId('');
         setOpenChannelId('');
+    }, [option]);
+
+    useEffect(() => {
+        setSelectedWorkspace('');
     }, [option]);
 
     useEffect(() => {
@@ -863,12 +873,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const openModal = useCallback(
         async (type) => {
-            console.log('selectedWorkspace openModal', selectedWorkspace);
-            if (option === 'Classroom' && selectedWorkspace !== '') {
-                console.log('Set selected workspace', selectedWorkspace);
-                await AsyncStorage.setItem('activeWorkspace', selectedWorkspace);
-                setSelectedWorkspace('');
-            }
+            // console.log('selectedWorkspace openModal', selectedWorkspace);
+            // if (option === 'Classroom' && selectedWorkspace !== '') {
+            //     console.log('Set selected workspace', selectedWorkspace);
+            //     await AsyncStorage.setItem('activeWorkspace', selectedWorkspace);
+            //     setSelectedWorkspace('');
+            // }
 
             setModalType(type);
             // AsyncStorage.setItem('lastopened', type);
@@ -1057,16 +1067,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         setModalType('');
 
-        console.log('Close modal option', option);
+        // console.log('Close modal option', option);
 
-        // Check if active workspace
-        if (option === 'Classroom') {
-            const activeWorkspace = await AsyncStorage.getItem('activeWorkspace');
+        // // Check if active workspace
+        // if (option === 'Classroom') {
+        //     const activeWorkspace = await AsyncStorage.getItem('activeWorkspace');
 
-            if (activeWorkspace) {
-                setSelectedWorkspace(activeWorkspace);
-            }
-        }
+        //     if (activeWorkspace) {
+        //         setSelectedWorkspace(activeWorkspace);
+        //     }
+        // }
 
         // Mark as read
         if (modalType === 'Update') {
@@ -1113,6 +1123,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     };
 
+    console.log('User', user);
+    console.log('Selected workspace', selectedWorkspace);
+
     /**
      * @description Helpter for icon to use in navbar
      */
@@ -1131,9 +1144,56 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     };
 
+    const getWorkspaceNavbarIconName = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return workspaceActiveTab === op ? 'library' : 'library-outline';
+            case 'Discuss':
+                return workspaceActiveTab === op ? 'chatbubbles' : 'chatbubbles-outline';
+            case 'Meet':
+                return workspaceActiveTab === op ? 'videocam' : 'videocam-outline';
+            case 'Scores':
+                return workspaceActiveTab === op ? 'bar-chart' : 'bar-chart-outline';
+            default:
+                return workspaceActiveTab === op ? 'build' : 'build-outline';
+        }
+    };
+
+    const getCreateNavbarIconName = (op: string) => {
+        console.log('Create navbar op', op);
+        switch (op) {
+            case 'Content':
+                return createActiveTab === op ? 'create' : 'create-outline';
+            case 'Import':
+                return createActiveTab === op ? 'share' : 'share-outline';
+            case 'Quiz':
+                return createActiveTab === op ? 'checkbox' : 'checkbox-outline';
+            case 'Books':
+                return createActiveTab === op ? 'book' : 'book-outline';
+            case 'Videos':
+                return createActiveTab === op ? 'videocam' : 'videocam-outline';
+            default:
+                return createActiveTab === op ? 'build' : 'build-outline';
+        }
+    };
+
     const getNavbarIconColor = (op: string) => {
         if (op === option) {
-            return '#007AFF';
+            return '#fff';
+        }
+        return '#fff';
+    };
+
+    const getWorkspaceNavbarIconColor = (op: string) => {
+        if (op === workspaceActiveTab) {
+            return '#fff';
+        }
+        return '#fff';
+    };
+
+    const getCreateNavbarIconColor = (op: string) => {
+        if (op === createActiveTab) {
+            return '#fff';
         }
         return '#fff';
     };
@@ -1141,7 +1201,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const getNavbarText = (op: string) => {
         switch (op) {
             case 'To Do':
-                return 'Agenda';
+                return 'Plan';
             case 'Classroom':
                 return 'Workspace';
             case 'Search':
@@ -1150,6 +1210,38 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return 'Inbox';
             default:
                 return 'Account';
+        }
+    };
+
+    const getWorkspaceNavbarText = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return 'Coursework';
+            case 'Discuss':
+                return 'Discussion';
+            case 'Meet':
+                return 'Meetings';
+            case 'Scores':
+                return 'Scores';
+            default:
+                return 'Settings';
+        }
+    };
+
+    const getCreateNavbarText = (op: string) => {
+        switch (op) {
+            case 'Content':
+                return 'Content';
+            case 'Import':
+                return 'Import';
+            case 'Quiz':
+                return 'Quiz';
+            case 'Books':
+                return 'Books';
+            case 'Videos':
+                return 'Videos';
+            default:
+                return 'Settings';
         }
     };
 
@@ -1690,8 +1782,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     ? (Dimensions.get('window').width - 1200) / 2
                                     : Dimensions.get('window').width >= 1024
                                     ? (Dimensions.get('window').width - 1024) / 2 - 20
+                                    : Dimensions.get('window').width >= 768
+                                    ? 30
                                     : 20,
-                            marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
+                            marginBottom:
+                                Dimensions.get('window').width < 768
+                                    ? 77
+                                    : Dimensions.get('window').width < 1024
+                                    ? 90
+                                    : 25,
                             right: 0,
                             justifyContent: 'center',
                             bottom: 0,
@@ -1822,7 +1921,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     showDirectory.toString() +
                                     showCreate.toString() +
                                     showHelp.toString() +
-                                    subscriptions.toString()
+                                    subscriptions.toString() +
+                                    selectedWorkspace.toString()
                                 }
                                 openDiscussionFromActivity={(channelId: string) => {
                                     setOption('Classroom');
@@ -1894,6 +1994,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     setSelectedWorkspace(val);
                                 }}
                                 user={user}
+                                setShowImportCreate={(showImport: boolean) => setShowImportCreate(showImport)}
+                                showImportCreate={showImportCreate}
+                                showVideosCreate={showVideosCreate}
+                                setShowVideosCreate={(showVideos: boolean) => setShowVideosCreate(showVideos)}
+                                setCreateActiveTab={(tab: any) => setCreateActiveTab(tab)}
+                                createActiveTab={createActiveTab}
+                                setDisableCreateNavbar={(disable: boolean) => setDisableCreateNavbar(disable)}
                             />
                         )}
                     </View>
@@ -1936,13 +2043,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 ) : null}
             </View>
 
-            {Dimensions.get('window').width < 768 && showHome ? (
+            {/* Create navbar bottom mobile */}
+            {Dimensions.get('window').width < 1024 && modalType === 'Create' ? (
                 <View
                     style={{
                         position: 'absolute',
                         alignSelf: 'flex-end',
                         width: '100%',
-                        paddingTop: 12,
+                        paddingTop: 10,
                         paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
                         paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 40,
                         flexDirection: 'row',
@@ -1959,9 +2067,169 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         shadowRadius: 12,
                         zIndex: showLoginWindow ? 40 : 100,
                         elevation: showLoginWindow ? 40 : 120,
-                        borderTopColor: '#e8e8e8',
+                        borderTopColor: selectedWorkspace.split('-SPLIT-')[3],
                         borderTopWidth: 1,
-                        backgroundColor: '#000000de',
+                        backgroundColor:
+                            selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                ? '#000'
+                                : selectedWorkspace.split('-SPLIT-')[3],
+                    }}
+                >
+                    {createOptions.map((op: any, ind: number) => {
+                        if (user.role !== 'instructor' && op === 'Quiz') {
+                            return null;
+                        }
+
+                        if (disableCreateNavbar) {
+                            return null;
+                        }
+
+                        return (
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor:
+                                        selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                            ? '#000'
+                                            : selectedWorkspace.split('-SPLIT-')[3],
+                                    width: user.role === 'instructor' ? '20%' : '25%',
+                                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                                key={ind.toString()}
+                                onPress={() => {
+                                    if (op === 'Import') {
+                                        setShowImportCreate(true);
+                                    } else if (op === 'Videos') {
+                                        setShowVideosCreate(true);
+                                    } else {
+                                        setCreateActiveTab(op);
+                                    }
+                                }}
+                            >
+                                <Ionicons
+                                    name={getCreateNavbarIconName(op)}
+                                    style={{ color: getCreateNavbarIconColor(op), marginBottom: 6 }}
+                                    size={23}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
+                                        lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
+                                        color: getCreateNavbarIconColor(op),
+                                        fontFamily: op === createActiveTab ? 'Inter' : 'overpass',
+                                        marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
+                                        paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                    }}
+                                >
+                                    {getCreateNavbarText(op)}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+            ) : null}
+
+            {Dimensions.get('window').width < 1024 && showHome && selectedWorkspace && modalType !== 'Create' ? (
+                <View
+                    style={{
+                        position: 'absolute',
+                        alignSelf: 'flex-end',
+                        width: '100%',
+                        paddingTop: 10,
+                        paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
+                        paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 40,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        height: Dimensions.get('window').width < 768 ? 60 : 68,
+                        shadowColor: '#000',
+                        shadowOffset: {
+                            width: 0,
+                            height: -10,
+                        },
+                        bottom: 0,
+                        right: 0,
+                        shadowOpacity: 0.03,
+                        shadowRadius: 12,
+                        zIndex: showLoginWindow ? 40 : 100,
+                        elevation: showLoginWindow ? 40 : 120,
+                        borderTopColor: selectedWorkspace.split('-SPLIT-')[3],
+                        borderTopWidth: 1,
+                        backgroundColor:
+                            selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                ? '#000'
+                                : selectedWorkspace.split('-SPLIT-')[3],
+                    }}
+                >
+                    {workspaceOptions.map((op: any) => {
+                        if (selectedWorkspace.split('-SPLIT-')[0] === 'My Notes') return null;
+
+                        if (op === 'Settings' && selectedWorkspace.split('-SPLIT-')[2] !== user._id) return null;
+
+                        return (
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: 'none',
+                                    width: selectedWorkspace.split('-SPLIT-')[2] === user._id ? '20%' : '25%',
+                                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    paddingBottom: 2,
+                                }}
+                                onPress={() => {
+                                    setWorkspaceActiveTab(op);
+                                }}
+                            >
+                                <Ionicons
+                                    name={getWorkspaceNavbarIconName(op)}
+                                    style={{ color: getWorkspaceNavbarIconColor(op), marginBottom: 6 }}
+                                    size={23}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
+                                        lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
+                                        color: getWorkspaceNavbarIconColor(op),
+                                        fontWeight: 'bold',
+                                        fontFamily: op === workspaceActiveTab ? 'Inter' : 'overpass',
+                                        marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
+                                        paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                    }}
+                                >
+                                    {getWorkspaceNavbarText(op)}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+            ) : null}
+
+            {Dimensions.get('window').width < 1024 && showHome && !selectedWorkspace ? (
+                <View
+                    style={{
+                        position: 'absolute',
+                        alignSelf: 'flex-end',
+                        width: '100%',
+                        paddingTop: 10,
+                        paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
+                        paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 40,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        height: Dimensions.get('window').width < 768 ? 60 : 68,
+                        shadowColor: '#000',
+                        shadowOffset: {
+                            width: 0,
+                            height: -10,
+                        },
+                        bottom: 0,
+                        right: 0,
+                        shadowOpacity: 0.03,
+                        shadowRadius: 12,
+                        zIndex: showLoginWindow ? 40 : 100,
+                        elevation: showLoginWindow ? 40 : 120,
+                        borderTopColor: '#000',
+                        borderTopWidth: 1,
+                        backgroundColor: '#000000',
                     }}
                 >
                     {options.map((op: any) => {
@@ -2002,7 +2270,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             >
                                 <Ionicons
                                     name={getNavbarIconName(op)}
-                                    style={{ color: getNavbarIconColor(op), marginBottom: 3 }}
+                                    style={{ color: getNavbarIconColor(op), marginBottom: 6 }}
                                     size={21}
                                 />
                                 <Text
@@ -2010,8 +2278,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
                                         lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
                                         color: getNavbarIconColor(op),
-                                        // fontWeight: 'bold',
-                                        fontFamily: 'inter',
+                                        fontFamily: op === option ? 'inter' : 'overpass',
                                         marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
                                         paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
                                     }}

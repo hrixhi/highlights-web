@@ -1811,7 +1811,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: '100%',
                         height:
                             Dimensions.get('window').width < 1024
-                                ? Dimensions.get('window').height - 104
+                                ? Dimensions.get('window').height - (64 + 60)
                                 : Dimensions.get('window').height - 64,
                     }}
                     contentContainerStyle={{
@@ -1869,7 +1869,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 backgroundColor: '#f8f8f8',
                                 width: '100%',
-                                height: windowHeight - 64,
+                                height:
+                                    Dimensions.get('window').width < 1024
+                                        ? Dimensions.get('window').height - (64 + 60)
+                                        : Dimensions.get('window').height - 64,
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0,
@@ -1879,7 +1882,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 ref={scroll3}
                                 contentContainerStyle={{
                                     width: '100%',
-                                    height: windowHeight - 64,
+                                    height:
+                                        Dimensions.get('window').width < 1024
+                                            ? Dimensions.get('window').height - (64 + 60)
+                                            : Dimensions.get('window').height - 64,
                                     alignItems: 'center',
                                 }}
                                 showsVerticalScrollIndicator={true}

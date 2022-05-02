@@ -53,6 +53,7 @@ import InsetShadow from 'react-native-inset-shadow';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
@@ -198,10 +199,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     //     [scrollViewRef.current, channelKeyList, channelHeightList, indexMap]
     // );
 
-    // useEffect(() => {
-    //     props.setSelectedWorkspace(selectedWorkspace);
-    //     console.log('Selected workspace dashboard', selectedWorkspace);
-    // }, [selectedWorkspace]);
+    useEffect(() => {
+        setSelectedWorkspace(props.selectedWorkspace);
+        console.log('Selected workspace dashboard', selectedWorkspace);
+    }, [props.selectedWorkspace]);
 
     const getWorkspaceNavbarIconName = (op: string) => {
         switch (op) {
@@ -1302,7 +1303,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     justifyContent: 'center',
                     paddingVertical: 15,
                     backgroundColor: '#f8f8f8',
-                    paddingHorizontal: width < 1024 ? 10 : 0,
+                    paddingHorizontal: paddingResponsive(),
                     height: 54,
                 }}
             >
@@ -1387,6 +1388,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             paddingVertical: 15,
                             backgroundColor: '#f8f8f8',
                             height: 54,
+                            paddingHorizontal: paddingResponsive(),
                         }}
                     >
                         <View
@@ -1401,14 +1403,95 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 backgroundColor: 'none',
                             }}
                         >
+                            {Dimensions.get('window').width < 768 ? (
+                                <View>
+                                    <Menu
+                                        onSelect={(op: any) => {
+                                            setActiveSearchResultsTab(op);
+                                        }}
+                                    >
+                                        <MenuTrigger>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 20,
+                                                        fontFamily: 'Inter',
+                                                        color: '#000',
+                                                    }}
+                                                >
+                                                    {activeSearchResultsTab === 'Discussion'
+                                                        ? 'Discussion'
+                                                        : activeSearchResultsTab === 'Content'
+                                                        ? 'Coursework'
+                                                        : activeSearchResultsTab}
+                                                </Text>
+                                                <Ionicons
+                                                    name={'chevron-down'}
+                                                    size={23}
+                                                    color={'#000'}
+                                                    style={{
+                                                        paddingLeft: 3,
+                                                    }}
+                                                />
+                                            </View>
+                                        </MenuTrigger>
+                                        <MenuOptions
+                                            optionsContainerStyle={{
+                                                shadowOffset: {
+                                                    width: 2,
+                                                    height: 2,
+                                                },
+                                                shadowColor: '#000',
+                                                // overflow: 'hidden',
+                                                shadowOpacity: 0.07,
+                                                shadowRadius: 7,
+                                                padding: 7,
+                                                // borderWidth: 1,
+                                                // borderColor: '#CCC'
+                                            }}
+                                        >
+                                            {searchResultTabs.map((op: string, ind: number) => {
+                                                if (op === 'Add') return null;
+
+                                                return (
+                                                    <MenuOption value={op} key={ind.toString()}>
+                                                        <Text
+                                                            style={{
+                                                                fontFamily: 'inter',
+                                                                fontSize: 15,
+                                                                color:
+                                                                    op === activeSearchResultsTab
+                                                                        ? '#007AFF'
+                                                                        : '#1f1f1f',
+                                                                // textTransform: 'uppercase',
+                                                            }}
+                                                        >
+                                                            {op === 'Discussion'
+                                                                ? 'Discussion'
+                                                                : op === 'Content'
+                                                                ? 'Coursework'
+                                                                : op}
+                                                        </Text>
+                                                    </MenuOption>
+                                                );
+                                            })}
+                                        </MenuOptions>
+                                    </Menu>
+                                </View>
+                            ) : null}
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    position: 'absolute',
+                                    position: Dimensions.get('window').width < 768 ? 'relative' : 'absolute',
                                     left: 0,
                                     backgroundColor: 'none',
-                                    paddingHorizontal: 5,
+                                    marginLeft: Dimensions.get('window').width < 768 ? 'auto' : 0,
                                 }}
                             >
                                 <Text
@@ -1420,46 +1503,56 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     {resultCount} results
                                 </Text>
                             </View>
-                            {searchResultTabs.map((tab: string, ind: number) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={ind.toString()}
-                                        style={{
-                                            marginRight: 38,
-                                            paddingVertical: 3,
-                                            backgroundColor: 'none',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            borderBottomColor: '#000',
-                                            borderBottomWidth: tab === activeSearchResultsTab ? 1 : 0,
-                                        }}
-                                        onPress={() => {
-                                            setActiveSearchResultsTab(tab);
-                                        }}
-                                    >
-                                        {/* <Ionicons
+                            {Dimensions.get('window').width < 768 ? null : (
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    {searchResultTabs.map((tab: string, ind: number) => {
+                                        return (
+                                            <TouchableOpacity
+                                                key={ind.toString()}
+                                                style={{
+                                                    marginRight: 38,
+                                                    paddingVertical: 3,
+                                                    backgroundColor: 'none',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    borderBottomColor: '#000',
+                                                    borderBottomWidth: tab === activeSearchResultsTab ? 1 : 0,
+                                                }}
+                                                onPress={() => {
+                                                    setActiveSearchResultsTab(tab);
+                                                }}
+                                            >
+                                                {/* <Ionicons
                                             name={getSearchNavbarIconName(tab)}
                                             style={{ color: getSearchNavbarIconColor(tab) }}
                                             size={tab === 'Courses' ? 15 : 13}
                                         /> */}
-                                        <Text
-                                            style={{
-                                                color: getSearchNavbarIconColor(tab),
-                                                fontSize: 14,
-                                                fontFamily: tab === activeSearchResultsTab ? 'Inter' : 'overpass',
-                                                textTransform: 'uppercase',
-                                                // paddingLeft: 7,
-                                            }}
-                                        >
-                                            {tab === 'Discussion'
-                                                ? 'Discussion'
-                                                : tab === 'Content'
-                                                ? 'Coursework'
-                                                : tab}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
+                                                <Text
+                                                    style={{
+                                                        color: getSearchNavbarIconColor(tab),
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            tab === activeSearchResultsTab ? 'Inter' : 'overpass',
+                                                        textTransform: 'uppercase',
+                                                        // paddingLeft: 7,
+                                                    }}
+                                                >
+                                                    {tab === 'Discussion'
+                                                        ? 'Discussion'
+                                                        : tab === 'Content'
+                                                        ? 'Coursework'
+                                                        : tab}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </View>
+                            )}
                         </View>
                     </View>
                 ) : null}
@@ -1481,7 +1574,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             style={{
                                 width: '100%',
                                 color: '#1F1F1F',
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingVertical: 50,
                                 textAlign: 'center',
                                 lineHeight: 30,
@@ -1587,7 +1680,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {!activeSearchResultsTab || loadingSearchResults || searchTerm.trim().length === 0 ? null : (
                         <ScrollView
                             style={{
-                                maxHeight: Dimensions.get('window').height - 64,
+                                maxHeight:
+                                    Dimensions.get('window').width < 1024
+                                        ? Dimensions.get('window').height - 64 - 54 - 60
+                                        : Dimensions.get('window').height - 64,
                                 backgroundColor: '#fff',
                             }}
                             showsVerticalScrollIndicator={true}
@@ -1760,7 +1856,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderOngoingMeetings = (createdBy: string, colorCode: string) => {
         return (
-            <View style={{ width: '100%', maxWidth: 1024, backgroundColor: '#fff', paddingBottom: 30, paddingTop: 20 }}>
+            <View
+                style={{
+                    width: '100%',
+                    maxWidth: 1024,
+                    backgroundColor: '#fff',
+                    paddingBottom: 30,
+                    paddingTop: 20,
+                    paddingHorizontal: paddingResponsive(),
+                }}
+            >
                 <Text style={{ color: '#1f1f1f', fontSize: 15, fontFamily: 'inter', marginBottom: 20 }}>
                     In Progress
                 </Text>
@@ -2072,8 +2177,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         style={{
                                             padding: 10,
                                             fontSize: 15,
-                                            borderColor: '#f2f2f2',
-                                            borderBottomWidth: 1,
+                                            borderColor: '#ccc',
+                                            backgroundColor: '#fff',
+                                            borderWidth: 1,
                                         }}
                                         value={instantMeetingTitle}
                                         placeholder={''}
@@ -2099,8 +2205,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         style={{
                                             padding: 10,
                                             fontSize: 15,
-                                            borderColor: '#f2f2f2',
-                                            borderBottomWidth: 1,
+                                            borderColor: '#ccc',
+                                            borderWidth: 1,
+                                            backgroundColor: '#fff',
                                         }}
                                         value={instantMeetingDescription}
                                         placeholder={''}
@@ -2313,6 +2420,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             ? '#000'
                             : selectedWorkspace.split('-SPLIT-')[3],
                     height: 64,
+                    paddingHorizontal: paddingResponsive(),
                 }}
             >
                 {/* Arrow back */}
@@ -2333,7 +2441,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: 'row',
                             alignItems: 'center',
                             position: 'absolute',
-                            left: 0,
+                            left: Dimensions.get('window').width < 1024 ? 10 : 0,
                             backgroundColor: 'none',
                         }}
                     >
@@ -2366,63 +2474,66 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             {selectedWorkspace.split('-SPLIT-')[0]}
                         </Text>
                     </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: 'none',
-                            zIndex: 50000,
-                            // backgroundColor: '#f8f8f8',
-                        }}
-                    >
-                        {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes' &&
-                            props.workspaceOptions.map((tab: string, ind: number) => {
-                                if (tab === 'Settings' && selectedWorkspace.split('-SPLIT-')[2] !== userId) return null;
-                                return (
-                                    <TouchableOpacity
-                                        key={ind.toString()}
-                                        style={{
-                                            marginRight: 38,
-                                            paddingVertical: 3,
-                                            backgroundColor: 'none',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            borderBottomColor: '#fff',
-                                            borderBottomWidth: tab === props.activeWorkspaceTab ? 1 : 0,
-                                        }}
-                                        onPress={() => {
-                                            props.setWorkspaceActiveTab(tab);
-                                        }}
-                                    >
-                                        {/* <Ionicons
+                    {Dimensions.get('window').width < 1024 ? null : (
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: 'none',
+                                zIndex: 50000,
+                                // backgroundColor: '#f8f8f8',
+                            }}
+                        >
+                            {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes' &&
+                                props.workspaceOptions.map((tab: string, ind: number) => {
+                                    if (tab === 'Settings' && selectedWorkspace.split('-SPLIT-')[2] !== userId)
+                                        return null;
+                                    return (
+                                        <TouchableOpacity
+                                            key={ind.toString()}
+                                            style={{
+                                                marginRight: 38,
+                                                paddingVertical: 3,
+                                                backgroundColor: 'none',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                borderBottomColor: '#fff',
+                                                borderBottomWidth: tab === props.activeWorkspaceTab ? 1 : 0,
+                                            }}
+                                            onPress={() => {
+                                                props.setWorkspaceActiveTab(tab);
+                                            }}
+                                        >
+                                            {/* <Ionicons
                                             name={getWorkspaceNavbarIconName(tab)}
                                             style={{ color: getWorkspaceNavbarIconColor(tab) }}
                                             size={tab === 'Meet' ? 15 : tab === 'Scores' ? 14 : 13}
                                         /> */}
-                                        <Text
-                                            style={{
-                                                color: getWorkspaceNavbarIconColor(tab),
-                                                fontSize: 14,
-                                                fontFamily: tab === props.activeWorkspaceTab ? 'inter' : 'overpass',
-                                                textTransform: 'uppercase',
-                                                // paddingLeft: 5,
-                                            }}
-                                        >
-                                            {tab === 'Content'
-                                                ? 'Coursework'
-                                                : tab === 'Discuss'
-                                                ? 'Discussion'
-                                                : tab === 'Meet'
-                                                ? 'Meetings'
-                                                : tab}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                    </View>
+                                            <Text
+                                                style={{
+                                                    color: getWorkspaceNavbarIconColor(tab),
+                                                    fontSize: 14,
+                                                    fontFamily: tab === props.activeWorkspaceTab ? 'inter' : 'overpass',
+                                                    textTransform: 'uppercase',
+                                                    // paddingLeft: 5,
+                                                }}
+                                            >
+                                                {tab === 'Content'
+                                                    ? 'Coursework'
+                                                    : tab === 'Discuss'
+                                                    ? 'Discussion'
+                                                    : tab === 'Meet'
+                                                    ? 'Meetings'
+                                                    : tab}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                        </View>
+                    )}
                     <View
                         style={{
-                            right: 0,
+                            right: Dimensions.get('window').width < 1024 ? 10 : 0,
                             position: 'absolute',
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -2471,7 +2582,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 horizontal={false}
                 contentContainerStyle={{
                     width: '100%',
-                    height: width < 768 ? Dimensions.get('window').height - 115 : Dimensions.get('window').height - 64,
+                    height:
+                        width < 1024
+                            ? Dimensions.get('window').height - (64 + 60)
+                            : Dimensions.get('window').height - 64,
                     backgroundColor: '#fff',
                 }}
                 ref={scrollViewRef}
@@ -2488,7 +2602,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             borderColor: '#f2f2f2',
-                                            paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
+                                            paddingHorizontal:
+                                                width < 768 && props.option === 'Classroom'
+                                                    ? 10
+                                                    : width < 1024 && props.option === 'Classroom'
+                                                    ? 20
+                                                    : 0,
                                             borderTopWidth: ind === 0 ? 0 : 1,
                                             paddingBottom: 0,
                                             maxWidth: 1024,
@@ -2588,6 +2707,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: 'row',
                             justifyContent: 'center',
                             backgroundColor: '#fff',
+                            minHeight: '100%',
                             height: props.activeWorkspaceTab === 'Discuss' ? '100%' : 'auto',
                         }}
                         key={selectedWorkspace.toString()}
@@ -2597,8 +2717,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 width: '100%',
                                 maxWidth: 1024,
                                 backgroundColor: '#fff',
-                                paddingHorizontal: width < 1024 ? 20 : 0,
+                                paddingHorizontal: 0,
                                 height: props.activeWorkspaceTab === 'Discuss' ? '100%' : 'auto',
+                                minHeight: '100%',
                             }}
                         >
                             {props.activeWorkspaceTab !== 'Content' ? (
@@ -2621,51 +2742,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             backgroundColor: '#fff',
                                         }}
                                     >
-                                        {/* {selectedWorkspace.split('-SPLIT-')[2] === userId ? (
-                                            <View
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: 20,
-                                                    backgroundColor: '#fff',
-                                                }}
-                                            >
-                                                <TouchableOpacity
-                                                    onPress={() =>
-                                                        handleStartMeeting(
-                                                            selectedWorkspace.split('-SPLIT-')[1],
-                                                            selectedWorkspace.split('-SPLIT-')[2]
-                                                        )
-                                                    }
-                                                    style={{
-                                                        backgroundColor: '#fff',
-                                                        overflow: 'hidden',
-                                                        height: 35,
-                                                        justifyContent: 'center',
-                                                        flexDirection: 'row',
-                                                        marginLeft: 'auto',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            lineHeight: 34,
-                                                            color: '#fff',
-                                                            borderRadius: 15,
-                                                            backgroundColor: '#007AFF',
-                                                            fontSize: 13,
-                                                            paddingHorizontal: 20,
-                                                            fontFamily: 'inter',
-                                                            height: 35,
-                                                            width: 175,
-                                                            textTransform: 'uppercase',
-                                                        }}
-                                                    >
-                                                        Start Meeting
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        ) : null} */}
-
                                         {ongoingMeetings.length > 0
                                             ? renderOngoingMeetings(
                                                   selectedWorkspace.split('-SPLIT-')[2],
@@ -2733,30 +2809,68 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     />
                                 )
                             ) : cueMap[selectedWorkspace].length === 0 ? (
-                                <Text
-                                    style={{
-                                        width: '100%',
-                                        color: '#1F1F1F',
-                                        fontSize: 16,
-                                        paddingVertical: 100,
-                                        paddingHorizontal: 5,
-                                        fontFamily: 'inter',
-                                    }}
-                                >
-                                    {selectedWorkspace.split('-SPLIT-')[0] !== 'My Notes'
-                                        ? selectedWorkspace.split('-SPLIT-')[2] === userId
-                                            ? PreferredLanguageText('noCuesCreatedInstructor')
-                                            : PreferredLanguageText('noCuesCreated')
-                                        : PreferredLanguageText('noNotesCreated')}
-                                </Text>
+                                selectedWorkspace.split('-SPLIT-')[0] === 'My Notes' ? (
+                                    <Text
+                                        style={{
+                                            width: '100%',
+                                            color: '#1F1F1F',
+                                            fontSize: 16,
+                                            paddingVertical: 100,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'inter',
+                                        }}
+                                    >
+                                        {PreferredLanguageText('noNotesCreated')}
+                                    </Text>
+                                ) : selectedWorkspace.split('-SPLIT-')[2] === userId ? (
+                                    <Text
+                                        style={{
+                                            width: '100%',
+                                            color: '#1F1F1F',
+                                            fontSize: 16,
+                                            paddingVertical: 100,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'inter',
+                                        }}
+                                    >
+                                        Click on{' '}
+                                        <Ionicons
+                                            name="create-outline"
+                                            size={18}
+                                            color="#000"
+                                            style={{
+                                                paddingHorizontal: 5,
+                                            }}
+                                        />{' '}
+                                        to create, import and share new content
+                                    </Text>
+                                ) : (
+                                    <Text
+                                        style={{
+                                            width: '100%',
+                                            color: '#1F1F1F',
+                                            fontSize: 16,
+                                            paddingVertical: 100,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'inter',
+                                        }}
+                                    >
+                                        {PreferredLanguageText('noCuesCreated')}
+                                    </Text>
+                                )
                             ) : (
                                 <ScrollView
                                     horizontal={true}
+                                    style={{
+                                        minHeight: '100%',
+                                    }}
                                     contentContainerStyle={{
                                         maxWidth: '100%',
                                         width: '100%',
+                                        minHeight: '100%',
                                         backgroundColor: '#fff',
-                                        paddingTop: 25,
+                                        paddingTop: Dimensions.get('window').width < 768 ? 15 : 25,
+                                        paddingHorizontal: paddingResponsive(),
                                     }}
                                     showsHorizontalScrollIndicator={false}
                                 >
@@ -2895,7 +3009,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 : Dimensions.get('window').width >= 1024
                                 ? (Dimensions.get('window').width - 1024) / 2 - 20
                                 : 20,
-                        marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
+                        marginBottom: Dimensions.get('window').width < 768 ? 16 : 25,
                         right: 0,
                         justifyContent: 'center',
                         bottom: 0,
@@ -2945,8 +3059,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <View
                 style={{
                     backgroundColor: '#000',
-                    paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 0,
+                    paddingHorizontal: paddingResponsive(),
                     flexDirection: 'row',
+                    alignItems: 'center',
                     justifyContent: 'center',
                     width: '100%',
                     height: 64,
@@ -2962,12 +3077,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         maxWidth: 1024,
                         backgroundColor: 'none',
                         // paddingVertical: 10,
-                        padding: '0.5rem 1rem',
+                        padding: paddingResponsive(),
                         flex: 1,
                         maxHeight: 50,
                     }}
                 >
-                    {Dimensions.get('window').width < 768 ? null : (
+                    {Dimensions.get('window').width < 1024 ? null : (
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -3029,7 +3144,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     : op === 'Performance'
                                                     ? 'Performance'
                                                     : op === 'To Do'
-                                                    ? 'Agenda'
+                                                    ? 'Plan'
                                                     : op}
                                             </Text>
 
@@ -3057,11 +3172,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: 'row',
                             alignItems: 'center',
                             backgroundColor: 'none',
-                            width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
+                            width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
                             margin: 0,
                         }}
                     >
-                        {Dimensions.get('window').width < 768 ? (
+                        {Dimensions.get('window').width < 1024 ? (
                             <Image
                                 source={logo}
                                 style={{
@@ -3074,155 +3189,220 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             />
                         ) : null}
 
-                        <TouchableOpacity
-                            style={{ backgroundColor: 'none', marginRight: 15 }}
-                            onPress={() => {
-                                props.openHelpModal(true);
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    color: '#1F1F1F',
-                                    marginTop: 1,
-                                    textAlign: 'right',
+                        {Dimensions.get('window').width < 1024 ? null : (
+                            <TouchableOpacity
+                                style={{ backgroundColor: 'none', marginRight: 15 }}
+                                onPress={() => {
+                                    props.openHelpModal(true);
                                 }}
                             >
-                                <Ionicons
-                                    name="help-circle-outline"
-                                    size={20}
-                                    color={props.option === 'Settings' && props.showHelp ? '#007AFF' : '#f2f2f2'}
-                                />
-                            </Text>
-                        </TouchableOpacity>
-
-                        {props.option === 'Account' || props.option === 'Inbox' ? null : (
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    backgroundColor: '#e8e8e8',
-                                    paddingVertical: 6,
-                                    paddingHorizontal: 12,
-                                    borderRadius: 24,
-                                }}
-                            >
-                                <Ionicons size={15} name="search-outline" color={'#000'} style={{}} />
-                                <DefaultInput
-                                    value={searchTerm}
+                                <Text
                                     style={{
-                                        color: '#727272',
-                                        backgroundColor: 'none',
-                                        fontSize: 13,
-                                        flex: 1,
-                                        fontFamily: 'Inter',
-                                        paddingLeft: 5,
-                                        maxWidth: 225,
-                                    }}
-                                    placeholder={'Search'}
-                                    onChangeText={(val) => setSearchTerm(val)}
-                                    placeholderTextColor={'#727272'}
-                                />
-                                {searchTerm !== '' ? (
-                                    <TouchableOpacity
-                                        style={{
-                                            marginLeft: 'auto',
-                                            backgroundColor: '#e8e8e8',
-                                            width: 15,
-                                        }}
-                                        onPress={() => {
-                                            setSearchTerm('');
-                                        }}
-                                    >
-                                        <Ionicons name="close-outline" size={15} color="#000" />
-                                    </TouchableOpacity>
-                                ) : (
-                                    <View
-                                        style={{
-                                            marginLeft: 'auto',
-                                            width: 15,
-                                        }}
-                                    />
-                                )}
-                            </View>
-                        )}
-                        <TouchableOpacity
-                            style={{
-                                marginLeft: 15,
-                                backgroundColor: 'none',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                height: 30,
-                            }}
-                            onPress={() => {
-                                props.setOption('Account');
-                            }}
-                        >
-                            <Image
-                                style={{
-                                    height: 30,
-                                    width: 30,
-                                    borderRadius: 75,
-                                    alignSelf: 'center',
-                                }}
-                                source={{
-                                    uri: avatar,
-                                }}
-                            />
-                        </TouchableOpacity>
-
-                        {Dimensions.get('window').width < 768 && props.option === 'Account' ? (
-                            <Menu
-                                style={{
-                                    marginLeft: 15,
-                                    right: 0,
-                                }}
-                                onSelect={(op: any) => {
-                                    props.setActiveAccountTab(op);
-                                }}
-                            >
-                                <MenuTrigger>
-                                    <Text>
-                                        <Ionicons name={'menu-outline'} size={23} color={'#f2f2f2'} />
-                                    </Text>
-                                </MenuTrigger>
-                                <MenuOptions
-                                    optionsContainerStyle={{
-                                        shadowOffset: {
-                                            width: 2,
-                                            height: 2,
-                                        },
-                                        shadowColor: '#000',
-                                        // overflow: 'hidden',
-                                        shadowOpacity: 0.07,
-                                        shadowRadius: 7,
-                                        padding: 7,
-                                        // borderWidth: 1,
-                                        // borderColor: '#CCC'
+                                        fontSize: 11,
+                                        color: '#1F1F1F',
+                                        marginTop: 1,
+                                        textAlign: 'right',
                                     }}
                                 >
-                                    {props.accountTabs.map((tab: string, ind: number) => {
-                                        return (
-                                            <MenuOption value={tab} key={ind.toString()}>
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'inter',
-                                                        fontSize: 15,
-                                                        fontWeight: 'bold',
-                                                        color: tab === props.activeAccountTab ? '#007AFF' : '#1f1f1f',
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {tab}
-                                                </Text>
-                                            </MenuOption>
-                                        );
-                                    })}
-                                </MenuOptions>
-                            </Menu>
-                        ) : null}
+                                    <Ionicons
+                                        name="help-circle-outline"
+                                        size={20}
+                                        color={props.option === 'Settings' && props.showHelp ? '#007AFF' : '#f2f2f2'}
+                                    />
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginLeft: Dimensions.get('window').width < 1024 ? 'auto' : 0,
+                            }}
+                        >
+                            {props.option === 'Account' || props.option === 'Inbox' ? null : (
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#e8e8e8',
+                                        paddingVertical: 6,
+                                        paddingHorizontal: 12,
+                                        borderRadius: 24,
+                                        maxWidth: 225,
+                                    }}
+                                >
+                                    <Ionicons
+                                        size={15}
+                                        name="search-outline"
+                                        color={'#000'}
+                                        // style={{ marginLeft: 12 }}
+                                    />
+                                    <DefaultInput
+                                        value={searchTerm}
+                                        style={{
+                                            color: '#727272',
+                                            backgroundColor: 'none',
+                                            fontSize: 13,
+                                            fontFamily: 'Inter',
+                                            paddingLeft: 5,
+                                        }}
+                                        placeholder={'Search'}
+                                        onChangeText={(val) => setSearchTerm(val)}
+                                        placeholderTextColor={'#727272'}
+                                    />
+                                    {searchTerm !== '' ? (
+                                        <TouchableOpacity
+                                            style={{
+                                                marginLeft: 'auto',
+                                                backgroundColor: '#e8e8e8',
+                                                width: 15,
+                                            }}
+                                            onPress={() => {
+                                                setSearchTerm('');
+                                            }}
+                                        >
+                                            <Ionicons name="close-outline" size={15} color="#000" />
+                                        </TouchableOpacity>
+                                    ) : (
+                                        <View
+                                            style={{
+                                                marginLeft: 'auto',
+                                                width: 15,
+                                            }}
+                                        />
+                                    )}
+                                </View>
+                            )}
+                            {Dimensions.get('window').width > 1024 ? (
+                                <TouchableOpacity
+                                    style={{
+                                        marginLeft: 15,
+                                        backgroundColor: 'none',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        height: 30,
+                                    }}
+                                    onPress={() => {
+                                        props.setOption('Account');
+                                    }}
+                                >
+                                    <Image
+                                        style={{
+                                            height: 30,
+                                            width: 30,
+                                            borderRadius: 75,
+                                            alignSelf: 'center',
+                                        }}
+                                        source={{
+                                            uri: avatar,
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            ) : null}
+
+                            {Dimensions.get('window').width > 1024 || props.option === 'Account' ? null : (
+                                <TouchableOpacity
+                                    style={{ backgroundColor: 'none', marginLeft: 15 }}
+                                    onPress={() => {
+                                        props.openHelpModal(true);
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 11,
+                                            color: '#1F1F1F',
+                                            marginTop: 1,
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name="help-circle-outline"
+                                            size={20}
+                                            color={
+                                                props.option === 'Settings' && props.showHelp ? '#007AFF' : '#f2f2f2'
+                                            }
+                                        />
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+
+                            {Dimensions.get('window').width < 768 && props.option === 'Account' ? (
+                                <Menu
+                                    style={{
+                                        marginLeft: 'auto',
+                                        right: 0,
+                                    }}
+                                    onSelect={(op: any) => {
+                                        props.setActiveAccountTab(op);
+                                    }}
+                                >
+                                    <MenuTrigger>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 20,
+                                                    fontFamily: 'Inter',
+                                                    color: '#fff',
+                                                    textTransform: 'capitalize',
+                                                }}
+                                            >
+                                                {props.activeAccountTab}
+                                            </Text>
+                                            <Ionicons
+                                                name={'chevron-down'}
+                                                size={23}
+                                                color={'#fff'}
+                                                style={{
+                                                    paddingLeft: 3,
+                                                }}
+                                            />
+                                        </View>
+                                    </MenuTrigger>
+                                    <MenuOptions
+                                        optionsContainerStyle={{
+                                            shadowOffset: {
+                                                width: 2,
+                                                height: 2,
+                                            },
+                                            shadowColor: '#000',
+                                            // overflow: 'hidden',
+                                            shadowOpacity: 0.07,
+                                            shadowRadius: 7,
+                                            padding: 7,
+                                            // borderWidth: 1,
+                                            // borderColor: '#CCC'
+                                        }}
+                                    >
+                                        {props.accountTabs.map((tab: string, ind: number) => {
+                                            return (
+                                                <MenuOption value={tab} key={ind.toString()}>
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: 'inter',
+                                                            fontSize: 15,
+                                                            fontWeight: 'bold',
+                                                            color:
+                                                                tab === props.activeAccountTab ? '#007AFF' : '#1f1f1f',
+                                                            textTransform: 'capitalize',
+                                                        }}
+                                                    >
+                                                        {tab}
+                                                    </Text>
+                                                </MenuOption>
+                                            );
+                                        })}
+                                    </MenuOptions>
+                                </Menu>
+                            ) : null}
+                        </View>
                     </View>
                 </div>
             </View>
@@ -3257,6 +3437,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 : selectedWorkspace.split('-SPLIT-')[3]
                         }
                         courseName={selectedWorkspace.split('-SPLIT-')[0]}
+                        createOption={props.createOption}
+                        showImportCreate={props.showImportCreate}
+                        setShowImportCreate={props.setShowImportCreate}
+                        setCreateActiveTab={props.setCreateActiveTab}
+                        createActiveTab={props.createActiveTab}
+                        setDisableCreateNavbar={props.setDisableCreateNavbar}
+                        showVideosCreate={props.showVideosCreate}
+                        setShowVideosCreate={props.setShowVideosCreate}
                     />
                 ) : (
                     <View
@@ -3264,7 +3452,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             alignSelf: 'center',
                             width: '100%',
                             backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
-                            height: width < 768 ? windowHeight - 104 : windowHeight - 64,
+                            height: width < 1024 ? windowHeight - (64 + 60) : windowHeight - 64,
                         }}
                     >
                         {/* Add tabs to switch between Account tabs  */}

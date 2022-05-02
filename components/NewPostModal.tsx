@@ -146,7 +146,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             style={{
                 backgroundColor: '#fff',
                 marginBottom: 20,
-                paddingHorizontal: 20,
+                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 20,
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: '100%',
@@ -173,8 +173,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         borderColor: '#cccccc',
                                         borderWidth: 1,
                                         fontSize: 15,
-                                        height: '2.75em',
-                                        padding: '1em',
+                                        padding: 10,
                                     }}
                                     placeholder={'Enter Category'}
                                     onChangeText={(val) => {
@@ -298,7 +297,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     maxWidth: 750,
                     width: '100%',
                     flexDirection: 'column',
-                    paddingHorizontal: 20,
+                    paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 20,
                     marginVertical: 20,
                     backgroundColor: '#fff',
                 }}
@@ -327,7 +326,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         style={{
                             paddingTop: 5,
-                            fontSize: 18,
+                            fontSize: 20,
                             fontFamily: 'inter',
                         }}
                     >
@@ -399,7 +398,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
                             // TOOLBAR
                             toolbarButtons: DISCUSS_POST_TOOLBAR_BUTTONS,
-                            toolbarSticky: true,
+                            toolbarSticky: false,
                             htmlAllowedEmptyTags: [
                                 'textarea',
                                 'a',
@@ -452,7 +451,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         width: '100%',
                         maxWidth: 750,
                         marginVertical: 20,
-                        paddingHorizontal: 20,
+                        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 20,
                     }}
                 >
                     <Text
@@ -480,12 +479,13 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     marginBottom: 10,
                                 }}
                             >
-                                <Ionicons name="attach-outline" size={24} color="#007AFF" />
+                                <Ionicons name="attach-outline" size={24} color="#000" />
                                 <Text
                                     style={{
                                         paddingLeft: 10,
                                         fontSize: 15,
                                         fontFamily: 'Overpass',
+                                        maxWidth: '80%',
                                     }}
                                 >
                                     {file.name}

@@ -15,6 +15,7 @@ import { TextInput } from './CustomTextInput';
 import alert from './Alert';
 import { Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -145,23 +146,6 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 backgroundColor: '#f8f8f8',
             }}
         >
-            {/* <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                <TextInput
-                    value={searchTerm}
-                    style={{
-                        width: 300,
-                        backgroundColor: '#f8f8f8',
-                        fontSize: 20,
-                        padding: 15,
-                        borderRadius: 25,
-                        paddingVertical: 12,
-                        marginTop: 0,
-                    }}
-                    placeholder={'🔍'}
-                    onChangeText={(val) => setSearchTerm(val)}
-                    placeholderTextColor={'#1F1F1F'}
-                />
-            </View> */}
             <View
                 style={{
                     flexDirection: 'row',
@@ -171,6 +155,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     maxWidth: 500,
                     marginBottom: 30,
                     backgroundColor: '#f8f8f8',
+                    paddingHorizontal: paddingResponsive(),
                 }}
             >
                 <View
@@ -181,7 +166,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingVertical: 12,
                         paddingHorizontal: 15,
                         borderRadius: 24,
-                        width: 300,
+                        width: Dimensions.get('window').width < 768 ? 'auto' : 300,
                         flex: 1,
                     }}
                 >
@@ -232,7 +217,11 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         onPress={() => {
                             handleSearch();
                         }}
-                        style={{ backgroundColor: 'white', borderRadius: 15, marginLeft: 30 }}
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 15,
+                            marginLeft: Dimensions.get('window').width < 768 ? 10 : 30,
+                        }}
                     >
                         <Text
                             style={{
@@ -265,6 +254,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         justifyContent: 'center',
                         flexDirection: 'column',
                         backgroundColor: '#f8f8f8',
+                        paddingTop: 50,
                     }}
                 >
                     <ActivityIndicator color={'#1F1F1F'} style={{ alignSelf: 'center' }} />
@@ -272,7 +262,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         style={{
                             marginTop: 15,
                             textAlign: 'center',
-                            fontSize: 18,
+                            fontSize: 20,
                             fontFamily: 'Inter',
                         }}
                     >
@@ -311,7 +301,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 style={{
                                     width: '100%',
                                     textAlign: 'center',
-                                    fontSize: 30,
+                                    fontSize: 20,
                                     color: '#1f1f1f',
                                     paddingTop: 50,
                                     paddingBottom: 50,
@@ -333,11 +323,10 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             // Open the popup that has detailed information
                                         }}
                                         style={{
-                                            width: 125,
+                                            width: Dimensions.get('window').width < 768 ? '50%' : 125,
                                             height: 275,
                                             marginBottom: 30,
-                                            marginRight: 10,
-                                            marginLeft: 10,
+                                            marginHorizontal: Dimensions.get('window').width < 768 ? 0 : 10,
                                             borderRadius: 1,
                                             overflow: 'hidden',
                                             backgroundColor: '#f8f8f8',
@@ -347,7 +336,9 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         <View
                                             style={{
                                                 height: 175,
-                                                width: 125,
+                                                width: Dimensions.get('window').width < 768 ? '100%' : 125,
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
                                                 // shadowOffset: {
                                                 //     width: 2,
                                                 //     height: 2,
@@ -576,7 +567,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 style={{
                                     marginTop: 15,
                                     textAlign: 'center',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: 'Inter',
                                 }}
                             >

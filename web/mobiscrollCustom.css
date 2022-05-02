@@ -410,3 +410,7 @@ input:focus {
 .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-outline {
     background: #fff !important;
 }
+
+.htmlParser {
+    font-family: 'Overpass' !important;
+}

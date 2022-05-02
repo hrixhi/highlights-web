@@ -647,11 +647,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     marginBottom: 10,
                                     marginTop: 10,
                                     borderRadius: 2,
-                                    paddingTop: 13,
-                                    paddingBottom: 13,
+                                    padding: 10,
                                     fontSize: 15,
                                     border: '1px solid #cccccc',
-                                    paddingLeft: 10,
                                     maxWidth: '100%',
                                     minWidth: '100%',
                                     width: '100%',
@@ -3455,12 +3453,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                                         border: '1px solid #cccccc',
                                                                                         borderRadius: 2,
                                                                                         fontSize: 15,
-                                                                                        paddingTop: 10,
-                                                                                        paddingBottom: 10,
+                                                                                        padding: 10,
                                                                                         marginTop: 0,
-                                                                                        padding: '10px',
                                                                                         marginRight: 5,
-                                                                                        paddingLeft: 10,
                                                                                         // background: "#f2f2f2",
                                                                                     }}
                                                                                     value={item.content}
@@ -3789,15 +3784,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     maxWidth: '100%',
                                                                     // marginBottom: 10,
                                                                     marginTop: 20,
-                                                                    paddingTop: 10,
-                                                                    paddingBottom: 10,
+                                                                    padding: 10,
                                                                     fontSize: 15,
                                                                     border: '1px solid #cccccc',
                                                                     borderRadius: 2,
                                                                     width: 300,
                                                                     maxWidth: 300,
                                                                     marginLeft: 20,
-                                                                    paddingLeft: 10,
                                                                 }}
                                                                 value={option.option}
                                                                 placeholder={'Option ' + (optionIndex + 1)}
@@ -4010,7 +4003,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         marginBottom: 10,
                                         fontFamily: 'Inter',
                                     }}
@@ -4098,11 +4091,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             marginBottom: 10,
                                                             marginTop: 10,
                                                             borderRadius: 1,
-                                                            paddingTop: 13,
-                                                            paddingBottom: 13,
+                                                            padding: 10,
                                                             fontSize: 15,
                                                             borderBottom: '1px solid #f2f2f2',
-                                                            paddingLeft: 10,
                                                             minWidth: '90%',
                                                         }}
                                                         value={header}
@@ -4166,11 +4157,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             marginBottom: 10,
                                                             marginTop: 10,
                                                             borderRadius: 1,
-                                                            paddingTop: 13,
-                                                            paddingBottom: 13,
+                                                            padding: 10,
                                                             fontSize: 15,
                                                             borderBottom: '1px solid #f2f2f2',
-                                                            paddingLeft: 10,
                                                             minWidth: '90%',
                                                         }}
                                                         value={problem.matchTableOptions[rowIndex]}

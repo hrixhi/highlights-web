@@ -1,6 +1,6 @@
 // REACT
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, ScrollView, Dimensions, TextInput, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import _, { at, has } from 'lodash';
 import * as FileSaver from 'file-saver';
@@ -339,7 +339,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     //                                 textAlign: 'center',
     //                                 lineHeight: 34,
     //                                 color: '#007AFF',
-    //                                 fontSize: 13,
+    //                                 fontSize: 14,
     //                                 borderColor: '#007AFF',
     //                                 paddingHorizontal: 20,
     //                                 fontFamily: 'inter',
@@ -402,7 +402,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     >
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                             }}
                         >
                             Grade
@@ -410,7 +410,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text
                             style={{
                                 fontFamily: 'Inter',
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingTop: 7,
                             }}
                         >
@@ -432,8 +432,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    fontSize: 15,
-                                    fontFamily: 'Inter',
+                                    fontSize: 14,
                                 }}
                             >
                                 Progress
@@ -449,14 +448,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text
                                     style={{
                                         fontFamily: 'Inter',
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         paddingBottom: 5,
                                     }}
                                 >
                                     {progress}%
                                 </Text>
 
-                                {progress > 0 ? (
+                                {progress > 0 && Dimensions.get('window').width > 768 ? (
                                     <ProgressBar
                                         completed={progress}
                                         maxCompleted={100}
@@ -486,7 +485,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     >
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                             }}
                         >
                             Next submission
@@ -494,8 +493,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text
                             style={{
                                 fontFamily: 'Inter',
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingTop: 7,
+                                textAlign: 'center',
                             }}
                         >
                             {upcomingDeadline !== '' ? upcomingDeadline : 'N/A'}
@@ -510,7 +510,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     >
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                             }}
                         >
                             Total Assessments
@@ -518,7 +518,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text
                             style={{
                                 fontFamily: 'Inter',
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingTop: 7,
                             }}
                         >
@@ -534,7 +534,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     >
                         <Text
                             style={{
-                                fontSize: 13,
+                                fontSize: 14,
                             }}
                         >
                             Not Submitted{' '}
@@ -542,7 +542,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text
                             style={{
                                 fontFamily: 'Inter',
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingTop: 7,
                             }}
                         >
@@ -573,7 +573,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                 }}
                             >
                                 Submitted{' '}
@@ -581,7 +581,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text
                                 style={{
                                     fontFamily: 'Inter',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     paddingTop: 7,
                                 }}
                             >
@@ -597,7 +597,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                 }}
                             >
                                 Late{' '}
@@ -605,7 +605,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text
                                 style={{
                                     fontFamily: 'Inter',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     paddingTop: 7,
                                 }}
                             >
@@ -622,7 +622,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                 }}
                             >
                                 Graded{' '}
@@ -630,7 +630,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text
                                 style={{
                                     fontFamily: 'Inter',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     paddingTop: 7,
                                 }}
                             >
@@ -690,69 +690,64 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         );
     };
 
-    const renderStudentScoresTable = () => {
+    const renderScoresTableStudent = () => {
         return (
             <View
                 style={{
-                    width: '100%',
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
                 }}
             >
-                {renderPerformanceOverview()}
                 <View
                     style={{
-                        borderRadius: 2,
-                        borderWidth: 1,
-                        borderColor: '#cccccc',
+                        flexDirection: 'row',
+                        alignItems: 'center',
                     }}
                 >
                     <View
                         style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
+                            width: '25%',
+                            padding: 15,
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
-                        <View
+                        <TouchableOpacity
                             style={{
-                                width: '25%',
-                                padding: 15,
-                                backgroundColor: '#f8f8f8',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'none',
+                            }}
+                            onPress={() => {
+                                if (sortByOption !== 'Name') {
+                                    setSortByOption('Name');
+                                    setSortByOrder(true);
+                                } else {
+                                    setSortByOrder(!sortByOrder);
+                                }
                             }}
                         >
-                            <TouchableOpacity
+                            <Text
                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'none',
-                                }}
-                                onPress={() => {
-                                    if (sortByOption !== 'Name') {
-                                        setSortByOption('Name');
-                                        setSortByOrder(true);
-                                    } else {
-                                        setSortByOrder(!sortByOrder);
-                                    }
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    paddingRight: 5,
+                                    fontFamily: 'Inter',
                                 }}
                             >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        textAlign: 'center',
-                                        paddingRight: 5,
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Assessment
-                                </Text>
-                                {sortByOption === 'Name' ? (
-                                    <Ionicons
-                                        name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
-                                        size={16}
-                                        color={'#1f1f1f'}
-                                    />
-                                ) : null}
-                            </TouchableOpacity>
-                        </View>
+                                Assessment
+                            </Text>
+                            {sortByOption === 'Name' ? (
+                                <Ionicons
+                                    name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
+                                    size={16}
+                                    color={'#1f1f1f'}
+                                />
+                            ) : null}
+                        </TouchableOpacity>
+                    </View>
+                    {Dimensions.get('window').width < 768 ? null : (
                         <View
                             style={{
                                 width: '25%',
@@ -795,178 +790,191 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 ) : null}
                             </TouchableOpacity>
                         </View>
-                        <View
-                            style={{
-                                width: '25%',
-                                padding: 15,
-                                backgroundColor: '#f8f8f8',
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'none',
-                                }}
-                                onPress={() => {
-                                    if (sortByOption !== 'Status') {
-                                        setSortByOption('Status');
-                                        setSortByOrder(true);
-                                    } else {
-                                        setSortByOrder(!sortByOrder);
-                                    }
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        textAlign: 'center',
-                                        paddingRight: 5,
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Status
-                                </Text>
-                                {sortByOption === 'Status' ? (
-                                    <Ionicons
-                                        name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
-                                        size={16}
-                                        color={'#1f1f1f'}
-                                    />
-                                ) : null}
-                            </TouchableOpacity>
-                        </View>
-                        <View
-                            style={{
-                                width: '25%',
-                                padding: 15,
-                                backgroundColor: '#f8f8f8',
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: 'none',
-                                }}
-                                onPress={() => {
-                                    if (sortByOption !== 'Deadline') {
-                                        setSortByOption('Deadline');
-                                        setSortByOrder(true);
-                                    } else {
-                                        setSortByOrder(!sortByOrder);
-                                    }
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        textAlign: 'center',
-                                        paddingRight: 5,
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Deadline
-                                </Text>
-                                {sortByOption === 'Deadline' ? (
-                                    <Ionicons
-                                        name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
-                                        size={16}
-                                        color={'#1f1f1f'}
-                                    />
-                                ) : null}
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <ScrollView
-                        horizontal={false}
+                    )}
+                    <View
                         style={{
-                            width: '100%',
-                            maxHeight: 350,
-                        }}
-                        contentContainerStyle={{
-                            flexDirection: 'column',
-                            borderLeftWidth: 1,
-                            borderRightWidth: 1,
-                            borderBottomWidth: 1,
-                            borderColor: '#f2f2f2',
-                            borderTopWidth: 0,
-                            borderBottomLeftRadius: 8,
-                            borderBottomRightRadius: 8,
+                            width: '25%',
+                            padding: 15,
+                            backgroundColor: '#f8f8f8',
                         }}
                     >
-                        {cues.map((cue: any, ind: number) => {
-                            const { title } = htmlStringParser(cue.cue);
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'none',
+                            }}
+                            onPress={() => {
+                                if (sortByOption !== 'Status') {
+                                    setSortByOption('Status');
+                                    setSortByOrder(true);
+                                } else {
+                                    setSortByOrder(!sortByOrder);
+                                }
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    paddingRight: 5,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Status
+                            </Text>
+                            {sortByOption === 'Status' ? (
+                                <Ionicons
+                                    name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
+                                    size={16}
+                                    color={'#1f1f1f'}
+                                />
+                            ) : null}
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={{
+                            width: Dimensions.get('window').width < 768 ? '50%' : '25%',
+                            padding: 15,
+                            backgroundColor: '#f8f8f8',
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'none',
+                            }}
+                            onPress={() => {
+                                if (sortByOption !== 'Deadline') {
+                                    setSortByOption('Deadline');
+                                    setSortByOrder(true);
+                                } else {
+                                    setSortByOrder(!sortByOrder);
+                                }
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    textAlign: 'center',
+                                    paddingRight: 5,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Deadline
+                            </Text>
+                            {sortByOption === 'Deadline' ? (
+                                <Ionicons
+                                    name={sortByOrder ? 'caret-up-outline' : 'caret-down-outline'}
+                                    size={16}
+                                    color={'#1f1f1f'}
+                                />
+                            ) : null}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <ScrollView
+                    horizontal={false}
+                    style={{
+                        width: '100%',
+                        maxHeight: 350,
+                    }}
+                    contentContainerStyle={{
+                        flexDirection: 'column',
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: '#f2f2f2',
+                        borderTopWidth: 0,
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                    }}
+                >
+                    {cues.map((cue: any, ind: number) => {
+                        const { title } = htmlStringParser(cue.cue);
 
-                            const scoreObject = scores[0].scores.find((s: any) => {
-                                return s.cueId.toString().trim() === cue._id.toString().trim();
-                            });
+                        const scoreObject = scores[0].scores.find((s: any) => {
+                            return s.cueId.toString().trim() === cue._id.toString().trim();
+                        });
 
-                            const hasDeadlinePassed = new Date(cue.deadline) < new Date() || cue.releaseSubmission;
-                            const hasLateSubmissionPassed =
-                                (cue.availableUntil && new Date(cue.availableUntil) < new Date()) ||
-                                cue.releaseSubmission;
+                        const hasDeadlinePassed = new Date(cue.deadline) < new Date() || cue.releaseSubmission;
+                        const hasLateSubmissionPassed =
+                            (cue.availableUntil && new Date(cue.availableUntil) < new Date()) || cue.releaseSubmission;
 
-                            console.log('Has late deadline passed ' + (ind + 1), hasLateSubmissionPassed);
+                        console.log('Has late deadline passed ' + (ind + 1), hasLateSubmissionPassed);
 
-                            let remaining;
+                        let remaining;
 
-                            if (!hasDeadlinePassed) {
-                                let start = new Date(cue.initiateAt);
-                                let end = new Date(cue.deadline);
-                                const current = new Date();
+                        if (!hasDeadlinePassed) {
+                            let start = new Date(cue.initiateAt);
+                            let end = new Date(cue.deadline);
+                            const current = new Date();
 
-                                const currentElapsed = current.valueOf() - start.valueOf();
-                                const totalDifference = end.valueOf() - start.valueOf();
+                            const currentElapsed = current.valueOf() - start.valueOf();
+                            const totalDifference = end.valueOf() - start.valueOf();
 
-                                remaining = 100 - (currentElapsed / totalDifference) * 100;
-                            } else if (hasDeadlinePassed && cue.availableUntil && !hasLateSubmissionPassed) {
-                                let start = new Date(cue.deadline);
-                                let end = new Date(cue.availableUntil);
-                                const current = new Date();
+                            remaining = 100 - (currentElapsed / totalDifference) * 100;
+                        } else if (hasDeadlinePassed && cue.availableUntil && !hasLateSubmissionPassed) {
+                            let start = new Date(cue.deadline);
+                            let end = new Date(cue.availableUntil);
+                            const current = new Date();
 
-                                const currentElapsed = current.getTime() - start.getTime();
-                                const totalDifference = end.getTime() - start.getTime();
+                            const currentElapsed = current.getTime() - start.getTime();
+                            const totalDifference = end.getTime() - start.getTime();
 
-                                remaining = 100 - (currentElapsed / totalDifference) * 100;
-                            }
+                            remaining = 100 - (currentElapsed / totalDifference) * 100;
+                        }
 
-                            return (
+                        return (
+                            <View
+                                key={ind.toString()}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    borderBottomLeftRadius: ind === cues.length - 1 ? 8 : 0,
+                                    borderBottomRightRadius: ind === cues.length - 1 ? 8 : 0,
+                                    borderTopColor: '#f2f2f2',
+                                    borderTopWidth: ind === 0 ? 0 : 1,
+                                }}
+                            >
                                 <View
-                                    key={ind.toString()}
                                     style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        borderBottomLeftRadius: ind === cues.length - 1 ? 8 : 0,
-                                        borderBottomRightRadius: ind === cues.length - 1 ? 8 : 0,
-                                        borderTopColor: '#f2f2f2',
-                                        borderTopWidth: ind === 0 ? 0 : 1,
+                                        width: '25%',
+                                        padding: Dimensions.get('window').width < 768 ? 7 : 15,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 7 : 0,
+                                        flexDirection: 'column',
                                     }}
                                 >
+                                    <TouchableOpacity onPress={() => props.openCueFromGrades(cue._id)}>
+                                        <Text
+                                            style={{
+                                                fontSize: 15,
+                                                textAlign: 'center',
+                                                fontFamily: 'Inter',
+                                            }}
+                                        >
+                                            {title}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                textAlign: 'center',
+                                                paddingTop: 7,
+                                            }}
+                                        >
+                                            {cue.gradeWeight ? cue.gradeWeight : '0'}%
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {Dimensions.get('window').width < 768 ? null : (
                                     <View
                                         style={{
                                             width: '25%',
-                                            padding: 15,
-                                        }}
-                                    >
-                                        <TouchableOpacity onPress={() => props.openCueFromGrades(cue._id)}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    textAlign: 'center',
-                                                    fontFamily: 'Inter',
-                                                }}
-                                            >
-                                                {title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View
-                                        style={{
-                                            width: '25%',
-                                            padding: 15,
+                                            padding: Dimensions.get('window').width < 768 ? 7 : 15,
+                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 7 : 0,
                                         }}
                                     >
                                         <View>
@@ -981,296 +989,310 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             </Text>
                                         </View>
                                     </View>
-                                    <View
-                                        style={{
-                                            width: '25%',
-                                            padding: 15,
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        {!scoreObject || !scoreObject.submittedAt ? (
-                                            <View
-                                                style={{
-                                                    width: 10,
-                                                    height: 10,
-                                                    borderRadius: 10,
-                                                    marginRight: 7,
-                                                    backgroundColor: '#f94144',
-                                                }}
-                                            />
-                                        ) : (
-                                            <View
-                                                style={{
-                                                    width: 10,
-                                                    height: 10,
-                                                    borderRadius: 10,
-                                                    marginRight: 7,
-                                                    backgroundColor:
-                                                        scoreObject &&
-                                                        scoreObject !== undefined &&
-                                                        scoreObject.graded &&
-                                                        scoreObject.score
-                                                            ? '#000'
-                                                            : scoreObject &&
-                                                              new Date(parseInt(scoreObject.submittedAt)) >=
-                                                                  new Date(cue.deadline)
-                                                            ? '#FFC107'
-                                                            : '#35AC78',
-                                                }}
-                                            />
-                                        )}
-                                        {!scoreObject || !scoreObject.submittedAt ? (
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {scoreObject &&
-                                                scoreObject !== undefined &&
-                                                scoreObject.graded &&
-                                                scoreObject.score &&
-                                                scoreObject.score.replace(/\.0+$/, '')
-                                                    ? scoreObject.score + '%'
-                                                    : !scoreObject || !scoreObject.cueId
-                                                    ? 'N/A'
-                                                    : 'Not Submitted'}
-                                            </Text>
-                                        ) : (
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    textAlign: 'center',
-                                                    color:
-                                                        scoreObject &&
-                                                        new Date(parseInt(scoreObject.submittedAt)) >=
-                                                            new Date(cue.deadline)
-                                                            ? '#f3722c'
-                                                            : '#000000',
-                                                }}
-                                            >
-                                                {scoreObject &&
-                                                scoreObject !== undefined &&
-                                                scoreObject.graded &&
-                                                scoreObject.score
-                                                    ? scoreObject.score.replace(/\.0+$/, '') + '%'
-                                                    : scoreObject &&
-                                                      new Date(parseInt(scoreObject.submittedAt)) >=
-                                                          new Date(cue.deadline)
-                                                    ? 'Late'
-                                                    : 'Submitted'}
-                                            </Text>
-                                        )}
-                                    </View>
-                                    <View
-                                        style={{
-                                            width: '25%',
-                                            padding: 15,
-                                        }}
-                                    >
-                                        {hasDeadlinePassed && (!cue.availableUntil || hasLateSubmissionPassed) ? (
-                                            <View>
-                                                {cue.availableUntil ? (
+                                )}
+                                <View
+                                    style={{
+                                        width: '25%',
+                                        padding: Dimensions.get('window').width < 768 ? 7 : 15,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 7 : 0,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {!scoreObject || !scoreObject.submittedAt ? (
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 10,
+                                                marginRight: 7,
+                                                backgroundColor: '#f94144',
+                                            }}
+                                        />
+                                    ) : (
+                                        <View
+                                            style={{
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: 10,
+                                                marginRight: 7,
+                                                backgroundColor:
+                                                    scoreObject &&
+                                                    scoreObject !== undefined &&
+                                                    scoreObject.graded &&
+                                                    scoreObject.score
+                                                        ? '#000'
+                                                        : scoreObject &&
+                                                          new Date(parseInt(scoreObject.submittedAt)) >=
+                                                              new Date(cue.deadline)
+                                                        ? '#FFC107'
+                                                        : '#35AC78',
+                                            }}
+                                        />
+                                    )}
+                                    {!scoreObject || !scoreObject.submittedAt ? (
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            {scoreObject &&
+                                            scoreObject !== undefined &&
+                                            scoreObject.graded &&
+                                            scoreObject.score &&
+                                            scoreObject.score.replace(/\.0+$/, '')
+                                                ? scoreObject.score + '%'
+                                                : !scoreObject || !scoreObject.cueId
+                                                ? 'N/A'
+                                                : 'Not Submitted'}
+                                        </Text>
+                                    ) : (
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                textAlign: 'center',
+                                                color:
+                                                    scoreObject &&
+                                                    new Date(parseInt(scoreObject.submittedAt)) >=
+                                                        new Date(cue.deadline)
+                                                        ? '#f3722c'
+                                                        : '#000000',
+                                            }}
+                                        >
+                                            {scoreObject &&
+                                            scoreObject !== undefined &&
+                                            scoreObject.graded &&
+                                            scoreObject.score
+                                                ? scoreObject.score.replace(/\.0+$/, '') + '%'
+                                                : scoreObject &&
+                                                  new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)
+                                                ? 'Late'
+                                                : 'Submitted'}
+                                        </Text>
+                                    )}
+                                </View>
+                                <View
+                                    style={{
+                                        width: Dimensions.get('window').width < 768 ? '50%' : '25%',
+                                        padding: Dimensions.get('window').width < 768 ? 7 : 15,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 7 : 0,
+                                    }}
+                                >
+                                    {hasDeadlinePassed && (!cue.availableUntil || hasLateSubmissionPassed) ? (
+                                        <View>
+                                            {cue.availableUntil ? (
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'column',
+                                                    }}
+                                                >
                                                     <View
                                                         style={{
-                                                            flexDirection: 'column',
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
                                                         }}
                                                     >
-                                                        <View
+                                                        <Text
                                                             style={{
-                                                                flexDirection: 'row',
-                                                                alignItems: 'center',
+                                                                fontSize: 14,
+                                                                textAlign: 'center',
+                                                                width: '100%',
                                                             }}
                                                         >
+                                                            {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            paddingTop: 10,
+                                                        }}
+                                                    >
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                textAlign: 'center',
+                                                                width: '100%',
+                                                                fontFamily: 'Inter',
+                                                            }}
+                                                        >
+                                                            Late:{' '}
                                                             <Text
                                                                 style={{
-                                                                    fontSize: 14,
-                                                                    textAlign: 'center',
-                                                                    width: '100%',
+                                                                    fontFamily: 'overpass',
                                                                 }}
                                                             >
-                                                                {moment(new Date(cue.deadline)).format(
+                                                                {moment(new Date(cue.availableUntil)).format(
                                                                     'MMM Do, h:mm a'
                                                                 )}
                                                             </Text>
-                                                        </View>
-                                                        <View
-                                                            style={{
-                                                                flexDirection: 'row',
-                                                                alignItems: 'center',
-                                                                paddingTop: 10,
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14,
-                                                                    textAlign: 'center',
-                                                                    width: '100%',
-                                                                    fontFamily: 'Inter',
-                                                                }}
-                                                            >
-                                                                Late:{' '}
-                                                                <Text
-                                                                    style={{
-                                                                        fontFamily: 'overpass',
-                                                                    }}
-                                                                >
-                                                                    {moment(new Date(cue.availableUntil)).format(
-                                                                        'MMM Do, h:mm a'
-                                                                    )}
-                                                                </Text>
-                                                            </Text>
-                                                        </View>
+                                                        </Text>
                                                     </View>
-                                                ) : (
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 14,
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
-                                                    </Text>
-                                                )}
-                                            </View>
-                                        ) : !hasDeadlinePassed ? (
+                                                </View>
+                                            ) : (
+                                                <Text
+                                                    style={{
+                                                        fontSize: 14,
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
+                                                </Text>
+                                            )}
+                                        </View>
+                                    ) : !hasDeadlinePassed ? (
+                                        <View
+                                            style={{
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                paddingHorizontal: 20,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    width: '100%',
+                                                    fontSize: 14,
+                                                    // textAlign: 'center',
+                                                    paddingBottom: 10,
+                                                }}
+                                            >
+                                                {getTimeRemaining(cue.deadline)}
+                                            </Text>
                                             <View
                                                 style={{
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                    paddingHorizontal: 20,
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <ProgressBar
+                                                    completed={remaining ? remaining : 0}
+                                                    maxCompleted={100}
+                                                    height={'10px'}
+                                                    isLabelVisible={false}
+                                                    bgColor={'#007AFF'}
+                                                    dir="rtl"
+                                                />
+                                            </View>
+                                            {/*  */}
+                                            <View
+                                                style={{
+                                                    marginTop: 10,
+                                                    flexDirection: 'row',
+                                                    width: '100%',
+                                                    justifyContent: 'space-between',
                                                 }}
                                             >
                                                 <Text
                                                     style={{
-                                                        width: '100%',
-                                                        fontSize: 14,
-                                                        // textAlign: 'center',
-                                                        paddingBottom: 10,
+                                                        fontSize: 12,
+                                                        textAlign: 'center',
                                                     }}
                                                 >
-                                                    {getTimeRemaining(cue.deadline)}
+                                                    {moment(new Date(cue.initiateAt)).format('MMM Do')}
                                                 </Text>
-                                                <View
+                                                <Text
                                                     style={{
-                                                        width: '100%',
+                                                        fontSize: 12,
+                                                        textAlign: 'center',
                                                     }}
                                                 >
-                                                    <ProgressBar
-                                                        completed={remaining ? remaining : 0}
-                                                        maxCompleted={100}
-                                                        height={'10px'}
-                                                        isLabelVisible={false}
-                                                        bgColor={'#007AFF'}
-                                                        dir="rtl"
-                                                    />
-                                                </View>
-                                                {/*  */}
-                                                <View
-                                                    style={{
-                                                        marginTop: 10,
-                                                        flexDirection: 'row',
-                                                        width: '100%',
-                                                        justifyContent: 'space-between',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {moment(new Date(cue.initiateAt)).format('MMM Do')}
-                                                    </Text>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
-                                                    </Text>
-                                                </View>
+                                                    {moment(new Date(cue.deadline)).format('MMM Do, h:mm a')}
+                                                </Text>
                                             </View>
-                                        ) : cue.availableUntil && !hasLateSubmissionPassed ? (
+                                        </View>
+                                    ) : cue.availableUntil && !hasLateSubmissionPassed ? (
+                                        <View
+                                            style={{
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                paddingHorizontal: 20,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    width: '100%',
+                                                    fontSize: 14,
+                                                    // textAlign: 'center',
+                                                    paddingBottom: 10,
+                                                }}
+                                            >
+                                                Late submission available. {getTimeRemaining(cue.availableUntil)}
+                                            </Text>
                                             <View
                                                 style={{
-                                                    flexDirection: 'column',
-                                                    alignItems: 'center',
-                                                    paddingHorizontal: 20,
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <ProgressBar
+                                                    completed={remaining ? remaining : 0}
+                                                    maxCompleted={100}
+                                                    height={'10px'}
+                                                    isLabelVisible={false}
+                                                    bgColor={'#FFC107'}
+                                                    dir="rtl"
+                                                />
+                                            </View>
+                                            {/*  */}
+                                            <View
+                                                style={{
+                                                    marginTop: 10,
+                                                    flexDirection: 'row',
+                                                    width: '100%',
+                                                    justifyContent: 'space-between',
                                                 }}
                                             >
                                                 <Text
                                                     style={{
-                                                        width: '100%',
-                                                        fontSize: 14,
-                                                        // textAlign: 'center',
-                                                        paddingBottom: 10,
+                                                        fontSize: 12,
+                                                        textAlign: 'center',
                                                     }}
                                                 >
-                                                    Late submission available. {getTimeRemaining(cue.availableUntil)}
+                                                    {moment(new Date(cue.deadline)).format('MMM Do')}
                                                 </Text>
-                                                <View
+                                                <Text
                                                     style={{
-                                                        width: '100%',
+                                                        fontSize: 12,
+                                                        textAlign: 'center',
                                                     }}
                                                 >
-                                                    <ProgressBar
-                                                        completed={remaining ? remaining : 0}
-                                                        maxCompleted={100}
-                                                        height={'10px'}
-                                                        isLabelVisible={false}
-                                                        bgColor={'#FFC107'}
-                                                        dir="rtl"
-                                                    />
-                                                </View>
-                                                {/*  */}
-                                                <View
-                                                    style={{
-                                                        marginTop: 10,
-                                                        flexDirection: 'row',
-                                                        width: '100%',
-                                                        justifyContent: 'space-between',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {moment(new Date(cue.deadline)).format('MMM Do')}
-                                                    </Text>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {moment(new Date(cue.availableUntil)).format('MMM Do, h:mm a')}
-                                                    </Text>
-                                                </View>
+                                                    {moment(new Date(cue.availableUntil)).format('MMM Do, h:mm a')}
+                                                </Text>
                                             </View>
-                                        ) : null}
-                                    </View>
+                                        </View>
+                                    ) : null}
                                 </View>
-                            );
-                        })}
-                    </ScrollView>
-                </View>
+                            </View>
+                        );
+                    })}
+                </ScrollView>
             </View>
         );
     };
 
-    const renderScoresList = () => {
+    const renderStudentView = () => {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    marginBottom: Dimensions.get('window').width < 768 ? 75 : 0,
+                }}
+            >
+                {renderPerformanceOverview()}
+                {renderScoresTableStudent()}
+            </View>
+        );
+    };
+
+    const renderInstructorView = () => {
         return (
             <View
                 style={{
                     height: props.isOwner ? '100%' : 'auto',
-                    maxHeight: Dimensions.get('window').height - 52 - 45 - 50, // Navbar - 50 padding
+                    maxHeight: Dimensions.get('window').height - 64 - 45 - 50, // Navbar - 50 padding
                     marginLeft: props.isOwner || Dimensions.get('window').width < 768 ? 0 : 100,
+                    minWidth: '100%',
                 }}
             >
                 <ScrollView
@@ -1281,6 +1303,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         flexDirection: 'column',
                         borderTopLeftRadius: 8,
                         borderTopRightRadius: 8,
+                        minWidth: '100%',
                     }}
                     nestedScrollEnabled={true}
                 >
@@ -1291,11 +1314,23 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             overflow: 'hidden',
                             borderBottomWidth: 1,
                             borderBottomColor: '#f2f2f2',
+                            backgroundColor: '#f8f8f8',
+                            minWidth: '100%',
                         }}
                         key={'-'}
                     >
                         {props.isOwner ? (
-                            <View style={styles.colHeader} key={'0,0'}>
+                            <View
+                                style={{
+                                    backgroundColor: '#f8f8f8',
+                                    width: Dimensions.get('window').width < 768 ? 90 : 150,
+                                    justifyContent: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    padding: 10,
+                                }}
+                                key={'0,0'}
+                            >
                                 <TextInput
                                     value={studentSearch}
                                     onChangeText={(val: string) => setStudentSearch(val)}
@@ -1303,7 +1338,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     placeholderTextColor={'#1F1F1F'}
                                     style={{
                                         width: '100%',
-                                        borderColor: '#f2f2f2',
+                                        borderColor: '#ccc',
                                         borderBottomWidth: 1,
                                         fontSize: 15,
                                         paddingVertical: 8,
@@ -1339,7 +1374,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Text
                                         style={{
                                             textAlign: 'center',
-                                            fontSize: 11,
+                                            fontSize: 12,
                                             color: '#000000',
                                             marginBottom: 5,
                                         }}
@@ -1351,7 +1386,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Text
                                         style={{
                                             textAlign: 'center',
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             color: '#000000',
                                             fontFamily: 'inter',
                                             marginBottom: 5,
@@ -1362,7 +1397,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     >
                                         {title}
                                     </Text>
-                                    <Text style={{ textAlign: 'center', fontSize: 11, color: '#000000' }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#000000' }}>
                                         {cue.gradeWeight ? cue.gradeWeight : '0'}%
                                     </Text>
                                 </TouchableOpacity>
@@ -1377,7 +1412,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 style={{
                                     width: '100%',
                                     color: '#1F1F1F',
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     paddingVertical: 50,
                                     paddingHorizontal: 5,
                                     fontFamily: 'inter',
@@ -1420,24 +1455,46 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             flexDirection: 'row',
                                             overflow: 'hidden',
                                             borderBottomColor: '#f2f2f2',
-                                            borderBottomWidth: row === score.scores.length - 1 ? 0 : 1,
-                                            borderBottomLeftRadius: row === score.scores.length - 1 ? 8 : 0,
-                                            borderBottomRightRadius: row === score.scores.length - 1 ? 8 : 0,
+                                            borderBottomWidth: row === scores.length - 1 ? 0 : 1,
                                         }}
                                         key={row}
                                     >
                                         {props.isOwner ? (
-                                            <View style={styles.col}>
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 13,
-                                                        color: '#000000',
-                                                        fontFamily: 'inter',
-                                                    }}
-                                                >
-                                                    {score.fullName}
-                                                </Text>
+                                            <View
+                                                style={{
+                                                    width: Dimensions.get('window').width < 768 ? 90 : 150,
+                                                    justifyContent: 'center',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    padding: 10,
+                                                }}
+                                            >
+                                                <View>
+                                                    <Image
+                                                        style={{
+                                                            height: 37,
+                                                            width: 37,
+                                                            borderRadius: 75,
+                                                            alignSelf: 'center',
+                                                        }}
+                                                        source={{
+                                                            uri: score.avatar
+                                                                ? score.avatar
+                                                                : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                                        }}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                            marginTop: 7,
+                                                            textAlign: 'center',
+                                                            fontSize: 14,
+                                                            color: '#000000',
+                                                            fontFamily: 'inter',
+                                                        }}
+                                                    >
+                                                        {score.fullName}
+                                                    </Text>
+                                                </View>
                                             </View>
                                         ) : null}
                                         {cues.length === 0 ? null : (
@@ -1445,7 +1502,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 <Text
                                                     style={{
                                                         textAlign: 'center',
-                                                        fontSize: 11,
+                                                        fontSize: 13,
                                                         color: '#000000',
                                                         textTransform: 'uppercase',
                                                     }}
@@ -1489,7 +1546,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     padding: 8,
                                                                     borderBottomColor: '#f2f2f2',
                                                                     borderBottomWidth: 1,
-                                                                    fontSize: 13,
+                                                                    fontSize: 14,
                                                                 }}
                                                                 placeholderTextColor={'#1F1F1F'}
                                                             />
@@ -1541,7 +1598,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <Text
                                                             style={{
                                                                 textAlign: 'center',
-                                                                fontSize: 11,
+                                                                fontSize: 13,
                                                                 color: '#f94144',
                                                             }}
                                                         >
@@ -1558,7 +1615,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <Text
                                                             style={{
                                                                 textAlign: 'center',
-                                                                fontSize: 11,
+                                                                fontSize: 13,
                                                                 color:
                                                                     scoreObject &&
                                                                     new Date(parseInt(scoreObject.submittedAt)) >=
@@ -1590,7 +1647,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <Text
                                                             style={{
                                                                 textAlign: 'center',
-                                                                fontSize: 11,
+                                                                fontSize: 13,
                                                                 color: !scoreObject.submittedAt ? '#f94144' : '#f3722c',
                                                                 marginTop: 5,
                                                                 borderWidth: 0,
@@ -1625,6 +1682,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 backgroundColor: '#fff',
                 width: '100%',
                 height: '100%',
+                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
             }}
         >
             {/* {renderExportButton()} */}
@@ -1636,7 +1694,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             color: '#1F1F1F',
                             fontSize: 16,
                             paddingVertical: 100,
-                            paddingHorizontal: 5,
+                            paddingHorizontal: 10,
                             fontFamily: 'inter',
                         }}
                     >
@@ -1652,7 +1710,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        maxHeight: Dimensions.get('window').height - 52 - 45 - 120,
+                        maxHeight: Dimensions.get('window').height - 64 - 45 - 120,
                         borderRadius: 2,
                         borderWidth: 1,
                         marginTop: 25,
@@ -1665,10 +1723,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }}
                     key={JSON.stringify(props.scores)}
                 >
-                    {props.isOwner ? renderScoresList() : null}
+                    {props.isOwner ? renderInstructorView() : null}
                 </View>
             ) : (
-                renderStudentScoresTable()
+                renderStudentView()
             )}
         </View>
     );
@@ -1682,14 +1740,14 @@ const stylesObject: any = (isOwner: any) =>
             minHeight: 70,
             flexDirection: isOwner || Dimensions.get('window').width < 768 ? 'row' : 'column',
             borderBottomColor: '#f2f2f2',
-            borderBottomWidth: (!isOwner && Dimensions.get('window').width < 768) || isOwner ? 1 : 0,
+            borderBottomWidth: 1,
         },
         col: {
             width: Dimensions.get('window').width < 768 ? 90 : 120,
             justifyContent: 'center',
             display: 'flex',
             flexDirection: 'column',
-            padding: 7,
+            padding: 10,
         },
         colHeader: {
             backgroundColor: '#f8f8f8',
@@ -1697,7 +1755,7 @@ const stylesObject: any = (isOwner: any) =>
             justifyContent: 'center',
             display: 'flex',
             flexDirection: 'column',
-            padding: 7,
+            padding: 10,
         },
         selectedButton: {
             backgroundColor: '#000',

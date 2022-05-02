@@ -302,8 +302,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 height: '100%',
                 maxHeight:
                     Dimensions.get('window').width < 1024
-                        ? Dimensions.get('window').height - 115
-                        : Dimensions.get('window').height - 52,
+                        ? Dimensions.get('window').height - (64 + 60)
+                        : Dimensions.get('window').height - (64 + 54),
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
@@ -342,7 +342,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     paddingRight: 20,
                                     paddingTop: 5,
                                     paddingBottom: 20,
-                                    paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0,
+                                    paddingLeft: Dimensions.get('window').width < 768 ? 10 : 0,
                                     alignSelf: 'flex-start',
                                 }}
                             >

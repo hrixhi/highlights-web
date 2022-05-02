@@ -919,9 +919,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             width: '100%',
                         }}
                     >
-                        <View
-                            style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, marginTop: 10 }}
-                        >
+                        <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                             <TouchableOpacity
                                 key={Math.random()}
                                 style={{
@@ -942,7 +940,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Ionicons
                                         name="chevron-back-outline"
-                                        size={22}
+                                        size={30}
                                         color={'#000000'}
                                         style={{ marginRight: 10 }}
                                     />
@@ -951,7 +949,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         <Text
                             style={{
-                                fontSize: 18,
+                                fontSize: 20,
                                 paddingBottom: 20,
                                 fontFamily: 'inter',
                                 flex: 1,
@@ -1010,8 +1008,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             minWidth: 500,
                                             borderBottom: '1px solid #efefef',
                                             fontSize: 15,
-                                            paddingTop: 13,
-                                            paddingBottom: 13,
+                                            padding: 10,
                                             marginTop: 12,
                                             marginBottom: 20,
                                             borderRadius: 1,
@@ -1301,89 +1298,88 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View>
             <View style={styles.screen}>
-                <View style={{ backgroundColor: 'white', paddingTop: 20, paddingHorizontal: 10 }}>
+                <View
+                    style={{
+                        maxWidth: 600,
+                        alignSelf: 'center',
+                        minHeight: 100,
+                    }}
+                >
                     <View
                         style={{
-                            maxWidth: 600,
-                            alignSelf: 'center',
-                            minHeight: 100,
+                            flexDirection: 'row',
+                            alignItems: 'center',
                         }}
                     >
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <View style={{ backgroundColor: 'white' }}>
-                                <View
+                        <View style={{ backgroundColor: 'white' }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text
                                     style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
+                                        fontSize: 15,
+                                        color: '#000000',
+                                        fontFamily: 'Inter',
+                                        marginRight: 8,
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            fontSize: 15,
-                                            color: '#000000',
-                                            fontFamily: 'Inter',
-                                            marginRight: 8,
-                                        }}
-                                    >
-                                        Access Code
-                                    </Text>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            Alert('Share this code so people can join your course directly.');
-                                        }}
-                                    >
-                                        <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                    </TouchableOpacity>
-                                </View>
+                                    Access Code
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Alert('Share this code so people can join your course directly.');
+                                    }}
+                                >
+                                    <Ionicons name="help-circle-outline" size={18} color="#939699" />
+                                </TouchableOpacity>
+                            </View>
 
-                                <View
+                            <View
+                                style={{
+                                    width: '100%',
+                                    flexDirection: 'row',
+                                    justifyContent:
+                                        Dimensions.get('window').width < 768 ? 'space-between' : 'flex-start',
+                                    alignItems: 'center',
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Text
                                     style={{
-                                        width: '100%',
-                                        flexDirection: 'row',
-                                        justifyContent:
-                                            Dimensions.get('window').width < 768 ? 'space-between' : 'flex-start',
-                                        alignItems: 'center',
-                                        marginTop: 10,
+                                        fontSize: Dimensions.get('window').width < 768 ? 26 : 30,
+                                        fontFamily: 'inter',
+                                        fontWeight: 'bold',
                                     }}
                                 >
-                                    <Text
+                                    {accessCode}
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        paddingLeft: Dimensions.get('window').width < 768 ? 20 : 20,
+                                        // marginLeft: 'auto',
+                                    }}
+                                >
+                                    <TouchableOpacity
                                         style={{
-                                            fontSize: Dimensions.get('window').width < 768 ? 26 : 30,
-                                            fontFamily: 'inter',
-                                            fontWeight: 'bold',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            marginRight: 10,
+                                        }}
+                                        onPress={() => {
+                                            navigator.clipboard.writeText(accessCode);
+                                            setCopied(true);
                                         }}
                                     >
-                                        {accessCode}
-                                    </Text>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                                            // marginLeft: 'auto',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            style={{
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                marginRight: 10,
-                                            }}
-                                            onPress={() => {
-                                                navigator.clipboard.writeText(accessCode);
-                                                setCopied(true);
-                                            }}
-                                        >
-                                            <Ionicons
-                                                name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
-                                                size={20}
-                                                color={copied ? '#35AC78' : '#000'}
-                                            />
-                                            {/* <Text
+                                        <Ionicons
+                                            name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
+                                            size={20}
+                                            color={copied ? '#35AC78' : '#000'}
+                                        />
+                                        {/* <Text
                                         style={{
                                             color: copied ? '#35AC78' : '#000',
                                             fontSize: 11,
@@ -1393,343 +1389,148 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {' '}
                                         {copied ? 'Copied' : 'Copy'}{' '}
                                     </Text> */}
-                                        </TouchableOpacity>
+                                    </TouchableOpacity>
 
-                                        <TouchableOpacity
-                                            style={{
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                            }}
-                                            onPress={() => handleResetCode()}
-                                        >
-                                            <Ionicons name="refresh-outline" size={20} color={'#000'} />
-                                            {/* <Text style={{ color: '#000', fontSize: 11, paddingTop: 3 }}> Reset </Text> */}
-                                        </TouchableOpacity>
-                                    </View>
+                                    <TouchableOpacity
+                                        style={{
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                        }}
+                                        onPress={() => handleResetCode()}
+                                    >
+                                        <Ionicons name="refresh-outline" size={20} color={'#000'} />
+                                        {/* <Text style={{ color: '#000', fontSize: 11, paddingTop: 3 }}> Reset </Text> */}
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
+                    </View>
 
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                        }}
+                    >
                         <View
                             style={{
-                                flexDirection: 'row',
-                                flexWrap: 'wrap',
+                                backgroundColor: 'white',
+                                marginTop: 20,
+                                width: Dimensions.get('window').width < 768 ? '100%' : 300,
+                                paddingRight: Dimensions.get('window').width < 768 ? 0 : 20,
                             }}
                         >
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    marginTop: 20,
-                                    width: Dimensions.get('window').width < 768 ? '100%' : 300,
-                                    paddingRight: Dimensions.get('window').width < 768 ? 0 : 20,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    {PreferredLanguageText('name')}
-                                </Text>
-                                <TextInput
-                                    value={name}
-                                    autoCompleteType="off"
-                                    placeholder={''}
-                                    onChangeText={(val) => {
-                                        setName(val);
-                                    }}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    required={true}
-                                />
-                            </View>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    marginTop: 20,
-                                    width: Dimensions.get('window').width < 768 ? '100%' : 300,
-                                    paddingRight: Dimensions.get('window').width < 768 ? 0 : 20,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    {PreferredLanguageText('enrolmentPassword')}
-                                </Text>
-                                <TextInput
-                                    value={password}
-                                    autoCompleteType="off"
-                                    placeholder={`(${PreferredLanguageText('optional')})`}
-                                    onChangeText={(val) => setPassword(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    required={false}
-                                />
-                            </View>
-                        </View>
-
-                        {meetingProvider && meetingProvider !== '' ? (
-                            <View style={{ backgroundColor: 'white' }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Meeting link
-                                </Text>
-                                <TextInput
-                                    value={meetingUrl}
-                                    autoCompleteType="off"
-                                    placeholder={''}
-                                    onChangeText={(val) => setMeetingUrl(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    required={false}
-                                />
-                            </View>
-                        ) : null}
-
-                        <View style={{ backgroundColor: 'white' }}>
                             <Text
                                 style={{
+                                    fontSize: 15,
                                     color: '#000000',
                                     fontFamily: 'Inter',
                                 }}
                             >
-                                Theme
+                                {PreferredLanguageText('name')}
                             </Text>
-                            <View
-                                style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    marginTop: 20,
+                            <TextInput
+                                value={name}
+                                autoCompleteType="off"
+                                placeholder={''}
+                                onChangeText={(val) => {
+                                    setName(val);
                                 }}
-                            >
-                                <View style={{ backgroundColor: 'white' }}>
-                                    <CirclePicker
-                                        colors={colorChoices}
-                                        color={colorCode}
-                                        onChangeComplete={(color: any) => setColorCode(color.hex)}
-                                        width={'220px'}
-                                    />
-                                </View>
-                            </View>
+                                placeholderTextColor={'#1F1F1F'}
+                                required={true}
+                            />
                         </View>
-
-                        {!school ? (
-                            <View
-                                style={{
-                                    width: '100%',
-                                    marginTop: 25,
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        paddingBottom: 15,
-                                        backgroundColor: 'white',
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 15,
-                                            color: '#000000',
-                                            fontFamily: 'Inter',
-                                        }}
-                                    >
-                                        Public
-                                    </Text>
-                                </View>
-                                <View
-                                    style={{
-                                        backgroundColor: 'white',
-                                        width: '100%',
-                                        height: 30,
-                                        // marginHorizontal: 10
-                                    }}
-                                >
-                                    <Switch
-                                        value={isPublic}
-                                        onValueChange={() => setIsPublic(!isPublic)}
-                                        style={{ height: 20 }}
-                                        trackColor={{
-                                            false: '#efefef',
-                                            true: '#000',
-                                        }}
-                                        activeThumbColor="white"
-                                    />
-                                </View>
-                                <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
-                                    Makes your course visible to all users
-                                </Text>
-                            </View>
-                        ) : null}
-                        {!school ? (
-                            <View
-                                style={{
-                                    width: '100%',
-                                    marginTop: 25,
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        paddingBottom: 15,
-                                        backgroundColor: 'white',
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 15,
-                                            color: '#000000',
-                                            fontFamily: 'Inter',
-                                        }}
-                                    >
-                                        Tags
-                                    </Text>
-                                </View>
-                                <View
-                                    style={{
-                                        backgroundColor: 'white',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <ReactTagInput
-                                        tags={tags}
-                                        placeholder=" "
-                                        removeOnBackspace={true}
-                                        maxTags={5}
-                                        onChange={(newTags) => setTags(newTags)}
-                                    />
-                                </View>
-                                <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
-                            </View>
-                        ) : null}
-
                         <View
                             style={{
-                                display: 'flex',
-                                width: '100%',
-                                flexDirection: 'row',
-                                paddingTop: 30,
-                                alignItems: 'center',
+                                backgroundColor: 'white',
+                                marginTop: 20,
+                                width: Dimensions.get('window').width < 768 ? '100%' : 300,
+                                paddingRight: Dimensions.get('window').width < 768 ? 0 : 20,
                             }}
                         >
-                            <View
+                            <Text
                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
                                 }}
                             >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                        marginRight: 8,
-                                    }}
-                                >
-                                    Students
-                                </Text>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert(
-                                            'Students are able to view content, provide submissions, post discussion threads and view their performance.'
-                                        );
-                                    }}
-                                >
-                                    <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                </TouchableOpacity>
-                            </View>
-                            {props.userCreatedOrg ? (
-                                <TouchableOpacity
-                                    onPress={() => setShowInviteByEmailsModal(true)}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        justifyContent: 'center',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        marginLeft: 'auto',
-                                        paddingTop: 2,
-                                    }}
-                                >
-                                    <Ionicons
-                                        name="mail-outline"
-                                        color="#000"
-                                        style={{ marginRight: 7, paddingTop: 2 }}
-                                        size={20}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 15,
-                                            color: '#000',
-                                            fontFamily: 'Inter',
-                                        }}
-                                    >
-                                        Add Users
-                                    </Text>
-                                </TouchableOpacity>
-                            ) : null}
+                                {PreferredLanguageText('enrolmentPassword')}
+                            </Text>
+                            <TextInput
+                                value={password}
+                                autoCompleteType="off"
+                                placeholder={`(${PreferredLanguageText('optional')})`}
+                                onChangeText={(val) => setPassword(val)}
+                                placeholderTextColor={'#1F1F1F'}
+                                required={false}
+                            />
                         </View>
+                    </View>
 
-                        {school && !props.userCreatedOrg ? renderSubscriberFilters() : null}
+                    {meetingProvider && meetingProvider !== '' ? (
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Meeting link
+                            </Text>
+                            <TextInput
+                                value={meetingUrl}
+                                autoCompleteType="off"
+                                placeholder={''}
+                                onChangeText={(val) => setMeetingUrl(val)}
+                                placeholderTextColor={'#1F1F1F'}
+                                required={false}
+                            />
+                        </View>
+                    ) : null}
+
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text
+                            style={{
+                                color: '#000000',
+                                fontFamily: 'Inter',
+                            }}
+                        >
+                            Theme
+                        </Text>
                         <View
                             style={{
-                                flexDirection: 'column',
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                                marginTop: 20,
+                            }}
+                        >
+                            <View style={{ backgroundColor: 'white' }}>
+                                <CirclePicker
+                                    colors={colorChoices}
+                                    color={colorCode}
+                                    onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                    width={'220px'}
+                                />
+                            </View>
+                        </View>
+                    </View>
+
+                    {!school ? (
+                        <View
+                            style={{
+                                width: '100%',
                                 marginTop: 25,
                             }}
                         >
-                            <View style={{ height: 'auto', width: '100%' }}>
-                                <label style={{ width: '100%' }}>
-                                    <Select
-                                        themeVariant="light"
-                                        selectMultiple={true}
-                                        group={true}
-                                        groupLabel="&nbsp;"
-                                        inputClass="mobiscrollCustomMultiInput"
-                                        placeholder="Select..."
-                                        touchUi={true}
-                                        value={selectedValues}
-                                        data={options}
-                                        onChange={(val: any) => {
-                                            setSelectedValues(val.value);
-                                            // Filter out any moderator if not part of the selected values
-
-                                            let filterRemovedModerators = selectedModerators.filter((mod: any) =>
-                                                val.value.includes(mod)
-                                            );
-
-                                            setSelectedModerators(filterRemovedModerators);
-                                        }}
-                                        responsive={{
-                                            small: {
-                                                display: 'bubble',
-                                            },
-                                            medium: {
-                                                touchUi: false,
-                                            },
-                                        }}
-                                    />
-                                </label>
-                            </View>
-                        </View>
-
-                        {props.userId === channelCreator ? (
                             <View
                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginTop: 25,
-                                    marginBottom: 20,
+                                    width: '100%',
+                                    paddingBottom: 15,
+                                    backgroundColor: 'white',
                                 }}
                             >
                                 <Text
@@ -1737,37 +1538,174 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         fontSize: 15,
                                         color: '#000000',
                                         fontFamily: 'Inter',
-                                        marginRight: 8,
                                     }}
                                 >
-                                    Instructors
+                                    Public
                                 </Text>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert(
-                                            'Instructors can share content, score and view submissions for all users, initiate meetings and edit course settings, in addition to the student permissions.'
-                                        );
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    width: '100%',
+                                    height: 30,
+                                    // marginHorizontal: 10
+                                }}
+                            >
+                                <Switch
+                                    value={isPublic}
+                                    onValueChange={() => setIsPublic(!isPublic)}
+                                    style={{ height: 20 }}
+                                    trackColor={{
+                                        false: '#efefef',
+                                        true: '#000',
+                                    }}
+                                    activeThumbColor="white"
+                                />
+                            </View>
+                            <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
+                                Makes your course visible to all users
+                            </Text>
+                        </View>
+                    ) : null}
+                    {!school ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                marginTop: 25,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: '100%',
+                                    paddingBottom: 15,
+                                    backgroundColor: 'white',
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        color: '#000000',
+                                        fontFamily: 'Inter',
                                     }}
                                 >
-                                    <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                </TouchableOpacity>
+                                    Tags
+                                </Text>
                             </View>
-                        ) : null}
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    width: '100%',
+                                }}
+                            >
+                                <ReactTagInput
+                                    tags={tags}
+                                    placeholder=" "
+                                    removeOnBackspace={true}
+                                    maxTags={5}
+                                    onChange={(newTags) => setTags(newTags)}
+                                />
+                            </View>
+                            <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
+                        </View>
+                    ) : null}
 
-                        {props.userId === channelCreator ? (
+                    <View
+                        style={{
+                            display: 'flex',
+                            width: '100%',
+                            flexDirection: 'row',
+                            paddingTop: 30,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                    marginRight: 8,
+                                }}
+                            >
+                                Students
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert(
+                                        'Students are able to view content, provide submissions, post discussion threads and view their performance.'
+                                    );
+                                }}
+                            >
+                                <Ionicons name="help-circle-outline" size={18} color="#939699" />
+                            </TouchableOpacity>
+                        </View>
+                        {props.userCreatedOrg ? (
+                            <TouchableOpacity
+                                onPress={() => setShowInviteByEmailsModal(true)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginLeft: 'auto',
+                                    paddingTop: 2,
+                                }}
+                            >
+                                <Ionicons
+                                    name="mail-outline"
+                                    color="#000"
+                                    style={{ marginRight: 7, paddingTop: 2 }}
+                                    size={20}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        color: '#000',
+                                        fontFamily: 'Inter',
+                                    }}
+                                >
+                                    Add Users
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
+                    </View>
+
+                    {school && !props.userCreatedOrg ? renderSubscriberFilters() : null}
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            marginTop: 25,
+                        }}
+                    >
+                        <View style={{ height: 'auto', width: '100%' }}>
                             <label style={{ width: '100%' }}>
                                 <Select
                                     themeVariant="light"
-                                    select="multiple"
                                     selectMultiple={true}
-                                    placeholder="Select..."
+                                    group={true}
+                                    groupLabel="&nbsp;"
                                     inputClass="mobiscrollCustomMultiInput"
-                                    value={selectedModerators}
-                                    data={moderatorOptions}
-                                    onChange={(val: any) => {
-                                        setSelectedModerators(val.value);
-                                    }}
+                                    placeholder="Select..."
                                     touchUi={true}
+                                    value={selectedValues}
+                                    data={options}
+                                    onChange={(val: any) => {
+                                        setSelectedValues(val.value);
+                                        // Filter out any moderator if not part of the selected values
+
+                                        let filterRemovedModerators = selectedModerators.filter((mod: any) =>
+                                            val.value.includes(mod)
+                                        );
+
+                                        setSelectedModerators(filterRemovedModerators);
+                                    }}
                                     responsive={{
                                         small: {
                                             display: 'bubble',
@@ -1776,17 +1714,153 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             touchUi: false,
                                         },
                                     }}
-                                    // minWidth={[60, 320]}
                                 />
                             </label>
-                        ) : null}
+                        </View>
+                    </View>
 
+                    {props.userId === channelCreator ? (
                         <View
-                            style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginTop: 25,
+                                marginBottom: 20,
+                            }}
                         >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                    marginRight: 8,
+                                }}
+                            >
+                                Instructors
+                            </Text>
                             <TouchableOpacity
                                 onPress={() => {
-                                    Alert('Update course?', '', [
+                                    Alert(
+                                        'Instructors can share content, score and view submissions for all users, initiate meetings and edit course settings, in addition to the student permissions.'
+                                    );
+                                }}
+                            >
+                                <Ionicons name="help-circle-outline" size={18} color="#939699" />
+                            </TouchableOpacity>
+                        </View>
+                    ) : null}
+
+                    {props.userId === channelCreator ? (
+                        <label style={{ width: '100%' }}>
+                            <Select
+                                themeVariant="light"
+                                select="multiple"
+                                selectMultiple={true}
+                                placeholder="Select..."
+                                inputClass="mobiscrollCustomMultiInput"
+                                value={selectedModerators}
+                                data={moderatorOptions}
+                                onChange={(val: any) => {
+                                    setSelectedModerators(val.value);
+                                }}
+                                touchUi={true}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble',
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    },
+                                }}
+                                // minWidth={[60, 320]}
+                            />
+                        </label>
+                    ) : null}
+
+                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                Alert('Update course?', '', [
+                                    {
+                                        text: 'Cancel',
+                                        style: 'cancel',
+                                        onPress: () => {
+                                            return;
+                                        },
+                                    },
+                                    {
+                                        text: 'Yes',
+                                        onPress: () => {
+                                            handleSubmit();
+                                        },
+                                    },
+                                ]);
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 15,
+                                // overflow: 'hidden',
+                                // height: 35,
+                            }}
+                            disabled={isUpdatingChannel || props.user.email === disableEmailId}
+                        >
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    borderColor: '#000',
+                                    borderWidth: 1,
+                                    color: '#fff',
+                                    backgroundColor: '#000',
+                                    fontSize: 11,
+                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'uppercase',
+                                    width: 150,
+                                }}
+                            >
+                                {isUpdatingChannel ? 'UPDATING' : 'UPDATE'}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {props.userId === channelCreator ? (
+                            <TouchableOpacity
+                                onPress={() => setShowDuplicateChannel(true)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 15,
+                                    // overflow: 'hidden',
+                                    // height: 35,
+                                    marginTop: 15,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        color: '#000',
+                                        backgroundColor: '#fff',
+                                        fontSize: 11,
+                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        fontFamily: 'inter',
+                                        overflow: 'hidden',
+                                        paddingVertical: 14,
+                                        textTransform: 'uppercase',
+                                        width: 150,
+                                    }}
+                                >
+                                    DUPLICATE
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
+                        {temporary ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert('Delete course?', '', [
                                         {
                                             text: 'Cancel',
                                             style: 'cancel',
@@ -1797,7 +1871,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {
                                             text: 'Yes',
                                             onPress: () => {
-                                                handleSubmit();
+                                                handleDelete();
                                             },
                                         },
                                     ]);
@@ -1807,8 +1881,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     borderRadius: 15,
                                     // overflow: 'hidden',
                                     // height: 35,
+                                    marginTop: 15,
                                 }}
-                                disabled={isUpdatingChannel || props.user.email === disableEmailId}
+                                disabled={props.user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1816,8 +1891,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'center',
                                         borderColor: '#000',
                                         borderWidth: 1,
-                                        color: '#fff',
-                                        backgroundColor: '#000',
+                                        color: '#000',
+                                        backgroundColor: '#fff',
                                         fontSize: 11,
                                         paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
                                         fontFamily: 'inter',
@@ -1827,92 +1902,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         width: 150,
                                     }}
                                 >
-                                    {isUpdatingChannel ? 'UPDATING' : 'UPDATE'}
+                                    DELETE
                                 </Text>
                             </TouchableOpacity>
-
-                            {props.userId === channelCreator ? (
-                                <TouchableOpacity
-                                    onPress={() => setShowDuplicateChannel(true)}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: 15,
-                                        // overflow: 'hidden',
-                                        // height: 35,
-                                        marginTop: 15,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            borderColor: '#000',
-                                            borderWidth: 1,
-                                            color: '#000',
-                                            backgroundColor: '#fff',
-                                            fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            paddingVertical: 14,
-                                            textTransform: 'uppercase',
-                                            width: 150,
-                                        }}
-                                    >
-                                        DUPLICATE
-                                    </Text>
-                                </TouchableOpacity>
-                            ) : null}
-                            {temporary ? (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert('Delete course?', '', [
-                                            {
-                                                text: 'Cancel',
-                                                style: 'cancel',
-                                                onPress: () => {
-                                                    return;
-                                                },
-                                            },
-                                            {
-                                                text: 'Yes',
-                                                onPress: () => {
-                                                    handleDelete();
-                                                },
-                                            },
-                                        ]);
-                                    }}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: 15,
-                                        // overflow: 'hidden',
-                                        // height: 35,
-                                        marginTop: 15,
-                                    }}
-                                    disabled={props.user.email === disableEmailId}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            borderColor: '#000',
-                                            borderWidth: 1,
-                                            color: '#000',
-                                            backgroundColor: '#fff',
-                                            fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            paddingVertical: 14,
-                                            textTransform: 'uppercase',
-                                            width: 150,
-                                        }}
-                                    >
-                                        DELETE
-                                    </Text>
-                                </TouchableOpacity>
-                            ) : null}
-                        </View>
+                        ) : null}
                     </View>
                 </View>
             </View>
@@ -1931,12 +1924,13 @@ export default ChannelSettings;
 
 const styles = StyleSheet.create({
     screen: {
-        paddingTop: 10,
+        paddingTop: 20,
         paddingBottom: 20,
         width: '100%',
         backgroundColor: 'white',
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
+        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
     },
     outline: {
         borderRadius: 1,

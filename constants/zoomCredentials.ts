@@ -12,4 +12,4 @@ export const origin = 'https://app.learnwithcues.com';
 // export const zoomRedirectUri = 'https://dev-app.learnwithcues.com/zoom_auth';
 // export const origin = 'https://dev-app.learnwithcues.com';
 
-export const disableEmailId = 'demo@learnwithcues.com';
+export const disableEmailId = 'instructor@learnwithcues.com';

@@ -296,7 +296,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             >
                                 <Text
                                     style={{
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontFamily: 'Inter',
                                         textAlign: 'center',
                                     }}

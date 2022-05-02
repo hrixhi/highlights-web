@@ -75,7 +75,7 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
             <View
                 style={{
                     flexDirection: 'column',
-                    paddingHorizontal: 20,
+                    paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 20,
                     marginVertical: 20,
                     minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
                     maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
@@ -98,12 +98,12 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         fontFamily: 'overpass',
                         marginTop: 20,
                         fontSize: 15,
-                        borderRadius: 1,
-                        padding: 12,
-                        width: '95%',
-                        maxWidth: '95%',
-                        minWidth: '95%',
-                        borderBottom: '1px solid #f2f2f2',
+                        padding: 10,
+                        width: Dimensions.get('window').width > 768 ? 340 : 280,
+                        maxWidth: Dimensions.get('window').width > 768 ? 340 : 280,
+                        minWidth: Dimensions.get('window').width > 768 ? 340 : 280,
+                        border: '1px solid #ccc',
+                        borderRadius: 2,
                     }}
                     onChange={(e: any) => {
                         setEmails(e.target.value);

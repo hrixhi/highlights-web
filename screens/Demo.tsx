@@ -13,7 +13,7 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
     useEffect(() => {
         (async () => {
             setTimeout(async () => {
-                const email = 'demo@learnwithcues.com';
+                const email = 'instructor@learnwithcues.com';
                 const password = 'password';
 
                 setIsLoggingIn(true);
@@ -81,7 +81,7 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
                         textAlign: 'center',
                     }}
                 >
-                    Redirecting to Demo...
+                    Loading Demo...
                 </Text>
                 <Text
                     style={{
@@ -89,7 +89,7 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
                         paddingTop: 20,
                     }}
                 >
-                    Functionality such as Creating and Editing content is disabled
+                    Functionality such as creating and editing content will be disabled
                 </Text>
             </View>
         </View>

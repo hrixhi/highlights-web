@@ -389,6 +389,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         <View
                             style={{
                                 borderColor: '#f2f2f2',
+                                backgroundColor: '#fff',
                                 borderWidth: 1,
                                 borderRadius: 15,
                                 padding: 10,
