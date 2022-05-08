@@ -123,7 +123,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 })
                 .then((res) => {
                     if (res.data.cue.submitGrade) {
-                        console.log('Submit grade', res.data.cue.submitGrade);
                         server
                             .query({
                                 query: getGradesList,

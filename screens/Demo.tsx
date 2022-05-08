@@ -30,8 +30,6 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
                     })
                     .then(async (r: any) => {
                         if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
-                            console.log('Login result', r.data.user.login.user);
-
                             const u = r.data.user.login.user;
                             const token = r.data.user.login.token;
                             if (u.__typename) {

@@ -91,8 +91,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [editDiscussionThreadAttachments, setEditDiscussionThreadAttachments] = useState<any[]>([]);
     const [editDiscussionThreadAnonymous, setEditDiscussionThreadAnonymous] = useState(false);
 
-    console.log('Search results', searchResults);
-
     // ALERTS
     const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
@@ -247,7 +245,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
                 loadCueDiscussions(tId);
             } else {
-                loadCueDiscussions(threads[0]._id);
+                if (threads.length > 0) {
+                    loadCueDiscussions(threads[0]._id);
+                }
             }
         })();
     }, [threads]);
@@ -451,8 +451,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             });
     }, [props.channelId, props.cueId, threadId, html, attachments, userId, anonymous]);
 
-    console.log('Thread with replies', threadWithReplies);
-
     /**
      * @description Load the entire the Thread using the thread ID
      */
@@ -473,8 +471,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     },
                 })
                 .then((res) => {
-                    console.log('getThreadWithReplies', res.data.thread.getThreadWithReplies);
-
                     setThreadWithReplies(res.data.thread.getThreadWithReplies);
                     const tempChat: any[] = [];
                     res.data.thread.getThreadWithReplies.map((msg: any) => {
@@ -699,8 +695,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }
 
     const renderDiscussionEditor = () => {
-        console.log('Edit discussion thread html', editDiscussionThreadHtml);
-
         return (
             <View
                 style={{
@@ -922,7 +916,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const fileUploadEditor = useCallback(
         async (files: any) => {
-            console.log('File', files.item(0));
             const res = await handleFileUploadEditor(false, files.item(0), userId);
 
             if (!res || res.url === '' || res.type === '') {
@@ -950,8 +943,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             if (editDiscussionThreadId !== '') {
                 const updatedAttachments: any[] = [...editDiscussionThreadAttachments];
 
-                console.log('initial attachments', updatedAttachments);
-
                 updatedAttachments.push({
                     url: uploadURL,
                     type: uploadType,
@@ -961,8 +952,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 setEditDiscussionThreadAttachments(updatedAttachments);
             } else {
                 const updatedAttachments: any[] = [...attachments];
-
-                console.log('initial attachments', updatedAttachments);
 
                 updatedAttachments.push({
                     url: uploadURL,
@@ -983,8 +972,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         let selectedThreadTitle = '';
         let selectedThreadContent = '';
         let selectedThreadAttachments = [];
-
-        console.log('Selected thread', selectedThread);
 
         if (
             selectedThread.message &&
@@ -1557,8 +1544,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                 >
                     {threadChat.map((thread: any, ind: number) => {
-                        // console.log('Thread chat', thread);
-
                         let replyThreadContent = '';
                         let replyThreadAttachments = [];
 
@@ -2206,8 +2191,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             </View>
         );
     };
-
-    console.log('Thread Id', threadId);
 
     /**
      * @description Renders List of threads

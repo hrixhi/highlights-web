@@ -196,8 +196,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         refreshAfterCallback: false,
         callback: function () {
             this.selection.save();
-            // curr.editor.id
-            console.log('Curr editor Id', this.id);
 
             setEquationMultipartId(this.id);
 
@@ -228,6 +226,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             this.events.trigger('contentChanged');
         },
     });
+
+    console.log('Problems', problems);
 
     Froalaeditor.DefineIcon('insertTextEntryField', { NAME: 'plus', SVG_KEY: 'add' });
     Froalaeditor.RegisterCommand('insertTextEntryField', {
@@ -262,9 +262,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             setOptionEquations([]);
         }
     }, [editQuestionNumber]);
-
-    console.log('Problems', problems);
-    console.log('Edit question number', editQuestionNumber);
 
     /**
      * @description Inserts equation into problem
@@ -1441,6 +1438,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onChange={(val: any) => {
                                                                 const updatedProblems = [...problems];
 
+                                                                console.log('val.value', val.value);
+
                                                                 // MCQs
                                                                 if (val.value === 'mcq') {
                                                                     updatedProblems[index].questionType = '';
@@ -1496,7 +1495,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 // Drag and Drop
                                                                 if (val.value === 'dragdrop') {
                                                                     updatedProblems[index].questionType = 'dragdrop';
-                                                                    updatedProblems[index].options = [];
                                                                     updatedProblems[index].dragDropData = [
                                                                         [
                                                                             {
@@ -1516,15 +1514,16 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                                 // Clear Options
                                                                 if (val.value === 'trueFalse') {
-                                                                    updatedProblems[index].options = [];
-                                                                    updatedProblems[index].options.push({
-                                                                        option: 'True',
-                                                                        isCorrect: false,
-                                                                    });
-                                                                    updatedProblems[index].options.push({
-                                                                        option: 'False',
-                                                                        isCorrect: false,
-                                                                    });
+                                                                    updatedProblems[index].options = [
+                                                                        {
+                                                                            option: 'True',
+                                                                            isCorrect: false,
+                                                                        },
+                                                                        {
+                                                                            option: 'False',
+                                                                            isCorrect: false,
+                                                                        },
+                                                                    ];
                                                                 }
 
                                                                 if (val.value === 'matchTableGrid') {
@@ -1544,7 +1543,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 if (val.value !== 'dragdrop') {
                                                                     updatedProblems[index].dragDropData = [];
                                                                     updatedProblems[index].dragDropHeaders = [];
-                                                                    updatedProblems[index].options = [];
                                                                 }
 
                                                                 if (val.value !== 'matchTableGrid') {
@@ -1904,47 +1902,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     ref={RichText}
                                     model={problems[index].highlightTextHtml}
                                     onModelChange={(model: any) => {
-                                        console.log('On model change called');
-
                                         const newProbs = [...problems];
-
-                                        // Extract SPAN Tags from HTML and update Span IDS
-                                        // var el = document.createElement('html');
-                                        // el.innerHTML = model;
-                                        // const spans: HTMLCollection = el.getElementsByTagName('span');
-
-                                        // const highlightTextChoices: boolean[] = [];
-
-                                        // let spanIdCounter = 0;
-
-                                        // for (let i = 0; i < spans.length; i++) {
-                                        //     const span = spans.item(i);
-
-                                        //     console.log("Span", span)
-                                        //     if (span.style.backgroundColor === 'rgb(97, 189, 109)') {
-                                        //         highlightTextChoices.push(true);
-                                        //         span.setAttribute('id', `${spanIdCounter}`);
-                                        //         spanIdCounter += 1;
-                                        //     } else if (span.style.backgroundColor === 'rgb(247, 218, 100)') {
-                                        //         span.setAttribute('id', `${spanIdCounter}`);
-                                        //         highlightTextChoices.push(false);
-                                        //         spanIdCounter += 1;
-                                        //     }
-                                        // }
-
-                                        // // Array.from(spans).map((span: any, spanIndex: number) => {
-
-                                        // // })
-
-                                        // console.log("Inner HTML", el.innerHTML)
-
-                                        // const pTag = el.getElementsByTagName('body')[0].innerHTML;
-
-                                        // console.log("PTag", pTag)
-
-                                        // newProbs[index].highlightTextHtml = pTag;
-
-                                        // newProbs[index].highlightTextChoices = highlightTextChoices;
 
                                         newProbs[index].highlightTextHtml = model;
 
@@ -2007,8 +1965,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                         const spans: HTMLCollection = el.getElementsByTagName('span');
 
-                                        console.log('Spans', spans);
-
                                         let updateInlineChoices: any[] = problems[index].inlineChoiceOptions;
 
                                         // Added choice
@@ -2052,9 +2008,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }
                                             });
 
-                                            console.log('DeletedInd', deletedInd);
-                                            console.log('deleteCount', deleteCount);
-
                                             updateInlineChoices.splice(deletedInd, deleteCount);
 
                                             // Update all span tags
@@ -2073,8 +2026,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 /// create a temporary div or tr (to support tds)
                                                 tmp = document.createElement(html.indexOf('<td') != -1 ? 'tr' : 'div');
 
-                                                console.log('tmp', tmp);
-
                                                 /// fill that div with our html, this generates our children
                                                 tmp.innerHTML = html;
                                                 /// step through the temporary div's children and insertBefore our target
@@ -2086,7 +2037,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 /// around, and why I'm assigning the elements I'm working with to `elm`
                                                 /// and `last`
                                                 last = target;
-                                                console.log('Target', target);
                                                 while (x--) {
                                                     target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
                                                     last = elm;
@@ -2102,7 +2052,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         }
 
                                         newProbs[index].inlineChoiceOptions = updateInlineChoices;
-                                        console.log('Update inline choices', updateInlineChoices);
 
                                         setProblems(newProbs);
                                         props.setProblems(newProbs);
@@ -2163,10 +2112,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                         const spans: HTMLCollection = el.getElementsByTagName('span');
 
-                                        console.log('Spans', spans);
-
-                                        console.log('Text entry model', model);
-
                                         let updateTextEntryOptions: any[] = problems[index].textEntryOptions;
 
                                         // Added choice
@@ -2206,9 +2151,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }
                                             });
 
-                                            console.log('DeletedInd', deletedInd);
-                                            console.log('deleteCount', deleteCount);
-
                                             updateTextEntryOptions.splice(deletedInd, deleteCount);
 
                                             // Update all span tags
@@ -2227,8 +2169,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 /// create a temporary div or tr (to support tds)
                                                 tmp = document.createElement(html.indexOf('<td') != -1 ? 'tr' : 'div');
 
-                                                console.log('tmp', tmp);
-
                                                 /// fill that div with our html, this generates our children
                                                 tmp.innerHTML = html;
                                                 /// step through the temporary div's children and insertBefore our target
@@ -2240,7 +2180,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 /// around, and why I'm assigning the elements I'm working with to `elm`
                                                 /// and `last`
                                                 last = target;
-                                                console.log('Target', target);
                                                 while (x--) {
                                                     target.parentNode.insertBefore((elm = tmp.childNodes[x]), last);
                                                     last = elm;
@@ -2256,7 +2195,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         }
 
                                         newProbs[index].textEntryOptions = updateTextEntryOptions;
-                                        console.log('Update text entry choices', updateTextEntryOptions);
 
                                         setProblems(newProbs);
                                         props.setProblems(newProbs);
@@ -2788,8 +2726,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
                                                 if (node.type === 'tag' && node.name === 'span') {
-                                                    console.log('Node span', node);
-
                                                     let className = '';
 
                                                     if (node.attribs.style === 'background-color: rgb(97, 189, 109);') {
@@ -3120,8 +3056,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     },
                                                 ];
 
-                                                console.log('Markers', updatedProblems[index].hotspots);
-
                                                 setProblems(updatedProblems);
                                                 props.setProblems(updatedProblems);
                                             }}
@@ -3190,7 +3124,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     }}
                                 >
                                     {problem.hotspotOptions.map((option: any, ind: number) => {
-                                        console.log('Hotspot', option);
                                         return (
                                             <View
                                                 style={{

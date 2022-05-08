@@ -129,11 +129,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const doesNotExistAlert = PreferredLanguageText('doesNotExists');
 
-    console.log('Selected workspace', selectedWorkspace);
-    console.log('Cue Map', cueMap);
-    console.log('Props.activeWorkspaceTab', props.activeWorkspaceTab);
-    console.log('Props.option', props.option);
-
     /**
      * @description Save Sort by option in settings
      */
@@ -153,7 +148,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     useEffect(() => {
         setSelectedWorkspace(props.selectedWorkspace);
-        console.log('Selected workspace dashboard', selectedWorkspace);
     }, [props.selectedWorkspace]);
 
     const getWorkspaceNavbarIconName = (op: string) => {
@@ -743,9 +737,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Handle create instant meeting for channel owners
      */
     const getCurrentMeetings = useCallback(async () => {
-        console.log('Get ongoing meetings channelId', selectedWorkspace);
-        console.log('');
-
         if (userId !== '' && selectedWorkspace !== '') {
             const server = fetchAPI('');
             server
@@ -758,12 +749,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 })
                 .then((res) => {
                     if (res.data && res.data.channel.ongoingMeetings) {
-                        console.log('Ongoing meetings', res.data.channel.ongoingMeetings);
                         setOngoingMeetings(res.data.channel.ongoingMeetings);
                     }
                 })
                 .catch((err) => {
-                    console.log('Error in getCurrentMeeting', err);
                     Alert('Something went wrong.');
                 });
         }
@@ -2683,7 +2672,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             if (props.activeWorkspaceTab === 'Content') {
                                 props.openCreate();
                             } else if (props.activeWorkspaceTab === 'Discuss') {
-                                console.log('Set show new discussion post true');
                                 setShowNewDiscussionPost(true);
                             } else if (props.activeWorkspaceTab === 'Meet') {
                                 handleStartMeeting(
@@ -3253,6 +3241,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 : selectedWorkspace.split('-SPLIT-')[3]
                         }
                         courseName={selectedWorkspace.split('-SPLIT-')[0]}
+                        channelId={
+                            selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
+                                ? ''
+                                : selectedWorkspace.split('-SPLIT-')[1]
+                        }
                         createOption={props.createOption}
                         showImportCreate={props.showImportCreate}
                         setShowImportCreate={props.setShowImportCreate}

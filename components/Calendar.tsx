@@ -1246,8 +1246,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditEventOptions = () => {
         const { recurringId, start, end, channelId } = editEvent;
 
-        console.log('Edit event', editEvent);
-
         // const date = new Date();
 
         return (
@@ -1618,7 +1616,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const getAgendaNavbarIconName = (op: string) => {
-        console.log('Agenda navbar op', op);
         switch (op) {
             case 'Agenda':
                 return op === tab ? 'list' : 'list-outline';
@@ -1997,8 +1994,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View>
         );
     };
-
-    console.log('Activity', activity);
 
     // MAIN RETURN
     return (

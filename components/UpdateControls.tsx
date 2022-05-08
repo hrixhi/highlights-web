@@ -1,6 +1,6 @@
 // REACT
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, Animated } from 'react-native';
+import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import lodash from 'lodash';
@@ -358,8 +358,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             if (url === '') return;
 
-            console.log('View submission webviewer');
-
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
@@ -463,7 +461,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 );
             });
         }
-    }, [viewSubmission, viewSubmissionTab, submissionAttempts, props.showOriginal, userId, userFullName]);
+    }, [
+        viewSubmission,
+        viewSubmissionTab,
+        submissionAttempts,
+        props.showOriginal,
+        props.showOptions,
+        userId,
+        userFullName,
+    ]);
 
     /**
      * @description Used to detect ongoing quiz and
@@ -714,7 +720,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead();
     }, [props.cue.status]);
 
-    console.log('Submission draft updatecontrols', submissionDraft);
+    // const handleSaveChanges = useCallback(async () => {
+    //     if (isQuiz) {
+    //         // first try and save quiz changes and then save details
+    //     }
+
+    //     await handleUpdateContent();
+    //     await handleUpdateDetails();
+    //     await handleRestrictAccessUpdate();
+    // }, [props.save, props.channelOwner, isQuiz]);
 
     /**
      * @description Handle Save when props.save
@@ -745,7 +759,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ]);
             props.setSave(false);
         }
-    }, [props.save, props.channelOwner, props.showOriginal, isQuiz]);
+    }, [props.save, props.channelOwner, isQuiz]);
 
     /**
      * @description Handle Delete when props.del
@@ -914,18 +928,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 const { documentViewer, annotationManager } = instance.Core;
                 // you can now call WebViewer APIs here...
 
-                // const u = await AsyncStorage.getItem('user');
-
-                // let user: any;
-
-                // if (u) {
-                //     user = JSON.parse(u);
-                //     annotationManager.setCurrentUser(user.fullName);
-                // }
-
                 if (!documentViewer || !annotationManager) return;
-
-                console.log('Submission draft when loading annotation', submissionDraft);
 
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
@@ -936,8 +939,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         submissionDraft[submissionDraft.length - 1] === '}'
                     ) {
                         const obj = JSON.parse(submissionDraft);
-
-                        console.log('Annotations object', obj);
 
                         if (obj.annotations !== '') {
                             const xfdfString = obj.annotations;
@@ -995,8 +996,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ...obj,
                 annotations: xfdfString,
             };
-
-            console.log('Annotation changed', xfdfString);
 
             setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation));
         },
@@ -1396,9 +1395,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             if (submissionDraft && submissionDraft[0] === '{' && submissionDraft[submissionDraft.length - 1] === '}') {
                 updatedDraft = JSON.parse(submissionDraft);
             }
-
-            console.log('Submission Draft inside handleUpdateCue');
-            console.log(submissionDraft);
 
             // Submission draft will also have annotations so preserve those
 
@@ -2873,22 +2869,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             .catch((err) => console.log(err));
     };
 
-    if (loading || loadingAfterModifyingQuiz || fetchingQuiz) {
-        return null;
-    }
-
     /**
      * @description QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
      */
     const renderQuizTimerOrUploadOptions = () => {
         return props.showOriginal && (imported || isQuiz) ? (
-            <View style={{ flexDirection: 'column', marginRight: 0, marginLeft: 0, backgroundColor: '#f8f8f8' }}>
+            <View style={{ flexDirection: 'column', marginRight: 0, marginLeft: 0 }}>
                 <View
                     style={{
                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                         alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center',
                         marginBottom: 25,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {isOwner || !props.cue.channelId ? (
@@ -2936,7 +2927,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
-                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <CountdownCircleTimer
@@ -2969,14 +2959,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             marginLeft: 15,
                             marginTop: 20,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         {isOwner || !props.cue.channelId ? (
                             <TouchableOpacity
                                 onPress={() => clearAll()}
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     borderRadius: 15, // marginLeft: 15,
                                     marginTop: 5,
                                 }}
@@ -3005,7 +2993,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const renderQuizEndedMessage = () => {
         return (
-            <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <Text
                     style={{
                         width: '100%',
@@ -3040,14 +3028,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: '100%',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
-                <View
-                    style={{
-                        backgroundColor: '#f8f8f8',
-                    }}
-                >
+                <View style={{}}>
                     {quizAttempted ? (
                         <View
                             style={{
@@ -3055,7 +3038,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 20,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
@@ -3070,7 +3052,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 20,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Ionicons name="alert-circle-outline" size={22} color={'#D91D56'} />
@@ -3080,11 +3061,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View>
 
                 {props.cue.graded && props.cue.releaseSubmission ? (
-                    <View
-                        style={{
-                            backgroundColor: '#f8f8f8',
-                        }}
-                    >
+                    <View style={{}}>
                         <Text
                             style={{
                                 fontSize: 15,
@@ -3127,7 +3104,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     justifyContent: 'space-between',
                     maxWidth: 1024,
                     alignSelf: 'center',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && viewSubmission ? (
@@ -3137,7 +3113,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             alignItems: 'center',
                             marginTop: 0,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
@@ -3149,7 +3124,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 {/* View Submission button here */}
                 {props.cue.graded && props.cue.releaseSubmission && viewSubmission ? (
-                    <View style={{ paddingLeft: 20, backgroundColor: '#f8f8f8' }}>
+                    <View style={{ paddingLeft: 20 }}>
                         <Text
                             style={{
                                 fontSize: 15,
@@ -3173,7 +3148,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : null}
 
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.releaseSubmission ? (
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
+                    <View style={{ flexDirection: 'row' }}>
                         {viewSubmission ? (
                             props.cue.releaseSubmission ||
                             (!allowLateSubmission && new Date() > deadline) ||
@@ -3183,7 +3158,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         setViewSubmission(false);
                                     }}
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         // overflow: 'hidden',
                                         // height: 35,
                                         // marginTop: 15,
@@ -3218,7 +3192,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setViewSubmission(true);
                                 }}
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     overflow: 'hidden',
                                     height: 35,
                                     justifyContent: 'center',
@@ -3252,7 +3225,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     marginTop: 20,
                     marginBottom: 10,
                     marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <Text
@@ -3320,7 +3292,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     alignSelf: 'center',
                     minHeight: 475,
                     paddingTop: 0,
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 {!props.showOriginal || loading ? null : isQuiz ? (
@@ -3331,7 +3302,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     width: '100%',
                                     flexDirection: 'column',
                                     paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
-                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <Quiz
@@ -3364,20 +3334,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {renderFooter()}
                             </View>
                         ) : (
-                            <View
-                                style={{
-                                    backgroundColor: '#f8f8f8',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        backgroundColor: '#f8f8f8',
-                                    }}
-                                >
+                            <View style={{}}>
+                                <View style={{}}>
                                     <TouchableOpacity
                                         onPress={() => initQuiz()}
                                         style={{
-                                            backgroundColor: '#f8f8f8',
                                             // overflow: 'hidden',
                                             // height: 35,
                                             justifyContent: 'center',
@@ -3415,7 +3376,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 flexDirection: 'column',
                                 paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Quiz
@@ -3456,7 +3416,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     type === 'mpeg' ||
                     type === 'mp2' ||
                     type === 'wav' ? (
-                        <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                        <View style={{ width: '100%' }}>
                             <ReactPlayer
                                 url={url}
                                 controls={true}
@@ -3469,7 +3429,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             />
                         </View>
                     ) : (
-                        <View key={url + props.showOriginal.toString()} style={{ backgroundColor: '#f8f8f8' }}>
+                        <View key={url + props.showOriginal.toString()} style={{}}>
                             <div
                                 className="webviewer"
                                 ref={RichText}
@@ -3491,14 +3451,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === 'mpeg' ||
                     submissionType === 'mp2' ||
                     submissionType === 'wav' ? (
-                        <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                        <View style={{ width: '100%' }}>
                             <ReactPlayer url={submissionUrl} controls={true} width={'100%'} height={'100%'} />
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
                     ) : (
                         <View
-                            style={{ backgroundColor: '#f8f8f8' }}
+                            style={{}}
                             key={
                                 JSON.stringify(submissionImported) +
                                 JSON.stringify(viewSubmission) +
@@ -3950,7 +3910,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
+
                         flex: 1,
                         flexDirection: 'row',
                     }}
@@ -3977,7 +3937,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 <View
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         height: 40,
                                         marginRight: 10,
                                     }}
@@ -4054,7 +4013,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4073,7 +4031,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             isQuiz ? null : (
                                 <View
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         height: 40,
                                         marginRight: 10,
                                     }}
@@ -4094,7 +4051,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             )
                         ) : (
-                            <View style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
+                            <View style={{ flex: 1 }}>
                                 <Text
                                     style={{
                                         fontSize: 15,
@@ -4247,7 +4204,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4265,7 +4221,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{ flexDirection: 'row', justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     marginRight: 10,
                                 }}
@@ -4290,7 +4245,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
+
                                 justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                 alignItems: 'center',
                             }}
@@ -4355,7 +4310,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flex: 1,
                         flexDirection: 'row',
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4373,7 +4327,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{ flexDirection: 'row', justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     marginRight: 10,
                                 }}
@@ -4398,7 +4351,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
+
                                 alignItems: 'center',
                             }}
                         >
@@ -4484,7 +4437,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -4502,7 +4454,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             display: 'flex',
                             flexDirection: 'row',
-                            backgroundColor: '#f8f8f8',
+
                             justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
                         }}
                     >
@@ -4526,7 +4478,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -4542,7 +4493,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View>
                         <View
                             style={{
-                                backgroundColor: '#f8f8f8',
                                 height: 40,
                                 marginRight: 10,
                                 flexDirection: 'row',
@@ -4575,7 +4525,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     display: 'flex',
                                     flexDirection: 'row',
                                     justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
-                                    backgroundColor: '#f8f8f8',
+
                                     alignItems: 'center',
                                 }}
                             >
@@ -4633,7 +4583,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -4654,10 +4604,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
-                            <View style={{ width: '85%', backgroundColor: '#f8f8f8' }}>
+                            <View style={{ width: '85%' }}>
                                 <View style={styles.colorBar}>
                                     <TouchableOpacity style={styles.allGrayOutline} onPress={() => {}}>
                                         <Text
@@ -4680,10 +4629,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
-                            <View style={{ backgroundColor: '#f8f8f8' }}>
+                            <View style={{}}>
                                 {addCustomCategory ? (
                                     <View style={styles.colorBar}>
                                         <TextInput
@@ -4770,7 +4718,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </label>
                                 )}
                             </View>
-                            <View style={{ backgroundColor: '#f8f8f8', paddingLeft: 20 }}>
+                            <View style={{ paddingLeft: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -4781,7 +4729,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setAddCustomCategory(true);
                                         }
                                     }}
-                                    style={{ backgroundColor: '#f8f8f8' }}
+                                    style={{}}
                                 >
                                     <Text
                                         style={{
@@ -4824,7 +4772,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -4841,10 +4789,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flexDirection: 'row',
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
-                    <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                    <View style={{ width: '100%' }}>
                         <ScrollView
                             style={{ ...styles.colorBar, height: 20 }}
                             horizontal={true}
@@ -4900,7 +4847,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -4917,7 +4864,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flexDirection: 'row',
-                        backgroundColor: '#f8f8f8',
+
                         alignItems: 'center',
                     }}
                 >
@@ -4947,7 +4894,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         />
                     </label>
 
-                    <View style={{ backgroundColor: '#f8f8f8', paddingLeft: 20 }}>
+                    <View style={{ paddingLeft: 20 }}>
                         <TouchableOpacity
                             disabled={shareWithChannelId === 'None'}
                             onPress={() => {
@@ -4971,7 +4918,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ]
                                 );
                             }}
-                            style={{ backgroundColor: '#f8f8f8' }}
+                            style={{}}
                         >
                             <Text
                                 style={{
@@ -5011,7 +4958,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -5026,7 +4972,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                     <View
                         style={{
-                            backgroundColor: '#f8f8f8',
                             // width: "100%",
                             height: 40,
                         }}
@@ -5059,7 +5004,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flex: 1,
                                 flexDirection: 'row',
                                 paddingBottom: 15,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Text
@@ -5075,7 +5019,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{}}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     alignSelf: width < 768 ? 'flex-start' : 'flex-end',
                                 }}
@@ -5097,7 +5040,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         display: 'flex',
                                         flexDirection: 'row',
                                         alignItems: 'center',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text
@@ -5183,7 +5125,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         flex: 1,
                                         flexDirection: 'row',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <View style={{ flex: 1 }}>
@@ -5247,7 +5188,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 flex: 1,
                                 paddingBottom: 15,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Text
@@ -5263,7 +5203,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                     flexDirection: 'row',
@@ -5286,7 +5225,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text style={styles.text}>{PreferredLanguageText('remindTill')}</Text>
@@ -5400,7 +5338,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         justifyContent: 'center',
                         display: 'flex',
                         flexDirection: 'row',
@@ -5463,10 +5401,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     };
 
+    if (loading || loadingAfterModifyingQuiz || fetchingQuiz || updatingCueContent || updatingCueDetails) {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    paddingVertical: 100,
+                    justifyContent: 'center',
+                    flex: 1,
+                    flexDirection: 'column',
+                }}
+            >
+                <ActivityIndicator color={'#1F1F1F'} />
+            </View>
+        );
+    }
+
     if (initiateAt > new Date() && !isOwner) {
         return (
             <View style={{ minHeight: Dimensions.get('window').height }}>
-                <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
+                <View style={{ flex: 1 }}>
                     <Text
                         style={{
                             width: '100%',
@@ -5492,7 +5446,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 // paddingBottom: 50
@@ -5537,7 +5491,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             : // : width < 1024
                               // ? Dimensions.get('window').height - (64 + 68)
                               Dimensions.get('window').height - 64,
-                    backgroundColor: '#f8f8f8',
+
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -5659,7 +5613,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 <TouchableOpacity
                                                     onPress={() => clearAll()}
                                                     style={{
-                                                        backgroundColor: '#f8f8f8',
                                                         borderRadius: 15,
                                                         marginTop: 5,
                                                     }}
@@ -5682,7 +5635,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <TouchableOpacity
                                             onPress={() => clearAll()}
                                             style={{
-                                                backgroundColor: '#f8f8f8',
                                                 borderRadius: 15,
                                                 marginLeft: 15,
                                                 marginTop: 5,
@@ -5785,7 +5737,7 @@ export default UpdateControls;
 const styles: any = StyleSheet.create({
     footer: {
         width: '100%',
-        backgroundColor: '#f8f8f8',
+
         display: 'flex',
         flexDirection: 'row',
         marginTop: Dimensions.get('window').width < 768 ? 40 : 80,
@@ -5799,7 +5751,6 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: '#f8f8f8',
     },
     colorContainerOutline: {
         lineHeight: 20,
@@ -5808,7 +5759,7 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: '#f8f8f8',
+
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#1F1F1F',
@@ -5827,7 +5778,7 @@ const styles: any = StyleSheet.create({
     colorBar: {
         width: '100%',
         flexDirection: 'row',
-        backgroundColor: '#f8f8f8',
+
         lineHeight: 20,
     },
     all: {
@@ -5836,7 +5787,7 @@ const styles: any = StyleSheet.create({
         fontWeight: 'bold',
         height: 25,
         paddingHorizontal: Dimensions.get('window').width < 768 ? 12 : 15,
-        backgroundColor: '#f8f8f8',
+
         lineHeight: 25,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
@@ -5857,7 +5808,7 @@ const styles: any = StyleSheet.create({
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#f8f8f8',
+
         borderRadius: 1,
         borderWidth: 1,
         borderColor: '#1F1F1F',

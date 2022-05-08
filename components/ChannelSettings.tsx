@@ -187,8 +187,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         })();
     }, []);
 
-    console.log('render channel settings');
-
     /**
      * @description Filter dropdown users based on Roles, Grades and Section
      */
@@ -1295,8 +1293,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             </View>
         );
     }
-
-    console.log('Channel settings props', props);
 
     // MAIN RETURN
     return (

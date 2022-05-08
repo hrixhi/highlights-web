@@ -82,10 +82,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
 
-    console.log('ChatName', chatName);
-
-    console.log('Chat groupid', groupId);
-
     const width = Dimensions.get('window').width;
     let options = users.map((sub: any) => {
         return {
@@ -183,7 +179,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             } else if (Dimensions.get('window').width >= 768 && chats.length !== 0 && !props.showDirectory) {
                 // Set the first chat as default if not mobile view and not view directory
                 const firstChat = chats[0];
-                console.log('First chat', firstChat);
 
                 if (firstChat.users && firstChat.users.length > 2) {
                     loadGroupChat(firstChat.users, firstChat._id);
@@ -467,11 +462,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      */
     const onSend = useCallback(
         async (messages = []) => {
-            console.log('ON SEND GROUP ID', groupId);
-            console.log('creating message', creatingMessage);
-            console.log('chat users', chatUsers);
-            console.log('User Id', userId);
-
             if (creatingMessage) return;
 
             const message =

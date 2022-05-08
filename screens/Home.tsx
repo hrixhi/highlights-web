@@ -235,7 +235,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         if (!initUserFlow && user && user.email && user.createdAt) {
             const signed_up_at = new Date(parseInt(user.createdAt));
 
-            console.log('Init user flow');
             userflow.init('ct_pgwxzraltrarhdz3sfas2rgkoi');
             userflow.identify(user._id, {
                 name: user.fullName,
@@ -246,7 +245,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
 
             if (user.email === disableEmailId) {
-                console.log('start the flow');
                 userflow.start('084a9bd0-4ce0-4056-b802-48c5d3efb7d4');
             }
             setInitUserFlow(true);

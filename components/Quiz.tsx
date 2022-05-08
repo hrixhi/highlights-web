@@ -108,9 +108,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [multipartEquations, setMultipartEquations] = useState<any[]>([]);
     const [showMultipartFormulas, setShowMultipartFormulas] = useState<any[]>([]);
 
-    console.log('Solutions', solutions);
-    console.log('Problems', problems);
-
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
         PATH: 'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z',
@@ -179,8 +176,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         refreshAfterCallback: false,
         callback: function () {
             this.selection.save();
-            // curr.editor.id
-            console.log('Curr editor Id', this.id);
 
             setEquationMultipartId(this.id);
 
@@ -361,13 +356,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         if (props.shuffleQuiz && !props.isOwner) {
             setLoading(true);
 
-            console.log('shuffleQuizAttemptOrder', props.shuffleQuizAttemptOrder);
-
             if (props.shuffleQuizAttemptOrder === undefined || props.shuffleQuizAttemptOrder.length === 0) {
                 // If it's a shuffle quiz then we need to initialize a random order for each attempt
                 const questionNumberArray = [];
-
-                console.log('Initialize shuffle order for random questions');
 
                 for (let i = 0; i < problems.length; i++) {
                     questionNumberArray.push(i);
@@ -405,13 +396,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     const shuffledArray = shuffled.flat();
 
-                    console.log('Shuffled question array', shuffledArray);
-
                     props.setShuffleQuizAttemptOrder(shuffledArray);
                 } else {
                     const shuffledArray = shuffle(questionNumberArray);
-
-                    console.log('Shuffled question array', shuffledArray);
 
                     props.setShuffleQuizAttemptOrder(shuffledArray);
                 }
@@ -429,8 +416,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     return updatedProblemsWithIndex[order];
                 });
 
-                console.log('Random order questions', randomOrderQuestions);
-
                 setProblems(randomOrderQuestions);
             }
         } else {
@@ -439,7 +424,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return updated;
             });
 
-            console.log('Set questions without shuffle');
             setProblems(updatedProblemsWithIndex);
         }
         setLoading(false);
@@ -538,7 +522,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                         marginRight: 15,
                     }}
                 >
@@ -554,7 +537,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8',
                         flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column',
                         alignItems: Dimensions.get('window').width < 768 ? 'center' : 'flex-end',
                         justifyContent: 'flex-start',
@@ -706,7 +688,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
+
                         marginRight: 15,
                     }}
                 >
@@ -722,7 +704,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8',
                         height: 40,
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
@@ -1142,22 +1123,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      */
     const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
         const sourceClone = Array.from(source);
-        console.log('Source clone', sourceClone);
 
         const destClone = Array.from(destination);
-        console.log('Destination clone', destClone);
 
         const [removed] = sourceClone.splice(droppableSource.index, 1);
-        console.log('Removed', removed);
 
         destClone.splice(droppableDestination.index, 0, removed);
-        console.log();
 
         const result: any = {};
         result[droppableSource.droppableId] = sourceClone;
         result[droppableDestination.droppableId] = destClone;
-
-        console.log('Result', result);
 
         return result;
     };
@@ -1446,7 +1421,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <ActivityIndicator color={'#1F1F1F'} />
@@ -1458,7 +1432,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
@@ -1577,8 +1551,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     // array
                     const usedOptions: any[] = [];
 
-                    console.log('Solutions[problemIndex]', solutions[problemIndex]);
-
                     solutions[problemIndex].dragDropChoices.map((selections: any[]) => {
                         let groupOptions: any[] = [];
                         selections.map((label: any) => {
@@ -1603,8 +1575,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     dndOptions = [allOptions, ...solutionChoices];
                 }
-
-                console.log('DragDropOptions', dndOptions);
 
                 const dragDropOptions = dndOptions;
 
@@ -2290,7 +2260,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 marginRight: 20,
                                                                 marginBottom: 20,
                                                                 borderRadius: 10,
-                                                                // backgroundColor: '#f8f8f8',
+                                                                //
                                                                 borderWidth: 1,
                                                                 borderColor: '#ccc',
                                                                 shadowOffset: {
@@ -2355,7 +2325,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     marginRight: 20,
                                                     marginBottom: 20,
                                                     borderRadius: 10,
-                                                    // backgroundColor: '#f8f8f8',
+                                                    //
                                                     borderWidth: 1,
                                                     borderColor: '#ccc',
                                                     shadowOffset: {
@@ -2444,8 +2414,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
                                                 if (node.type === 'tag' && node.name === 'span') {
                                                     let className = '';
-
-                                                    console.log('node', node);
 
                                                     if (
                                                         node.attribs.id &&
@@ -2574,9 +2542,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         const sInd = +source.droppableId;
                                         const dInd = +destination.droppableId;
 
-                                        console.log('Source ind', sInd);
-                                        console.log('Destination ind', dInd);
-
                                         if (sInd === dInd) {
                                             if (dInd !== 0) {
                                                 const updatedSolution = [...solutions];
@@ -2592,7 +2557,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     dndOptions.length
                                                 );
                                                 setSolutions(updatedSolution);
-                                                console.log('Updated solutions', updatedSolution);
                                                 props.setSolutions(updatedSolution);
                                             }
                                         } else {
@@ -2795,8 +2759,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
-                                                                    console.log('Solution ', e.target.value);
-
                                                                     const updatedSolution = [...solutions];
                                                                     updatedSolution[problemIndex].inlineChoiceSelection[
                                                                         Number(node.attribs.id)
@@ -2846,8 +2808,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
-                                                                    console.log('Solution ', e.target.value);
-
                                                                     const updatedSolution = [...solutions];
                                                                     updatedSolution[problemIndex].inlineChoiceSelection[
                                                                         Number(node.attribs.id)
@@ -3883,7 +3843,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <TouchableOpacity
                                     onPress={() => resetChanges(index)}
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         borderRadius: 15,
                                         width: 120,
                                         marginRight: 30,
@@ -3896,7 +3855,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderColor: '#000',
                                             borderWidth: 1,
                                             color: '#000',
-                                            backgroundColor: '#f8f8f8',
+
                                             fontSize: 11,
                                             paddingHorizontal: 24,
                                             fontFamily: 'inter',
@@ -3915,7 +3874,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         setEditQuestion({});
                                         setEditQuestionContent('');
                                     }}
-                                    style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 120 }}
+                                    style={{ borderRadius: 15, width: 120 }}
                                 >
                                     <Text
                                         style={{
@@ -3959,7 +3918,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 shuffleQuiz
                             );
                         }}
-                        style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 150, marginTop: 50 }}
+                        style={{  borderRadius: 15, width: 150, marginTop: 50 }}
                         disabled={props.user.email === disableEmailId}
                     >
                         <Text

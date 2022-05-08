@@ -58,9 +58,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 const { title: aTitle } = htmlStringParser(a.cue);
                 const { title: bTitle } = htmlStringParser(b.cue);
 
-                console.log('aTitle', aTitle);
-                console.log('bTitle', bTitle);
-
                 if (aTitle < bTitle) {
                     return sortByOrder ? -1 : 1;
                 } else if (aTitle > bTitle) {
@@ -156,9 +153,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 const scoreObjectB = scores[0].scores.find((s: any) => {
                     return s.cueId.toString().trim() === bId.toString().trim();
                 });
-
-                console.log('Score Object A', scoreObjectA);
-                console.log('Score Object B', scoreObjectB);
 
                 if (scoreObjectA && !scoreObjectB) {
                     return -1;
@@ -943,8 +937,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         const hasDeadlinePassed = new Date(cue.deadline) < new Date() || cue.releaseSubmission;
                         const hasLateSubmissionPassed =
                             (cue.availableUntil && new Date(cue.availableUntil) < new Date()) || cue.releaseSubmission;
-
-                        console.log('Has late deadline passed ' + (ind + 1), hasLateSubmissionPassed);
 
                         let remaining;
 

@@ -88,10 +88,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
     const [activeTab, setActiveTab] = useState('Content');
 
-    console.log('Cue Id', props.cue);
-
-    console.log('Subscriptions', props.subscriptions);
-
     // HOOKS
 
     /**
@@ -123,15 +119,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return sub.channelId === props.cue.channelId;
             });
 
-            console.log('Find course', findCourse);
-
             if (findCourse && findCourse.colorCode) {
                 setCourseColor(findCourse.colorCode);
             }
         }
     }, [props.cue.channelId, props.subscriptions]);
-
-    console.log('Course color', courseColor);
 
     /**
      * @description Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
@@ -1818,6 +1810,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 opacity: modalAnimation,
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
+                backgroundColor: channelOwner ? '#f8f8f8' : '#fff',
             }}
             key={JSON.stringify(threads)}
         >
@@ -1878,6 +1871,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             ? Dimensions.get('window').height - (64 + 60)
                                             : Dimensions.get('window').height - 64,
                                     alignItems: 'center',
+                                    backgroundColor: channelOwner ? '#f8f8f8' : '#fff',
                                 }}
                                 showsVerticalScrollIndicator={true}
                                 contentOffset={{ x: 0, y: 1 }}

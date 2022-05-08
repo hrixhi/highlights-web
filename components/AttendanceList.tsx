@@ -126,8 +126,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         loadPastSchedule();
     }, [props.channelId]);
 
-    console.log('channelAttendances', channelAttendances);
-
     /**
      * @description Filter users by search
      */
@@ -598,7 +596,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             {/* All assignments */}
                             {pastMeetings.map((meeting: any, col: number) => {
                                 const { title, start, end, recordingLink } = meeting;
-                                console.log('Meeting', meeting);
 
                                 return (
                                     <th
@@ -902,7 +899,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                             {pastMeetings.map((meeting: any, col: number) => {
                                 const { title, start, end, recordingLink } = meeting;
-                                console.log('Meeting', meeting);
 
                                 return (
                                     <TouchableOpacity

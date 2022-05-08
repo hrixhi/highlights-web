@@ -30,9 +30,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [comment, setComment] = useState(props.comment ? props.comment : '');
     const [headers, setHeaders] = useState<any>(props.headers);
 
-    console.log('Solutions', solutions);
-    console.log('Props', props);
-
     if (!props.solutions) {
         return null;
     }
@@ -346,14 +343,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <ActivityIndicator color={'#1F1F1F'} />
             </View>
         );
-
-    console.log('Solutions', solutions);
 
     // MAIN RETURN
 
@@ -361,7 +355,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 paddingTop: 15,
@@ -482,8 +476,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     content = parse.content;
                     type = parse.type;
                 }
-
-                console.log('Problem', problem);
 
                 return (
                     <View
@@ -705,7 +697,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 paddingHorizontal: 15,
                                                 color,
                                                 lineHeight: 25,
-                                                backgroundColor: selected || isCorrectAnswer ? background : '#f8f8f8',
+                                                backgroundColor: selected || isCorrectAnswer ? background : 'none',
                                                 borderColor: selected || isCorrectAnswer ? color : 'none',
                                                 borderWidth: selected || isCorrectAnswer ? 1 : 0,
                                                 padding: 7,
@@ -862,7 +854,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 marginRight: 20,
                                                                 marginBottom: 20,
                                                                 borderRadius: 10,
-                                                                // backgroundColor: '#f8f8f8',
                                                                 borderWidth: 1,
                                                                 borderColor: '#ccc',
                                                                 shadowOffset: {
@@ -1352,7 +1343,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 let isCorrectAnswer = option.isCorrect;
 
                                                 let color = '#000000';
-                                                let background = '#f8f8f8';
+                                                let background = 'none';
 
                                                 if (selected && isCorrectAnswer) {
                                                     color = '#35ac78';
@@ -1402,9 +1393,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 color,
                                                                 lineHeight: 25,
                                                                 backgroundColor:
-                                                                    selected || isCorrectAnswer
-                                                                        ? background
-                                                                        : '#f8f8f8',
+                                                                    selected || isCorrectAnswer ? background : 'none',
                                                                 borderColor:
                                                                     selected || isCorrectAnswer ? color : 'none',
                                                                 borderWidth: selected || isCorrectAnswer ? 1 : 0,
@@ -1723,7 +1712,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
                         alignItems: 'center',
                         display: 'flex',
                         marginTop: 25,
@@ -1735,7 +1723,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <TouchableOpacity
                             onPress={() => props.modifyActiveQuizAttempt()}
                             style={{
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: 'none',
                                 // borderRadius: 15,
                                 // overflow: 'hidden',
                                 // height: 35,
@@ -1767,7 +1755,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <TouchableOpacity
                         onPress={() => props.onGradeQuiz(problemScores, problemComments, Number(percentage), comment)}
                         style={{
-                            backgroundColor: '#f8f8f8',
+                            backgroundColor: 'none',
                             // borderRadius: 15,
                             // overflow: 'hidden',
                             // height: 35,

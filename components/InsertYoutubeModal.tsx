@@ -72,7 +72,6 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         setError('Could not load results. Check internet connection.');
                         setSearchedForResults(false);
                     }
-                    console.log('Res', res);
                 });
         },
         [searchTerm]
@@ -323,10 +322,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         {searchResults.map((result: any) => {
                             const { title, description, channelTitle } = result.snippet;
                             const imageURL = result.snippet.thumbnails.medium.url;
-                            console.log('Image url', imageURL);
                             const { videoId } = result.id;
-
-                            console.log('Result', result);
 
                             return (
                                 <View

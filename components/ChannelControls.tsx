@@ -197,9 +197,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredUsers = filterGrades;
         }
 
-        console.log('User id', userId);
-        console.log('Users', filteredUsers);
-
         if (userId !== '') {
             const filterOutMainOwner = filteredUsers.filter((user: any) => {
                 return user._id !== userId;
@@ -207,8 +204,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             filteredUsers = filterOutMainOwner;
         }
-
-        console.log('Filtered Users', filteredUsers);
 
         if (activeSection !== 'All') {
             const filterSections = filteredUsers.filter((user: any) => {
@@ -373,8 +368,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                     return 0;
                 });
-
-                console.log('Set school options', sort);
 
                 setOptions(sort);
             });

@@ -55,7 +55,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const fileUploadEditor = useCallback(
         async (files: any) => {
-            console.log('File', files.item(0));
             const res = await handleFileUploadEditor(false, files.item(0), props.userId);
 
             if (!res || res.url === '' || res.type === '') {
@@ -87,21 +86,15 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         [props.userId]
     );
 
-    console.log('Attachments', attachments);
-
     const setUploadResult = useCallback(
         (uploadURL: string, uploadType: string, updloadName: string) => {
             const updatedAttachments: any[] = [...attachments];
-
-            console.log('initial attachments', updatedAttachments);
 
             updatedAttachments.push({
                 url: uploadURL,
                 type: uploadType,
                 name: updloadName,
             });
-
-            console.log('After attachments', updatedAttachments);
 
             setAttachments(updatedAttachments);
         },
@@ -544,11 +537,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             Alert('Content cannot be empty.');
                             return;
                         }
-
-                        console.log('Message', {
-                            html,
-                            attachments,
-                        });
 
                         props.onSend(
                             title,
