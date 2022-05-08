@@ -447,10 +447,10 @@ export const modifyQuiz = gql`
 //     }
 //   }
 // `;
-export const start = gql`
-    mutation ($userId: String!, $cueId: String!, $cue: String!) {
+export const startQuiz = gql`
+    mutation ($userId: String!, $cueId: String!) {
         quiz {
-            start(userId: $userId, cueId: $cueId, cue: $cue)
+            start(userId: $userId, cueId: $cueId)
         }
     }
 `;
@@ -711,6 +711,7 @@ export const findUserById = gql`
                 schoolId
                 orgName
                 userCreatedOrg
+                createdAt
             }
         }
     }

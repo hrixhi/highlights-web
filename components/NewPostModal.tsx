@@ -55,7 +55,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const fileUploadEditor = useCallback(
         async (files: any) => {
-            console.log('File', files.item(0));
             const res = await handleFileUploadEditor(false, files.item(0), props.userId);
 
             if (!res || res.url === '' || res.type === '') {
@@ -87,21 +86,15 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         [props.userId]
     );
 
-    console.log('Attachments', attachments);
-
     const setUploadResult = useCallback(
         (uploadURL: string, uploadType: string, updloadName: string) => {
             const updatedAttachments: any[] = [...attachments];
-
-            console.log('initial attachments', updatedAttachments);
 
             updatedAttachments.push({
                 url: uploadURL,
                 type: uploadType,
                 name: updloadName,
             });
-
-            console.log('After attachments', updatedAttachments);
 
             setAttachments(updatedAttachments);
         },
@@ -123,7 +116,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" id="' +
+                '<img class="rendered-math-jax" style="width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -234,7 +227,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         marginLeft: 'auto',
                         flexDirection: 'row',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                     }}
                 >
                     <View
@@ -259,7 +252,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         marginLeft: 50,
                         flexDirection: 'row',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                     }}
                 >
                     <View
@@ -545,11 +538,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             return;
                         }
 
-                        console.log('Message', {
-                            html,
-                            attachments,
-                        });
-
                         props.onSend(
                             title,
                             JSON.stringify({
@@ -573,7 +561,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             color: '#fff',
                             backgroundColor: '#000',
                             fontSize: 11,
-                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                            paddingHorizontal: 24,
                             fontFamily: 'inter',
                             overflow: 'hidden',
                             paddingVertical: 14,

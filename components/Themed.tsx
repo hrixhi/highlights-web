@@ -39,5 +39,5 @@ export function TouchableOpacity(props: TouchableOpacityProps) {
     const { style, lightColor, darkColor, ...otherProps } = props;
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
-    return <DefaultTouchableOpacity style={[{ backgroundColor }, style]} {...otherProps} />;
+    return <DefaultTouchableOpacity style={style} {...otherProps} />;
 }

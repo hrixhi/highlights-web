@@ -279,7 +279,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }
 
                             Alert(
-                                (successCount > 0 ? 'Successfully added ' + successCount + ' viewers. ' : '') +
+                                (successCount > 0 ? 'Successfully added ' + successCount + ' students. ' : '') +
                                     (failedCount > 0 ? failedString : '')
                             );
 
@@ -670,7 +670,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         });
 
         if (!moderatorsPresentAsSubscribers) {
-            alert('An editor must be added as a viewer');
+            alert('An instructor must be added as a student');
             return;
         }
 
@@ -746,7 +746,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     // Set updated subs as new subs
                     setOriginalSubs(updatedOriginalSubs);
 
-                    props.refreshSubscriptions();
+                    props.handleUpdateChannel(name.trim(), colorCode);
                 } else {
                     setIsUpdatingChannel(false);
                     alert('Something went wrong. Try again.');
@@ -1275,7 +1275,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             color: '#fff',
                                             backgroundColor: '#000',
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -1813,7 +1813,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     color: '#fff',
                                     backgroundColor: '#000',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
@@ -1845,7 +1845,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         color: '#000',
                                         backgroundColor: '#fff',
                                         fontSize: 11,
-                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        paddingHorizontal: 24,
                                         fontFamily: 'inter',
                                         overflow: 'hidden',
                                         paddingVertical: 14,
@@ -1894,7 +1894,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         color: '#000',
                                         backgroundColor: '#fff',
                                         fontSize: 11,
-                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        paddingHorizontal: 24,
                                         fontFamily: 'inter',
                                         overflow: 'hidden',
                                         paddingVertical: 14,

@@ -6,6 +6,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { login } from '../graphql/QueriesAndMutations';
 import { View, Text } from '../components/Themed';
 import { origin } from '../constants/zoomCredentials';
+import { ActivityIndicator } from 'react-native';
 
 export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'>) {
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -29,8 +30,6 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
                     })
                     .then(async (r: any) => {
                         if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
-                            console.log('Login result', r.data.user.login.user);
-
                             const u = r.data.user.login.user;
                             const token = r.data.user.login.token;
                             if (u.__typename) {
@@ -75,22 +74,7 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
                     alignItems: 'center',
                 }}
             >
-                <Text
-                    style={{
-                        fontSize: 20,
-                        textAlign: 'center',
-                    }}
-                >
-                    Loading Demo...
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        paddingTop: 20,
-                    }}
-                >
-                    Functionality such as creating and editing content will be disabled
-                </Text>
+                <ActivityIndicator color={'#000'} style={{ alignSelf: 'center' }} />
             </View>
         </View>
     );

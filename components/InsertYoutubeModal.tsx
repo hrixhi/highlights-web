@@ -72,7 +72,6 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         setError('Could not load results. Check internet connection.');
                         setSearchedForResults(false);
                     }
-                    console.log('Res', res);
                 });
         },
         [searchTerm]
@@ -248,7 +247,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                     color: '#fff',
                                     backgroundColor: '#000',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
@@ -323,10 +322,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         {searchResults.map((result: any) => {
                             const { title, description, channelTitle } = result.snippet;
                             const imageURL = result.snippet.thumbnails.medium.url;
-                            console.log('Image url', imageURL);
                             const { videoId } = result.id;
-
-                            console.log('Result', result);
 
                             return (
                                 <View

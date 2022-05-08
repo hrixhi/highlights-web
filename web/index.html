@@ -66,6 +66,8 @@
                 -moz-osx-font-smoothing: grayscale;
                 -ms-overflow-style: none !important;
                 scrollbar-width: none !important;
+                user-select: text !important;
+                font-family: 'overpass';
             }
 
             button,
@@ -90,10 +92,10 @@
                 font-variant: normal;
             }
 
-            td {
+            /* td {
                 border: 1px solid #ddd !important;
                 padding: 5px !important;
-            }
+            } */
 
             button,
             input,
@@ -135,6 +137,21 @@
                 margin-block-start: 0 !important;
                 margin-block-end: 0 !important;
                 background-color: none !important;
+                font-family: overpass;
+                font-size: 16px;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: Inter;
+            }
+
+            input[type='checkbox' i] {
+                margin: 0px !important;
             }
 
             /* Enable for apps that support dark-theme */
@@ -163,7 +180,7 @@
                 },
             };
         </script>
-        <script>
+        <!-- <script>
             (function (apiKey) {
                 (function (p, e, n, d, o) {
                     var v, w, x, y, z;
@@ -185,7 +202,7 @@
                     z.parentNode.insertBefore(y, z);
                 })(window, document, 'script', 'pendo');
             })('a2e4beba-23c6-403c-7b77-dff81932b8fd');
-        </script>
+        </script> -->
 
         <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
         <!-- 

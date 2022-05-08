@@ -1,6 +1,6 @@
 // REACT
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, Animated } from 'react-native';
+import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import lodash from 'lodash';
@@ -20,11 +20,11 @@ import {
     shareCueWithMoreIds,
     unshareCueWithIds,
     shareWithAll,
-    start,
     submit,
     modifyQuiz,
     duplicateQuiz,
     saveSubmissionDraft,
+    startQuiz,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -74,6 +74,7 @@ import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from 
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -132,7 +133,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [deadline, setDeadline] = useState<Date>(dead);
     const [initiateAt, setInitiateAt] = useState<Date>(initiate);
     const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0);
-    const [graded, setGraded] = useState(props.cue.gradeWeight);
+    const [graded, setGraded] = useState(props.cue.gradeWeight ? true : false);
     const currentDate = new Date();
     const [submitted, setSubmitted] = useState(false);
     const [imported, setImported] = useState(false);
@@ -165,6 +166,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         (props.cue.submittedAt !== null && props.cue.submittedAt !== undefined) ||
             (props.cue.graded && props.cue.releaseSubmission)
     );
+    // const [viewSubmission, setViewSubmission] = useState(false);
     const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
     const [remainingAttempts, setRemainingAttempts] = useState<any>(null);
@@ -195,8 +197,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [failedToSaveSubmission, setFailedToSaveSubmission] = useState(false);
 
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
+    const [saveQuiz, setSaveQuiz] = useState(false);
 
     const [userId, setUserId] = useState('');
+    const [userFullName, setUserFullName] = useState('');
     const width = Dimensions.get('window').width;
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz');
@@ -242,7 +246,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         undo: true,
         refreshAfterCallback: false,
         callback: function () {
-            RichText.current.editor.selection.save();
+            editorRef.current.editor.selection.save();
             setShowInsertYoutubeVideosModal(true);
         },
     });
@@ -345,28 +349,35 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Load PDFTron Webviewer for submission
      */
     useEffect(() => {
+        if (!userId || !userFullName) return;
+
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
             let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
 
+            if (url === '') return;
+
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
+                    annotationUser: userId,
                 },
                 submissionViewerRef.current
             ).then(async (instance) => {
                 const { documentViewer, annotationManager } = instance.Core;
 
-                const u = await AsyncStorage.getItem('user');
+                if (!documentViewer || !annotationManager) return;
 
-                let user: any;
+                // const u = await AsyncStorage.getItem('user');
 
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                // let user: any;
+
+                // if (u) {
+                //     user = JSON.parse(u);
+                //     annotationManager.setCurrentUser(user.fullName);
+                // }
 
                 documentViewer.addEventListener('documentLoaded', async () => {
                     // perform document operations
@@ -379,13 +390,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
                             annotations.forEach((annotation: any) => {
                                 // Hide instructor annotations until grades are released
-                                if (!props.cue.releaseSubmission && annotation.Author !== user.fullName) {
+                                if (!props.cue.releaseSubmission && annotation.Author !== userId) {
                                     annotationManager.hideAnnotation(annotation);
                                 } else {
                                     annotationManager.redrawAnnotation(annotation);
                                 }
                             });
                         });
+                    }
+                });
+
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
                     }
                 });
 
@@ -397,7 +414,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
                         let subCues: any = {};
                         try {
@@ -437,8 +454,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         subCues[props.cueKey][props.cueIndex] = saveCue;
 
-                        console.log('Update annotation', saveCue);
-
                         const stringifiedCues = JSON.stringify(subCues);
                         await AsyncStorage.setItem('cues', stringifiedCues);
                         // props.reloadCueListAfterUpdate();
@@ -448,11 +463,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [
         viewSubmission,
-        submissionViewerRef,
-        submissionViewerRef.current,
         viewSubmissionTab,
         submissionAttempts,
         props.showOriginal,
+        props.showOptions,
+        userId,
+        userFullName,
     ]);
 
     /**
@@ -548,14 +564,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setSolutions(parseQuizResponses.solutions);
 
                                     setShuffleQuizAttemptOrder(
-                                        parseQuizResponses.shuffleQuizAttemptOrder !== undefined &&
-                                            res.data.quiz.getQuiz.shuffleQuiz
-                                            ? parseQuizResponses.shuffleQuizAttemptOrder
-                                            : []
-                                    );
-
-                                    console.log(
-                                        'shuffle Attempt order update controls',
                                         parseQuizResponses.shuffleQuizAttemptOrder !== undefined &&
                                             res.data.quiz.getQuiz.shuffleQuiz
                                             ? parseQuizResponses.shuffleQuizAttemptOrder
@@ -712,6 +720,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead();
     }, [props.cue.status]);
 
+    // const handleSaveChanges = useCallback(async () => {
+    //     if (isQuiz) {
+    //         // first try and save quiz changes and then save details
+    //     }
+
+    //     await handleUpdateContent();
+    //     await handleUpdateDetails();
+    //     await handleRestrictAccessUpdate();
+    // }, [props.save, props.channelOwner, isQuiz]);
+
     /**
      * @description Handle Save when props.save
      */
@@ -728,7 +746,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        await handleUpdateContent();
+                        if (isQuiz) {
+                            setSaveQuiz(true);
+                        } else {
+                            await handleUpdateContent();
+                        }
+
                         await handleUpdateDetails();
                         await handleRestrictAccessUpdate();
                     },
@@ -736,7 +759,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ]);
             props.setSave(false);
         }
-    }, [props.save, props.channelOwner, props.showOriginal]);
+    }, [props.save, props.channelOwner, isQuiz]);
 
     /**
      * @description Handle Delete when props.del
@@ -752,6 +775,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Setup PDFTron Webviewer for Cue content
      */
     useEffect(() => {
+        if (!userId || !userFullName) return;
+
         if (props.showOriginal) {
             if (url === '' || !url) {
                 return;
@@ -781,18 +806,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
+                    annotationUser: userId,
                 },
                 RichText.current
             ).then(async (instance: any) => {
                 const { documentViewer, annotationManager } = instance.Core;
-                const u = await AsyncStorage.getItem('user');
 
-                let user: any;
+                if (!documentViewer || !annotationManager) return;
 
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                // const u = await AsyncStorage.getItem('user');
+
+                // let user: any;
+
+                // if (u) {
+                //     user = JSON.parse(u);
+                //     annotationManager.setCurrentUser(user.fullName);
+                // }
 
                 // you can now call WebViewer APIs here...
                 documentViewer.addEventListener('documentLoaded', async () => {
@@ -824,6 +853,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 });
 
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
+                    }
+                });
+
                 annotationManager.addEventListener(
                     'annotationChanged',
                     async (annotations: any, action: any, { imported }) => {
@@ -832,7 +867,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
                         let subCues: any = {};
                         try {
@@ -866,6 +901,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return;
             }
 
+            if (viewSubmission) return;
+
             if (
                 submissionType === 'mp4' ||
                 submissionType === 'oga' ||
@@ -880,37 +917,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return;
             }
 
-            if (submissionImported) {
-                if (!RichText.current) {
-                    return;
-                }
-            }
-
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: submissionUrl,
+                    annotationUser: userId,
                 },
                 RichText.current
             ).then(async (instance: any) => {
                 const { documentViewer, annotationManager } = instance.Core;
                 // you can now call WebViewer APIs here...
 
-                const u = await AsyncStorage.getItem('user');
-
-                let user: any;
-
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                if (!documentViewer || !annotationManager) return;
 
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
 
                     if (
                         submissionDraft !== '' &&
-                        submissionDraft[0] &&
                         submissionDraft[0] === '{' &&
                         submissionDraft[submissionDraft.length - 1] === '}'
                     ) {
@@ -928,6 +952,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 });
 
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
+                    }
+                });
+
                 annotationManager.addEventListener(
                     'annotationChanged',
                     async (annotations: any, action: any, { imported }) => {
@@ -936,16 +966,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const obj = JSON.parse(submissionDraft);
-
-                        let updateSubmissionDraftWithAnnotation = {
-                            ...obj,
-                            annotations: xfdfString,
-                        };
-
-                        setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation));
+                        handleUpdateAnnotationsForSubmission(xfdfString);
                     }
                 );
             });
@@ -960,7 +983,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         submissionUrl,
         type,
         submissionType,
+        userId,
+        userFullName,
+        viewSubmission,
     ]);
+
+    const handleUpdateAnnotationsForSubmission = useCallback(
+        (xfdfString: string) => {
+            const obj = JSON.parse(submissionDraft);
+
+            let updateSubmissionDraftWithAnnotation = {
+                ...obj,
+                annotations: xfdfString,
+            };
+
+            setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation));
+        },
+        [submissionDraft]
+    );
 
     /**
      * @description Set is owner based on Channel owner prop
@@ -1150,15 +1190,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         (videoId: string) => {
             setShowInsertYoutubeVideosModal(false);
 
-            RichText.current.editor.selection.restore();
+            editorRef.current.editor.selection.restore();
 
-            RichText.current.editor.html.insert(
+            editorRef.current.editor.html.insert(
                 `<iframe width="640" height="360" src="https://youtube.com/embed/${videoId}" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe>`
             );
 
-            RichText.current.editor.events.trigger('contentChanged');
+            editorRef.current.editor.events.trigger('contentChanged');
         },
-        [RichText, RichText.current]
+        [editorRef, editorRef.current]
     );
 
     /**
@@ -1176,7 +1216,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             editorRef.current.editor.selection.restore();
 
             editorRef.current.editor.html.insert(
-                '<img class="rendered-math-jax" id="' +
+                '<img class="rendered-math-jax" style="width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -1199,10 +1239,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (u) {
             const parsedUser = JSON.parse(u);
             setUserId(parsedUser._id);
+            setUserFullName(parsedUser.fullName);
         }
     }, []);
-
-    console.log('Initiated at', initiatedAt);
 
     /**
      * @description Initialize the quiz (Timed quiz)
@@ -1222,35 +1261,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return;
         }
 
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const user = JSON.parse(u);
-            const now = new Date();
-            const server = fetchAPI('');
-            const saveCue = JSON.stringify({
-                solutions,
-                initiatedAt: now,
-            });
-            server
-                .mutate({
-                    mutation: start,
-                    variables: {
-                        cueId: props.cue._id,
-                        userId: user._id,
-                        cue: saveCue,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.quiz.start) {
-                        setInitiatedAt(now);
-                    }
-                })
-                .catch((err) => console.log(err));
-            // save time to cloud first
-            // after saving time in cloud, save it locally, set initiatedAt
-            // quiz gets triggered
-        }
-    }, [props.cue._id, solutions, deadline, availableUntil, allowLateSubmission]);
+        // const now = new Date();
+        const server = fetchAPI('');
+        // const saveCue = JSON.stringify({
+        //     solutions,
+        //     initiatedAt: now,
+        // });
+        server
+            .mutate({
+                mutation: startQuiz,
+                variables: {
+                    cueId: props.cue._id,
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.quiz.start !== '') {
+                    setInitiatedAt(new Date(res.data.quiz.start));
+                }
+            })
+            .catch((err) => console.log(err));
+        // save time to cloud first
+        // after saving time in cloud, save it locally, set initiatedAt
+        // quiz gets triggered
+    }, [props.cue._id, deadline, availableUntil, allowLateSubmission, userId]);
 
     const fileUploadEditor = useCallback(
         async (files: any, forSubmission: boolean) => {
@@ -1290,9 +1324,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 );
             } else {
                 setSubmissionImported(true);
-                setSubmissionType(uploadType);
-                setSubmissionUrl(uploadURL);
-
                 setSubmissionDraft(
                     JSON.stringify({
                         url: uploadURL,
@@ -1301,6 +1332,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         annotations: '',
                     })
                 );
+                setSubmissionType(uploadType);
+                setSubmissionUrl(uploadURL);
             }
         },
         [title, submissionTitle]
@@ -1357,7 +1390,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 submissionObj = JSON.parse(currCueValue);
             }
 
-            const updatedDraft = JSON.parse(submissionDraft);
+            let updatedDraft = {};
+
+            if (submissionDraft && submissionDraft[0] === '{' && submissionDraft[submissionDraft.length - 1] === '}') {
+                updatedDraft = JSON.parse(submissionDraft);
+            }
+
             // Submission draft will also have annotations so preserve those
 
             const obj = {
@@ -1785,44 +1823,36 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Submit quiz when time gets over
      */
     const submitQuizEndTime = useCallback(async () => {
-        const u: any = await AsyncStorage.getItem('user');
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            if (!parsedUser.email || parsedUser.email === '') {
-                // cannot submit
-                return;
-            }
-            const saveCue = JSON.stringify({
-                solutions,
-                initiatedAt,
-            });
+        const saveCue = JSON.stringify({
+            solutions,
+            initiatedAt,
+        });
 
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: submit,
-                    variables: {
-                        cue: saveCue,
-                        cueId: props.cue._id,
-                        userId: parsedUser._id,
-                        quizId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.cue.submitModification) {
-                        Alert(submissionCompleteAlert, new Date().toString(), [
-                            {
-                                text: 'Okay',
-                                onPress: () => window.location.reload(),
-                            },
-                        ]);
-                    }
-                })
-                .catch((err) => {
-                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
-                });
-        }
-    }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions]);
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: submit,
+                variables: {
+                    cue: saveCue,
+                    cueId: props.cue._id,
+                    userId,
+                    quizId,
+                },
+            })
+            .then((res) => {
+                if (res.data.cue.submitModification) {
+                    Alert(submissionCompleteAlert, new Date().toString(), [
+                        {
+                            text: 'Okay',
+                            onPress: () => window.location.reload(),
+                        },
+                    ]);
+                }
+            })
+            .catch((err) => {
+                Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+            });
+    }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions, userId]);
 
     const submitResponse = useCallback(() => {
         let now = new Date();
@@ -1844,53 +1874,46 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     text: 'Okay',
                     onPress: async () => {
                         setIsSubmitting(true);
-                        const u: any = await AsyncStorage.getItem('user');
-                        if (u) {
-                            const parsedUser = JSON.parse(u);
-                            if (!parsedUser.email || parsedUser.email === '') {
-                                // cannot submit
-                                return;
-                            }
-                            let saveCue = '';
-                            if (isQuiz) {
-                                saveCue = JSON.stringify({
-                                    solutions,
-                                    initiatedAt,
-                                });
-                            } else {
-                                saveCue = submissionDraft;
-                            }
 
-                            const server = fetchAPI('');
-                            server
-                                .mutate({
-                                    mutation: submit,
-                                    variables: {
-                                        cue: saveCue,
-                                        cueId: props.cue._id,
-                                        userId: parsedUser._id,
-                                        quizId: isQuiz ? quizId : null,
-                                    },
-                                })
-                                .then((res: any) => {
-                                    if (res.data.cue.submitModification) {
-                                        setIsSubmitting(false);
-                                        Alert(submissionCompleteAlert, new Date().toString(), [
-                                            {
-                                                text: 'Okay',
-                                                onPress: () => window.location.reload(),
-                                            },
-                                        ]);
-                                    } else {
-                                        Alert('Submission failed. Try again. ');
-                                        setIsSubmitting(false);
-                                    }
-                                })
-                                .catch((err: any) => {
-                                    setIsSubmitting(false);
-                                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
-                                });
+                        let saveCue = '';
+                        if (isQuiz) {
+                            saveCue = JSON.stringify({
+                                solutions,
+                                initiatedAt,
+                            });
+                        } else {
+                            saveCue = submissionDraft;
                         }
+
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: submit,
+                                variables: {
+                                    cue: saveCue,
+                                    cueId: props.cue._id,
+                                    userId,
+                                    quizId: isQuiz ? quizId : null,
+                                },
+                            })
+                            .then((res: any) => {
+                                if (res.data.cue.submitModification) {
+                                    setIsSubmitting(false);
+                                    Alert(submissionCompleteAlert, new Date().toString(), [
+                                        {
+                                            text: 'Okay',
+                                            onPress: () => window.location.reload(),
+                                        },
+                                    ]);
+                                } else {
+                                    Alert('Submission failed. Try again. ');
+                                    setIsSubmitting(false);
+                                }
+                            })
+                            .catch((err: any) => {
+                                setIsSubmitting(false);
+                                Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+                            });
                     },
                 },
             ]
@@ -1908,6 +1931,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         solutions,
         deadline,
         submissionDraft,
+        userId,
     ]);
 
     /**
@@ -1927,15 +1951,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         for (let i = 0; i < problems.length; i++) {
             const problem = problems[i];
             const solution = solutions[i];
-
-            // console.log('Handle submit shuffle quiz', shuffleQuiz);
-            // console.log('shuffleQuizAttemptOrder', shuffleQuizAttemptOrder);
-            // console.log('Current index', i);
-            // console.log('Current question', problem);
-
-            // const currentAttemptIndex = shuffleQuiz ? shuffleQuizAttemptOrder[i] : i;
-
-            // console.log('Current attempt index', shuffleQuiz ? shuffleQuizAttemptOrder[i] : i);
 
             let currentAttemptIndex = i;
 
@@ -2115,8 +2130,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 // Optional
             }
         }
-
-        console.log('Required missing questions', requiredMissingQuestions);
 
         requiredMissingQuestions.sort((a: any, b: any) => {
             return a > b ? 1 : -1;
@@ -2381,527 +2394,492 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         duration: any,
         shuffleQuiz: boolean
     ) => {
-        Alert('Update Quiz?', '', [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-                onPress: () => {
+        setLoadingAfterModifyingQuiz(true);
+        const server = fetchAPI('');
+
+        // Update title as well
+        handleUpdateContent();
+
+        // VALIDATION:
+        // Check if any question without a correct answer
+
+        let error = false;
+        problems.map((problem: any, problemIndex: number) => {
+            if (
+                problem.question === '' &&
+                problem.questionType !== 'textEntry' &&
+                problem.questionType !== 'inlineChoice' &&
+                problem.questionType !== 'highlightText'
+            ) {
+                alert(`Question ${problemIndex + 1} has no content.`);
+                error = true;
+            }
+
+            if (problem.points === '' || Number.isNaN(Number(problem.points))) {
+                Alert(`Enter numeric points for Question ${problemIndex + 1}.`);
+                error = true;
+            }
+            let optionFound = false;
+
+            // If MCQ then > 2 options
+            if (!problem.questionType && problem.options.length < 2) {
+                Alert(`Question ${problemIndex + 1} must have at least 2 options.`);
+                setIsSubmitting(false);
+                error = true;
+            }
+
+            // If MCQ, check if any options repeat:
+            if (!problem.questionType || problem.questionType === 'trueFalse') {
+                const keys: any = {};
+
+                problem.options.map((option: any) => {
+                    if (option.option === '' || option.option === 'formula:') {
+                        Alert(`Fill out missing options in question ${problemIndex + 1}.`);
+                        setIsSubmitting(false);
+                        error = true;
+                    }
+
+                    if (option.option in keys) {
+                        Alert(`Option repeated in question ${problemIndex + 1}.`);
+                        setIsSubmitting(false);
+                        error = true;
+                    }
+
+                    if (option.isCorrect) {
+                        optionFound = true;
+                    }
+
+                    keys[option.option] = 1;
+                });
+
+                if (!optionFound) {
+                    Alert(`Question ${problemIndex + 1} must have at least one correct answer.`);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+            }
+
+            // Drag and Drop
+            if (problem.questionType === 'dragdrop') {
+                let groupHeaderMissing = false;
+                let labelMissing = false;
+                let groupEmpty = false;
+
+                problem.dragDropHeaders.map((header: string) => {
+                    if (!header) {
+                        groupHeaderMissing = true;
+                    }
+                });
+
+                if (groupHeaderMissing) {
+                    alert(`Group header is missing in Question ${problemIndex + 1}.`);
+                    return false;
+                }
+
+                problem.dragDropData.map((items: any[]) => {
+                    if (items.length === 0) {
+                        groupEmpty = true;
+                    }
+
+                    items.map((label: any) => {
+                        if (label.content === '') {
+                            labelMissing = true;
+                        }
+                    });
+                });
+
+                if (labelMissing) {
+                    alert(`Item missing in Question ${problemIndex + 1}.`);
+                    return false;
+                }
+
+                if (groupEmpty) {
+                    alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`);
+                    return false;
+                }
+            }
+
+            // Hotspot
+            if (problem.questionType === 'hotspot') {
+                if (problem.imgUrl === '' || !problem.imgUrl) {
+                    Alert(`Hotspot image is missing in Question ${problemIndex + 1}.`);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+                if (!problem.hotspots || problem.hotspots.length === 0) {
+                    Alert(`You must place at least two hotspot marker on the image in Question ${problemIndex + 1}.`);
+                    setIsSubmitting(false);
+                    error = true;
+                }
+
+                let hasCorrectAnswer = false;
+
+                problem.hotspotOptions.map((option: any) => {
+                    if (option.isCorrect) {
+                        hasCorrectAnswer = true;
+                    }
+                });
+
+                if (!hasCorrectAnswer) {
+                    Alert(`Hotspot question ${problemIndex + 1} must have at least correct choice.`);
                     return;
-                },
-            },
-            {
-                text: 'Okay',
-                onPress: async () => {
-                    setLoadingAfterModifyingQuiz(true);
-                    const server = fetchAPI('');
+                }
+            }
 
-                    // Update title as well
-                    handleUpdateContent();
+            // Highlight Text
+            if (problem.questionType === 'highlightText') {
+                if (problem.highlightTextChoices.length < 2) {
+                    Alert(
+                        `You must set multiple highlight text choices and mark one as correct in Question ${
+                            problemIndex + 1
+                        }.`
+                    );
+                    return;
+                }
 
-                    // VALIDATION:
-                    // Check if any question without a correct answer
+                let atleastOneCorrect = false;
 
-                    let error = false;
-                    problems.map((problem: any, problemIndex: number) => {
-                        if (
-                            problem.question === '' &&
-                            problem.questionType !== 'textEntry' &&
-                            problem.questionType !== 'inlineChoice' &&
-                            problem.questionType !== 'highlightText'
-                        ) {
-                            alert(`Question ${problemIndex + 1} has no content.`);
-                            error = true;
+                problem.highlightTextChoices.map((choice: boolean) => {
+                    if (choice) {
+                        atleastOneCorrect = true;
+                    }
+                });
+
+                if (!atleastOneCorrect) {
+                    Alert(
+                        `You must set at least one highlight text choice as correct in Question ${problemIndex + 1}.`
+                    );
+                    return;
+                }
+            }
+
+            // Inline Choice
+            if (problem.questionType === 'inlineChoice') {
+                if (problem.inlineChoiceHtml === '') {
+                    alert(`Question ${problemIndex + 1} has no content.`);
+                    return;
+                }
+
+                if (problem.inlineChoiceOptions.length === 0) {
+                    alert(`Question ${problemIndex + 1} must have at lease one dropdown.`);
+                    return;
+                }
+
+                let lessThan2DropdownValues = false;
+                let missingDropdownValue = false;
+                let missingCorrectAnswer = false;
+
+                if (problem.inlineChoiceOptions.length > 0) {
+                    problem.inlineChoiceOptions.map((choices: any[]) => {
+                        if (choices.length < 2) {
+                            lessThan2DropdownValues = true;
                         }
 
-                        if (problem.points === '' || Number.isNaN(Number(problem.points))) {
-                            Alert(`Enter numeric points for Question ${problemIndex + 1}.`);
-                            error = true;
-                        }
-                        let optionFound = false;
-
-                        // If MCQ then > 2 options
-                        if (!problem.questionType && problem.options.length < 2) {
-                            Alert(`Question ${problemIndex + 1} must have at least 2 options.`);
-                            setIsSubmitting(false);
-                            error = true;
-                        }
-
-                        // If MCQ, check if any options repeat:
-                        if (!problem.questionType || problem.questionType === 'trueFalse') {
-                            const keys: any = {};
-
-                            problem.options.map((option: any) => {
-                                if (option.option === '' || option.option === 'formula:') {
-                                    Alert(`Fill out missing options in question ${problemIndex + 1}.`);
-                                    setIsSubmitting(false);
-                                    error = true;
-                                }
-
-                                if (option.option in keys) {
-                                    Alert(`Option repeated in question ${problemIndex + 1}.`);
-                                    setIsSubmitting(false);
-                                    error = true;
-                                }
-
-                                if (option.isCorrect) {
-                                    optionFound = true;
-                                }
-
-                                keys[option.option] = 1;
-                            });
-
-                            if (!optionFound) {
-                                Alert(`Question ${problemIndex + 1} must have at least one correct answer.`);
-                                setIsSubmitting(false);
-                                error = true;
-                            }
-                        }
-
-                        // Drag and Drop
-                        if (problem.questionType === 'dragdrop') {
-                            let groupHeaderMissing = false;
-                            let labelMissing = false;
-                            let groupEmpty = false;
-
-                            problem.dragDropHeaders.map((header: string) => {
-                                if (!header) {
-                                    groupHeaderMissing = true;
-                                }
-                            });
-
-                            if (groupHeaderMissing) {
-                                alert(`Group header is missing in Question ${problemIndex + 1}.`);
-                                return false;
+                        let hasCorrect = false;
+                        choices.map((choice: any) => {
+                            if (choice.isCorrect) {
+                                hasCorrect = true;
                             }
 
-                            problem.dragDropData.map((items: any[]) => {
-                                if (items.length === 0) {
-                                    groupEmpty = true;
-                                }
-
-                                items.map((label: any) => {
-                                    if (label.content === '') {
-                                        labelMissing = true;
-                                    }
-                                });
-                            });
-
-                            if (labelMissing) {
-                                alert(`Item missing in Question ${problemIndex + 1}.`);
-                                return false;
-                            }
-
-                            if (groupEmpty) {
-                                alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`);
-                                return false;
-                            }
-                        }
-
-                        // Hotspot
-                        if (problem.questionType === 'hotspot') {
-                            if (problem.imgUrl === '' || !problem.imgUrl) {
-                                Alert(`Hotspot image is missing in Question ${problemIndex + 1}.`);
-                                setIsSubmitting(false);
-                                error = true;
-                            }
-                            if (!problem.hotspots || problem.hotspots.length === 0) {
-                                Alert(
-                                    `You must place at least two hotspot marker on the image in Question ${
-                                        problemIndex + 1
-                                    }.`
-                                );
-                                setIsSubmitting(false);
-                                error = true;
-                            }
-
-                            let hasCorrectAnswer = false;
-
-                            problem.hotspotOptions.map((option: any) => {
-                                if (option.isCorrect) {
-                                    hasCorrectAnswer = true;
-                                }
-                            });
-
-                            if (!hasCorrectAnswer) {
-                                Alert(`Hotspot question ${problemIndex + 1} must have at least correct choice.`);
-                                return;
-                            }
-                        }
-
-                        // Highlight Text
-                        if (problem.questionType === 'highlightText') {
-                            if (problem.highlightTextChoices.length < 2) {
-                                Alert(
-                                    `You must set multiple highlight text choices and mark one as correct in Question ${
-                                        problemIndex + 1
-                                    }.`
-                                );
-                                return;
-                            }
-
-                            let atleastOneCorrect = false;
-
-                            problem.highlightTextChoices.map((choice: boolean) => {
-                                if (choice) {
-                                    atleastOneCorrect = true;
-                                }
-                            });
-
-                            if (!atleastOneCorrect) {
-                                Alert(
-                                    `You must set at least one highlight text choice as correct in Question ${
-                                        problemIndex + 1
-                                    }.`
-                                );
-                                return;
-                            }
-                        }
-
-                        // Inline Choice
-                        if (problem.questionType === 'inlineChoice') {
-                            if (problem.inlineChoiceHtml === '') {
-                                alert(`Question ${problemIndex + 1} has no content.`);
-                                return;
-                            }
-
-                            if (problem.inlineChoiceOptions.length === 0) {
-                                alert(`Question ${problemIndex + 1} must have at lease one dropdown.`);
-                                return;
-                            }
-
-                            let lessThan2DropdownValues = false;
-                            let missingDropdownValue = false;
-                            let missingCorrectAnswer = false;
-
-                            if (problem.inlineChoiceOptions.length > 0) {
-                                problem.inlineChoiceOptions.map((choices: any[]) => {
-                                    if (choices.length < 2) {
-                                        lessThan2DropdownValues = true;
-                                    }
-
-                                    let hasCorrect = false;
-                                    choices.map((choice: any) => {
-                                        if (choice.isCorrect) {
-                                            hasCorrect = true;
-                                        }
-
-                                        if (choice.option === '') {
-                                            missingDropdownValue = true;
-                                        }
-                                    });
-
-                                    if (!hasCorrect) {
-                                        missingCorrectAnswer = true;
-                                    }
-                                });
-
-                                if (lessThan2DropdownValues) {
-                                    alert(
-                                        `Each dropdown in question ${problemIndex + 1} must have at lease two options.`
-                                    );
-                                    return;
-                                }
-
-                                if (missingDropdownValue) {
-                                    alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`);
-                                    return;
-                                }
-
-                                if (missingCorrectAnswer) {
-                                    alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`);
-                                    return;
-                                }
-                            }
-                        }
-
-                        // Text Entry
-                        if (problem.questionType === 'textEntry') {
-                            if (problem.textEntryHtml === '') {
-                                alert(`Question ${problemIndex + 1} has no content.`);
-                                return;
-                            }
-
-                            if (problem.textEntryOptions.length === 0) {
-                                alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`);
-                                return;
-                            }
-
-                            let missingEntryAnswer = false;
-                            let missingEntryPoints = false;
-                            let pointsNotANumber = false;
-
-                            problem.textEntryOptions.map((choice: any, problemIndex: number) => {
-                                if (choice.option === '') {
-                                    missingEntryAnswer = true;
-                                }
-
-                                if (choice.points === '') {
-                                    missingEntryPoints = true;
-                                }
-
-                                if (Number.isNaN(Number(choice.points))) {
-                                    pointsNotANumber = true;
-                                }
-                            });
-
-                            if (missingEntryAnswer) {
-                                alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`);
-                                return;
-                            }
-
-                            if (missingEntryPoints) {
-                                alert(`Each Text entry must have points in question ${problemIndex + 1}.`);
-                                return;
-                            }
-
-                            if (pointsNotANumber) {
-                                alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`);
-                                return;
-                            }
-                        }
-
-                        // Multipart
-                        if (problem.questionType === 'multipart') {
-                            if (problem.multipartQuestions[0] === '' || problem.multipartQuestions[1] === '') {
-                                alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
-                                return;
-                            }
-
-                            // Part A
-                            let hasOneCorrect = false;
-                            let hasMissingOption = false;
-
-                            // At least two choices
-                            if (problem.multipartOptions[0].length < 2) {
-                                alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
-                                return;
-                            }
-
-                            problem.multipartOptions[0].map((option: any) => {
-                                if (option.isCorrect) {
-                                    hasOneCorrect = true;
-                                }
-
-                                if (option.option === '') {
-                                    hasMissingOption = true;
-                                }
-                            });
-
-                            if (!hasOneCorrect) {
-                                alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
-                                return;
-                            }
-
-                            if (hasMissingOption) {
-                                alert(`Part A option is empty in question ${problemIndex + 1}`);
-                            }
-
-                            if (problem.multipartOptions[0].length < 2) {
-                                alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
-                                return;
-                            }
-
-                            // Part B
-                            problem.multipartOptions[1].map((option: any) => {
-                                if (option.isCorrect) {
-                                    hasOneCorrect = true;
-                                }
-
-                                if (option.option === '') {
-                                    hasMissingOption = true;
-                                }
-                            });
-
-                            if (!hasOneCorrect) {
-                                alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
-                                return;
-                            }
-
-                            if (hasMissingOption) {
-                                alert(`Part A option is empty in question ${problemIndex + 1}`);
-                            }
-                        }
-
-                        // Equation Editor
-                        if (problem.questionType === 'equationEditor') {
-                            if (problem.correctEquations[0] === '') {
-                                alert('Correct equation cannot be empty.');
-                                return;
-                            }
-                        }
-
-                        // Match table grid
-                        if (problem.questionType === 'matchTableGrid') {
-                            let missingColHeader = false;
-                            let missingRowHeader = false;
-                            let missingCorrect = false;
-
-                            problem.matchTableHeaders.map((header: string) => {
-                                if (header === '') {
-                                    missingColHeader = true;
-                                }
-                            });
-
-                            if (missingColHeader) {
-                                alert(`Column header cannot be empty in question ${problemIndex + 1}.`);
-                                return;
-                            }
-
-                            problem.matchTableOptions.map((rowHeader: string) => {
-                                if (rowHeader === '') {
-                                    missingRowHeader = true;
-                                }
-                            });
-
-                            if (missingRowHeader) {
-                                alert(`Row header cannot be empty in question ${problemIndex + 1}.`);
-                                return;
-                            }
-
-                            problem.matchTableChoices.map((row: any) => {
-                                let hasCorrect = false;
-
-                                if (missingCorrect) {
-                                    return;
-                                }
-
-                                row.map((option: boolean) => {
-                                    if (option) {
-                                        hasCorrect = true;
-                                    }
-                                });
-
-                                if (!hasCorrect) {
-                                    missingCorrect = true;
-                                }
-                            });
-
-                            if (missingCorrect) {
-                                alert(`Each row must have a correct response in question ${problemIndex + 1}.`);
-                                return;
-                            }
-                        }
-
-                        // Check if any regrade choice has not been selected
-                        modifiedCorrectAnswerProblems.map((prob: boolean, index: number) => {
-                            if (prob && regradeChoices[index] === '') {
-                                Alert('Select regrade option for any questions with modified correct answers.');
-                                error = true;
+                            if (choice.option === '') {
+                                missingDropdownValue = true;
                             }
                         });
+
+                        if (!hasCorrect) {
+                            missingCorrectAnswer = true;
+                        }
                     });
 
-                    if (error) {
-                        setLoadingAfterModifyingQuiz(false);
+                    if (lessThan2DropdownValues) {
+                        alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`);
                         return;
                     }
 
-                    // Points should be a string not a number
+                    if (missingDropdownValue) {
+                        alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`);
+                        return;
+                    }
 
-                    const sanitizeProblems = problems.map((prob: any) => {
-                        const { options } = prob;
-                        const sanitizeOptions = options.map((option: any) => {
-                            const clone = option;
+                    if (missingCorrectAnswer) {
+                        alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`);
+                        return;
+                    }
+                }
+            }
 
-                            delete clone.__typename;
+            // Text Entry
+            if (problem.questionType === 'textEntry') {
+                if (problem.textEntryHtml === '') {
+                    alert(`Question ${problemIndex + 1} has no content.`);
+                    return;
+                }
 
-                            return clone;
-                        });
+                if (problem.textEntryOptions.length === 0) {
+                    alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`);
+                    return;
+                }
 
-                        delete prob.__typename;
-                        delete prob.problemIndex;
-                        return {
-                            ...prob,
-                            points: prob.points.toString(),
-                            options: sanitizeOptions,
-                        };
+                let missingEntryAnswer = false;
+                let missingEntryPoints = false;
+                let pointsNotANumber = false;
+
+                problem.textEntryOptions.map((choice: any, problemIndex: number) => {
+                    if (choice.option === '') {
+                        missingEntryAnswer = true;
+                    }
+
+                    if (choice.points === '') {
+                        missingEntryPoints = true;
+                    }
+
+                    if (Number.isNaN(Number(choice.points))) {
+                        pointsNotANumber = true;
+                    }
+                });
+
+                if (missingEntryAnswer) {
+                    alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`);
+                    return;
+                }
+
+                if (missingEntryPoints) {
+                    alert(`Each Text entry must have points in question ${problemIndex + 1}.`);
+                    return;
+                }
+
+                if (pointsNotANumber) {
+                    alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`);
+                    return;
+                }
+            }
+
+            // Multipart
+            if (problem.questionType === 'multipart') {
+                if (problem.multipartQuestions[0] === '' || problem.multipartQuestions[1] === '') {
+                    alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                // Part A
+                let hasOneCorrect = false;
+                let hasMissingOption = false;
+
+                // At least two choices
+                if (problem.multipartOptions[0].length < 2) {
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                problem.multipartOptions[0].map((option: any) => {
+                    if (option.isCorrect) {
+                        hasOneCorrect = true;
+                    }
+
+                    if (option.option === '') {
+                        hasMissingOption = true;
+                    }
+                });
+
+                if (!hasOneCorrect) {
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                if (hasMissingOption) {
+                    alert(`Part A option is empty in question ${problemIndex + 1}`);
+                }
+
+                if (problem.multipartOptions[0].length < 2) {
+                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                // Part B
+                problem.multipartOptions[1].map((option: any) => {
+                    if (option.isCorrect) {
+                        hasOneCorrect = true;
+                    }
+
+                    if (option.option === '') {
+                        hasMissingOption = true;
+                    }
+                });
+
+                if (!hasOneCorrect) {
+                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    return;
+                }
+
+                if (hasMissingOption) {
+                    alert(`Part A option is empty in question ${problemIndex + 1}`);
+                }
+            }
+
+            // Equation Editor
+            if (problem.questionType === 'equationEditor') {
+                if (problem.correctEquations[0] === '') {
+                    alert('Correct equation cannot be empty.');
+                    return;
+                }
+            }
+
+            // Match table grid
+            if (problem.questionType === 'matchTableGrid') {
+                let missingColHeader = false;
+                let missingRowHeader = false;
+                let missingCorrect = false;
+
+                problem.matchTableHeaders.map((header: string) => {
+                    if (header === '') {
+                        missingColHeader = true;
+                    }
+                });
+
+                if (missingColHeader) {
+                    alert(`Column header cannot be empty in question ${problemIndex + 1}.`);
+                    return;
+                }
+
+                problem.matchTableOptions.map((rowHeader: string) => {
+                    if (rowHeader === '') {
+                        missingRowHeader = true;
+                    }
+                });
+
+                if (missingRowHeader) {
+                    alert(`Row header cannot be empty in question ${problemIndex + 1}.`);
+                    return;
+                }
+
+                problem.matchTableChoices.map((row: any) => {
+                    let hasCorrect = false;
+
+                    if (missingCorrect) {
+                        return;
+                    }
+
+                    row.map((option: boolean) => {
+                        if (option) {
+                            hasCorrect = true;
+                        }
                     });
 
-                    const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
+                    if (!hasCorrect) {
+                        missingCorrect = true;
+                    }
+                });
 
-                    let variables = {
-                        cueId: props.cue._id,
-                        quiz: {
-                            instructions,
-                            problems: sanitizeProblems,
-                            headers: JSON.stringify(headers),
-                            duration: timer ? durationMinutes.toString() : null,
-                            shuffleQuiz,
-                        },
-                        modifiedCorrectAnswers: modifiedCorrectAnswerProblems.map((o: any) => (o ? 'yes' : 'no')),
-                        regradeChoices: regradeChoices.map((choice: string) => (choice === '' ? 'none' : choice)),
-                    };
+                if (missingCorrect) {
+                    alert(`Each row must have a correct response in question ${problemIndex + 1}.`);
+                    return;
+                }
+            }
 
-                    const sanitizeWithoutTypename = omitDeep(variables, '__typename');
+            // Check if any regrade choice has not been selected
+            modifiedCorrectAnswerProblems.map((prob: boolean, index: number) => {
+                if (prob && regradeChoices[index] === '') {
+                    Alert('Select regrade option for any questions with modified correct answers.');
+                    error = true;
+                }
+            });
+        });
 
-                    console.log('SanitizeWithoutTypename', sanitizeWithoutTypename);
+        if (error) {
+            setLoadingAfterModifyingQuiz(false);
+            return;
+        }
 
-                    server
-                        .mutate({
-                            mutation: modifyQuiz,
-                            variables: sanitizeWithoutTypename,
-                        })
-                        .then((res: any) => {
-                            if (res.data && res.data.quiz.modifyQuiz) {
-                                const server = fetchAPI('');
-                                server
-                                    .query({
-                                        query: getQuiz,
-                                        variables: {
-                                            quizId,
-                                        },
-                                    })
-                                    .then((res) => {
-                                        if (res.data && res.data.quiz.getQuiz) {
-                                            setProblems(res.data.quiz.getQuiz.problems);
-                                            const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems);
-                                            setUnmodifiedProblems(deepCopy);
-                                            setInstructions(
-                                                res.data.quiz.getQuiz.instructions
-                                                    ? res.data.quiz.getQuiz.instructions
-                                                    : ''
-                                            );
-                                            setHeaders(
-                                                res.data.quiz.getQuiz.headers
-                                                    ? JSON.parse(res.data.quiz.getQuiz.headers)
-                                                    : {}
-                                            );
-                                            setLoadingAfterModifyingQuiz(false);
-                                            setDuration(res.data.quiz.getQuiz.duration * 60);
-                                            setShuffleQuiz(
-                                                res.data.quiz.getQuiz.shuffleQuiz
-                                                    ? res.data.quiz.getQuiz.shuffleQuiz
-                                                    : false
-                                            );
-                                            alert('Quiz updated successfully');
-                                            // Refresh all subscriber scores since there could be regrades
-                                            props.reloadStatuses();
-                                        }
-                                    });
-                            }
-                        })
-                        .catch((err) => console.log(err));
-                },
+        // Points should be a string not a number
+
+        const sanitizeProblems = problems.map((prob: any) => {
+            const { options } = prob;
+            const sanitizeOptions = options.map((option: any) => {
+                const clone = option;
+
+                delete clone.__typename;
+
+                return clone;
+            });
+
+            delete prob.__typename;
+            delete prob.problemIndex;
+            return {
+                ...prob,
+                points: prob.points.toString(),
+                options: sanitizeOptions,
+            };
+        });
+
+        const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
+
+        let variables = {
+            cueId: props.cue._id,
+            quiz: {
+                instructions,
+                problems: sanitizeProblems,
+                headers: JSON.stringify(headers),
+                duration: timer ? durationMinutes.toString() : null,
+                shuffleQuiz,
             },
-        ]);
-    };
+            modifiedCorrectAnswers: modifiedCorrectAnswerProblems.map((o: any) => (o ? 'yes' : 'no')),
+            regradeChoices: regradeChoices.map((choice: string) => (choice === '' ? 'none' : choice)),
+        };
 
-    if (loading || loadingAfterModifyingQuiz || fetchingQuiz) {
-        return null;
-    }
+        const sanitizeWithoutTypename = omitDeep(variables, '__typename');
+
+        server
+            .mutate({
+                mutation: modifyQuiz,
+                variables: sanitizeWithoutTypename,
+            })
+            .then((res: any) => {
+                if (res.data && res.data.quiz.modifyQuiz) {
+                    const server = fetchAPI('');
+                    server
+                        .query({
+                            query: getQuiz,
+                            variables: {
+                                quizId,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.quiz.getQuiz) {
+                                setProblems(res.data.quiz.getQuiz.problems);
+                                const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems);
+                                setUnmodifiedProblems(deepCopy);
+                                setInstructions(
+                                    res.data.quiz.getQuiz.instructions ? res.data.quiz.getQuiz.instructions : ''
+                                );
+                                setHeaders(
+                                    res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {}
+                                );
+                                setLoadingAfterModifyingQuiz(false);
+                                setDuration(res.data.quiz.getQuiz.duration * 60);
+                                setShuffleQuiz(
+                                    res.data.quiz.getQuiz.shuffleQuiz ? res.data.quiz.getQuiz.shuffleQuiz : false
+                                );
+                                alert('Quiz updated successfully');
+                                // Refresh all subscriber scores since there could be regrades
+                                props.reloadStatuses();
+                            }
+                        });
+                }
+            })
+            .catch((err) => console.log(err));
+    };
 
     /**
      * @description QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
      */
     const renderQuizTimerOrUploadOptions = () => {
         return props.showOriginal && (imported || isQuiz) ? (
-            <View style={{ flexDirection: 'column', marginRight: 0, marginLeft: 0, backgroundColor: '#f8f8f8' }}>
+            <View style={{ flexDirection: 'column', marginRight: 0, marginLeft: 0 }}>
                 <View
                     style={{
                         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                         alignItems: Dimensions.get('window').width < 768 ? 'flex-start' : 'center',
                         marginBottom: 25,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     {isOwner || !props.cue.channelId ? (
@@ -2949,7 +2927,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
-                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <CountdownCircleTimer
@@ -2982,14 +2959,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             marginLeft: 15,
                             marginTop: 20,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         {isOwner || !props.cue.channelId ? (
                             <TouchableOpacity
                                 onPress={() => clearAll()}
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     borderRadius: 15, // marginLeft: 15,
                                     marginTop: 5,
                                 }}
@@ -3018,7 +2993,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const renderQuizEndedMessage = () => {
         return (
-            <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <Text
                     style={{
                         width: '100%',
@@ -3053,14 +3028,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: '100%',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
-                <View
-                    style={{
-                        backgroundColor: '#f8f8f8',
-                    }}
-                >
+                <View style={{}}>
                     {quizAttempted ? (
                         <View
                             style={{
@@ -3068,7 +3038,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 20,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
@@ -3083,7 +3052,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 20,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Ionicons name="alert-circle-outline" size={22} color={'#D91D56'} />
@@ -3093,11 +3061,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View>
 
                 {props.cue.graded && props.cue.releaseSubmission ? (
-                    <View
-                        style={{
-                            backgroundColor: '#f8f8f8',
-                        }}
-                    >
+                    <View style={{}}>
                         <Text
                             style={{
                                 fontSize: 15,
@@ -3140,7 +3104,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     justifyContent: 'space-between',
                     maxWidth: 1024,
                     alignSelf: 'center',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 {props.cue.submittedAt && props.cue.submittedAt !== '' && viewSubmission ? (
@@ -3150,7 +3113,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             alignItems: 'center',
                             marginTop: 0,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Ionicons name="checkmark-outline" size={22} color={'#53BE68'} />
@@ -3162,7 +3124,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 {/* View Submission button here */}
                 {props.cue.graded && props.cue.releaseSubmission && viewSubmission ? (
-                    <View style={{ paddingLeft: 20, backgroundColor: '#f8f8f8' }}>
+                    <View style={{ paddingLeft: 20 }}>
                         <Text
                             style={{
                                 fontSize: 15,
@@ -3185,8 +3147,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : null}
 
-                {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.graded ? (
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
+                {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.releaseSubmission ? (
+                    <View style={{ flexDirection: 'row' }}>
                         {viewSubmission ? (
                             props.cue.releaseSubmission ||
                             (!allowLateSubmission && new Date() > deadline) ||
@@ -3196,7 +3158,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         setViewSubmission(false);
                                     }}
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         // overflow: 'hidden',
                                         // height: 35,
                                         // marginTop: 15,
@@ -3213,7 +3174,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             color: '#fff',
                                             backgroundColor: '#000',
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -3231,7 +3192,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setViewSubmission(true);
                                 }}
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     overflow: 'hidden',
                                     height: 35,
                                     justifyContent: 'center',
@@ -3265,7 +3225,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     marginTop: 20,
                     marginBottom: 10,
                     marginLeft: Dimensions.get('window').width < 768 ? 'none' : 'auto',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <Text
@@ -3333,7 +3292,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     alignSelf: 'center',
                     minHeight: 475,
                     paddingTop: 0,
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 {!props.showOriginal || loading ? null : isQuiz ? (
@@ -3344,7 +3302,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     width: '100%',
                                     flexDirection: 'column',
                                     paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
-                                    backgroundColor: '#f8f8f8',
                                 }}
                             >
                                 <Quiz
@@ -3370,25 +3327,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     user={props.user}
                                     shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                     setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
+                                    saveQuiz={saveQuiz}
+                                    setSaveQuiz={(saveQuiz: boolean) => setSaveQuiz(saveQuiz)}
                                 />
                                 {renderSubmissionDraftStatus()}
                                 {renderFooter()}
                             </View>
                         ) : (
-                            <View
-                                style={{
-                                    backgroundColor: '#f8f8f8',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        backgroundColor: '#f8f8f8',
-                                    }}
-                                >
+                            <View style={{}}>
+                                <View style={{}}>
                                     <TouchableOpacity
                                         onPress={() => initQuiz()}
                                         style={{
-                                            backgroundColor: '#f8f8f8',
                                             // overflow: 'hidden',
                                             // height: 35,
                                             justifyContent: 'center',
@@ -3406,7 +3356,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 color: '#fff',
                                                 backgroundColor: '#000',
                                                 fontSize: 11,
-                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                                paddingHorizontal: 24,
                                                 fontFamily: 'inter',
                                                 overflow: 'hidden',
                                                 paddingVertical: 14,
@@ -3426,7 +3376,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 flexDirection: 'column',
                                 paddingTop: Dimensions.get('window').width < 768 ? 0 : 25,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Quiz
@@ -3450,6 +3399,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 user={props.user}
                                 shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                 setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
+                                saveQuiz={saveQuiz}
+                                setSaveQuiz={(saveQuiz: boolean) => setSaveQuiz(saveQuiz)}
                             />
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
@@ -3465,7 +3416,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     type === 'mpeg' ||
                     type === 'mp2' ||
                     type === 'wav' ? (
-                        <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                        <View style={{ width: '100%' }}>
                             <ReactPlayer
                                 url={url}
                                 controls={true}
@@ -3478,11 +3429,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             />
                         </View>
                     ) : (
-                        <View key={url + props.showOriginal.toString()} style={{ backgroundColor: '#f8f8f8' }}>
+                        <View key={url + props.showOriginal.toString()} style={{}}>
                             <div
                                 className="webviewer"
                                 ref={RichText}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                                 key={props.showOriginal + url + imported.toString()}
                             ></div>
                         </View>
@@ -3500,25 +3451,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === 'mpeg' ||
                     submissionType === 'mp2' ||
                     submissionType === 'wav' ? (
-                        <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                        <View style={{ width: '100%' }}>
                             <ReactPlayer url={submissionUrl} controls={true} width={'100%'} height={'100%'} />
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
                     ) : (
                         <View
-                            style={{ backgroundColor: '#f8f8f8' }}
+                            style={{}}
                             key={
                                 JSON.stringify(submissionImported) +
                                 JSON.stringify(viewSubmission) +
                                 JSON.stringify(viewSubmissionTab)
                             }
                         >
-                            <div
-                                className="webviewer"
-                                ref={RichText}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
-                            ></div>
+                            <div className="webviewer" ref={RichText} style={{ height: '70vh' }}></div>
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
@@ -3615,6 +3562,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             spellcheck: true,
                             tabSpaces: 4,
                             scrollableContainer: '#scroll_container',
+                            toolbarStickyOffset: 0,
                             // TOOLBAR
                             toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                             toolbarSticky: true,
@@ -3841,7 +3789,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     JSON.stringify(props.showOriginal) +
                                     JSON.stringify(submissionAttempts)
                                 }
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                             ></div>
                         </View>
                     )
@@ -3855,7 +3803,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div
                                 className="webviewer"
                                 ref={submissionViewerRef}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                                 key={viewSubmissionTab}
                             ></div>
                         )}
@@ -3869,98 +3817,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Rich editor for Submissions
      */
     const renderRichEditorModified = () => {
+        if (submissionImported) return null;
+
         return (
-            // <Editor
-            //     onInit={(evt, editor) => (editorRef.current = editor)}
-            //     initialValue={initialSubmissionDraft}
-            //     disabled={
-            //         props.cue.releaseSubmission ||
-            //         (!allowLateSubmission && new Date() > deadline) ||
-            //         (allowLateSubmission && new Date() > availableUntil)
-            //     }
-            //     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-            //     init={{
-            //         skin: 'snow',
-            //         branding: false,
-            //         placeholder: 'Content...',
-            //         readonly:
-            //             props.cue.releaseSubmission ||
-            //             (!allowLateSubmission && new Date() > deadline) ||
-            //             (allowLateSubmission && new Date() > availableUntil),
-            //         min_height: 500,
-            //         paste_data_images: true,
-            //         images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-            //         mobile: {
-            //             plugins:
-            //                 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-            //         },
-            //         plugins:
-            //             'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-            //         menu: {
-            //             // this is the complete default configuration
-            //             file: { title: 'File', items: 'newdocument' },
-            //             edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-            //             insert: { title: 'Insert', items: 'link media | template hr' },
-            //             view: { title: 'View', items: 'visualaid' },
-            //             format: {
-            //                 title: 'Format',
-            //                 items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'
-            //             },
-            //             table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-            //             tools: { title: 'Tools', items: 'spellchecker code' }
-            //         },
-            //         setup: (editor: any) => {
-            //             const equationIcon =
-            //                 '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-            //             editor.ui.registry.addIcon('formula', equationIcon);
-
-            //             editor.ui.registry.addButton('formula', {
-            //                 icon: 'formula',
-            //                 // text: "Upload File",
-            //                 tooltip: 'Insert equation',
-            //                 onAction: () => {
-            //                     setShowEquationEditor(!showEquationEditor);
-            //                 }
-            //             });
-
-            //             editor.ui.registry.addButton('upload', {
-            //                 icon: 'upload',
-            //                 tooltip: 'Import File (pdf, docx, media, etc.)',
-            //                 onAction: async () => {
-            //                     const res = await handleFile(false);
-
-            //                     if (!res || res.url === '' || res.type === '') {
-            //                         return;
-            //                     }
-
-            //                     updateAfterFileImport(res.url, res.type);
-            //                 }
-            //             });
-            //         },
-            //         // menubar: 'file edit view insert format tools table tc help',
-            //         menubar: false,
-            //         toolbar:
-            //             props.cue.releaseSubmission ||
-            //             (!allowLateSubmission && new Date() > deadline) ||
-            //             (allowLateSubmission && new Date() > availableUntil)
-            //                 ? false
-            //                 : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
-            //         importcss_append: true,
-            //         image_caption: true,
-            //         quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-            //         noneditable_noneditable_class: 'mceNonEditable',
-            //         toolbar_mode: 'sliding',
-            //         tinycomments_mode: 'embedded',
-            //         content_style: '.mymention{ color: gray; }',
-            //         // contextmenu: 'link image imagetools table configurepermanentpen',
-            //         a11y_advanced_options: true,
-            //         extended_valid_elements:
-            //             'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-            //         // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-            //         // content_css: useDarkMode ? 'dark' : 'default',
-            //     }}
-            //     onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
-            // />
             <View
                 key={userId.toString() + isOwner.toString()}
                 style={{
@@ -3973,7 +3832,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <FroalaEditor
                     ref={editorRef}
                     model={submissionDraft}
-                    onModelChange={(model: any) => setSubmissionDraft(model)}
+                    onModelChange={(model: any) => {
+                        if (submissionImported || submissionUrl) return;
+
+                        setSubmissionDraft(model);
+                    }}
                     config={{
                         key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                         attribution: false,
@@ -4013,8 +3876,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             },
                             'file.beforeUpload': function (files: any) {
                                 // Return false if you want to stop the file upload.
-                                console.log('Before upload');
-                                console.log('File', files.item(0));
 
                                 fileUploadEditor(files, true);
 
@@ -4049,7 +3910,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
+
                         flex: 1,
                         flexDirection: 'row',
                     }}
@@ -4076,7 +3937,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 <View
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         height: 40,
                                         marginRight: 10,
                                     }}
@@ -4153,7 +4013,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4172,7 +4031,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             isQuiz ? null : (
                                 <View
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         height: 40,
                                         marginRight: 10,
                                     }}
@@ -4193,7 +4051,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             )
                         ) : (
-                            <View style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
+                            <View style={{ flex: 1 }}>
                                 <Text
                                     style={{
                                         fontSize: 15,
@@ -4346,7 +4204,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4364,7 +4221,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{ flexDirection: 'row', justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     marginRight: 10,
                                 }}
@@ -4389,7 +4245,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
+
                                 justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                 alignItems: 'center',
                             }}
@@ -4454,7 +4310,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flex: 1,
                         flexDirection: 'row',
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
                     <Text
@@ -4472,7 +4327,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{ flexDirection: 'row', justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     marginRight: 10,
                                 }}
@@ -4497,7 +4351,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
+
                                 alignItems: 'center',
                             }}
                         >
@@ -4583,7 +4437,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -4601,7 +4454,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             display: 'flex',
                             flexDirection: 'row',
-                            backgroundColor: '#f8f8f8',
+
                             justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
                         }}
                     >
@@ -4625,7 +4478,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -4641,7 +4493,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View>
                         <View
                             style={{
-                                backgroundColor: '#f8f8f8',
                                 height: 40,
                                 marginRight: 10,
                                 flexDirection: 'row',
@@ -4674,7 +4525,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     display: 'flex',
                                     flexDirection: 'row',
                                     justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
-                                    backgroundColor: '#f8f8f8',
+
                                     alignItems: 'center',
                                 }}
                             >
@@ -4732,7 +4583,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -4753,10 +4604,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: '100%',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
-                            <View style={{ width: '85%', backgroundColor: '#f8f8f8' }}>
+                            <View style={{ width: '85%' }}>
                                 <View style={styles.colorBar}>
                                     <TouchableOpacity style={styles.allGrayOutline} onPress={() => {}}>
                                         <Text
@@ -4779,10 +4629,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
-                            <View style={{ backgroundColor: '#f8f8f8' }}>
+                            <View style={{}}>
                                 {addCustomCategory ? (
                                     <View style={styles.colorBar}>
                                         <TextInput
@@ -4869,7 +4718,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </label>
                                 )}
                             </View>
-                            <View style={{ backgroundColor: '#f8f8f8', paddingLeft: 20 }}>
+                            <View style={{ paddingLeft: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -4880,7 +4729,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setAddCustomCategory(true);
                                         }
                                     }}
-                                    style={{ backgroundColor: '#f8f8f8' }}
+                                    style={{}}
                                 >
                                     <Text
                                         style={{
@@ -4923,7 +4772,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -4940,10 +4789,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flexDirection: 'row',
-                        backgroundColor: '#f8f8f8',
                     }}
                 >
-                    <View style={{ width: '100%', backgroundColor: '#f8f8f8' }}>
+                    <View style={{ width: '100%' }}>
                         <ScrollView
                             style={{ ...styles.colorBar, height: 20 }}
                             horizontal={true}
@@ -4999,7 +4847,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         paddingBottom: width < 768 ? 15 : 0,
                     }}
                 >
@@ -5016,7 +4864,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flexDirection: 'row',
-                        backgroundColor: '#f8f8f8',
+
                         alignItems: 'center',
                     }}
                 >
@@ -5046,7 +4894,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         />
                     </label>
 
-                    <View style={{ backgroundColor: '#f8f8f8', paddingLeft: 20 }}>
+                    <View style={{ paddingLeft: 20 }}>
                         <TouchableOpacity
                             disabled={shareWithChannelId === 'None'}
                             onPress={() => {
@@ -5070,7 +4918,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ]
                                 );
                             }}
-                            style={{ backgroundColor: '#f8f8f8' }}
+                            style={{}}
                         >
                             <Text
                                 style={{
@@ -5110,7 +4958,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: 'row',
                             flex: 1,
                             paddingBottom: 15,
-                            backgroundColor: '#f8f8f8',
                         }}
                     >
                         <Text
@@ -5125,7 +4972,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                     <View
                         style={{
-                            backgroundColor: '#f8f8f8',
                             // width: "100%",
                             height: 40,
                         }}
@@ -5158,7 +5004,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flex: 1,
                                 flexDirection: 'row',
                                 paddingBottom: 15,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Text
@@ -5174,7 +5019,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{}}>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     alignSelf: width < 768 ? 'flex-start' : 'flex-end',
                                 }}
@@ -5196,7 +5040,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         display: 'flex',
                                         flexDirection: 'row',
                                         alignItems: 'center',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text
@@ -5282,7 +5125,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         flex: 1,
                                         flexDirection: 'row',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <View style={{ flex: 1 }}>
@@ -5346,7 +5188,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 flex: 1,
                                 paddingBottom: 15,
-                                backgroundColor: '#f8f8f8',
                             }}
                         >
                             <Text
@@ -5362,7 +5203,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View>
                             <View
                                 style={{
-                                    backgroundColor: '#f8f8f8',
                                     height: 40,
                                     justifyContent: width < 768 ? 'flex-start' : 'flex-end',
                                     flexDirection: 'row',
@@ -5385,7 +5225,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        backgroundColor: '#f8f8f8',
                                     }}
                                 >
                                     <Text style={styles.text}>{PreferredLanguageText('remindTill')}</Text>
@@ -5499,7 +5338,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
+
                         justifyContent: 'center',
                         display: 'flex',
                         flexDirection: 'row',
@@ -5536,7 +5375,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: '#fff',
                                     backgroundColor: '#000',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
@@ -5549,7 +5388,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 (isQuiz && remainingAttempts === 0) ||
                                 (props.cue.releaseSubmission && !props.cue.graded)
                                     ? 'Submission Ended'
-                                    : props.cue.graded && !isQuiz
+                                    : props.cue.graded && props.cue.releaseSubmission
                                     ? PreferredLanguageText('graded')
                                     : isSubmitting
                                     ? 'Submitting...'
@@ -5562,10 +5401,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     };
 
+    if (loading || loadingAfterModifyingQuiz || fetchingQuiz || updatingCueContent || updatingCueDetails) {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    paddingVertical: 100,
+                    justifyContent: 'center',
+                    flex: 1,
+                    flexDirection: 'column',
+                }}
+            >
+                <ActivityIndicator color={'#1F1F1F'} />
+            </View>
+        );
+    }
+
     if (initiateAt > new Date() && !isOwner) {
         return (
             <View style={{ minHeight: Dimensions.get('window').height }}>
-                <View style={{ backgroundColor: '#f8f8f8', flex: 1 }}>
+                <View style={{ flex: 1 }}>
                     <Text
                         style={{
                             width: '100%',
@@ -5591,149 +5446,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 // paddingBottom: 50
             }}
         >
-            {props.cue.channelId && props.cue.channelId !== '' ? (
-                <View
-                    style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        maxWidth: 1024,
-                        alignSelf: 'center',
-                    }}
-                >
-                    {!isOwner &&
-                    props.cue.graded &&
-                    props.cue.score !== undefined &&
-                    props.cue.score !== null &&
-                    !isQuiz &&
-                    props.cue.releaseSubmission &&
-                    (props.showOriginal || props.showOptions) ? (
-                        <Text
-                            style={{
-                                fontSize: 13,
-                                color: 'white',
-                                height: 22,
-                                paddingHorizontal: 10,
-                                borderRadius: 15,
-                                backgroundColor: '#000',
-                                lineHeight: 20,
-                                paddingTop: 1,
-                                marginBottom: 5,
-                                marginTop: 20,
-                            }}
-                        >
-                            {props.cue.score}%
-                        </Text>
-                    ) : null}
-                    {!isOwner &&
-                    props.cue.submittedAt !== '' &&
-                    new Date(props.cue.submittedAt) >= deadline &&
-                    props.showOriginal ? (
-                        <View style={{ marginTop: 20, marginBottom: 5 }}>
-                            <Text
-                                style={{
-                                    color: '#f94144',
-                                    fontSize: 20,
-                                    fontFamily: 'Inter',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                LATE
-                            </Text>
-                        </View>
-                    ) : null}
-                    {/* <TouchableOpacity
-                            onPress={() => setStarred(!starred)}
-                            style={{
-                                backgroundColor: "white",
-                                flex: 1
-                            }}>
-                            <Text
-                                style={{
-                                    textAlign: "right",
-                                    lineHeight: 34,
-                                    marginTop: -31,
-                                    // paddingRight: 25,
-                                    width: "100%"
-                                }}>
-                                <Ionicons name="bookmark" size={40} color={starred ? "#f94144" : "#1F1F1F"} />
-                            </Text>
-                        </TouchableOpacity> */}
-                </View>
-            ) : null}
-
-            {/* {props.showOptions || props.showComments || viewSubmission ? null : (
-                <View
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
-                        marginBottom: 5,
-                        backgroundColor: '#f8f8f8',
-                        borderBottomColor: '#f2f2f2'
-                    }}
-                    onTouchStart={() => Keyboard.dismiss()}
-                >
-                    <View
-                        style={{
-                            flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                            flex: 1
-                        }}
-                    >
-                        {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions) ||
-                        (props.showOriginal && showImportOptions && (isOwner || !props.cue.channelId)) ? (
-                            <FileUpload
-                                back={() => setShowImportOptions(false)}
-                                onUpload={(u: any, t: any) => {
-                                    if (props.showOriginal) {
-                                        setOriginal(
-                                            JSON.stringify({
-                                                url: u,
-                                                type: t,
-                                                title
-                                            })
-                                        );
-                                    } else {
-                                        setSubmissionDraft(
-                                            JSON.stringify({
-                                                url: u,
-                                                type: t,
-                                                title: submissionTitle,
-                                                annotations: ''
-                                            })
-                                        );
-                                        setSubmissionImported(true);
-                                        setSubmissionType(t);
-                                        setSubmissionUrl(u);
-                                    }
-                                    setShowImportOptions(false);
-                                }}
-                            />
-                        ) : null}
-                    </View>
-                </View>
-            )} */}
-            {showEquationEditor ? (
-                <FormulaGuide
-                    value={equation}
-                    onChange={setEquation}
-                    show={showEquationEditor}
-                    onClose={() => setShowEquationEditor(false)}
-                    onInsertEquation={insertEquation}
-                />
-            ) : null}
-            {showInsertYoutubeVideosModal ? (
-                <InsertYoutubeModal
-                    show={showInsertYoutubeVideosModal}
-                    onClose={() => setShowInsertYoutubeVideosModal(false)}
-                    insertVideo={handleAddVideo}
-                />
-            ) : null}
             {/* <ScrollView
                 style={{
                     paddingBottom: 25,
@@ -5762,26 +5480,81 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     overflow: 'auto',
                     width: '100%',
                     height:
-                        Dimensions.get('window').width < 1024
+                        width < 768
                             ? Dimensions.get('window').height - (64 + 60)
-                            : Dimensions.get('window').height - 64,
+                            : // : width < 1024
+                              // ? Dimensions.get('window').height - (64 + 68)
+                              Dimensions.get('window').height - 64,
                     maxHeight:
-                        Dimensions.get('window').width < 1024
+                        width < 768
                             ? Dimensions.get('window').height - (64 + 60)
-                            : Dimensions.get('window').height - 64,
-                    backgroundColor: '#f8f8f8',
+                            : // : width < 1024
+                              // ? Dimensions.get('window').height - (64 + 68)
+                              Dimensions.get('window').height - 64,
+
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                 }}
                 id="scroll_container"
             >
+                {props.cue.channelId && props.cue.channelId !== '' ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            maxWidth: 1024,
+                            alignSelf: 'center',
+                            paddingHorizontal: paddingResponsive(),
+                        }}
+                    >
+                        {!isOwner &&
+                        props.cue.graded &&
+                        props.cue.score !== undefined &&
+                        props.cue.score !== null &&
+                        !isQuiz &&
+                        props.cue.releaseSubmission &&
+                        (props.showOriginal || props.showOptions) ? (
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    color: '#000',
+                                    lineHeight: 20,
+                                    paddingTop: 1,
+                                    marginBottom: 5,
+                                    marginTop: 20,
+                                    fontFamily: 'Inter',
+                                    marginRight: 20,
+                                }}
+                            >
+                                {props.cue.score}%
+                            </Text>
+                        ) : null}
+                        {!isOwner &&
+                        props.cue.submittedAt !== '' &&
+                        new Date(props.cue.submittedAt) >= deadline &&
+                        props.showOriginal ? (
+                            <View style={{ marginTop: 20, marginBottom: 5 }}>
+                                <Text
+                                    style={{
+                                        color: '#f94144',
+                                        fontSize: 20,
+                                        fontFamily: 'Inter',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    LATE
+                                </Text>
+                            </View>
+                        ) : null}
+                    </View>
+                ) : null}
                 <View
                     style={{
                         width: '100%',
                         maxWidth: 1024,
                         alignSelf: 'center',
-                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
+                        paddingHorizontal: paddingResponsive(),
                     }}
                 >
                     {props.showOptions ||
@@ -5819,7 +5592,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 marginBottom: 0,
                                                 maxWidth: 300,
                                                 minWidth: 300,
-                                                borderBottom: '1px solid #cccccc',
+                                                border: '1px solid #cccccc',
                                                 borderRadius: 2,
                                                 width: '100%',
                                             }}
@@ -5836,11 +5609,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 alignSelf: 'flex-end',
                                             }}
                                         >
-                                            {props.cue.graded || currentDate > deadline ? null : (
+                                            {props.cue.releaseSubmission ? null : (
                                                 <TouchableOpacity
                                                     onPress={() => clearAll()}
                                                     style={{
-                                                        backgroundColor: '#f8f8f8',
                                                         borderRadius: 15,
                                                         marginTop: 5,
                                                     }}
@@ -5863,7 +5635,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <TouchableOpacity
                                             onPress={() => clearAll()}
                                             style={{
-                                                backgroundColor: '#f8f8f8',
                                                 borderRadius: 15,
                                                 marginLeft: 15,
                                                 marginTop: 5,
@@ -5941,6 +5712,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
             </div>
+            {showEquationEditor ? (
+                <FormulaGuide
+                    value={equation}
+                    onChange={setEquation}
+                    show={showEquationEditor}
+                    onClose={() => setShowEquationEditor(false)}
+                    onInsertEquation={insertEquation}
+                />
+            ) : null}
+            {showInsertYoutubeVideosModal ? (
+                <InsertYoutubeModal
+                    show={showInsertYoutubeVideosModal}
+                    onClose={() => setShowInsertYoutubeVideosModal(false)}
+                    insertVideo={handleAddVideo}
+                />
+            ) : null}
         </View>
     );
 };
@@ -5950,7 +5737,7 @@ export default UpdateControls;
 const styles: any = StyleSheet.create({
     footer: {
         width: '100%',
-        backgroundColor: '#f8f8f8',
+
         display: 'flex',
         flexDirection: 'row',
         marginTop: Dimensions.get('window').width < 768 ? 40 : 80,
@@ -5964,7 +5751,6 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: '#f8f8f8',
     },
     colorContainerOutline: {
         lineHeight: 20,
@@ -5973,7 +5759,7 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: '#f8f8f8',
+
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#1F1F1F',
@@ -5992,7 +5778,7 @@ const styles: any = StyleSheet.create({
     colorBar: {
         width: '100%',
         flexDirection: 'row',
-        backgroundColor: '#f8f8f8',
+
         lineHeight: 20,
     },
     all: {
@@ -6001,7 +5787,7 @@ const styles: any = StyleSheet.create({
         fontWeight: 'bold',
         height: 25,
         paddingHorizontal: Dimensions.get('window').width < 768 ? 12 : 15,
-        backgroundColor: '#f8f8f8',
+
         lineHeight: 25,
         fontFamily: 'overpass',
         textTransform: 'uppercase',
@@ -6022,7 +5808,7 @@ const styles: any = StyleSheet.create({
         color: '#1F1F1F',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#f8f8f8',
+
         borderRadius: 1,
         borderWidth: 1,
         borderColor: '#1F1F1F',

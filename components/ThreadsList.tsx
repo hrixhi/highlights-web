@@ -91,8 +91,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [editDiscussionThreadAttachments, setEditDiscussionThreadAttachments] = useState<any[]>([]);
     const [editDiscussionThreadAnonymous, setEditDiscussionThreadAnonymous] = useState(false);
 
-    console.log('Search results', searchResults);
-
     // ALERTS
     const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
@@ -246,6 +244,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 await AsyncStorage.removeItem('openThread');
 
                 loadCueDiscussions(tId);
+            } else {
+                if (threads.length > 0) {
+                    loadCueDiscussions(threads[0]._id);
+                }
             }
         })();
     }, [threads]);
@@ -315,7 +317,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         [props.cueId, props.channelId, userId, isOwner]
     );
 
-    const handleDeleteThread = useCallback(async (threadId: string, reply: boolean) => {
+    const handleDeleteThread = useCallback(async (threadId: string, parentId?: string) => {
         Alert('Delete post?', '', [
             {
                 text: 'Cancel',
@@ -337,8 +339,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         })
                         .then((res) => {
                             if (res.data && res.data.thread.delete) {
-                                if (reply) {
-                                    loadCueDiscussions(threadId);
+                                if (parentId) {
+                                    loadCueDiscussions(parentId);
                                 } else {
                                     //
                                     setSelectedThread('');
@@ -465,7 +467,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 .query({
                     query: getThreadWithReplies,
                     variables: {
-                        threadId: threadId,
+                        threadId,
                     },
                 })
                 .then((res) => {
@@ -610,7 +612,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" id="' +
+                '<img class="rendered-math-jax" style="width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -693,8 +695,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }
 
     const renderDiscussionEditor = () => {
-        console.log('Edit discussion thread html', editDiscussionThreadHtml);
-
         return (
             <View
                 style={{
@@ -916,7 +916,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const fileUploadEditor = useCallback(
         async (files: any) => {
-            console.log('File', files.item(0));
             const res = await handleFileUploadEditor(false, files.item(0), userId);
 
             if (!res || res.url === '' || res.type === '') {
@@ -944,8 +943,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             if (editDiscussionThreadId !== '') {
                 const updatedAttachments: any[] = [...editDiscussionThreadAttachments];
 
-                console.log('initial attachments', updatedAttachments);
-
                 updatedAttachments.push({
                     url: uploadURL,
                     type: uploadType,
@@ -955,8 +952,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 setEditDiscussionThreadAttachments(updatedAttachments);
             } else {
                 const updatedAttachments: any[] = [...attachments];
-
-                console.log('initial attachments', updatedAttachments);
 
                 updatedAttachments.push({
                     url: uploadURL,
@@ -977,8 +972,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         let selectedThreadTitle = '';
         let selectedThreadContent = '';
         let selectedThreadAttachments = [];
-
-        console.log('Selected thread', selectedThread);
 
         if (
             selectedThread.message &&
@@ -1169,7 +1162,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         marginLeft: 20,
                                     }}
                                     onPress={() => {
-                                        handleDeleteThread(selectedThread._id, false);
+                                        handleDeleteThread(selectedThread._id, undefined);
                                     }}
                                     disabled={props.user.email === disableEmailId}
                                 >
@@ -1551,8 +1544,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                 >
                     {threadChat.map((thread: any, ind: number) => {
-                        console.log('Thread chat', thread);
-
                         let replyThreadContent = '';
                         let replyThreadAttachments = [];
 
@@ -1679,7 +1670,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     marginLeft: 20,
                                                 }}
                                                 onPress={() => {
-                                                    handleDeleteThread(thread._id, true);
+                                                    handleDeleteThread(thread._id, thread.parentId);
                                                 }}
                                                 disabled={props.user.email === disableEmailId}
                                             >
@@ -2201,8 +2192,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         );
     };
 
-    console.log('Thread Id', threadId);
-
     /**
      * @description Renders List of threads
      */
@@ -2391,7 +2380,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                           marginLeft: 'auto',
                                                           flexDirection: 'row',
                                                           backgroundColor: 'none',
-                                                          paddingHorizontal: 10,
+                                                          paddingLeft: 10,
                                                           alignItems: 'center',
                                                       }}
                                                   >

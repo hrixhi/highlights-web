@@ -197,9 +197,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredUsers = filterGrades;
         }
 
-        console.log('User id', userId);
-        console.log('Users', filteredUsers);
-
         if (userId !== '') {
             const filterOutMainOwner = filteredUsers.filter((user: any) => {
                 return user._id !== userId;
@@ -207,8 +204,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             filteredUsers = filterOutMainOwner;
         }
-
-        console.log('Filtered Users', filteredUsers);
 
         if (activeSection !== 'All') {
             const filterSections = filteredUsers.filter((user: any) => {
@@ -373,8 +368,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                     return 0;
                 });
-
-                console.log('Set school options', sort);
 
                 setOptions(sort);
             });
@@ -829,10 +822,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 width: '100%',
                 maxHeight:
                     Dimensions.get('window').width < 768
-                        ? Dimensions.get('window').height - (64 + 60)
-                        : Dimensions.get('window').width < 1024
-                        ? Dimensions.get('window').height - (64 + 60 + 54)
-                        : Dimensions.get('window').height - (64 + 54),
+                        ? Dimensions.get('window').height - (54 + 60)
+                        : // : Dimensions.get('window').width < 1024
+                          // ? Dimensions.get('window').height - (64 + 68 + 54)
+                          Dimensions.get('window').height - (64 + 54),
                 // backgroundColor: props.showCreate ? "#fff" : '#f2f2f2',
                 justifyContent: 'center',
                 flexDirection: 'row',
@@ -858,7 +851,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             >
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
+                                    <Ionicons name="arrow-back-outline" size={32} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -915,9 +908,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <ScrollView
                                     contentContainerStyle={{
                                         maxHeight:
-                                            Dimensions.get('window').width < 1024
-                                                ? Dimensions.get('window').height - (64 + 60)
-                                                : Dimensions.get('window').height - (64 + 54),
+                                            Dimensions.get('window').width < 768
+                                                ? Dimensions.get('window').height - (54 + 60)
+                                                : // : Dimensions.get('window').width < 1024
+                                                  // ? Dimensions.get('window').height - (64 + 68)
+                                                  Dimensions.get('window').height - (64 + 54),
                                         width: '100%',
                                     }}
                                     showsVerticalScrollIndicator={true}
@@ -1146,7 +1141,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         color: '#fff',
                                         backgroundColor: '#000',
                                         fontSize: 11,
-                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        paddingHorizontal: 24,
                                         fontFamily: 'inter',
                                         overflow: 'hidden',
                                         paddingVertical: 14,
@@ -1610,7 +1605,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 color: '#fff',
                                                 backgroundColor: '#000',
                                                 fontSize: 11,
-                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                                paddingHorizontal: 24,
                                                 fontFamily: 'inter',
                                                 overflow: 'hidden',
                                                 paddingVertical: 14,

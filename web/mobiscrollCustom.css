@@ -413,4 +413,78 @@ input:focus {
 
 .htmlParser {
     font-family: 'Overpass' !important;
+    user-select: text !important;
+}
+
+.highlighter {
+    text-overflow: ellipsis;
+}
+
+.fr-box.fr-basic .fr-element {
+    color: '#000';
+}
+
+/* New table with sticky row and column */
+
+.stickyTableContainer {
+    position: relative;
+    max-height: 300px;
+    width: 500px;
+    overflow: scroll;
+}
+
+.stickyTable {
+    white-space: nowrap;
+    margin: 0;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: 100%;
+}
+
+.stickyTable > thead th {
+    padding: 3px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 120px;
+    max-width: 120px;
+    background-color: #f8f8f8;
+}
+
+.stickyTable > thead {
+    background-color: #f8f8f8;
+    min-width: 100%;
+}
+
+.stickyTable > thead th:first-child {
+    background-color: #f8f8f8;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #f2f2f2;
+}
+
+.stickyTable > tbody th {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #f2f2f2;
+}
+
+.stickyTable > td {
+    z-index: 1;
+    min-width: 120px;
+    max-width: 120px;
+    padding: 10px;
 }

@@ -15,6 +15,7 @@ import ImageMarker from 'react-image-marker';
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import MathJax from 'react-mathjax-preview';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems] = useState<any[]>(props.problems);
@@ -28,9 +29,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [percentage, setPercentage] = useState('');
     const [comment, setComment] = useState(props.comment ? props.comment : '');
     const [headers, setHeaders] = useState<any>(props.headers);
-
-    console.log('Solutions', solutions);
-    console.log('Props', props);
 
     if (!props.solutions) {
         return null;
@@ -258,7 +256,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <TouchableOpacity onPress={() => props.onChangeQuizAttempt(index)}>
                                         <Text
                                             style={{
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 color: '#000',
                                                 fontFamily: 'Inter',
                                             }}
@@ -267,7 +265,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </TouchableOpacity>
                                 ) : (
-                                    <Text style={{ fontSize: 15 }}>Attempt {index + 1}</Text>
+                                    <Text style={{ fontSize: 16 }}>Attempt {index + 1}</Text>
                                 )}
                             </View>
                             <View
@@ -328,7 +326,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const renderHeader = (index: number) => {
         if (index in headers) {
             return (
-                <Text style={{ width: '100%', marginBottom: 30, marginTop: 70, fontSize: 15, fontWeight: '600' }}>
+                <Text style={{ width: '100%', marginBottom: 30, marginTop: 70, fontSize: 18, fontWeight: '600' }}>
                     {headers[index]}
                 </Text>
             );
@@ -345,14 +343,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <ActivityIndicator color={'#1F1F1F'} />
             </View>
         );
-
-    console.log('Solutions', solutions);
 
     // MAIN RETURN
 
@@ -360,7 +355,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 paddingTop: 15,
@@ -388,17 +383,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0,
                         }}
                     >
-                        <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
+                        <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 16 }}>
                             {props.problems.length} {props.problems.length === 1 ? 'Question' : 'Questions'}
                         </Text>
-                        <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>{totalPossible} Points</Text>
+                        <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 16 }}>{totalPossible} Points</Text>
                     </View>
 
                     <View style={{}}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 10 }}>
                             <Text
                                 style={{
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     height: 22,
                                     fontFamily: 'Inter',
                                     paddingHorizontal: 10,
@@ -412,7 +407,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             </Text>
                             <Text
                                 style={{
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     height: 22,
                                     fontFamily: 'Inter',
                                     // textAlign: 'right',
@@ -429,7 +424,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             {props.isOwner ? (
                                 <Text
                                     style={{
-                                        fontSize: 15,
+                                        fontSize: 16,
                                         fontFamily: 'Inter',
                                         color: '#000000',
                                         marginBottom: 10,
@@ -482,8 +477,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     type = parse.type;
                 }
 
-                console.log('Problem', problem);
-
                 return (
                     <View
                         style={{
@@ -526,8 +519,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         style={{
                                             flexDirection: 'row',
                                             alignItems: 'flex-start',
-                                            paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0,
-                                            marginBottom: Dimensions.get('window').width > 768 ? 20 : 0,
+                                            paddingLeft: Dimensions.get('window').width >= 768 ? 20 : 0,
+                                            marginBottom: Dimensions.get('window').width >= 768 ? 20 : 0,
                                             marginLeft: 'auto',
                                             paddingTop: 7,
                                         }}
@@ -566,7 +559,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     borderColor: '#cccccc',
                                                     borderWidth: 1,
                                                     borderRadius: 2,
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     padding: 15,
                                                     paddingTop: props.isOwner ? 10 : 7,
                                                     paddingBottom: 10,
@@ -584,7 +577,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 value={'/ ' + problem.points}
                                                 style={{
                                                     width: 100,
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     padding: 15,
                                                     paddingTop: props.isOwner ? 12 : 7,
                                                     paddingBottom: 12,
@@ -626,7 +619,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginTop: 10,
                                         marginBottom: 20,
                                         marginLeft: 20,
-                                        fontSize: 15,
+                                        fontSize: 16,
                                         lineHeight: 25,
                                     }}
                                 >
@@ -639,7 +632,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     marginTop: 15,
                                     marginBottom: 20,
                                     marginLeft: 20,
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     width: window.screen.width < 1024 ? '100%' : '80%',
                                     lineHeight: 25,
                                     flex: 1,
@@ -700,11 +693,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         <Text
                                             style={{
                                                 width: Dimensions.get('window').width < 768 ? '80%' : '50%',
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 paddingHorizontal: 15,
                                                 color,
                                                 lineHeight: 25,
-                                                backgroundColor: selected || isCorrectAnswer ? background : '#f8f8f8',
+                                                backgroundColor: selected || isCorrectAnswer ? background : 'none',
                                                 borderColor: selected || isCorrectAnswer ? color : 'none',
                                                 borderWidth: selected || isCorrectAnswer ? 1 : 0,
                                                 padding: 7,
@@ -717,7 +710,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         {selected || isCorrectAnswer ? (
                                             <Text
                                                 style={{
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     fontFamily: 'Overpass',
                                                     paddingLeft: 15,
                                                     textTransform: 'uppercase',
@@ -861,7 +854,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 marginRight: 20,
                                                                 marginBottom: 20,
                                                                 borderRadius: 10,
-                                                                // backgroundColor: '#f8f8f8',
                                                                 borderWidth: 1,
                                                                 borderColor: '#ccc',
                                                                 shadowOffset: {
@@ -1060,7 +1052,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const inlineChoiceOptions = problem.inlineChoiceOptions;
 
@@ -1201,7 +1193,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const textEntryOptions = problem.textEntryOptions;
 
@@ -1337,7 +1329,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     marginTop: 15,
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     lineHeight: 25,
                                                     marginBottom: 20,
                                                 }}
@@ -1351,7 +1343,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 let isCorrectAnswer = option.isCorrect;
 
                                                 let color = '#000000';
-                                                let background = '#f8f8f8';
+                                                let background = 'none';
 
                                                 if (selected && isCorrectAnswer) {
                                                     color = '#35ac78';
@@ -1396,14 +1388,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     Dimensions.get('window').width < 768
                                                                         ? '80%'
                                                                         : '50%',
-                                                                fontSize: 15,
+                                                                fontSize: 16,
                                                                 paddingHorizontal: 15,
                                                                 color,
                                                                 lineHeight: 25,
                                                                 backgroundColor:
-                                                                    selected || isCorrectAnswer
-                                                                        ? background
-                                                                        : '#f8f8f8',
+                                                                    selected || isCorrectAnswer ? background : 'none',
                                                                 borderColor:
                                                                     selected || isCorrectAnswer ? color : 'none',
                                                                 borderWidth: selected || isCorrectAnswer ? 1 : 0,
@@ -1417,7 +1407,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         {selected || isCorrectAnswer ? (
                                                             <Text
                                                                 style={{
-                                                                    fontSize: 15,
+                                                                    fontSize: 16,
                                                                     fontFamily: 'Overpass',
                                                                     paddingLeft: 15,
                                                                     textTransform: 'uppercase',
@@ -1540,7 +1530,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text
                                                     style={{
                                                         fontFamily: 'overpass',
-                                                        fontSize: 15,
+                                                        fontSize: 16,
                                                         textAlign: 'center',
                                                         width: '100%',
                                                     }}
@@ -1575,7 +1565,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 <Text
                                                     style={{
                                                         fontFamily: 'overpass',
-                                                        fontSize: 15,
+                                                        fontSize: 16,
                                                         textAlign: 'center',
                                                         width: '100%',
                                                     }}
@@ -1653,7 +1643,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             fontFamily: 'overpass',
                                             marginTop: 20,
                                             marginBottom: 20,
-                                            fontSize: 15,
+                                            fontSize: 16,
                                             padding: 10,
                                             width: '100%',
                                             maxWidth: '100%',
@@ -1696,7 +1686,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     fontFamily: 'overpass',
                                     marginTop: 20,
                                     marginBottom: 20,
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     padding: 10,
                                     borderRadius: 2,
                                     width: '100%',
@@ -1710,7 +1700,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             />
                         </View>
                     ) : (
-                        <Text style={{ color: '#000', fontSize: 15, width: '100%', textAlign: 'left', marginTop: 40 }}>
+                        <Text style={{ color: '#000', fontSize: 16, width: '100%', textAlign: 'left', marginTop: 40 }}>
                             {comment}
                         </Text>
                     )}
@@ -1722,7 +1712,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#f8f8f8',
                         alignItems: 'center',
                         display: 'flex',
                         marginTop: 25,
@@ -1734,7 +1723,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <TouchableOpacity
                             onPress={() => props.modifyActiveQuizAttempt()}
                             style={{
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: 'none',
                                 // borderRadius: 15,
                                 // overflow: 'hidden',
                                 // height: 35,
@@ -1751,7 +1740,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     color: '#000',
                                     backgroundColor: '#fff',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
@@ -1766,7 +1755,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <TouchableOpacity
                         onPress={() => props.onGradeQuiz(problemScores, problemComments, Number(percentage), comment)}
                         style={{
-                            backgroundColor: '#f8f8f8',
+                            backgroundColor: 'none',
                             // borderRadius: 15,
                             // overflow: 'hidden',
                             // height: 35,
@@ -1782,7 +1771,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 color: '#fff',
                                 backgroundColor: '#000',
                                 fontSize: 11,
-                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                paddingHorizontal: 24,
                                 fontFamily: 'inter',
                                 overflow: 'hidden',
                                 paddingVertical: 14,
@@ -1806,7 +1795,7 @@ const styles = StyleSheet.create({
         width: '50%',
         // borderBottomColor: '#f2f2f2',
         // borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

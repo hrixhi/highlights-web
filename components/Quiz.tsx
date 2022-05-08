@@ -44,6 +44,7 @@ import {
     QUIZ_QUESTION_TOOLBAR_BUTTONS,
     QUIZ_OPTION_TOOLBAR_BUTTONS,
     QUIZ_SOLUTION_TOOLBAR_BUTTONS,
+    QUIZ_MULTIPART_TOOLBAR_BUTTONS,
 } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
@@ -84,6 +85,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [shuffleQuiz, setShuffleQuiz] = useState(props.shuffleQuiz);
     const [problemRefs, setProblemRefs] = useState<any[]>(props.problems.map(() => createRef(null)));
     const [optionRefs, setOptionRefs] = useState<any[]>([]);
+    const [getMultipartEditorRef, setMultipartEditorRef] = useDynamicRefs();
+
     const [showFormulas, setShowFormulas] = useState<any[]>(props.problems.map((prob: any) => false));
     const [responseEquations, setResponseEquations] = useState<any[]>(props.problems.map((prob: any) => ''));
     const [showFormulaGuide, setShowFormulaGuide] = useState(false);
@@ -101,8 +104,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [equationOptionId, setEquationOptionId] = useState('');
     const [equationSolutionId, setEquationSolutionId] = useState('');
 
-    console.log('Solutions', solutions);
-    console.log('Problems', problems);
+    const [equationMultipartId, setEquationMultipartId] = useState('');
+    const [multipartEquations, setMultipartEquations] = useState<any[]>([]);
+    const [showMultipartFormulas, setShowMultipartFormulas] = useState<any[]>([]);
 
     Froalaeditor.DefineIcon('insertFormulaQuestion', {
         NAME: 'formula',
@@ -157,6 +161,25 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setEquationSolutionId(this.id);
 
             setEquationEditorFor('solution');
+            setShowEquationEditor(true);
+        },
+    });
+
+    Froalaeditor.DefineIcon('insertFormulaMultipart', {
+        NAME: 'formula',
+        PATH: 'M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z',
+    });
+    Froalaeditor.RegisterCommand('insertFormulaMultipart', {
+        title: 'Insert Formula',
+        focus: false,
+        undo: true,
+        refreshAfterCallback: false,
+        callback: function () {
+            this.selection.save();
+
+            setEquationMultipartId(this.id);
+
+            setEquationEditorFor('multipart');
             setShowEquationEditor(true);
         },
     });
@@ -300,6 +323,32 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, [problems, props.solutions, props.setSolutions, props.isOwner]);
 
+    useEffect(() => {
+        if (props.saveQuiz) {
+            props.modifyQuiz(
+                instructions,
+                problems,
+                headers,
+                modifiedCorrectAnswerProblems,
+                regradeChoices,
+                timer,
+                duration,
+                shuffleQuiz
+            );
+            props.setSaveQuiz(false);
+        }
+    }, [
+        props.saveQuiz,
+        instructions,
+        problems,
+        headers,
+        modifiedCorrectAnswerProblems,
+        regradeChoices,
+        timer,
+        duration,
+        shuffleQuiz,
+    ]);
+
     /**
      * @description Shuffle problems
      */
@@ -307,13 +356,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         if (props.shuffleQuiz && !props.isOwner) {
             setLoading(true);
 
-            console.log('shuffleQuizAttemptOrder', props.shuffleQuizAttemptOrder);
-
             if (props.shuffleQuizAttemptOrder === undefined || props.shuffleQuizAttemptOrder.length === 0) {
                 // If it's a shuffle quiz then we need to initialize a random order for each attempt
                 const questionNumberArray = [];
-
-                console.log('Initialize shuffle order for random questions');
 
                 for (let i = 0; i < problems.length; i++) {
                     questionNumberArray.push(i);
@@ -351,13 +396,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     const shuffledArray = shuffled.flat();
 
-                    console.log('Shuffled question array', shuffledArray);
-
                     props.setShuffleQuizAttemptOrder(shuffledArray);
                 } else {
                     const shuffledArray = shuffle(questionNumberArray);
-
-                    console.log('Shuffled question array', shuffledArray);
 
                     props.setShuffleQuizAttemptOrder(shuffledArray);
                 }
@@ -375,8 +416,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     return updatedProblemsWithIndex[order];
                 });
 
-                console.log('Random order questions', randomOrderQuestions);
-
                 setProblems(randomOrderQuestions);
             }
         } else {
@@ -385,7 +424,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return updated;
             });
 
-            console.log('Set questions without shuffle');
             setProblems(updatedProblemsWithIndex);
         }
         setLoading(false);
@@ -484,13 +522,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
                         marginRight: 15,
                     }}
                 >
                     <Text
                         style={{
-                            fontSize: 15,
+                            fontSize: 16,
                             fontFamily: 'inter',
                             color: '#000000',
                         }}
@@ -500,7 +537,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8',
                         flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column',
                         alignItems: Dimensions.get('window').width < 768 ? 'center' : 'flex-end',
                         justifyContent: 'flex-start',
@@ -548,7 +584,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         <Text
                                             style={{
                                                 // fontFamily: "inter",
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 color: '#000000',
                                             }}
                                         >
@@ -593,7 +629,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <MenuTrigger>
                                         <Text
                                             style={{
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 color: '#000000',
                                             }}
                                         >
@@ -652,13 +688,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         flexDirection: 'row',
                         flex: 1,
                         paddingBottom: 15,
-                        backgroundColor: '#f8f8f8',
+
                         marginRight: 15,
                     }}
                 >
                     <Text
                         style={{
-                            fontSize: 15,
+                            fontSize: 16,
                             fontFamily: 'inter',
                             color: '#000000',
                         }}
@@ -668,7 +704,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 <View
                     style={{
-                        backgroundColor: '#f8f8f8',
                         height: 40,
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
@@ -725,7 +760,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         fontFamily: 'overpass',
                         marginBottom: Dimensions.get('window').width < 768 ? 10 : 30,
                         marginTop: 50,
-                        fontSize: 15,
+                        fontSize: 16,
                         padding: 10,
                         borderRadius: 2,
                         border: '1px solid #ccc',
@@ -746,7 +781,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     style={{
                         marginBottom: Dimensions.get('window').width < 768 ? 10 : 30,
                         marginTop: 50,
-                        fontSize: 15,
+                        fontSize: 18,
                         paddingTop: 12,
                         paddingBottom: 12,
                         fontWeight: '600',
@@ -795,7 +830,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 RichText.current.editor.selection.restore();
 
                 RichText.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -853,7 +888,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 optionEditorRef.current.editor.selection.restore();
 
                 optionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -896,7 +931,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 solutionEditorRef.current.editor.selection.restore();
 
                 solutionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -917,6 +952,53 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setEquationEditorFor('');
                 setEquation('');
             });
+        } else if (equationEditorFor === 'multipart') {
+            renderMathjax(equation).then((res: any) => {
+                const random = Math.random();
+
+                // Find the active Ref for option to insert formula in
+
+                let multipartEditorRef: any;
+
+                let multipartIndex: number = -1;
+
+                editQuestion.multipartQuestions.map((_: any, i: number) => {
+                    const ref: any = getMultipartEditorRef(i.toString());
+
+                    if (ref && ref.current && ref.current.editor.id === equationMultipartId) {
+                        multipartEditorRef = ref;
+                        multipartIndex = i;
+                    }
+                });
+
+                if (multipartIndex === -1 || !multipartEditorRef) return;
+
+                multipartEditorRef.current.editor.selection.restore();
+
+                multipartEditorRef.current.editor.html.insert(
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
+                        random +
+                        '" data-eq="' +
+                        encodeURIComponent(equation) +
+                        '" src="' +
+                        res.imgSrc +
+                        '"></img>'
+                );
+
+                // Update problem in props
+                const newProbs = [...problems];
+                newProbs[editQuestionNumber - 1].multipartQuestions[multipartIndex] =
+                    multipartEditorRef.current.editor.html.get();
+
+                multipartEditorRef.current.editor.events.trigger('contentChanged');
+
+                setProblems(newProbs);
+                props.setProblems(newProbs);
+
+                setShowEquationEditor(false);
+                setEquationEditorFor('');
+                setEquation('');
+            });
         }
     }, [
         equation,
@@ -930,6 +1012,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         equationOptionId,
         equationSolutionId,
         optionRefs,
+        equationMultipartId,
     ]);
 
     /**
@@ -964,6 +1047,41 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const updateOptionEquations = [...optionEquations];
         updateOptionEquations[index] = '';
         setOptionEquations(updateOptionEquations);
+    };
+
+    /**
+     * @description Inserts equation for MCQ options
+     */
+    const insertMultipartEquation = (index: number) => {
+        if (multipartEquations[index] === '') {
+            alert('Equation cannot be empty.');
+            return;
+        }
+
+        const ref: any = getMultipartEditorRef(index.toString());
+
+        if (!ref || !ref.current) return;
+
+        let currentContent = ref.current.getContent();
+
+        const SVGEquation = TeXToSVG(multipartEquations[index], { width: 100 }); // returns svg in html format
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '</div>';
+
+        ref.current.setContent(currentContent);
+
+        // Update problem in props
+        const newProbs = [...problems];
+        newProbs[editQuestionNumber - 1].multipartQuestions[index] = ref.current.getContent();
+
+        setProblems(newProbs);
+
+        const updateShowFormulas = [...showMultipartFormulas];
+        updateShowFormulas[index] = false;
+        setShowMultipartFormulas(updateShowFormulas);
+
+        const updateMultipartEquations = [...multipartEquations];
+        updateMultipartEquations[index] = '';
+        setMultipartEquations(updateMultipartEquations);
     };
 
     /**
@@ -1005,22 +1123,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      */
     const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
         const sourceClone = Array.from(source);
-        console.log('Source clone', sourceClone);
 
         const destClone = Array.from(destination);
-        console.log('Destination clone', destClone);
 
         const [removed] = sourceClone.splice(droppableSource.index, 1);
-        console.log('Removed', removed);
 
         destClone.splice(droppableDestination.index, 0, removed);
-        console.log();
 
         const result: any = {};
         result[droppableSource.droppableId] = sourceClone;
         result[droppableDestination.droppableId] = destClone;
-
-        console.log('Result', result);
 
         return result;
     };
@@ -1309,7 +1421,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     justifyContent: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    backgroundColor: '#f8f8f8',
                 }}
             >
                 <ActivityIndicator color={'#1F1F1F'} />
@@ -1321,7 +1432,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <View
             style={{
                 width: '100%',
-                backgroundColor: '#f8f8f8',
+
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
                 paddingTop: Dimensions.get('window').width < 768 ? 0 : 15,
@@ -1378,7 +1489,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             // marginTop: 20,
                             marginBottom: 20,
-                            fontSize: 15,
+                            fontSize: 16,
                             paddingTop: 12,
                             paddingBottom: 12,
                             width: '100%',
@@ -1440,8 +1551,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     // array
                     const usedOptions: any[] = [];
 
-                    console.log('Solutions[problemIndex]', solutions[problemIndex]);
-
                     solutions[problemIndex].dragDropChoices.map((selections: any[]) => {
                         let groupOptions: any[] = [];
                         selections.map((label: any) => {
@@ -1466,8 +1575,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     dndOptions = [allOptions, ...solutionChoices];
                 }
-
-                console.log('DragDropOptions', dndOptions);
 
                 const dragDropOptions = dndOptions;
 
@@ -1604,7 +1711,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                               (Number(problem.points) === 1 ? 'Point' : ' Points')
                                                     }
                                                     style={{
-                                                        fontSize: 15,
+                                                        fontSize: 16,
                                                         padding: 15,
                                                         paddingTop: 12,
                                                         paddingBottom: 12,
@@ -1724,7 +1831,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         ) : audioVideoQuestion ? (
                             <View style={{ width: '100%', marginBottom: 25, flex: 1 }}>
                                 <View style={{ marginBottom: 20 }}>{renderAudioVideoPlayer(url, type)}</View>
-                                <Text style={{ marginVertical: 20, fontSize: 15, lineHeight: 25 }}>
+                                <Text style={{ marginVertical: 20, fontSize: 16, lineHeight: 25 }}>
                                     {parser(content)}
                                 </Text>
                             </View>
@@ -1732,7 +1839,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <Text
                                 style={{
                                     marginVertical: 20,
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     width: Dimensions.get('window').width < 768 ? '100%' : '80%',
                                     lineHeight: 25,
                                 }}
@@ -1886,7 +1993,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     width: Dimensions.get('window').width < 768 ? '80%' : '50%',
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 15,
                                                     // paddingTop: 12,
                                                     // paddingBottom: 12,
@@ -2153,7 +2260,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 marginRight: 20,
                                                                 marginBottom: 20,
                                                                 borderRadius: 10,
-                                                                // backgroundColor: '#f8f8f8',
+                                                                //
                                                                 borderWidth: 1,
                                                                 borderColor: '#ccc',
                                                                 shadowOffset: {
@@ -2218,7 +2325,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     marginRight: 20,
                                                     marginBottom: 20,
                                                     borderRadius: 10,
-                                                    // backgroundColor: '#f8f8f8',
+                                                    //
                                                     borderWidth: 1,
                                                     borderColor: '#ccc',
                                                     shadowOffset: {
@@ -2307,8 +2414,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             return convertNodeToElement(node, ind1, (node: any, ind2: any) => {
                                                 if (node.type === 'tag' && node.name === 'span') {
                                                     let className = '';
-
-                                                    console.log('node', node);
 
                                                     if (
                                                         node.attribs.id &&
@@ -2437,9 +2542,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         const sInd = +source.droppableId;
                                         const dInd = +destination.droppableId;
 
-                                        console.log('Source ind', sInd);
-                                        console.log('Destination ind', dInd);
-
                                         if (sInd === dInd) {
                                             if (dInd !== 0) {
                                                 const updatedSolution = [...solutions];
@@ -2455,7 +2557,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     dndOptions.length
                                                 );
                                                 setSolutions(updatedSolution);
-                                                console.log('Updated solutions', updatedSolution);
                                                 props.setSolutions(updatedSolution);
                                             }
                                         } else {
@@ -2559,7 +2660,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const inlineChoiceOptions = problems[index].inlineChoiceOptions;
 
@@ -2640,7 +2741,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const inlineChoiceOptions = problems[index].inlineChoiceOptions;
 
@@ -2658,8 +2759,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
-                                                                    console.log('Solution ', e.target.value);
-
                                                                     const updatedSolution = [...solutions];
                                                                     updatedSolution[problemIndex].inlineChoiceSelection[
                                                                         Number(node.attribs.id)
@@ -2709,8 +2808,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     fontFamily: 'Overpass',
                                                                 }}
                                                                 onChange={(e) => {
-                                                                    console.log('Solution ', e.target.value);
-
                                                                     const updatedSolution = [...solutions];
                                                                     updatedSolution[problemIndex].inlineChoiceSelection[
                                                                         Number(node.attribs.id)
@@ -2757,7 +2854,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const textEntryOptions = problems[index].textEntryOptions;
 
@@ -2822,7 +2919,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     transform: (node: any, ind1: any) => {
                                         if (node.type === 'tag' && node.name === 'p') {
                                             node.attribs.style =
-                                                'line-height: 40px; font-family: Overpass; font-size: 15px;';
+                                                'line-height: 40px; font-family: Overpass; font-size: 16px;';
 
                                             const textEntryOptions = problems[index].textEntryOptions;
 
@@ -2928,6 +3025,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}
                             >
                                 {problem.multipartOptions.map((part: any, partIndex: number) => {
+                                    const currRef: any = setMultipartEditorRef(partIndex.toString());
+
                                     const alphabet = [
                                         'A',
                                         'B',
@@ -2974,6 +3073,21 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 Part {alphabet[partIndex]}
                                             </Text>
 
+                                            <FormulaGuide
+                                                equation={multipartEquations[partIndex]}
+                                                onChange={(eq: any) => {
+                                                    const updateMultipartEquations = [...multipartEquations];
+                                                    updateMultipartEquations[partIndex] = eq;
+                                                    setMultipartEquations(updateMultipartEquations);
+                                                }}
+                                                show={showMultipartFormulas[partIndex]}
+                                                onClose={() => {
+                                                    const updateShowFormulas = [...showMultipartFormulas];
+                                                    updateShowFormulas[partIndex] = !updateShowFormulas[partIndex];
+                                                    setShowMultipartFormulas(updateShowFormulas);
+                                                }}
+                                                onInsertEquation={() => insertMultipartEquation(partIndex)}
+                                            />
                                             {/* Question */}
                                             <View
                                                 style={{
@@ -2984,6 +3098,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 }}
                                             >
                                                 <FroalaEditor
+                                                    ref={currRef}
                                                     model={problem.multipartQuestions[partIndex]}
                                                     onModelChange={(model: any) => {
                                                         const newProbs = [...problems];
@@ -3014,7 +3129,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         spellcheck: true,
                                                         tabSpaces: 4,
                                                         // TOOLBAR
-                                                        toolbarButtons: QUIZ_OPTION_TOOLBAR_BUTTONS,
+                                                        toolbarButtons: QUIZ_MULTIPART_TOOLBAR_BUTTONS,
                                                         toolbarSticky: false,
                                                         quickInsertEnabled: false,
                                                     }}
@@ -3053,7 +3168,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     marginTop: 10,
                                                                     borderRadius: 2,
                                                                     padding: 10,
-                                                                    fontSize: 15,
+                                                                    fontSize: 16,
                                                                     borderBottom: '1px solid #ccc',
                                                                     width: 300,
                                                                     maxWidth: 300,
@@ -3140,7 +3255,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <Text
                                                 style={{
                                                     marginTop: 15,
-                                                    fontSize: 15,
+                                                    fontSize: 16,
                                                     lineHeight: 25,
                                                     marginBottom: 20,
                                                 }}
@@ -3218,7 +3333,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                         {
                                                             <Text
-                                                                style={{ marginLeft: 20, fontSize: 15, lineHeight: 25 }}
+                                                                style={{ marginLeft: 20, fontSize: 16, lineHeight: 25 }}
                                                             >
                                                                 {parser(option.option)}
                                                             </Text>
@@ -3340,7 +3455,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             marginBottom: 10,
                                                             marginTop: 10,
                                                             borderRadius: 2,
-                                                            fontSize: 15,
+                                                            fontSize: 16,
                                                             borderBottom: '1px solid #ccc',
                                                             padding: 10,
                                                             minWidth: '90%',
@@ -3359,7 +3474,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     <Text
                                                         style={{
                                                             fontFamily: 'overpass',
-                                                            fontSize: 15,
+                                                            fontSize: 16,
                                                             textAlign: 'center',
                                                             width: '100%',
                                                         }}
@@ -3401,7 +3516,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             marginTop: 10,
                                                             borderRadius: 2,
                                                             padding: 10,
-                                                            fontSize: 15,
+                                                            fontSize: 16,
                                                             borderBottom: '1px solid #ccc',
                                                             minWidth: '90%',
                                                         }}
@@ -3419,7 +3534,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     <Text
                                                         style={{
                                                             fontFamily: 'overpass',
-                                                            fontSize: 15,
+                                                            fontSize: 16,
                                                             textAlign: 'center',
                                                             width: '100%',
                                                         }}
@@ -3505,7 +3620,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Text
                                         style={{
                                             marginTop: 20,
-                                            fontSize: 15,
+                                            fontSize: 16,
                                             paddingTop: 12,
                                             paddingBottom: 12,
                                             // width: '50%',
@@ -3610,7 +3725,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 width: 150,
                                                 borderColor: '#e8e8e8',
                                                 borderBottomWidth: 1,
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 paddingTop: 13,
                                                 paddingBottom: 13,
                                                 marginTop: 0,
@@ -3650,7 +3765,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         ) : null}
 
                         {props.isOwner && modifiedCorrectAnswerProblems[index] && editQuestionNumber !== index + 1 ? (
-                            <Text style={{ fontSize: 15, fontWeight: '800', paddingLeft: 20, marginBottom: 20 }}>
+                            <Text style={{ fontSize: 16, fontWeight: '800', paddingLeft: 20, marginBottom: 20 }}>
                                 {regradeChoices[index] === '' ? '' : regradeOptions[regradeChoices[index]]}
                             </Text>
                         ) : null}
@@ -3675,9 +3790,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <MenuTrigger>
                                         <Text
                                             style={{
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 color: '#000000',
-                                                width: Dimensions.get('window').width > 768 ? '100%' : 200,
+                                                width: Dimensions.get('window').width >= 768 ? '100%' : 200,
                                             }}
                                         >
                                             {regradeChoices[index] === ''
@@ -3728,7 +3843,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <TouchableOpacity
                                     onPress={() => resetChanges(index)}
                                     style={{
-                                        backgroundColor: '#f8f8f8',
                                         borderRadius: 15,
                                         width: 120,
                                         marginRight: 30,
@@ -3741,9 +3855,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderColor: '#000',
                                             borderWidth: 1,
                                             color: '#000',
-                                            backgroundColor: '#f8f8f8',
+
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -3760,7 +3874,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         setEditQuestion({});
                                         setEditQuestionContent('');
                                     }}
-                                    style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 120 }}
+                                    style={{ borderRadius: 15, width: 120 }}
                                 >
                                     <Text
                                         style={{
@@ -3771,7 +3885,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             color: '#fff',
                                             backgroundColor: '#000',
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -3789,7 +3903,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             })}
 
             {/* Add Save Changes button here */}
-            {props.isOwner ? (
+            {/* {props.isOwner ? (
                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                     <TouchableOpacity
                         onPress={() => {
@@ -3804,7 +3918,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 shuffleQuiz
                             );
                         }}
-                        style={{ backgroundColor: '#f8f8f8', borderRadius: 15, width: 150, marginTop: 50 }}
+                        style={{  borderRadius: 15, width: 150, marginTop: 50 }}
                         disabled={props.user.email === disableEmailId}
                     >
                         <Text
@@ -3816,7 +3930,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 color: '#fff',
                                 backgroundColor: '#000',
                                 fontSize: 11,
-                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                paddingHorizontal: 24,
                                 fontFamily: 'inter',
                                 overflow: 'hidden',
                                 paddingVertical: 14,
@@ -3828,7 +3942,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text>
                     </TouchableOpacity>
                 </View>
-            ) : null}
+            ) : null} */}
         </View>
     );
 };
@@ -3840,7 +3954,7 @@ const styles = StyleSheet.create({
         width: '50%',
         // borderBottomColor: '#f2f2f2',
         // borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

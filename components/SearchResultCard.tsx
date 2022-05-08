@@ -9,6 +9,7 @@ import Alert from './Alert';
 // COMPONENTS
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { disableEmailId } from '../constants/zoomCredentials';
+import Highlighter from 'react-highlight-words';
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorScheme = 'dark';
@@ -80,7 +81,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                     }}
                 >
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Text
+                        {/* <Text
                             ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={{
@@ -93,7 +94,36 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             }}
                         >
                             {props.title}
-                        </Text>
+                        </Text> */}
+                        <View
+                            style={{
+                                flex: 1,
+                                marginTop: props.option === 'Messages' ? 6 : 10,
+                            }}
+                        >
+                            <Text numberOfLines={1} ellipsizeMode="tail">
+                                <Highlighter
+                                    searchWords={[props.searchTerm]}
+                                    autoEscape={true}
+                                    textToHighlight={props.title}
+                                    highlightStyle={{
+                                        backgroundColor: '#ffd54f',
+                                        fontFamily: 'inter',
+                                        fontSize: 15,
+                                        // lineHeight: 20,
+                                        color: '#000000',
+                                    }}
+                                    unhighlightStyle={{
+                                        fontFamily: 'inter',
+                                        fontSize: 15,
+                                        // lineHeight: 20,
+                                        color: '#000000',
+                                    }}
+                                    className="highlighter"
+                                />
+                            </Text>
+                        </View>
+
                         {props.option === 'Content' || props.option === 'Messages' || props.option === 'Discussion' ? (
                             <Text
                                 style={{
@@ -128,7 +158,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     disabled={props.user.email === disableEmailId}
                                 >
                                     <Text style={{}}>
-                                        <Ionicons name="enter-outline" size={24} color="#007AFF" />
+                                        <Ionicons name="enter-outline" size={24} color="#000" />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -149,11 +179,7 @@ const styles: any = (colorScheme: any, col: any, option: any) =>
             maxWidth: '100%',
             backgroundColor: '#fff',
             flexDirection: 'column',
-            shadowColor: '#000000',
-            shadowOffset: { width: 1, height: 1 },
-            shadowOpacity: 0.08,
-            shadowRadius: 1,
-            elevation: 0,
+
             zIndex: 500000,
             borderBottomColor: '#efefef',
             borderBottomWidth: 1,
@@ -162,7 +188,7 @@ const styles: any = (colorScheme: any, col: any, option: any) =>
         text: {
             height: '100%',
             width: '100%',
-            padding: 7,
+            paddingVertical: 7,
             // paddingHorizontal: 10,
             backgroundColor: '#fff',
         },

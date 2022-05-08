@@ -39,10 +39,11 @@ import inbox from '../assets/images/inbox.jpeg';
 import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 import { defaultCues } from '../helpers/DefaultData';
-import { origin } from '../constants/zoomCredentials';
+import { disableEmailId, origin } from '../constants/zoomCredentials';
 import { Popup } from '@mobiscroll/react5';
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+import userflow from 'userflow.js';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     // read/learn
@@ -111,6 +112,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const [option, setOption] = useState('To Do');
     const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Account']);
+    const [mobileOptions] = useState(['To Do', 'Classroom', 'Search', 'Inbox', 'Account']);
 
     const [showHome, setShowHome] = useState(true);
     const [hideNewChatButton, setHideNewChatButton] = useState(false);
@@ -135,6 +137,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [disableCreateNavbar, setDisableCreateNavbar] = useState(false);
     const [showImportCreate, setShowImportCreate] = useState(false);
     const [showVideosCreate, setShowVideosCreate] = useState(false);
+
+    const [initUserFlow, setInitUserFlow] = useState(false);
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -203,14 +207,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     useEffect(() => {
         (async () => {
             const u = await AsyncStorage.getItem('user');
-            const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
+            // const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
 
             if (u) {
                 const parsedUser: any = JSON.parse(u);
-                if (showOnboarding === 'true') {
-                    setShowOnboardModal(true);
-                    AsyncStorage.setItem('show_onboard_modal', 'false');
-                }
 
                 if (parsedUser._id && parsedUser._id !== '') {
                     await loadDataFromCloud();
@@ -224,6 +224,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (!initUserFlow) {
+            initializeUserFlow();
+        }
+    }, [user, initUserFlow]);
+
+    const initializeUserFlow = useCallback(() => {
+        if (!initUserFlow && user && user.email && user.createdAt) {
+            const signed_up_at = new Date(parseInt(user.createdAt));
+
+            userflow.init('ct_pgwxzraltrarhdz3sfas2rgkoi');
+            userflow.identify(user._id, {
+                name: user.fullName,
+                email: user.email,
+                role: user.role,
+                signed_up_at: signed_up_at.toISOString(),
+                zoomId: user.zoomInfo && user.zoomInfo.accountId !== '' ? user.zoomInfo.accountId : '',
+            });
+
+            if (user.email === disableEmailId) {
+                userflow.start('084a9bd0-4ce0-4056-b802-48c5d3efb7d4');
+            }
+            setInitUserFlow(true);
+        }
+    }, [initUserFlow, user]);
 
     useEffect(() => {
         (async () => {
@@ -609,34 +635,51 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
     }, [email, password]);
 
-    useEffect(() => {
-        if (user && user.email) {
-            window.pendo.initialize({
-                visitor: {
-                    id: user._id, // Required if user is logged in
-                    email: user.email, // Recommended if using Pendo Feedback, or NPS Email
-                    full_name: user.fullName, // Recommended if using Pendo Feedback
-                    role: user.role, // Optional
-                    // You can add any additional visitor level key-values here,
-                    // as long as it's not one of the above reserved names.
-                },
+    // useEffect(() => {
+    //     if (user && user.email) {
 
-                account: {
-                    id: user.schoolId,
-                    name: user.orgName, // Required if using Pendo Feedback
-                    // name:         // Optional
-                    // is_paying:    // Recommended if using Pendo Feedback
-                    // monthly_value:// Recommended if using Pendo Feedback
-                    // planLevel:    // Optional
-                    // planPrice:    // Optional
-                    // creationDate: // Optional
+    //         // userflow.group(
+    //         //     user.schoolId,
+    //         //     {
+    //         //         name: user.orgName,
+    //         //     },
+    //         //     {
+    //         //         membership: {
+    //         //             role: user.role,
+    //         //         },
+    //         //     }
+    //         // );
+    //     }
+    // }, [user]);
 
-                    // You can add any additional account level key-values here,
-                    // as long as it's not one of the above reserved names.
-                },
-            });
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (user && user.email) {
+    //         window.pendo.initialize({
+    //             visitor: {
+    //                 id: user._id, // Required if user is logged in
+    //                 email: user.email, // Recommended if using Pendo Feedback, or NPS Email
+    //                 full_name: user.fullName, // Recommended if using Pendo Feedback
+    //                 role: user.role, // Optional
+    //                 // You can add any additional visitor level key-values here,
+    //                 // as long as it's not one of the above reserved names.
+    //             },
+
+    //             account: {
+    //                 id: user.schoolId,
+    //                 name: user.orgName, // Required if using Pendo Feedback
+    //                 // name:         // Optional
+    //                 // is_paying:    // Recommended if using Pendo Feedback
+    //                 // monthly_value:// Recommended if using Pendo Feedback
+    //                 // planLevel:    // Optional
+    //                 // planPrice:    // Optional
+    //                 // creationDate: // Optional
+
+    //                 // You can add any additional account level key-values here,
+    //                 // as long as it's not one of the above reserved names.
+    //             },
+    //         });
+    //     }
+    // }, [user]);
 
     // imp
     const loadDataFromCloud = useCallback(async () => {
@@ -1066,6 +1109,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setClosingModal(true);
 
         setModalType('');
+        setCreateActiveTab('Content');
 
         // console.log('Close modal option', option);
 
@@ -1123,9 +1167,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     };
 
-    console.log('User', user);
-    console.log('Selected workspace', selectedWorkspace);
-
     /**
      * @description Helpter for icon to use in navbar
      */
@@ -1179,9 +1220,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const getNavbarIconColor = (op: string) => {
         if (op === option) {
-            return '#fff';
+            return '#000';
         }
-        return '#fff';
+        return '#797979';
     };
 
     const getWorkspaceNavbarIconColor = (op: string) => {
@@ -1785,12 +1826,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     : Dimensions.get('window').width >= 768
                                     ? 30
                                     : 20,
-                            marginBottom:
-                                Dimensions.get('window').width < 768
-                                    ? 77
-                                    : Dimensions.get('window').width < 1024
-                                    ? 90
-                                    : 25,
+                            marginBottom: Dimensions.get('window').width < 768 ? 77 : 25,
                             right: 0,
                             justifyContent: 'center',
                             bottom: 0,
@@ -2044,7 +2080,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
 
             {/* Create navbar bottom mobile */}
-            {Dimensions.get('window').width < 1024 && modalType === 'Create' ? (
+            {Dimensions.get('window').width < 768 && modalType === 'Create' ? (
                 <View
                     style={{
                         position: 'absolute',
@@ -2109,7 +2145,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             >
                                 <Ionicons
                                     name={getCreateNavbarIconName(op)}
-                                    style={{ color: getCreateNavbarIconColor(op), marginBottom: 6 }}
+                                    style={{
+                                        color: getCreateNavbarIconColor(op),
+                                        marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                                    }}
                                     size={23}
                                 />
                                 <Text
@@ -2130,7 +2169,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
             ) : null}
 
-            {Dimensions.get('window').width < 1024 && showHome && selectedWorkspace && modalType !== 'Create' ? (
+            {Dimensions.get('window').width < 768 &&
+            showHome &&
+            selectedWorkspace &&
+            selectedWorkspace !== 'My Notes' &&
+            modalType !== 'Create' ? (
                 <View
                     style={{
                         position: 'absolute',
@@ -2171,40 +2214,49 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 style={{
                                     backgroundColor: 'none',
                                     width: selectedWorkspace.split('-SPLIT-')[2] === user._id ? '20%' : '25%',
-                                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
                                     paddingBottom: 2,
                                 }}
                                 onPress={() => {
                                     setWorkspaceActiveTab(op);
                                 }}
                             >
-                                <Ionicons
-                                    name={getWorkspaceNavbarIconName(op)}
-                                    style={{ color: getWorkspaceNavbarIconColor(op), marginBottom: 6 }}
-                                    size={23}
-                                />
-                                <Text
+                                <View
+                                    nativeID={op}
                                     style={{
-                                        fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
-                                        lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
-                                        color: getWorkspaceNavbarIconColor(op),
-                                        fontWeight: 'bold',
-                                        fontFamily: op === workspaceActiveTab ? 'Inter' : 'overpass',
-                                        marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
-                                        paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                        flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    {getWorkspaceNavbarText(op)}
-                                </Text>
+                                    <Ionicons
+                                        name={getWorkspaceNavbarIconName(op)}
+                                        style={{
+                                            color: getWorkspaceNavbarIconColor(op),
+                                            marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                                        }}
+                                        size={23}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
+                                            lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
+                                            color: getWorkspaceNavbarIconColor(op),
+                                            fontWeight: 'bold',
+                                            fontFamily: op === workspaceActiveTab ? 'Inter' : 'overpass',
+                                            marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
+                                            paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                        }}
+                                    >
+                                        {getWorkspaceNavbarText(op)}
+                                    </Text>
+                                </View>
                             </TouchableOpacity>
                         );
                     })}
                 </View>
             ) : null}
 
-            {Dimensions.get('window').width < 1024 && showHome && !selectedWorkspace ? (
+            {Dimensions.get('window').width < 768 && showHome && !selectedWorkspace ? (
                 <View
                     style={{
                         position: 'absolute',
@@ -2227,12 +2279,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         shadowRadius: 12,
                         zIndex: showLoginWindow ? 40 : 100,
                         elevation: showLoginWindow ? 40 : 120,
-                        borderTopColor: '#000',
+                        borderTopColor: '#e8e8e8',
                         borderTopWidth: 1,
-                        backgroundColor: '#000000',
+                        backgroundColor: '#fff',
                     }}
                 >
-                    {options.map((op: any) => {
+                    {mobileOptions.map((op: any) => {
                         if (op === 'Settings' || op === 'Channels') {
                             return;
                         }
@@ -2240,10 +2292,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: 'none',
-                                    width: '25%',
-                                    flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                    width: '20%',
                                     paddingBottom: 2,
                                 }}
                                 onPress={() => {
@@ -2268,23 +2317,35 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                 }}
                             >
-                                <Ionicons
-                                    name={getNavbarIconName(op)}
-                                    style={{ color: getNavbarIconColor(op), marginBottom: 6 }}
-                                    size={21}
-                                />
-                                <Text
+                                <View
+                                    nativeID={op.split(' ').join('-')}
                                     style={{
-                                        fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
-                                        lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
-                                        color: getNavbarIconColor(op),
-                                        fontFamily: op === option ? 'inter' : 'overpass',
-                                        marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
-                                        paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                        flexDirection: Dimensions.get('window').width < 800 ? 'column' : 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    {getNavbarText(op)}
-                                </Text>
+                                    <Ionicons
+                                        name={getNavbarIconName(op)}
+                                        style={{
+                                            color: getNavbarIconColor(op),
+                                            marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                                        }}
+                                        size={21}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontSize: Dimensions.get('window').width < 800 ? 11 : 16,
+                                            lineHeight: Dimensions.get('window').width < 800 ? 11 : 23,
+                                            color: getNavbarIconColor(op),
+                                            fontFamily: op === option ? 'inter' : 'overpass',
+                                            marginBottom: Dimensions.get('window').width < 800 ? 0 : 6,
+                                            paddingLeft: Dimensions.get('window').width < 800 ? 0 : 5,
+                                        }}
+                                    >
+                                        {getNavbarText(op)}
+                                    </Text>
+                                </View>
                             </TouchableOpacity>
                         );
                     })}
