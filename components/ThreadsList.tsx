@@ -246,6 +246,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 await AsyncStorage.removeItem('openThread');
 
                 loadCueDiscussions(tId);
+            } else {
+                loadCueDiscussions(threads[0]._id);
             }
         })();
     }, [threads]);
@@ -614,7 +616,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" id="' +
+                '<img class="rendered-math-jax" style="width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +

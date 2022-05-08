@@ -282,7 +282,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 RichText.current.editor.selection.restore();
 
                 RichText.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -365,7 +365,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 optionEditorRef.current.editor.selection.restore();
 
                 optionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -412,7 +412,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 multipartEditorRef.current.editor.selection.restore();
 
                 multipartEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +

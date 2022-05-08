@@ -1347,6 +1347,349 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderInstructorView = () => {
         return (
+            <table className="stickyTable">
+                {/* First row  */}
+                <thead>
+                    <tr>
+                        {/* First cell will contain search bar */}
+                        <th>
+                            <TextInput
+                                value={studentSearch}
+                                onChangeText={(val: string) => setStudentSearch(val)}
+                                placeholder={'Search'}
+                                placeholderTextColor={'#1F1F1F'}
+                                style={{
+                                    width: '100%',
+                                    maxWidth: 200,
+                                    borderColor: '#f2f2f2',
+                                    borderWidth: 1,
+                                    backgroundColor: '#fff',
+                                    borderRadius: 24,
+                                    fontSize: 15,
+                                    paddingVertical: 8,
+                                    marginTop: 0,
+                                    paddingHorizontal: 10,
+                                }}
+                            />
+                        </th>
+                        {/* Total column */}
+                        <th>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: 14,
+                                    color: '#000000',
+                                    fontFamily: 'inter',
+                                    marginBottom: 5,
+                                }}
+                            >
+                                {PreferredLanguageText('total')}
+                            </Text>
+                        </th>
+                        {/* All assignments */}
+                        {cues.map((cue: any, col: number) => {
+                            const { title } = htmlStringParser(cue.cue);
+                            return (
+                                <th
+                                    onClick={() => {
+                                        props.openCueFromGrades(cue._id);
+                                    }}
+                                    style={{
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontSize: 12,
+                                            color: '#000000',
+                                            marginBottom: 5,
+                                        }}
+                                    >
+                                        {new Date(cue.deadline).toString().split(' ')[1] +
+                                            ' ' +
+                                            new Date(cue.deadline).toString().split(' ')[2]}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontSize: 14,
+                                            color: '#000000',
+                                            fontFamily: 'inter',
+                                            marginTop: 3,
+                                            // marginBottom: 5,
+                                            // textAlignVertical: 'center',
+                                        }}
+                                        numberOfLines={2}
+                                        ellipsizeMode="tail"
+                                    >
+                                        {title}
+                                    </Text>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#000000' }}>
+                                        {cue.gradeWeight ? cue.gradeWeight : '0'}%
+                                    </Text>
+                                </th>
+                            );
+                        })}
+                    </tr>
+                </thead>
+                {/* Main Body */}
+                <tbody>
+                    {scores.length === 0 ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                padding: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 18,
+                                    textAlign: 'center',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                No students.
+                            </Text>
+                        </View>
+                    ) : null}
+                    {/* Enter no students message if there is none */}
+                    {scores.map((score: any, row: number) => {
+                        let totalPoints = 0;
+                        let totalScore = 0;
+
+                        score.scores.map((s: any) => {
+                            if (s.releaseSubmission) {
+                                if (!s.submittedAt || !s.graded) {
+                                    // totalPoints += (Number(s.gradeWeight) * Number(s.score))
+                                    totalScore += Number(s.gradeWeight);
+                                } else {
+                                    totalPoints += Number(s.gradeWeight) * Number(s.score);
+                                    totalScore += Number(s.gradeWeight);
+                                }
+                            }
+                        });
+
+                        return (
+                            <tr style={{}}>
+                                {/* Student info */}
+                                <th>
+                                    <View>
+                                        <Image
+                                            style={{
+                                                height: 37,
+                                                width: 37,
+                                                borderRadius: 75,
+                                                alignSelf: 'center',
+                                            }}
+                                            source={{
+                                                uri: score.avatar
+                                                    ? score.avatar
+                                                    : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                marginTop: 7,
+                                                textAlign: 'center',
+                                                fontSize: 14,
+                                                color: '#000000',
+                                                fontFamily: 'inter',
+                                            }}
+                                        >
+                                            {score.fullName}
+                                        </Text>
+                                    </View>
+                                </th>
+                                {/* Total */}
+                                <td>
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                fontSize: 13,
+                                                color: '#000000',
+                                                textTransform: 'uppercase',
+                                            }}
+                                        >
+                                            {totalScore !== 0
+                                                ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '')
+                                                : '0'}
+                                            %
+                                        </Text>
+                                    </View>
+                                </td>
+                                {/* Other scores */}
+                                {cues.map((cue: any, col: number) => {
+                                    const scoreObject = score.scores.find((s: any) => {
+                                        return s.cueId.toString().trim() === cue._id.toString().trim();
+                                    });
+
+                                    if (
+                                        scoreObject &&
+                                        activeCueId === scoreObject.cueId &&
+                                        activeUserId === score.userId
+                                    ) {
+                                        return (
+                                            <td key={col.toString()}>
+                                                <View
+                                                    style={{
+                                                        width: '100%',
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <TextInput
+                                                        value={activeScore}
+                                                        placeholder={' / 100'}
+                                                        onChangeText={(val) => {
+                                                            setActiveScore(val);
+                                                        }}
+                                                        style={{
+                                                            width: '50%',
+                                                            marginRight: 5,
+                                                            padding: 8,
+                                                            borderBottomColor: '#f2f2f2',
+                                                            borderBottomWidth: 1,
+                                                            fontSize: 14,
+                                                        }}
+                                                        placeholderTextColor={'#1F1F1F'}
+                                                    />
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            modifyGrade();
+                                                        }}
+                                                        disabled={props.user.email === disableEmailId}
+                                                    >
+                                                        <Ionicons
+                                                            name="checkmark-circle-outline"
+                                                            size={15}
+                                                            style={{ marginRight: 5 }}
+                                                            color={'#8bc34a'}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setActiveCueId('');
+                                                            setActiveUserId('');
+                                                            setActiveScore('');
+                                                        }}
+                                                    >
+                                                        <Ionicons
+                                                            name="close-circle-outline"
+                                                            size={15}
+                                                            color={'#f94144'}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </td>
+                                        );
+                                    }
+
+                                    return (
+                                        <td>
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    width: '100%',
+                                                }}
+                                                key={row.toString() + '-' + col.toString()}
+                                                onPress={() => {
+                                                    if (!scoreObject) return;
+
+                                                    setActiveCueId(scoreObject.cueId);
+                                                    setActiveUserId(score.userId);
+                                                    setActiveScore(scoreObject.score);
+                                                }}
+                                            >
+                                                {!scoreObject || !scoreObject.submittedAt ? (
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 13,
+                                                            color: '#f94144',
+                                                        }}
+                                                    >
+                                                        {scoreObject &&
+                                                        scoreObject !== undefined &&
+                                                        scoreObject.graded &&
+                                                        scoreObject.score.replace(/\.0+$/, '') + '%'
+                                                            ? scoreObject.score
+                                                            : !scoreObject || !scoreObject.cueId
+                                                            ? 'N/A'
+                                                            : 'Not Submitted'}
+                                                    </Text>
+                                                ) : (
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 13,
+                                                            color:
+                                                                scoreObject &&
+                                                                new Date(parseInt(scoreObject.submittedAt)) >=
+                                                                    new Date(cue.deadline)
+                                                                    ? '#f3722c'
+                                                                    : '#000000',
+                                                        }}
+                                                    >
+                                                        {scoreObject &&
+                                                        scoreObject !== undefined &&
+                                                        scoreObject.graded &&
+                                                        scoreObject.score
+                                                            ? scoreObject.score.replace(/\.0+$/, '') + '%'
+                                                            : scoreObject &&
+                                                              new Date(parseInt(scoreObject.submittedAt)) >=
+                                                                  new Date(cue.deadline)
+                                                            ? 'Late'
+                                                            : 'Submitted'}
+                                                    </Text>
+                                                )}
+
+                                                {scoreObject &&
+                                                scoreObject !== undefined &&
+                                                scoreObject.score &&
+                                                scoreObject.graded &&
+                                                (new Date(parseInt(scoreObject.submittedAt)) >=
+                                                    new Date(cue.deadline) ||
+                                                    !scoreObject.submittedAt) ? (
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 13,
+                                                            color: !scoreObject.submittedAt ? '#f94144' : '#f3722c',
+                                                            marginTop: 5,
+                                                            borderWidth: 0,
+                                                            borderColor: !scoreObject.submittedAt
+                                                                ? '#f94144'
+                                                                : '#f3722c',
+                                                            borderRadius: 10,
+                                                            width: 60,
+                                                            alignSelf: 'center',
+                                                        }}
+                                                    >
+                                                        {!scoreObject.submittedAt ? '(Missing)' : '(Late)'}
+                                                    </Text>
+                                                ) : null}
+                                            </TouchableOpacity>
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        );
+    };
+
+    const renderInstructorViewNative = () => {
+        return (
             <View
                 style={{
                     height: props.isOwner ? '100%' : 'auto',
@@ -1771,6 +2114,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         width: '100%',
                         backgroundColor: 'white',
                         maxHeight: Dimensions.get('window').height - 64 - 45 - 120,
+                        maxWidth: 1024,
                         borderRadius: 2,
                         borderWidth: 1,
                         marginTop: 25,
@@ -1778,12 +2122,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         zIndex: 5000000,
                         flexDirection: 'column',
                         justifyContent: props.isOwner ? 'flex-start' : 'center',
-                        overflow: props.isOwner ? 'scroll' : 'visible',
                         alignItems: props.isOwner ? 'flex-start' : 'center',
+                        position: 'relative',
+                        overflow: 'scroll',
                     }}
                     key={JSON.stringify(props.scores)}
                 >
-                    {props.isOwner ? renderInstructorView() : null}
+                    {renderInstructorView()}
                 </View>
             ) : (
                 renderStudentView()

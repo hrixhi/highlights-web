@@ -2499,7 +2499,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     flexDirection: 'row',
                                 }}
                             >
-                                {((channelOwner && showOriginal && !isQuiz) || showOptions || !props.channelId) &&
+                                {((channelOwner && showOriginal) || showOptions || !props.channelId) &&
                                 !editFolder &&
                                 !createNewFolder ? (
                                     <TouchableOpacity

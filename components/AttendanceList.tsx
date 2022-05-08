@@ -546,6 +546,284 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: '100%',
                     backgroundColor: 'white',
+                    maxWidth: 1024,
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
+                    zIndex: 5000000,
+                    maxHeight: 500,
+                    position: 'relative',
+                    overflow: 'scroll',
+                }}
+            >
+                <table className="stickyTable">
+                    {/* First row  */}
+                    <thead>
+                        <tr>
+                            {/* First cell will contain search bar */}
+                            <th>
+                                <TextInput
+                                    value={studentSearch}
+                                    onChangeText={(val: string) => setStudentSearch(val)}
+                                    placeholder={'Search'}
+                                    placeholderTextColor={'#1F1F1F'}
+                                    style={{
+                                        width: '100%',
+                                        maxWidth: 200,
+                                        borderColor: '#f2f2f2',
+                                        borderWidth: 1,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 24,
+                                        fontSize: 15,
+                                        paddingVertical: 8,
+                                        marginTop: 0,
+                                        paddingHorizontal: 10,
+                                    }}
+                                />
+                            </th>
+                            {/* Total column */}
+                            <th>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontSize: 14,
+                                        color: '#000000',
+                                        fontFamily: 'inter',
+                                        marginBottom: 5,
+                                    }}
+                                >
+                                    Total
+                                </Text>
+                            </th>
+                            {/* All assignments */}
+                            {pastMeetings.map((meeting: any, col: number) => {
+                                const { title, start, end, recordingLink } = meeting;
+                                console.log('Meeting', meeting);
+
+                                return (
+                                    <th
+                                        onClick={() => {
+                                            setEditMeeting(meeting);
+                                            setShowEditMeetingModal(true);
+                                            setEditMeetingTopic(meeting.title);
+                                            setEditMeetingRecordingLink(
+                                                meeting.recordingLink ? meeting.recordingLink : ''
+                                            );
+                                        }}
+                                        style={{
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 14,
+                                                    color: '#000000',
+                                                    fontFamily: 'inter',
+                                                    paddingBottom: 5,
+                                                }}
+                                                numberOfLines={1}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {title}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 12,
+                                                    color: '#000000',
+                                                    marginBottom: 5,
+                                                }}
+                                            >
+                                                {moment(new Date(start)).format('MMM Do YY')}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 12,
+                                                    color: '#000000',
+                                                }}
+                                            >
+                                                {moment(new Date(start)).format('h:mm')} -{' '}
+                                                {moment(new Date(end)).format('h:mm')}
+                                            </Text>
+                                            {recordingLink ? (
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        paddingTop: 4,
+                                                    }}
+                                                >
+                                                    <Ionicons name="videocam-outline" color={'#000'} size={15} />
+                                                </Text>
+                                            ) : null}
+                                        </View>
+                                    </th>
+                                );
+                            })}
+                        </tr>
+                    </thead>
+                    {/* Main Body */}
+
+                    <tbody>
+                        {channelAttendances.length === 0 ? (
+                            <View
+                                style={{
+                                    width: '100%',
+                                    padding: 20,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: 'center',
+                                        fontFamily: 'Inter',
+                                    }}
+                                >
+                                    No attendances.
+                                </Text>
+                            </View>
+                        ) : null}
+                        {channelAttendances.map((channelAttendance: any, row: number) => {
+                            const studentCount = attendanceTotalMap[channelAttendance.userId];
+
+                            return (
+                                <tr style={{}}>
+                                    <th>
+                                        <View>
+                                            <Image
+                                                style={{
+                                                    height: 37,
+                                                    width: 37,
+                                                    borderRadius: 75,
+                                                    alignSelf: 'center',
+                                                }}
+                                                source={{
+                                                    uri: channelAttendance.avatar
+                                                        ? channelAttendance.avatar
+                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                                }}
+                                            />
+                                            <Text
+                                                style={{
+                                                    marginTop: 7,
+                                                    textAlign: 'center',
+                                                    fontSize: 14,
+                                                    color: '#000000',
+                                                    fontFamily: 'inter',
+                                                }}
+                                            >
+                                                {channelAttendance.fullName}
+                                            </Text>
+                                        </View>
+                                    </th>
+                                    <td>
+                                        <View
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 14,
+                                                    color: '#000000',
+                                                    fontFamily: 'inter',
+                                                }}
+                                            >
+                                                {studentCount} / {pastMeetings.length}
+                                            </Text>
+                                        </View>
+                                    </td>
+                                    {pastMeetings.map((meeting: any, col: number) => {
+                                        const attendanceObject = channelAttendance.attendances.find((s: any) => {
+                                            return s.dateId.toString().trim() === meeting.dateId.toString().trim();
+                                        });
+                                        return (
+                                            <td key={row.toString() + '-' + col.toString()}>
+                                                <View
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    <TouchableOpacity
+                                                        disabled={!props.isOwner}
+                                                        onPress={() =>
+                                                            onChangeAttendance(
+                                                                meeting.dateId,
+                                                                channelAttendance.userId,
+                                                                attendanceObject ? false : true
+                                                            )
+                                                        }
+                                                        style={{
+                                                            marginBottom: 5,
+                                                            width: '100%',
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        {attendanceObject ? (
+                                                            <Ionicons
+                                                                name="checkmark-outline"
+                                                                size={15}
+                                                                color={'#000'}
+                                                            />
+                                                        ) : props.isOwner ? (
+                                                            <Ionicons
+                                                                name="checkmark-outline"
+                                                                size={15}
+                                                                color={'#e0e0e0'}
+                                                            />
+                                                        ) : (
+                                                            '-'
+                                                        )}
+                                                    </TouchableOpacity>
+                                                    {attendanceObject ? (
+                                                        <Text
+                                                            style={{
+                                                                textAlign: 'center',
+                                                                fontSize: 14,
+                                                                color: '#000000',
+                                                                width: '100%',
+                                                            }}
+                                                        >
+                                                            {attendanceObject.joinedAt
+                                                                ? moment(new Date(attendanceObject.joinedAt)).format(
+                                                                      'h:mm a'
+                                                                  )
+                                                                : ''}
+                                                        </Text>
+                                                    ) : null}
+                                                </View>
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </View>
+        );
+    };
+
+    const renderMeetingsListNative = () => {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    backgroundColor: 'white',
                     maxHeight: 500,
                     borderRadius: 2,
                     borderWidth: 1,

@@ -2108,17 +2108,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 />
                             </View>
                         </TouchableOpacity>
-                        <Text
-                            style={{
-                                fontSize: 20,
-                                fontFamily: 'Inter',
-                                marginRight: 75,
-                                color: Dimensions.get('window').width < 768 ? '#000' : '#fff',
-                                // textTransform: 'uppercase',
-                            }}
-                        >
-                            {selectedWorkspace.split('-SPLIT-')[0]}
-                        </Text>
+                        {Dimensions.get('window').width < 1024 && Dimensions.get('window').width >= 768 ? null : (
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontFamily: 'Inter',
+                                    marginRight: 75,
+                                    color: Dimensions.get('window').width < 768 ? '#000' : '#fff',
+                                    // textTransform: 'uppercase',
+                                }}
+                            >
+                                {selectedWorkspace.split('-SPLIT-')[0]}
+                            </Text>
+                        )}
                     </View>
                     {Dimensions.get('window').width < 768 ? null : (
                         <View

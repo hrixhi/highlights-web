@@ -328,6 +328,32 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, [problems, props.solutions, props.setSolutions, props.isOwner]);
 
+    useEffect(() => {
+        if (props.saveQuiz) {
+            props.modifyQuiz(
+                instructions,
+                problems,
+                headers,
+                modifiedCorrectAnswerProblems,
+                regradeChoices,
+                timer,
+                duration,
+                shuffleQuiz
+            );
+            props.setSaveQuiz(false);
+        }
+    }, [
+        props.saveQuiz,
+        instructions,
+        problems,
+        headers,
+        modifiedCorrectAnswerProblems,
+        regradeChoices,
+        timer,
+        duration,
+        shuffleQuiz,
+    ]);
+
     /**
      * @description Shuffle problems
      */
@@ -823,7 +849,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 RichText.current.editor.selection.restore();
 
                 RichText.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -881,7 +907,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 optionEditorRef.current.editor.selection.restore();
 
                 optionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -924,7 +950,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 solutionEditorRef.current.editor.selection.restore();
 
                 solutionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -969,7 +995,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 multipartEditorRef.current.editor.selection.restore();
 
                 multipartEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" id="' +
+                    '<img class="rendered-math-jax" style="width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -3918,7 +3944,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             })}
 
             {/* Add Save Changes button here */}
-            {props.isOwner ? (
+            {/* {props.isOwner ? (
                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                     <TouchableOpacity
                         onPress={() => {
@@ -3957,7 +3983,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text>
                     </TouchableOpacity>
                 </View>
-            ) : null}
+            ) : null} */}
         </View>
     );
 };
