@@ -77,7 +77,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         } else {
             setLoading(false);
         }
-    }, [props.channelId, props.channelCreatedBy]);
+    }, [props.channelId, props.channelCreatedBy, props.userId]);
 
     /**
      * @description Used to modify an assignment score directly
@@ -123,11 +123,13 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 })
                 .then((res) => {
                     if (res.data.cue.submitGrade) {
+                        console.log('Submit grade', res.data.cue.submitGrade);
                         server
                             .query({
                                 query: getGradesList,
                                 variables: {
                                     channelId: props.channelId,
+                                    userId: props.userId,
                                 },
                             })
                             .then(async (res2) => {

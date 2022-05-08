@@ -315,7 +315,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         [props.cueId, props.channelId, userId, isOwner]
     );
 
-    const handleDeleteThread = useCallback(async (threadId: string, reply: boolean) => {
+    const handleDeleteThread = useCallback(async (threadId: string, parentId?: string) => {
         Alert('Delete post?', '', [
             {
                 text: 'Cancel',
@@ -337,8 +337,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         })
                         .then((res) => {
                             if (res.data && res.data.thread.delete) {
-                                if (reply) {
-                                    loadCueDiscussions(threadId);
+                                if (parentId) {
+                                    loadCueDiscussions(parentId);
                                 } else {
                                     //
                                     setSelectedThread('');
@@ -449,6 +449,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             });
     }, [props.channelId, props.cueId, threadId, html, attachments, userId, anonymous]);
 
+    console.log('Thread with replies', threadWithReplies);
+
     /**
      * @description Load the entire the Thread using the thread ID
      */
@@ -465,10 +467,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 .query({
                     query: getThreadWithReplies,
                     variables: {
-                        threadId: threadId,
+                        threadId,
                     },
                 })
                 .then((res) => {
+                    console.log('getThreadWithReplies', res.data.thread.getThreadWithReplies);
+
                     setThreadWithReplies(res.data.thread.getThreadWithReplies);
                     const tempChat: any[] = [];
                     res.data.thread.getThreadWithReplies.map((msg: any) => {
@@ -1169,7 +1173,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         marginLeft: 20,
                                     }}
                                     onPress={() => {
-                                        handleDeleteThread(selectedThread._id, false);
+                                        handleDeleteThread(selectedThread._id, undefined);
                                     }}
                                     disabled={props.user.email === disableEmailId}
                                 >
@@ -1551,7 +1555,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                 >
                     {threadChat.map((thread: any, ind: number) => {
-                        console.log('Thread chat', thread);
+                        // console.log('Thread chat', thread);
 
                         let replyThreadContent = '';
                         let replyThreadAttachments = [];
@@ -1679,7 +1683,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     marginLeft: 20,
                                                 }}
                                                 onPress={() => {
-                                                    handleDeleteThread(thread._id, true);
+                                                    handleDeleteThread(thread._id, thread.parentId);
                                                 }}
                                                 disabled={props.user.email === disableEmailId}
                                             >
@@ -2391,7 +2395,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                           marginLeft: 'auto',
                                                           flexDirection: 'row',
                                                           backgroundColor: 'none',
-                                                          paddingHorizontal: 10,
+                                                          paddingLeft: 10,
                                                           alignItems: 'center',
                                                       }}
                                                   >

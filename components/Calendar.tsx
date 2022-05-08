@@ -163,46 +163,41 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, [props.subscriptions]);
+    }, [props.subscriptions, userId]);
 
     /**
      * @description Fetch user activity
      */
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-
-                setUserId(user._id);
-                if (user.zoomInfo) {
-                    setUserZoomInfo(user.zoomInfo);
-                }
-                const server = fetchAPI(user._id);
-                server
-                    .query({
-                        query: getActivity,
-                        variables: {
-                            userId: user._id,
-                        },
-                    })
-                    .then((res) => {
-                        if (res.data && res.data.activity.getActivity) {
-                            const tempActivity = res.data.activity.getActivity;
-                            let unread = 0;
-                            tempActivity.map((act: any) => {
-                                if (act.status === 'unread') {
-                                    unread++;
-                                }
-                            });
-                            setUnreadCount(unread);
-                            setActivity(tempActivity);
-                            setAllActivity(tempActivity);
-                        }
-                    });
+        if (props.user) {
+            setUserId(props.user._id);
+            if (props.user.zoomInfo) {
+                setUserZoomInfo(props.user.zoomInfo);
             }
-        })();
-    }, []);
+            const server = fetchAPI(props.user._id);
+            server
+                .query({
+                    query: getActivity,
+                    variables: {
+                        userId: props.user._id,
+                    },
+                })
+                .then((res) => {
+                    if (res.data && res.data.activity.getActivity) {
+                        const tempActivity = res.data.activity.getActivity;
+                        let unread = 0;
+                        tempActivity.map((act: any) => {
+                            if (act.status === 'unread') {
+                                unread++;
+                            }
+                        });
+                        setUnreadCount(unread);
+                        setActivity(tempActivity);
+                        setAllActivity(tempActivity);
+                    }
+                });
+        }
+    }, [props.user]);
 
     /**
      * @description Validate submit for creating events
@@ -267,7 +262,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             setDescription(editEvent.description);
             setStart(new Date(editEvent.start));
             setEnd(new Date(editEvent.end));
-            setEditChannelName(editEvent.channelName);
+            setEditChannelName(editEvent.channelName !== '' ? editChannelName : 'My Events');
 
             if (editEvent.dateId !== 'channel' && editEvent.createdBy) {
                 setIsMeeting(true);
@@ -301,25 +296,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Load all channels to filter data in Activity
      */
     const loadChannels = useCallback(async () => {
-        const uString: any = await AsyncStorage.getItem('user');
-        if (uString) {
-            const user = JSON.parse(uString);
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getChannels,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.channel.findByUserId) {
-                        setChannels(res.data.channel.findByUserId);
-                    }
-                })
-                .catch((err) => {});
-        }
-    }, []);
+        const server = fetchAPI('');
+        server
+            .query({
+                query: getChannels,
+                variables: {
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data.channel.findByUserId) {
+                    setChannels(res.data.channel.findByUserId);
+                }
+            })
+            .catch((err) => {});
+    }, [userId]);
 
     /**
      * @description Handle Create event
@@ -352,66 +343,62 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const repeatDays = recurring && frequency === '1-W' ? selectedDays : '';
 
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const user = JSON.parse(u);
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: createDateV1,
-                    variables: {
-                        title,
-                        userId: user._id,
-                        start: start.toUTCString(),
-                        end: end.toUTCString(),
-                        channelId,
-                        meeting,
-                        description,
-                        recordMeeting,
-                        frequency: freq,
-                        repeatTill: repeat,
-                        repeatDays,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.date.createV1 === 'SUCCESS') {
-                        Alert('Event created successfully.');
-                        loadEvents();
-                        setTitle('');
-                        setRepeatTill(new Date());
-                        setIsMeeting(false);
-                        setDescription('');
-                        setFrequency('1-W');
-                        setRecurring(false);
-                        setRecordMeeting(false);
-                        setIsCreatingEvents(false);
-                        setShowAddEvent(false);
-                        setSelectedDays([]);
-                        setSelectedStartDay('');
-                        props.setTab('Agenda');
-                    } else if (res.data && res.data.date.createV1 === 'ZOOM_MEETING_CREATE_FAILED') {
-                        Alert('Event scheduled but Zoom meeting could not be created.');
-                        loadEvents();
-                        setTitle('');
-                        setRepeatTill(new Date());
-                        setIsMeeting(false);
-                        setDescription('');
-                        setFrequency('1-W');
-                        setRecurring(false);
-                        setRecordMeeting(false);
-                        setIsCreatingEvents(false);
-                        setShowAddEvent(false);
-                        setSelectedDays([]);
-                        setSelectedStartDay('');
-                    } else {
-                        Alert('Failed to create event. Try again.');
-                    }
-                })
-                .catch((err) => {
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: createDateV1,
+                variables: {
+                    title,
+                    userId,
+                    start: start.toUTCString(),
+                    end: end.toUTCString(),
+                    channelId,
+                    meeting,
+                    description,
+                    recordMeeting,
+                    frequency: freq,
+                    repeatTill: repeat,
+                    repeatDays,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.date.createV1 === 'SUCCESS') {
+                    Alert('Event created successfully.');
+                    loadEvents();
+                    setTitle('');
+                    setRepeatTill(new Date());
+                    setIsMeeting(false);
+                    setDescription('');
+                    setFrequency('1-W');
+                    setRecurring(false);
+                    setRecordMeeting(false);
                     setIsCreatingEvents(false);
-                    console.log(err);
-                });
-        }
+                    setShowAddEvent(false);
+                    setSelectedDays([]);
+                    setSelectedStartDay('');
+                    props.setTab('Agenda');
+                } else if (res.data && res.data.date.createV1 === 'ZOOM_MEETING_CREATE_FAILED') {
+                    Alert('Event scheduled but Zoom meeting could not be created.');
+                    loadEvents();
+                    setTitle('');
+                    setRepeatTill(new Date());
+                    setIsMeeting(false);
+                    setDescription('');
+                    setFrequency('1-W');
+                    setRecurring(false);
+                    setRecordMeeting(false);
+                    setIsCreatingEvents(false);
+                    setShowAddEvent(false);
+                    setSelectedDays([]);
+                    setSelectedStartDay('');
+                } else {
+                    Alert('Failed to create event. Try again.');
+                }
+            })
+            .catch((err) => {
+                setIsCreatingEvents(false);
+                console.log(err);
+            });
     }, [
         title,
         description,
@@ -426,7 +413,45 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         isSubmitDisabled,
         isCreatingEvents,
         selectedDays,
+        userId,
     ]);
+
+    const markAlertsRead = useCallback(async () => {
+        const server = fetchAPI(userId);
+        server
+            .mutate({
+                mutation: markActivityAsRead,
+                variables: {
+                    userId,
+                    markAllRead: true,
+                },
+            })
+            .then((res) => {
+                if (res.data.activity.markActivityAsRead) {
+                    server
+                        .query({
+                            query: getActivity,
+                            variables: {
+                                userId,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.activity.getActivity) {
+                                const tempActivity = res.data.activity.getActivity;
+                                let unread = 0;
+                                tempActivity.map((act: any) => {
+                                    if (act.status === 'unread') {
+                                        unread++;
+                                    }
+                                });
+                                setUnreadCount(unread);
+                                setActivity(tempActivity);
+                            }
+                        });
+                }
+            })
+            .catch((err) => {});
+    }, [userId]);
 
     /**
      * @description Handle Edit event
@@ -473,7 +498,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             if (res.data.date.editV1) {
                                 loadEvents();
                                 props.setTab('Agenda');
-                                Alert('Updated event successfully.');
+                                setEditEvent(null);
+                                setTab('Agenda');
+                                // Alert('Updated event successfully.');
                             } else {
                                 Alert('Failed to edit event. Try again.');
                             }
@@ -521,7 +548,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setEditEvent(null);
                         setShowAddEvent(false);
                         props.setTab('Agenda');
-                        Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
+                        setTab('Agenda');
+
+                        // Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
                     } else if (res.data && res.data.date.deleteV1 === 'ZOOM_MEETING_DELETE_FAILED') {
                         Alert('Event deleted successfully. Failed to delete Zoom meeting.');
                     } else {
@@ -544,22 +573,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Load all events for Agenda
      */
     const loadEvents = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        let parsedUser: any = {};
-        if (u) {
-            parsedUser = JSON.parse(u);
-        } else {
+        if (!userId) {
             setLoading(false);
             return;
         }
 
         setLoading(true);
-        const server = fetchAPI(parsedUser._id);
+        const server = fetchAPI(userId);
         server
             .query({
                 query: getEvents,
                 variables: {
-                    userId: parsedUser._id,
+                    userId,
                 },
             })
             .then((res) => {
@@ -636,7 +661,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     useNativeDriver: true,
                 }).start();
             });
-    }, [props.subscriptions, modalAnimation]);
+    }, [props.subscriptions, modalAnimation, userId]);
 
     // FUNCTIONS
 
@@ -664,101 +689,93 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     /**
      * @description On Select event in Agenda
      */
-    const onSelectEvent = async (data: any) => {
+    const onSelectEvent = (data: any) => {
         const { event } = data;
 
-        console.log('Selected event', data);
+        const timeString = datesEqual(event.start, event.end)
+            ? moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a')
+            : moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a') +
+              ' to ' +
+              moment(new Date(event.end)).format('MMMM Do YYYY, h:mm a');
 
-        const uString: any = await AsyncStorage.getItem('user');
-        // Only allow edit if event is not past
-        if (uString) {
-            const user = JSON.parse(uString);
+        const descriptionString = event.description ? event.description + '- ' + timeString : '' + timeString;
 
-            const timeString = datesEqual(event.start, event.end)
-                ? moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a')
-                : moment(new Date(event.start)).format('MMMM Do YYYY, h:mm a') +
-                  ' to ' +
-                  moment(new Date(event.end)).format('MMMM Do YYYY, h:mm a');
+        if (userId === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
+            setEditEvent(event);
+            setTab('Add');
+        } else if (
+            userId === event.createdBy &&
+            event.cueId === '' &&
+            new Date(event.end) < new Date() &&
+            event.eventId
+        ) {
+            Alert('Delete ' + event.title + '?', descriptionString, [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        return;
+                    },
+                },
+                {
+                    text: 'Delete',
+                    onPress: async () => {
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: deleteDateV1,
+                                variables: {
+                                    id: event.eventId,
+                                    deleteAll: false,
+                                },
+                            })
+                            .then((res) => {
+                                if (res.data && res.data.date.deleteV1) {
+                                    Alert('Event Deleted!');
+                                    loadEvents();
+                                }
+                            });
+                    },
+                },
+            ]);
+        } else {
+            const date = new Date();
 
-            const descriptionString = event.description ? event.description + '- ' + timeString : '' + timeString;
+            if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
+                const meetingLink = !meetingProvider
+                    ? event.zoomRegistrationJoinUrl
+                        ? event.zoomRegistrationJoinUrl
+                        : event.zoomJoinUrl
+                    : event.meetingLink;
 
-            if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
-                setEditEvent(event);
-                setTab('Add');
-            } else if (
-                user._id === event.createdBy &&
-                event.cueId === '' &&
-                new Date(event.end) < new Date() &&
-                event.eventId
-            ) {
-                Alert('Delete ' + event.title + '?', descriptionString, [
+                if (!meetingLink) {
+                    Alert('No meeting link set. Contact your instructor.');
+                    return;
+                }
+
+                Alert('Join meeting?', '', [
                     {
-                        text: 'Cancel',
+                        text: 'No',
                         style: 'cancel',
                         onPress: () => {
                             return;
                         },
                     },
                     {
-                        text: 'Delete',
+                        text: 'Yes',
                         onPress: async () => {
-                            const server = fetchAPI('');
-                            server
-                                .mutate({
-                                    mutation: deleteDateV1,
-                                    variables: {
-                                        id: event.eventId,
-                                        deleteAll: false,
-                                    },
-                                })
-                                .then((res) => {
-                                    if (res.data && res.data.date.deleteV1) {
-                                        Alert('Event Deleted!');
-                                        loadEvents();
-                                    }
-                                });
+                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                window.open(meetingLink, '_blank');
+                            } else {
+                                Linking.openURL(meetingLink);
+                            }
                         },
                     },
                 ]);
+            } else if (event.cueId !== '') {
+                props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy);
             } else {
-                const date = new Date();
-
-                if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
-                    const meetingLink = !meetingProvider
-                        ? event.zoomRegistrationJoinUrl
-                            ? event.zoomRegistrationJoinUrl
-                            : event.zoomJoinUrl
-                        : event.meetingLink;
-
-                    if (!meetingLink) {
-                        Alert('No meeting link set. Contact your instructor.');
-                        return;
-                    }
-
-                    Alert('Join meeting?', '', [
-                        {
-                            text: 'No',
-                            style: 'cancel',
-                            onPress: () => {
-                                return;
-                            },
-                        },
-                        {
-                            text: 'Yes',
-                            onPress: async () => {
-                                if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                    window.open(meetingLink, '_blank');
-                                } else {
-                                    Linking.openURL(meetingLink);
-                                }
-                            },
-                        },
-                    ]);
-                } else if (event.cueId !== '') {
-                    props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy);
-                } else {
-                    Alert(event.title, descriptionString);
-                }
+                Alert(event.title, descriptionString);
             }
         }
     };
@@ -863,7 +880,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         >
                                             <input
                                                 disabled={day === selectedStartDay}
-                                                style={{ marginRight: 5 }}
                                                 type="checkbox"
                                                 checked={selectedDays.includes(day)}
                                                 onChange={(e: any) => {
@@ -878,7 +894,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }
                                                 }}
                                             />
-                                            <Text>{label}</Text>
+                                            <Text style={{ marginLeft: 5 }}>{label}</Text>
                                         </View>
                                     );
                                 })}
@@ -1229,6 +1245,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      */
     const renderEditEventOptions = () => {
         const { recurringId, start, end, channelId } = editEvent;
+
+        console.log('Edit event', editEvent);
 
         // const date = new Date();
 
@@ -1630,7 +1648,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: 'row',
                     justifyContent: 'center',
                     paddingVertical: 15,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: Dimensions.get('window').width < 768 ? '#fff' : '#f8f8f8',
                     height: 54,
                     paddingHorizontal: paddingResponsive(),
                 }}
@@ -1670,85 +1688,153 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     marginRight: 15,
                                 }}
                             >
-                                <Ionicons size={28} name="arrow-back-outline" color="#1f1f1f" />
+                                <Ionicons size={32} name="arrow-back-outline" color="#1f1f1f" />
                             </TouchableOpacity>
                         </View>
                     )}
                     {/* For mobile render the tabs as a Menu */}
                     {tab !== 'Add' && Dimensions.get('window').width < 768 ? (
-                        <View style={{}}>
-                            <Menu
-                                style={{
-                                    right: 0,
-                                }}
-                                onSelect={(op: any) => {
-                                    setTab(op);
+                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                            <ScrollView
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{
+                                    flexDirection: 'row',
+                                    // paddingHorizontal: 12,
                                 }}
                             >
-                                <MenuTrigger>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
+                                {tabs.map((option: string, ind: number) => {
+                                    if (option === 'Add') return null;
+                                    return (
+                                        <View nativeID={option}>
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: option === tab ? '#000' : '#f2f2f2',
+                                                    borderRadius: 20,
+                                                    paddingHorizontal: 14,
+                                                    marginRight: 10,
+                                                    paddingVertical: 7,
+                                                }}
+                                                onPress={() => {
+                                                    setTab(option);
+                                                }}
+                                                key={ind.toString()}
+                                            >
+                                                {option === 'Activity' && unreadCount !== 0 ? (
+                                                    <View
+                                                        style={{
+                                                            width: 6,
+                                                            height: 6,
+                                                            borderRadius: '100%',
+                                                            backgroundColor: '#f94144',
+                                                            position: 'absolute',
+                                                            top: 4,
+                                                            right: 7,
+                                                        }}
+                                                    />
+                                                ) : null}
+                                                <Text
+                                                    style={{
+                                                        color: option === tab ? '#fff' : '#000',
+                                                        fontSize: 14,
+                                                    }}
+                                                >
+                                                    {option === 'Agenda'
+                                                        ? 'To-Do'
+                                                        : option === 'Activity'
+                                                        ? 'Alerts'
+                                                        : option}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    );
+                                })}
+                            </ScrollView>
+                            <View>
+                                {tab === 'Add' ? null : tab === 'Activity' ? (
+                                    <Menu
+                                        onSelect={(val: any) => {
+                                            if (val === 'filter') {
+                                                setShowFilterPopup(true);
+                                            } else {
+                                                markAlertsRead();
+                                            }
+                                        }}
+                                    >
+                                        <MenuTrigger>
+                                            <Text
+                                                style={{
+                                                    fontSize: 11,
+                                                    color: '#1f1f1f',
+                                                    textAlign: 'right',
+                                                }}
+                                            >
+                                                <Ionicons name="ellipsis-vertical-outline" size={20} />
+                                            </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions
+                                            optionsContainerStyle={{
+                                                shadowOffset: {
+                                                    width: 2,
+                                                    height: 2,
+                                                },
+                                                shadowColor: '#000',
+                                                // overflow: 'hidden',
+                                                shadowOpacity: 0.07,
+                                                shadowRadius: 7,
+                                                padding: 7,
+                                                borderWidth: 1,
+                                                borderColor: '#CCC',
+                                            }}
+                                        >
+                                            <MenuOption value={'filter'}>
+                                                <View
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Ionicons name="filter-outline" size={16} />
+                                                    <Text style={{ marginLeft: 7 }}>Filter</Text>
+                                                </View>
+                                            </MenuOption>
+                                            <MenuOption value={'markAsRead'}>
+                                                <View
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Ionicons name="checkmark-done-outline" size={16} />
+                                                    <Text style={{ marginLeft: 7 }}>Mark as Read</Text>
+                                                </View>
+                                            </MenuOption>
+                                        </MenuOptions>
+                                    </Menu>
+                                ) : (
+                                    <TouchableOpacity
+                                        style={{ backgroundColor: 'none', marginLeft: 15 }}
+                                        onPress={() => {
+                                            setShowFilterPopup(true);
                                         }}
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 20,
-                                                fontFamily: 'Inter',
-                                                color: '#000',
+                                                fontSize: 11,
+                                                color: '#1f1f1f',
+                                                textAlign: 'right',
                                             }}
                                         >
-                                            {tab === 'Agenda' ? 'To-Do' : tab === 'Activity' ? 'Alerts' : tab}
+                                            <Ionicons name="filter-outline" size={20} />
                                         </Text>
-                                        <Ionicons
-                                            name={'chevron-down'}
-                                            size={23}
-                                            color={'#000'}
-                                            style={{
-                                                paddingLeft: 3,
-                                            }}
-                                        />
-                                    </View>
-                                </MenuTrigger>
-                                <MenuOptions
-                                    optionsContainerStyle={{
-                                        shadowOffset: {
-                                            width: 2,
-                                            height: 2,
-                                        },
-                                        shadowColor: '#000',
-                                        // overflow: 'hidden',
-                                        shadowOpacity: 0.07,
-                                        shadowRadius: 7,
-                                        padding: 7,
-                                        // borderWidth: 1,
-                                        // borderColor: '#CCC'
-                                    }}
-                                >
-                                    {tabs.map((op: string, ind: number) => {
-                                        if (op === 'Add') return null;
-
-                                        return (
-                                            <MenuOption value={op} key={ind.toString()}>
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'inter',
-                                                        fontSize: 15,
-                                                        color: op === tab ? '#007AFF' : '#1f1f1f',
-                                                        // textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {op === 'Agenda' ? 'To-Do' : op === 'Activity' ? 'Alerts' : op}
-                                                </Text>
-                                            </MenuOption>
-                                        );
-                                    })}
-                                </MenuOptions>
-                            </Menu>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
                         </View>
                     ) : null}
-                    {tab !== 'Add' && Dimensions.get('window').width > 768 ? (
+                    {tab !== 'Add' && Dimensions.get('window').width >= 768 ? (
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -1760,46 +1846,40 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 if (option === 'Add') return null;
 
                                 return (
-                                    <TouchableOpacity
-                                        key={ind.toString()}
+                                    <View
+                                        nativeID={option}
                                         style={{
                                             marginRight: 38,
-                                            paddingVertical: 3,
-                                            backgroundColor: 'none',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            borderBottomColor: '#000',
-                                            borderBottomWidth: option === tab ? 1 : 0,
-                                        }}
-                                        onPress={() => {
-                                            setTab(option);
                                         }}
                                     >
-                                        {option === 'Activity' && unreadCount !== 0 ? (
-                                            <View
-                                                style={{
-                                                    width: 6,
-                                                    height: 6,
-                                                    borderRadius: '100%',
-                                                    backgroundColor: '#f94144',
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    right: -8,
-                                                }}
-                                            />
-                                        ) : null}
-                                        <View
+                                        <TouchableOpacity
+                                            key={ind.toString()}
                                             style={{
+                                                paddingVertical: 3,
+                                                backgroundColor: 'none',
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
-                                                backgroundColor: 'none',
+                                                borderBottomColor: '#000',
+                                                borderBottomWidth: option === tab ? 1 : 0,
+                                            }}
+                                            onPress={() => {
+                                                setTab(option);
                                             }}
                                         >
-                                            {/* <Ionicons
-                                                name={getAgendaNavbarIconName(option)}
-                                                style={{ color: getAgendaIconColor(option) }}
-                                                size={option === 'Agenda' ? 15 : option === 'Schedule' ? 13 : 14}
-                                            /> */}
+                                            {option === 'Activity' && unreadCount !== 0 ? (
+                                                <View
+                                                    style={{
+                                                        width: 6,
+                                                        height: 6,
+                                                        borderRadius: '100%',
+                                                        backgroundColor: '#f94144',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: -8,
+                                                    }}
+                                                />
+                                            ) : null}
+
                                             <Text
                                                 style={{
                                                     color: getAgendaIconColor(option),
@@ -1815,8 +1895,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     ? 'Alerts'
                                                     : option}
                                             </Text>
-                                        </View>
-                                    </TouchableOpacity>
+                                        </TouchableOpacity>
+                                    </View>
                                 );
                             })}
                         </View>
@@ -1845,109 +1925,74 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     ) : null}
                     {/* Mark as read button */}
 
-                    <View
-                        style={{
-                            right: 0,
-                            position: 'absolute',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: 'none',
-                        }}
-                    >
-                        {tab === 'Activity' && unreadCount !== 0 ? (
-                            <TouchableOpacity
-                                onPress={async () => {
-                                    const uString: any = await AsyncStorage.getItem('user');
-                                    if (uString) {
-                                        const user = JSON.parse(uString);
-                                        const server = fetchAPI(user._id);
-                                        server
-                                            .mutate({
-                                                mutation: markActivityAsRead,
-                                                variables: {
-                                                    userId: user._id,
-                                                    markAllRead: true,
-                                                },
-                                            })
-                                            .then((res) => {
-                                                if (res.data.activity.markActivityAsRead) {
-                                                    server
-                                                        .query({
-                                                            query: getActivity,
-                                                            variables: {
-                                                                userId: user._id,
-                                                            },
-                                                        })
-                                                        .then((res) => {
-                                                            if (res.data && res.data.activity.getActivity) {
-                                                                const tempActivity = res.data.activity.getActivity;
-                                                                let unread = 0;
-                                                                tempActivity.map((act: any) => {
-                                                                    if (act.status === 'unread') {
-                                                                        unread++;
-                                                                    }
-                                                                });
-                                                                setUnreadCount(unread);
-                                                                setActivity(tempActivity);
-                                                            }
-                                                        });
-                                                }
-                                            })
-                                            .catch((err) => {});
-                                    }
-                                }}
-                                style={{
-                                    backgroundColor: '#f8f8f8',
-                                    overflow: 'hidden',
-                                    height: 35,
-                                    alignSelf: 'center',
-                                    paddingHorizontal: Dimensions.get('window').width < 1024 ? 10 : 20,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                                disabled={props.user.email === disableEmailId}
-                            >
-                                <Ionicons name="checkmark-done-outline" size={18} color="#000" />
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        lineHeight: 34,
-                                        color: '#000',
-                                        fontSize: 15,
-                                        // borderWidth: 1,
-                                        // borderColor: '#007AFF',
-                                        paddingLeft: 5,
-                                        fontFamily: 'inter',
-                                        // height: 35,
-                                        // width: 150,
-                                        // borderRadius: 15,
-                                        textTransform: 'capitalize',
+                    {Dimensions.get('window').width < 768 ? null : (
+                        <View
+                            style={{
+                                right: 0,
+                                position: 'absolute',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: 'none',
+                            }}
+                        >
+                            {tab === 'Activity' && unreadCount !== 0 ? (
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        markAlertsRead();
                                     }}
+                                    style={{
+                                        backgroundColor: '#f8f8f8',
+                                        overflow: 'hidden',
+                                        height: 35,
+                                        alignSelf: 'center',
+                                        paddingHorizontal: Dimensions.get('window').width < 1024 ? 10 : 20,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                    disabled={props.user.email === disableEmailId}
                                 >
-                                    Mark as Read
-                                </Text>
-                            </TouchableOpacity>
-                        ) : null}
+                                    <Ionicons name="checkmark-done-outline" size={18} color="#000" />
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            lineHeight: 34,
+                                            color: '#000',
+                                            fontSize: 15,
+                                            // borderWidth: 1,
+                                            // borderColor: '#007AFF',
+                                            paddingLeft: 5,
+                                            fontFamily: 'inter',
+                                            // height: 35,
+                                            // width: 150,
+                                            // borderRadius: 15,
+                                            textTransform: 'capitalize',
+                                        }}
+                                    >
+                                        Mark as Read
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
 
-                        {tab !== 'Add' ? (
-                            <TouchableOpacity
-                                style={{ backgroundColor: 'none', marginLeft: 15 }}
-                                onPress={() => {
-                                    setShowFilterPopup(true);
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 11,
-                                        color: '#1f1f1f',
-                                        textAlign: 'right',
+                            {tab !== 'Add' ? (
+                                <TouchableOpacity
+                                    style={{ backgroundColor: 'none', marginLeft: 15 }}
+                                    onPress={() => {
+                                        setShowFilterPopup(true);
                                     }}
                                 >
-                                    <Ionicons name="filter-outline" size={20} />
-                                </Text>
-                            </TouchableOpacity>
-                        ) : null}
-                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: 11,
+                                            color: '#1f1f1f',
+                                            textAlign: 'right',
+                                        }}
+                                    >
+                                        <Ionicons name="filter-outline" size={20} />
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
+                        </View>
+                    )}
                 </View>
             </View>
         );
@@ -1970,8 +2015,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 contentContainerStyle={{
                     width: '100%',
                     height:
-                        width < 1024
-                            ? Dimensions.get('window').height - 64 - 54 - 60
+                        width < 768
+                            ? Dimensions.get('window').height - 54 - 60
                             : Dimensions.get('window').height - 64 - 54,
                     backgroundColor: '#fff',
                 }}
@@ -2012,6 +2057,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         backgroundColor: 'none',
                                     }}
+                                    nativeID={'planner-wrapper'}
                                 >
                                     {tab === tabs[0] ? (
                                         <Eventcalendar
@@ -2444,46 +2490,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 backgroundColor: '#f8f8f8',
                                                             }}
                                                         >
-                                                            {/* <Menu
-                                                                                                            onSelect={(channelId: any) => {
-                                                                                                                setChannelId(channelId)
-                                                                                                            }}>
-                                                                                                            <MenuTrigger>
-                                                                                                                <Text style={{ fontSize: 15, color: '#000000' }}>
-                                                                                                                    {eventForChannelName}<Ionicons name='chevron-down-outline' size={15} />
-                                                                                                                </Text>
-                                                                                                            </MenuTrigger>
-                                                                                                            <MenuOptions customStyles={{
-                                                                                                                optionsContainer: {
-                                                                                                                    padding: 10,
-                                                                                                                    borderRadius: 15,
-                                                                                                                    shadowOpacity: 0,
-                                                                                                                    borderWidth: 1,
-                                                                                                                    borderColor: '#f2f2f2'
-                                                                                                                }
-                                                                                                            }}>
-                                                                                                                <MenuOption
-                                                                                                                    value={''}>
-                                                                                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                                                                        <Text style={{ marginLeft: 5 }}>
-                                                                                                                            My Cues
-                                                                                                                        </Text>
-                                                                                                                    </View>
-                                                                                                                </MenuOption>
-                                                                                                                {
-                                                                                                                    channels.map((channel: any) => {
-                                                                                                                        return <MenuOption
-                                                                                                                            value={channel._id}>
-                                                                                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                                                                                <Text style={{ marginLeft: 5 }}>
-                                                                                                                                    {channel.name}
-                                                                                                                                </Text>
-                                                                                                                            </View>
-                                                                                                                        </MenuOption>
-                                                                                                                    })
-                                                                                                                }
-                                                                                                            </MenuOptions>
-                                                                                                        </Menu> */}
                                                             <label
                                                                 style={{
                                                                     width: '100%',
@@ -2498,7 +2504,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     onChange={(val: any) => {
                                                                         setSelectedChannel(val.value);
 
-                                                                        if (val.value === 'Home') {
+                                                                        if (val.value === 'My Events') {
                                                                             setChannelId('');
                                                                         } else {
                                                                             setChannelId(val.value);

@@ -20,11 +20,11 @@ import {
     shareCueWithMoreIds,
     unshareCueWithIds,
     shareWithAll,
-    start,
     submit,
     modifyQuiz,
     duplicateQuiz,
     saveSubmissionDraft,
+    startQuiz,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -74,6 +74,7 @@ import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from 
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -132,7 +133,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [deadline, setDeadline] = useState<Date>(dead);
     const [initiateAt, setInitiateAt] = useState<Date>(initiate);
     const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0);
-    const [graded, setGraded] = useState(props.cue.gradeWeight);
+    const [graded, setGraded] = useState(props.cue.gradeWeight ? true : false);
     const currentDate = new Date();
     const [submitted, setSubmitted] = useState(false);
     const [imported, setImported] = useState(false);
@@ -165,6 +166,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         (props.cue.submittedAt !== null && props.cue.submittedAt !== undefined) ||
             (props.cue.graded && props.cue.releaseSubmission)
     );
+    // const [viewSubmission, setViewSubmission] = useState(false);
     const [viewSubmissionTab, setViewSubmissionTab] = useState('instructorAnnotations');
     const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
     const [remainingAttempts, setRemainingAttempts] = useState<any>(null);
@@ -197,6 +199,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
 
     const [userId, setUserId] = useState('');
+    const [userFullName, setUserFullName] = useState('');
     const width = Dimensions.get('window').width;
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz');
@@ -242,7 +245,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         undo: true,
         refreshAfterCallback: false,
         callback: function () {
-            RichText.current.editor.selection.save();
+            editorRef.current.editor.selection.save();
             setShowInsertYoutubeVideosModal(true);
         },
     });
@@ -345,28 +348,37 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Load PDFTron Webviewer for submission
      */
     useEffect(() => {
+        if (!userId || !userFullName) return;
+
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
             let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
 
+            if (url === '') return;
+
+            console.log('View submission webviewer');
+
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
+                    annotationUser: userId,
                 },
                 submissionViewerRef.current
             ).then(async (instance) => {
                 const { documentViewer, annotationManager } = instance.Core;
 
-                const u = await AsyncStorage.getItem('user');
+                if (!documentViewer || !annotationManager) return;
 
-                let user: any;
+                // const u = await AsyncStorage.getItem('user');
 
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                // let user: any;
+
+                // if (u) {
+                //     user = JSON.parse(u);
+                //     annotationManager.setCurrentUser(user.fullName);
+                // }
 
                 documentViewer.addEventListener('documentLoaded', async () => {
                     // perform document operations
@@ -379,13 +391,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
                             annotations.forEach((annotation: any) => {
                                 // Hide instructor annotations until grades are released
-                                if (!props.cue.releaseSubmission && annotation.Author !== user.fullName) {
+                                if (!props.cue.releaseSubmission && annotation.Author !== userId) {
                                     annotationManager.hideAnnotation(annotation);
                                 } else {
                                     annotationManager.redrawAnnotation(annotation);
                                 }
                             });
                         });
+                    }
+                });
+
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
                     }
                 });
 
@@ -397,7 +415,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
                         let subCues: any = {};
                         try {
@@ -437,8 +455,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         subCues[props.cueKey][props.cueIndex] = saveCue;
 
-                        console.log('Update annotation', saveCue);
-
                         const stringifiedCues = JSON.stringify(subCues);
                         await AsyncStorage.setItem('cues', stringifiedCues);
                         // props.reloadCueListAfterUpdate();
@@ -446,14 +462,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 );
             });
         }
-    }, [
-        viewSubmission,
-        submissionViewerRef,
-        submissionViewerRef.current,
-        viewSubmissionTab,
-        submissionAttempts,
-        props.showOriginal,
-    ]);
+    }, [viewSubmission, viewSubmissionTab, submissionAttempts, props.showOriginal, userId, userFullName]);
 
     /**
      * @description Used to detect ongoing quiz and
@@ -548,14 +557,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setSolutions(parseQuizResponses.solutions);
 
                                     setShuffleQuizAttemptOrder(
-                                        parseQuizResponses.shuffleQuizAttemptOrder !== undefined &&
-                                            res.data.quiz.getQuiz.shuffleQuiz
-                                            ? parseQuizResponses.shuffleQuizAttemptOrder
-                                            : []
-                                    );
-
-                                    console.log(
-                                        'shuffle Attempt order update controls',
                                         parseQuizResponses.shuffleQuizAttemptOrder !== undefined &&
                                             res.data.quiz.getQuiz.shuffleQuiz
                                             ? parseQuizResponses.shuffleQuizAttemptOrder
@@ -712,6 +713,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead();
     }, [props.cue.status]);
 
+    console.log('Submission draft updatecontrols', submissionDraft);
+
     /**
      * @description Handle Save when props.save
      */
@@ -752,6 +755,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Setup PDFTron Webviewer for Cue content
      */
     useEffect(() => {
+        if (!userId || !userFullName) return;
+
         if (props.showOriginal) {
             if (url === '' || !url) {
                 return;
@@ -781,18 +786,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
+                    annotationUser: userId,
                 },
                 RichText.current
             ).then(async (instance: any) => {
                 const { documentViewer, annotationManager } = instance.Core;
-                const u = await AsyncStorage.getItem('user');
 
-                let user: any;
+                if (!documentViewer || !annotationManager) return;
 
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                // const u = await AsyncStorage.getItem('user');
+
+                // let user: any;
+
+                // if (u) {
+                //     user = JSON.parse(u);
+                //     annotationManager.setCurrentUser(user.fullName);
+                // }
 
                 // you can now call WebViewer APIs here...
                 documentViewer.addEventListener('documentLoaded', async () => {
@@ -824,6 +833,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 });
 
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
+                    }
+                });
+
                 annotationManager.addEventListener(
                     'annotationChanged',
                     async (annotations: any, action: any, { imported }) => {
@@ -832,7 +847,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
                         let subCues: any = {};
                         try {
@@ -866,6 +881,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return;
             }
 
+            if (viewSubmission) return;
+
             if (
                 submissionType === 'mp4' ||
                 submissionType === 'oga' ||
@@ -880,41 +897,41 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return;
             }
 
-            if (submissionImported) {
-                if (!RichText.current) {
-                    return;
-                }
-            }
-
             WebViewer(
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: submissionUrl,
+                    annotationUser: userId,
                 },
                 RichText.current
             ).then(async (instance: any) => {
                 const { documentViewer, annotationManager } = instance.Core;
                 // you can now call WebViewer APIs here...
 
-                const u = await AsyncStorage.getItem('user');
+                // const u = await AsyncStorage.getItem('user');
 
-                let user: any;
+                // let user: any;
 
-                if (u) {
-                    user = JSON.parse(u);
-                    annotationManager.setCurrentUser(user.fullName);
-                }
+                // if (u) {
+                //     user = JSON.parse(u);
+                //     annotationManager.setCurrentUser(user.fullName);
+                // }
+
+                if (!documentViewer || !annotationManager) return;
+
+                console.log('Submission draft when loading annotation', submissionDraft);
 
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
 
                     if (
                         submissionDraft !== '' &&
-                        submissionDraft[0] &&
                         submissionDraft[0] === '{' &&
                         submissionDraft[submissionDraft.length - 1] === '}'
                     ) {
                         const obj = JSON.parse(submissionDraft);
+
+                        console.log('Annotations object', obj);
 
                         if (obj.annotations !== '') {
                             const xfdfString = obj.annotations;
@@ -928,6 +945,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 });
 
+                annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                    if (userId === id) {
+                        return userFullName;
+                    }
+                });
+
                 annotationManager.addEventListener(
                     'annotationChanged',
                     async (annotations: any, action: any, { imported }) => {
@@ -936,16 +959,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
-                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                        const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const obj = JSON.parse(submissionDraft);
-
-                        let updateSubmissionDraftWithAnnotation = {
-                            ...obj,
-                            annotations: xfdfString,
-                        };
-
-                        setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation));
+                        handleUpdateAnnotationsForSubmission(xfdfString);
                     }
                 );
             });
@@ -960,7 +976,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         submissionUrl,
         type,
         submissionType,
+        userId,
+        userFullName,
+        viewSubmission,
     ]);
+
+    const handleUpdateAnnotationsForSubmission = useCallback(
+        (xfdfString: string) => {
+            const obj = JSON.parse(submissionDraft);
+
+            let updateSubmissionDraftWithAnnotation = {
+                ...obj,
+                annotations: xfdfString,
+            };
+
+            console.log('Annotation changed', xfdfString);
+
+            setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation));
+        },
+        [submissionDraft]
+    );
 
     /**
      * @description Set is owner based on Channel owner prop
@@ -1150,15 +1185,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         (videoId: string) => {
             setShowInsertYoutubeVideosModal(false);
 
-            RichText.current.editor.selection.restore();
+            editorRef.current.editor.selection.restore();
 
-            RichText.current.editor.html.insert(
+            editorRef.current.editor.html.insert(
                 `<iframe width="640" height="360" src="https://youtube.com/embed/${videoId}" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe>`
             );
 
-            RichText.current.editor.events.trigger('contentChanged');
+            editorRef.current.editor.events.trigger('contentChanged');
         },
-        [RichText, RichText.current]
+        [editorRef, editorRef.current]
     );
 
     /**
@@ -1176,7 +1211,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             editorRef.current.editor.selection.restore();
 
             editorRef.current.editor.html.insert(
-                '<img class="rendered-math-jax" id="' +
+                '<img class="rendered-math-jax" style="width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -1199,10 +1234,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (u) {
             const parsedUser = JSON.parse(u);
             setUserId(parsedUser._id);
+            setUserFullName(parsedUser.fullName);
         }
     }, []);
-
-    console.log('Initiated at', initiatedAt);
 
     /**
      * @description Initialize the quiz (Timed quiz)
@@ -1222,35 +1256,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return;
         }
 
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const user = JSON.parse(u);
-            const now = new Date();
-            const server = fetchAPI('');
-            const saveCue = JSON.stringify({
-                solutions,
-                initiatedAt: now,
-            });
-            server
-                .mutate({
-                    mutation: start,
-                    variables: {
-                        cueId: props.cue._id,
-                        userId: user._id,
-                        cue: saveCue,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.quiz.start) {
-                        setInitiatedAt(now);
-                    }
-                })
-                .catch((err) => console.log(err));
-            // save time to cloud first
-            // after saving time in cloud, save it locally, set initiatedAt
-            // quiz gets triggered
-        }
-    }, [props.cue._id, solutions, deadline, availableUntil, allowLateSubmission]);
+        // const now = new Date();
+        const server = fetchAPI('');
+        // const saveCue = JSON.stringify({
+        //     solutions,
+        //     initiatedAt: now,
+        // });
+        server
+            .mutate({
+                mutation: startQuiz,
+                variables: {
+                    cueId: props.cue._id,
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.quiz.start !== '') {
+                    setInitiatedAt(new Date(res.data.quiz.start));
+                }
+            })
+            .catch((err) => console.log(err));
+        // save time to cloud first
+        // after saving time in cloud, save it locally, set initiatedAt
+        // quiz gets triggered
+    }, [props.cue._id, deadline, availableUntil, allowLateSubmission, userId]);
 
     const fileUploadEditor = useCallback(
         async (files: any, forSubmission: boolean) => {
@@ -1290,9 +1319,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 );
             } else {
                 setSubmissionImported(true);
-                setSubmissionType(uploadType);
-                setSubmissionUrl(uploadURL);
-
                 setSubmissionDraft(
                     JSON.stringify({
                         url: uploadURL,
@@ -1301,6 +1327,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         annotations: '',
                     })
                 );
+                setSubmissionType(uploadType);
+                setSubmissionUrl(uploadURL);
             }
         },
         [title, submissionTitle]
@@ -1357,7 +1385,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 submissionObj = JSON.parse(currCueValue);
             }
 
-            const updatedDraft = JSON.parse(submissionDraft);
+            let updatedDraft = {};
+
+            if (submissionDraft && submissionDraft[0] === '{' && submissionDraft[submissionDraft.length - 1] === '}') {
+                updatedDraft = JSON.parse(submissionDraft);
+            }
+
+            console.log('Submission Draft inside handleUpdateCue');
+            console.log(submissionDraft);
+
             // Submission draft will also have annotations so preserve those
 
             const obj = {
@@ -1785,44 +1821,36 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Submit quiz when time gets over
      */
     const submitQuizEndTime = useCallback(async () => {
-        const u: any = await AsyncStorage.getItem('user');
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            if (!parsedUser.email || parsedUser.email === '') {
-                // cannot submit
-                return;
-            }
-            const saveCue = JSON.stringify({
-                solutions,
-                initiatedAt,
-            });
+        const saveCue = JSON.stringify({
+            solutions,
+            initiatedAt,
+        });
 
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: submit,
-                    variables: {
-                        cue: saveCue,
-                        cueId: props.cue._id,
-                        userId: parsedUser._id,
-                        quizId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.cue.submitModification) {
-                        Alert(submissionCompleteAlert, new Date().toString(), [
-                            {
-                                text: 'Okay',
-                                onPress: () => window.location.reload(),
-                            },
-                        ]);
-                    }
-                })
-                .catch((err) => {
-                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
-                });
-        }
-    }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions]);
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: submit,
+                variables: {
+                    cue: saveCue,
+                    cueId: props.cue._id,
+                    userId,
+                    quizId,
+                },
+            })
+            .then((res) => {
+                if (res.data.cue.submitModification) {
+                    Alert(submissionCompleteAlert, new Date().toString(), [
+                        {
+                            text: 'Okay',
+                            onPress: () => window.location.reload(),
+                        },
+                    ]);
+                }
+            })
+            .catch((err) => {
+                Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+            });
+    }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions, userId]);
 
     const submitResponse = useCallback(() => {
         let now = new Date();
@@ -1844,53 +1872,46 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     text: 'Okay',
                     onPress: async () => {
                         setIsSubmitting(true);
-                        const u: any = await AsyncStorage.getItem('user');
-                        if (u) {
-                            const parsedUser = JSON.parse(u);
-                            if (!parsedUser.email || parsedUser.email === '') {
-                                // cannot submit
-                                return;
-                            }
-                            let saveCue = '';
-                            if (isQuiz) {
-                                saveCue = JSON.stringify({
-                                    solutions,
-                                    initiatedAt,
-                                });
-                            } else {
-                                saveCue = submissionDraft;
-                            }
 
-                            const server = fetchAPI('');
-                            server
-                                .mutate({
-                                    mutation: submit,
-                                    variables: {
-                                        cue: saveCue,
-                                        cueId: props.cue._id,
-                                        userId: parsedUser._id,
-                                        quizId: isQuiz ? quizId : null,
-                                    },
-                                })
-                                .then((res: any) => {
-                                    if (res.data.cue.submitModification) {
-                                        setIsSubmitting(false);
-                                        Alert(submissionCompleteAlert, new Date().toString(), [
-                                            {
-                                                text: 'Okay',
-                                                onPress: () => window.location.reload(),
-                                            },
-                                        ]);
-                                    } else {
-                                        Alert('Submission failed. Try again. ');
-                                        setIsSubmitting(false);
-                                    }
-                                })
-                                .catch((err: any) => {
-                                    setIsSubmitting(false);
-                                    Alert(somethingWentWrongAlert, tryAgainLaterAlert);
-                                });
+                        let saveCue = '';
+                        if (isQuiz) {
+                            saveCue = JSON.stringify({
+                                solutions,
+                                initiatedAt,
+                            });
+                        } else {
+                            saveCue = submissionDraft;
                         }
+
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: submit,
+                                variables: {
+                                    cue: saveCue,
+                                    cueId: props.cue._id,
+                                    userId,
+                                    quizId: isQuiz ? quizId : null,
+                                },
+                            })
+                            .then((res: any) => {
+                                if (res.data.cue.submitModification) {
+                                    setIsSubmitting(false);
+                                    Alert(submissionCompleteAlert, new Date().toString(), [
+                                        {
+                                            text: 'Okay',
+                                            onPress: () => window.location.reload(),
+                                        },
+                                    ]);
+                                } else {
+                                    Alert('Submission failed. Try again. ');
+                                    setIsSubmitting(false);
+                                }
+                            })
+                            .catch((err: any) => {
+                                setIsSubmitting(false);
+                                Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+                            });
                     },
                 },
             ]
@@ -1908,6 +1929,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         solutions,
         deadline,
         submissionDraft,
+        userId,
     ]);
 
     /**
@@ -1927,15 +1949,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         for (let i = 0; i < problems.length; i++) {
             const problem = problems[i];
             const solution = solutions[i];
-
-            // console.log('Handle submit shuffle quiz', shuffleQuiz);
-            // console.log('shuffleQuizAttemptOrder', shuffleQuizAttemptOrder);
-            // console.log('Current index', i);
-            // console.log('Current question', problem);
-
-            // const currentAttemptIndex = shuffleQuiz ? shuffleQuizAttemptOrder[i] : i;
-
-            // console.log('Current attempt index', shuffleQuiz ? shuffleQuizAttemptOrder[i] : i);
 
             let currentAttemptIndex = i;
 
@@ -2115,8 +2128,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 // Optional
             }
         }
-
-        console.log('Required missing questions', requiredMissingQuestions);
 
         requiredMissingQuestions.sort((a: any, b: any) => {
             return a > b ? 1 : -1;
@@ -2834,8 +2845,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                     const sanitizeWithoutTypename = omitDeep(variables, '__typename');
 
-                    console.log('SanitizeWithoutTypename', sanitizeWithoutTypename);
-
                     server
                         .mutate({
                             mutation: modifyQuiz,
@@ -3185,7 +3194,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : null}
 
-                {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.graded ? (
+                {props.cue.submittedAt && props.cue.submittedAt !== '' && !props.cue.releaseSubmission ? (
                     <View style={{ flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
                         {viewSubmission ? (
                             props.cue.releaseSubmission ||
@@ -3213,7 +3222,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             color: '#fff',
                                             backgroundColor: '#000',
                                             fontSize: 11,
-                                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                            paddingHorizontal: 24,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
                                             paddingVertical: 14,
@@ -3406,7 +3415,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 color: '#fff',
                                                 backgroundColor: '#000',
                                                 fontSize: 11,
-                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                                paddingHorizontal: 24,
                                                 fontFamily: 'inter',
                                                 overflow: 'hidden',
                                                 paddingVertical: 14,
@@ -3482,7 +3491,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div
                                 className="webviewer"
                                 ref={RichText}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                                 key={props.showOriginal + url + imported.toString()}
                             ></div>
                         </View>
@@ -3514,11 +3523,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 JSON.stringify(viewSubmissionTab)
                             }
                         >
-                            <div
-                                className="webviewer"
-                                ref={RichText}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
-                            ></div>
+                            <div className="webviewer" ref={RichText} style={{ height: '70vh' }}></div>
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
                         </View>
@@ -3615,6 +3620,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             spellcheck: true,
                             tabSpaces: 4,
                             scrollableContainer: '#scroll_container',
+                            toolbarStickyOffset: 0,
                             // TOOLBAR
                             toolbarButtons: FULL_FLEDGED_TOOLBAR_BUTTONS(Dimensions.get('window').width),
                             toolbarSticky: true,
@@ -3841,7 +3847,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     JSON.stringify(props.showOriginal) +
                                     JSON.stringify(submissionAttempts)
                                 }
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                             ></div>
                         </View>
                     )
@@ -3855,7 +3861,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div
                                 className="webviewer"
                                 ref={submissionViewerRef}
-                                style={{ height: Dimensions.get('window').width < 768 ? '50vh' : '70vh' }}
+                                style={{ height: '70vh' }}
                                 key={viewSubmissionTab}
                             ></div>
                         )}
@@ -3869,98 +3875,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Rich editor for Submissions
      */
     const renderRichEditorModified = () => {
+        if (submissionImported) return null;
+
         return (
-            // <Editor
-            //     onInit={(evt, editor) => (editorRef.current = editor)}
-            //     initialValue={initialSubmissionDraft}
-            //     disabled={
-            //         props.cue.releaseSubmission ||
-            //         (!allowLateSubmission && new Date() > deadline) ||
-            //         (allowLateSubmission && new Date() > availableUntil)
-            //     }
-            //     apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-            //     init={{
-            //         skin: 'snow',
-            //         branding: false,
-            //         placeholder: 'Content...',
-            //         readonly:
-            //             props.cue.releaseSubmission ||
-            //             (!allowLateSubmission && new Date() > deadline) ||
-            //             (allowLateSubmission && new Date() > availableUntil),
-            //         min_height: 500,
-            //         paste_data_images: true,
-            //         images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-            //         mobile: {
-            //             plugins:
-            //                 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-            //         },
-            //         plugins:
-            //             'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-            //         menu: {
-            //             // this is the complete default configuration
-            //             file: { title: 'File', items: 'newdocument' },
-            //             edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-            //             insert: { title: 'Insert', items: 'link media | template hr' },
-            //             view: { title: 'View', items: 'visualaid' },
-            //             format: {
-            //                 title: 'Format',
-            //                 items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'
-            //             },
-            //             table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-            //             tools: { title: 'Tools', items: 'spellchecker code' }
-            //         },
-            //         setup: (editor: any) => {
-            //             const equationIcon =
-            //                 '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-            //             editor.ui.registry.addIcon('formula', equationIcon);
-
-            //             editor.ui.registry.addButton('formula', {
-            //                 icon: 'formula',
-            //                 // text: "Upload File",
-            //                 tooltip: 'Insert equation',
-            //                 onAction: () => {
-            //                     setShowEquationEditor(!showEquationEditor);
-            //                 }
-            //             });
-
-            //             editor.ui.registry.addButton('upload', {
-            //                 icon: 'upload',
-            //                 tooltip: 'Import File (pdf, docx, media, etc.)',
-            //                 onAction: async () => {
-            //                     const res = await handleFile(false);
-
-            //                     if (!res || res.url === '' || res.type === '') {
-            //                         return;
-            //                     }
-
-            //                     updateAfterFileImport(res.url, res.type);
-            //                 }
-            //             });
-            //         },
-            //         // menubar: 'file edit view insert format tools table tc help',
-            //         menubar: false,
-            //         toolbar:
-            //             props.cue.releaseSubmission ||
-            //             (!allowLateSubmission && new Date() > deadline) ||
-            //             (allowLateSubmission && new Date() > availableUntil)
-            //                 ? false
-            //                 : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
-            //         importcss_append: true,
-            //         image_caption: true,
-            //         quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-            //         noneditable_noneditable_class: 'mceNonEditable',
-            //         toolbar_mode: 'sliding',
-            //         tinycomments_mode: 'embedded',
-            //         content_style: '.mymention{ color: gray; }',
-            //         // contextmenu: 'link image imagetools table configurepermanentpen',
-            //         a11y_advanced_options: true,
-            //         extended_valid_elements:
-            //             'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-            //         // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-            //         // content_css: useDarkMode ? 'dark' : 'default',
-            //     }}
-            //     onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
-            // />
             <View
                 key={userId.toString() + isOwner.toString()}
                 style={{
@@ -3973,7 +3890,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <FroalaEditor
                     ref={editorRef}
                     model={submissionDraft}
-                    onModelChange={(model: any) => setSubmissionDraft(model)}
+                    onModelChange={(model: any) => {
+                        if (submissionImported || submissionUrl) return;
+
+                        setSubmissionDraft(model);
+                    }}
                     config={{
                         key: 'kRB4zB3D2D2E1B2A1B1rXYb1VPUGRHYZNRJd1JVOOb1HAc1zG2B1A2A2D6B1C1C4E1G4==',
                         attribution: false,
@@ -4013,8 +3934,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             },
                             'file.beforeUpload': function (files: any) {
                                 // Return false if you want to stop the file upload.
-                                console.log('Before upload');
-                                console.log('File', files.item(0));
 
                                 fileUploadEditor(files, true);
 
@@ -5536,7 +5455,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: '#fff',
                                     backgroundColor: '#000',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
@@ -5549,7 +5468,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 (isQuiz && remainingAttempts === 0) ||
                                 (props.cue.releaseSubmission && !props.cue.graded)
                                     ? 'Submission Ended'
-                                    : props.cue.graded && !isQuiz
+                                    : props.cue.graded && props.cue.releaseSubmission
                                     ? PreferredLanguageText('graded')
                                     : isSubmitting
                                     ? 'Submitting...'
@@ -5597,143 +5516,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 // paddingBottom: 50
             }}
         >
-            {props.cue.channelId && props.cue.channelId !== '' ? (
-                <View
-                    style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        maxWidth: 1024,
-                        alignSelf: 'center',
-                    }}
-                >
-                    {!isOwner &&
-                    props.cue.graded &&
-                    props.cue.score !== undefined &&
-                    props.cue.score !== null &&
-                    !isQuiz &&
-                    props.cue.releaseSubmission &&
-                    (props.showOriginal || props.showOptions) ? (
-                        <Text
-                            style={{
-                                fontSize: 13,
-                                color: 'white',
-                                height: 22,
-                                paddingHorizontal: 10,
-                                borderRadius: 15,
-                                backgroundColor: '#000',
-                                lineHeight: 20,
-                                paddingTop: 1,
-                                marginBottom: 5,
-                                marginTop: 20,
-                            }}
-                        >
-                            {props.cue.score}%
-                        </Text>
-                    ) : null}
-                    {!isOwner &&
-                    props.cue.submittedAt !== '' &&
-                    new Date(props.cue.submittedAt) >= deadline &&
-                    props.showOriginal ? (
-                        <View style={{ marginTop: 20, marginBottom: 5 }}>
-                            <Text
-                                style={{
-                                    color: '#f94144',
-                                    fontSize: 20,
-                                    fontFamily: 'Inter',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                LATE
-                            </Text>
-                        </View>
-                    ) : null}
-                    {/* <TouchableOpacity
-                            onPress={() => setStarred(!starred)}
-                            style={{
-                                backgroundColor: "white",
-                                flex: 1
-                            }}>
-                            <Text
-                                style={{
-                                    textAlign: "right",
-                                    lineHeight: 34,
-                                    marginTop: -31,
-                                    // paddingRight: 25,
-                                    width: "100%"
-                                }}>
-                                <Ionicons name="bookmark" size={40} color={starred ? "#f94144" : "#1F1F1F"} />
-                            </Text>
-                        </TouchableOpacity> */}
-                </View>
-            ) : null}
-
-            {/* {props.showOptions || props.showComments || viewSubmission ? null : (
-                <View
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
-                        marginBottom: 5,
-                        backgroundColor: '#f8f8f8',
-                        borderBottomColor: '#f2f2f2'
-                    }}
-                    onTouchStart={() => Keyboard.dismiss()}
-                >
-                    <View
-                        style={{
-                            flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                            flex: 1
-                        }}
-                    >
-                        {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions) ||
-                        (props.showOriginal && showImportOptions && (isOwner || !props.cue.channelId)) ? (
-                            <FileUpload
-                                back={() => setShowImportOptions(false)}
-                                onUpload={(u: any, t: any) => {
-                                    if (props.showOriginal) {
-                                        setOriginal(
-                                            JSON.stringify({
-                                                url: u,
-                                                type: t,
-                                                title
-                                            })
-                                        );
-                                    } else {
-                                        setSubmissionDraft(
-                                            JSON.stringify({
-                                                url: u,
-                                                type: t,
-                                                title: submissionTitle,
-                                                annotations: ''
-                                            })
-                                        );
-                                        setSubmissionImported(true);
-                                        setSubmissionType(t);
-                                        setSubmissionUrl(u);
-                                    }
-                                    setShowImportOptions(false);
-                                }}
-                            />
-                        ) : null}
-                    </View>
-                </View>
-            )} */}
-            {showEquationEditor ? (
-                <FormulaGuide
-                    value={equation}
-                    onChange={setEquation}
-                    show={showEquationEditor}
-                    onClose={() => setShowEquationEditor(false)}
-                    onInsertEquation={insertEquation}
-                />
-            ) : null}
-            {showInsertYoutubeVideosModal ? (
-                <InsertYoutubeModal
-                    show={showInsertYoutubeVideosModal}
-                    onClose={() => setShowInsertYoutubeVideosModal(false)}
-                    insertVideo={handleAddVideo}
-                />
-            ) : null}
             {/* <ScrollView
                 style={{
                     paddingBottom: 25,
@@ -5762,13 +5544,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     overflow: 'auto',
                     width: '100%',
                     height:
-                        Dimensions.get('window').width < 1024
+                        width < 768
                             ? Dimensions.get('window').height - (64 + 60)
-                            : Dimensions.get('window').height - 64,
+                            : // : width < 1024
+                              // ? Dimensions.get('window').height - (64 + 68)
+                              Dimensions.get('window').height - 64,
                     maxHeight:
-                        Dimensions.get('window').width < 1024
+                        width < 768
                             ? Dimensions.get('window').height - (64 + 60)
-                            : Dimensions.get('window').height - 64,
+                            : // : width < 1024
+                              // ? Dimensions.get('window').height - (64 + 68)
+                              Dimensions.get('window').height - 64,
                     backgroundColor: '#f8f8f8',
                     display: 'flex',
                     flexDirection: 'column',
@@ -5776,12 +5562,63 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}
                 id="scroll_container"
             >
+                {props.cue.channelId && props.cue.channelId !== '' ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            maxWidth: 1024,
+                            alignSelf: 'center',
+                            paddingHorizontal: paddingResponsive(),
+                        }}
+                    >
+                        {!isOwner &&
+                        props.cue.graded &&
+                        props.cue.score !== undefined &&
+                        props.cue.score !== null &&
+                        !isQuiz &&
+                        props.cue.releaseSubmission &&
+                        (props.showOriginal || props.showOptions) ? (
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    color: '#000',
+                                    lineHeight: 20,
+                                    paddingTop: 1,
+                                    marginBottom: 5,
+                                    marginTop: 20,
+                                    fontFamily: 'Inter',
+                                    marginRight: 20,
+                                }}
+                            >
+                                {props.cue.score}%
+                            </Text>
+                        ) : null}
+                        {!isOwner &&
+                        props.cue.submittedAt !== '' &&
+                        new Date(props.cue.submittedAt) >= deadline &&
+                        props.showOriginal ? (
+                            <View style={{ marginTop: 20, marginBottom: 5 }}>
+                                <Text
+                                    style={{
+                                        color: '#f94144',
+                                        fontSize: 20,
+                                        fontFamily: 'Inter',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    LATE
+                                </Text>
+                            </View>
+                        ) : null}
+                    </View>
+                ) : null}
                 <View
                     style={{
                         width: '100%',
                         maxWidth: 1024,
                         alignSelf: 'center',
-                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
+                        paddingHorizontal: paddingResponsive(),
                     }}
                 >
                     {props.showOptions ||
@@ -5819,7 +5656,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 marginBottom: 0,
                                                 maxWidth: 300,
                                                 minWidth: 300,
-                                                borderBottom: '1px solid #cccccc',
+                                                border: '1px solid #cccccc',
                                                 borderRadius: 2,
                                                 width: '100%',
                                             }}
@@ -5836,7 +5673,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 alignSelf: 'flex-end',
                                             }}
                                         >
-                                            {props.cue.graded || currentDate > deadline ? null : (
+                                            {props.cue.releaseSubmission ? null : (
                                                 <TouchableOpacity
                                                     onPress={() => clearAll()}
                                                     style={{
@@ -5941,6 +5778,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
             </div>
+            {showEquationEditor ? (
+                <FormulaGuide
+                    value={equation}
+                    onChange={setEquation}
+                    show={showEquationEditor}
+                    onClose={() => setShowEquationEditor(false)}
+                    onInsertEquation={insertEquation}
+                />
+            ) : null}
+            {showInsertYoutubeVideosModal ? (
+                <InsertYoutubeModal
+                    show={showInsertYoutubeVideosModal}
+                    onClose={() => setShowInsertYoutubeVideosModal(false)}
+                    insertVideo={handleAddVideo}
+                />
+            ) : null}
         </View>
     );
 };

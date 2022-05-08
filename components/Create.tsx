@@ -58,6 +58,8 @@ import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from 
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
+import { htmlStringParser } from '../helpers/HTMLParser';
 // Include special components if required.
 // import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
@@ -233,6 +235,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     console.log('Show Books', showBooks);
     console.log('url', url);
+    console.log('Imported', imported);
+    console.log('RichText', RichText);
+    console.log('Is quiz', isQuiz);
+    console.log('Props.createActiveTab', props.createActiveTab);
+    console.log('Props.showImportCreate', props.showImportCreate);
+
+    // For landscape mode table, we must also update the potrait mode navbar
+    useEffect(() => {
+        if (isQuiz) {
+            props.setCreateActiveTab('Quiz');
+        } else if (showBooks) {
+            props.setCreateActiveTab('Books');
+        } else {
+            props.setCreateActiveTab('Content');
+        }
+    }, [showBooks, isQuiz]);
 
     /**
      * @description
@@ -247,16 +265,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 setIsQuiz(true);
                 setSubmission(true);
                 const quizDraft = await AsyncStorage.getItem('quizDraft');
-                if (quizDraft !== null) {
+                if (quizDraft) {
                     const { title } = JSON.parse(quizDraft);
                     setTitle(title);
                 }
             } else if (props.createActiveTab === 'Books') {
                 setShowBooks(true);
             } else if (props.createActiveTab === 'Content') {
+                // Set title if uploaded content
+                if (cue[0] === '{' && cue[cue.length - 1] === '}') {
+                    const obj = JSON.parse(cue);
+                    setTitle(obj.title);
+                }
             }
         })();
-    }, [props.createActiveTab]);
+    }, [props.createActiveTab, cue]);
 
     /**
      * @description Sets import options based on Cue content if JSON object
@@ -284,7 +307,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Loads webviewer for Imports
      */
     useEffect(() => {
-        if (showBooks) return;
+        if (showBooks || showOptions || !RichText.current || !url || isQuiz) return;
 
         if (url === '' || !url) {
             return;
@@ -304,6 +327,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return;
         }
 
+        console.log('Executing useEffect');
+
         WebViewer(
             {
                 licenseKey: 'xswED5JutJBccg0DZhBM',
@@ -316,11 +341,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             if (!documentViewer) return;
             // you can now call WebViewer APIs here...
-            documentViewer.addEventListener('documentLoaded', () => {
-                // perform document operations
-            });
+            // documentViewer.addEventListener('documentLoaded', () => {
+            //     // perform document operations
+            // });
         });
-    }, [url, RichText, imported, type, showOptions, props.createActiveTab, showBooks]);
+    }, [url, RichText, imported, type, showOptions, showBooks, isQuiz]);
 
     /**
      * @description Sets user role
@@ -1305,6 +1330,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return;
             }
 
+            // Check if Cue is not empty
+            if (!quizId && !imported) {
+                const { title, subtitle } = htmlStringParser(cue);
+
+                console.log('TItle', title);
+                console.log('Subtitle', subtitle);
+
+                if (title === 'No Content' && !subtitle) {
+                    Alert(enterContentAlert);
+                    setIsSubmitting(false);
+                    return;
+                }
+            }
+
             if ((submission || isQuiz) && deadline < new Date()) {
                 Alert('Submission deadline must be in future');
                 setIsSubmitting(false);
@@ -1498,7 +1537,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setTimer(false);
                         setTitle('');
 
-                        if (Dimensions.get('window').width > 768) {
+                        if (Dimensions.get('window').width >= 768) {
                             setIsQuiz(false);
                         }
 
@@ -1542,6 +1581,51 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         return time;
     };
 
+    const renderQuizButton = () => {
+        if (
+            (Dimensions.get('window').width >= 768 && allowQuizCreation && !showBooks && !showOptions) ||
+            (Dimensions.get('window').width < 768 && isQuiz)
+        ) {
+            return (
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: 'none',
+                    }}
+                    onPress={async () => {
+                        if (isQuiz) {
+                            clearAll();
+                            return;
+                        }
+                        setIsQuiz(true);
+                        setSubmission(true);
+                        const quizDraft = await AsyncStorage.getItem('quizDraft');
+                        if (quizDraft) {
+                            const { title } = JSON.parse(quizDraft);
+                            setTitle(title);
+                        }
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: '#fff',
+                            fontSize: 15,
+                            paddingHorizontal: 10,
+                            marginRight: 20,
+                            fontFamily: 'inter',
+                            overflow: 'hidden',
+                            paddingVertical: 14,
+                            textTransform: 'capitalize',
+                            backgroundColor: 'none',
+                        }}
+                    >
+                        {isQuiz ? 'Clear' : 'Quiz'}
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
+    };
+
     const renderCreateNavbar = () => {
         return (
             <View
@@ -1558,13 +1642,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         maxWidth: 1024,
                         width: '100%',
                         alignSelf: 'center',
-                        paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
+                        paddingHorizontal: paddingResponsive(),
                     }}
                 >
                     {/* Back button */}
                     <TouchableOpacity
                         onPress={() => {
-                            if (showBooks) {
+                            if (showBooks && Dimensions.get('window').width >= 768) {
                                 setShowBooks(false);
                             } else if (showOptions) {
                                 setShowOptions(false);
@@ -1614,7 +1698,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             !showOptions &&
                             !isQuiz &&
                             !showBooks &&
-                            Dimensions.get('window').width > 768 ? (
+                            Dimensions.get('window').width >= 768 ? (
                                 <TouchableOpacity
                                     onPress={() => {
                                         handleFileUpload();
@@ -1648,7 +1732,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             !showOptions &&
                             !isQuiz &&
                             !showBooks &&
-                            Dimensions.get('window').width > 768 ? (
+                            Dimensions.get('window').width >= 768 ? (
                                 <TouchableOpacity
                                     onPress={() => {
                                         setShowBooks(!showBooks);
@@ -1679,7 +1763,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             !showOptions &&
                             !isQuiz &&
                             !showBooks &&
-                            Dimensions.get('window').width > 768 ? (
+                            Dimensions.get('window').width >= 768 ? (
                                 <TouchableOpacity
                                     style={{
                                         backgroundColor: 'none',
@@ -1706,47 +1790,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </TouchableOpacity>
                             ) : null}
 
-                            {allowQuizCreation &&
-                            !imported &&
-                            !showOptions &&
-                            !showBooks &&
-                            (Dimensions.get('window').width > 768 || isQuiz) ? (
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: 'none',
-                                    }}
-                                    onPress={async () => {
-                                        if (isQuiz) {
-                                            clearAll();
-                                            return;
-                                        }
-                                        setIsQuiz(true);
-                                        setSubmission(true);
-                                        const quizDraft = await AsyncStorage.getItem('quizDraft');
-                                        if (quizDraft !== null) {
-                                            const { title } = JSON.parse(quizDraft);
-                                            setTitle(title);
-                                        }
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            color: '#fff',
-                                            fontSize: 15,
-                                            paddingHorizontal: 10,
-                                            marginRight: 20,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            paddingVertical: 14,
-                                            textTransform: 'capitalize',
-                                            backgroundColor: 'none',
-                                        }}
-                                    >
-                                        {isQuiz ? 'Clear' : 'Quiz'}
-                                    </Text>
-                                </TouchableOpacity>
-                            ) : null}
+                            {renderQuizButton()}
+
                             {showOptions || showBooks ? null : (
                                 <TouchableOpacity
                                     onPress={async () => {
@@ -1820,6 +1865,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }}
                 showsVerticalScrollIndicator={true}
             > */}
+            {/* For Sticky toolbar in froala */}
             <div
                 style={{
                     top: 64,
@@ -1827,13 +1873,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     overflow: 'auto',
                     width: '100%',
                     height:
-                        dimensions.window.width < 1024
+                        Dimensions.get('window').width < 768
                             ? dimensions.window.height - (64 + 60)
-                            : dimensions.window.height - 64,
+                            : // : dimensions.window.width < 1024
+                              // ? dimensions.window.height - (64 + 68)
+                              dimensions.window.height - 64,
                     maxHeight:
-                        dimensions.window.width < 1024
+                        Dimensions.get('window').width < 768
                             ? dimensions.window.height - (64 + 60)
-                            : dimensions.window.height - 64,
+                            : // : dimensions.window.width < 1024
+                              // ? dimensions.window.height - (64 + 68)
+                              dimensions.window.height - 64,
                     backgroundColor: '#f8f8f8',
                 }}
                 id="scroll_container"
@@ -1844,10 +1894,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             width: '100%',
                             backgroundColor: '#f8f8f8',
                             opacity: modalAnimation,
-                            height: '100%',
+                            height:
+                                Dimensions.get('window').width < 768
+                                    ? dimensions.window.height - (64 + 60)
+                                    : // : dimensions.window.width < 1024
+                                      // ? dimensions.window.height - (64 + 68)
+                                      dimensions.window.height - 64,
                             maxWidth: 1024,
                             marginTop: 30,
-                            paddingHorizontal: dimensions.window.width < 1024 ? 15 : 0,
+                            paddingHorizontal: paddingResponsive(),
                         }}
                     >
                         {!showOptions ? (
@@ -3656,7 +3711,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     color: '#fff',
                                                     backgroundColor: '#000',
                                                     fontSize: 11,
-                                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                                    paddingHorizontal: 24,
                                                     fontFamily: 'inter',
                                                     overflow: 'hidden',
                                                     paddingVertical: 14,

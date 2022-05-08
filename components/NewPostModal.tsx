@@ -234,7 +234,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         marginLeft: 'auto',
                         flexDirection: 'row',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                     }}
                 >
                     <View
@@ -259,7 +259,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     style={{
                         marginLeft: 50,
                         flexDirection: 'row',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                     }}
                 >
                     <View
@@ -573,7 +573,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             color: '#fff',
                             backgroundColor: '#000',
                             fontSize: 11,
-                            paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                            paddingHorizontal: 24,
                             fontFamily: 'inter',
                             overflow: 'hidden',
                             paddingVertical: 14,

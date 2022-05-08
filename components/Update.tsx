@@ -38,6 +38,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 // import { TextInput } from './CustomTextInput';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(1));
@@ -914,7 +915,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const getNavbarIconColor = (op: string) => {
         if (op === activeTab) {
-            return '#007AFF';
+            return '#fff';
         }
         return '#fff';
     };
@@ -928,22 +929,28 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         <View
             style={{
                 position: 'absolute',
-                zIndex: 1000,
-                backgroundColor: '#000000',
-                bottom: 0,
+                alignSelf: 'flex-end',
                 width: '100%',
+                paddingTop: 10,
+                paddingBottom: Dimensions.get('window').width < 768 ? 10 : 20,
+                paddingHorizontal: Dimensions.get('window').width < 1024 ? 5 : 40,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                alignItems: 'center',
-                height: Dimensions.get('window').width < 768 ? 54 : 68,
-                // shadowColor: '#000',
-                // shadowOffset: {
-                //     width: 0,
-                //     height: -7,
-                // },
-                // shadowOpacity: 0.12,
-                // shadowRadius: 10,
-                zIndex: 500000,
+                height: Dimensions.get('window').width < 768 ? 60 : 68,
+                shadowColor: '#000',
+                shadowOffset: {
+                    width: 0,
+                    height: -10,
+                },
+                bottom: 0,
+                right: 0,
+                shadowOpacity: 0.03,
+                shadowRadius: 12,
+                zIndex: 100,
+                elevation: 120,
+                borderTopColor: courseColor,
+                borderTopWidth: 1,
+                backgroundColor: courseColor,
             }}
         >
             <TouchableOpacity
@@ -966,7 +973,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>Content</Text> */}
                 <Ionicons
                     name={getNavbarIconName('Content')}
-                    style={{ color: getNavbarIconColor('Content'), marginBottom: 3 }}
+                    style={{
+                        color: getNavbarIconColor('Content'),
+                        marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                    }}
                     size={21}
                 />
                 <Text
@@ -974,7 +984,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         fontSize: width < 800 ? 11 : 16,
                         lineHeight: width < 800 ? 11 : 23,
                         color: getNavbarIconColor('Content'),
-                        fontFamily: 'Inter',
+                        fontFamily: activeTab === 'Content' ? 'Inter' : 'overpass',
                         marginBottom: width < 800 ? 0 : 6,
                         paddingLeft: width < 800 ? 0 : 5,
                     }}
@@ -1002,7 +1012,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {/* <Text style={showOptions ? styles.allGrayFill : styles.all}>DETAILS</Text> */}
                 <Ionicons
                     name={getNavbarIconName('Details')}
-                    style={{ color: getNavbarIconColor('Details'), marginBottom: 3 }}
+                    style={{
+                        color: getNavbarIconColor('Details'),
+                        marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                    }}
                     size={21}
                 />
                 <Text
@@ -1010,7 +1023,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         fontSize: width < 800 ? 11 : 16,
                         lineHeight: width < 800 ? 11 : 23,
                         color: getNavbarIconColor('Details'),
-                        fontFamily: 'Inter',
+                        fontFamily: activeTab === 'Details' ? 'Inter' : 'overpass',
                         marginBottom: width < 800 ? 0 : 6,
                         paddingLeft: width < 800 ? 0 : 5,
                     }}
@@ -1051,7 +1064,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </Text> */}
                     <Ionicons
                         name={getNavbarIconName('Submission')}
-                        style={{ color: getNavbarIconColor('Submission'), marginBottom: 3 }}
+                        style={{
+                            color: getNavbarIconColor('Submission'),
+                            marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                        }}
                         size={21}
                     />
                     <Text
@@ -1059,7 +1075,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: width < 800 ? 11 : 16,
                             lineHeight: width < 800 ? 11 : 23,
                             color: getNavbarIconColor('Submission'),
-                            fontFamily: 'Inter',
+                            fontFamily: activeTab === 'Submission' ? 'Inter' : 'overpass',
                             marginBottom: width < 800 ? 0 : 6,
                             paddingLeft: width < 800 ? 0 : 5,
                         }}
@@ -1090,7 +1106,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text> */}
                     <Ionicons
                         name={getNavbarIconName('Feedback')}
-                        style={{ color: getNavbarIconColor('Feedback'), marginBottom: 3 }}
+                        style={{
+                            color: getNavbarIconColor('Feedback'),
+                            marginBottom: Dimensions.get('window').width < 800 ? 3 : 6,
+                        }}
                         size={21}
                     />
                     <Text
@@ -1098,7 +1117,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: width < 800 ? 11 : 16,
                             lineHeight: width < 800 ? 11 : 23,
                             color: getNavbarIconColor('Feedback'),
-                            fontFamily: 'Inter',
+                            fontFamily: activeTab === 'Feedback' ? 'Inter' : 'overpass',
                             marginBottom: width < 800 ? 0 : 6,
                             paddingLeft: width < 800 ? 0 : 5,
                         }}
@@ -1220,7 +1239,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         backgroundColor: '#f8f8f8',
                         paddingVertical: 14,
-                        paddingHorizontal: 10,
+                        paddingHorizontal: paddingResponsive(),
                     }}
                 >
                     {/* Render Folder Title */}
@@ -1362,7 +1381,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     height: 'auto',
                 }}
             >
-                <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10, flex: 1 }}>
+                <View
+                    style={{ width: '100%', flexDirection: 'column', flex: 1, paddingHorizontal: paddingResponsive() }}
+                >
                     {/* Section 1: Shows all cues from Channel */}
                     <View
                         style={{
@@ -1579,7 +1600,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     height: 'auto',
                 }}
             >
-                <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: 10 }}>
+                <View style={{ width: '100%', flexDirection: 'column', paddingHorizontal: paddingResponsive() }}>
                     {/* Section 1: Shows all cues from Channel */}
                     <View
                         style={{
@@ -1801,67 +1822,35 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             key={JSON.stringify(threads)}
         >
             {!viewStatus ? (
-                <ScrollView
-                    nestedScrollEnabled={true}
-                    showsVerticalScrollIndicator={true}
-                    horizontal={false}
-                    style={{
-                        borderTopRightRadius: 0,
-                        borderTopLeftRadius: 0,
-                        width: '100%',
-                        height:
-                            Dimensions.get('window').width < 1024
-                                ? Dimensions.get('window').height - (64 + 60)
-                                : Dimensions.get('window').height - 64,
-                    }}
-                    contentContainerStyle={{
-                        borderTopRightRadius: 0,
-                        borderTopLeftRadius: 0,
-                        // maxHeight: windowHeight - 64,
-                        alignItems: 'center',
-                        width: '100%',
-                        // maxWidth: 1024,
-                        alignSelf: 'center',
-                    }}
-                >
-                    {/* <View
-                        style={{
-                            // maxWidth: 1024,
-                            width: '100%',
-                            paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0
-                        }}
-                    > */}
-                    <UpdateControls
-                        // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
-                        channelId={props.channelId}
-                        save={save}
-                        del={del}
-                        customCategories={props.customCategories}
-                        cue={props.cue}
-                        cueIndex={props.cueIndex}
-                        cueKey={props.cueKey}
-                        channelOwner={channelOwner}
-                        createdBy={createdBy}
-                        folderId={folderId}
-                        closeModal={() => props.closeModal()}
-                        reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
-                        changeViewStatus={() => setViewStatus(true)}
-                        viewStatus={viewStatus}
-                        showOptions={showOptions}
-                        showOriginal={showOriginal}
-                        showFolder={showFolder}
-                        setShowOptions={(op: boolean) => setShowOptions(op)}
-                        setShowOriginal={(val: boolean) => setShowOriginal(val)}
-                        showComments={showComments}
-                        setShowComments={(s: any) => setShowComments(s)}
-                        setShowFolder={(s: any) => setShowFolder(s)}
-                        reloadStatuses={reloadStatuses}
-                        setSave={(save: boolean) => setSave(save)}
-                        setDelete={(del: boolean) => setDel(del)}
-                        user={props.user}
-                    />
-                    {/* </View> */}
-                </ScrollView>
+                <UpdateControls
+                    // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
+                    channelId={props.channelId}
+                    save={save}
+                    del={del}
+                    customCategories={props.customCategories}
+                    cue={props.cue}
+                    cueIndex={props.cueIndex}
+                    cueKey={props.cueKey}
+                    channelOwner={channelOwner}
+                    createdBy={createdBy}
+                    folderId={folderId}
+                    closeModal={() => props.closeModal()}
+                    reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                    changeViewStatus={() => setViewStatus(true)}
+                    viewStatus={viewStatus}
+                    showOptions={showOptions}
+                    showOriginal={showOriginal}
+                    showFolder={showFolder}
+                    setShowOptions={(op: boolean) => setShowOptions(op)}
+                    setShowOriginal={(val: boolean) => setShowOriginal(val)}
+                    showComments={showComments}
+                    setShowComments={(s: any) => setShowComments(s)}
+                    setShowFolder={(s: any) => setShowFolder(s)}
+                    reloadStatuses={reloadStatuses}
+                    setSave={(save: boolean) => setSave(save)}
+                    setDelete={(del: boolean) => setDel(del)}
+                    user={props.user}
+                />
             ) : (
                 <View>
                     {channelOwner ? (
@@ -1870,9 +1859,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 backgroundColor: '#f8f8f8',
                                 width: '100%',
                                 height:
-                                    Dimensions.get('window').width < 1024
+                                    width < 768
                                         ? Dimensions.get('window').height - (64 + 60)
-                                        : Dimensions.get('window').height - 64,
+                                        : // : width < 1024
+                                          // ? Dimensions.get('window').height - (64 + 68)
+                                          Dimensions.get('window').height - 64,
                                 // paddingHorizontal: 20,
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0,
@@ -1883,7 +1874,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 contentContainerStyle={{
                                     width: '100%',
                                     height:
-                                        Dimensions.get('window').width < 1024
+                                        Dimensions.get('window').width < 768
                                             ? Dimensions.get('window').height - (64 + 60)
                                             : Dimensions.get('window').height - 64,
                                     alignItems: 'center',
@@ -2396,7 +2387,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         alignItems: 'center',
                         height: 64,
                         backgroundColor: 'none',
-                        paddingHorizontal: 10,
+                        paddingHorizontal: paddingResponsive(),
                         zIndex: 500000,
                     }}
                 >
@@ -2650,7 +2641,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {ContentView}
                     </View>
                     {/* Mobile tabs */}
-                    {Dimensions.get('window').width < 1024 ? mobileOptions : null}
+                    {Dimensions.get('window').width < 768 ? mobileOptions : null}
                 </View>
             )}
         </View>

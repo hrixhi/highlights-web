@@ -84,6 +84,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     console.log('ChatName', chatName);
 
+    console.log('Chat groupid', groupId);
+
     const width = Dimensions.get('window').width;
     let options = users.map((sub: any) => {
         return {
@@ -126,8 +128,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      */
     useEffect(() => {
         loadUsers();
-        loadChats(!props.showDirectory);
-    }, [props.showDirectory]);
+        loadChats();
+    }, []);
 
     useEffect(() => {
         if (searchTerm === '') {
@@ -166,9 +168,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      */
     useEffect(() => {
         (async () => {
-            const chat = await AsyncStorage.getItem('openChat');
-            if (chat && chats.length !== 0) {
-                const parseChat: any = JSON.parse(chat);
+            const openChat = await AsyncStorage.getItem('openChat');
+
+            if (openChat && chats.length !== 0) {
+                const parseChat: any = JSON.parse(openChat);
 
                 await AsyncStorage.removeItem('openChat');
 
@@ -177,9 +180,19 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 } else {
                     loadChat(parseChat.users[0] === userId ? parseChat.users[1] : parseChat.users[0], parseChat._id);
                 }
+            } else if (Dimensions.get('window').width >= 768 && chats.length !== 0 && !props.showDirectory) {
+                // Set the first chat as default if not mobile view and not view directory
+                const firstChat = chats[0];
+                console.log('First chat', firstChat);
+
+                if (firstChat.users && firstChat.users.length > 2) {
+                    loadGroupChat(firstChat.users, firstChat._id);
+                } else {
+                    loadChat(firstChat.users[0] === userId ? firstChat.users[1] : firstChat.users[0], firstChat._id);
+                }
             }
         })();
-    }, [chats]);
+    }, [chats, props.showDirectory]);
 
     /**
      * @description Fetch meeting provider for org
@@ -251,81 +264,76 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     /**
      * @description Loads all the chat threads for user
      */
-    const loadChats = useCallback(
-        async (init?: boolean) => {
-            const u = await AsyncStorage.getItem('user');
+    const loadChats = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user');
 
-            const openChatAsyncStorage = await AsyncStorage.getItem('openChat');
-
-            let server: any = null;
-            let parsedUser: any = {};
-            if (u) {
-                parsedUser = JSON.parse(u);
-                server = fetchAPI(parsedUser._id);
-            } else {
-                return;
-            }
-            setLoadingChats(true);
-            server
-                .query({
-                    query: getChats,
-                    variables: {
-                        userId: parsedUser._id,
-                    },
-                })
-                .then((res: any) => {
-                    if (res.data && res.data.group.getChats) {
-                        setChats(res.data.group.getChats.reverse());
-                        props.hideNewChatButton(false);
-                        setShowNewGroup(false);
-                        setLoadingChats(false);
-
-                        // Load default chat if not opening from search or not loading directory or not Mobile view
-                        if (!init || Dimensions.get('window').width < 768) {
-                            setShowChat(false);
-                            return;
-                        }
-
-                        if (!openChatAsyncStorage && res.data.group.getChats.length > 0) {
-                            const chat = res.data.group.getChats[0];
-
-                            console.log('First Chat', chat);
-
-                            if (chat.userNames.length > 2) {
-                                loadGroupChat(chat.users, chat._id);
-                                setGroupCreatedBy(chat.createdBy);
-                                setGroupUsers(chat.userNames);
-                                setEditGroupName(chat.name);
-                                setEditGroupImage(chat.image ? chat.image : undefined);
-                                setChatName(chat.name);
-                                setChatImg(
-                                    chat.image ? chat.image : 'https://cues-files.s3.amazonaws.com/images/default.png'
-                                );
-                            } else {
-                                chat.userNames.map((user: any) => {
-                                    if (user._id !== parsedUser._id) {
-                                        setChatName(user.fullName);
-                                        const chatImg =
-                                            user.avatar && user.avatar !== ''
-                                                ? user.avatar
-                                                : 'https://cues-files.s3.amazonaws.com/images/default.png';
-                                        setChatImg(chatImg);
-                                        return;
-                                    }
-                                });
-
-                                loadChat(chat.users[0] === parsedUser._id ? chat.users[1] : chat.users[0], chat._id);
-                            }
-                        }
-                    }
-                })
-                .catch((err: any) => {
-                    console.log(err);
+        let server: any = null;
+        let parsedUser: any = {};
+        if (u) {
+            parsedUser = JSON.parse(u);
+            server = fetchAPI(parsedUser._id);
+        } else {
+            return;
+        }
+        setLoadingChats(true);
+        server
+            .query({
+                query: getChats,
+                variables: {
+                    userId: parsedUser._id,
+                },
+            })
+            .then((res: any) => {
+                if (res.data && res.data.group.getChats) {
+                    setChats(res.data.group.getChats.reverse());
+                    props.hideNewChatButton(false);
+                    setShowNewGroup(false);
                     setLoadingChats(false);
-                });
-        },
-        [userId]
-    );
+
+                    // Load default chat if not opening from search or not loading directory or not Mobile view
+                    // if (!init || Dimensions.get('window').width < 768) {
+                    //     setShowChat(false);
+                    //     return;
+                    // }
+
+                    // if (!openChatAsyncStorage && res.data.group.getChats.length > 0) {
+                    //     const chat = res.data.group.getChats[0];
+
+                    //     console.log('First Chat', chat);
+
+                    //     if (chat.userNames.length > 2) {
+                    //         loadGroupChat(chat.users, chat._id);
+                    //         setGroupCreatedBy(chat.createdBy);
+                    //         setGroupUsers(chat.userNames);
+                    //         setEditGroupName(chat.name);
+                    //         setEditGroupImage(chat.image ? chat.image : undefined);
+                    //         setChatName(chat.name);
+                    //         setChatImg(
+                    //             chat.image ? chat.image : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                    //         );
+                    //     } else {
+                    //         chat.userNames.map((user: any) => {
+                    //             if (user._id !== parsedUser._id) {
+                    //                 setChatName(user.fullName);
+                    //                 const chatImg =
+                    //                     user.avatar && user.avatar !== ''
+                    //                         ? user.avatar
+                    //                         : 'https://cues-files.s3.amazonaws.com/images/default.png';
+                    //                 setChatImg(chatImg);
+                    //                 return;
+                    //             }
+                    //         });
+
+                    //         loadChat(chat.users[0] === parsedUser._id ? chat.users[1] : chat.users[0], chat._id);
+                    //     }
+                    // }
+                }
+            })
+            .catch((err: any) => {
+                console.log(err);
+                setLoadingChats(false);
+            });
+    }, [userId]);
 
     /**
      * @description Used to open a group chat on Select
@@ -353,120 +361,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     }
                 });
 
-                const server = fetchAPI('');
-                server
-                    .query({
-                        query: getMessages,
-                        variables: {
-                            groupId,
-                        },
-                    })
-                    .then((res) => {
-                        const tempChat: any[] = [];
-                        res.data.message.getMessagesThread.map((msg: any) => {
-                            let text: any = '';
-                            let img: any = '';
-                            let audio: any = '';
-                            let video: any = '';
-                            if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
-                                const obj = JSON.parse(msg.message);
-                                const { type, url } = obj;
-                                if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
-                                    img = url;
-                                } else if (type === 'mp3' || type === 'wav' || type === 'mp2') {
-                                    audio = url;
-                                } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
-                                    video = url;
-                                } else if (type === 'meeting_link') {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                } else {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title + '.' + obj.type}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                }
-                            } else {
-                                const { title: t, subtitle: s } = htmlStringParser(msg.message);
-                                text = t;
-                            }
-                            tempChat.push({
-                                _id: msg._id,
-                                text,
-                                image: img,
-                                audio,
-                                video,
-                                createdAt: msg.sentAt,
-                                user: {
-                                    _id: msg.sentBy,
-                                    name: msg.fullName,
-                                    avatar: msg.avatar
-                                        ? msg.avatar
-                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                },
-                            });
-                        });
-                        tempChat.reverse();
-                        setChat(tempChat);
-                        setShowChat(true);
-                        props.hideNewChatButton(true);
-                    })
-                    .catch((err) => {
-                        console.log('Error', err);
-                    });
+                loadMessagesForChat(groupId, parsedUser._id);
 
+                const server = fetchAPI(parsedUser._id);
                 // mark as read here
                 server
                     .mutate({
@@ -570,6 +467,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      */
     const onSend = useCallback(
         async (messages = []) => {
+            console.log('ON SEND GROUP ID', groupId);
+            console.log('creating message', creatingMessage);
+            console.log('chat users', chatUsers);
+            console.log('User Id', userId);
+
             if (creatingMessage) return;
 
             const message =
@@ -607,6 +509,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 })
                 .then(async (res) => {
                     if (res.data.message.createDirect) {
+                        // Add a dummy _id to the message for now
+                        messages[0] = {
+                            ...messages[0],
+                            _id: Math.random().toString(),
+                        };
+
                         setChat((previousMessages) => GiftedChat.append(previousMessages, messages));
 
                         if (!groupId || groupId === '') {
@@ -616,6 +524,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     users: chatUsers,
                                 },
                             });
+
+                            console.log('New group id', res.data.message.getGroupId);
 
                             if (res && res.data.message.getGroupId && res.data.message.getGroupId !== '') {
                                 setGroupId(res.data.message.getGroupId);
@@ -684,120 +594,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     }
                 });
 
-                const server = fetchAPI('');
-                server
-                    .query({
-                        query: getMessages,
-                        variables: {
-                            groupId,
-                        },
-                    })
-                    .then((res) => {
-                        const tempChat: any[] = [];
-                        res.data.message.getMessagesThread.map((msg: any) => {
-                            let text: any = '';
-                            let img: any = '';
-                            let audio: any = '';
-                            let video: any = '';
-                            if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
-                                const obj = JSON.parse(msg.message);
-                                const { type, url } = obj;
-                                if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
-                                    img = url;
-                                } else if (type === 'mp3' || type === 'wav' || type === 'mp2') {
-                                    audio = url;
-                                } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
-                                    video = url;
-                                } else if (type === 'meeting_link') {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                } else {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title + '.' + obj.type}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                }
-                            } else {
-                                const { title: t, subtitle: s } = htmlStringParser(msg.message);
-                                text = t;
-                            }
-                            tempChat.push({
-                                _id: msg._id,
-                                text,
-                                image: img,
-                                audio,
-                                video,
-                                createdAt: msg.sentAt,
-                                user: {
-                                    _id: msg.sentBy,
-                                    name: msg.fullName,
-                                    avatar: msg.avatar
-                                        ? msg.avatar
-                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                },
-                            });
-                        });
-                        tempChat.reverse();
-                        setChat(tempChat);
-                        setShowChat(true);
-                        props.hideNewChatButton(true);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        // Alert(unableToLoadMessagesAlert, checkConnectionAlert)
-                    });
+                loadMessagesForChat(groupId, parsedUser._id);
+
+                const server = fetchAPI(parsedUser._id);
                 // mark chat as read here
                 server
                     .mutate({
@@ -846,10 +645,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 });
 
                 setChatName(fName);
-
                 setChatImg(img);
-
                 setGroupId('');
+
                 const server = fetchAPI('');
 
                 // First load the group if there is one
@@ -861,6 +659,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     },
                 });
 
+                // Completely new chat so no need to fetch messages
                 if (!res || !res.data.message.getGroupId || res.data.message.getGroupId === '') {
                     setShowChat(true);
                     props.hideNewChatButton(true);
@@ -869,122 +668,124 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                 setGroupId(res.data.message.getGroupId);
 
-                server
-                    .query({
-                        query: getMessages,
-                        variables: {
-                            groupId: res.data.message.getGroupId,
-                        },
-                    })
-                    .then((res) => {
-                        const tempChat: any[] = [];
-                        res.data.message.getMessagesThread.map((msg: any) => {
-                            let text: any = '';
-                            let img: any = '';
-                            let audio: any = '';
-                            let video: any = '';
-                            if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
-                                const obj = JSON.parse(msg.message);
-                                const { type, url } = obj;
-                                if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
-                                    img = url;
-                                } else if (type === 'mp3' || type === 'wav' || type === 'mp2') {
-                                    audio = url;
-                                } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
-                                    video = url;
-                                } else if (type === 'meeting_link') {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                } else {
-                                    text = (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: 'underline',
-                                                    backgroundColor:
-                                                        msg.sentBy !== parsedUser._id ? '#f2f2f2' : '#007AFF',
-                                                    color: msg.sentBy !== parsedUser._id ? '#000' : '#fff',
-                                                }}
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(url, '_blank');
-                                                    } else {
-                                                        Linking.openURL(url);
-                                                    }
-                                                }}
-                                            >
-                                                {obj.title + '.' + obj.type}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                }
-                            } else {
-                                const { title: t, subtitle: s } = htmlStringParser(msg.message);
-                                text = t;
-                            }
-                            tempChat.push({
-                                _id: msg._id,
-                                text,
-                                image: img,
-                                audio,
-                                video,
-                                createdAt: msg.sentAt,
-                                user: {
-                                    _id: msg.sentBy,
-                                    name: msg.fullName,
-                                    avatar: msg.avatar
-                                        ? msg.avatar
-                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                },
-                            });
-                        });
-                        tempChat.reverse();
-                        setChat(tempChat);
-                        setShowChat(true);
-                        props.hideNewChatButton(true);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                loadMessagesForChat(res.data.message.getGroupId, parsedUser._id);
             }
         },
         [users, userId]
     );
+
+    const loadMessagesForChat = useCallback((groupId: string, userId: string) => {
+        const server = fetchAPI(userId);
+
+        server
+            .query({
+                query: getMessages,
+                variables: {
+                    groupId,
+                },
+            })
+            .then((res) => {
+                const tempChat: any[] = [];
+                res.data.message.getMessagesThread.map((msg: any) => {
+                    let text: any = '';
+                    let img: any = '';
+                    let audio: any = '';
+                    let video: any = '';
+                    if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                        const obj = JSON.parse(msg.message);
+                        const { type, url } = obj;
+                        if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+                            img = url;
+                        } else if (type === 'mp3' || type === 'wav' || type === 'mp2') {
+                            audio = url;
+                        } else if (type === 'mp4' || type === 'oga' || type === 'mov' || type === 'wmv') {
+                            video = url;
+                        } else if (type === 'meeting_link') {
+                            text = (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: msg.sentBy !== userId ? '#f2f2f2' : '#007AFF',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textDecorationLine: 'underline',
+                                            backgroundColor: msg.sentBy !== userId ? '#f2f2f2' : '#007AFF',
+                                            color: msg.sentBy !== userId ? '#000' : '#fff',
+                                        }}
+                                        onPress={() => {
+                                            if (
+                                                Platform.OS === 'web' ||
+                                                Platform.OS === 'macos' ||
+                                                Platform.OS === 'windows'
+                                            ) {
+                                                window.open(url, '_blank');
+                                            } else {
+                                                Linking.openURL(url);
+                                            }
+                                        }}
+                                    >
+                                        {obj.title}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        } else {
+                            text = (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: msg.sentBy !== userId ? '#f2f2f2' : '#007AFF',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textDecorationLine: 'underline',
+                                            backgroundColor: msg.sentBy !== userId ? '#f2f2f2' : '#007AFF',
+                                            color: msg.sentBy !== userId ? '#000' : '#fff',
+                                        }}
+                                        onPress={() => {
+                                            if (
+                                                Platform.OS === 'web' ||
+                                                Platform.OS === 'macos' ||
+                                                Platform.OS === 'windows'
+                                            ) {
+                                                window.open(url, '_blank');
+                                            } else {
+                                                Linking.openURL(url);
+                                            }
+                                        }}
+                                    >
+                                        {obj.title + '.' + obj.type}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        }
+                    } else {
+                        const { title: t, subtitle: s } = htmlStringParser(msg.message);
+                        text = t;
+                    }
+                    tempChat.push({
+                        _id: msg._id,
+                        text,
+                        image: img,
+                        audio,
+                        video,
+                        createdAt: msg.sentAt,
+                        user: {
+                            _id: msg.sentBy,
+                            name: msg.fullName,
+                            avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                        },
+                    });
+                });
+                tempChat.reverse();
+                setChat(tempChat);
+                setShowChat(true);
+                props.hideNewChatButton(true);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     // FUNCTIONS
 
@@ -1001,6 +802,95 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     },
                 }}
             />
+        );
+    };
+
+    const renderActions = () => {
+        return (
+            <View
+                style={{
+                    marginTop: -10,
+                    paddingLeft: 10,
+                }}
+                key={groupId + userId + chatUsers.toString() + creatingMessage.toString()}
+            >
+                <FileUpload
+                    chat={true}
+                    onUpload={(u: any, t: any) => {
+                        const title = prompt('Enter title and click on OK to share.');
+                        if (!title || title === '') return;
+
+                        let text: any = '';
+                        let img: any = '';
+                        let audio: any = '';
+                        let video: any = '';
+                        let file: any = '';
+
+                        if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
+                            img = u;
+                        } else if (t === 'mp3' || t === 'wav' || t === 'mp2') {
+                            audio = u;
+                        } else if (t === 'mp4' || t === 'oga' || t === 'mov' || t === 'wmv') {
+                            video = u;
+                        } else {
+                            file = u;
+                            text = (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (
+                                            Platform.OS === 'web' ||
+                                            Platform.OS === 'macos' ||
+                                            Platform.OS === 'windows'
+                                        ) {
+                                            window.open(u, '_blank');
+                                        } else {
+                                            Linking.openURL(u);
+                                        }
+                                    }}
+                                    style={{
+                                        backgroundColor: '#000',
+                                        borderRadius: 15,
+                                        marginLeft: 15,
+                                        marginTop: 6,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            lineHeight: 34,
+                                            color: 'white',
+                                            fontSize: 13,
+                                            borderWidth: 1,
+                                            borderColor: '#000',
+                                            paddingHorizontal: 20,
+                                            fontFamily: 'inter',
+                                            height: 36,
+                                            borderRadius: 15,
+                                            textTransform: 'uppercase',
+                                        }}
+                                    >
+                                        {title}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        }
+
+                        const obj = { title, type: t, url: u };
+
+                        onSend([
+                            {
+                                title,
+                                text,
+                                image: img,
+                                audio,
+                                video,
+                                file,
+                                saveCue: JSON.stringify(obj),
+                            },
+                        ]);
+                    }}
+                />
+            </View>
         );
     };
 
@@ -1299,7 +1189,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 <View
                     style={{
                         flexDirection: 'column',
-                        paddingHorizontal: Dimensions.get('window').width > 768 ? 25 : 0,
+                        paddingHorizontal: Dimensions.get('window').width >= 768 ? 25 : 0,
                         backgroundColor: '#f8f8f8',
                     }}
                     className="mbsc-align-center mbsc-padding"
@@ -1317,8 +1207,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 flexDirection: 'column',
                                 paddingHorizontal: 20,
                                 marginVertical: 20,
-                                minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
-                                maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                                minWidth: Dimensions.get('window').width >= 768 ? 400 : 200,
+                                maxWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
                                 backgroundColor: '#f8f8f8',
                             }}
                         >
@@ -1429,7 +1319,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 style={{
                     width: '100%',
                     height:
-                        Dimensions.get('window').width < 1024 ? windowHeight - (64 + 60) - 80 : windowHeight - 64 - 70,
+                        Dimensions.get('window').width < 768
+                            ? windowHeight - (64 + 60) - 50
+                            : // : Dimensions.get('window').width < 1024
+                              // ? windowHeight - (64 + 68) - 50
+                              windowHeight - 64 - 70,
                     borderColor: '#f2f2f2',
                 }}
             >
@@ -1458,91 +1352,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     alwaysShowSend={true}
                     renderMessageText={renderMessageText}
                     renderBubble={renderBubble}
-                    renderActions={() => (
-                        <View
-                            style={{
-                                marginTop: -10,
-                                paddingLeft: 10,
-                            }}
-                        >
-                            <FileUpload
-                                chat={true}
-                                onUpload={(u: any, t: any) => {
-                                    const title = prompt('Enter title and click on OK to share.');
-                                    if (!title || title === '') return;
-
-                                    let text: any = '';
-                                    let img: any = '';
-                                    let audio: any = '';
-                                    let video: any = '';
-                                    let file: any = '';
-
-                                    if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
-                                        img = u;
-                                    } else if (t === 'mp3' || t === 'wav' || t === 'mp2') {
-                                        audio = u;
-                                    } else if (t === 'mp4' || t === 'oga' || t === 'mov' || t === 'wmv') {
-                                        video = u;
-                                    } else {
-                                        file = u;
-                                        text = (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    if (
-                                                        Platform.OS === 'web' ||
-                                                        Platform.OS === 'macos' ||
-                                                        Platform.OS === 'windows'
-                                                    ) {
-                                                        window.open(u, '_blank');
-                                                    } else {
-                                                        Linking.openURL(u);
-                                                    }
-                                                }}
-                                                style={{
-                                                    backgroundColor: '#000',
-                                                    borderRadius: 15,
-                                                    marginLeft: 15,
-                                                    marginTop: 6,
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        lineHeight: 34,
-                                                        color: 'white',
-                                                        fontSize: 13,
-                                                        borderWidth: 1,
-                                                        borderColor: '#000',
-                                                        paddingHorizontal: 20,
-                                                        fontFamily: 'inter',
-                                                        height: 36,
-                                                        borderRadius: 15,
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {title}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        );
-                                    }
-
-                                    const obj = { title, type: t, url: u };
-
-                                    onSend([
-                                        {
-                                            title,
-                                            text,
-                                            image: img,
-                                            audio,
-                                            video,
-                                            file,
-                                            saveCue: JSON.stringify(obj),
-                                        },
-                                    ]);
-                                }}
-                            />
-                        </View>
-                    )}
+                    renderActions={renderActions}
                 />
             </View>
         );
@@ -1710,7 +1520,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 color: '#fff',
                                 backgroundColor: '#000',
                                 fontSize: 11,
-                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                paddingHorizontal: 24,
                                 fontFamily: 'inter',
                                 overflow: 'hidden',
                                 paddingVertical: 14,
@@ -1910,8 +1720,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             <View style={{ backgroundColor: '#fff' }}>
                 <View
                     style={{
-                        paddingHorizontal: 20,
-                        paddingVertical: 13,
+                        paddingHorizontal: 10,
                         flexDirection: 'row',
                         alignItems: 'center',
                     }}
@@ -1965,7 +1774,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingHorizontal: 10,
                         borderRadius: 1,
                         width: '100%',
-                        maxHeight: width < 1024 ? windowHeight - (64 + 60 + 60) : windowHeight - 64,
+                        maxHeight: width < 768 ? windowHeight - (64 + 60 + 60) : windowHeight - 64,
                     }}
                 >
                     {sortChatsByLastMessage.length === 0 ? (
@@ -2421,7 +2230,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         overflow: 'hidden',
                                     }}
                                 >
-                                    <Ionicons name="arrow-back-outline" size={28} color="#000" />
+                                    <Ionicons name="arrow-back-outline" size={32} color="#000" />
                                 </TouchableOpacity>
                             </View>
                             <View
@@ -3438,7 +3247,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 color: '#fff',
                                 backgroundColor: '#000',
                                 fontSize: 11,
-                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                paddingHorizontal: 24,
                                 fontFamily: 'inter',
                                 overflow: 'hidden',
                                 paddingVertical: 14,
@@ -3478,9 +3287,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingTop: 0,
                         width: '100%',
                         height:
-                            width < 1024
+                            width < 768
                                 ? Dimensions.get('window').height - (64 + 60)
-                                : Dimensions.get('window').height - 64,
+                                : // : width < 1024
+                                  // ? Dimensions.get('window').height - (64 + 68)
+                                  Dimensions.get('window').height - 64,
                         backgroundColor: 'white',
                     }}
                     key={1}
@@ -3494,6 +3305,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     marginBottom: width < 768 ? 20 : 0,
                                     height: '100%',
                                 }}
+                                nativeID="inbox-wrapper"
                             >
                                 {Dimensions.get('window').width < 768 ? renderHeader() : null}
                                 {viewGroup && Dimensions.get('window').width < 768 ? renderEditGroup() : null}

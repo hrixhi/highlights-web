@@ -301,9 +301,11 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 width: '100%',
                 height: '100%',
                 maxHeight:
-                    Dimensions.get('window').width < 1024
-                        ? Dimensions.get('window').height - (64 + 60)
-                        : Dimensions.get('window').height - (64 + 54),
+                    Dimensions.get('window').width < 768
+                        ? Dimensions.get('window').height - (54 + 60)
+                        : // : Dimensions.get('window').width < 1024
+                          // ? Dimensions.get('window').height - (64 + 68)
+                          Dimensions.get('window').height - (64 + 54),
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
@@ -347,7 +349,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                             >
                                 <Text style={{ lineHeight: 34, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name="arrow-back-outline" size={30} color={'#1F1F1F'} />
+                                    <Ionicons name="arrow-back-outline" size={32} color={'#1F1F1F'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>

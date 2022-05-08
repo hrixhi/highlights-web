@@ -17,6 +17,7 @@ import moment from 'moment';
 import ProgressBar from '@ramonak/react-progress-bar';
 import Alert from './Alert';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { paddingResponsive } from '../helpers/paddingHelper';
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores));
@@ -109,7 +110,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     scoreObjectB &&
                     (!scoreObjectB.score || !scoreObjectB.graded)
                 ) {
-                    return sortByOrder ? -1 : 1;
+                    return sortByOrder ? 1 : -1;
                 } else if (
                     scoreObjectA &&
                     (!scoreObjectA.score || !scoreObjectA.graded) &&
@@ -117,7 +118,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     scoreObjectB.score &&
                     scoreObjectB.graded
                 ) {
-                    return sortByOrder ? 1 : -1;
+                    return sortByOrder ? -1 : 1;
                 } else {
                     return 0;
                 }
@@ -139,6 +140,30 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     return sortByOrder ? -1 : 1;
                 } else if (scoreObjectA && !scoreObjectA.submittedAt && scoreObjectB && scoreObjectB.submittedAt) {
                     return sortByOrder ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+
+            sortCues.sort((a: any, b: any) => {
+                const aId = a._id;
+                const bId = b._id;
+
+                const scoreObjectA = scores[0].scores.find((s: any) => {
+                    return s.cueId.toString().trim() === aId.toString().trim();
+                });
+
+                const scoreObjectB = scores[0].scores.find((s: any) => {
+                    return s.cueId.toString().trim() === bId.toString().trim();
+                });
+
+                console.log('Score Object A', scoreObjectA);
+                console.log('Score Object B', scoreObjectB);
+
+                if (scoreObjectA && !scoreObjectB) {
+                    return -1;
+                } else if (scoreObjectB && !scoreObjectA) {
+                    return 1;
                 } else {
                     return 0;
                 }
@@ -229,10 +254,25 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     return s.cueId.toString().trim() === cue._id.toString().trim();
                 });
 
-                if (scoreObject && scoreObject.graded) {
-                    userRow.push(scoreObject.score);
+                if (!scoreObject || !scoreObject.submittedAt) {
+                    if (!scoreObject || !scoreObject.cueId) {
+                        userRow.push('N/A');
+                    } else {
+                        userRow.push('Not Submitted');
+                    }
                 } else {
-                    userRow.push('-');
+                    if (scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score) {
+                        userRow.push(
+                            scoreObject.score.replace(/\.0+$/, '') +
+                                '%' +
+                                ' ' +
+                                (new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline) ? '(LATE)' : '')
+                        );
+                    } else if (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)) {
+                        userRow.push('Late');
+                    } else {
+                        userRow.push('Submitted');
+                    }
                 }
             });
 
@@ -455,7 +495,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {progress}%
                                 </Text>
 
-                                {progress > 0 && Dimensions.get('window').width > 768 ? (
+                                {progress > 0 && Dimensions.get('window').width >= 768 ? (
                                     <ProgressBar
                                         completed={progress}
                                         maxCompleted={100}
@@ -948,7 +988,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         flexDirection: 'column',
                                     }}
                                 >
-                                    <TouchableOpacity onPress={() => props.openCueFromGrades(cue._id)}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (!scoreObject || !scoreObject.cueId) return;
+
+                                            props.openCueFromGrades(cue._id);
+                                        }}
+                                        disabled={!scoreObject || !scoreObject.cueId}
+                                    >
                                         <Text
                                             style={{
                                                 fontSize: 15,
@@ -1000,7 +1047,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    {!scoreObject || !scoreObject.submittedAt ? (
+                                    {scoreObject && !scoreObject.submittedAt ? (
                                         <View
                                             style={{
                                                 width: 10,
@@ -1010,7 +1057,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 backgroundColor: '#f94144',
                                             }}
                                         />
-                                    ) : (
+                                    ) : scoreObject && scoreObject !== undefined ? (
                                         <View
                                             style={{
                                                 width: 10,
@@ -1018,19 +1065,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 borderRadius: 10,
                                                 marginRight: 7,
                                                 backgroundColor:
-                                                    scoreObject &&
-                                                    scoreObject !== undefined &&
                                                     scoreObject.graded &&
-                                                    scoreObject.score
-                                                        ? '#000'
-                                                        : scoreObject &&
-                                                          new Date(parseInt(scoreObject.submittedAt)) >=
-                                                              new Date(cue.deadline)
-                                                        ? '#FFC107'
+                                                    scoreObject.score &&
+                                                    new Date(parseInt(scoreObject.submittedAt)) >=
+                                                        new Date(cue.deadline)
+                                                        ? '#f3722c'
                                                         : '#35AC78',
                                             }}
                                         />
-                                    )}
+                                    ) : null}
                                     {!scoreObject || !scoreObject.submittedAt ? (
                                         <Text
                                             style={{
@@ -1072,7 +1115,24 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 : 'Submitted'}
                                         </Text>
                                     )}
+                                    {scoreObject &&
+                                    scoreObject.submittedAt &&
+                                    scoreObject.graded &&
+                                    scoreObject.score &&
+                                    new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline) ? (
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                textAlign: 'center',
+                                                color: '#f3722c',
+                                                marginLeft: 5,
+                                            }}
+                                        >
+                                            (Late)
+                                        </Text>
+                                    ) : null}
                                 </View>
+
                                 <View
                                     style={{
                                         width: Dimensions.get('window').width < 768 ? '50%' : '25%',
@@ -1682,7 +1742,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 backgroundColor: '#fff',
                 width: '100%',
                 height: '100%',
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 0,
+                paddingHorizontal: paddingResponsive(),
             }}
         >
             {/* {renderExportButton()} */}

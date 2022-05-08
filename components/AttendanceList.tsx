@@ -121,7 +121,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Load data on init
      */
     useEffect(() => {
-        loadChannelAttendances();
+        loadChannelAttendances(true);
         setPastMeetings([]);
         loadPastSchedule();
     }, [props.channelId]);
@@ -278,42 +278,48 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     /**
      * @description API call to fetch user attendances
      */
-    const loadChannelAttendances = useCallback(() => {
-        setLoadingAttendances(true);
-        const server = fetchAPI('');
-        server
-            .query({
-                query: getAttendancesForChannel,
-                variables: {
-                    channelId: props.channelId,
-                },
-            })
-            .then(async (res) => {
-                if (res.data && res.data.attendance.getAttendancesForChannel) {
-                    const u = await AsyncStorage.getItem('user');
-                    if (u) {
-                        const user = JSON.parse(u);
-                        if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                            // all attendances
-                            setAllChannelAttendances(res.data.attendance.getAttendancesForChannel);
-                            setChannelAttendances(res.data.attendance.getAttendancesForChannel);
-                        } else {
-                            // only user's attendances
-                            const attendances = res.data.attendance.getAttendancesForChannel.find((u: any) => {
-                                return u.userId.toString().trim() === user._id.toString().trim();
-                            });
-                            const userAttendances = [{ ...attendances }];
-                            setAllChannelAttendances(userAttendances);
-                            setChannelAttendances(userAttendances);
+    const loadChannelAttendances = useCallback(
+        (setLoading?: boolean) => {
+            if (setLoading) {
+                setLoadingAttendances(true);
+            }
+
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getAttendancesForChannel,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then(async (res) => {
+                    if (res.data && res.data.attendance.getAttendancesForChannel) {
+                        const u = await AsyncStorage.getItem('user');
+                        if (u) {
+                            const user = JSON.parse(u);
+                            if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                                // all attendances
+                                setAllChannelAttendances(res.data.attendance.getAttendancesForChannel);
+                                setChannelAttendances(res.data.attendance.getAttendancesForChannel);
+                            } else {
+                                // only user's attendances
+                                const attendances = res.data.attendance.getAttendancesForChannel.find((u: any) => {
+                                    return u.userId.toString().trim() === user._id.toString().trim();
+                                });
+                                const userAttendances = [{ ...attendances }];
+                                setAllChannelAttendances(userAttendances);
+                                setChannelAttendances(userAttendances);
+                            }
+                            setLoadingAttendances(false);
                         }
-                        setLoadingAttendances(false);
                     }
-                }
-            })
-            .catch((e: any) => {
-                setLoadingAttendances(false);
-            });
-    }, [props.channelId, props.isOwner]);
+                })
+                .catch((e: any) => {
+                    setLoadingAttendances(false);
+                });
+        },
+        [props.channelId, props.isOwner]
+    );
 
     /**
      * @description API call to fetch past meetings
@@ -397,8 +403,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: 'column',
                         paddingHorizontal: 20,
                         marginVertical: 20,
-                        minWidth: Dimensions.get('window').width > 768 ? 400 : 300,
-                        maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                        minWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
+                        maxWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
                         backgroundColor: '#f8f8f8',
                     }}
                 >
@@ -526,7 +532,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         })
                         .then((res) => {
                             if (res.data && res.data.attendance.modifyAttendance) {
-                                loadChannelAttendances();
+                                loadChannelAttendances(false);
                             }
                         });
                 },
@@ -1249,7 +1255,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         color: '#000',
                                         backgroundColor: '#fff',
                                         fontSize: 12,
-                                        paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                        paddingHorizontal: 24,
                                         fontFamily: 'inter',
                                         overflow: 'hidden',
                                         paddingVertical: 14,

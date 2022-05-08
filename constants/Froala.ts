@@ -316,6 +316,80 @@ export const QUIZ_SOLUTION_TOOLBAR_BUTTONS = {
     ],
 };
 
+export const QUIZ_MULTIPART_TOOLBAR_BUTTONS = {
+    moreText: {
+        buttons: [
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'subscript',
+            'superscript',
+            'fontFamily',
+            'fontSize',
+            'textColor',
+            'backgroundColor',
+            'clearFormatting',
+        ],
+        buttonsVisible: 2,
+    },
+    moreParagraph: {
+        buttons: ['formatOLSimple', 'formatUL'],
+        buttonsVisible: 0,
+    },
+    moreRich: {
+        buttons: [
+            'insertImage',
+            'insertFormulaMultipart',
+            'insertTable',
+            'insertLink',
+            'emoticons',
+            'fontAwesome',
+            'specialCharacters',
+        ],
+        buttonsVisible: 2,
+    },
+    moreMisc: {
+        buttons: ['undo', 'redo'],
+        align: 'right',
+        buttonsVisible: 2,
+    },
+    pluginsEnabled: [
+        'align',
+        'charCounter',
+        'codeBeautifier',
+        'codeView',
+        'colors',
+        'draggable',
+        'embedly',
+        'emoticons',
+        'entities',
+        'file',
+        'fontAwesome',
+        'fontFamily',
+        'fontSize',
+        'fullscreen',
+        'image',
+        'imageTUI',
+        'imageManager',
+        'inlineStyle',
+        'inlineClass',
+        'lineBreaker',
+        'lineHeight',
+        'link',
+        'lists',
+        'paragraphFormat',
+        'paragraphStyle',
+        'quickInsert',
+        'quote',
+        'save',
+        'table',
+        'url',
+        'video',
+        'wordPaste',
+    ],
+};
+
 export const QUIZ_OPTION_TOOLBAR_BUTTONS = {
     moreText: {
         buttons: [
@@ -411,7 +485,7 @@ export const HIGHLIGHT_BUTTONS = {
     moreRich: {
         buttons: [
             'insertImage',
-            'insertFormulaOption',
+            'insertFormulaQuestion',
             'insertTable',
             'insertLink',
             'emoticons',
@@ -449,7 +523,7 @@ export const INLINE_CHOICE_BUTTONS = {
     moreRich: {
         buttons: [
             'insertImage',
-            'insertFormulaOption',
+            'insertFormulaQuestion',
             'insertTable',
             'insertLink',
             'emoticons',
@@ -487,7 +561,7 @@ export const TEXT_ENTRY_BUTTONS = {
     moreRich: {
         buttons: [
             'insertImage',
-            'insertFormulaOption',
+            'insertFormulaQuestion',
             'insertTable',
             'insertLink',
             'emoticons',

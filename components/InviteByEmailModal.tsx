@@ -77,8 +77,8 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                     flexDirection: 'column',
                     paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 20,
                     marginVertical: 20,
-                    minWidth: Dimensions.get('window').width > 768 ? 400 : 200,
-                    maxWidth: Dimensions.get('window').width > 768 ? 400 : 300,
+                    minWidth: Dimensions.get('window').width >= 768 ? 400 : 200,
+                    maxWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
                     backgroundColor: '#f8f8f8',
                 }}
             >
@@ -99,9 +99,9 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         marginTop: 20,
                         fontSize: 15,
                         padding: 10,
-                        width: Dimensions.get('window').width > 768 ? 340 : 280,
-                        maxWidth: Dimensions.get('window').width > 768 ? 340 : 280,
-                        minWidth: Dimensions.get('window').width > 768 ? 340 : 280,
+                        width: Dimensions.get('window').width >= 768 ? 340 : 280,
+                        maxWidth: Dimensions.get('window').width >= 768 ? 340 : 280,
+                        minWidth: Dimensions.get('window').width >= 768 ? 340 : 280,
                         border: '1px solid #ccc',
                         borderRadius: 2,
                     }}

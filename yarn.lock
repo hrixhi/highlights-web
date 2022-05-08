@@ -14500,6 +14500,11 @@
   "resolved" "https://registry.npmjs.org/use/-/use-3.1.1.tgz"
   "version" "3.1.1"
 
+"userflow.js@^2.4.0":
+  "integrity" "sha512-MUI7pma/SAKShCPW8iBparAlfKGUL7X0rBg1T7NlM1JRTxhmx8rm4O/7p5/JpyKPjjs8KhSeRylRfb5L8+36eQ=="
+  "resolved" "https://registry.npmjs.org/userflow.js/-/userflow.js-2.4.0.tgz"
+  "version" "2.4.0"
+
 "utif@^2.0.1":
   "integrity" "sha512-Z/S1fNKCicQTf375lIP9G8Sa1H/phcysstNrrSdZKj1f9g58J4NMgb5IgiEZN9/nLMPDwF0W7hdOe9Qq2IYoLg=="
   "resolved" "https://registry.npmjs.org/utif/-/utif-2.0.1.tgz"

@@ -413,4 +413,13 @@ input:focus {
 
 .htmlParser {
     font-family: 'Overpass' !important;
+    user-select: text !important;
+}
+
+.highlighter {
+    text-overflow: ellipsis;
+}
+
+.fr-box.fr-basic .fr-element {
+    color: '#000';
 }

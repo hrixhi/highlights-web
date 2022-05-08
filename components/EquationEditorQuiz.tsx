@@ -64,7 +64,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
     const symbols = [
         '+',
         '-',
-        'x',
+        '×',
         '÷',
         '±',
         '=',
@@ -88,7 +88,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
     const symbolsMap = {
         '+': '+',
         '-': '-',
-        x: 'x',
+        '×': '×',
         '÷': '÷',
         '±': '±',
         '=': '=',

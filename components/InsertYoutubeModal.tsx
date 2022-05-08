@@ -248,7 +248,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                     color: '#fff',
                                     backgroundColor: '#000',
                                     fontSize: 11,
-                                    paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
+                                    paddingHorizontal: 24,
                                     fontFamily: 'inter',
                                     overflow: 'hidden',
                                     paddingVertical: 14,
