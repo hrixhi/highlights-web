@@ -15,7 +15,6 @@ import ImageMarker from 'react-image-marker';
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import MathJax from 'react-mathjax-preview';
 import { disableEmailId } from '../constants/zoomCredentials';
-import { paddingResponsive } from '../helpers/paddingHelper';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [problems] = useState<any[]>(props.problems);

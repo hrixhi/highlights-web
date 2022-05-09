@@ -472,7 +472,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 // }
 
                 let u = await AsyncStorage.getItem('user');
-                const sC = await AsyncStorage.getItem('cues');
+                // const sC = await AsyncStorage.getItem('cues');
 
                 // if (sC) {
                 // await refreshChannelCues();
@@ -634,52 +634,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 Alert('Something went wrong. Try again.');
             });
     }, [email, password]);
-
-    // useEffect(() => {
-    //     if (user && user.email) {
-
-    //         // userflow.group(
-    //         //     user.schoolId,
-    //         //     {
-    //         //         name: user.orgName,
-    //         //     },
-    //         //     {
-    //         //         membership: {
-    //         //             role: user.role,
-    //         //         },
-    //         //     }
-    //         // );
-    //     }
-    // }, [user]);
-
-    // useEffect(() => {
-    //     if (user && user.email) {
-    //         window.pendo.initialize({
-    //             visitor: {
-    //                 id: user._id, // Required if user is logged in
-    //                 email: user.email, // Recommended if using Pendo Feedback, or NPS Email
-    //                 full_name: user.fullName, // Recommended if using Pendo Feedback
-    //                 role: user.role, // Optional
-    //                 // You can add any additional visitor level key-values here,
-    //                 // as long as it's not one of the above reserved names.
-    //             },
-
-    //             account: {
-    //                 id: user.schoolId,
-    //                 name: user.orgName, // Required if using Pendo Feedback
-    //                 // name:         // Optional
-    //                 // is_paying:    // Recommended if using Pendo Feedback
-    //                 // monthly_value:// Recommended if using Pendo Feedback
-    //                 // planLevel:    // Optional
-    //                 // planPrice:    // Optional
-    //                 // creationDate: // Optional
-
-    //                 // You can add any additional account level key-values here,
-    //                 // as long as it's not one of the above reserved names.
-    //             },
-    //         });
-    //     }
-    // }, [user]);
 
     // imp
     const loadDataFromCloud = useCallback(async () => {
@@ -916,15 +870,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const openModal = useCallback(
         async (type) => {
-            // console.log('selectedWorkspace openModal', selectedWorkspace);
-            // if (option === 'Classroom' && selectedWorkspace !== '') {
-            //     console.log('Set selected workspace', selectedWorkspace);
-            //     await AsyncStorage.setItem('activeWorkspace', selectedWorkspace);
-            //     setSelectedWorkspace('');
-            // }
-
             setModalType(type);
-            // AsyncStorage.setItem('lastopened', type);
         },
         [cues, selectedWorkspace, option]
     );
@@ -1111,17 +1057,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setModalType('');
         setCreateActiveTab('Content');
 
-        // console.log('Close modal option', option);
-
-        // // Check if active workspace
-        // if (option === 'Classroom') {
-        //     const activeWorkspace = await AsyncStorage.getItem('activeWorkspace');
-
-        //     if (activeWorkspace) {
-        //         setSelectedWorkspace(activeWorkspace);
-        //     }
-        // }
-
         // Mark as read
         if (modalType === 'Update') {
             await markCueAsRead();
@@ -1152,20 +1087,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
         });
     }
-
-    const renderTimeMessage = () => {
-        return 'Overview';
-
-        const currentTime = new Date();
-
-        if (currentTime.getHours() < 12 && currentTime.getHours() > 0) {
-            return 'Good Morning';
-        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 17) {
-            return 'Good Afternoon';
-        } else {
-            return 'Good Evening';
-        }
-    };
 
     /**
      * @description Helpter for icon to use in navbar
@@ -1285,16 +1206,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return 'Settings';
         }
     };
-
-    const cuesCopy = cuesArray.sort((a: any, b: any) => {
-        if (a.color < b.color) {
-            return -1;
-        }
-        if (a.color > b.color) {
-            return 1;
-        }
-        return 0;
-    });
 
     let dateFilteredCues: any[] = [];
     if (filterStart && filterEnd) {
@@ -1502,294 +1413,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
             ) : null}
 
-            {showLoginWindow && !showSignupWindow ? (
-                <View
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        flex: 1,
-                        position: 'absolute',
-                        zIndex: 50,
-                        backgroundColor: 'rgba(16,16,16, 0.7)',
-                        overflow: 'hidden',
-                    }}
-                >
-                    <View
-                        style={{
-                            position: 'absolute',
-                            zIndex: 525,
-                            display: 'flex',
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: 'white',
-                            width: dimensions.window.width < 768 ? '100%' : '100%',
-                            height: dimensions.window.width < 768 ? '100%' : '100%',
-                            borderRadius: dimensions.window.width < 768 ? 0 : 0,
-                            marginTop: dimensions.window.width < 768 ? 0 : 0,
-                            paddingHorizontal: 40,
-                        }}
-                    >
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            horizontal={false}
-                            contentContainerStyle={{
-                                height: '100%',
-                                paddingVertical: 40,
-                                justifyContent: 'center',
-                            }}
-                            nestedScrollEnabled={true}
-                        >
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    display: 'flex',
-                                    paddingBottom: 30,
-                                }}
-                            >
-                                <Image
-                                    source={logo}
-                                    style={{
-                                        width: dimensions.window.height * 0.16 * 0.53456,
-                                        height: dimensions.window.height * 0.16 * 0.2,
-                                    }}
-                                    resizeMode={'contain'}
-                                />
-                            </View>
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    color: '#1F1F1F',
-                                    fontFamily: 'overpass',
-                                    paddingBottom: 20,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {showForgotPassword
-                                    ? PreferredLanguageText('temporaryPassword')
-                                    : PreferredLanguageText('continueLeftOff')}
-                            </Text>
-
-                            <View
-                                style={{
-                                    maxWidth: 400,
-                                    width: '100%',
-                                    backgroundColor: 'white',
-                                    justifyContent: 'center',
-                                    alignSelf: 'center',
-                                }}
-                            >
-                                <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
-                                    {PreferredLanguageText('email')}
-                                </Text>
-                                <TextInput
-                                    autoCompleteType="email"
-                                    textContentType="emailAddress"
-                                    value={email}
-                                    placeholder={''}
-                                    onChangeText={(val: any) => setEmail(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    errorText={emailValidError}
-                                />
-                                {showForgotPassword ? null : (
-                                    <View>
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <Text style={{ color: '#000000', fontSize: 14, paddingBottom: 5 }}>
-                                                {PreferredLanguageText('password')}
-                                            </Text>
-                                            {showForgotPassword ? null : (
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setShowForgotPassword(true);
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: 'white',
-                                                        flexDirection: 'row',
-                                                        justifyContent: 'center',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 13,
-                                                            color: '#007AFF',
-                                                        }}
-                                                    >
-                                                        Forgot Password?
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                        </View>
-
-                                        <TextInput
-                                            autoCompleteType="password"
-                                            textContentType="password"
-                                            secureTextEntry={true}
-                                            value={password}
-                                            placeholder={''}
-                                            onChangeText={(val: any) => setPassword(val)}
-                                            placeholderTextColor={'#1F1F1F'}
-                                        />
-                                    </View>
-                                )}
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        paddingBottom: 10,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        disabled={isSubmitDisabled}
-                                        onPress={() => {
-                                            if (showForgotPassword) {
-                                                forgotPassword();
-                                            } else {
-                                                handleLogin();
-                                            }
-                                        }}
-                                        style={{
-                                            backgroundColor: 'white',
-                                            // overflow: 'hidden',
-                                            // height: 35,
-                                            marginTop: 15,
-                                            width: '100%',
-                                            justifyContent: 'center',
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontWeight: 'bold',
-                                                textAlign: 'center',
-                                                borderColor: '#000',
-                                                borderWidth: 1,
-                                                color: '#fff',
-                                                backgroundColor: '#000',
-                                                fontSize: 11,
-                                                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 24,
-                                                fontFamily: 'inter',
-                                                overflow: 'hidden',
-                                                paddingVertical: 14,
-                                                textTransform: 'uppercase',
-                                                width: 120,
-                                            }}
-                                        >
-                                            {showForgotPassword
-                                                ? PreferredLanguageText('reset')
-                                                : PreferredLanguageText('login')}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    {/* Sign up button */}
-                                    {/* {showForgotPassword ? null : (
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                width: '100%',
-                                                marginTop: 20,
-                                                flexDirection: 'row',
-                                                justifyContent: 'center'
-                                            }}>
-                                            <Text>Not a member?</Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    setShowSignupWindow(true);
-                                                }}
-                                                style={{ marginLeft: 5 }}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 14,
-                                                        color: '#007AFF'
-                                                    }}>
-                                                    Sign up now
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    )} */}
-
-                                    {/* {showForgotPassword ? null : (
-                                        <View
-                                            style={{
-                                                maxWidth: 400,
-                                                width: '100%',
-                                                backgroundColor: 'white',
-                                                justifyContent: 'space-between',
-                                                alignSelf: 'center',
-                                                flexDirection: 'row',
-                                                marginTop: 20
-                                            }}>
-                                            <SocialMediaButton
-                                                provider="facebook"
-                                                appId={env === 'DEV' ? '922882341942535' : '746023139417168'}
-                                                onLoginSuccess={handleSocialAuth}
-                                                onLoginFailure={handleSocialAuthFailure}
-                                                scope="public_profile,email">
-                                                Sign in with Facebook
-                                            </SocialMediaButton>
-
-                                            <SocialMediaButton
-                                                provider="google"
-                                                appId="39948716442-erculsknud84na14b7mbd94f1is97477.apps.googleusercontent.com"
-                                                onLoginSuccess={handleSocialAuth}
-                                                onLoginFailure={handleSocialAuthFailure}
-                                                key={'google'}
-                                                scope={
-                                                    'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid'
-                                                }>
-                                                Sign in with Google
-                                            </SocialMediaButton>
-                                        </View>
-                                    )} */}
-
-                                    {showForgotPassword ? (
-                                        <TouchableOpacity
-                                            onPress={() => setShowForgotPassword(false)}
-                                            style={{
-                                                backgroundColor: 'white',
-                                                overflow: 'hidden',
-                                                height: 35,
-                                                marginTop: 15,
-                                                marginBottom: 30,
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    color: '#007AFF',
-                                                }}
-                                            >
-                                                Back to Sign In
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ) : null}
-                                </View>
-                            </View>
-                            <View
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    paddingLeft: 5,
-                                    paddingBottom: 5,
-                                    marginTop: 20,
-                                }}
-                            >
-                                {/* <LanguageSelect /> */}
-                            </View>
-                        </ScrollView>
-                    </View>
-                </View>
-            ) : null}
-
             {showHome &&
                 !loadingCues &&
                 !loadingUser &&
@@ -1836,13 +1459,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             backgroundColor: '#000',
                             borderColor: '#000',
                             borderWidth: 0,
-                            // shadowColor: '#000',
-                            // shadowOffset: {
-                            //     width: 4,
-                            //     height: 4,
-                            // },
-                            // shadowOpacity: 0.12,
-                            // shadowRadius: 10,
                             zIndex: showLoginWindow ? 40 : 500000,
                         }}
                     >
@@ -2394,7 +2010,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     fontFamily: 'Inter',
                                 }}
                             >
-                                {renderTimeMessage()}
+                                Overview
                             </Text>
 
                             <View

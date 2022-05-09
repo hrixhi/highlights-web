@@ -42,7 +42,6 @@ import { Datepicker as MobiscrollDatePicker } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { Select as MobiscrollSelect } from '@mobiscroll/react';
 import FormulaGuide from './FormulaGuide';
-import { RichEditor } from 'react-native-pell-rich-editor';
 import InsertYoutubeModal from './InsertYoutubeModal';
 
 // HELPERS
@@ -1782,16 +1781,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 if (res.data.cue.deleteForEveryone) {
                                     Alert('Deleted successfully.');
                                 }
+                            })
+                            .catch((e) => {
+                                Alert('Failed to delete. Try again.');
+                                return;
                             });
                     }
 
                     if (!props.cue.channelId) {
-                        server.mutate({
-                            mutation: deleteCue,
-                            variables: {
-                                cueId: props.cue._id,
-                            },
-                        });
+                        server
+                            .mutate({
+                                mutation: deleteCue,
+                                variables: {
+                                    cueId: props.cue._id,
+                                },
+                            })
+                            .then((res) => {
+                                if (res.data.cue.deleteForEveryone) {
+                                    Alert('Deleted successfully.');
+                                }
+                            })
+                            .catch((e) => {
+                                Alert('Failed to delete. Try again.');
+                                return;
+                            });
                     }
 
                     let subCues: any = {};
@@ -1817,7 +1830,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 },
             },
         ]);
-    }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner, original]);
+    }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner, original, props.cue.channelId]);
 
     /**
      * @description Submit quiz when time gets over

@@ -12,7 +12,6 @@ import { validateEmail } from '../helpers/emailCheck';
 
 const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [emails, setEmails] = useState('');
-    const styles = styleObject();
 
     // MAIN RETURN
 

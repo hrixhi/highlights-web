@@ -539,8 +539,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                         }}
                                         style={{
                                             backgroundColor: 'white',
-                                            // overflow: 'hidden',
-                                            // height: 35,
                                             marginTop: 15,
                                             width: '100%',
                                             justifyContent: 'center',

@@ -15,7 +15,6 @@ import {
     updateFolder,
     addToFolder,
     deleteFolder,
-    // removeFromFolder,
     getReleaseSubmissionStatus,
 } from '../graphql/QueriesAndMutations';
 
@@ -24,11 +23,9 @@ import Alert from '../components/Alert';
 import { View, TouchableOpacity, Text } from '../components/Themed';
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler';
-import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
 import { Ionicons } from '@expo/vector-icons';
-import TextareaAutosize from 'react-textarea-autosize';
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import InsetShadow from 'react-native-inset-shadow';
@@ -36,7 +33,6 @@ import InsetShadow from 'react-native-inset-shadow';
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
-// import { TextInput } from './CustomTextInput';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 

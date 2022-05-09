@@ -67,8 +67,6 @@ import ImageMarker from 'react-image-marker';
 import EquationEditorQuiz from './EquationEditorQuiz';
 import MathJax from 'react-mathjax-preview';
 
-// import { BoardRepository, Board } from 'react-native-draganddrop-board'
-
 // CONSTANTS
 const questionTypeOptions = [
     {

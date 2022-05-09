@@ -34,7 +34,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [activeUserId, setActiveUserId] = useState('');
     const [activeScore, setActiveScore] = useState('');
     const [studentSearch, setStudentSearch] = useState('');
-    const [activeTab, setActiveTab] = useState('overview');
 
     // Deadline, Name, Status
     const [sortByOption, setSortByOption] = useState('Deadline');

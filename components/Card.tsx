@@ -9,7 +9,7 @@ import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 
 // HELPERS
-import { htmlStringParser, getContentIcon } from '../helpers/HTMLParser';
+import { htmlStringParser } from '../helpers/HTMLParser';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();

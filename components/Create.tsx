@@ -18,8 +18,6 @@ import {
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import Alert from '../components/Alert';
 import QuizCreate from './QuizCreate';
-import TeXToSVG from 'tex-to-svg';
-import moment from 'moment';
 import ReactPlayer from 'react-player';
 import WebViewer from '@pdftron/pdfjs-express';
 import { Select, Datepicker as MobiscrollDatePicker } from '@mobiscroll/react';
@@ -33,7 +31,6 @@ import Books from './Books';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
-import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 
 // NEW EDITOR
 // Require Editor JS files.
@@ -60,8 +57,6 @@ import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { htmlStringParser } from '../helpers/HTMLParser';
-// Include special components if required.
-// import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -302,10 +297,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     useEffect(() => {
         if (showBooks || showOptions || !RichText.current || !url || isQuiz) return;
-
-        if (url === '' || !url) {
-            return;
-        }
 
         if (
             type === 'mp4' ||

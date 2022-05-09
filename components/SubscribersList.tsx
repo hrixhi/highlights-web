@@ -438,29 +438,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [props.isQuiz]);
 
-    // /**
-    //  * @description If assingment has upload Url then setup Webviewer (not used since tabs are disabled rn)
-    //  */
-    // useEffect(() => {
-    //     if (url === '' || !url) {
-    //         return;
-    //     }
-    //     console.log(url);
-    //     WebViewer(
-    //         {
-    //             licenseKey: 'xswED5JutJBccg0DZhBM',
-    //             initialDoc: url,
-    //         },
-    //         RichText.current
-    //     ).then((instance) => {
-    //         const { documentViewer } = instance.Core;
-    //         // you can now call WebViewer APIs here...
-    //         documentViewer.addEventListener('documentLoaded', () => {
-    //             // perform document operations
-    //         });
-    //     });
-    // }, [url, RichText, imported, type, submissionAttempts, viewSubmissionTab]);
-
     /**
      * @description Save instructor annotations to cloud
      */
@@ -480,6 +457,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     if (res.data.cue.updateAnnotation) {
                         // props.reload()
                         // setShowSubmission(false)
+                        console.log('Update annotation', res.data.cue.updateAnnotation);
                     }
                 })
                 .catch((e) => {

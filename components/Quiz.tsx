@@ -2499,7 +2499,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 ];
                                                                 updatedHighlightTextSelection[optionIndex] =
                                                                     !highlightTextSelection[optionIndex];
-                                                                updatedSolution[index].highlightTextSelection =
+                                                                updatedSolution[problemIndex].highlightTextSelection =
                                                                     updatedHighlightTextSelection;
                                                                 setSolutions(updatedSolution);
                                                                 props.setSolutions(updatedSolution);
@@ -2552,7 +2552,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 );
                                                 const newState = [...dndOptions];
                                                 newState[sInd] = items;
-                                                updatedSolution[index].dragDropChoices = newState.slice(
+                                                updatedSolution[problemIndex].dragDropChoices = newState.slice(
                                                     1,
                                                     dndOptions.length
                                                 );
@@ -2570,7 +2570,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             const newState = [...dndOptions];
                                             newState[sInd] = result[sInd];
                                             newState[dInd] = result[dInd];
-                                            updatedSolution[index].dragDropChoices = newState.slice(
+                                            updatedSolution[problemIndex].dragDropChoices = newState.slice(
                                                 1,
                                                 dndOptions.length
                                             );
