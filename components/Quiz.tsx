@@ -323,32 +323,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, [problems, props.solutions, props.setSolutions, props.isOwner]);
 
-    useEffect(() => {
-        if (props.saveQuiz) {
-            props.modifyQuiz(
-                instructions,
-                problems,
-                headers,
-                modifiedCorrectAnswerProblems,
-                regradeChoices,
-                timer,
-                duration,
-                shuffleQuiz
-            );
-            props.setSaveQuiz(false);
-        }
-    }, [
-        props.saveQuiz,
-        instructions,
-        problems,
-        headers,
-        modifiedCorrectAnswerProblems,
-        regradeChoices,
-        timer,
-        duration,
-        shuffleQuiz,
-    ]);
-
     /**
      * @description Shuffle problems
      */
@@ -3903,7 +3877,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             })}
 
             {/* Add Save Changes button here */}
-            {/* {props.isOwner ? (
+            {props.isOwner ? (
                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                     <TouchableOpacity
                         onPress={() => {
@@ -3918,7 +3892,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 shuffleQuiz
                             );
                         }}
-                        style={{  borderRadius: 15, width: 150, marginTop: 50 }}
+                        style={{ borderRadius: 15, width: 150, marginTop: 50 }}
                         disabled={props.user.email === disableEmailId}
                     >
                         <Text
@@ -3942,7 +3916,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text>
                     </TouchableOpacity>
                 </View>
-            ) : null} */}
+            ) : null}
         </View>
     );
 };

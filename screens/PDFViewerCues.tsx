@@ -1,11 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text } from '../components/Themed';
 import { Platform, Alert } from 'react-native';
 import alert from '../components/Alert';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { fetchAnnotationsForViewer, updateAnnotationsFromViewer } from '../graphql/QueriesAndMutations';
+import {
+    fetchAnnotationsForViewer,
+    updateAnnotationsFromViewer,
+    getUsernamesForAnnotation,
+} from '../graphql/QueriesAndMutations';
 import WebViewer from '@pdftron/pdfjs-express';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
@@ -14,13 +18,15 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
     const [url, setUrl] = useState('');
     const [cueId, setCueId] = useState('');
     const [userId, setUserId] = useState('');
+    // User Id
     const [annotations, setAnnotations] = useState('');
     const [source, setSource] = useState('');
     const [name, setName] = useState('');
+    const [feedbackUser, setFeedbackUser] = useState('');
     const [releaseSubmission, setReleaseSubmission] = useState(false);
     const RichText: any = useRef();
     const [loading, setLoading] = useState(true);
-
+    const [usernamesForAnnotation, setUsernamesForAnnotation] = useState<any>({});
 
     useEffect(() => {
         if (Platform.OS === 'web') {
@@ -31,6 +37,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
             const cueIdParam = route?.params?.cueId;
             const sourceParam = route?.params?.source;
             const nameParam = route?.params?.name;
+            const feedbackUserParam = route?.params?.feedbackUser;
 
             if (!urlParam || !sourceParam) {
                 setInvalidParams(true);
@@ -44,6 +51,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
             setUserId(userIdParam);
             setSource(sourceParam);
             setName(decodeURIComponent(nameParam));
+            setFeedbackUser(decodeURIComponent(feedbackUserParam));
 
             // console.log("UrlParam", urlParam)
             // console.log("Source", sourceParam)
@@ -63,17 +71,18 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         variables: {
                             cueId: cueIdParam,
                             userId: userIdParam,
-                            myNotes: sourceParam === 'MY_NOTES'
-                        }
+                            myNotes: sourceParam === 'MY_NOTES',
+                        },
                     })
-                    .then(async res => {
-
+                    .then(async (res) => {
                         if (
                             res.data &&
                             res.data.user.fetchAnnotationsForViewer !== undefined &&
                             res.data.user.fetchAnnotationsForViewer !== null
                         ) {
-                            const annot = res.data.user.fetchAnnotationsForViewer.annotations ? res.data.user.fetchAnnotationsForViewer.annotations : '';
+                            const annot = res.data.user.fetchAnnotationsForViewer.annotations
+                                ? res.data.user.fetchAnnotationsForViewer.annotations
+                                : '';
 
                             setAnnotations(annot ? annot : '');
                         } else {
@@ -82,13 +91,17 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         }
                         setLoading(false);
                     })
-                    .catch(err => {
-                        console.log("Error in fetching params", err);
+                    .catch((err) => {
+                        console.log('Error in fetching params', err);
                         setLoading(false);
                         setInvalidParams(true);
                         console.log(err);
                     });
-            } else if (sourceParam === 'CREATE_SUBMISSION' || sourceParam === 'VIEW_SUBMISSION' || sourceParam === 'FEEDBACK') {
+            } else if (
+                sourceParam === 'CREATE_SUBMISSION' ||
+                sourceParam === 'VIEW_SUBMISSION' ||
+                sourceParam === 'FEEDBACK'
+            ) {
                 //
                 const server = fetchAPI('');
                 server
@@ -96,11 +109,10 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         query: fetchAnnotationsForViewer,
                         variables: {
                             cueId: cueIdParam,
-                            userId: userIdParam
-                        }
+                            userId: userIdParam,
+                        },
                     })
-                    .then(async res => {
-
+                    .then(async (res) => {
                         if (
                             res.data &&
                             res.data.user.fetchAnnotationsForViewer !== undefined &&
@@ -112,11 +124,9 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                                 const obj = JSON.parse(cue);
 
                                 if (sourceParam === 'CREATE_SUBMISSION') {
-
                                     const submissionDraft = obj.submissionDraft;
 
-                                    setAnnotations(submissionDraft.annotations ? submissionDraft.annotations : '')
-
+                                    setAnnotations(submissionDraft.annotations ? submissionDraft.annotations : '');
                                 } else {
                                     const attempts = obj.attempts;
 
@@ -124,7 +134,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
 
                                     setAnnotations(currAttempt.annotations ? currAttempt.annotations : '');
                                 }
-
                             }
 
                             setReleaseSubmission(
@@ -136,12 +145,29 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                         }
                         setLoading(false);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                         setInvalidParams(true);
                         setLoading(false);
                     });
-            } 
+
+                if (sourceParam === 'VIEW_SUBMISSION' || sourceParam === 'FEEDBACK') {
+                    server
+                        .query({
+                            query: getUsernamesForAnnotation,
+                            variables: {
+                                cueId: cueIdParam,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.user.getUsernamesForAnnotation) {
+                                const userIdToNameMap = JSON.parse(res.data.user.getUsernamesForAnnotation);
+                                setUsernamesForAnnotation(userIdToNameMap);
+                            }
+                        })
+                        .catch((e) => {});
+                }
+            }
         } else {
             setInvalidParams(true);
             setLoading(false);
@@ -157,7 +183,11 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
             {
                 licenseKey: 'xswED5JutJBccg0DZhBM',
                 initialDoc: url,
-                enableReadOnlyMode: source === 'CREATE'
+                enableReadOnlyMode:
+                    source === 'CREATE' ||
+                    (source === 'VIEW_SUBMISSION' && !releaseSubmission) ||
+                    source === 'CREATE_SUBMISSION',
+                annotationUser: source === 'FEEDBACK' ? feedbackUser : userId,
             },
             RichText.current
         ).then(async (instance: any) => {
@@ -170,8 +200,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
 
             if (!documentViewer || !annotationManager) return;
 
-            annotationManager.setCurrentUser(name);
-
             // you can now call WebViewer APIs here...
             documentViewer.addEventListener('documentLoaded', async () => {
                 // const currCue = subCues[props.cueKey][props.cueIndex];
@@ -181,9 +209,10 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
 
                     annotationManager.importAnnotations(xfdfString).then((annot: any) => {
                         annot.forEach((annotation: any) => {
+                            console.log('Annotation', annotation);
                             if (source === 'VIEW_SUBMISSION') {
                                 // Hide instructor annotations until grades are released
-                                if (!releaseSubmission && annotation.Author !== name) {
+                                if (!releaseSubmission && annotation.Author !== userId) {
                                     annotationManager.hideAnnotation(annotation);
                                 } else {
                                     annotationManager.redrawAnnotation(annotation);
@@ -196,6 +225,21 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                 }
             });
 
+            annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
+                console.log('ID', id);
+                console.log('User Id', userId);
+                if (source !== 'FEEDBACK' && userId === id) {
+                    return name;
+                } else if (source === 'FEEDBACK' && feedbackUser === id) {
+                    return name;
+                } else if (usernamesForAnnotation[id] && usernamesForAnnotation[id] !== undefined) {
+                    return usernamesForAnnotation[id];
+                } else {
+                    // Fetch username from server and add it to the Map
+                    return 'no name';
+                }
+            });
+
             annotationManager.addEventListener(
                 'annotationChanged',
                 async (annotations: any, action: any, { imported }) => {
@@ -204,7 +248,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                     // from the server or individual changes from other users
                     if (imported) return;
 
-                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
                     const server = fetchAPI('');
 
@@ -215,8 +259,8 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                                 userId,
                                 cueId,
                                 annotations: xfdfString,
-                                source
-                            }
+                                source,
+                            },
                         })
                         .then((res: any) => {
                             if (res.data && res.data.user.updateAnnotationsFromViewer) {
@@ -228,7 +272,21 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                 }
             );
         });
-    }, [url, RichText, cueId, userId, annotations, source, name, releaseSubmission, loading]);
+    }, [
+        url,
+        RichText,
+        cueId,
+        userId,
+        annotations,
+        source,
+        name,
+        releaseSubmission,
+        loading,
+        usernamesForAnnotation,
+        feedbackUser,
+    ]);
+
+    console.log('Annotations', annotations);
 
     if (loading) {
         return (
@@ -240,8 +298,9 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
+                    alignItems: 'center',
+                }}
+            >
                 <ActivityIndicator color={'#1F1F1F'} />
             </View>
         );
@@ -256,7 +315,10 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
     }
 
     return (
-        <View style={{ width: '100%', height: '100%' }} key={JSON.stringify(url) + JSON.stringify(annotations) + name}>
+        <View
+            style={{ width: '100%', height: '100%' }}
+            key={JSON.stringify(url) + JSON.stringify(annotations) + name + JSON.stringify(usernamesForAnnotation)}
+        >
             <div className="webviewer" ref={RichText} style={{ height: '100vh' }}></div>
         </View>
     );
@@ -268,18 +330,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20
+        padding: 20,
     },
     title: {
         fontSize: 20,
-        fontFamily: 'inter'
+        fontFamily: 'inter',
     },
     link: {
         marginTop: 15,
-        paddingVertical: 15
+        paddingVertical: 15,
     },
     linkText: {
         fontSize: 14,
-        color: '#f9c74f'
-    }
+        color: '#f9c74f',
+    },
 });

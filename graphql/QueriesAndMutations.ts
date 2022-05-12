@@ -596,9 +596,9 @@ export const markActivityAsRead = gql`
 `;
 
 export const updateAnnotation = gql`
-    mutation ($cueId: String!, $userId: String!, $attempts: String!) {
+    mutation ($cueId: String!, $userId: String!, $annotations: String!) {
         cue {
-            updateAnnotation(cueId: $cueId, userId: $userId, attempts: $attempts)
+            updateAnnotation(cueId: $cueId, userId: $userId, annotations: $annotations)
         }
     }
 `;
@@ -1810,6 +1810,22 @@ export const searchThreads = gql`
                 views
                 searchTitle
             }
+        }
+    }
+`;
+
+export const getSubmissionAnnotations = gql`
+    query ($cueId: String!, $userId: String!) {
+        cue {
+            getSubmissionAnnotations(cueId: $cueId, userId: $userId)
+        }
+    }
+`;
+
+export const getUsernamesForAnnotation = gql`
+    query ($cueId: String!) {
+        user {
+            getUsernamesForAnnotation(cueId: $cueId)
         }
     }
 `;

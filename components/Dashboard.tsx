@@ -342,7 +342,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (sortBy === 'Priority') {
                 // tempCues.reverse();
                 tempCues.sort((a: any, b: any) => {
-                    return a.colorCode < b.colorCode ? 1 : -1;
+                    return a.color < b.color ? 1 : -1;
                 });
             } else if (sortBy === 'Date ↑') {
                 tempCues.sort((a: any, b: any) => {
@@ -416,7 +416,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (sortBy === 'Priority') {
             // mycues.reverse();
             mycues.sort((a: any, b: any) => {
-                return a.colorCode < b.colorCode ? 1 : -1;
+                return a.color < b.color ? 1 : -1;
             });
         } else if (sortBy === 'Date ↑') {
             mycues.sort((a: any, b: any) => {

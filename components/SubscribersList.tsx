@@ -18,6 +18,8 @@ import {
     editReleaseSubmission,
     updateAnnotation,
     modifyActiveAttemptQuiz,
+    getSubmissionAnnotations,
+    getUsernamesForAnnotation,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -71,6 +73,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [headers, setHeaders] = useState({});
     const [exportAoa, setExportAoa] = useState<any[]>();
     const [showQuizGrading, setShowQuizGrading] = useState(false);
+    const [usernamesForAnnotation, setUsernamesForAnnotation] = useState<any>({});
+
     if (props.cue && props.cue.submission) {
         categories.push('Submitted');
         categories.push('Graded');
@@ -327,6 +331,30 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [submission, props.isQuiz]);
 
+    useEffect(() => {
+        if (props.cue && props.cue.channelId && props.cue.channelId !== '') {
+            fetchUsersForAnnotations();
+        }
+    }, [props.cue]);
+
+    const fetchUsersForAnnotations = useCallback(() => {
+        const server = fetchAPI('');
+        server
+            .query({
+                query: getUsernamesForAnnotation,
+                variables: {
+                    cueId: props.cue._id,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.user.getUsernamesForAnnotation) {
+                    const userIdToNameMap = JSON.parse(res.data.user.getUsernamesForAnnotation);
+                    setUsernamesForAnnotation(userIdToNameMap);
+                }
+            })
+            .catch((e) => {});
+    }, [props.cue]);
+
     /**
      * @description Setup PDFTRON Webviewer with Submission
      */
@@ -363,17 +391,32 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
 
-                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+                    // Fetch annotations from server
+                    const server = fetchAPI('');
+                    server
+                        .query({
+                            query: getSubmissionAnnotations,
+                            variables: {
+                                userId,
+                                cueId: props.cueId,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.cue.getSubmissionAnnotations) {
+                                const xfdfString = res.data.cue.getSubmissionAnnotations;
 
-                    const xfdfString = currAttempt.annotations;
-
-                    if (xfdfString !== '') {
-                        annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
-                            annotations.forEach((annotation: any) => {
-                                annotationManager.redrawAnnotation(annotation);
-                            });
+                                if (xfdfString !== '') {
+                                    annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+                                        annotations.forEach((annotation: any) => {
+                                            annotationManager.redrawAnnotation(annotation);
+                                        });
+                                    });
+                                }
+                            }
+                        })
+                        .catch((e) => {
+                            Alert('Failed to fetch document annotations. Check internet connection.');
                         });
-                    }
                 });
 
                 annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
@@ -381,6 +424,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         return props.user.fullName;
                     } else if (userId === id) {
                         return subscriberName;
+                    } else if (usernamesForAnnotation[id] && usernamesForAnnotation[id] !== undefined) {
+                        console.log('Returned name', usernamesForAnnotation[id]);
+                        return usernamesForAnnotation[id];
+                    } else {
+                        // Fetch username from server and add it to the Map
+                        return 'no name';
                     }
                 });
 
@@ -394,20 +443,37 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: updateAnnotation,
+                                variables: {
+                                    userId,
+                                    cueId: props.cueId,
+                                    annotations: xfdfString,
+                                },
+                            })
+                            .then((res) => {
+                                console.log('update annotation', res.data.cue.updateAnnotation);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                            });
 
-                        currAttempt.annotations = xfdfString;
+                        // const currAttempt = submissionAttempts[submissionAttempts.length - 1];
 
-                        const allAttempts = [...submissionAttempts];
+                        // currAttempt.annotations = xfdfString;
 
-                        allAttempts[allAttempts.length - 1] = currAttempt;
+                        // const allAttempts = [...submissionAttempts];
 
-                        await handleAnnotationsUpdate(allAttempts);
+                        // allAttempts[allAttempts.length - 1] = currAttempt;
+
+                        // await handleAnnotationsUpdate(allAttempts);
                     }
                 );
             });
         }
-    }, [submissionAttempts, viewSubmissionTab, props.user, subscriberName]);
+    }, [submissionAttempts, viewSubmissionTab, props.user, subscriberName, props.cueId, userId]);
 
     /**
      * @description if submission is a quiz then fetch Quiz

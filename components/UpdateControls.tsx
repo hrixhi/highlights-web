@@ -25,6 +25,9 @@ import {
     duplicateQuiz,
     saveSubmissionDraft,
     startQuiz,
+    getSubmissionAnnotations,
+    updateAnnotation,
+    getUsernamesForAnnotation,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -196,11 +199,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [failedToSaveSubmission, setFailedToSaveSubmission] = useState(false);
 
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
-    const [saveQuiz, setSaveQuiz] = useState(false);
 
     const [userId, setUserId] = useState('');
     const [userFullName, setUserFullName] = useState('');
     const width = Dimensions.get('window').width;
+    const [usernamesForAnnotation, setUsernamesForAnnotation] = useState<any>({});
+
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz');
     const cueDeletedAlert = PreferredLanguageText('cueDeleted');
@@ -304,6 +308,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     //     }
     // }, [role, school, userId]);
 
+    useEffect(() => {
+        if (props.cue && props.cue.channelId && props.cue.channelId !== '') {
+            fetchUsersForAnnotations();
+        }
+    }, [props.cue]);
+
+    const fetchUsersForAnnotations = useCallback(() => {
+        const server = fetchAPI('');
+        server
+            .query({
+                query: getUsernamesForAnnotation,
+                variables: {
+                    cueId: props.cue._id,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.user.getUsernamesForAnnotation) {
+                    const userIdToNameMap = JSON.parse(res.data.user.getUsernamesForAnnotation);
+                    setUsernamesForAnnotation(userIdToNameMap);
+                }
+            })
+            .catch((e) => {});
+    }, [props.cue]);
+
     /**
      * @description Load channels and share with
      */
@@ -362,6 +390,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
                     annotationUser: userId,
+                    enableReadOnlyMode: !props.cue.releaseSubmission,
                 },
                 submissionViewerRef.current
             ).then(async (instance) => {
@@ -369,39 +398,70 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 if (!documentViewer || !annotationManager) return;
 
-                // const u = await AsyncStorage.getItem('user');
-
-                // let user: any;
-
-                // if (u) {
-                //     user = JSON.parse(u);
-                //     annotationManager.setCurrentUser(user.fullName);
-                // }
+                // NEED TO ADD WEBSOCKETS FOR REAL-TIME INTERACTION
 
                 documentViewer.addEventListener('documentLoaded', async () => {
                     // perform document operations
 
-                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+                    // Fetch annotations from server
+                    const server = fetchAPI('');
+                    server
+                        .query({
+                            query: getSubmissionAnnotations,
+                            variables: {
+                                userId,
+                                cueId: props.cue._id,
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data && res.data.cue.getSubmissionAnnotations) {
+                                const xfdfString = res.data.cue.getSubmissionAnnotations;
 
-                    const xfdfString = currAttempt.annotations;
-
-                    if (xfdfString !== '') {
-                        annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
-                            annotations.forEach((annotation: any) => {
-                                // Hide instructor annotations until grades are released
-                                if (!props.cue.releaseSubmission && annotation.Author !== userId) {
-                                    annotationManager.hideAnnotation(annotation);
-                                } else {
-                                    annotationManager.redrawAnnotation(annotation);
+                                if (xfdfString !== '') {
+                                    annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+                                        annotations.forEach((annotation: any) => {
+                                            // Hide instructor annotations until grades are released
+                                            if (!props.cue.releaseSubmission && annotation.Author !== userId) {
+                                                annotationManager.hideAnnotation(annotation);
+                                            } else {
+                                                annotationManager.redrawAnnotation(annotation);
+                                            }
+                                        });
+                                    });
                                 }
-                            });
+                            }
+                        })
+                        .catch((e) => {
+                            Alert('Failed to fetch document annotations. Check internet connection.');
                         });
-                    }
+
+                    // const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+
+                    // const xfdfString = currAttempt.annotations;
+
+                    // if (xfdfString !== '') {
+                    //     annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+                    //         annotations.forEach((annotation: any) => {
+                    //             // Hide instructor annotations until grades are released
+                    //             if (!props.cue.releaseSubmission && annotation.Author !== userId) {
+                    //                 annotationManager.hideAnnotation(annotation);
+                    //             } else {
+                    //                 annotationManager.redrawAnnotation(annotation);
+                    //             }
+                    //         });
+                    //     });
+                    // }
                 });
 
                 annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
                     if (userId === id) {
                         return userFullName;
+                    } else if (usernamesForAnnotation[id] && usernamesForAnnotation[id] !== undefined) {
+                        console.log('Returned name', usernamesForAnnotation[id]);
+                        return usernamesForAnnotation[id];
+                    } else {
+                        // Fetch username from server and add it to the Map
+                        return 'no name';
                     }
                 });
 
@@ -413,48 +473,67 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // from the server or individual changes from other users
                         if (imported) return;
 
+                        if (!props.cue.releaseSubmission) return;
+
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        let subCues: any = {};
-                        try {
-                            const value = await AsyncStorage.getItem('cues');
-                            if (value) {
-                                subCues = JSON.parse(value);
-                            }
-                        } catch (e) {}
+                        const server = fetchAPI('');
+                        server
+                            .mutate({
+                                mutation: updateAnnotation,
+                                variables: {
+                                    userId,
+                                    cueId: props.cue._id,
+                                    annotations: xfdfString,
+                                },
+                            })
+                            .then((res) => {
+                                console.log('update annotation', res.data.cue.updateAnnotation);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                            });
 
-                        if (subCues[props.cueKey].length === 0) {
-                            return;
-                        }
+                        // let subCues: any = {};
+                        // try {
+                        //     const value = await AsyncStorage.getItem('cues');
+                        //     if (value) {
+                        //         subCues = JSON.parse(value);
+                        //     }
+                        // } catch (e) {}
 
-                        const currCue = subCues[props.cueKey][props.cueIndex];
+                        // if (subCues[props.cueKey].length === 0) {
+                        //     return;
+                        // }
 
-                        const currCueValue = currCue.cue;
+                        // const currCue = subCues[props.cueKey][props.cueIndex];
 
-                        const obj = JSON.parse(currCueValue);
+                        // const currCueValue = currCue.cue;
 
-                        const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+                        // const obj = JSON.parse(currCueValue);
 
-                        currAttempt.annotations = xfdfString;
+                        // const currAttempt = submissionAttempts[submissionAttempts.length - 1];
 
-                        const allAttempts = [...obj.attempts];
+                        // currAttempt.annotations = xfdfString;
 
-                        allAttempts[allAttempts.length - 1] = currAttempt;
+                        // const allAttempts = [...obj.attempts];
 
-                        const updateCue = {
-                            attempts: allAttempts,
-                            submissionDraft: obj.submissionDraft,
-                        };
+                        // allAttempts[allAttempts.length - 1] = currAttempt;
 
-                        const saveCue = {
-                            ...currCue,
-                            cue: JSON.stringify(updateCue),
-                        };
+                        // const updateCue = {
+                        //     attempts: allAttempts,
+                        //     submissionDraft: obj.submissionDraft,
+                        // };
 
-                        subCues[props.cueKey][props.cueIndex] = saveCue;
+                        // const saveCue = {
+                        //     ...currCue,
+                        //     cue: JSON.stringify(updateCue),
+                        // };
 
-                        const stringifiedCues = JSON.stringify(subCues);
-                        await AsyncStorage.setItem('cues', stringifiedCues);
+                        // subCues[props.cueKey][props.cueIndex] = saveCue;
+
+                        // const stringifiedCues = JSON.stringify(subCues);
+                        // await AsyncStorage.setItem('cues', stringifiedCues);
                         // props.reloadCueListAfterUpdate();
                     }
                 );
@@ -468,6 +547,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.showOptions,
         userId,
         userFullName,
+        props.cue,
+        usernamesForAnnotation,
     ]);
 
     /**
@@ -745,12 +826,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        if (isQuiz) {
-                            setSaveQuiz(true);
-                        } else {
-                            await handleUpdateContent();
-                        }
-
+                        await handleUpdateContent();
                         await handleUpdateDetails();
                         await handleRestrictAccessUpdate();
                     },
@@ -2410,6 +2486,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         setLoadingAfterModifyingQuiz(true);
         const server = fetchAPI('');
 
+        console.log('Timer', timer);
+
         // Update title as well
         handleUpdateContent();
 
@@ -2825,6 +2903,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         });
 
         const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
+
+        console.log('duration minutes', durationMinutes);
 
         let variables = {
             cueId: props.cue._id,
@@ -3340,8 +3420,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     user={props.user}
                                     shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                     setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
-                                    saveQuiz={saveQuiz}
-                                    setSaveQuiz={(saveQuiz: boolean) => setSaveQuiz(saveQuiz)}
                                 />
                                 {renderSubmissionDraftStatus()}
                                 {renderFooter()}
@@ -3412,8 +3490,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 user={props.user}
                                 shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                 setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
-                                saveQuiz={saveQuiz}
-                                setSaveQuiz={(saveQuiz: boolean) => setSaveQuiz(saveQuiz)}
                             />
                             {renderSubmissionDraftStatus()}
                             {renderFooter()}
