@@ -58,19 +58,15 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [loading, setLoading] = useState(false);
     const unparsedThreads: any[] = JSON.parse(JSON.stringify(props.threads));
     const [threads] = useState<any[]>(unparsedThreads.reverse());
-    const [threadWithReplies, setThreadWithReplies] = useState<any[]>([]);
     const [showThreadCues, setShowThreadCues] = useState(false);
     const [filterChoice, setFilterChoice] = useState('All');
     const [threadId, setThreadId] = useState('');
     const [selectedThread, setSelectedThread] = useState<any>({});
     const [avatar, setAvatar] = useState('');
     const [threadCategories, setThreadCategories] = useState<any[]>([]);
-    const [customCategory, setCustomCategory] = useState('None');
-    const [addCustomCategory, setAddCustomCategory] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
     const [userId, setUserId] = useState('');
     const [threadChat, setThreadChat] = useState<any[]>([]);
-    const styles = styleObject();
     const categories: any[] = [];
     const categoryObject: any = {};
     let filteredThreads: any[] = [];
@@ -245,7 +241,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
                 loadCueDiscussions(tId);
             } else {
-                if (threads.length > 0) {
+                if (threads.length > 0 && Dimensions.get('window').width > 768) {
                     loadCueDiscussions(threads[0]._id);
                 }
             }
@@ -471,7 +467,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     },
                 })
                 .then((res) => {
-                    setThreadWithReplies(res.data.thread.getThreadWithReplies);
                     const tempChat: any[] = [];
                     res.data.thread.getThreadWithReplies.map((msg: any) => {
                         if (msg._id !== threadId) {
@@ -505,96 +500,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }
     }, []);
 
-    // const deletePost = useCallback((threadId: string) => {
-    //     if (!isOwner) {
-    //         return;
-    //     }
-    //     const server = fetchAPI('')
-    //     server.mutate({
-    //         mutation: deleteThread,
-    //         variables: {
-    //             threadId
-    //         }
-    //     }).then((res) => {
-    //         if (res.data && res.data.thread.delete) {
-    //             props.reload()
-    //         } else {
-    //             Alert(somethingWentWrongAlert)
-    //         }
-    //     }).catch(e => Alert(somethingWentWrongAlert))
-    // }, [isOwner])
-
-    /**
-     * @description Renders Custom bubble for Gifted Chat
-     */
-    const renderBubble = (props: any) => {
-        return (
-            <Bubble
-                {...props}
-                wrapperStyle={{
-                    right: {
-                        backgroundColor: '#007AFF',
-                    },
-                }}
-            />
-        );
-    };
-
-    /**
-     * @description render custom font size
-     */
-    const renderMessageText = (props: any) => {
-        return <MessageText {...props} customTextStyle={{ fontSize: 15, lineHeight: 14 }} />;
-    };
-
-    /**
-     * @description Customize how Audio message appears
-     */
-    const renderMessageAudio = (props: any) => {
-        if (props.currentMessage.audio && props.currentMessage.audio !== '') {
-            return (
-                <View>
-                    <ReactPlayer
-                        url={props.currentMessage.audio}
-                        controls={true}
-                        onContextMenu={(e: any) => e.preventDefault()}
-                        config={{
-                            file: { attributes: { controlsList: 'nodownload' } },
-                        }}
-                        width={250}
-                        height={60}
-                    />
-                </View>
-            );
-        }
-
-        return null;
-    };
-
-    /**
-     * @description Customize how Video Message appears
-     */
-    const renderMessageVideo = (props: any) => {
-        if (props.currentMessage.video && props.currentMessage.video !== '') {
-            return (
-                <View>
-                    <ReactPlayer
-                        url={props.currentMessage.video}
-                        controls={true}
-                        onContextMenu={(e: any) => e.preventDefault()}
-                        config={{
-                            file: { attributes: { controlsList: 'nodownload' } },
-                        }}
-                        width={250}
-                        height={200}
-                    />
-                </View>
-            );
-        }
-
-        return null;
-    };
-
     // FUNCTIONS
 
     /**
@@ -612,7 +517,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="width: 72px; id="' +
+                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -864,50 +769,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 );
                             }
                         )}
-                    </View>
-                ) : null}
-            </View>
-        );
-    };
-
-    /**
-     * @description Renders the Filter Dropdown and the New Post button
-     */
-    const renderThreadHeader = () => {
-        return (
-            <View
-                style={{
-                    backgroundColor: '#fff',
-                    flexDirection: 'row',
-                    paddingBottom: 30,
-                    width: '100%',
-                }}
-            >
-                {props.cueId === null && categoryChoices.length > 1 ? (
-                    <View
-                        style={{
-                            backgroundColor: '#fff',
-                        }}
-                    >
-                        <label style={{ width: 150, backgroundColor: '#fff' }}>
-                            <Select
-                                touchUi={true}
-                                themeVariant="light"
-                                value={filterChoice}
-                                onChange={(val: any) => {
-                                    setFilterChoice(val.value);
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble',
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    },
-                                }}
-                                data={categoryChoices}
-                            />
-                        </label>
                     </View>
                 ) : null}
             </View>

@@ -18,14 +18,14 @@ PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
-var extendStatics = function(d, b) {
+var extendStatics = function (d, b) {
     extendStatics =
         Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array &&
-            function(d, b) {
+            function (d, b) {
                 d.__proto__ = b;
             }) ||
-        function(d, b) {
+        function (d, b) {
             for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
         };
     return extendStatics(d, b);
@@ -59,9 +59,10 @@ var mathQuill = MathQuill.getInterface(2);
  * @prop {string} autoOperatorNames List of operators for which you only have to type the name of the
  * operator with a \ in front of it. Examples: sin cos tan
  * @prop {Function} onEnter Triggered when enter is pressed in the equation editor
+ * @prop {boolean} disableKeyboard Disable the virtual keyboard
  * @extends {Component<EquationEditorProps>}
  */
-var EquationEditor = /** @class */ (function(_super) {
+var EquationEditor = /** @class */ (function (_super) {
     __extends(EquationEditor, _super);
     // Element needs to be in the class format and thus requires a constructor. The steps that are run
     // in the constructor is to make sure that React can succesfully communicate with the equation
@@ -74,7 +75,7 @@ var EquationEditor = /** @class */ (function(_super) {
         _this.ignoreEditEvents = 2;
         return _this;
     }
-    EquationEditor.prototype.componentDidMount = function() {
+    EquationEditor.prototype.componentDidMount = function () {
         var _this = this;
         var _a = this.props,
             onChange = _a.onChange,
@@ -83,9 +84,10 @@ var EquationEditor = /** @class */ (function(_super) {
             autoCommands = _a.autoCommands,
             autoOperatorNames = _a.autoOperatorNames,
             onEnter = _a.onEnter;
+
         var config = {
             handlers: {
-                edit: function() {
+                edit: function () {
                     if (_this.ignoreEditEvents > 0) {
                         _this.ignoreEditEvents -= 1;
                         return;
@@ -94,30 +96,71 @@ var EquationEditor = /** @class */ (function(_super) {
                         onChange(_this.mathField.latex());
                     }
                 },
-                enter: onEnter
+                enter: onEnter,
             },
             spaceBehavesLikeTab: spaceBehavesLikeTab,
             autoCommands: autoCommands,
-            autoOperatorNames: autoOperatorNames
+            autoOperatorNames: autoOperatorNames,
         };
-        this.mathField = mathQuill.MathField(this.element.current, config);
+
+        var disableKeyboardConfig = {
+            handlers: {
+                edit: function () {
+                    if (_this.ignoreEditEvents > 0) {
+                        _this.ignoreEditEvents -= 1;
+                        return;
+                    }
+                    if (_this.mathField.latex() !== value) {
+                        onChange(_this.mathField.latex());
+                    }
+                },
+                enter: onEnter,
+            },
+            spaceBehavesLikeTab: spaceBehavesLikeTab,
+            autoCommands: autoCommands,
+            autoOperatorNames: autoOperatorNames,
+            substituteTextarea: function () {
+                const span = document.createElement('span');
+                span.tabIndex = 0;
+                return span;
+            },
+        };
+        this.mathField = mathQuill.MathField(
+            this.element.current,
+            this.props.disableKeyboard ? disableKeyboardConfig : config
+        );
         this.mathField.latex(value || '');
+        this.mathField.focus();
     };
-    EquationEditor.prototype.componentDidUpdate = function(prevProps) {
+    EquationEditor.prototype.componentDidUpdate = function (prevProps) {
         if (
             prevProps.addElementFromButton !== this.props.addElementFromButton &&
             this.props.addElementFromButton !== ''
         ) {
             this.mathField.cmd(this.props.addElementFromButton);
             this.props.clearAddElementField();
+            this.mathField.focus();
         }
 
         if (prevProps.clearField !== this.props.clearField && this.props.clearField) {
-            this.mathField.latex('')
-            this.props.resetClearField()
-        } 
+            this.mathField.latex('');
+            this.props.resetClearField();
+            this.mathField.focus();
+        }
+
+        if (prevProps.typeFromButton !== this.props.typeFromButton && this.props.typeFromButton !== '') {
+            this.mathField.typedText(this.props.typeFromButton);
+            this.props.clearTypeFromButton();
+            this.mathField.focus();
+        }
+
+        if (prevProps.keystrokeFromButton !== this.props.keystrokeFromButton && this.props.keystrokeFromButton !== '') {
+            this.mathField.keystroke(this.props.keystrokeFromButton);
+            this.props.clearKeystrokeFromButton();
+            this.mathField.focus();
+        }
     };
-    EquationEditor.prototype.render = function() {
+    EquationEditor.prototype.render = function () {
         return React.createElement('span', { ref: this.element, style: { border: '0px', boxShadow: 'None' } });
     };
     return EquationEditor;

@@ -284,44 +284,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     props.hideNewChatButton(false);
                     setShowNewGroup(false);
                     setLoadingChats(false);
-
-                    // Load default chat if not opening from search or not loading directory or not Mobile view
-                    // if (!init || Dimensions.get('window').width < 768) {
-                    //     setShowChat(false);
-                    //     return;
-                    // }
-
-                    // if (!openChatAsyncStorage && res.data.group.getChats.length > 0) {
-                    //     const chat = res.data.group.getChats[0];
-
-                    //     console.log('First Chat', chat);
-
-                    //     if (chat.userNames.length > 2) {
-                    //         loadGroupChat(chat.users, chat._id);
-                    //         setGroupCreatedBy(chat.createdBy);
-                    //         setGroupUsers(chat.userNames);
-                    //         setEditGroupName(chat.name);
-                    //         setEditGroupImage(chat.image ? chat.image : undefined);
-                    //         setChatName(chat.name);
-                    //         setChatImg(
-                    //             chat.image ? chat.image : 'https://cues-files.s3.amazonaws.com/images/default.png'
-                    //         );
-                    //     } else {
-                    //         chat.userNames.map((user: any) => {
-                    //             if (user._id !== parsedUser._id) {
-                    //                 setChatName(user.fullName);
-                    //                 const chatImg =
-                    //                     user.avatar && user.avatar !== ''
-                    //                         ? user.avatar
-                    //                         : 'https://cues-files.s3.amazonaws.com/images/default.png';
-                    //                 setChatImg(chatImg);
-                    //                 return;
-                    //             }
-                    //         });
-
-                    //         loadChat(chat.users[0] === parsedUser._id ? chat.users[1] : chat.users[0], chat._id);
-                    //     }
-                    // }
                 }
             })
             .catch((err: any) => {
@@ -1309,11 +1271,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 style={{
                     width: '100%',
                     height:
-                        Dimensions.get('window').width < 768
-                            ? windowHeight - (64 + 60) - 50
-                            : // : Dimensions.get('window').width < 1024
-                              // ? windowHeight - (64 + 68) - 50
-                              windowHeight - 64 - 70,
+                        Dimensions.get('window').width < 768 ? windowHeight - (64 + 60) - 50 : windowHeight - 64 - 70,
                     borderColor: '#f2f2f2',
                 }}
             >
@@ -2911,7 +2869,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     const renderHeader = () => {
         return (
-            <View style={{ flexDirection: 'row', width: '100%' }}>
+            <View style={{ flexDirection: 'row', width: '100%', borderBottomWidth: 1, borderBottomColor: '#f2f2f2' }}>
                 {(showNewGroup && Dimensions.get('window').width < 768) ||
                 viewGroup ||
                 (showChat && Dimensions.get('window').width < 768) ||
@@ -2963,8 +2921,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
-                            borderBottomWidth: 1,
-                            borderBottomColor: '#f2f2f2',
                             paddingVertical: 10,
                             paddingHorizontal: 10,
                         }}

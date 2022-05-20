@@ -112,18 +112,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const windowHeight =
         Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
     const key = JSON.stringify(filteredSubscribers);
-    let options = filteredSubscribers.map((sub: any) => {
-        return {
-            value: sub._id,
-            text: sub.displayName,
-            group: sub.displayName[0],
-        };
-    });
-    options = options.sort((a: any, b: any) => {
-        if (a > b) return -1;
-        if (a < b) return 1;
-        return 0;
-    });
 
     const questionTypeLabel: any = {
         '': 'MCQ/Multiselect',

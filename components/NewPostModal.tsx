@@ -116,7 +116,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="width: 72px; id="' +
+                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -550,7 +550,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         );
                     }}
                     disabled={props.user.email === disableEmailId}
-                    // disabled={isCreatingEvents}
                 >
                     <Text
                         style={{

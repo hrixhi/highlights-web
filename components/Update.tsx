@@ -477,6 +477,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     if (res2.data.status && res2.data.status.findByCueId) {
                                         const subs: any[] = [];
                                         const statuses = res2.data.status.findByCueId;
+
+                                        statuses.sort((a: any, b: any) => {
+                                            return a.fullName > b.fullName ? -1 : 1;
+                                        });
+
                                         statuses.map((status: any) => {
                                             subs.push({
                                                 avatar: status.avatar,

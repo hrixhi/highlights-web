@@ -23,7 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 export const htmlStringParser = (htmlString: string) => {
     if (htmlString === null || !htmlString) {
         return {
-            title: 'No content',
+            title: 'NO_CONTENT',
             subtitle: '',
         };
     }
@@ -43,10 +43,10 @@ export const htmlStringParser = (htmlString: string) => {
             const obj = JSON.parse(filteredLines[0]);
             title = obj.title ? obj.title : 'file';
         } else {
-            title = filteredLines.length > 0 ? filteredLines[0] : 'No Content';
+            title = filteredLines.length > 0 ? filteredLines[0] : 'NO_CONTENT';
         }
     } else {
-        title = 'No Content';
+        title = 'NO_CONTENT';
     }
     return {
         title,

@@ -815,6 +815,41 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     useEffect(() => {
         if (props.save) {
+            // Basic Validation for save content
+
+            if (imported || isQuiz) {
+                if (title === '') {
+                    Alert('Title cannot be empty');
+                    props.setSave(false);
+                    return;
+                }
+            }
+
+            if (!imported && !isQuiz) {
+                const parse = htmlStringParser(original);
+
+                if (parse.title === 'NO_CONTENT' && !parse.subtitle) {
+                    Alert('Content cannot be empty.');
+                    props.setSave(false);
+                    return;
+                }
+            }
+
+            // Basic Validation For save details
+            if (submission && isOwner) {
+                if (initiateAt > deadline) {
+                    Alert('Deadline must be after available date');
+                    props.setSave(false);
+                    return;
+                }
+
+                if (allowLateSubmission && availableUntil < deadline) {
+                    Alert('Late Submission date must be after deadline');
+                    props.setSave(false);
+                    return;
+                }
+            }
+
             Alert('Save changes?', '', [
                 {
                     text: 'Cancel',
@@ -834,7 +869,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ]);
             props.setSave(false);
         }
-    }, [props.save, props.channelOwner, isQuiz]);
+    }, [
+        props.save,
+        props.channelOwner,
+        isQuiz,
+        submission,
+        isOwner,
+        initiateAt,
+        deadline,
+        allowLateSubmission,
+        availableUntil,
+        imported,
+        isQuiz,
+        title,
+        original,
+    ]);
 
     /**
      * @description Handle Delete when props.del
@@ -1291,7 +1340,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             editorRef.current.editor.selection.restore();
 
             editorRef.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="width: 72px; id="' +
+                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -2899,6 +2948,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ...prob,
                 points: prob.points.toString(),
                 options: sanitizeOptions,
+                maxCharCount: prob.questionType === 'freeResponse' ? Number(prob.maxCharCount) : null,
             };
         });
 

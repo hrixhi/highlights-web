@@ -1061,19 +1061,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                                     let isCorrect = false;
 
-                                                    inlineChoiceOptions[Number(node.attribs.id)].map(
-                                                        (option: any, optionIndex: number) => {
-                                                            if (
-                                                                option.option ===
-                                                                    solutions[index].inlineChoiceSelection[
-                                                                        optionIndex
-                                                                    ] &&
-                                                                option.isCorrect
-                                                            ) {
-                                                                isCorrect = true;
-                                                            }
+                                                    options.map((option: any, optionIndex: number) => {
+                                                        if (
+                                                            option.option ===
+                                                                solutions[index].inlineChoiceSelection[
+                                                                    Number(node.attribs.id)
+                                                                ] &&
+                                                            option.isCorrect
+                                                        ) {
+                                                            isCorrect = true;
                                                         }
-                                                    );
+                                                    });
 
                                                     return (
                                                         <span key={ind2.toString()} style={{ width: 160 }}>

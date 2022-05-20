@@ -27,7 +27,15 @@ type EquationEditorProps = {
   autoOperatorNames: string;
   onEnter?(): void;
   clearAddElementField?(): void;
+  clearField?: boolean;
+  resetClearField?(): void;
   addElementFromButton: string;
+  disableKeyboard?: boolean;
+  typeFromButton?: string;
+  keystrokeFromButton?: string;
+  clearTypeFromButton?(): void;
+  clearKeystrokeFromButton?(): void;
+
 };
 
 /**
@@ -64,7 +72,29 @@ class EquationEditor extends Component<EquationEditorProps> {
     if (prevProps.addElementFromButton !== this.props.addElementFromButton && this.props.addElementFromButton !== "") {
       this.mathField.cmd(this.props.addElementFromButton)
       this.props.clearAddElementField()
+      this.mathField.focus();
     }
+
+    if (prevProps.clearField !== this.props.clearField && this.props.clearField) {
+      this.mathField.latex('')
+      this.props.resetClearField()
+      this.mathField.focus();
+    }
+    
+    if (prevProps.typeFromButton !== this.props.typeFromButton &&
+      this.props.typeFromButton !== '') {
+          this.mathField.typedText(this.props.typeFromButton)
+          this.props.clearTypeFromButton();
+          this.mathField.focus();
+    }
+
+    if (prevProps.keystrokeFromButton !== this.props.keystrokeFromButton &&
+      this.props.keystrokeFromButton !== '') {
+          this.mathField.keystroke(this.props.keystrokeFromButton)
+          this.props.clearKeystrokeFromButton();
+          this.mathField.focus();
+    } 
+
   }
 
 
@@ -76,6 +106,7 @@ class EquationEditor extends Component<EquationEditorProps> {
       autoCommands,
       autoOperatorNames,
       onEnter,
+      disableKeyboard = false
     } = this.props;
 
     const config = {
@@ -96,8 +127,32 @@ class EquationEditor extends Component<EquationEditorProps> {
       autoOperatorNames,
     };
 
-    this.mathField = mathQuill.MathField(this.element.current, config);
+    const disableKeyboardConfig = {
+      handlers: {
+        edit: () => {
+          if (this.ignoreEditEvents > 0) {
+            this.ignoreEditEvents -= 1;
+            return;
+          }
+          if (this.mathField.latex() !== value) {
+            onChange(this.mathField.latex());
+          }
+        },
+        enter: onEnter,
+      },
+      spaceBehavesLikeTab,
+      autoCommands,
+      autoOperatorNames,
+      substituteTextarea: function() {
+        const span = document.createElement("span");
+        span.tabIndex = 0
+        return span;
+      }
+    };
+
+    this.mathField = mathQuill.MathField(this.element.current, disableKeyboard ? disableKeyboardConfig : config);
     this.mathField.latex(value || "");
+    this.mathField.focus()
   }
 
 

@@ -479,7 +479,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="width: 72px; id="' +
+                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -1302,7 +1302,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             if (!quizId && !imported) {
                 const { title, subtitle } = htmlStringParser(cue);
 
-                if (title === 'No Content' && !subtitle) {
+                console.log('Title', title);
+                if (title === 'NO_CONTENT' && !subtitle) {
                     Alert(enterContentAlert);
                     setIsSubmitting(false);
                     return;

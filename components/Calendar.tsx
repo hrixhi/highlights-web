@@ -214,13 +214,19 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Filter events and activity
      */
     useEffect(() => {
-        const all = [...allActivity];
+        let all = [...allActivity];
         if (filterByChannel === 'All') {
-            setActivity(all);
         } else {
-            const filter = all.filter((e: any) => filterByChannel === e.channelId);
-            setActivity(filter);
+            all = all.filter((e: any) => filterByChannel === e.channelId);
         }
+
+        if (filterStart && filterEnd) {
+            all = all.filter(
+                (e: any) => new Date(e.date) > new Date(filterStart) && new Date(e.date) < new Date(filterEnd)
+            );
+        }
+
+        setActivity(all);
 
         let total = [...allEvents];
 
@@ -262,7 +268,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             setDescription(editEvent.description);
             setStart(new Date(editEvent.start));
             setEnd(new Date(editEvent.end));
-            setEditChannelName(editEvent.channelName !== '' ? editChannelName : 'My Events');
+            setEditChannelName(editEvent.channelName !== '' ? editEvent.channelName : 'My Events');
 
             if (editEvent.dateId !== 'channel' && editEvent.createdBy) {
                 setIsMeeting(true);

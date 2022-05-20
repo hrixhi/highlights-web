@@ -406,30 +406,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             />
                         </View>
                     </View>
-                    {/* Guide */}
-                    {/* <View
-                        style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            backgroundColor: '#f8f8f8',
-                            borderBottomWidth: 1,
-                            borderBottomColor: '#f2f2f2'
-                        }}>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Symbol</View>
-                        <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>Keyboard command</View>
-                    </View>
-                    {symbols.map((s: any) => {
-                        return (
-                            <View
-                                key={JSON.stringify(s)}
-                                style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f8f8f8' }}>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>
-                                    {s.symbol}
-                                </View>
-                                <View style={{ padding: 10, width: '50%', backgroundColor: '#f8f8f8' }}>{s.howTo}</View>
-                            </View>
-                        );
-                    })} */}
+
                     <View
                         style={{
                             flexDirection: 'column',

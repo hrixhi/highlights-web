@@ -804,7 +804,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 RichText.current.editor.selection.restore();
 
                 RichText.current.editor.html.insert(
-                    '<img class="rendered-math-jax" style="width: 72px; id="' +
+                    '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -862,7 +862,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 optionEditorRef.current.editor.selection.restore();
 
                 optionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" style="width: 72px; id="' +
+                    '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -905,7 +905,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 solutionEditorRef.current.editor.selection.restore();
 
                 solutionEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" style="width: 72px; id="' +
+                    '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -950,7 +950,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 multipartEditorRef.current.editor.selection.restore();
 
                 multipartEditorRef.current.editor.html.insert(
-                    '<img class="rendered-math-jax" style="width: 72px; id="' +
+                    '<img class="rendered-math-jax" style="min-width: 72px; id="' +
                         random +
                         '" data-eq="' +
                         encodeURIComponent(equation) +
@@ -1854,34 +1854,42 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     />
                                                 </TouchableOpacity>
                                             ) : (
-                                                <input
-                                                    disabled={
-                                                        props.isOwner && editQuestionNumber === index + 1
-                                                            ? false
-                                                            : props.isOwner
-                                                    }
-                                                    style={{ marginTop: 22, backgroundColor: '#fff' }}
-                                                    type="checkbox"
-                                                    checked={
-                                                        props.isOwner
-                                                            ? option.isCorrect
-                                                            : solutions[problemIndex].selected[i].isSelected
-                                                    }
-                                                    onChange={(e: any) => {
-                                                        if (props.isOwner) {
-                                                            const updatedProbs = [...problems];
-                                                            if (problem.questionType === 'trueFalse') {
-                                                                updatedProbs[problemIndex].options[0].isCorrect = false;
-                                                                updatedProbs[problemIndex].options[1].isCorrect = false;
-                                                            }
-                                                            updatedProbs[problemIndex].options[i].isCorrect =
-                                                                !updatedProbs[problemIndex].options[i].isCorrect;
-                                                            setProblems(updatedProbs);
-                                                        } else {
-                                                            selectMCQOption(problem, problemIndex, i);
-                                                        }
+                                                <View
+                                                    style={{
+                                                        marginTop: 21,
                                                     }}
-                                                />
+                                                >
+                                                    <input
+                                                        disabled={
+                                                            props.isOwner && editQuestionNumber === index + 1
+                                                                ? false
+                                                                : props.isOwner
+                                                        }
+                                                        style={{ marginTop: 22, backgroundColor: '#fff' }}
+                                                        type="checkbox"
+                                                        checked={
+                                                            props.isOwner
+                                                                ? option.isCorrect
+                                                                : solutions[problemIndex].selected[i].isSelected
+                                                        }
+                                                        onChange={(e: any) => {
+                                                            if (props.isOwner) {
+                                                                const updatedProbs = [...problems];
+                                                                if (problem.questionType === 'trueFalse') {
+                                                                    updatedProbs[problemIndex].options[0].isCorrect =
+                                                                        false;
+                                                                    updatedProbs[problemIndex].options[1].isCorrect =
+                                                                        false;
+                                                                }
+                                                                updatedProbs[problemIndex].options[i].isCorrect =
+                                                                    !updatedProbs[problemIndex].options[i].isCorrect;
+                                                                setProblems(updatedProbs);
+                                                            } else {
+                                                                selectMCQOption(problem, problemIndex, i);
+                                                            }
+                                                        }}
+                                                    />
+                                                </View>
                                             )}
                                         </View>
                                         {props.isOwner &&
