@@ -783,6 +783,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         color: cue.color.toString(),
                         date: new Date(cue.date).toISOString(),
                         gradeWeight: cue.submission && cue.gradeWeight ? cue.gradeWeight.toString() : undefined,
+                        totalPoints: cue.submission && cue.totalPoints ? cue.totalPoints.toString() : undefined,
                         endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? new Date(cue.endPlayAt).toISOString() : '',
                         allowedAttempts:
                             cue.allowedAttempts && cue.allowedAttempts !== null ? cue.allowedAttempts.toString() : null,

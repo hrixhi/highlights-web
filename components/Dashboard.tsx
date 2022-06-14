@@ -120,7 +120,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [activeSearchResultsTab, setActiveSearchResultsTab] = useState('');
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
     const [reversedSearches, setReversedSearches] = useState<string[]>([]);
-    const [exportScores, setExportScores] = useState(false);
+    // const [exportScores, setExportScores] = useState(false);
+    const [showNewAssignment, setShowNewAssignment] = useState(false);
 
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -2167,6 +2168,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         ? 'Discussion'
                                                         : tab === 'Meet'
                                                         ? 'Meetings'
+                                                        : tab === 'Scores'
+                                                        ? 'Grades'
                                                         : tab}
                                                 </Text>
                                             </View>
@@ -2460,8 +2463,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             activeTab={'scores'}
                                             isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                             userId={userId}
-                                            exportScores={exportScores}
-                                            setExportScores={(exp: boolean) => setExportScores(exp)}
+                                            // exportScores={exportScores}
+                                            // setExportScores={(exp: boolean) => setExportScores(exp)}
+                                            showNewAssignment={showNewAssignment}
+                                            setShowNewAssignment={(create: boolean) => setShowNewAssignment(create)}
                                             user={props.user}
                                         />
                                     ) : (
@@ -2666,7 +2671,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         selectedWorkspace.split('-SPLIT-')[0] === 'My Notes' ||
                         selectedWorkspace.split('-SPLIT-')[2] === userId
                     )
-                ) ? (
+                ) &&
+                !(props.activeWorkspaceTab === 'Scores' && showNewAssignment) ? (
                     <TouchableOpacity
                         onPress={() => {
                             if (props.activeWorkspaceTab === 'Content') {
@@ -2679,7 +2685,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     selectedWorkspace.split('-SPLIT-')[2]
                                 );
                             } else if (props.activeWorkspaceTab === 'Scores') {
-                                setExportScores(true);
+                                // setExportScores(true);
+                                setShowNewAssignment(true);
                             }
                         }}
                         style={{
@@ -2730,7 +2737,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 ) : props.activeWorkspaceTab === 'Meet' ? (
                                     <Ionicons name="videocam-outline" size={25} />
                                 ) : props.activeWorkspaceTab === 'Scores' ? (
-                                    <Ionicons name="download-outline" size={28} />
+                                    <Ionicons name="add-outline" size={35} />
                                 ) : null}
                             </Text>
                         </View>

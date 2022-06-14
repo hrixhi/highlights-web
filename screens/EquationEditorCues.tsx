@@ -924,7 +924,9 @@ export default function EquationEditorCues({ navigation, route }: StackScreenPro
                                     const random = Math.random();
 
                                     const equationImg =
-                                        '<img class="rendered-math-jax" style="min-width: 72px; id="' +
+                                        '<img class="rendered-math-jax" style="width:' +
+                                        res.intrinsicWidth +
+                                        'px; id="' +
                                         random +
                                         '" data-eq="' +
                                         encodeURIComponent(equation) +

@@ -496,6 +496,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 submittedAt: status.submittedAt,
                                                 deadline: status.deadline,
                                                 releaseSubmission: status.releaseSubmission,
+                                                totalPoints: status.totalPoints,
+                                                pointsScored: status.pointsScored,
                                             });
                                         });
                                         setSubscribers(subs);

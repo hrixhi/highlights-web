@@ -4,7 +4,14 @@ import { ActivityIndicator } from 'react-native';
 
 // API
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getGrades, getGradesList, submitGrade } from '../graphql/QueriesAndMutations';
+import {
+    getGrades,
+    getGradesList,
+    submitGrade,
+    getCourseStudents,
+    getGradebookInstructor,
+    getAssignmentAnalytics,
+} from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
 import Alert from '../components/Alert';
@@ -14,9 +21,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [isFetchingStudents, setIsFetchingStudents] = useState(false);
+    const [isFetchingAssignmentAnalytics, setIsFetchingAssignmentAnalytics] = useState(false);
     const [cues, setCues] = useState<any[]>([]);
     const [scores, setScores] = useState<any[]>([]);
+    const [courseStudents, setCourseStudents] = useState<any[]>([]);
+    const [instructorGradebook, setIntructorGradebook] = useState<any>(undefined);
+    const [assignmentAnalytics, setAssignmentAnalytics] = useState<any>(undefined);
     const couldNotLoadSubscribersAlert = PreferredLanguageText('couldNotLoadSubscribers');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
 
@@ -25,59 +37,154 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Loads Cues and User grades on Init
      */
-    useEffect(() => {
-        loadCuesAndScores();
-    }, [props.channelId]);
+    // useEffect(() => {
+    //     loadCourseStudents();
+    // }, [props.channelId]);
+
+    // useEffect(() => {
+    //     if (props.isOwner) {
+    //         fetchGradebookInstructor();
+    //         fetchCourseAssignmentsAnalytics();
+    //     }
+    // }, [props.isOwner]);
 
     /**
-     * @description Fetches all assignments and user grades for each
+     * @description Fetch all course students for creating new assignment and assigning scores
      */
-    const loadCuesAndScores = useCallback(() => {
-        setLoading(true);
+    const loadCourseStudents = useCallback(() => {
+        setIsFetchingStudents(true);
         if (props.channelId && props.channelId !== '') {
             const server = fetchAPI('');
             server
                 .query({
-                    query: getGrades,
+                    query: getCourseStudents,
                     variables: {
                         channelId: props.channelId,
                     },
                 })
                 .then((res) => {
-                    if (res.data.channel && res.data.channel.getSubmissionCues) {
-                        setCues(res.data.channel.getSubmissionCues);
-                        server
-                            .query({
-                                query: getGradesList,
-                                variables: {
-                                    channelId: props.channelId,
-                                    userId: props.userId,
-                                },
-                            })
-                            .then(async (res2) => {
-                                if (res2.data.channel.getGrades) {
-                                    setScores(res2.data.channel.getGrades);
-                                    setLoading(false);
-                                }
-                            })
-                            .catch((err) => {
-                                console.log('Error', err);
-                                Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
-                                setLoading(false);
-                            });
+                    if (res.data.channel && res.data.channel.getCourseStudents) {
+                        setCourseStudents(res.data.channel.getCourseStudents);
                     } else {
-                        setLoading(false);
+                        setCourseStudents([]);
                     }
+                    setIsFetchingStudents(false);
                 })
-                .catch((err) => {
-                    console.log('Error', err);
-                    Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
+                .catch((e) => {
+                    console.log('Error', e);
+                    Alert('Failed to fetch students.');
+                    setIsFetchingStudents(false);
+                });
+        }
+    }, [props.channelId]);
+
+    const fetchGradebookInstructor = useCallback(() => {
+        setLoading(true);
+        if (props.channelId && props.channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getGradebookInstructor,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.gradebook && res.data.gradebook.getGradebook) {
+                        setIntructorGradebook(res.data.gradebook.getGradebook);
+                    } else {
+                        setIntructorGradebook(undefined);
+                    }
+                    setLoading(false);
+                })
+                .catch((e) => {
+                    console.log('error', e);
+                    Alert('Failed to fetch gradebook');
+                    setIntructorGradebook(undefined);
                     setLoading(false);
                 });
-        } else {
-            setLoading(false);
         }
-    }, [props.channelId, props.channelCreatedBy, props.userId]);
+    }, []);
+
+    const fetchCourseAssignmentsAnalytics = useCallback(() => {
+        setIsFetchingAssignmentAnalytics(true);
+        if (props.channelId && props.channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getAssignmentAnalytics,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.gradebook && res.data.gradebook.getAssignmentAnalytics) {
+                        setAssignmentAnalytics(res.data.gradebook.getAssignmentAnalytics);
+                    } else {
+                        setAssignmentAnalytics(undefined);
+                    }
+                    setIsFetchingAssignmentAnalytics(false);
+                })
+                .catch((e) => {
+                    console.log('error', e);
+                    Alert('Failed to fetch assignment analytics');
+                    setAssignmentAnalytics(undefined);
+                    setIsFetchingAssignmentAnalytics(false);
+                });
+        }
+    }, []);
+
+    console.log('Instructor gradebook', instructorGradebook);
+
+    // /**
+    //  * @description Fetches all assignments and user grades for each
+    //  */
+    // const loadCuesAndScores = useCallback(() => {
+    //     setLoading(true);
+    //     if (props.channelId && props.channelId !== '') {
+    //         const server = fetchAPI('');
+    //         server
+    //             .query({
+    //                 query: getGrades,
+    //                 variables: {
+    //                     channelId: props.channelId,
+    //                 },
+    //             })
+    //             .then((res) => {
+    //                 if (res.data.channel && res.data.channel.getSubmissionCues) {
+    //                     setCues(res.data.channel.getSubmissionCues);
+    //                     server
+    //                         .query({
+    //                             query: getGradesList,
+    //                             variables: {
+    //                                 channelId: props.channelId,
+    //                                 userId: props.userId,
+    //                             },
+    //                         })
+    //                         .then(async (res2) => {
+    //                             if (res2.data.channel.getGrades) {
+    //                                 setScores(res2.data.channel.getGrades);
+    //                                 setLoading(false);
+    //                             }
+    //                         })
+    //                         .catch((err) => {
+    //                             console.log('Error', err);
+    //                             Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
+    //                             setLoading(false);
+    //                         });
+    //                 } else {
+    //                     setLoading(false);
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 console.log('Error', err);
+    //                 Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
+    //                 setLoading(false);
+    //             });
+    //     } else {
+    //         setLoading(false);
+    //     }
+    // }, [props.channelId, props.channelCreatedBy, props.userId]);
 
     /**
      * @description Used to modify an assignment score directly
@@ -193,7 +300,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     // MAIN RETURN
     return (
         <View style={{ width: '100%', backgroundColor: '#fff' }}>
-            {loading ? (
+            {loading || isFetchingStudents ? (
                 <View
                     style={{
                         width: '100%',
@@ -218,7 +325,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     isOwner={props.isOwner}
                     channelId={props.channelId}
                     closeModal={() => props.closeModal()}
-                    reload={() => loadCuesAndScores()}
+                    // reload={() => loadCuesAndScores()}
                     modifyGrade={modifyGrade}
                     openCueFromGrades={props.openCueFromGrades}
                     activeTab={props.activeTab}
@@ -227,9 +334,14 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     attendance={props.attendance}
                     thread={props.thread}
                     date={props.date}
-                    exportScores={props.exportScores}
-                    setExportScores={props.setExportScores}
+                    // exportScores={props.exportScores}
+                    // setExportScores={props.setExportScores}
+                    showNewAssignment={props.showNewAssignment}
+                    setShowNewAssignment={props.setShowNewAssignment}
                     user={props.user}
+                    courseStudents={courseStudents}
+                    instructorGradebook={instructorGradebook}
+                    assignmentAnalytics={assignmentAnalytics}
                 />
             )}
         </View>

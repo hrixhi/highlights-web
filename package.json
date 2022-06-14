@@ -132,6 +132,7 @@
         "tex-to-svg": "^0.2.0",
         "use-dynamic-refs": "^1.0.0",
         "userflow.js": "^2.4.0",
+        "victory": "^36.5.0",
         "volkeno-react-native-drag-drop": "^1.0.8",
         "xlsx": "^0.17.0"
     },

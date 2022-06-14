@@ -93,6 +93,7 @@ export const createCue = gql`
         $limitedShares: Boolean
         $allowedAttempts: String
         $availableUntil: String
+        $totalPoints: String
     ) {
         cue {
             create(
@@ -113,6 +114,7 @@ export const createCue = gql`
                 limitedShares: $limitedShares
                 allowedAttempts: $allowedAttempts
                 availableUntil: $availableUntil
+                totalPoints: $totalPoints
             )
         }
     }
@@ -212,25 +214,6 @@ export const saveCuesToCloud = gql`
         }
     }
 `;
-export const saveConfigToCloud = gql`
-    mutation (
-        $userId: String!
-        $randomShuffleFrequency: String!
-        $sleepFrom: String!
-        $sleepTo: String!
-        $currentDraft: String
-    ) {
-        user {
-            saveConfigToCloud(
-                userId: $userId
-                randomShuffleFrequency: $randomShuffleFrequency
-                sleepTo: $sleepTo
-                sleepFrom: $sleepFrom
-                currentDraft: $currentDraft
-            )
-        }
-    }
-`;
 export const submit = gql`
     mutation ($cueId: String!, $userId: String!, $cue: String!, $quizId: String) {
         cue {
@@ -239,9 +222,9 @@ export const submit = gql`
     }
 `;
 export const submitGrade = gql`
-    mutation ($cueId: String!, $userId: String!, $score: String!, $comment: String) {
+    mutation ($cueId: String!, $userId: String!, $pointsScored: String!, $comment: String) {
         cue {
-            submitGrade(cueId: $cueId, userId: $userId, score: $score, comment: $comment)
+            submitGrade(cueId: $cueId, userId: $userId, pointsScored: $pointsScored, comment: $comment)
         }
     }
 `;
@@ -701,11 +684,7 @@ export const findUserById = gql`
                     accountId
                 }
                 notificationId
-                randomShuffleFrequency
-                sleepFrom
-                sleepTo
                 email
-                currentDraft
                 role
                 allowQuizCreation
                 schoolId
@@ -759,6 +738,7 @@ export const getCues = gql`
                 limitedShares
                 allowedAttempts
                 availableUntil
+                totalPoints
             }
         }
     }
@@ -928,6 +908,8 @@ export const getStatuses = gql`
                 graded
                 comment
                 releaseSubmission
+                totalPoints
+                pointsScored
             }
         }
     }
@@ -992,6 +974,7 @@ export const getCuesFromCloud = gql`
                 allowedAttempts
                 annotations
                 availableUntil
+                totalPoints
             }
         }
     }
@@ -1421,6 +1404,30 @@ export const updateThread = gql`
     }
 `;
 
+export const createGradebookEntry = gql`
+    mutation ($gradebookEntryInput: NewGradebookEntryInput!) {
+        gradebook {
+            create(gradebookEntryInput: $gradebookEntryInput)
+        }
+    }
+`;
+
+export const editGradebookEntry = gql`
+    mutation ($gradebookEntryInput: NewGradebookEntryInput!, $entryId: String!) {
+        gradebook {
+            edit(gradebookEntryInput: $gradebookEntryInput, entryId: $entryId)
+        }
+    }
+`;
+
+export const deleteGradebookEntry = gql`
+    mutation ($entryId: String!) {
+        gradebook {
+            delete(entryId: $entryId)
+        }
+    }
+`;
+
 // export const isSubInactive = gql`
 //   query($userId: String!, $channelId: String!) {
 //     subscription {
@@ -1826,6 +1833,118 @@ export const getUsernamesForAnnotation = gql`
     query ($cueId: String!) {
         user {
             getUsernamesForAnnotation(cueId: $cueId)
+        }
+    }
+`;
+
+export const getCourseStudents = gql`
+    query ($channelId: String!) {
+        channel {
+            getCourseStudents(channelId: $channelId) {
+                _id
+                fullName
+                email
+                avatar
+            }
+        }
+    }
+`;
+
+export const getGradebookInstructor = gql`
+    query ($channelId: String!) {
+        gradebook {
+            getGradebook(channelId: $channelId) {
+                entries {
+                    title
+                    gradeWeight
+                    deadline
+                    totalPoints
+                    cueId
+                    gradebookEntryId
+                    releaseSubmission
+                    scores {
+                        userId
+                        submitted
+                        pointsScored
+                        score
+                        submittedAt
+                        lateSubmission
+                    }
+                }
+                totals {
+                    userId
+                    totalPointsPossible
+                    pointsScored
+                    score
+                    gradingScaleOutcome
+                }
+                users {
+                    userId
+                    fullName
+                    avatar
+                }
+            }
+        }
+    }
+`;
+
+export const getAssignmentAnalytics = gql`
+    query ($channelId: String!) {
+        gradebook {
+            getAssignmentAnalytics(channelId: $channelId) {
+                title
+                totalPoints
+                deadline
+                cueId
+                gradebookEntryId
+                max
+                min
+                mean
+                median
+                std
+                maxPts
+                minPts
+                meanPts
+                medianPts
+                stdPts
+                sharedWith
+                submitted
+                graded
+                topPerformers {
+                    userId
+                    score
+                    pointsScored
+                    fullName
+                    avatar
+                }
+                bottomPerformers {
+                    userId
+                    score
+                    pointsScored
+                    fullName
+                    avatar
+                }
+            }
+        }
+    }
+`;
+
+export const getStudentAnalytics = gql`
+    query ($channelId: String!, $userId: String!) {
+        gradebook {
+            getStudentScores(channelId: $channelId, userId: $userId) {
+                score
+                sharedWith
+                graded
+                submitted
+                progress
+                scores {
+                    score
+                    gradebookEntryId
+                    cueId
+                    pointsScored
+                }
+            }
         }
     }
 `;

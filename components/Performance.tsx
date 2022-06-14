@@ -220,8 +220,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     date={date}
                     isOwner={props.isOwner}
                     userId={props.userId}
-                    exportScores={props.exportScores}
-                    setExportScores={props.setExportScores}
+                    // exportScores={props.exportScores}
+                    // setExportScores={props.setExportScores}
+                    showNewAssignment={props.showNewAssignment}
+                    setShowNewAssignment={props.setShowNewAssignment}
                     user={props.user}
                 />
             )}

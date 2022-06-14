@@ -517,7 +517,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             RichText.current.editor.selection.restore();
 
             RichText.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
+                '<img class="rendered-math-jax" style="width:' +
+                    res.intrinsicWidth +
+                    'px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +

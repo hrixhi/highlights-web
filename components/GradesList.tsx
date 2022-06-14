@@ -1,14 +1,17 @@
 // REACT
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, Dimensions, TextInput, Image } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ActivityIndicator, StyleSheet, ScrollView, Dimensions, TextInput, Image, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import _, { at, has } from 'lodash';
+import _, { at, drop, has } from 'lodash';
 import * as FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 
 // COMPONENTS
 import { View, Text, TouchableOpacity } from './Themed';
-import { TextInput as CustomTextInput } from '../components/CustomTextInput';
+
+import { TextInput as CustomTextInput } from './CustomTextInput';
+
+import { Select, Datepicker } from '@mobiscroll/react';
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -18,6 +21,50 @@ import ProgressBar from '@ramonak/react-progress-bar';
 import Alert from './Alert';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { fetchAPI } from '../graphql/FetchAPI';
+import {
+    createGradebookEntry,
+    editGradebookEntry,
+    getStudentAnalytics,
+    getGradebookInstructor,
+    getAssignmentAnalytics,
+    getCourseStudents,
+    deleteGradebookEntry,
+} from '../graphql/QueriesAndMutations';
+import {
+    VictoryPie,
+    VictoryLabel,
+    VictoryTooltip,
+    VictoryChart,
+    VictoryBar,
+    Bar,
+    VictoryStack,
+    VictoryAxis,
+} from 'victory';
+
+class CustomLabel extends React.Component {
+    render() {
+        console.log('Props', this.props);
+        return (
+            <g>
+                <VictoryLabel {...this.props} />
+                <VictoryTooltip
+                    {...this.props}
+                    x={200}
+                    y={250}
+                    orientation="top"
+                    pointerLength={0}
+                    cornerRadius={50}
+                    flyoutWidth={100}
+                    flyoutHeight={100}
+                    flyoutStyle={{ fill: 'white', border: 'none', fontSize: 25, borderWidth: 0 }}
+                />
+            </g>
+        );
+    }
+}
+
+CustomLabel.defaultEvents = VictoryTooltip.defaultEvents;
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores));
@@ -28,26 +75,359 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             return a.deadline < b.deadline ? -1 : 1;
         })
     );
-    const styles = stylesObject(props.isOwner);
     const [exportAoa, setExportAoa] = useState<any[]>();
-    const [activeCueId, setActiveCueId] = useState('');
+    const [activeModifyId, setActiveModifyId] = useState('');
     const [activeUserId, setActiveUserId] = useState('');
     const [activeScore, setActiveScore] = useState('');
     const [studentSearch, setStudentSearch] = useState('');
-
     // Deadline, Name, Status
     const [sortByOption, setSortByOption] = useState('Deadline');
-
     // Ascending = true, descending = false
     const [sortByOrder, setSortByOrder] = useState(false);
 
-    // HOOKS
+    // ADD AN OUTSIDE ASSIGNMENT
+    const [newAssignmentTitle, setNewAssignmentTitle] = useState('');
+    const [newAssignmentGradeWeight, setNewAssignmentGradeWeight] = useState('');
+    const [newAssignmentTotalPoints, setNewAssignmentTotalPoints] = useState('');
+    const [newAssignmentDeadline, setNewAssignmentDeadline] = useState(new Date());
+    const [newAssignmentStoreSubmittedDate, setNewAssignmentStoreSubmittedDate] = useState(false);
+    const [newAssignmentStoreFeedback, setNewAssignmentStoreFeedback] = useState(false);
+    const [newAssignmentShareWithOptions, setNewAssignmentShareWithOptions] = useState<any[]>([]);
+    const [newAssignmentShareWithSelected, setNewAssignmentShareWithSelected] = useState<string[]>([]);
+    const [newAssignmentShareWithAll, setNewAssignmentShareWithAll] = useState(true);
+    const [newAssignmentPointsScored, setNewAssignmentPointsScored] = useState<any[]>([]);
+    const [newAssignmentStep, setNewAssignmentStep] = useState(0);
+    const [newAssignmentFormErrors, setNewAssignmentFormErrors] = useState<string[]>([]);
+    const [isCreatingAssignment, setIsCreatingAssignment] = useState(false);
+    const [isDeletingAssignment, setIsDeletingAssignment] = useState(false);
+
+    const [editEntryId, setEditEntryId] = useState('');
+
+    // GRADEBOOK
+    const [isFetchingGradebook, setIsFetchingGradebook] = useState(false);
+    const [isFetchingStudents, setIsFetchingStudents] = useState(false);
+    const [instructorGradebook, setIntructorGradebook] = useState<any>(undefined);
+    const [gradebookEntries, setGradebookEntries] = useState<any[]>([]);
+    const [gradebookUsers, setGradebookUsers] = useState<any[]>([]);
+    const [courseStudents, setCourseStudents] = useState<any[]>([]);
+
+    // SWITCH % and PTS
+    const [viewGradebookTabs] = useState(['Pts', '%']);
+    const [gradebookViewPoints, setGradebookViewPoints] = useState(true);
+    const [assignmentsViewPoints, setAssignmentsViewPoints] = useState(true);
+    const [studentsViewPoints, setStudentsViewPoints] = useState(true);
+
+    // INSTRUCTOR ANALYTICS
+    const [assignmentAnalytics, setAssignmentAnalytics] = useState<any>(undefined);
+    const [isFetchingAssignmentAnalytics, setIsFetchingAssignmentAnalytics] = useState(false);
+    const [assignmentAnalyticsOptions, setAssignmentAnalyticsOptions] = useState<any[]>([]);
+    const [assignmentAnalyticsSelected, setAssignmentAnalyticsSelected] = useState<any>(undefined);
+    const [studentAnalytics, setStudentAnalytics] = useState<any>(undefined);
+    const [userAnalyticsOptions, setUserAnalyticsOptions] = useState<any[]>([]);
+    const [userAnalyticsSelected, setUserAnalyticsSelected] = useState(undefined);
+    const [isFetchingStudentAnalytics, setIsFetchingStudentAnalytics] = useState(false);
+
+    //
     useEffect(() => {
-        if (props.exportScores) {
-            exportGrades();
-            props.setExportScores(false);
+        if (props.isOwner && props.channelId) {
+            fetchGradebookInstructor();
+            fetchCourseAssignmentsAnalytics();
+            loadCourseStudents();
         }
-    }, [props.exportScores]);
+    }, [props.isOwner, props.channelId]);
+
+    useEffect(() => {
+        if (userAnalyticsSelected && props.isOwner) {
+            fetchStudentAnalytics();
+        }
+    }, [userAnalyticsSelected, props.isOwner]);
+
+    console.log('Course Students', courseStudents);
+
+    useEffect(() => {
+        if (courseStudents) {
+            const dropdownOptions = courseStudents.map((student: any) => {
+                return {
+                    value: student._id,
+                    text: student.fullName,
+                    group: student.fullName[0].toUpperCase(),
+                };
+            });
+
+            const dropdownSelected = courseStudents.map((student: any) => student._id);
+
+            if (dropdownSelected.length > 0) {
+                setUserAnalyticsSelected(dropdownSelected[0]);
+            }
+
+            setUserAnalyticsOptions(dropdownOptions);
+
+            setNewAssignmentShareWithOptions(dropdownOptions);
+            setNewAssignmentShareWithSelected(dropdownSelected);
+        }
+    }, [courseStudents]);
+
+    useEffect(() => {
+        if (assignmentAnalytics) {
+            const assignments = [...assignmentAnalytics];
+
+            assignments.sort((a: any, b: any) => {
+                return a.title < b.title ? 1 : -1;
+            });
+
+            const dropdownOptions = assignments.map((x: any) => {
+                return {
+                    value: x.cueId ? x.cueId : x.gradebookEntryId,
+                    text: x.title,
+                };
+            });
+
+            setAssignmentAnalyticsOptions(dropdownOptions);
+
+            setAssignmentAnalyticsSelected(dropdownOptions.length > 0 ? dropdownOptions[0].value : undefined);
+        }
+    }, [assignmentAnalytics]);
+
+    useEffect(() => {
+        if (newAssignmentShareWithAll) {
+            let selected: string[] = [];
+
+            courseStudents.map((student: any) => {
+                selected.push(student._id);
+            });
+
+            setNewAssignmentShareWithSelected(selected);
+        }
+    }, [newAssignmentShareWithAll, courseStudents]);
+
+    useEffect(() => {
+        let updatePointsScored = [...newAssignmentPointsScored];
+
+        // Add selected
+        newAssignmentShareWithSelected.map((studentId: string) => {
+            const alreadyAdded = updatePointsScored.find((x: any) => x._id === studentId);
+
+            if (!alreadyAdded) {
+                const findStudent = courseStudents.find((x: any) => x._id === studentId);
+
+                updatePointsScored.push({
+                    _id: findStudent._id,
+                    fullName: findStudent.fullName,
+                    avatar: findStudent.avatar,
+                    submitted: false,
+                    points: '',
+                    lateSubmission: false,
+                    feedback: '',
+                    submittedAt: new Date(),
+                });
+            }
+        });
+
+        // Remove unselected
+        const filterRemoved = updatePointsScored.filter((x: any) => newAssignmentShareWithSelected.includes(x._id));
+
+        console.log('Update New assignment points scored', filterRemoved);
+
+        setNewAssignmentPointsScored(filterRemoved);
+    }, [newAssignmentShareWithSelected, courseStudents]);
+
+    const fetchGradebookInstructor = useCallback(() => {
+        setIsFetchingGradebook(true);
+        if (props.channelId && props.channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getGradebookInstructor,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.gradebook && res.data.gradebook.getGradebook) {
+                        setIntructorGradebook(res.data.gradebook.getGradebook);
+                        setGradebookEntries(res.data.gradebook.getGradebook.entries);
+                        setGradebookUsers(res.data.gradebook.getGradebook.users);
+                    } else {
+                        setIntructorGradebook(undefined);
+                        setGradebookEntries([]);
+                        setGradebookUsers([]);
+                    }
+                    setIsFetchingGradebook(false);
+                })
+                .catch((e) => {
+                    console.log('error', e);
+                    Alert('Failed to fetch gradebook');
+                    setIntructorGradebook(undefined);
+                    setGradebookEntries([]);
+                    setGradebookUsers([]);
+                    setIsFetchingGradebook(false);
+                });
+        }
+    }, []);
+
+    const fetchCourseAssignmentsAnalytics = useCallback(() => {
+        setIsFetchingAssignmentAnalytics(true);
+        if (props.channelId && props.channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getAssignmentAnalytics,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.gradebook && res.data.gradebook.getAssignmentAnalytics) {
+                        setAssignmentAnalytics(res.data.gradebook.getAssignmentAnalytics);
+                    } else {
+                        setAssignmentAnalytics(undefined);
+                    }
+                    setIsFetchingAssignmentAnalytics(false);
+                })
+                .catch((e) => {
+                    console.log('error', e);
+                    Alert('Failed to fetch assignment analytics');
+                    setAssignmentAnalytics(undefined);
+                    setIsFetchingAssignmentAnalytics(false);
+                });
+        }
+    }, []);
+
+    const fetchStudentAnalytics = useCallback(() => {
+        setIsFetchingStudentAnalytics(true);
+        const server = fetchAPI('');
+        server
+            .query({
+                query: getStudentAnalytics,
+                variables: {
+                    channelId: props.channelId,
+                    userId: userAnalyticsSelected,
+                },
+            })
+            .then((res) => {
+                if (res.data.gradebook && res.data.gradebook.getStudentScores) {
+                    setStudentAnalytics(res.data.gradebook.getStudentScores);
+                } else {
+                    setStudentAnalytics(undefined);
+                }
+                setIsFetchingStudentAnalytics(false);
+            })
+            .catch((e) => {
+                console.log('Error', e);
+                Alert('Failed to fetch students.');
+                setStudentAnalytics(undefined);
+                setIsFetchingStudentAnalytics(false);
+            });
+    }, [userAnalyticsSelected]);
+
+    /**
+     * @description Fetch all course students for creating new assignment and assigning scores
+     */
+    const loadCourseStudents = useCallback(() => {
+        setIsFetchingStudents(true);
+        if (props.channelId && props.channelId !== '') {
+            const server = fetchAPI('');
+            server
+                .query({
+                    query: getCourseStudents,
+                    variables: {
+                        channelId: props.channelId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.channel && res.data.channel.getCourseStudents) {
+                        setCourseStudents(res.data.channel.getCourseStudents);
+                    } else {
+                        setCourseStudents([]);
+                    }
+                    setIsFetchingStudents(false);
+                })
+                .catch((e) => {
+                    console.log('Error', e);
+                    Alert('Failed to fetch students.');
+                    setIsFetchingStudents(false);
+                });
+        }
+    }, [props.channelId]);
+
+    const handleEditGradebookEntry = useCallback(
+        (gradebookEntryId: string) => {
+            const { entries, users } = instructorGradebook;
+
+            const findEntry = entries.find((entry: any) => entry.gradebookEntryId === gradebookEntryId);
+
+            const { scores } = findEntry;
+
+            console.log('Entry scores', scores);
+
+            if (!findEntry) return;
+
+            let shareWithAll = false;
+            let storeSubmissionDate = false;
+            let storeFeedback = false;
+
+            let shareWithSelected: string[] = [];
+
+            let gradebookPointsScored: any[] = [];
+
+            users.map((user: any) => {
+                const findScore = scores.find((x: any) => x.userId === user.userId);
+
+                console.log('FindScore', findScore);
+
+                if (!findScore) {
+                    shareWithAll = false;
+                } else {
+                    shareWithSelected.push(user.userId);
+
+                    if (findScore.submittedAt) {
+                        storeSubmissionDate = true;
+                    }
+
+                    if (findScore.feedback) {
+                        storeFeedback = true;
+                    }
+
+                    gradebookPointsScored.push({
+                        _id: user.userId,
+                        fullName: user.fullName,
+                        avatar: user.avatar,
+                        submitted: findScore.submitted,
+                        points: findScore.pointsScored ? findScore.pointsScored : '',
+                        lateSubmission: findScore.lateSubmission,
+                        feedback: findScore.feedback ? findScore.feedback : '',
+                        submittedAt: findScore.submittedAt,
+                    });
+                }
+            });
+
+            setEditEntryId(gradebookEntryId);
+            setNewAssignmentTitle(findEntry.title);
+            setNewAssignmentDeadline(findEntry.deadline);
+            setNewAssignmentGradeWeight(findEntry.gradeWeight);
+            setNewAssignmentTotalPoints(findEntry.totalPoints);
+            setNewAssignmentPointsScored(gradebookPointsScored);
+            setNewAssignmentStep(1);
+            setNewAssignmentShareWithAll(shareWithAll);
+            setNewAssignmentStoreFeedback(storeFeedback);
+            setNewAssignmentStoreSubmittedDate(storeSubmissionDate);
+            setNewAssignmentShareWithSelected(shareWithSelected);
+
+            props.setShowNewAssignment(true);
+        },
+        [instructorGradebook]
+    );
+
+    console.log('Gradebook points scored', newAssignmentPointsScored);
+
+    /**
+     * @description Round time to nearest seconds
+     */
+    const roundSeconds = (time: Date) => {
+        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+        time.setSeconds(0, 0);
+        return time;
+    };
 
     useEffect(() => {
         if (sortByOption === 'Name') {
@@ -187,18 +567,22 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
      * @description Filter users by search
      */
     useEffect(() => {
+        if (!instructorGradebook || !instructorGradebook.users) {
+            return;
+        }
+
         if (studentSearch === '') {
-            setScores([...props.scores]);
+            setGradebookUsers([...instructorGradebook.users]);
         } else {
-            const allStudents = [...props.scores];
+            const allStudents = [...instructorGradebook.users];
 
             const matches = allStudents.filter((student: any) => {
                 return student.fullName.toLowerCase().includes(studentSearch.toLowerCase());
             });
 
-            setScores(matches);
+            setGradebookUsers(matches);
         }
-    }, [studentSearch]);
+    }, [studentSearch, instructorGradebook]);
 
     /**
      * @description Prepare export data for Grades
@@ -332,11 +716,194 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
      * @description Handles modifying grade
      */
     const modifyGrade = () => {
-        props.modifyGrade(activeCueId, activeUserId, activeScore);
-        setActiveCueId('');
+        props.modifyGrade(activeModifyId, activeUserId, activeScore);
+        setActiveModifyId('');
         setActiveUserId('');
         setActiveScore('');
     };
+
+    const resetNewEntryForm = () => {
+        setNewAssignmentTitle('');
+        setNewAssignmentGradeWeight('');
+        setNewAssignmentTotalPoints('');
+        setNewAssignmentDeadline(new Date());
+        setNewAssignmentPointsScored([]);
+        setNewAssignmentFormErrors([]);
+        setNewAssignmentStoreFeedback(false);
+        setNewAssignmentStoreSubmittedDate(false);
+        setNewAssignmentStep(0);
+        setEditEntryId('');
+    };
+
+    const handleDeleteAssignment = useCallback(async () => {
+        setIsDeletingAssignment(true);
+
+        const server = fetchAPI('');
+
+        server
+            .mutate({
+                mutation: deleteGradebookEntry,
+                variables: {
+                    entryId: editEntryId,
+                },
+            })
+            .then((res) => {
+                if (res.data.gradebook && res.data.gradebook.delete) {
+                    Alert('Deleted Gradebook entry successfully.');
+                    resetNewEntryForm();
+                    props.setShowNewAssignment(false);
+                    // Reload gradebook
+                    fetchGradebookInstructor();
+                    fetchCourseAssignmentsAnalytics();
+                    fetchStudentAnalytics();
+                } else {
+                    Alert('Failed to delete gradebook entry.');
+                }
+                setIsDeletingAssignment(false);
+            })
+            .catch((e) => {
+                console.log('Error', e);
+                Alert('Failed to delete gradebook entry.');
+                setIsDeletingAssignment(false);
+            });
+    }, []);
+
+    const handleCreateAssignment = useCallback(
+        async (editing?: boolean) => {
+            setIsCreatingAssignment(true);
+
+            let errors = [];
+
+            if (!newAssignmentTitle || newAssignmentTitle === '') {
+                errors.push('Title is required for the assignment.');
+            }
+
+            if (
+                newAssignmentTotalPoints === '' ||
+                Number.isNaN(Number(newAssignmentTotalPoints)) ||
+                Number(newAssignmentTotalPoints) < 0
+            ) {
+                errors.push('Enter valid total points for the assignment.');
+            }
+
+            if (
+                newAssignmentGradeWeight === '' ||
+                Number.isNaN(Number(newAssignmentGradeWeight)) ||
+                Number(newAssignmentGradeWeight) < 0
+            ) {
+                errors.push('Enter valid grade weight for the assignment.');
+            }
+
+            // Validate each user entry
+            newAssignmentPointsScored.map((user) => {
+                //
+                if (user.submitted) {
+                    if (!user.points || Number.isNaN(Number(user.points))) {
+                        errors.push(`Enter valid points for student ${user.fullName}.`);
+                    }
+                }
+            });
+
+            if (errors.length > 0) {
+                setNewAssignmentFormErrors(errors);
+                setIsCreatingAssignment(false);
+                return;
+            }
+
+            // Sanitize
+            const sanitizeScores = newAssignmentPointsScored.map((user: any) => {
+                return {
+                    userId: user._id,
+                    submitted: user.submitted,
+                    points: user.submitted ? Number(user.points) : undefined,
+                    lateSubmission:
+                        user.submitted && !newAssignmentStoreSubmittedDate ? user.lateSubmission : undefined,
+                    submittedAt: user.submitted && newAssignmentStoreSubmittedDate ? user.submittedAt : undefined,
+                    feedback: user.submitted && newAssignmentStoreFeedback ? user.feedback : undefined,
+                };
+            });
+
+            //
+            const gradebookEntryInput = {
+                title: newAssignmentTitle,
+                totalPoints: Number(newAssignmentTotalPoints),
+                gradeWeight: Number(newAssignmentGradeWeight),
+                deadline: newAssignmentDeadline,
+                channelId: props.channelId,
+                scores: sanitizeScores,
+            };
+
+            console.log('New Assignment Input', gradebookEntryInput);
+
+            // return;
+            const server = fetchAPI('');
+
+            if (editing) {
+                server
+                    .mutate({
+                        mutation: editGradebookEntry,
+                        variables: {
+                            gradebookEntryInput,
+                            entryId: editEntryId,
+                        },
+                    })
+                    .then((res) => {
+                        if (res.data.gradebook && res.data.gradebook.edit) {
+                            Alert('Updated Gradebook entry successfully.');
+                            resetNewEntryForm();
+                            props.setShowNewAssignment(false);
+                            // Reload gradebook
+                            fetchGradebookInstructor();
+                            fetchCourseAssignmentsAnalytics();
+                            fetchStudentAnalytics();
+                        } else {
+                            Alert('Failed to update gradebook entry.');
+                        }
+                        setIsCreatingAssignment(false);
+                    })
+                    .catch((e) => {
+                        console.log('Error', e);
+                        Alert('Failed to update gradebook entry.');
+                        setIsCreatingAssignment(false);
+                    });
+            } else {
+                server
+                    .mutate({
+                        mutation: createGradebookEntry,
+                        variables: {
+                            gradebookEntryInput,
+                        },
+                    })
+                    .then((res) => {
+                        if (res.data.gradebook && res.data.gradebook.create) {
+                            Alert('Created Gradebook entry successfully.');
+                            resetNewEntryForm();
+                            props.setShowNewAssignment(false);
+                            fetchGradebookInstructor();
+                            fetchCourseAssignmentsAnalytics();
+                            fetchStudentAnalytics();
+                        } else {
+                            Alert('Failed to create gradebook entry.');
+                        }
+                        setIsCreatingAssignment(false);
+                    })
+                    .catch((e) => {
+                        console.log('Error', e);
+                        Alert('Failed to update gradebook entry.');
+                        setIsCreatingAssignment(false);
+                    });
+            }
+        },
+        [
+            newAssignmentTitle,
+            newAssignmentTotalPoints,
+            newAssignmentGradeWeight,
+            newAssignmentDeadline,
+            newAssignmentPointsScored,
+            newAssignmentStoreFeedback,
+            newAssignmentStoreSubmittedDate,
+        ]
+    );
 
     // /**
     //  * @description Renders export button
@@ -1336,6 +1903,823 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         );
     };
 
+    const renderAssignmentAnalytics = () => {
+        if (!assignmentAnalytics) return;
+
+        const selectedAssignment = assignmentAnalytics.find(
+            (assignment: any) =>
+                assignment.cueId === assignmentAnalyticsSelected ||
+                assignment.gradebookEntryId === assignmentAnalyticsSelected
+        );
+
+        if (!selectedAssignment) return null;
+
+        const topPerformersData = selectedAssignment.topPerformers.map((user: any) => {
+            return {
+                x: user.fullName,
+                y: assignmentsViewPoints ? user.pointsScored : user.score,
+            };
+        });
+
+        console.log('Top performers data', topPerformersData);
+
+        const bottomPerformersData = selectedAssignment.bottomPerformers.map((user: any) => {
+            return {
+                x: user.fullName,
+                y: assignmentsViewPoints ? user.pointsScored : user.score,
+            };
+        });
+
+        return (
+            <View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        marginTop: 25,
+                        alignItems: 'center',
+                    }}
+                >
+                    <label style={{ width: '100%', maxWidth: 250 }}>
+                        <Select
+                            themeVariant="light"
+                            selectMultiple={false}
+                            groupLabel="&nbsp;"
+                            inputClass="mobiscrollCustomMultiInput"
+                            placeholder="Select..."
+                            touchUi={true}
+                            value={assignmentAnalyticsSelected}
+                            data={assignmentAnalyticsOptions}
+                            onChange={(val: any) => {
+                                setAssignmentAnalyticsSelected(val.value);
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble',
+                                },
+                                medium: {
+                                    touchUi: false,
+                                },
+                            }}
+                        />
+                    </label>
+
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginLeft: 'auto',
+                            alignItems: 'center',
+                            borderRadius: 20,
+                            backgroundColor: '#f8f8f8',
+                        }}
+                    >
+                        {viewGradebookTabs.map((tab: string, ind: number) => {
+                            return (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor:
+                                            (tab === 'Pts' && assignmentsViewPoints) ||
+                                            (tab !== 'Pts' && !assignmentsViewPoints)
+                                                ? '#000'
+                                                : '#f8f8f8',
+                                        borderRadius: 20,
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 7,
+                                        minWidth: 60,
+                                    }}
+                                    onPress={() => {
+                                        if (tab === 'Pts') {
+                                            setAssignmentsViewPoints(true);
+                                        } else {
+                                            setAssignmentsViewPoints(false);
+                                        }
+                                    }}
+                                    key={ind.toString()}
+                                >
+                                    <Text
+                                        style={{
+                                            color:
+                                                (tab === 'Pts' && assignmentsViewPoints) ||
+                                                (tab !== 'Pts' && !assignmentsViewPoints)
+                                                    ? '#fff'
+                                                    : '#000',
+                                            fontSize: 12,
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        {tab}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%',
+                        padding: 20,
+                        marginTop: 30,
+                        borderRadius: 2,
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                    }}
+                >
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Deadline
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {moment(selectedAssignment.deadline).format('MMM Do, h:mma')}
+                            </Text>
+                        </View>
+
+                        <View
+                            style={{
+                                maxWidth: 200,
+                                paddingTop: 20,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    Mean
+                                </Text>
+                                <View
+                                    style={{
+                                        paddingTop: 7,
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        width: 200,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Inter',
+                                            fontSize: 20,
+                                            paddingBottom: 5,
+                                        }}
+                                    >
+                                        {assignmentsViewPoints
+                                            ? selectedAssignment.meanPts
+                                            : selectedAssignment.mean + '%'}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Total Points
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                {selectedAssignment.totalPoints}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                paddingTop: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Median
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {assignmentsViewPoints ? selectedAssignment.medianPts : selectedAssignment.median + '%'}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                paddingTop: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Max
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {assignmentsViewPoints ? selectedAssignment.maxPts : selectedAssignment.max + '%'}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Shared With
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {selectedAssignment.sharedWith} students
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                paddingTop: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Standard Deviation
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {assignmentsViewPoints ? selectedAssignment.stdPts : selectedAssignment.std + '%'}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                paddingTop: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Min
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    paddingTop: 7,
+                                }}
+                            >
+                                {assignmentsViewPoints ? selectedAssignment.minPts : selectedAssignment.min + '%'}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%',
+                        padding: 20,
+                        marginTop: 30,
+                        borderRadius: 2,
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                    }}
+                >
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Status
+                            </Text>
+                            <View
+                                style={{
+                                    width: 250,
+                                }}
+                            >
+                                <VictoryPie
+                                    colorScale={['tomato', 'orange', 'green']}
+                                    data={[
+                                        {
+                                            x: 1,
+                                            y:
+                                                selectedAssignment.sharedWith -
+                                                selectedAssignment.graded -
+                                                selectedAssignment.submitted,
+                                        },
+                                        {
+                                            x: 2,
+                                            y: selectedAssignment.submitted,
+                                        },
+                                        {
+                                            x: 3,
+                                            y: selectedAssignment.graded,
+                                        },
+                                    ]}
+                                    style={{ labels: { fill: 'black', fontSize: 20 } }}
+                                    innerRadius={120}
+                                    labels={({ datum }) => {
+                                        if (datum.y > 0) {
+                                            if (datum.x === 1) {
+                                                return datum.y + ' Not submitted';
+                                            } else if (datum.x === 2) {
+                                                return datum.y + ' Submitted';
+                                            } else {
+                                                return datum.y + ' Graded';
+                                            }
+                                        }
+                                        return '';
+                                    }}
+                                    // labelComponent={<CustomLabel />}
+                                />
+                            </View>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Highest scores
+                            </Text>
+                            <VictoryChart domainPadding={{ x: 50, y: [0, 20] }}>
+                                <VictoryBar
+                                    style={{ data: { fill: '#c43a31' } }}
+                                    dataComponent={<Bar />}
+                                    data={topPerformersData}
+                                />
+                            </VictoryChart>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: '33%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Lowest scores
+                            </Text>
+                            <VictoryChart domainPadding={{ x: 50, y: [0, 20] }}>
+                                <VictoryBar
+                                    style={{ data: { fill: '#c43a31' } }}
+                                    dataComponent={<Bar />}
+                                    data={bottomPerformersData}
+                                />
+                            </VictoryChart>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
+    const renderStudentAnalytics = () => {
+        if (!studentAnalytics || !assignmentAnalytics) return;
+
+        const data = [
+            {
+                x: 1,
+                y: studentAnalytics.progress,
+            },
+            {
+                x: 2,
+                y: 100 - studentAnalytics.progress,
+            },
+        ];
+
+        const avgScoreData: any[] = [];
+
+        const studentScoresData: any[] = [];
+
+        console.log('Student analytics', studentAnalytics);
+
+        console.log('assignmentAnalytics', assignmentAnalytics);
+
+        studentAnalytics.scores.map((score: any) => {
+            const id = score.cueId ? score.cueId : score.gradebookEntryId;
+
+            const findAssignment = assignmentAnalytics.find((x: any) => x.cueId === id || x.gradebookEntryId === id);
+
+            if (!findAssignment) return;
+
+            avgScoreData.push({
+                x: findAssignment.title,
+                y: studentsViewPoints ? findAssignment.meanPts : findAssignment.mean,
+            });
+
+            studentScoresData.push({
+                x: findAssignment.title,
+                y: studentsViewPoints ? score.pointsScored : score.score,
+            });
+        });
+
+        console.log('avgScoreData', avgScoreData);
+        console.log('studentScoresData', studentScoresData);
+
+        return (
+            <View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        marginTop: 25,
+                        alignItems: 'center',
+                    }}
+                >
+                    <label style={{ width: '100%', maxWidth: 250 }}>
+                        <Select
+                            themeVariant="light"
+                            selectMultiple={false}
+                            group={true}
+                            groupLabel="&nbsp;"
+                            inputClass="mobiscrollCustomMultiInput"
+                            placeholder="Select..."
+                            touchUi={true}
+                            value={userAnalyticsSelected}
+                            data={userAnalyticsOptions}
+                            onChange={(val: any) => {
+                                setUserAnalyticsSelected(val.value);
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble',
+                                },
+                                medium: {
+                                    touchUi: false,
+                                },
+                            }}
+                        />
+                    </label>
+
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginLeft: 'auto',
+                            alignItems: 'center',
+                            borderRadius: 20,
+                            backgroundColor: '#f8f8f8',
+                            height: 27,
+                        }}
+                    >
+                        {viewGradebookTabs.map((tab: string, ind: number) => {
+                            return (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor:
+                                            (tab === 'Pts' && studentsViewPoints) ||
+                                            (tab !== 'Pts' && !studentsViewPoints)
+                                                ? '#000'
+                                                : '#f8f8f8',
+                                        borderRadius: 20,
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 7,
+                                        minWidth: 60,
+                                    }}
+                                    onPress={() => {
+                                        if (tab === 'Pts') {
+                                            setStudentsViewPoints(true);
+                                        } else {
+                                            setStudentsViewPoints(false);
+                                        }
+                                    }}
+                                    key={ind.toString()}
+                                >
+                                    <Text
+                                        style={{
+                                            color:
+                                                (tab === 'Pts' && studentsViewPoints) ||
+                                                (tab !== 'Pts' && !studentsViewPoints)
+                                                    ? '#fff'
+                                                    : '#000',
+                                            fontSize: 12,
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        {tab}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%',
+                        padding: 20,
+                        marginTop: 30,
+                        borderRadius: 2,
+                        borderWidth: 1,
+                        borderColor: '#cccccc',
+                    }}
+                >
+                    <View
+                        style={{
+                            width: '50%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Course Progress
+                            </Text>
+                            <View
+                                style={{
+                                    width: 250,
+                                }}
+                            >
+                                <VictoryPie
+                                    data={data}
+                                    innerRadius={120}
+                                    cornerRadius={25}
+                                    labels={() => null}
+                                    style={{
+                                        data: {
+                                            fill: ({ datum }) => {
+                                                const color = datum.y > 30 ? 'green' : 'red';
+                                                return datum.x === 1 ? color : 'transparent';
+                                            },
+                                        },
+                                    }}
+                                    labelComponent={
+                                        <VictoryLabel
+                                            textAnchor="middle"
+                                            verticalAnchor="middle"
+                                            x={200}
+                                            y={200}
+                                            text={`${Math.round(studentAnalytics.progress)}%`}
+                                            style={{ fontSize: 45 }}
+                                        />
+                                    }
+                                />
+                            </View>
+                        </View>
+
+                        {/*  */}
+
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                marginTop: 30,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Submissions
+                            </Text>
+                            <View
+                                style={{
+                                    width: 250,
+                                }}
+                            >
+                                <VictoryPie
+                                    colorScale={['tomato', 'orange', 'green']}
+                                    data={[
+                                        {
+                                            x: 1,
+                                            y:
+                                                studentAnalytics.sharedWith -
+                                                studentAnalytics.graded -
+                                                studentAnalytics.submitted,
+                                        },
+                                        {
+                                            x: 2,
+                                            y: studentAnalytics.submitted,
+                                        },
+                                        {
+                                            x: 3,
+                                            y: studentAnalytics.graded,
+                                        },
+                                    ]}
+                                    style={{ labels: { fill: 'black', fontSize: 20 } }}
+                                    innerRadius={120}
+                                    labels={({ datum }) => {
+                                        if (datum.y > 0) {
+                                            if (datum.x === 1) {
+                                                return datum.y + ' Not submitted';
+                                            } else if (datum.x === 2) {
+                                                return datum.y + ' Submitted';
+                                            } else {
+                                                return datum.y + ' Graded';
+                                            }
+                                        }
+                                        return '';
+                                    }}
+                                    // labelComponent={
+                                    //     <VictoryLabel
+                                    //         textAnchor="middle"
+                                    //         verticalAnchor="middle"
+                                    //         x={200}
+                                    //         y={200}
+                                    //         text={`${Math.round(
+                                    //             (studentAnalytics.graded / studentAnalytics.sharedWith) * 100
+                                    //         )}%`}
+                                    //         style={{ fontSize: 45 }}
+                                    //     />
+                                    // }
+                                    // labelComponent={<CustomLabel />}
+                                />
+                            </View>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: '50%',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                }}
+                            >
+                                Student score vs Course Average
+                            </Text>
+
+                            <VictoryChart horizontal height={400} width={400} padding={40}>
+                                <VictoryStack style={{ data: { width: 25 }, labels: { fontSize: 15 } }}>
+                                    <VictoryBar
+                                        style={{ data: { fill: 'tomato' } }}
+                                        data={studentScoresData}
+                                        y={(data) => -Math.abs(data.y)}
+                                        labels={({ datum }) => `${Math.abs(datum.y)}${studentsViewPoints ? '' : '%'}`}
+                                    />
+                                    <VictoryBar
+                                        style={{ data: { fill: 'orange' } }}
+                                        data={avgScoreData}
+                                        labels={({ datum }) => `${Math.abs(datum.y)}${studentsViewPoints ? '' : '%'}`}
+                                    />
+                                </VictoryStack>
+
+                                <VictoryAxis
+                                    style={{
+                                        axis: { stroke: 'transparent' },
+                                        ticks: { stroke: 'transparent' },
+                                        tickLabels: { fontSize: 15, fill: 'black' },
+                                    }}
+                                    tickLabelComponent={<VictoryLabel x={400 / 2} textAnchor="middle" />}
+                                    tickValues={studentScoresData.map((point) => point.x).reverse()}
+                                />
+                            </VictoryChart>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        );
+    };
+
     const renderInstructorView = () => {
         return (
             <table className="stickyTable">
@@ -1347,7 +2731,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <TextInput
                                 value={studentSearch}
                                 onChangeText={(val: string) => setStudentSearch(val)}
-                                placeholder={'Search'}
+                                placeholder={'Search user'}
                                 placeholderTextColor={'#1F1F1F'}
                                 style={{
                                     width: '100%',
@@ -1378,12 +2762,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </Text>
                         </th>
                         {/* All assignments */}
-                        {cues.map((cue: any, col: number) => {
-                            const { title } = htmlStringParser(cue.cue);
+                        {gradebookEntries.map((entry: any, col: number) => {
                             return (
                                 <th
                                     onClick={() => {
-                                        props.openCueFromGrades(cue._id);
+                                        if (entry.cueId) {
+                                            props.openCueFromGrades(entry.cueId);
+                                        } else {
+                                            handleEditGradebookEntry(entry.gradebookEntryId);
+                                        }
                                     }}
                                     style={{
                                         cursor: 'pointer',
@@ -1397,9 +2784,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             marginBottom: 5,
                                         }}
                                     >
-                                        {new Date(cue.deadline).toString().split(' ')[1] +
+                                        {new Date(entry.deadline).toString().split(' ')[1] +
                                             ' ' +
-                                            new Date(cue.deadline).toString().split(' ')[2]}
+                                            new Date(entry.deadline).toString().split(' ')[2]}
                                     </Text>
                                     <Text
                                         style={{
@@ -1414,11 +2801,22 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         numberOfLines={2}
                                         ellipsizeMode="tail"
                                     >
-                                        {title}
+                                        {entry.title}
                                     </Text>
                                     <Text style={{ textAlign: 'center', fontSize: 12, color: '#000000' }}>
-                                        {cue.gradeWeight ? cue.gradeWeight : '0'}%
+                                        {entry.gradeWeight}%
                                     </Text>
+                                    <View
+                                        style={{
+                                            marginTop: 3,
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name={entry.cueId ? 'open-outline' : 'pencil-outline'}
+                                            size={15}
+                                            color="#1f1f1f"
+                                        />
+                                    </View>
                                 </th>
                             );
                         })}
@@ -1426,7 +2824,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </thead>
                 {/* Main Body */}
                 <tbody>
-                    {scores.length === 0 ? (
+                    {instructorGradebook.users.length === 0 ? (
                         <View
                             style={{
                                 width: '100%',
@@ -1445,24 +2843,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         </View>
                     ) : null}
                     {/* Enter no students message if there is none */}
-                    {scores.map((score: any, row: number) => {
-                        let totalPoints = 0;
-                        let totalScore = 0;
-
-                        score.scores.map((s: any) => {
-                            if (s.releaseSubmission) {
-                                if (!s.submittedAt || !s.graded) {
-                                    // totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                                    totalScore += Number(s.gradeWeight);
-                                } else {
-                                    totalPoints += Number(s.gradeWeight) * Number(s.score);
-                                    totalScore += Number(s.gradeWeight);
-                                }
-                            }
-                        });
+                    {gradebookUsers.map((user: any, row: number) => {
+                        const userTotals = instructorGradebook.totals.find((x: any) => x.userId === user.userId);
 
                         return (
-                            <tr style={{}}>
+                            <tr style={{}} key={user.userId}>
                                 {/* Student info */}
                                 <th>
                                     <View>
@@ -1474,8 +2859,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 alignSelf: 'center',
                                             }}
                                             source={{
-                                                uri: score.avatar
-                                                    ? score.avatar
+                                                uri: user.avatar
+                                                    ? user.avatar
                                                     : 'https://cues-files.s3.amazonaws.com/images/default.png',
                                             }}
                                         />
@@ -1488,7 +2873,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 fontFamily: 'inter',
                                             }}
                                         >
-                                            {score.fullName}
+                                            {user.fullName}
                                         </Text>
                                     </View>
                                 </th>
@@ -1507,23 +2892,21 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textTransform: 'uppercase',
                                             }}
                                         >
-                                            {totalScore !== 0
-                                                ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '')
-                                                : '0'}
-                                            %
+                                            {gradebookViewPoints
+                                                ? userTotals.pointsScored + ' / ' + userTotals.totalPointsPossible
+                                                : userTotals.score + '%'}
                                         </Text>
                                     </View>
                                 </td>
                                 {/* Other scores */}
-                                {cues.map((cue: any, col: number) => {
-                                    const scoreObject = score.scores.find((s: any) => {
-                                        return s.cueId.toString().trim() === cue._id.toString().trim();
-                                    });
+                                {gradebookEntries.map((entry: any, col: number) => {
+                                    const userScore = entry.scores.find((x: any) => x.userId === user.userId);
 
                                     if (
-                                        scoreObject &&
-                                        activeCueId === scoreObject.cueId &&
-                                        activeUserId === score.userId
+                                        userScore &&
+                                        userScore.submitted &&
+                                        (activeModifyId === entry.cueId || activeModifyId === entry.gradebookEntryId) &&
+                                        activeUserId === user.userId
                                     ) {
                                         return (
                                             <td key={col.toString()}>
@@ -1566,7 +2949,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </TouchableOpacity>
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            setActiveCueId('');
+                                                            setActiveModifyId('');
                                                             setActiveUserId('');
                                                             setActiveScore('');
                                                         }}
@@ -1591,15 +2974,18 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     width: '100%',
                                                 }}
                                                 key={row.toString() + '-' + col.toString()}
+                                                disabled={!gradebookViewPoints}
                                                 onPress={() => {
-                                                    if (!scoreObject) return;
+                                                    if (!userScore) return;
 
-                                                    setActiveCueId(scoreObject.cueId);
-                                                    setActiveUserId(score.userId);
-                                                    setActiveScore(scoreObject.score);
+                                                    setActiveModifyId(
+                                                        entry.cueId ? entry.cueId : entry.gradebookEntryId
+                                                    );
+                                                    setActiveUserId(user.userId);
+                                                    setActiveScore(userScore.pointsScored);
                                                 }}
                                             >
-                                                {!scoreObject || !scoreObject.submittedAt ? (
+                                                {!userScore || !userScore.submitted ? (
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
@@ -1607,14 +2993,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             color: '#f94144',
                                                         }}
                                                     >
-                                                        {scoreObject &&
-                                                        scoreObject !== undefined &&
-                                                        scoreObject.graded &&
-                                                        scoreObject.score.replace(/\.0+$/, '') + '%'
-                                                            ? scoreObject.score
-                                                            : !scoreObject || !scoreObject.cueId
-                                                            ? 'N/A'
-                                                            : 'Not Submitted'}
+                                                        {!userScore ? 'N/A' : 'Not Submitted'}
                                                     </Text>
                                                 ) : (
                                                     <Text
@@ -1622,49 +3001,39 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             textAlign: 'center',
                                                             fontSize: 13,
                                                             color:
-                                                                scoreObject &&
-                                                                new Date(parseInt(scoreObject.submittedAt)) >=
-                                                                    new Date(cue.deadline)
+                                                                userScore && userScore.lateSubmission
                                                                     ? '#f3722c'
                                                                     : '#000000',
                                                         }}
                                                     >
-                                                        {scoreObject &&
-                                                        scoreObject !== undefined &&
-                                                        scoreObject.graded &&
-                                                        scoreObject.score
-                                                            ? scoreObject.score.replace(/\.0+$/, '') + '%'
-                                                            : scoreObject &&
-                                                              new Date(parseInt(scoreObject.submittedAt)) >=
-                                                                  new Date(cue.deadline)
+                                                        {userScore.score
+                                                            ? gradebookViewPoints
+                                                                ? userScore.pointsScored + ' / ' + entry.totalPoints
+                                                                : userScore.score + '%'
+                                                            : userScore.lateSubmission
                                                             ? 'Late'
                                                             : 'Submitted'}
                                                     </Text>
                                                 )}
 
-                                                {scoreObject &&
-                                                scoreObject !== undefined &&
-                                                scoreObject.score &&
-                                                scoreObject.graded &&
-                                                (new Date(parseInt(scoreObject.submittedAt)) >=
-                                                    new Date(cue.deadline) ||
-                                                    !scoreObject.submittedAt) ? (
+                                                {userScore &&
+                                                userScore.submitted &&
+                                                userScore.score &&
+                                                userScore.lateSubmission ? (
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
                                                             fontSize: 13,
-                                                            color: !scoreObject.submittedAt ? '#f94144' : '#f3722c',
+                                                            color: '#f3722c',
                                                             marginTop: 5,
                                                             borderWidth: 0,
-                                                            borderColor: !scoreObject.submittedAt
-                                                                ? '#f94144'
-                                                                : '#f3722c',
+                                                            borderColor: '#f3722c',
                                                             borderRadius: 10,
                                                             width: 60,
                                                             alignSelf: 'center',
                                                         }}
                                                     >
-                                                        {!scoreObject.submittedAt ? '(Missing)' : '(Late)'}
+                                                        (Late)
                                                     </Text>
                                                 ) : null}
                                             </TouchableOpacity>
@@ -1679,395 +3048,899 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         );
     };
 
-    const renderInstructorViewNative = () => {
+    if (props.showNewAssignment) {
         return (
             <View
                 style={{
-                    height: props.isOwner ? '100%' : 'auto',
-                    maxHeight: Dimensions.get('window').height - 64 - 45 - 50, // Navbar - 50 padding
-                    marginLeft: props.isOwner || Dimensions.get('window').width < 768 ? 0 : 100,
-                    minWidth: '100%',
+                    backgroundColor: '#fff',
+                    width: '100%',
+                    height: '100%',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingHorizontal: paddingResponsive(),
                 }}
             >
-                <ScrollView
-                    showsHorizontalScrollIndicator={true}
-                    horizontal={true}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
+                <View
+                    style={{
+                        maxWidth: 1024,
+                        width: '100%',
                         flexDirection: 'column',
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        minWidth: '100%',
+                        alignItems: 'center',
                     }}
-                    nestedScrollEnabled={true}
                 >
-                    <View
-                        style={{
-                            minHeight: 70,
-                            flexDirection: 'row',
-                            overflow: 'hidden',
-                            borderBottomWidth: 1,
-                            borderBottomColor: '#f2f2f2',
-                            backgroundColor: '#f8f8f8',
-                            minWidth: '100%',
-                        }}
-                        key={'-'}
-                    >
-                        {props.isOwner ? (
-                            <View
+                    {/* HEADER */}
+                    <View style={{ width: '100%', backgroundColor: 'white', flexDirection: 'row', marginTop: 20 }}>
+                        <TouchableOpacity
+                            key={Math.random()}
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                            }}
+                            onPress={() => {
+                                props.setShowNewAssignment(false);
+                                resetNewEntryForm();
+                            }}
+                        >
+                            <Text
                                 style={{
-                                    backgroundColor: '#f8f8f8',
-                                    width: Dimensions.get('window').width < 768 ? 90 : 150,
-                                    justifyContent: 'center',
+                                    borderRadius: 15,
+                                    marginTop: 5,
                                     display: 'flex',
-                                    flexDirection: 'column',
-                                    padding: 10,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                 }}
-                                key={'0,0'}
                             >
-                                <TextInput
-                                    value={studentSearch}
-                                    onChangeText={(val: string) => setStudentSearch(val)}
-                                    placeholder={'Search'}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    style={{
-                                        width: '100%',
-                                        borderColor: '#ccc',
-                                        borderBottomWidth: 1,
-                                        fontSize: 15,
-                                        paddingVertical: 8,
-                                        marginTop: 0,
-                                        paddingHorizontal: 10,
-                                    }}
-                                />
-                            </View>
-                        ) : null}
-                        {cues.length === 0 ? null : (
-                            <View style={styles.colHeader} key={'total'}>
+                                <Ionicons name="chevron-back-outline" color="#000" size={23} />
                                 <Text
                                     style={{
                                         textAlign: 'center',
-                                        fontSize: 14,
-                                        color: '#000000',
+                                        color: '#000',
+                                        fontSize: 15,
                                         fontFamily: 'inter',
-                                        marginBottom: 5,
+                                        textTransform: 'capitalize',
                                     }}
                                 >
-                                    {PreferredLanguageText('total')}
+                                    Back
                                 </Text>
-                            </View>
-                        )}
-                        {cues.map((cue: any, col: number) => {
-                            const { title } = htmlStringParser(cue.cue);
-                            return (
-                                <TouchableOpacity
-                                    style={styles.colHeader}
-                                    key={col.toString()}
-                                    onPress={() => props.openCueFromGrades(cue._id)}
-                                >
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontSize: 12,
-                                            color: '#000000',
-                                            marginBottom: 5,
-                                        }}
-                                    >
-                                        {new Date(cue.deadline).toString().split(' ')[1] +
-                                            ' ' +
-                                            new Date(cue.deadline).toString().split(' ')[2]}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontSize: 14,
-                                            color: '#000000',
-                                            fontFamily: 'inter',
-                                            marginBottom: 5,
-                                            textAlignVertical: 'center',
-                                        }}
-                                        numberOfLines={2}
-                                        ellipsizeMode="tail"
-                                    >
-                                        {title}
-                                    </Text>
-                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#000000' }}>
-                                        {cue.gradeWeight ? cue.gradeWeight : '0'}%
-                                    </Text>
-                                </TouchableOpacity>
-                            );
-                        })}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            paddingBottom: 20,
+                            fontFamily: 'inter',
+                            flex: 1,
+                            lineHeight: 25,
+                            textAlign: 'center',
+                        }}
+                    >
+                        New Gradebook Entry
+                    </Text>
+
+                    <View style={{ width: '100%' }}>
+                        <Text
+                            style={{
+                                fontSize: 15,
+                                fontFamily: 'inter',
+                                color: '#000000',
+                            }}
+                        >
+                            Title
+                        </Text>
+                        <CustomTextInput
+                            value={newAssignmentTitle}
+                            placeholder={''}
+                            onChangeText={(val) => setNewAssignmentTitle(val)}
+                            placeholderTextColor={'#1F1F1F'}
+                            required={true}
+                        />
                     </View>
 
-                    {/* Search results empty */}
-                    {scores.length === 0 ? (
-                        <View>
+                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                        <View
+                            style={{
+                                width: '33%',
+                                paddingRight: 20,
+                            }}
+                        >
                             <Text
                                 style={{
-                                    width: '100%',
-                                    color: '#1F1F1F',
-                                    fontSize: 20,
-                                    paddingVertical: 50,
-                                    paddingHorizontal: 5,
+                                    fontSize: 15,
                                     fontFamily: 'inter',
+                                    color: '#000000',
                                 }}
                             >
-                                No Students.
+                                Total Points
                             </Text>
+                            <CustomTextInput
+                                value={newAssignmentTotalPoints}
+                                placeholder={''}
+                                onChangeText={(val) => setNewAssignmentTotalPoints(val)}
+                                keyboardType="numeric"
+                                placeholderTextColor={'#1F1F1F'}
+                                required={true}
+                            />
                         </View>
-                    ) : null}
+                        <View
+                            style={{
+                                width: '33%',
+                                paddingRight: 20,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    fontFamily: 'inter',
+                                    color: '#000000',
+                                }}
+                            >
+                                Grade Weight
+                            </Text>
+                            <CustomTextInput
+                                value={newAssignmentGradeWeight}
+                                placeholder={''}
+                                onChangeText={(val) => setNewAssignmentGradeWeight(val)}
+                                placeholderTextColor={'#1F1F1F'}
+                                keyboardType="numeric"
+                                required={true}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                width: '33%',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    fontFamily: 'inter',
+                                    color: '#000000',
+                                }}
+                            >
+                                Deadline
+                            </Text>
+                            <View
+                                style={{
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Datepicker
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
+                                    value={newAssignmentDeadline}
+                                    themeVariant="light"
+                                    inputProps={{
+                                        placeholder: 'Select date...',
+                                    }}
+                                    onChange={(event: any) => {
+                                        const date = new Date(event.value);
+                                        const roundOffDate = roundSeconds(date);
+                                        setNewAssignmentDeadline(roundOffDate);
+                                    }}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true,
+                                        },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false,
+                                        },
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </View>
 
-                    <ScrollView
-                        showsVerticalScrollIndicator={true}
-                        horizontal={false}
-                        contentContainerStyle={{
-                            height: '100%',
+                    <View
+                        style={{
+                            flexDirection: 'column',
                             width: '100%',
                         }}
-                        nestedScrollEnabled={true}
                     >
-                        <View>
-                            {scores.map((score: any, row: number) => {
-                                let totalPoints = 0;
-                                let totalScore = 0;
-                                score.scores.map((s: any) => {
-                                    if (s.releaseSubmission) {
-                                        if (!s.submittedAt || !s.graded) {
-                                            // totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                                            totalScore += Number(s.gradeWeight);
-                                        } else {
-                                            totalPoints += Number(s.gradeWeight) * Number(s.score);
-                                            totalScore += Number(s.gradeWeight);
-                                        }
-                                    }
-                                });
+                        <Text
+                            style={{
+                                fontSize: 15,
+                                fontFamily: 'inter',
+                                color: '#000000',
+                            }}
+                        >
+                            Options
+                        </Text>
+                        {/* Store submission date */}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                width: '100%',
+                                borderBottomColor: '#f2f2f2',
+                                borderBottomWidth: 1,
+                                padding: 10,
+                                marginTop: 10,
+                            }}
+                        >
+                            {/* Checkbox */}
+                            <View>
+                                <input
+                                    type="checkbox"
+                                    checked={newAssignmentStoreSubmittedDate}
+                                    onChange={(e: any) => {
+                                        setNewAssignmentStoreSubmittedDate(!newAssignmentStoreSubmittedDate);
+                                    }}
+                                />
+                            </View>
+                            {/* Option */}
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    paddingLeft: 15,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        fontFamily: 'inter',
+                                    }}
+                                >
+                                    Record submission date
+                                </Text>
+                                <Text style={{ marginTop: 10 }}>
+                                    Check if you wish to store when the student submitted the assignment
+                                </Text>
+                            </View>
+                        </View>
 
-                                return (
-                                    <View
-                                        style={{
-                                            minHeight: 70,
-                                            flexDirection: 'row',
-                                            overflow: 'hidden',
-                                            borderBottomColor: '#f2f2f2',
-                                            borderBottomWidth: row === scores.length - 1 ? 0 : 1,
-                                        }}
-                                        key={row}
-                                    >
-                                        {props.isOwner ? (
-                                            <View
-                                                style={{
-                                                    width: Dimensions.get('window').width < 768 ? 90 : 150,
-                                                    justifyContent: 'center',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    padding: 10,
-                                                }}
-                                            >
-                                                <View>
-                                                    <Image
-                                                        style={{
-                                                            height: 37,
-                                                            width: 37,
-                                                            borderRadius: 75,
-                                                            alignSelf: 'center',
-                                                        }}
-                                                        source={{
-                                                            uri: score.avatar
-                                                                ? score.avatar
-                                                                : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                                        }}
-                                                    />
+                        {/* Store feedback */}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                width: '100%',
+                                borderBottomColor: '#f2f2f2',
+                                borderBottomWidth: 1,
+                                padding: 10,
+                            }}
+                        >
+                            {/* Checkbox */}
+                            <View>
+                                <input
+                                    type="checkbox"
+                                    checked={newAssignmentStoreFeedback}
+                                    onChange={(e: any) => {
+                                        setNewAssignmentStoreFeedback(!newAssignmentStoreFeedback);
+                                    }}
+                                />
+                            </View>
+                            {/* Option */}
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    paddingLeft: 15,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        fontFamily: 'inter',
+                                    }}
+                                >
+                                    Give feedback
+                                </Text>
+                                <Text style={{ marginTop: 10 }}>
+                                    Check if you wish to give feedback for each student
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{ width: '100%', marginTop: 30 }}>
+                        <Text
+                            style={{
+                                fontSize: 15,
+                                fontFamily: 'inter',
+                                color: '#000000',
+                            }}
+                        >
+                            Assign scores
+                        </Text>
+
+                        {newAssignmentStep === 1 ? (
+                            <View
+                                style={{
+                                    marginTop: 20,
+                                    borderColor: '#ccc',
+                                    borderWidth: 1,
+                                    maxHeight: 500,
+                                    overflow: 'scroll',
+                                }}
+                            >
+                                <table className="stickyTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: 14,
+                                                        color: '#000000',
+                                                        fontFamily: 'inter',
+                                                        marginBottom: 5,
+                                                    }}
+                                                >
+                                                    Student
+                                                </Text>
+                                            </th>
+
+                                            <th>
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: 14,
+                                                        color: '#000000',
+                                                        fontFamily: 'inter',
+                                                        marginBottom: 5,
+                                                    }}
+                                                >
+                                                    Submitted
+                                                </Text>
+                                            </th>
+
+                                            <th>
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: 14,
+                                                        color: '#000000',
+                                                        fontFamily: 'inter',
+                                                        marginBottom: 5,
+                                                    }}
+                                                >
+                                                    Score
+                                                </Text>
+                                            </th>
+
+                                            <th>
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: 14,
+                                                        color: '#000000',
+                                                        fontFamily: 'inter',
+                                                        marginBottom: 5,
+                                                    }}
+                                                >
+                                                    {newAssignmentStoreSubmittedDate ? 'Date' : 'Late'}
+                                                </Text>
+                                            </th>
+                                            {newAssignmentStoreFeedback ? (
+                                                <th>
                                                     <Text
                                                         style={{
-                                                            marginTop: 7,
                                                             textAlign: 'center',
                                                             fontSize: 14,
                                                             color: '#000000',
                                                             fontFamily: 'inter',
+                                                            marginBottom: 5,
                                                         }}
                                                     >
-                                                        {score.fullName}
+                                                        Feedback
+                                                    </Text>
+                                                </th>
+                                            ) : null}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {newAssignmentPointsScored.map((student, studentIdx) => {
+                                            return (
+                                                <tr>
+                                                    <th>
+                                                        <View>
+                                                            <Image
+                                                                style={{
+                                                                    height: 37,
+                                                                    width: 37,
+                                                                    borderRadius: 75,
+                                                                    alignSelf: 'center',
+                                                                }}
+                                                                source={{
+                                                                    uri: student.avatar
+                                                                        ? student.avatar
+                                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                                                }}
+                                                            />
+                                                            <Text
+                                                                style={{
+                                                                    marginTop: 7,
+                                                                    textAlign: 'center',
+                                                                    fontSize: 14,
+                                                                    color: '#000000',
+                                                                    fontFamily: 'inter',
+                                                                }}
+                                                            >
+                                                                {student.fullName}
+                                                            </Text>
+                                                        </View>
+                                                    </th>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            <Switch
+                                                                value={student.submitted}
+                                                                onValueChange={() => {
+                                                                    const updatePointsScored = [
+                                                                        ...newAssignmentPointsScored,
+                                                                    ];
+
+                                                                    updatePointsScored[studentIdx].submitted =
+                                                                        !student.submitted;
+                                                                    updatePointsScored[studentIdx].points = '';
+                                                                    updatePointsScored[studentIdx].lateSubmission =
+                                                                        false;
+
+                                                                    setNewAssignmentPointsScored(updatePointsScored);
+                                                                }}
+                                                                style={{ height: 20 }}
+                                                                trackColor={{
+                                                                    false: '#f2f2f2',
+                                                                    true: '#000',
+                                                                }}
+                                                                activeThumbColor="white"
+                                                            />
+                                                        </View>
+                                                    </td>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            {!student.submitted ? (
+                                                                <Text
+                                                                    style={{
+                                                                        width: 80,
+                                                                    }}
+                                                                >
+                                                                    -
+                                                                </Text>
+                                                            ) : (
+                                                                <TextInput
+                                                                    value={student.points}
+                                                                    placeholder={''}
+                                                                    onChangeText={(val) => {
+                                                                        const updatePointsScored = [
+                                                                            ...newAssignmentPointsScored,
+                                                                        ];
+
+                                                                        updatePointsScored[studentIdx].points = val;
+
+                                                                        setNewAssignmentPointsScored(
+                                                                            updatePointsScored
+                                                                        );
+                                                                    }}
+                                                                    style={{
+                                                                        width: 80,
+                                                                        marginRight: 5,
+                                                                        padding: 8,
+                                                                        borderColor: '#ccc',
+                                                                        borderWidth: 1,
+                                                                        fontSize: 14,
+                                                                    }}
+                                                                    placeholderTextColor={'#1F1F1F'}
+                                                                />
+                                                            )}
+                                                        </View>
+                                                    </td>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                flexDirection: 'row',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            {!student.submitted ? (
+                                                                <Text>-</Text>
+                                                            ) : newAssignmentStoreSubmittedDate ? (
+                                                                <View
+                                                                    style={{
+                                                                        marginTop: 10,
+                                                                    }}
+                                                                >
+                                                                    <Datepicker
+                                                                        controls={['date']}
+                                                                        touchUi={true}
+                                                                        theme="ios"
+                                                                        value={student.submittedAt}
+                                                                        themeVariant="light"
+                                                                        inputProps={{
+                                                                            placeholder: 'Repeat till...',
+                                                                        }}
+                                                                        onChange={(event: any) => {
+                                                                            const date = new Date(event.value);
+                                                                            const roundOffDate = roundSeconds(date);
+
+                                                                            const updatePointsScored = [
+                                                                                ...newAssignmentPointsScored,
+                                                                            ];
+
+                                                                            updatePointsScored[studentIdx].submittedAt =
+                                                                                roundOffDate;
+
+                                                                            setNewAssignmentPointsScored(
+                                                                                updatePointsScored
+                                                                            );
+                                                                        }}
+                                                                        responsive={{
+                                                                            xsmall: {
+                                                                                controls: ['date'],
+                                                                                display: 'bottom',
+                                                                                touchUi: true,
+                                                                            },
+                                                                            medium: {
+                                                                                controls: ['date'],
+                                                                                display: 'anchored',
+                                                                                touchUi: false,
+                                                                            },
+                                                                        }}
+                                                                    />
+                                                                </View>
+                                                            ) : (
+                                                                <Switch
+                                                                    value={student.lateSubmission}
+                                                                    onValueChange={() => {
+                                                                        const updatePointsScored = [
+                                                                            ...newAssignmentPointsScored,
+                                                                        ];
+
+                                                                        updatePointsScored[studentIdx].lateSubmission =
+                                                                            !student.lateSubmission;
+
+                                                                        setNewAssignmentPointsScored(
+                                                                            updatePointsScored
+                                                                        );
+                                                                    }}
+                                                                    style={{ height: 20 }}
+                                                                    trackColor={{
+                                                                        false: '#f2f2f2',
+                                                                        true: '#000',
+                                                                    }}
+                                                                    activeThumbColor="white"
+                                                                />
+                                                            )}
+                                                        </View>
+                                                    </td>
+                                                    {newAssignmentStoreFeedback ? (
+                                                        <td>
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: 'row',
+                                                                    justifyContent: 'center',
+                                                                    paddingVertical: 10,
+                                                                }}
+                                                            >
+                                                                <TextInput
+                                                                    multiline={true}
+                                                                    numberOfLines={2}
+                                                                    style={{
+                                                                        padding: 8,
+                                                                        borderColor: '#ccc',
+                                                                        borderWidth: 1,
+                                                                        fontSize: 14,
+                                                                    }}
+                                                                    value={student.feedback}
+                                                                    onChangeText={(val) => {
+                                                                        const updatePointsScored = [
+                                                                            ...newAssignmentPointsScored,
+                                                                        ];
+
+                                                                        updatePointsScored[studentIdx].feedback = val;
+
+                                                                        setNewAssignmentPointsScored(
+                                                                            updatePointsScored
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                        </td>
+                                                    ) : null}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </View>
+                        ) : (
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    width: '100%',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingTop: 20,
+                                    }}
+                                >
+                                    <Switch
+                                        value={newAssignmentShareWithAll}
+                                        onValueChange={() => setNewAssignmentShareWithAll(!newAssignmentShareWithAll)}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f2f2f2',
+                                            true: '#000',
+                                        }}
+                                        activeThumbColor="white"
+                                    />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 10,
+                                        }}
+                                    >
+                                        All Students
+                                    </Text>
+                                </View>
+
+                                <View style={{ marginTop: 15 }}>
+                                    <label style={{ width: '100%' }}>
+                                        <Select
+                                            themeVariant="light"
+                                            selectMultiple={true}
+                                            group={true}
+                                            groupLabel="&nbsp;"
+                                            inputClass="mobiscrollCustomMultiInput"
+                                            disabled={newAssignmentShareWithAll}
+                                            placeholder="Select..."
+                                            touchUi={true}
+                                            value={newAssignmentShareWithSelected}
+                                            data={newAssignmentShareWithOptions}
+                                            onChange={(val: any) => {
+                                                setNewAssignmentShareWithSelected(val.value);
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble',
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                },
+                                            }}
+                                        />
+                                    </label>
+                                </View>
+                            </View>
+                        )}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                width: '100%',
+                                marginTop: 20,
+                            }}
+                        >
+                            <Text>Step {newAssignmentStep + 1} / 2</Text>
+
+                            <TouchableOpacity
+                                disabled={newAssignmentShareWithSelected.length === 0}
+                                style={{
+                                    backgroundColor: 'black',
+                                    paddingVertical: 12,
+                                    paddingHorizontal: 18,
+                                }}
+                                onPress={() => {
+                                    if (newAssignmentStep === 0) {
+                                        setNewAssignmentStep(1);
+                                    } else {
+                                        setNewAssignmentStep(0);
+                                    }
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: 'Inter',
+                                        color: '#fff',
+                                    }}
+                                >
+                                    {newAssignmentStep === 0
+                                        ? newAssignmentShareWithSelected.length === 0
+                                            ? 'No Selections'
+                                            : 'Next'
+                                        : 'Back'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    {/* Form errors */}
+                    {newAssignmentFormErrors.length > 0 ? (
+                        <View
+                            style={{
+                                borderRadius: 12,
+                                padding: 20,
+                                backgroundColor: '#FEF2FE',
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                marginTop: 30,
+                            }}
+                        >
+                            <View style={{}}>
+                                <Ionicons name={'close-circle'} size={16} color={'#F8719D'} />
+                            </View>
+                            <View
+                                style={{
+                                    paddingLeft: 10,
+                                }}
+                            >
+                                <View style={{}}>
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            color: '#991B1B',
+                                            fontFamily: 'Inter',
+                                        }}
+                                    >
+                                        There were {newAssignmentFormErrors.length} errors with your submission
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        paddingLeft: 10,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    {newAssignmentFormErrors.map((error) => {
+                                        return (
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    paddingBottom: 7,
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#B91C1C',
+                                                    }}
+                                                >
+                                                    -
+                                                </Text>
+                                                <View
+                                                    style={{
+                                                        paddingLeft: 10,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            color: '#B91C1C',
+                                                        }}
+                                                    >
+                                                        {error}
                                                     </Text>
                                                 </View>
                                             </View>
-                                        ) : null}
-                                        {cues.length === 0 ? null : (
-                                            <View style={styles.col} key={'total'}>
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 13,
-                                                        color: '#000000',
-                                                        textTransform: 'uppercase',
-                                                    }}
-                                                >
-                                                    {totalScore !== 0
-                                                        ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '')
-                                                        : '0'}
-                                                    %
-                                                </Text>
-                                            </View>
-                                        )}
-                                        {cues.map((cue: any, col: number) => {
-                                            const scoreObject = score.scores.find((s: any) => {
-                                                return s.cueId.toString().trim() === cue._id.toString().trim();
-                                            });
-
-                                            if (
-                                                scoreObject &&
-                                                activeCueId === scoreObject.cueId &&
-                                                activeUserId === score.userId
-                                            ) {
-                                                return (
-                                                    <View style={styles.col} key={col.toString()}>
-                                                        <View
-                                                            style={{
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                                justifyContent: 'flex-end',
-                                                                alignItems: 'center',
-                                                            }}
-                                                        >
-                                                            <TextInput
-                                                                value={activeScore}
-                                                                placeholder={' / 100'}
-                                                                onChangeText={(val) => {
-                                                                    setActiveScore(val);
-                                                                }}
-                                                                style={{
-                                                                    width: '50%',
-                                                                    marginRight: 5,
-                                                                    padding: 8,
-                                                                    borderBottomColor: '#f2f2f2',
-                                                                    borderBottomWidth: 1,
-                                                                    fontSize: 14,
-                                                                }}
-                                                                placeholderTextColor={'#1F1F1F'}
-                                                            />
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    modifyGrade();
-                                                                }}
-                                                                disabled={props.user.email === disableEmailId}
-                                                            >
-                                                                <Ionicons
-                                                                    name="checkmark-circle-outline"
-                                                                    size={15}
-                                                                    style={{ marginRight: 5 }}
-                                                                    color={'#8bc34a'}
-                                                                />
-                                                            </TouchableOpacity>
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    setActiveCueId('');
-                                                                    setActiveUserId('');
-                                                                    setActiveScore('');
-                                                                }}
-                                                            >
-                                                                <Ionicons
-                                                                    name="close-circle-outline"
-                                                                    size={15}
-                                                                    color={'#f94144'}
-                                                                />
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                    </View>
-                                                );
-                                            }
-
-                                            return (
-                                                <TouchableOpacity
-                                                    disabled={!props.isOwner}
-                                                    style={styles.col}
-                                                    key={row.toString() + '-' + col.toString()}
-                                                    onPress={() => {
-                                                        if (!scoreObject) return;
-
-                                                        setActiveCueId(scoreObject.cueId);
-                                                        setActiveUserId(score.userId);
-                                                        setActiveScore(scoreObject.score);
-                                                    }}
-                                                >
-                                                    {!scoreObject || !scoreObject.submittedAt ? (
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                fontSize: 13,
-                                                                color: '#f94144',
-                                                            }}
-                                                        >
-                                                            {scoreObject &&
-                                                            scoreObject !== undefined &&
-                                                            scoreObject.graded &&
-                                                            scoreObject.score.replace(/\.0+$/, '') + '%'
-                                                                ? scoreObject.score
-                                                                : !scoreObject || !scoreObject.cueId
-                                                                ? 'N/A'
-                                                                : 'Not Submitted'}
-                                                        </Text>
-                                                    ) : (
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                fontSize: 13,
-                                                                color:
-                                                                    scoreObject &&
-                                                                    new Date(parseInt(scoreObject.submittedAt)) >=
-                                                                        new Date(cue.deadline)
-                                                                        ? '#f3722c'
-                                                                        : '#000000',
-                                                            }}
-                                                        >
-                                                            {scoreObject &&
-                                                            scoreObject !== undefined &&
-                                                            scoreObject.graded &&
-                                                            scoreObject.score
-                                                                ? scoreObject.score.replace(/\.0+$/, '') + '%'
-                                                                : scoreObject &&
-                                                                  new Date(parseInt(scoreObject.submittedAt)) >=
-                                                                      new Date(cue.deadline)
-                                                                ? 'Late'
-                                                                : 'Submitted'}
-                                                        </Text>
-                                                    )}
-
-                                                    {scoreObject &&
-                                                    scoreObject !== undefined &&
-                                                    scoreObject.score &&
-                                                    scoreObject.graded &&
-                                                    (new Date(parseInt(scoreObject.submittedAt)) >=
-                                                        new Date(cue.deadline) ||
-                                                        !scoreObject.submittedAt) ? (
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                fontSize: 13,
-                                                                color: !scoreObject.submittedAt ? '#f94144' : '#f3722c',
-                                                                marginTop: 5,
-                                                                borderWidth: 0,
-                                                                borderColor: !scoreObject.submittedAt
-                                                                    ? '#f94144'
-                                                                    : '#f3722c',
-                                                                borderRadius: 10,
-                                                                width: 60,
-                                                                alignSelf: 'center',
-                                                            }}
-                                                        >
-                                                            {!scoreObject.submittedAt ? '(Missing)' : '(Late)'}
-                                                        </Text>
-                                                    ) : null}
-                                                </TouchableOpacity>
-                                            );
-                                        })}
-                                    </View>
-                                );
-                            })}
+                                        );
+                                    })}
+                                </View>
+                            </View>
                         </View>
-                    </ScrollView>
-                </ScrollView>
+                    ) : null}
+
+                    {/* Submit buttons */}
+                    <View
+                        style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            marginVertical: 50,
+                        }}
+                    >
+                        {editEntryId ? (
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <TouchableOpacity
+                                    style={{
+                                        marginBottom: 20,
+                                    }}
+                                    onPress={() => handleCreateAssignment(true)}
+                                    disabled={isCreatingAssignment || props.user.email === disableEmailId}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: 24,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
+                                            textTransform: 'uppercase',
+                                            width: 120,
+                                        }}
+                                    >
+                                        {isCreatingAssignment ? '...' : 'EDIT'}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={{
+                                        marginBottom: 20,
+                                    }}
+                                    onPress={() => handleDeleteAssignment()}
+                                    disabled={isDeletingAssignment || props.user.email === disableEmailId}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#000',
+                                            backgroundColor: '#fff',
+                                            fontSize: 11,
+                                            paddingHorizontal: 24,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
+                                            textTransform: 'uppercase',
+                                            width: 120,
+                                        }}
+                                    >
+                                        {isDeletingAssignment ? '...' : 'DELETE'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        ) : (
+                            <TouchableOpacity
+                                style={{
+                                    marginBottom: 20,
+                                }}
+                                onPress={() => handleCreateAssignment(false)}
+                                disabled={isCreatingAssignment || props.user.email === disableEmailId}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        color: '#fff',
+                                        backgroundColor: '#000',
+                                        fontSize: 11,
+                                        paddingHorizontal: 24,
+                                        fontFamily: 'inter',
+                                        overflow: 'hidden',
+                                        paddingVertical: 14,
+                                        textTransform: 'uppercase',
+                                        width: 120,
+                                    }}
+                                >
+                                    {isCreatingAssignment ? '...' : 'CREATE'}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
             </View>
         );
-    };
+    }
 
     // MAIN RETURN
     return (
@@ -2080,46 +3953,209 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }}
         >
             {/* {renderExportButton()} */}
-            {props.scores.length === 0 || cues.length === 0 ? (
-                <View style={{ backgroundColor: '#fff' }}>
-                    <Text
-                        style={{
-                            width: '100%',
-                            color: '#1F1F1F',
-                            fontSize: 16,
-                            paddingVertical: 100,
-                            paddingHorizontal: 10,
-                            fontFamily: 'inter',
-                        }}
-                    >
-                        {cues.length === 0
-                            ? props.isOwner
-                                ? PreferredLanguageText('noGraded')
-                                : PreferredLanguageText('noGradedStudents')
-                            : PreferredLanguageText('noStudents')}
-                    </Text>
-                </View>
-            ) : props.isOwner ? (
+            {props.isOwner ? (
                 <View
                     style={{
-                        width: '100%',
-                        backgroundColor: 'white',
-                        maxHeight: Dimensions.get('window').height - 64 - 45 - 120,
-                        maxWidth: 1024,
-                        borderRadius: 2,
-                        borderWidth: 1,
-                        marginTop: 25,
-                        borderColor: '#cccccc',
-                        zIndex: 5000000,
                         flexDirection: 'column',
-                        justifyContent: props.isOwner ? 'flex-start' : 'center',
-                        alignItems: props.isOwner ? 'flex-start' : 'center',
-                        position: 'relative',
-                        overflow: 'scroll',
                     }}
-                    key={JSON.stringify(props.scores)}
                 >
-                    {renderInstructorView()}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 50,
+                        }}
+                    >
+                        <View>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Scores
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                marginLeft: 'auto',
+                                alignItems: 'center',
+                                borderRadius: 20,
+                                backgroundColor: '#f8f8f8',
+                            }}
+                        >
+                            {viewGradebookTabs.map((tab: string, ind: number) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor:
+                                                (tab === 'Pts' && gradebookViewPoints) ||
+                                                (tab !== 'Pts' && !gradebookViewPoints)
+                                                    ? '#000'
+                                                    : '#f8f8f8',
+                                            borderRadius: 20,
+                                            paddingHorizontal: 14,
+                                            paddingVertical: 7,
+                                            minWidth: 60,
+                                        }}
+                                        onPress={() => {
+                                            if (tab === 'Pts') {
+                                                setGradebookViewPoints(true);
+                                            } else {
+                                                setGradebookViewPoints(false);
+                                            }
+                                        }}
+                                        key={ind.toString()}
+                                    >
+                                        <Text
+                                            style={{
+                                                color:
+                                                    (tab === 'Pts' && gradebookViewPoints) ||
+                                                    (tab !== 'Pts' && !gradebookViewPoints)
+                                                        ? '#fff'
+                                                        : '#000',
+                                                fontSize: 12,
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            {tab}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                    </View>
+                    {isFetchingGradebook ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                flex: 1,
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                backgroundColor: '#fff',
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+                                paddingVertical: 100,
+                            }}
+                        >
+                            <ActivityIndicator color={'#1F1F1F'} />
+                        </View>
+                    ) : !instructorGradebook ? (
+                        <View>
+                            <Text
+                                style={{
+                                    width: '100%',
+                                    color: '#1F1F1F',
+                                    fontSize: 16,
+                                    paddingVertical: 100,
+                                    paddingHorizontal: 10,
+                                    fontFamily: 'inter',
+                                }}
+                            >
+                                Could not fetch instructor gradebook.
+                            </Text>
+                        </View>
+                    ) : (
+                        <View
+                            style={{
+                                width: '100%',
+                                backgroundColor: 'white',
+                                maxHeight: Dimensions.get('window').height - 64 - 45 - 120,
+                                maxWidth: 1024,
+                                borderRadius: 2,
+                                borderWidth: 1,
+                                marginTop: 20,
+                                borderColor: '#cccccc',
+                                zIndex: 5000000,
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'flex-start',
+                                position: 'relative',
+                                overflow: 'scroll',
+                            }}
+                            // key={JSON.stringify(props.scores)}
+                        >
+                            {renderInstructorView()}
+                        </View>
+                    )}
+
+                    {/* Render analytics section */}
+
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 100,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontFamily: 'Inter',
+                            }}
+                        >
+                            Assignment Insights
+                        </Text>
+                    </View>
+
+                    {/*  */}
+                    {isFetchingAssignmentAnalytics ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                flex: 1,
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                backgroundColor: '#fff',
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+                                paddingVertical: 100,
+                            }}
+                        >
+                            <ActivityIndicator color={'#1F1F1F'} />
+                        </View>
+                    ) : !assignmentAnalytics ? (
+                        <View>
+                            <Text
+                                style={{
+                                    width: '100%',
+                                    color: '#1F1F1F',
+                                    fontSize: 16,
+                                    paddingVertical: 100,
+                                    paddingHorizontal: 10,
+                                    fontFamily: 'inter',
+                                }}
+                            >
+                                Could not fetch assingment analytics.
+                            </Text>
+                        </View>
+                    ) : (
+                        <View>{renderAssignmentAnalytics()}</View>
+                    )}
+
+                    {/*  */}
+
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 100,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontFamily: 'Inter',
+                            }}
+                        >
+                            Student Insights
+                        </Text>
+                    </View>
+
+                    <View>{renderStudentAnalytics()}</View>
                 </View>
             ) : (
                 renderStudentView()

@@ -40,10 +40,15 @@
 export const renderMathjax = (mathContent: any) => {
     return new Promise((resolve, reject) => {
         // const MathJax = window.Mathjax;
+
+        console.log('Math Content', mathContent);
+
         var wrapper: any = document.createElement('div');
         wrapper.style.fontSize = '400%'; //may not need this
         wrapper.style['text-rendering'] = 'optimizeLegibility';
         wrapper.innerHTML = '\\[' + mathContent + '\\]';
+
+        console.log('Wrapper', wrapper);
 
         const MathJax = window.MathJax;
 
@@ -52,11 +57,17 @@ export const renderMathjax = (mathContent: any) => {
             try {
                 //start the conversion from svg to a base64 image source
                 var mathjaxSVG = wrapper.getElementsByTagName('svg')[0];
-                var svg = new XMLSerializer().serializeToString(mathjaxSVG);
-                var image = new Image();
-                var canvas = document.createElement('canvas');
 
-                var mycanvas = document.createElement('canvas');
+                var svg = new XMLSerializer().serializeToString(mathjaxSVG);
+
+                // Fetch Width for SVG
+                const splitWidth = svg.split('width=')[1];
+
+                const widthInEx = splitWidth.split('"')[1];
+
+                const widthInNumber = widthInEx.split('ex')[0];
+
+                const parseWidth = parseFloat(widthInNumber);
 
                 //modify the svg for safari and IE/Edge for proper rendering
                 svg = svg.replace('xmlns:NS1=""', 'xmlns:xlink="http://www.w3.org/1999/xlink"');
@@ -65,7 +76,8 @@ export const renderMathjax = (mathContent: any) => {
                 return resolve({
                     // element: $mathjaxElement,
                     imgHtml: '<img src="' + imgSrc + '"></img>',
-                    imgSrc: imgSrc
+                    imgSrc: imgSrc,
+                    intrinsicWidth: (parseWidth * 8.1).toFixed(2),
                 });
             } catch (ex) {
                 reject(ex);

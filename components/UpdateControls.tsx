@@ -160,6 +160,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [allowedAttempts, setAllowedAttemps] = useState(
         !props.cue.allowedAttempts ? '' : props.cue.allowedAttempts.toString()
     );
+    const [totalPoints, setTotalPoints] = useState(!props.cue.totalPoints ? '' : props.cue.totalPoints.toString());
     const [submissionAttempts, setSubmissionAttempts] = useState<any[]>([]);
     const [submissionDraft, setSubmissionDraft] = useState('');
     const [updatingCueContent, setUpdatingCueContent] = useState(false);
@@ -1340,7 +1341,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             editorRef.current.editor.selection.restore();
 
             editorRef.current.editor.html.insert(
-                '<img class="rendered-math-jax" style="min-width: 72px; id="' +
+                '<img class="rendered-math-jax" style="width:' +
+                    res.intrinsicWidth +
+                    'px; id="' +
                     random +
                     '" data-eq="' +
                     encodeURIComponent(equation) +
@@ -1831,7 +1834,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 Alert('Late Submission date must be after deadline');
                 return;
             }
+
+            if (!isQuiz && Number.isNaN(Number(totalPoints))) {
+                Alert('Enter valid total points for assignment.');
+                return;
+            }
         }
+
+        console.log('Update deadline only', deadline);
 
         const saveCue = {
             ...currCue,
@@ -1847,6 +1857,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
             availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
             limitedShares,
+            totalPoints: submission && !isQuiz ? totalPoints : '',
         };
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -1873,6 +1884,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         isOwner,
         graded,
         limitedShares,
+        isQuiz,
+        totalPoints,
     ]);
 
     /**
@@ -4438,6 +4451,76 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ) : null;
     };
 
+    const renderTotalPointsInput = () => {
+        return submission && !isQuiz ? (
+            <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        paddingBottom: 15,
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 15,
+                            color: '#000000',
+                            fontFamily: 'Inter',
+                        }}
+                    >
+                        Total points
+                    </Text>
+                </View>
+                <View>
+                    <View
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {isOwner ? (
+                            <TextInput
+                                value={totalPoints}
+                                style={{
+                                    width: 120,
+                                    borderColor: '#ccc',
+                                    borderWidth: 1,
+                                    borderRadius: 2,
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingVertical: 10,
+                                    marginTop: 0,
+                                    backgroundColor: '#fff',
+                                }}
+                                placeholder={''}
+                                onChangeText={(val) => {
+                                    if (Number.isNaN(Number(val))) return;
+                                    setTotalPoints(val);
+                                }}
+                                placeholderTextColor={'#1F1F1F'}
+                            />
+                        ) : (
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#1F1F1F',
+                                    textAlign: 'left',
+                                    paddingRight: 10,
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                {totalPoints ? totalPoints : '100'}
+                            </Text>
+                        )}
+                    </View>
+                </View>
+            </View>
+        ) : null;
+    };
+
     /**
      * @description Late submission option
      */
@@ -5839,6 +5922,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         {renderSubmissionRequiredOptions()}
                                         {renderGradeOptions()}
                                         {renderLateSubmissionOptions()}
+                                        {renderTotalPointsInput()}
                                         {renderAttemptsOptions()}
                                     </View>
                                 ) : null}
