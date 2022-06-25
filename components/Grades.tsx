@@ -48,94 +48,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     //     }
     // }, [props.isOwner]);
 
-    /**
-     * @description Fetch all course students for creating new assignment and assigning scores
-     */
-    const loadCourseStudents = useCallback(() => {
-        setIsFetchingStudents(true);
-        if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getCourseStudents,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.channel && res.data.channel.getCourseStudents) {
-                        setCourseStudents(res.data.channel.getCourseStudents);
-                    } else {
-                        setCourseStudents([]);
-                    }
-                    setIsFetchingStudents(false);
-                })
-                .catch((e) => {
-                    console.log('Error', e);
-                    Alert('Failed to fetch students.');
-                    setIsFetchingStudents(false);
-                });
-        }
-    }, [props.channelId]);
-
-    const fetchGradebookInstructor = useCallback(() => {
-        setLoading(true);
-        if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getGradebookInstructor,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.gradebook && res.data.gradebook.getGradebook) {
-                        setIntructorGradebook(res.data.gradebook.getGradebook);
-                    } else {
-                        setIntructorGradebook(undefined);
-                    }
-                    setLoading(false);
-                })
-                .catch((e) => {
-                    console.log('error', e);
-                    Alert('Failed to fetch gradebook');
-                    setIntructorGradebook(undefined);
-                    setLoading(false);
-                });
-        }
-    }, []);
-
-    const fetchCourseAssignmentsAnalytics = useCallback(() => {
-        setIsFetchingAssignmentAnalytics(true);
-        if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getAssignmentAnalytics,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.gradebook && res.data.gradebook.getAssignmentAnalytics) {
-                        setAssignmentAnalytics(res.data.gradebook.getAssignmentAnalytics);
-                    } else {
-                        setAssignmentAnalytics(undefined);
-                    }
-                    setIsFetchingAssignmentAnalytics(false);
-                })
-                .catch((e) => {
-                    console.log('error', e);
-                    Alert('Failed to fetch assignment analytics');
-                    setAssignmentAnalytics(undefined);
-                    setIsFetchingAssignmentAnalytics(false);
-                });
-        }
-    }, []);
-
-    console.log('Instructor gradebook', instructorGradebook);
-
     // /**
     //  * @description Fetches all assignments and user grades for each
     //  */
@@ -189,113 +101,113 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Used to modify an assignment score directly
      */
-    const modifyGrade = (cueId: string, userId: string, score: string) => {
-        if (Number.isNaN(Number(score))) {
-            Alert('Score should be a valid number');
-            return;
-        }
+    // const modifyGrade = (cueId: string, userId: string, score: string) => {
+    //     if (Number.isNaN(Number(score))) {
+    //         Alert('Score should be a valid number');
+    //         return;
+    //     }
 
-        let warning = '';
+    //     let warning = '';
 
-        if (Number(score) > 100) {
-            warning = 'Warning- Assigned score is greater than 100';
-        }
+    //     if (Number(score) > 100) {
+    //         warning = 'Warning- Assigned score is greater than 100';
+    //     }
 
-        Alert('Save grade?', warning, [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-                onPress: () => {
-                    return;
-                },
-            },
-            {
-                text: 'Yes',
-                onPress: async () => {
-                    handleSubmit();
-                },
-            },
-        ]);
+    //     Alert('Save grade?', warning, [
+    //         {
+    //             text: 'Cancel',
+    //             style: 'cancel',
+    //             onPress: () => {
+    //                 return;
+    //             },
+    //         },
+    //         {
+    //             text: 'Yes',
+    //             onPress: async () => {
+    //                 handleSubmit();
+    //             },
+    //         },
+    //     ]);
 
-        function handleSubmit() {
-            const server = fetchAPI('');
-            server
-                .mutate({
-                    mutation: submitGrade,
-                    variables: {
-                        cueId,
-                        userId,
-                        score,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.cue.submitGrade) {
-                        server
-                            .query({
-                                query: getGradesList,
-                                variables: {
-                                    channelId: props.channelId,
-                                    userId: props.userId,
-                                },
-                            })
-                            .then(async (res2) => {
-                                if (res2.data.channel.getGrades) {
-                                    const u = await AsyncStorage.getItem('user');
-                                    if (u) {
-                                        const user = JSON.parse(u);
-                                        if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                                            // all scores
-                                            setScores(res2.data.channel.getGrades);
-                                        } else {
-                                            // only user's score
-                                            const score = res2.data.channel.getGrades.find((u: any) => {
-                                                return u.userId.toString().trim() === user._id.toString().trim();
-                                            });
+    //     function handleSubmit() {
+    //         const server = fetchAPI('');
+    //         server
+    //             .mutate({
+    //                 mutation: submitGrade,
+    //                 variables: {
+    //                     cueId,
+    //                     userId,
+    //                     score,
+    //                 },
+    //             })
+    //             .then((res) => {
+    //                 if (res.data.cue.submitGrade) {
+    //                     server
+    //                         .query({
+    //                             query: getGradesList,
+    //                             variables: {
+    //                                 channelId: props.channelId,
+    //                                 userId: props.userId,
+    //                             },
+    //                         })
+    //                         .then(async (res2) => {
+    //                             if (res2.data.channel.getGrades) {
+    //                                 const u = await AsyncStorage.getItem('user');
+    //                                 if (u) {
+    //                                     const user = JSON.parse(u);
+    //                                     if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+    //                                         // all scores
+    //                                         setScores(res2.data.channel.getGrades);
+    //                                     } else {
+    //                                         // only user's score
+    //                                         const score = res2.data.channel.getGrades.find((u: any) => {
+    //                                             return u.userId.toString().trim() === user._id.toString().trim();
+    //                                         });
 
-                                            // if it is a quiz and not release submission then set Graded to false
-                                            const { scores } = score;
+    //                                         // if it is a quiz and not release submission then set Graded to false
+    //                                         const { scores } = score;
 
-                                            const updateScores = scores.map((x: any) => {
-                                                const { cueId, gradeWeight, graded } = x;
-                                                const findCue = res.data.channel.getSubmissionCues.find((u: any) => {
-                                                    return u._id.toString() === cueId.toString();
-                                                });
+    //                                         const updateScores = scores.map((x: any) => {
+    //                                             const { cueId, gradeWeight, graded } = x;
+    //                                             const findCue = res.data.channel.getSubmissionCues.find((u: any) => {
+    //                                                 return u._id.toString() === cueId.toString();
+    //                                             });
 
-                                                const { releaseSubmission } = findCue;
+    //                                             const { releaseSubmission } = findCue;
 
-                                                if (!releaseSubmission) {
-                                                    return {
-                                                        cueId,
-                                                        gradeWeight,
-                                                        graded: false,
-                                                        score: '',
-                                                    };
-                                                } else {
-                                                    return x;
-                                                }
-                                            });
+    //                                             if (!releaseSubmission) {
+    //                                                 return {
+    //                                                     cueId,
+    //                                                     gradeWeight,
+    //                                                     graded: false,
+    //                                                     score: '',
+    //                                                 };
+    //                                             } else {
+    //                                                 return x;
+    //                                             }
+    //                                         });
 
-                                            score.scores = updateScores;
+    //                                         score.scores = updateScores;
 
-                                            const singleScoreArray = [{ ...score }];
-                                            setScores(singleScoreArray);
-                                        }
-                                    }
-                                    setLoading(false);
-                                }
-                            })
-                            .catch((err) => {
-                                console.log('Error', err);
-                                Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
-                                setLoading(false);
-                            });
-                    }
-                })
-                .catch((err) => {
-                    alert('Something went wrong. Try Again.');
-                });
-        }
-    };
+    //                                         const singleScoreArray = [{ ...score }];
+    //                                         setScores(singleScoreArray);
+    //                                     }
+    //                                 }
+    //                                 setLoading(false);
+    //                             }
+    //                         })
+    //                         .catch((err) => {
+    //                             console.log('Error', err);
+    //                             Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
+    //                             setLoading(false);
+    //                         });
+    //                 }
+    //             })
+    //             .catch((err) => {
+    //                 alert('Something went wrong. Try Again.');
+    //             });
+    //     }
+    // };
 
     // MAIN RETURN
     return (
@@ -326,7 +238,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     channelId={props.channelId}
                     closeModal={() => props.closeModal()}
                     // reload={() => loadCuesAndScores()}
-                    modifyGrade={modifyGrade}
+                    // modifyGrade={modifyGrade}
                     openCueFromGrades={props.openCueFromGrades}
                     activeTab={props.activeTab}
                     channelColor={props.channelColor}

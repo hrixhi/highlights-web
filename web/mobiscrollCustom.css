@@ -498,3 +498,93 @@ input:focus {
     max-width: 120px;
     padding: 10px;
 }
+
+/* STANDARDS TABLE */
+
+.standardsTable {
+    white-space: nowrap;
+    margin: 0;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: 100%;
+}
+
+.standardsTable > thead th {
+    padding: 3px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 150px;
+    max-width: 150px;
+    background-color: #f8f8f8;
+    border-right: 1px solid #f2f2f2;
+}
+
+.standardsTable > thead {
+    background-color: #f8f8f8;
+    min-width: 100%;
+}
+
+.standardsTable > thead th:first-child {
+    background-color: #f8f8f8;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #f2f2f2;
+}
+
+.standardsTable > tfoot th {
+    padding: 3px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 150px;
+    max-width: 150px;
+    background-color: #f8f8f8;
+    border-right: 1px solid #f2f2f2;
+}
+
+.standardsTable > tfoot {
+    background-color: #f8f8f8;
+    min-width: 100%;
+}
+
+.standardsTable > tfoot th:first-child {
+    background-color: #f8f8f8;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #f2f2f2;
+}
+
+.standardsTable > tbody th {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    border-right: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.standardsTable > td {
+    z-index: 1;
+    min-width: 120px;
+    max-width: 120px;
+    padding: 15px;
+    border-bottom: 1px solid #f2f2f2;
+}

@@ -179,19 +179,19 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             if (email === '' || !email.includes('@')) {
                 setIsSsoEnabled(false);
             } else {
-                const split = email.split('@');
+                try {
+                    const split = email.split('@');
 
-                if (split[1] !== '') {
-                    if (typeof cancelTokenRef.current != typeof undefined) {
-                        cancelTokenRef.current &&
-                            cancelTokenRef.current.cancel &&
-                            cancelTokenRef.current.cancel('Operation canceled due to new request.');
-                    }
+                    if (split[1] !== '') {
+                        if (typeof cancelTokenRef.current != typeof undefined) {
+                            cancelTokenRef.current &&
+                                cancelTokenRef.current.cancel &&
+                                cancelTokenRef.current.cancel('Operation canceled due to new request.');
+                        }
 
-                    //Save the cancel token for the current request
-                    cancelTokenRef.current = axios.CancelToken.source();
+                        //Save the cancel token for the current request
+                        cancelTokenRef.current = axios.CancelToken.source();
 
-                    try {
                         axios
                             .post(
                                 `https://api.learnwithcues.com/checkSSO`,
@@ -207,10 +207,10 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                                     setIsSsoEnabled(false);
                                 }
                             });
-                    } catch (e) {
-                        console.log(e);
-                        setIsSsoEnabled(false);
                     }
+                } catch (e) {
+                    console.log(e);
+                    setIsSsoEnabled(false);
                 }
             }
         })();

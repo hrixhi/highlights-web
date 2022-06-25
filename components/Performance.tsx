@@ -46,141 +46,141 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     /**
      * @description Calculates Score, attendance and threads count for performance summary
      */
-    useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const tempSc: any = {};
-                scores.map((sc: any) => {
-                    if (!tempSc[sc.channelId]) {
-                        tempSc[sc.channelId] = sc;
-                    }
-                });
-                setScore(tempSc);
+    // useEffect(() => {
+    //     (async () => {
+    //         const u = await AsyncStorage.getItem('user');
+    //         if (u) {
+    //             const tempSc: any = {};
+    //             scores.map((sc: any) => {
+    //                 if (!tempSc[sc.channelId]) {
+    //                     tempSc[sc.channelId] = sc;
+    //                 }
+    //             });
+    //             setScore(tempSc);
 
-                const tempAtt: any = {};
-                attendances.map((att: any) => {
-                    if (tempAtt[att.channelId]) {
-                        tempAtt[att.channelId].push(att);
-                    } else {
-                        tempAtt[att.channelId] = [att];
-                    }
-                });
-                setAttendance(tempAtt);
+    //             const tempAtt: any = {};
+    //             attendances.map((att: any) => {
+    //                 if (tempAtt[att.channelId]) {
+    //                     tempAtt[att.channelId].push(att);
+    //                 } else {
+    //                     tempAtt[att.channelId] = [att];
+    //                 }
+    //             });
+    //             setAttendance(tempAtt);
 
-                const tempDate: any = {};
-                dates.map((dt: any) => {
-                    if (tempDate[dt.channelId]) {
-                        tempDate[dt.channelId].push(dt);
-                    } else {
-                        tempDate[dt.channelId] = [dt];
-                    }
-                });
-                setDate(tempDate);
+    //             const tempDate: any = {};
+    //             dates.map((dt: any) => {
+    //                 if (tempDate[dt.channelId]) {
+    //                     tempDate[dt.channelId].push(dt);
+    //                 } else {
+    //                     tempDate[dt.channelId] = [dt];
+    //                 }
+    //             });
+    //             setDate(tempDate);
 
-                const tempThread: any = {};
-                threads.map((t: any) => {
-                    if (tempThread[t.channelId]) {
-                        tempThread[t.channelId].push(t);
-                    } else {
-                        tempThread[t.channelId] = [t];
-                    }
-                });
-                setThread(tempThread);
+    //             const tempThread: any = {};
+    //             threads.map((t: any) => {
+    //                 if (tempThread[t.channelId]) {
+    //                     tempThread[t.channelId].push(t);
+    //                 } else {
+    //                     tempThread[t.channelId] = [t];
+    //                 }
+    //             });
+    //             setThread(tempThread);
 
-                setLoading(false);
-            }
-        })();
-    }, [scores, attendances, dates, threads]);
+    //             setLoading(false);
+    //         }
+    //     })();
+    // }, [scores, attendances, dates, threads]);
 
-    /**
-     * @description Fetches Performance report for User
-     */
-    useEffect(() => {
-        const server = fetchAPI(props.userId);
-        server
-            .query({
-                query: getPerformanceReport,
-                variables: {
-                    userId: props.userId,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.user.getPerformanceReport) {
-                    setScores(res.data.user.getPerformanceReport);
-                    setFetchingScores(false);
-                }
-            })
-            .catch((err) => {
-                setFetchingScores(false);
-            });
-        server
-            .query({
-                query: getAttendancesByUser,
-                variables: {
-                    userId: props.userId,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.attendance.getAttendancesByUser) {
-                    setAttendances(res.data.attendance.getAttendancesByUser);
-                    setFetchingAttendance(false);
-                }
-            })
-            .catch((err) => {
-                setFetchingAttendance(false);
-            });
-        server
-            .query({
-                query: getAllPastDates,
-                variables: {
-                    userId: props.userId,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.date.getPastDates) {
-                    setDates(res.data.date.getPastDates);
-                    setFetchingDates(false);
-                }
-            })
-            .catch((err) => {
-                setFetchingDates(false);
-            });
-        server
-            .query({
-                query: findThreadsByUserId,
-                variables: {
-                    userId: props.userId,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.thread.findByUserId) {
-                    setThreads(res.data.thread.findByUserId);
-                    setFetchingThreads(false);
-                }
-            })
-            .catch((err) => {
-                setFetchingThreads(false);
-            });
-    }, []);
+    // /**
+    //  * @description Fetches Performance report for User
+    //  */
+    // useEffect(() => {
+    //     const server = fetchAPI(props.userId);
+    //     server
+    //         .query({
+    //             query: getPerformanceReport,
+    //             variables: {
+    //                 userId: props.userId,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             if (res.data && res.data.user.getPerformanceReport) {
+    //                 setScores(res.data.user.getPerformanceReport);
+    //                 setFetchingScores(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setFetchingScores(false);
+    //         });
+    //     server
+    //         .query({
+    //             query: getAttendancesByUser,
+    //             variables: {
+    //                 userId: props.userId,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             if (res.data && res.data.attendance.getAttendancesByUser) {
+    //                 setAttendances(res.data.attendance.getAttendancesByUser);
+    //                 setFetchingAttendance(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setFetchingAttendance(false);
+    //         });
+    //     server
+    //         .query({
+    //             query: getAllPastDates,
+    //             variables: {
+    //                 userId: props.userId,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             if (res.data && res.data.date.getPastDates) {
+    //                 setDates(res.data.date.getPastDates);
+    //                 setFetchingDates(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setFetchingDates(false);
+    //         });
+    //     server
+    //         .query({
+    //             query: findThreadsByUserId,
+    //             variables: {
+    //                 userId: props.userId,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             if (res.data && res.data.thread.findByUserId) {
+    //                 setThreads(res.data.thread.findByUserId);
+    //                 setFetchingThreads(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setFetchingThreads(false);
+    //         });
+    // }, []);
 
-    if (loading || fetchingScores || fetchingAttendance || fetchingDates || fetchingThreads) {
-        return (
-            <View
-                style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    backgroundColor: '#fff',
-                    alignSelf: 'center',
-                    paddingVertical: 100,
-                }}
-            >
-                <ActivityIndicator color={'#1F1F1F'} />
-            </View>
-        );
-    }
+    // if (loading || fetchingScores || fetchingAttendance || fetchingDates || fetchingThreads) {
+    //     return (
+    //         <View
+    //             style={{
+    //                 width: '100%',
+    //                 justifyContent: 'center',
+    //                 display: 'flex',
+    //                 flexDirection: 'column',
+    //                 backgroundColor: '#fff',
+    //                 alignSelf: 'center',
+    //                 paddingVertical: 100,
+    //             }}
+    //         >
+    //             <ActivityIndicator color={'#1F1F1F'} />
+    //         </View>
+    //     );
+    // }
 
     // MAIN RETURN
 

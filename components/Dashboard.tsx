@@ -2672,7 +2672,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         selectedWorkspace.split('-SPLIT-')[2] === userId
                     )
                 ) &&
-                !(props.activeWorkspaceTab === 'Scores' && showNewAssignment) ? (
+                !(
+                    props.activeWorkspaceTab === 'Scores' &&
+                    (showNewAssignment || selectedWorkspace.split('-SPLIT-')[2] !== userId)
+                ) ? (
                     <TouchableOpacity
                         onPress={() => {
                             if (props.activeWorkspaceTab === 'Content') {

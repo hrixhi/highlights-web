@@ -1428,6 +1428,71 @@ export const deleteGradebookEntry = gql`
     }
 `;
 
+export const createStandards = gql`
+    mutation ($standardsInput: NewStandardsInput!) {
+        standards {
+            create(standardsInput: $standardsInput)
+        }
+    }
+`;
+
+export const updateStandardsScore = gql`
+    mutation ($standardId: String!, $userId: String!, $points: Float!, $override: Boolean!) {
+        standards {
+            updateStandardScore(standardId: $standardId, userId: $userId, points: $points, override: $override)
+        }
+    }
+`;
+
+export const revertOverriddenStandardScore = gql`
+    mutation ($standardId: String!, $userId: String!) {
+        standards {
+            revertOverriddenStandardScore(standardId: $standardId, userId: $userId)
+        }
+    }
+`;
+
+export const handleUpdateGradebookScore = gql`
+    mutation ($userId: String!, $entryId: String!, $gradebookEntry: Boolean!, $score: Float!) {
+        gradebook {
+            handleUpdateGradebookScore(
+                userId: $userId
+                entryId: $entryId
+                gradebookEntry: $gradebookEntry
+                score: $score
+            )
+        }
+    }
+`;
+
+export const handleReleaseSubmission = gql`
+    mutation ($entryId: String!, $gradebookEntry: Boolean!, $releaseSubmission: Boolean!) {
+        gradebook {
+            handleReleaseSubmission(
+                entryId: $entryId
+                gradebookEntry: $gradebookEntry
+                releaseSubmission: $releaseSubmission
+            )
+        }
+    }
+`;
+
+export const handleEditStandard = gql`
+    mutation ($standardId: String!, $title: String!, $description: String!, $category: String!) {
+        standards {
+            editStandard(standardId: $standardId, title: $title, description: $description, category: $category)
+        }
+    }
+`;
+
+export const handleDeleteStandard = gql`
+    mutation ($standardId: String!) {
+        standards {
+            deleteStandard(standardId: $standardId)
+        }
+    }
+`;
+
 // export const isSubInactive = gql`
 //   query($userId: String!, $channelId: String!) {
 //     subscription {
@@ -1897,6 +1962,8 @@ export const getAssignmentAnalytics = gql`
                 deadline
                 cueId
                 gradebookEntryId
+                gradeWeight
+                releaseSubmission
                 max
                 min
                 mean
@@ -1945,6 +2012,168 @@ export const getStudentAnalytics = gql`
                     pointsScored
                 }
             }
+        }
+    }
+`;
+
+export const getStandardsBasedGradingScale = gql`
+    query ($channelId: String!) {
+        channel {
+            getStandardsBasedGradingScale(channelId: $channelId) {
+                _id
+                name
+                range {
+                    name
+                    start
+                    end
+                    points
+                    description
+                }
+            }
+        }
+    }
+`;
+
+export const getStandardsGradebook = gql`
+    query ($channelId: String!) {
+        standards {
+            getStandardsGradebook(channelId: $channelId) {
+                entries {
+                    _id
+                    title
+                    description
+                    category
+                    scores {
+                        userId
+                        points
+                        mastery
+                        masteryPoints
+                        overridden
+                    }
+                }
+                totals {
+                    category
+                    scores {
+                        userId
+                        points
+                        mastery
+                        masteryPoints
+                    }
+                }
+                users {
+                    userId
+                    avatar
+                    fullName
+                }
+            }
+        }
+    }
+`;
+
+export const getStandardsInsights = gql`
+    query ($channelId: String!, $standardId: String!, $userId: String!) {
+        standards {
+            getStandardsInsights(channelId: $channelId, standardId: $standardId, userId: $userId) {
+                scores {
+                    _id
+                    points
+                    createdAt
+                    overridden
+                }
+                total
+                mastery
+                masteryPoints
+                overridden
+            }
+        }
+    }
+`;
+
+export const getCourseGradingScale = gql`
+    query ($channelId: String!) {
+        channel {
+            getCourseGradingScale(channelId: $channelId) {
+                _id
+                name
+                range {
+                    name
+                    start
+                    end
+                    points
+                    description
+                }
+            }
+        }
+    }
+`;
+
+export const getGradebookStudent = gql`
+    query ($channelId: String!, $userId: String!) {
+        gradebook {
+            getGradebookStudent(channelId: $channelId, userId: $userId) {
+                entries {
+                    title
+                    gradeWeight
+                    deadline
+                    availableUntil
+                    totalPoints
+                    cueId
+                    gradebookEntryId
+                    releaseSubmission
+                    submitted
+                    pointsScored
+                    score
+                    initiateAt
+                    lateSubmission
+                    submittedAt
+                }
+                total {
+                    totalPointsPossible
+                    pointsScored
+                    score
+                    gradingScaleOutcome
+                    totalAssessments
+                    submitted
+                    notSubmitted
+                    lateSubmissions
+                    graded
+                    courseProgress
+                }
+            }
+        }
+    }
+`;
+
+export const getStandardsGradebookStudent = gql`
+    query ($channelId: String!, $userId: String!) {
+        standards {
+            getStandardsGradebookStudent(channelId: $channelId, userId: $userId) {
+                entries {
+                    _id
+                    title
+                    description
+                    category
+                    points
+                    mastery
+                    masteryPoints
+                    overridden
+                }
+                totals {
+                    category
+                    points
+                    mastery
+                    masteryPoints
+                    overridden
+                }
+            }
+        }
+    }
+`;
+
+export const getStandardsCategories = gql`
+    query ($channelId: String!) {
+        standards {
+            getStandardsCategories(channelId: $channelId)
         }
     }
 `;

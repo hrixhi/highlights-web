@@ -23,6 +23,7 @@
         "@pathofdev/react-tag-input": "^1.0.7",
         "@pdftron/pdfjs-express": "^8.1.1",
         "@pdftron/webviewer": "^8.0.1",
+        "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
         "@ramonak/react-progress-bar": "^4.4.0",
         "@react-native-async-storage/async-storage": "^1.13.2",
         "@react-native-community/checkbox": "^0.5.7",
@@ -120,6 +121,7 @@
         "react-native-youtube-iframe": "^2.0.1",
         "react-onesignal": "^1.7.0",
         "react-player": "^2.9.0",
+        "react-refresh": "^0.14.0",
         "react-select": "^4.3.0",
         "react-social-login": "^3.4.14",
         "react-sortable-hoc": "^2.0.0",
@@ -134,6 +136,7 @@
         "userflow.js": "^2.4.0",
         "victory": "^36.5.0",
         "volkeno-react-native-drag-drop": "^1.0.8",
+        "webpack-hot-middleware": "^2.25.1",
         "xlsx": "^0.17.0"
     },
     "devDependencies": {
