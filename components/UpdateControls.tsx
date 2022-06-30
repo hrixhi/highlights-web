@@ -134,7 +134,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [availableUntil, setAvailableUntil] = useState<Date>(until);
     const [deadline, setDeadline] = useState<Date>(dead);
     const [initiateAt, setInitiateAt] = useState<Date>(initiate);
-    const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0);
+    const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight.toString() : '');
     const [graded, setGraded] = useState(props.cue.gradeWeight ? true : false);
     const currentDate = new Date();
     const [submitted, setSubmitted] = useState(false);
@@ -849,6 +849,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     props.setSave(false);
                     return;
                 }
+
+                if (!isQuiz && Number.isNaN(Number(totalPoints))) {
+                    Alert('Enter valid total points for assignment.');
+                    return;
+                }
             }
 
             Alert('Save changes?', '', [
@@ -884,6 +889,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         isQuiz,
         title,
         original,
+        totalPoints,
     ]);
 
     /**

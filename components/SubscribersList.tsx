@@ -588,7 +588,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 },
             },
         ]);
-    }, [pointsScored, userId, props.cueId, comment, props]);
+    }, [pointsScored, userId, props.cueId, comment]);
 
     // FUNCTIONS
 

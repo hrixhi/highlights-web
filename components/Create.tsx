@@ -94,7 +94,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [allowLateSubmission, setAllowLateSubmission] = useState(false);
     const [availableUntil, setAvailableUntil] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 48));
     const [showBooks, setShowBooks] = useState(props.option === 'Browse' ? true : false);
-    const [gradeWeight, setGradeWeight] = useState<any>(0);
+    const [gradeWeight, setGradeWeight] = useState<any>('');
     const [graded, setGraded] = useState(false);
     const [imported, setImported] = useState(false);
     const [url, setUrl] = useState('');
@@ -1493,6 +1493,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             allowLateSubmission,
             availableUntil,
             attempts,
+            totalPoints,
         ]
     );
 
@@ -1963,7 +1964,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         setCustomCategory('None');
                                                                         setAddCustomCategory(false);
                                                                         setSubmission(false);
-                                                                        setGradeWeight(0);
+                                                                        setGradeWeight('');
                                                                         setGraded(false);
                                                                         setSelected([]);
                                                                         setSubscribers([]);
@@ -1979,7 +1980,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         setAddCustomCategory(false);
                                                                         setCustomCategory('None');
                                                                         setSubmission(isQuiz ? true : false);
-                                                                        setGradeWeight(0);
+                                                                        setGradeWeight('');
                                                                         setGraded(false);
                                                                     }
                                                                 }}
@@ -2332,6 +2333,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                         placeholder={'0-100'}
                                                                         onChangeText={(val) => setGradeWeight(val)}
                                                                         placeholderTextColor={'#1F1F1F'}
+                                                                        keyboardType={'numeric'}
                                                                     />
                                                                     <Text
                                                                         style={{

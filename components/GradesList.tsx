@@ -95,14 +95,6 @@ const masteryColors = {
 };
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores));
-    const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues));
-    const [scores, setScores] = useState<any[]>([...unparsedScores]);
-    const [cues, setCues] = useState<any[]>(
-        unparsedCues.sort((a: any, b: any) => {
-            return a.deadline < b.deadline ? -1 : 1;
-        })
-    );
     const [exportAoa, setExportAoa] = useState<any[]>();
     const [activeModifyId, setActiveModifyId] = useState('');
     const [activeUserId, setActiveUserId] = useState('');
@@ -1304,83 +1296,83 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     /**
      * @description Prepare export data for Grades
      */
-    useEffect(() => {
-        if (props.scores.length === 0 || cues.length === 0) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (props.scores.length === 0 || cues.length === 0) {
+    //         return;
+    //     }
 
-        const exportAoa = [];
+    //     const exportAoa = [];
 
-        // Add row 1 with past meetings and total
-        let row1 = [''];
+    //     // Add row 1 with past meetings and total
+    //     let row1 = [''];
 
-        cues.forEach((cue) => {
-            const { title } = htmlStringParser(cue.cue);
+    //     cues.forEach((cue) => {
+    //         const { title } = htmlStringParser(cue.cue);
 
-            row1.push(`${title} (${cue.gradeWeight ? cue.gradeWeight : '0'}%)`);
-        });
+    //         row1.push(`${title} (${cue.gradeWeight ? cue.gradeWeight : '0'}%)`);
+    //     });
 
-        row1.push('Total');
+    //     row1.push('Total');
 
-        exportAoa.push(row1);
+    //     exportAoa.push(row1);
 
-        scores.forEach((score: any) => {
-            let totalPoints = 0;
-            let totalScore = 0;
-            score.scores.map((s: any) => {
-                if (s.releaseSubmission) {
-                    if (!s.submittedAt || !s.graded) {
-                        // totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                        totalScore += Number(s.gradeWeight);
-                    } else {
-                        totalPoints += Number(s.gradeWeight) * Number(s.score);
-                        totalScore += Number(s.gradeWeight);
-                    }
-                }
-            });
+    //     scores.forEach((score: any) => {
+    //         let totalPoints = 0;
+    //         let totalScore = 0;
+    //         score.scores.map((s: any) => {
+    //             if (s.releaseSubmission) {
+    //                 if (!s.submittedAt || !s.graded) {
+    //                     // totalPoints += (Number(s.gradeWeight) * Number(s.score))
+    //                     totalScore += Number(s.gradeWeight);
+    //                 } else {
+    //                     totalPoints += Number(s.gradeWeight) * Number(s.score);
+    //                     totalScore += Number(s.gradeWeight);
+    //                 }
+    //             }
+    //         });
 
-            let userRow = [];
+    //         let userRow = [];
 
-            userRow.push(score.fullName);
+    //         userRow.push(score.fullName);
 
-            cues.forEach((cue) => {
-                const scoreObject = score.scores.find((s: any) => {
-                    return s.cueId.toString().trim() === cue._id.toString().trim();
-                });
+    //         cues.forEach((cue) => {
+    //             const scoreObject = score.scores.find((s: any) => {
+    //                 return s.cueId.toString().trim() === cue._id.toString().trim();
+    //             });
 
-                if (!scoreObject || !scoreObject.submittedAt) {
-                    if (!scoreObject || !scoreObject.cueId) {
-                        userRow.push('N/A');
-                    } else {
-                        userRow.push('Not Submitted');
-                    }
-                } else {
-                    if (scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score) {
-                        userRow.push(
-                            scoreObject.score.replace(/\.0+$/, '') +
-                                '%' +
-                                ' ' +
-                                (new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline) ? '(LATE)' : '')
-                        );
-                    } else if (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)) {
-                        userRow.push('Late');
-                    } else {
-                        userRow.push('Submitted');
-                    }
-                }
-            });
+    //             if (!scoreObject || !scoreObject.submittedAt) {
+    //                 if (!scoreObject || !scoreObject.cueId) {
+    //                     userRow.push('N/A');
+    //                 } else {
+    //                     userRow.push('Not Submitted');
+    //                 }
+    //             } else {
+    //                 if (scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score) {
+    //                     userRow.push(
+    //                         scoreObject.score.replace(/\.0+$/, '') +
+    //                             '%' +
+    //                             ' ' +
+    //                             (new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline) ? '(LATE)' : '')
+    //                     );
+    //                 } else if (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)) {
+    //                     userRow.push('Late');
+    //                 } else {
+    //                     userRow.push('Submitted');
+    //                 }
+    //             }
+    //         });
 
-            const pointsToAdd =
-                totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '') + '%' : '0';
+    //         const pointsToAdd =
+    //             totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '') + '%' : '0';
 
-            // Add Total here
-            userRow.push(pointsToAdd);
+    //         // Add Total here
+    //         userRow.push(pointsToAdd);
 
-            exportAoa.push(userRow);
-        });
+    //         exportAoa.push(userRow);
+    //     });
 
-        setExportAoa(exportAoa);
-    }, [scores, cues]);
+    //     setExportAoa(exportAoa);
+    // }, [scores, cues]);
 
     function getTimeRemaining(endtime: string) {
         const total = Date.parse(endtime) - Date.parse(new Date());
@@ -1428,17 +1420,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, 'grades' + fileExtension);
     };
-
-    /**
-     * @description Handles modifying grade
-     */
-    // const modifyGrade = () => {
-    //     props.modifyGrade(activeModifyId, activeUserId, activeScore);
-    //     setActiveModifyId('');
-    // 	setActiveModifyEntryType('');
-    //     setActiveUserId('');
-    //     setActiveScore('');
-    // };
 
     const handleUpdateAssignmentScore = useCallback(
         async (totalPoints: number) => {
@@ -1527,6 +1508,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setEditStandardDescription('');
         setEditStandardCategory('');
 
+        // Reset assignment points scored
+        let selected: string[] = [];
+
+        courseStudents.map((student: any) => {
+            selected.push(student._id);
+        });
+
+        setNewAssignmentShareWithSelected(selected);
+
         // Standards
         setNewStandards([
             {
@@ -1536,6 +1526,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             },
         ]);
 
+        // Standard Points scored
         const standardsPointsScores: any[] = courseStudents.map((student: any) => {
             return {
                 _id: student._id,
@@ -1627,7 +1618,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 if (
                     newAssignmentTotalPoints === '' ||
                     Number.isNaN(Number(newAssignmentTotalPoints)) ||
-                    Number(newAssignmentTotalPoints) < 0
+                    Number(newAssignmentTotalPoints) <= 0
                 ) {
                     errors.push('Enter valid total points for the assignment.');
                 }
@@ -2189,53 +2180,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </Text>
                         </View>
                     </View>
-                    {/* <Text
-                        style={{
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            width: 200,
-                        }}
-                    >
-                        Meetings: {attended} / {totalMeetings}
-                    </Text>
-
-                    <Text
-                        style={{
-                            fontSize: 15,
-                            fontFamily: 'Inter',
-                            width: 200,
-                            paddingTop: 20,
-                        }}
-                    >
-                        Posts: {totalPosts}
-                    </Text> */}
-
-                    {/* {upcomingDeadline !== '' ? (
-                        <View
-                            style={{
-                                flexDirection: 'column',
-                                width: 200,
-                                paddingTop: 20,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    fontFamily: 'Inter',
-                                }}
-                            >
-                                Upcoming Deadline:{' '}
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    paddingTop: 10,
-                                }}
-                            >
-                                {upcomingDeadline}
-                            </Text>
-                        </View>
-                    ) : null} */}
                 </View>
             </View>
         );
@@ -2506,7 +2450,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         onPress={() => {
                                             if (!entry || !entry.cueId) return;
 
-                                            props.openCueFromGrades(entry.cueId);
+                                            props.openCueFromGrades(
+                                                props.channelId,
+                                                entry.cueId,
+                                                props.channelCreatedBy
+                                            );
                                         }}
                                         disabled={!entry.cueId}
                                     >
@@ -2832,7 +2780,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View
                         style={{
                             flexDirection: 'row',
-                            alignItems: 'center',
+                            justifyContent: 'space-between',
                             marginTop: 50,
                         }}
                     >
@@ -2844,6 +2792,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             Overview
                         </Text>
+                        {Dimensions.get('window').width > 768 ? null : renderSwitchGradebookViewpoints()}
                     </View>
 
                     {renderPerformanceOverview()}
@@ -3588,6 +3537,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     style={{
                                         textAlign: 'center',
                                         fontSize: 14,
+                                        fontFamily: 'Inter',
                                     }}
                                 >
                                     {level.points}
@@ -4870,7 +4820,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                 {/* Entries */}
                 <tbody>
-                    {instructorGradebook.users.length === 0 ? (
+                    {instructorStandardsGradebook.users.length === 0 ? (
                         <View
                             style={{
                                 width: '100%',
@@ -5112,7 +5062,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <th
                                     onClick={() => {
                                         if (entry.cueId) {
-                                            props.openCueFromGrades(entry.cueId);
+                                            props.openCueFromGrades(
+                                                props.channelId,
+                                                entry.cueId,
+                                                props.channelCreatedBy
+                                            );
                                         } else {
                                             handleEditGradebookEntry(entry.gradebookEntryId);
                                         }
@@ -5315,7 +5269,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         >
                                                             <Ionicons
                                                                 name="checkmark-circle-outline"
-                                                                size={15}
+                                                                size={20}
                                                                 style={{ marginRight: 5 }}
                                                                 color={'#8bc34a'}
                                                             />
@@ -5330,7 +5284,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         >
                                                             <Ionicons
                                                                 name="close-circle-outline"
-                                                                size={15}
+                                                                size={20}
                                                                 color={'#f94144'}
                                                             />
                                                         </TouchableOpacity>
@@ -5349,6 +5303,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     width: '100%',
                                                 }}
                                                 key={row.toString() + '-' + col.toString()}
+                                                disabled={!userScore}
                                                 onPress={() => {
                                                     setActiveModifyId(
                                                         entry.cueId ? entry.cueId : entry.gradebookEntryId
@@ -6228,7 +6183,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             fontFamily: 'Inter',
                                         }}
                                     >
-                                        Categories/Topics
+                                        New Categories
                                     </Text>
                                 </View>
                                 <View
@@ -7053,6 +7008,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
+                                justifyContent: 'space-between',
                                 marginTop: 50,
                             }}
                         >
@@ -7064,6 +7020,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 Scores
                             </Text>
+                            {Dimensions.get('window').width > 768 || standardsBasedScale
+                                ? null
+                                : renderSwitchGradebookViewpoints()}
                         </View>
                         {isFetchingGradebook ? (
                             <View
@@ -7162,7 +7121,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </View>
                         ) : null}
 
-                        {/*  */}
+                        {/* Student Insights */}
 
                         {studentAnalytics && assignmentAnalytics && assignmentAnalytics.length > 0 ? (
                             <View>
@@ -7614,6 +7573,64 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         );
     };
 
+    const renderSwitchGradebookViewpoints = () => {
+        return (
+            <View>
+                {selectedGradebookMode === 'assignments' ? (
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            marginLeft: 'auto',
+                            alignItems: 'center',
+                            borderRadius: 20,
+                            backgroundColor: '#f8f8f8',
+                        }}
+                    >
+                        {viewGradebookTabs.map((tab: string, ind: number) => {
+                            return (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor:
+                                            (tab === 'Pts' && gradebookViewPoints) ||
+                                            (tab !== 'Pts' && !gradebookViewPoints)
+                                                ? '#000'
+                                                : '#f8f8f8',
+                                        borderRadius: 20,
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 7,
+                                        minWidth: 60,
+                                    }}
+                                    onPress={() => {
+                                        if (tab === 'Pts') {
+                                            setGradebookViewPoints(true);
+                                        } else {
+                                            setGradebookViewPoints(false);
+                                        }
+                                    }}
+                                    key={ind.toString()}
+                                >
+                                    <Text
+                                        style={{
+                                            color:
+                                                (tab === 'Pts' && gradebookViewPoints) ||
+                                                (tab !== 'Pts' && !gradebookViewPoints)
+                                                    ? '#fff'
+                                                    : '#000',
+                                            fontSize: 12,
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        {tab}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                ) : null}
+            </View>
+        );
+    };
+
     // MAIN RETURN
     return (
         <View
@@ -7716,57 +7733,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 );
                             })}
                         </View>
-                        {selectedGradebookMode === 'assignments' ? (
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    marginLeft: 'auto',
-                                    alignItems: 'center',
-                                    borderRadius: 20,
-                                    backgroundColor: '#f8f8f8',
-                                }}
-                            >
-                                {viewGradebookTabs.map((tab: string, ind: number) => {
-                                    return (
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor:
-                                                    (tab === 'Pts' && gradebookViewPoints) ||
-                                                    (tab !== 'Pts' && !gradebookViewPoints)
-                                                        ? '#000'
-                                                        : '#f8f8f8',
-                                                borderRadius: 20,
-                                                paddingHorizontal: 14,
-                                                paddingVertical: 7,
-                                                minWidth: 60,
-                                            }}
-                                            onPress={() => {
-                                                if (tab === 'Pts') {
-                                                    setGradebookViewPoints(true);
-                                                } else {
-                                                    setGradebookViewPoints(false);
-                                                }
-                                            }}
-                                            key={ind.toString()}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color:
-                                                        (tab === 'Pts' && gradebookViewPoints) ||
-                                                        (tab !== 'Pts' && !gradebookViewPoints)
-                                                            ? '#fff'
-                                                            : '#000',
-                                                    fontSize: 12,
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {tab}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                })}
-                            </View>
-                        ) : null}
+                        {renderSwitchGradebookViewpoints()}
                     </View>
                 )
             ) : null}

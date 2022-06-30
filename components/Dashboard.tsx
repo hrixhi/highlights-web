@@ -45,6 +45,7 @@ import Card from './Card';
 import Alert from '../components/Alert';
 import Discussion from './Discussion';
 import ChannelSettings from './ChannelSettings';
+import GradesList from './GradesList';
 import { Datepicker, Select, Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import logo from '../components/default-images/cues-logo-white-exclamation-hidden.jpg';
@@ -54,6 +55,7 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import AttendanceList from './AttendanceList';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
@@ -122,6 +124,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [reversedSearches, setReversedSearches] = useState<string[]>([]);
     // const [exportScores, setExportScores] = useState(false);
     const [showNewAssignment, setShowNewAssignment] = useState(false);
+    const [showNewAttendance, setShowNewAttendance] = useState(false);
 
     // ALERTS
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -2411,63 +2414,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 backgroundColor: '#fff',
                                             }}
                                         >
-                                            {ongoingMeetings.length > 0
+                                            {ongoingMeetings.length > 0 && !showNewAttendance
                                                 ? renderOngoingMeetings(
                                                       selectedWorkspace.split('-SPLIT-')[2],
                                                       selectedWorkspace.split('-SPLIT-')[3]
                                                   )
                                                 : null}
 
-                                            <Performance
-                                                channelName={selectedWorkspace.split('-SPLIT-')[0]}
-                                                onPress={(name: any, id: any, createdBy: any) => {
-                                                    props.setChannelFilterChoice('All');
-                                                    props.handleFilterChange(name);
-                                                    props.setChannelId(id);
-                                                    props.setChannelCreatedBy(createdBy);
-                                                    props.openGrades();
-                                                    props.hideHome();
-                                                }}
-                                                filterStart={filterStart}
-                                                filterEnd={filterEnd}
+                                            <AttendanceList
                                                 channelId={selectedWorkspace.split('-SPLIT-')[1]}
                                                 channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
-                                                subscriptions={props.subscriptions}
-                                                openCueFromGrades={props.openCueFromCalendar}
-                                                colorCode={selectedWorkspace.split('-SPLIT-')[3]}
-                                                activeTab={'meetings'}
+                                                channelColor={selectedWorkspace.split('-SPLIT-')[3]}
                                                 isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                                 userId={userId}
                                                 user={props.user}
+                                                showNewAttendance={showNewAttendance}
+                                                setShowNewAttendance={(show: boolean) => setShowNewAttendance(show)}
                                             />
                                         </View>
                                     ) : // Scores
                                     props.activeWorkspaceTab === 'Scores' ? (
-                                        <Performance
-                                            channelName={selectedWorkspace.split('-SPLIT-')[0]}
-                                            onPress={(name: any, id: any, createdBy: any) => {
-                                                props.setChannelFilterChoice('All');
-                                                props.handleFilterChange(name);
-                                                props.setChannelId(id);
-                                                props.setChannelCreatedBy(createdBy);
-                                                props.openGrades();
-                                                props.hideHome();
-                                            }}
-                                            filterStart={filterStart}
-                                            channelId={selectedWorkspace.split('-SPLIT-')[1]}
-                                            channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
-                                            filterEnd={filterEnd}
-                                            subscriptions={props.subscriptions}
-                                            openCueFromGrades={props.openCueFromCalendar}
-                                            colorCode={selectedWorkspace.split('-SPLIT-')[3]}
-                                            activeTab={'scores'}
-                                            isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
-                                            userId={userId}
-                                            // exportScores={exportScores}
-                                            // setExportScores={(exp: boolean) => setExportScores(exp)}
-                                            showNewAssignment={showNewAssignment}
-                                            setShowNewAssignment={(create: boolean) => setShowNewAssignment(create)}
+                                        <GradesList
                                             user={props.user}
+                                            userId={userId}
+                                            openCueFromGrades={props.openCueFromCalendar}
+                                            isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
+                                            showNewAssignment={showNewAssignment}
+                                            setShowNewAssignment={(show: boolean) => setShowNewAssignment(show)}
+                                            channelId={selectedWorkspace.split('-SPLIT-')[1]}
                                         />
                                     ) : (
                                         <ChannelSettings
