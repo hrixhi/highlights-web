@@ -1565,6 +1565,20 @@ export const handleUpdateAttendanceBookEntry = gql`
         }
     }
 `;
+export const getStreamChatUserToken = gql`
+    mutation ($userId: String!) {
+        streamChat {
+            getUserToken(userId: $userId)
+        }
+    }
+`;
+export const regenStreamChatUserToken = gql`
+    mutation ($userId: String!) {
+        streamChat {
+            regenUserToken(userId: $userId)
+        }
+    }
+`;
 // export const getPersonalMeetingLink = gql`
 // query($userId: String!, $users: [String!]!) {
 //   channel {
@@ -2304,6 +2318,23 @@ export const getAttendanceBookStudent = gql`
                     last7Late
                     last7TotalExcused
                 }
+            }
+        }
+    }
+`;
+
+export const getInboxDirectory = gql`
+    query ($userId: String!) {
+        streamChat {
+            getInboxDirectory(userId: $userId) {
+                _id
+                fullName
+                avatar
+                role
+                grade
+                section
+                roleDescription
+                courses
             }
         }
     }

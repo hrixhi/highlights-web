@@ -56,6 +56,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import AttendanceList from './AttendanceList';
+import Chat from './Chat';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const styles = styleObject();
@@ -3296,15 +3297,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             />
                         ) : null}
                         {props.option === 'Inbox' ? (
-                            <Inbox
-                                showDirectory={props.showDirectory}
-                                setShowDirectory={(val: any) => props.setShowDirectory(val)}
-                                subscriptions={props.subscriptions}
-                                refreshUnreadInbox={props.refreshUnreadInbox}
-                                hideNewChatButton={props.hideNewChatButton}
-                                userId={userId}
-                                user={props.user}
-                            />
+                            // <Inbox
+                            //     showDirectory={props.showDirectory}
+                            //     setShowDirectory={(val: any) => props.setShowDirectory(val)}
+                            //     subscriptions={props.subscriptions}
+                            //     refreshUnreadInbox={props.refreshUnreadInbox}
+                            //     hideNewChatButton={props.hideNewChatButton}
+                            //     userId={userId}
+                            //     user={props.user}
+                            // />
+                            <Chat user={props.user} subscriptions={props.subscriptions} />
                         ) : null}
                     </View>
                 )
