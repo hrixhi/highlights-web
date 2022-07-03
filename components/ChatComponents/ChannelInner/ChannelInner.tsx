@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { logChatPromiseExecution } from 'stream-chat';
 import { MessageList, MessageInput, Window, useChannelActionContext, Thread } from 'stream-chat-react';
 
-import { MessagingChannelHeader, MessagingInput } from '../';
+import { MessagingChannelHeader, MessagingInput, ViewChannel } from '../';
 import { useGiphyContext } from '../Giphy';
 
 import type { MessageToSend } from 'stream-chat-react';
@@ -18,6 +18,8 @@ export const ChannelInner = (props: ChannelInnerProps) => {
     const { giphyState, setGiphyState } = useGiphyContext();
 
     const { sendMessage } = useChannelActionContext<StreamChatGenerics>();
+
+    const [isViewing, setIsViewing] = useState(false);
 
     const overrideSubmitHandler = (message: MessageToSend<StreamChatGenerics>) => {
         let updatedMessage;
@@ -55,14 +57,26 @@ export const ChannelInner = (props: ChannelInnerProps) => {
         setGiphyState(false);
     };
 
-    const actions = ['delete', 'edit', 'flag', 'mute', 'react', 'reply'];
+    // const actions = ['delete', 'edit', 'flag', 'mute', 'react', 'reply'];
+    const actions = ['delete', 'edit', 'react', 'reply'];
 
     return (
         <>
             <Window>
-                <MessagingChannelHeader theme={theme} toggleMobile={toggleMobile} />
-                <MessageList messageActions={actions} />
-                <MessageInput focus overrideSubmitHandler={overrideSubmitHandler} />
+                <MessagingChannelHeader
+                    isViewing={isViewing}
+                    setIsViewing={setIsViewing}
+                    theme={theme}
+                    toggleMobile={toggleMobile}
+                />
+                {isViewing ? (
+                    <ViewChannel />
+                ) : (
+                    <>
+                        <MessageList messageActions={actions} />
+                        <MessageInput focus overrideSubmitHandler={overrideSubmitHandler} />
+                    </>
+                )}
             </Window>
             <Thread Input={MessagingInput} />
         </>

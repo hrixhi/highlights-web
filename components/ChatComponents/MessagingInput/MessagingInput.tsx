@@ -3,6 +3,7 @@ import { ImageDropzone } from 'react-file-utils';
 import {
     ChatAutoComplete,
     EmojiPicker,
+    FileUploadIconFlat,
     UploadsPreview,
     useChannelStateContext,
     useMessageInputContext,
@@ -10,7 +11,7 @@ import {
 
 import './MessagingInput.css';
 
-import { EmojiIcon, LightningBoltSmall, SendIcon } from '../assets';
+import { EmojiIcon, FileAttachmentIcon, LightningBoltSmall, SendIcon } from '../assets';
 
 import type { StreamChatGenerics } from '../types';
 import { useGiphyContext } from '../Giphy';
@@ -62,6 +63,15 @@ const MessagingInput = () => {
             >
                 <UploadsPreview />
                 <div className="messaging-input__container">
+                    <div
+                        className="messaging-input__button emoji-button"
+                        role="button"
+                        aria-roledescription="button"
+                        onClick={messageInput.openEmojiPicker}
+                        ref={messageInput.emojiPickerRef}
+                    >
+                        <FileUploadIconFlat />
+                    </div>
                     <div
                         className="messaging-input__button emoji-button"
                         role="button"

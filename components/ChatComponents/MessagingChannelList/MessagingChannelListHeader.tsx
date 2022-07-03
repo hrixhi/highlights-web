@@ -9,10 +9,12 @@ import type { StreamChatGenerics } from '../types';
 type Props = {
     onCreateChannel?: () => void;
     theme: string;
+    channelSearch: string;
+    setChannelSearch: (value: React.SetStateAction<string>) => void;
 };
 
 const MessagingChannelListHeader = React.memo((props: Props) => {
-    const { onCreateChannel, theme } = props;
+    const { onCreateChannel, theme, channelSearch, setChannelSearch } = props;
 
     const { client } = useChatContext<StreamChatGenerics>();
 
@@ -26,6 +28,15 @@ const MessagingChannelListHeader = React.memo((props: Props) => {
                 <button className={`${theme} messaging__channel-list__header__button`} onClick={onCreateChannel}>
                     <Ionicons name="create-outline" size={24} />
                 </button>
+            </div>
+            <div className="messaging__channel-list-search">
+                <input
+                    value={channelSearch}
+                    onChange={(e) => setChannelSearch(e.target.value)}
+                    placeholder={'Search'}
+                    type="text"
+                    className="messaging__channel-list-search__input"
+                />
             </div>
         </div>
     );

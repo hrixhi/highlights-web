@@ -8,6 +8,7 @@ import MessagingChannelListHeader from './MessagingChannelList/MessagingChannelL
 import MessagingChannelPreview from './MessagingChannelPreview/MessagingChannelPreview';
 import MessagingInput from './MessagingInput/MessagingInput';
 import MessagingThreadHeader from './MessagingThread/MessagingThread';
+import ViewChannel from './ViewChannel/ViewChannel';
 
 export {
     AvatarGroup,
@@ -20,4 +21,5 @@ export {
     MessagingChannelPreview,
     MessagingInput,
     MessagingThreadHeader,
+    ViewChannel,
 };

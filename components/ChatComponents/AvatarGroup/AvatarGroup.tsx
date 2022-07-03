@@ -6,10 +6,16 @@ import React from 'react';
 const defaultImage = 'https://cues-files.s3.amazonaws.com/images/default.png';
 
 export const AvatarGroup = ({ members }: { members: ChannelMemberResponse[] }) => {
+    console.log('Members', members);
+
     if (members.length === 1) {
         return (
             <div className="avatar-group__avatars">
-                <Avatar image={defaultImage} size={40} />
+                <Avatar
+                    image={members[0]?.user?.image || ''}
+                    name={members[0]?.user?.name || members[0]?.user?.id}
+                    size={40}
+                />
             </div>
         );
     }
@@ -18,10 +24,20 @@ export const AvatarGroup = ({ members }: { members: ChannelMemberResponse[] }) =
         return (
             <div className="avatar-group__avatars two">
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={40} />
+                    <Avatar
+                        image={members[0]?.user?.image || ''}
+                        name={members[0]?.user?.name || members[0]?.user?.id}
+                        shape="square"
+                        size={40}
+                    />
                 </span>
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={40} />
+                    <Avatar
+                        image={members[1]?.user?.image || ''}
+                        name={members[1]?.user?.name || members[1]?.user?.id}
+                        shape="square"
+                        size={40}
+                    />
                 </span>
             </div>
         );
@@ -31,11 +47,26 @@ export const AvatarGroup = ({ members }: { members: ChannelMemberResponse[] }) =
         return (
             <div className="avatar-group__avatars three">
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={40} />
+                    <Avatar
+                        image={members[0]?.user?.image || ''}
+                        name={members[0]?.user?.name || members[0]?.user?.id}
+                        shape="square"
+                        size={40}
+                    />
                 </span>
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={20} />
-                    <Avatar image={defaultImage} shape="square" size={20} />
+                    <Avatar
+                        image={members[1]?.user?.image || ''}
+                        name={members[1]?.user?.name || members[1]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
+                    <Avatar
+                        image={members[2]?.user?.image || ''}
+                        name={members[2]?.user?.name || members[2]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
                 </span>
             </div>
         );
@@ -45,12 +76,32 @@ export const AvatarGroup = ({ members }: { members: ChannelMemberResponse[] }) =
         return (
             <div className="avatar-group__avatars four">
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={20} />
-                    <Avatar image={defaultImage} shape="square" size={20} />
+                    <Avatar
+                        image={members[0]?.user?.image || ''}
+                        name={members[0]?.user?.name || members[0]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
+                    <Avatar
+                        image={members[1]?.user?.image || ''}
+                        name={members[1]?.user?.name || members[1]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
                 </span>
                 <span>
-                    <Avatar image={defaultImage} shape="square" size={20} />
-                    <Avatar image={defaultImage} shape="square" size={20} />
+                    <Avatar
+                        image={members[2]?.user?.image || ''}
+                        name={members[2]?.user?.name || members[2]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
+                    <Avatar
+                        image={members[4]?.user?.image || ''}
+                        name={members[4]?.user?.name || members[4]?.user?.id}
+                        shape="square"
+                        size={20}
+                    />
                 </span>
             </div>
         );

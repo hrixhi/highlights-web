@@ -3,16 +3,7 @@ import { StreamChat } from 'stream-chat';
 import { Chat, Channel, ChannelList } from 'stream-chat-react';
 
 // CUSTOM COMPONENTS
-import {
-    CreateChannel,
-    ChannelInner,
-    CustomMessage,
-    MessagingChannelList,
-    MessagingChannelListHeader,
-    MessagingChannelPreview,
-    MessagingInput,
-    MessagingThreadHeader,
-} from './ChatComponents';
+import { MessagingChannelList, MessagingChannelListHeader, MessagingChannelPreview } from './ChatComponents';
 
 import { ActivityIndicator, Dimensions } from 'react-native';
 
@@ -23,7 +14,7 @@ import '../web/streamInbox.css';
 
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getStreamChatUserToken, regenStreamChatUserToken } from '../graphql/QueriesAndMutations';
-import { GiphyContextProvider } from './ChatComponents/Giphy';
+import { ChannelContainer } from './ChatComponents/ChannelContainer/ChannelContainer';
 
 const API_KEY = 'fa2jhu3kqpah';
 
@@ -52,8 +43,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     // CREATING NEW CHANNEL OPTIONS
     const [isCreating, setIsCreating] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     // FILTERS
+    const [channelSearch, setChannelSearch] = useState('');
     const [filters, setFilters] = useState<any>(undefined);
     const [options, setOptions] = useState<any>(undefined);
     const [sort, setSort] = useState<any>(undefined);
@@ -97,6 +90,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 setSort({ last_message_at: -1, updated_at: -1 });
                 setChatClient(client);
             } catch (error: any) {
+                console.log('Error', error);
                 console.log('Status code', JSON.parse(error.message).StatusCode);
                 if (JSON.parse(error.message).StatusCode === 401) {
                     console.log('RESET USER TOKEN');
@@ -116,6 +110,29 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             }
         };
     }, [userToken, props.user]);
+
+    useEffect(() => {
+        if (!chatClient || !props.user) {
+            return;
+        }
+
+        if (channelSearch === '') {
+            setFilters({ type: 'messaging', members: { $in: [props.user._id] } });
+        } else {
+            setFilters({
+                type: 'messaging',
+                members: { $in: [props.user._id] },
+                $or: [
+                    {
+                        'member.user.name': { $autocomplete: channelSearch },
+                    },
+                    {
+                        name: { $autocomplete: channelSearch },
+                    },
+                ],
+            });
+        }
+    }, [chatClient, channelSearch, props.user]);
 
     const fetchStreamUserToken = useCallback(async () => {
         const server = fetchAPI('');
@@ -155,6 +172,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             });
     }, [props.user]);
 
+    console.log('Is Creating', isCreating);
+
     if (!chatClient && !chatError)
         return (
             <View
@@ -181,11 +200,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         <div
             style={{
                 width: '100%',
-                // maxWidth: 1024,
                 alignSelf: 'center',
                 minHeight: '100%',
                 maxHeight: Dimensions.get('window').height - 64,
                 overflow: 'hidden',
+                display: 'flex',
+                flex: 1,
             }}
         >
             <Chat client={chatClient}>
@@ -197,6 +217,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     <MessagingChannelListHeader
                         onCreateChannel={() => setIsCreating(!isCreating)}
                         theme={'messaging light'}
+                        channelSearch={channelSearch}
+                        setChannelSearch={setChannelSearch}
                     />
                     <ChannelList
                         filters={filters}
@@ -206,36 +228,18 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         Preview={(props) => <MessagingChannelPreview {...props} setIsCreating={setIsCreating} />}
                     />
                 </div>
-                {/* <div
-                    style={{
-                        minHeight: '100%',
-                        maxHeight: Dimensions.get('window').height - 64,
+
+                <ChannelContainer
+                    toggleMobile={() => {}}
+                    theme={'light'}
+                    onClose={() => {
+                        setIsCreating(false);
+                        setIsEditing(false);
                     }}
-                > */}
-                <Channel
-                    Input={MessagingInput}
-                    maxNumberOfFiles={10}
-                    Message={CustomMessage}
-                    multipleUploads={true}
-                    ThreadHeader={MessagingThreadHeader}
-                    TypingIndicator={() => null}
-                >
-                    {isCreating && (
-                        <CreateChannel
-                            toggleMobile={() => {}}
-                            onClose={() => setIsCreating(false)}
-                            subscriptions={props.subscriptions}
-                        />
-                    )}
-                    <GiphyContextProvider>
-                        <ChannelInner
-                            theme={'light'}
-                            toggleMobile={() => {}}
-                            //  toggleMobile={toggleMobile}
-                        />
-                    </GiphyContextProvider>
-                </Channel>
-                {/* </div> */}
+                    isCreating={isCreating}
+                    isEditing={isEditing}
+                    subscriptions={props.subscriptions}
+                />
             </Chat>
         </div>
     );

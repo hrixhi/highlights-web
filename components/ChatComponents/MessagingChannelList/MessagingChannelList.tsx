@@ -12,32 +12,6 @@ const MessagingChannelList = (props: PropsWithChildren<ChannelListMessengerProps
     const { children, error = false, loading, LoadingErrorIndicator = ChatDown } = props;
     const { client, setActiveChannel } = useChatContext<StreamChatGenerics>();
 
-    useEffect(() => {
-        console.log('Channel loading', loading);
-
-        const getDemoChannel = async (client: StreamChat<StreamChatGenerics>) => {
-            const channel = client.channel('messaging', 'first', {
-                name: 'Social Demo',
-                demo: 'social',
-            });
-
-            await channel.watch();
-
-            if (client.user) {
-                await channel.addMembers([client.user.id, '61ceb580c4c5b8603780a9e7']);
-            }
-
-            setActiveChannel(channel);
-        };
-
-        //@ts-expect-error hack to ensure a channel is always loaded
-        if (!loading && !children?.props?.children?.length) {
-            getDemoChannel(client);
-        }
-    }, [loading]); // eslint-disable-line
-
-    console.log('Children props', children);
-
     if (!loading && !children?.props?.children?.length) {
         return <div className="messaging__channel-list__message">No active chats.</div>;
     }

@@ -1579,6 +1579,13 @@ export const regenStreamChatUserToken = gql`
         }
     }
 `;
+export const toggleAdminRole = gql`
+    mutation ($groupId: String!, $userId: String!, $alreadyAdmin: Boolean!) {
+        streamChat {
+            toggleAdminRole(groupId: $groupId, userId: $userId, alreadyAdmin: $alreadyAdmin)
+        }
+    }
+`;
 // export const getPersonalMeetingLink = gql`
 // query($userId: String!, $users: [String!]!) {
 //   channel {

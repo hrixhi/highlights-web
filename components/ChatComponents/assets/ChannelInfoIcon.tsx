@@ -1,11 +1,11 @@
 import React from 'react';
 
 type Props = {
-    isEditing: boolean;
-    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+    isViewing: boolean;
+    setIsViewing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const ChannelInfoIcon = ({ isEditing, setIsEditing }: Props) => (
+export const ChannelInfoIcon = ({ isViewing, setIsViewing }: Props) => (
     <svg
         width="24"
         height="24"
@@ -14,8 +14,8 @@ export const ChannelInfoIcon = ({ isEditing, setIsEditing }: Props) => (
         xmlns="http://www.w3.org/2000/svg"
         style={{ cursor: 'pointer', marginLeft: '16px' }}
         onClick={() => {
-            if (!isEditing) {
-                setIsEditing(true);
+            if (!isViewing) {
+                setIsViewing(true);
             }
         }}
     >

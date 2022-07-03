@@ -88,3 +88,22 @@
 .channel-preview__container .str-chat__avatar {
     margin-right: 0;
 }
+
+.channel-preview__content-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    height: 18px;
+    margin-bottom: 4px;
+}
+
+.channel-preview__content-unread {
+    background: #006aff;
+    height: 15px;
+    width: 15px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 11px;
+    text-align: center;
+}

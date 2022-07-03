@@ -5,8 +5,21 @@
     margin-top: 20px;
     border: 1px solid #f2f2f2;
     position: relative;
+    max-height: 500px;
+    overflow: scroll;
+}
+
+.selected-user-list__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-top: 10px;
+    border: 1px solid #f2f2f2;
+    position: relative;
     max-height: 400px;
     overflow: scroll;
+    width: 600px;
+    max-width: 100%;
 }
 
 .user-list__header {
@@ -30,10 +43,48 @@
 }
 
 .user-list__header p:first-child {
-    width: 60%;
+    width: 30%;
 }
 
 .user-list__header p:nth-child(2) {
+    width: 30%;
+}
+
+.user-list__header p:nth-child(3) {
+    width: 30%;
+}
+
+/* SELECTED USERS HEADERS */
+
+.selected-user-list__header {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: sticky;
+    top: 0;
+    background: #f8f8f8;
+}
+
+.selected-user-list__header p {
+    font-family: Helvetica Neue, sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    color: #858688;
+    margin-top: 16px;
+}
+
+.selected-user-list__header p:first-child {
+    width: 40%;
+}
+
+.selected-user-list__header p:nth-child(2) {
+    width: 30%;
+}
+
+.selected-user-list__header p:nth-child(3) {
     width: 30%;
 }
 
@@ -53,6 +104,15 @@
     padding-right: 20px;
 }
 
+.selected-user-item__wrapper {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 .user-item__wrapper:hover {
     background: #f7f6f8;
     cursor: pointer;
@@ -61,11 +121,32 @@
 .user-item__name-wrapper {
     display: flex;
     align-items: center;
-    width: 60%;
+    width: 30%;
+}
+
+.selected-user-item__name-wrapper {
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+
+.user-item__role-wrapper {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    font-family: overpass;
+    font-size: 14px;
 }
 
 .user-item__wrapper p {
-    font-family: Helvetica Neue, sans-serif;
+    font-family: Inter;
+    font-size: 14px;
+    line-height: 17px;
+    color: #2c2c30;
+}
+
+.selected-user-item__wrapper p {
+    font-family: Inter;
     font-size: 14px;
     line-height: 17px;
     color: #2c2c30;
@@ -76,6 +157,16 @@
 }
 
 .user-item__last-active {
+    font-weight: 400;
+    width: 30%;
+}
+
+.selected-user-item__role {
+    font-weight: 400;
+    width: 30%;
+}
+
+.selected-user-item__admin {
     font-weight: 400;
     width: 30%;
 }

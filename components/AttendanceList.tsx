@@ -1619,12 +1619,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     marginTop: 2,
                                                     fontSize: 10,
                                                     textAlign: 'center',
-                                                    backgroundColor: '#f3722c',
+                                                    // backgroundColor: '#f3722c',
                                                     borderRadius: 12,
                                                     marginLeft: 5,
                                                     paddingHorizontal: 7,
                                                     paddingVertical: 4,
-                                                    color: '#fff',
+                                                    color: '#000',
                                                     fontFamily: 'Inter',
                                                 }}
                                             >
@@ -2671,15 +2671,15 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     userAttendance.excused) ? (
                                                     <Text
                                                         style={{
-                                                            marginTop: 2,
+                                                            // marginTop: 2,
                                                             fontSize: 10,
                                                             textAlign: 'center',
-                                                            backgroundColor: '#f3722c',
+                                                            // backgroundColor: '#f3722c',
                                                             borderRadius: 12,
                                                             marginLeft: 5,
                                                             paddingHorizontal: 7,
                                                             paddingVertical: 4,
-                                                            color: '#fff',
+                                                            color: '#000',
                                                             fontFamily: 'Inter',
                                                         }}
                                                     >

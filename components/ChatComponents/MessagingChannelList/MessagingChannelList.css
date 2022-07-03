@@ -21,7 +21,21 @@
     display: flex;
     align-items: center;
     padding: 10px 0 10px 20px;
-    margin-bottom: 20px;
+}
+
+.messaging__channel-list-search {
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+.messaging__channel-list-search__input {
+    border-radius: 18px;
+    height: 28px;
+    flex: 1;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 15px 10px;
+    box-sizing: border-box;
 }
 
 .messaging__channel-list__message {

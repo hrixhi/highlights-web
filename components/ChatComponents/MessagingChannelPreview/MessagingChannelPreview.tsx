@@ -1,6 +1,6 @@
 import React from 'react';
 import './MessagingChannelPreview.css';
-import { ChannelPreviewUIComponentProps, ChatContextValue, useChatContext } from 'stream-chat-react';
+import { Avatar, ChannelPreviewUIComponentProps, ChatContextValue, useChatContext } from 'stream-chat-react';
 import { AvatarGroup } from '../';
 
 import type { Dispatch, SetStateAction } from 'react';
@@ -53,6 +53,8 @@ const MessagingChannelPreview = (props: Props) => {
 
     const members = Object.values(channel.state.members).filter(({ user }) => user?.id !== client.userID);
 
+    console.log('Channel', channel);
+
     return (
         <div
             className={
@@ -63,13 +65,24 @@ const MessagingChannelPreview = (props: Props) => {
                 setActiveChannel?.(channel);
             }}
         >
-            <AvatarGroup members={members} />
+            {channel.data.image ? (
+                <div className="avatar-group__avatars">
+                    <Avatar image={channel.data?.image} size={40} />
+                </div>
+            ) : (
+                <AvatarGroup members={members} />
+            )}
             <div className="channel-preview__content-wrapper">
                 <div className="channel-preview__content-top">
                     <p className="channel-preview__content-name">{channel.data?.name || getChannelName(members)}</p>
                     <p className="channel-preview__content-time">{getTimeStamp(channel)}</p>
                 </div>
-                <p className="channel-preview__content-message">{lastMessage?.text ?? 'Send a message'}</p>
+                <div className="channel-preview__content-bottom">
+                    <p className="channel-preview__content-message">{lastMessage?.text ?? 'Send a message'}</p>
+                    {channel.state.unreadCount > 0 ? (
+                        <p className="channel-preview__content-unread">{channel.state.unreadCount}</p>
+                    ) : null}
+                </div>
             </div>
         </div>
     );

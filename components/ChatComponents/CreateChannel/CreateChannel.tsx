@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
-import type { UserResponse } from 'stream-chat';
+import type { Channel, UserResponse } from 'stream-chat';
 import _debounce from 'lodash.debounce';
 
 import { InviteIcon, XButton, XButtonBackground } from '../assets';
@@ -13,7 +13,12 @@ import './UserList.css';
 import type { StreamChatGenerics } from '../types';
 import { fetchAPI } from '../../../graphql/FetchAPI';
 import { getInboxDirectory } from '../../../graphql/QueriesAndMutations';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image } from 'react-native';
+
+// GROUP IMAGE
+import { Text, View, TouchableOpacity } from '../../Themed';
+import { Ionicons } from '@expo/vector-icons';
+import FileUpload from '../../UploadFiles';
 
 const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 const sections = [
@@ -62,7 +67,7 @@ const filterRoleOptionsInstructor = [
         text: 'Admin',
     },
     {
-        value: 'parents',
+        value: 'parent',
         text: 'Parents',
     },
 ];
@@ -120,6 +125,7 @@ const ListContainer = React.forwardRef((props, ref) => {
         <div className="user-list__container">
             <div className="user-list__header">
                 <p>User</p>
+                <p>Role</p>
                 <p>Status</p>
                 <div>
                     <input
@@ -144,7 +150,7 @@ const ListContainer = React.forwardRef((props, ref) => {
 
 const UserResult = ({ user }: { user: UserResponse<StreamChatGenerics> }) => (
     <li className="messaging-create-channel__user-result">
-        <Avatar image={user.image} size={40} />
+        <Avatar image={user.image} name={user.name || user.id} size={34} />
         {user.online && <div className="messaging-create-channel__user-result-online" />}
         <div className="messaging-create-channel__user-result__details">
             <span>{user.name}</span>
@@ -153,8 +159,8 @@ const UserResult = ({ user }: { user: UserResponse<StreamChatGenerics> }) => (
 );
 
 type InputProps = {
-    channelName: string;
-    setChannelName: (value: React.SetStateAction<string>) => void;
+    groupName: string;
+    setGroupName: (value: React.SetStateAction<string>) => void;
 };
 
 type ItemProps = {
@@ -162,6 +168,13 @@ type ItemProps = {
     selected: boolean;
     toggleUser: (value: UserResponse<StreamChatGenerics>) => void;
     user: UserResponse<StreamChatGenerics>;
+};
+
+type SelectedItemProps = {
+    index: number;
+    user: UserResponse<StreamChatGenerics>;
+    selected: boolean;
+    toggleAdmin: (value: string) => void;
 };
 
 /**
@@ -223,8 +236,8 @@ const UserItem: React.FC<ItemProps> = (props) => {
                 <div
                     style={{
                         borderRadius: 50,
-                        height: 12,
-                        width: 12,
+                        height: 8,
+                        width: 8,
                         backgroundColor: user.online ? '#4ADE80' : '#F87170',
                     }}
                 />
@@ -246,23 +259,51 @@ const UserItem: React.FC<ItemProps> = (props) => {
                 <Avatar image={user.image} name={user.name || user.id} size={32} />
                 <p className="user-item__name">{user.name || user.id}</p>
             </div>
+            <div className="user-item__role-wrapper">{user.roleDescription}</div>
             <p className="user-item__last-active">{getPresence()}</p>
             {selected ? <InviteIcon /> : <div className="user-item__invite-empty" />}
         </div>
     );
 };
 
+const SelectedUserItem: React.FC<SelectedItemProps> = (props) => {
+    const { index, user, selected, toggleAdmin } = props;
+
+    function capitalizeFirstLetter(word: string) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    return (
+        <div className="selected-user-item__wrapper">
+            <div className="selected-user-item__name-wrapper">
+                <Avatar image={user.image} name={user.name || user.id} size={32} />
+                <p className="user-item__name">{user.name || user.id}</p>
+            </div>
+            <p className="selected-user-item__role">{capitalizeFirstLetter(user.cues_role)}</p>
+            <div className="selected-user-item__admin" onClick={() => toggleAdmin(user.id)}>
+                {selected ? <InviteIcon /> : <div className="user-item__invite-empty" />}
+            </div>
+        </div>
+    );
+};
+
 const GroupNameInput: React.FC<InputProps> = (props) => {
-    const { channelName = '', setChannelName } = props;
+    const { groupName = '', setGroupName } = props;
     const handleChange = (event: { preventDefault: () => void; target: { value: string } }) => {
         event.preventDefault();
-        setChannelName(event.target.value);
+        setGroupName(event.target.value);
     };
 
     return (
         <div className="channel-name-input__wrapper">
-            <p>Name</p>
-            <input onChange={handleChange} placeholder="Group name" type="text" value={channelName} />
+            <p
+                style={{
+                    marginBottom: 10,
+                }}
+            >
+                Group Name
+            </p>
+            <input onChange={handleChange} placeholder="" type="text" value={groupName} />
         </div>
     );
 };
@@ -276,7 +317,7 @@ type Props = {
 const filterByOptions = [
     {
         value: 'courses',
-        text: 'Courses',
+        text: 'Course',
     },
     {
         value: 'role',
@@ -289,6 +330,8 @@ const CreateChannel = (props: Props) => {
 
     const { client, setActiveChannel } = useChatContext<StreamChatGenerics>();
 
+    console.log('Client', client);
+
     // STATE
     const [focusedUser, setFocusedUser] = useState<number>();
     const [inputText, setInputText] = useState('');
@@ -297,6 +340,7 @@ const CreateChannel = (props: Props) => {
     const [searching, setSearching] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState<UserResponse<StreamChatGenerics>[]>([]);
     const [users, setUsers] = useState<UserResponse<StreamChatGenerics>[]>([]);
+    const [groupAdmins, setGroupAdmins] = useState<string[]>([]);
 
     // DIRECTORY
     const [isFetchingDirectory, setIsFetchingDirectory] = useState(true);
@@ -315,8 +359,13 @@ const CreateChannel = (props: Props) => {
     const [displayUsersError, setDisplayUsersError] = useState(false);
     const [displayUsers, setDisplayUsers] = useState<any[]>([]);
     const [indeterminate, setIndeterminate] = useState(false);
-    const checkboxRef = useRef();
+    const checkboxRef: any = useRef();
     const [checked, setChecked] = useState(false);
+
+    // GROUP
+    const [newGroup, setNewGroup] = useState(false);
+    const [groupName, setGroupName] = useState('');
+    const [groupImage, setGroupImage] = useState<any>(undefined);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -326,7 +375,35 @@ const CreateChannel = (props: Props) => {
         setSearchEmpty(false);
     };
 
-    const toggleAll = () => {};
+    useEffect(() => {
+        if (!newGroup) {
+            setGroupAdmins([]);
+        }
+    }, [newGroup]);
+
+    const toggleAll = useCallback(() => {
+        if (checked) {
+            // Remove display users from selected
+            let updateSelections: any[] = [...selectedUsers];
+            displayUsers.map((user: any) => {
+                updateSelections = updateSelections.filter((selected: any) => selected.id !== user.id);
+            });
+
+            setSelectedUsers(updateSelections);
+            setChecked(false);
+        } else {
+            // Add All
+            let updateSelections: any[] = [...selectedUsers];
+            displayUsers.map((user: any) => {
+                const isAlreadyAdded = selectedUsers.find((selected: any) => selected.id === user.id);
+                if (isAlreadyAdded) return;
+                updateSelections.push(user);
+            });
+            setSelectedUsers(updateSelections);
+            setChecked(true);
+        }
+        setIndeterminate(false);
+    }, [checked, selectedUsers, displayUsers]);
 
     useEffect(() => {
         const clickListener = () => {
@@ -363,6 +440,38 @@ const CreateChannel = (props: Props) => {
             setCourseDropdownOptions(subOptions);
         }
     }, [props.subscriptions]);
+
+    // Handle Select All Checkbox
+    useEffect(() => {
+        let isIndeterminate = false;
+        let checked = true;
+
+        if (displayUsers.length === 0) {
+            if (checkboxRef && checkboxRef.current) {
+                setChecked(false);
+                setIndeterminate(true);
+                checkboxRef.current.indeterminate = true;
+                return;
+            }
+        }
+
+        displayUsers.map((user: any) => {
+            const isSelected = selectedUsers.find((selected: any) => selected.id === user.id);
+
+            if (!isSelected) {
+                isIndeterminate = true;
+                checked = false;
+            }
+        });
+
+        setIndeterminate(indeterminate);
+        setChecked(checked);
+
+        if (checkboxRef && checkboxRef.current) {
+            checkboxRef.current.indeterminate = true;
+            return;
+        }
+    }, [selectedUsers, displayUsers, checkboxRef]);
 
     const fetchInboxDirectory = useCallback(() => {
         if (client && client.userID) {
@@ -431,22 +540,39 @@ const CreateChannel = (props: Props) => {
         }
     }, [inputText]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const createChannel = async () => {
+    const createChannel = useCallback(async () => {
         const selectedUsersIds = selectedUsers.map((u) => u.id);
 
         if (!selectedUsersIds.length || !client.userID) return;
 
-        const conversation = await client.channel('messaging', {
-            members: [...selectedUsersIds, client.userID],
-        });
+        let conversation: Channel<StreamChatGenerics>;
+
+        // GROUP
+        if (selectedUsersIds.length > 1) {
+            conversation = await client.channel('messaging', {
+                members: [...selectedUsersIds, client.userID],
+                name: groupName,
+                image: groupImage ? groupImage : undefined,
+                team: client.user.schoolId,
+            });
+        } else {
+            conversation = await client.channel('messaging', {
+                members: [...selectedUsersIds, client.userID],
+                team: client.user.schoolId,
+            });
+        }
 
         await conversation.watch();
+
+        if (groupAdmins.length > 0) {
+            // Make backend call to assign moderators;
+        }
 
         setActiveChannel?.(conversation);
         setSelectedUsers([]);
         setUsers([]);
         onClose();
-    };
+    }, [selectedUsers, groupName, groupImage, client, groupAdmins]);
 
     const addUser = (addedUser: UserResponse<StreamChatGenerics>) => {
         const isAlreadyAdded = selectedUsers.find((user) => user.id === addedUser.id);
@@ -513,6 +639,12 @@ const CreateChannel = (props: Props) => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    console.log('Selected role', selectedRole);
+
+    function capitalizeFirstLetter(word: string) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
     // Update display Users
     useEffect(() => {
         setIsFetchingDisplayUsers(true);
@@ -523,11 +655,43 @@ const CreateChannel = (props: Props) => {
             return;
         }
 
-        const queryUsers = async (userIds: string[]) => {
+        const queryUsers = async (users: any[]) => {
+            const userIds = users.map((user: any) => user._id);
+
             const res = await client.queryUsers({ id: { $in: userIds } }, { last_active: -1 }, { presence: true });
 
             if (res && res.users) {
-                setDisplayUsers(res.users);
+                let updateUsersWithRoles: any[] = [];
+
+                // ALL OTHER ROLES
+                res.users.map((user: any) => {
+                    if (user.cues_role !== 'parent') {
+                        updateUsersWithRoles.push({
+                            ...user,
+                            roleDescription:
+                                capitalizeFirstLetter(user.cues_role) +
+                                (user.cues_role === 'student'
+                                    ? ' (' + user.cues_grade + '-' + user.cues_section + ') '
+                                    : ''),
+                        });
+                    }
+                });
+
+                // PARENTS
+                users.map((user: any) => {
+                    if (user.role === 'parent') {
+                        const findQueriedUser = res.users.find((x: any) => x.id === user._id);
+
+                        if (findQueriedUser) {
+                            updateUsersWithRoles.push({
+                                ...findQueriedUser,
+                                roleDescription: user.roleDescription,
+                            });
+                        }
+                    }
+                });
+
+                setDisplayUsers(updateUsersWithRoles);
             } else {
                 setDisplayUsersError(true);
             }
@@ -564,30 +728,41 @@ const CreateChannel = (props: Props) => {
                         }
                     });
 
+                    console.log('Users after Filter role', users);
+
                     if ((selectedRole === 'student' || selectedRole === 'parent') && selectedGrade !== 'All') {
-                        users.filter((user: any) => {
+                        users = users.filter((user: any) => {
                             return user.grade === selectedGrade;
                         });
                     }
+                    console.log('Users after Filter grade', users);
 
                     if ((selectedRole === 'student' || selectedRole === 'parent') && selectedSection !== 'All') {
-                        users.filter((user: any) => {
+                        users = users.filter((user: any) => {
                             return user.section === selectedSection;
                         });
                     }
+                    console.log('Users after Filter section', users);
                 }
             }
 
-            const userIds = users.map((user: any) => user._id);
-
-            if (userIds.length === 0) {
+            if (users.length === 0) {
                 setDisplayUsers([]);
                 setIsFetchingDisplayUsers(false);
             } else {
-                queryUsers(userIds);
+                queryUsers(users);
             }
         }
-    }, [directory, filterBySelected, selectedCourse, selectedRole, props.subscriptions, client]);
+    }, [
+        directory,
+        filterBySelected,
+        selectedCourse,
+        selectedRole,
+        selectedGrade,
+        selectedSection,
+        props.subscriptions,
+        client,
+    ]);
 
     const renderCreateChannelInput = () => {
         return (
@@ -616,7 +791,7 @@ const CreateChannel = (props: Props) => {
                                     ref={inputRef}
                                     value={inputText}
                                     onChange={(e) => setInputText(e.target.value)}
-                                    placeholder={!selectedUsers.length ? 'Start typing for suggestions' : ''}
+                                    placeholder={'Start typing for suggestions'}
                                     type="text"
                                     className="messaging-create-channel__input"
                                 />
@@ -629,6 +804,15 @@ const CreateChannel = (props: Props) => {
                     {selectedUsers.length === 1 ? (
                         <button className="create-channel-button" onClick={createChannel}>
                             Start chat
+                        </button>
+                    ) : selectedUsers.length > 1 ? (
+                        <button
+                            className="create-channel-button"
+                            onClick={() => {
+                                setNewGroup(true);
+                            }}
+                        >
+                            Create group
                         </button>
                     ) : null}
                 </header>
@@ -694,6 +878,7 @@ const CreateChannel = (props: Props) => {
                                 paddingTop: 7,
                                 paddingBottom: 7,
                                 minWidth: 60,
+                                cursor: 'pointer',
                             }}
                             onClick={() => {
                                 setFilterBySelected(tab.value);
@@ -711,7 +896,10 @@ const CreateChannel = (props: Props) => {
                                     textAlign: 'center',
                                 }}
                             >
-                                {tab.text}
+                                {(tab.value === 'courses' && filterBySelected === 'courses') ||
+                                (tab.value !== 'courses' && filterBySelected !== 'courses')
+                                    ? 'Filter by ' + tab.text
+                                    : tab.text}
                             </div>
                         </div>
                     );
@@ -733,7 +921,7 @@ const CreateChannel = (props: Props) => {
             <ListContainer checked={checked} ref={checkboxRef} toggleAll={toggleAll}>
                 {isFetchingDisplayUsers ? (
                     <div className="user-list__message">Loading users...</div>
-                ) : displayUsers.length && displayUsers.length === 0 ? (
+                ) : displayUsers.length === 0 ? (
                     <div className="user-list__message">No users found.</div>
                 ) : (
                     displayUsers.map((user, i) => {
@@ -761,7 +949,7 @@ const CreateChannel = (props: Props) => {
         return (
             <div
                 style={{
-                    marginTop: 50,
+                    marginTop: 25,
                     paddingLeft: 20,
                     paddingRight: 20,
                 }}
@@ -773,7 +961,14 @@ const CreateChannel = (props: Props) => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    <p>Browse Directory</p>
+                    <p
+                        style={{
+                            fontFamily: 'Inter',
+                            fontSize: 18,
+                        }}
+                    >
+                        Browse Directory
+                    </p>
                     {renderFilterBySwitch()}
                 </div>
                 {isFetchingDirectory ? (
@@ -943,7 +1138,176 @@ const CreateChannel = (props: Props) => {
         );
     };
 
-    return (
+    const renderGroupInfo = () => {
+        return (
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginTop: 50,
+                    alignItems: 'center',
+                }}
+            >
+                <div className="channel-name-input__wrapper">
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 10,
+                        }}
+                    >
+                        <Image
+                            style={{
+                                height: 100,
+                                width: 100,
+                                borderRadius: 75,
+                                // marginTop: 20,
+                                position: 'relative',
+                                alignSelf: 'center',
+                            }}
+                            source={{
+                                uri: groupImage ? groupImage : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                            }}
+                        />
+                        {groupImage ? (
+                            <TouchableOpacity
+                                onPress={() => setGroupImage(undefined)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    marginLeft: 10,
+                                }}
+                            >
+                                <Text>
+                                    <Ionicons name={'close-circle-outline'} size={18} color={'#1F1F1F'} />
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <FileUpload
+                                profile={true}
+                                onUpload={(u: any, t: any) => {
+                                    setGroupImage(u);
+                                }}
+                            />
+                        )}
+                    </View>
+                </div>
+                <GroupNameInput groupName={groupName} setGroupName={setGroupName} />
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <p
+                        style={{
+                            marginBottom: 10,
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                        }}
+                    >
+                        Members
+                    </p>
+                    <div className="selected-user-list__container">
+                        <div className="selected-user-list__header">
+                            <p>User</p>
+                            <p>Role</p>
+                            <p>Group Admin</p>
+                        </div>
+                        {selectedUsers.map((user, i) => {
+                            return (
+                                <SelectedUserItem
+                                    index={i}
+                                    key={user.id}
+                                    user={user}
+                                    selected={groupAdmins.includes(user.id)}
+                                    toggleAdmin={(userId: string) => {
+                                        if (groupAdmins.includes(userId)) {
+                                            let updateAdmins = [...groupAdmins];
+                                            updateAdmins = updateAdmins.filter((x: string) => x !== userId);
+                                            setGroupAdmins(updateAdmins);
+                                        } else {
+                                            setGroupAdmins([...groupAdmins, userId]);
+                                        }
+                                    }}
+                                />
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Button */}
+
+                <div
+                    style={{
+                        marginTop: 40,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => createChannel()}
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 15,
+                        }}
+                        // disabled={props.user.email === disableEmailId}
+                    >
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: 24,
+                                fontFamily: 'inter',
+                                overflow: 'hidden',
+                                paddingVertical: 14,
+                                textTransform: 'uppercase',
+                                width: 150,
+                            }}
+                        >
+                            CREATE
+                        </Text>
+                    </TouchableOpacity>
+                </div>
+            </div>
+        );
+    };
+
+    return newGroup ? (
+        <div className="messaging-create-channel">
+            <header>
+                <div
+                    style={{
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        width: '100%',
+                    }}
+                >
+                    <div
+                        style={{ position: 'absolute', left: 0, cursor: 'pointer' }}
+                        onClick={() => {
+                            setNewGroup(false);
+                        }}
+                    >
+                        <Ionicons name="arrow-back-outline" size={28} />
+                    </div>
+                    <div style={{ fontFamily: 'Inter', fontSize: 18 }}>New Group</div>
+                </div>
+            </header>
+            {renderGroupInfo()}
+        </div>
+    ) : (
         <div className="messaging-create-channel">
             {/* TOP COMPONENT WILL BE FOR BROWSING USERS AND STARTING CHAT DIRECTLY */}
             {renderCreateChannelInput()}

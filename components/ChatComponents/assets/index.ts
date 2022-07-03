@@ -2,6 +2,7 @@ import { ChannelInfoIcon } from './ChannelInfoIcon';
 import { ChannelSaveIcon } from './ChannelSaveIcon';
 import { CloseThreadIcon } from './CloseThreadIcon';
 import { EmojiIcon } from './EmojiIcon';
+import { FileAttachmentIcon } from './FileAttachmentIcon';
 import { HamburgerIcon } from './HamburgerIcon';
 import { InviteIcon } from './InviteIcon';
 import { LightningBoltSmall } from './LightningBoltSmall';
@@ -14,6 +15,7 @@ export {
     ChannelSaveIcon,
     CloseThreadIcon,
     EmojiIcon,
+    FileAttachmentIcon,
     HamburgerIcon,
     InviteIcon,
     LightningBoltSmall,
