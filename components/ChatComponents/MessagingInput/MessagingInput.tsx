@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import { ImageDropzone } from 'react-file-utils';
+import { ImageDropzone, FileUploadButton } from 'react-file-utils';
 import {
     ChatAutoComplete,
     EmojiPicker,
     FileUploadIconFlat,
+    FileUploadIcon,
     UploadsPreview,
     useChannelStateContext,
     useMessageInputContext,
@@ -63,15 +64,28 @@ const MessagingInput = () => {
             >
                 <UploadsPreview />
                 <div className="messaging-input__container">
-                    <div
-                        className="messaging-input__button emoji-button"
+                    {/* <div
+                        // className="messaging-input__button emoji-button"
+                        style={{
+                            height: 28,
+                            width: 24,
+                        }}
                         role="button"
                         aria-roledescription="button"
                         onClick={messageInput.openEmojiPicker}
                         ref={messageInput.emojiPickerRef}
                     >
-                        <FileUploadIconFlat />
-                    </div>
+                        <Ionicons name={'document-attach-outline'} size={20} color={'#858688'} />
+                    </div> */}
+                    <FileUploadButton
+                        accepts={acceptedFiles}
+                        multiple={multipleUploads}
+                        handleFiles={messageInput.uploadNewFiles}
+                        disabled={
+                            (maxNumberOfFiles !== undefined && messageInput.numberOfUploads >= maxNumberOfFiles) ||
+                            giphyState
+                        }
+                    />
                     <div
                         className="messaging-input__button emoji-button"
                         role="button"

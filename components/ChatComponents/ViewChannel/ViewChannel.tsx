@@ -1,9 +1,8 @@
 import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import { UserResponse } from 'stream-chat';
 import { Avatar, useChannelStateContext, useChatContext } from 'stream-chat-react';
-import { InviteIcon } from '../assets';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import type { StreamChatGenerics } from '../types';
 
@@ -12,12 +11,15 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import './ViewChannel.css';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAPI } from '../../../graphql/FetchAPI';
-import { toggleAdminRole } from '../../../graphql/QueriesAndMutations';
+import { deleteChannelPermanently, toggleAdminRole } from '../../../graphql/QueriesAndMutations';
 import Alert from '../../Alert';
+import { View } from '../../Themed';
+import FileUpload from '../../UploadFiles';
 
 type Props = {
     theme: string;
     toggleMobile: () => void;
+    setIsAddingUsersGroup: (value: boolean) => void;
 };
 
 type ListProps = {
@@ -29,6 +31,7 @@ type ItemProps = {
     user: UserResponse<StreamChatGenerics>;
     channelRole: string;
     handleToggleAdmin: (userId: string, alreadyAdmin: boolean) => void;
+    handleRemoveUser: (userId: string) => void;
 };
 
 const MembersListContainer: React.FC<ListProps> = (props) => {
@@ -98,16 +101,16 @@ function fromNow(date: Date, nowDate = Date.now(), rft = new Intl.RelativeTimeFo
 }
 
 const MemberItem: React.FC<ItemProps> = (props) => {
-    const { index, user, channelRole, handleToggleAdmin } = props;
+    const { index, user, channelRole, handleToggleAdmin, handleRemoveUser } = props;
 
     const moderatorActions = [
         {
-            label: 'Remove User',
-            value: 'remove-user',
-        },
-        {
             label: 'Make Group Admin',
             value: 'make-admin',
+        },
+        {
+            label: 'Remove User',
+            value: 'remove-user',
         },
     ];
 
@@ -211,6 +214,7 @@ const MemberItem: React.FC<ItemProps> = (props) => {
                     onSelect={(action: any) => {
                         console.log('Action', action);
                         if (action === 'remove-user') {
+                            handleRemoveUser(user.id);
                         } else if (action === 'make-admin') {
                             handleToggleAdmin(user.id, false);
                         } else if (action === 'remove-admin') {
@@ -255,6 +259,32 @@ const MemberItem: React.FC<ItemProps> = (props) => {
     );
 };
 
+type InputProps = {
+    groupName: string;
+    setGroupName: (value: React.SetStateAction<string>) => void;
+};
+
+const GroupNameInput: React.FC<InputProps> = (props) => {
+    const { groupName = '', setGroupName } = props;
+    const handleChange = (event: { preventDefault: () => void; target: { value: string } }) => {
+        event.preventDefault();
+        setGroupName(event.target.value);
+    };
+
+    return (
+        <div className="channel-name-input__wrapper">
+            <p
+                style={{
+                    marginBottom: 10,
+                }}
+            >
+                Group Name
+            </p>
+            <input onChange={handleChange} placeholder="" type="text" value={groupName} />
+        </div>
+    );
+};
+
 const ViewChannel = (props: Props) => {
     const { theme, toggleMobile } = props;
     const { client } = useChatContext<StreamChatGenerics>();
@@ -262,6 +292,11 @@ const ViewChannel = (props: Props) => {
 
     const [channelRole, setChannelRole] = useState('member');
     const [channelMembers, setChannelMembers] = useState<any[]>([]);
+
+    const [groupName, setGroupName] = useState('');
+    const [groupImage, setGroupImage] = useState('');
+
+    const [isEditingGroupProfile, setIsEditingGroupProfile] = useState(false);
 
     const getGroupCreationText = useCallback(() => {
         const { created_by, created_at } = channel.data;
@@ -278,31 +313,26 @@ const ViewChannel = (props: Props) => {
 
         const updateChannelMembers = (event?: Event) => {
             // test if the updated user is a member of this channel
-            if (!event || channel.state.members[event.user!.id] !== undefined) {
-                let members: any[] = [];
 
-                Object.values(channel.state.members).map((user) => {
-                    if (user.user_id === client.userID) {
-                        return;
-                    }
+            let members: any[] = [];
 
-                    members.push({
-                        channel_role: user.channel_role,
-                        isOwner: user.role === 'owner',
-                        isModerator: user.is_moderator,
-                        roleDescription:
-                            capitalizeFirstLetter(user.user.cues_role) +
-                            (user.cues_role === 'student'
-                                ? ' (' + user.cues_grade + '-' + user.cues_section + ') '
-                                : ''),
-                        ...user.user,
-                    });
+            Object.values(channel.state.members).map((user) => {
+                if (user.user_id === client.userID) {
+                    return;
+                }
+
+                members.push({
+                    channel_role: user.channel_role,
+                    isOwner: user.role === 'owner',
+                    isModerator: user.is_moderator,
+                    roleDescription:
+                        capitalizeFirstLetter(user.user.cues_role) +
+                        (user.cues_role === 'student' ? ' (' + user.cues_grade + '-' + user.cues_section + ') ' : ''),
+                    ...user.user,
                 });
+            });
 
-                setChannelMembers(members);
-            } else {
-                setChannelMembers([]);
-            }
+            setChannelMembers(members);
         };
 
         updateChannelMembers();
@@ -324,6 +354,9 @@ const ViewChannel = (props: Props) => {
     useEffect(() => {
         if (!channel || !client) return;
 
+        setGroupName(channel.data?.name);
+        setGroupImage(channel.data.image ? channel.data.image : undefined);
+
         const channelUser = channel.state.members[client.userID];
 
         if (channelUser.role === 'owner') {
@@ -338,6 +371,15 @@ const ViewChannel = (props: Props) => {
     if (!channel || !channel.data) return null;
 
     const members = Object.values(channel.state.members).filter(({ user }) => user?.id !== client.userID);
+
+    const handleRemoveUser = useCallback(
+        async (userId: string) => {
+            if (!channel) return;
+
+            await channel.removeMembers([userId]);
+        },
+        [channel]
+    );
 
     const handleToggleAdmin = useCallback(
         (userId: string, alreadyAdmin: boolean) => {
@@ -366,69 +408,377 @@ const ViewChannel = (props: Props) => {
         [channel]
     );
 
+    const updateChannel = useCallback(async () => {
+        if (!groupName || groupName === '') {
+            Alert('Name is required for group.');
+            return;
+        }
+
+        await channel.updatePartial({
+            set: {
+                name: groupName,
+                image: groupImage,
+            },
+        });
+
+        setIsEditingGroupProfile(false);
+    }, [channel, groupName, groupImage]);
+
+    const handleDelete = useCallback(() => {
+        if (!channel) return;
+
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: deleteChannelPermanently,
+                variables: {
+                    groupId: channel.id,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.streamChat.deleteChannelPermanently) {
+                }
+            })
+            .catch((e) => {
+                Alert('Failed to delete channel.');
+            });
+    }, [channel]);
+
+    const renderEditGroupInfo = () => {
+        return (
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <div className="channel-name-input__wrapper">
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 10,
+                        }}
+                    >
+                        <Image
+                            style={{
+                                height: 100,
+                                width: 100,
+                                borderRadius: 75,
+                                // marginTop: 20,
+                                position: 'relative',
+                                alignSelf: 'center',
+                            }}
+                            source={{
+                                uri: groupImage ? groupImage : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                            }}
+                        />
+                        {groupImage ? (
+                            <TouchableOpacity
+                                onPress={() => setGroupImage(undefined)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    marginLeft: 10,
+                                }}
+                            >
+                                <Text>
+                                    <Ionicons name={'close-circle-outline'} size={18} color={'#1F1F1F'} />
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <FileUpload
+                                profile={true}
+                                onUpload={(u: any, t: any) => {
+                                    setGroupImage(u);
+                                }}
+                            />
+                        )}
+                    </View>
+                </div>
+                <GroupNameInput groupName={groupName} setGroupName={setGroupName} />
+
+                <div
+                    style={{
+                        marginBottom: 20,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => updateChannel()}
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 15,
+                        }}
+                        // disabled={props.user.email === disableEmailId}
+                    >
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#000',
+                                fontSize: 11,
+                                paddingHorizontal: 24,
+                                fontFamily: 'inter',
+                                overflow: 'hidden',
+                                paddingVertical: 14,
+                                textTransform: 'uppercase',
+                                width: 120,
+                            }}
+                        >
+                            SAVE
+                        </Text>
+                    </TouchableOpacity>
+                </div>
+
+                <div
+                    style={{
+                        marginBottom: 20,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => setIsEditingGroupProfile(false)}
+                        style={{
+                            backgroundColor: 'white',
+                            borderRadius: 15,
+                        }}
+                        // disabled={props.user.email === disableEmailId}
+                    >
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                color: '#000',
+                                backgroundColor: '#fff',
+                                fontSize: 11,
+                                paddingHorizontal: 24,
+                                fontFamily: 'inter',
+                                overflow: 'hidden',
+                                paddingVertical: 14,
+                                textTransform: 'uppercase',
+                                width: 120,
+                            }}
+                        >
+                            CANCEL
+                        </Text>
+                    </TouchableOpacity>
+                </div>
+            </div>
+        );
+    };
+
+    const renderViewGroupInfo = () => {
+        return (
+            <>
+                {channel.data?.image ? (
+                    <Image
+                        style={{
+                            height: 100,
+                            width: 100,
+                            borderRadius: 75,
+                            // marginTop: 20,
+                            position: 'relative',
+                            alignSelf: 'center',
+                        }}
+                        source={{
+                            uri: channel.data?.image,
+                        }}
+                    />
+                ) : (
+                    <AvatarGroup members={members} />
+                )}
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 20,
+                    }}
+                >
+                    <div
+                        style={{
+                            fontFamily: 'Inter',
+                            fontSize: 18,
+                        }}
+                    >
+                        {channel.data.name}
+                    </div>
+
+                    {channelRole === 'owner' || channelRole === 'moderator' ? (
+                        <div
+                            onClick={() => setIsEditingGroupProfile(true)}
+                            style={{
+                                marginLeft: 10,
+                                cursor: 'pointer',
+                            }}
+                        >
+                            <Ionicons name="pencil-outline" size={18} />
+                        </div>
+                    ) : null}
+                </div>
+
+                <div
+                    style={{
+                        fontFamily: 'Inter',
+                        fontSize: 14,
+                        marginTop: 10,
+                        color: '#858688',
+                    }}
+                >
+                    {channel.data.member_count} members
+                </div>
+
+                <div
+                    style={{
+                        fontFamily: 'Overpass',
+                        fontSize: 14,
+                        marginTop: 20,
+                        color: '#858688',
+                    }}
+                >
+                    {getGroupCreationText()}
+                </div>
+
+                {/* USERS */}
+                <MembersListContainer channelRole={channelRole}>
+                    {channelMembers.map((user, i) => (
+                        <MemberItem
+                            index={i}
+                            user={user}
+                            channelRole={channelRole}
+                            handleToggleAdmin={handleToggleAdmin}
+                            handleRemoveUser={handleRemoveUser}
+                        />
+                    ))}
+                </MembersListContainer>
+
+                {channelRole === 'moderator' || channelRole === 'owner' ? (
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: 40,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => {
+                                props.setIsAddingUsersGroup(true);
+                            }}
+                            style={{
+                                width: 125,
+                                paddingHorizontal: 24,
+                                paddingVertical: 14,
+                                backgroundColor: '#000',
+                                borderWidth: 1,
+                                borderColor: '#000',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Ionicons
+                                name="person-add-outline"
+                                size={18}
+                                color="#fff"
+                                style={{
+                                    marginRight: 8,
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    color: '#fff',
+                                    fontSize: 11,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                Users
+                            </Text>
+                        </TouchableOpacity>
+
+                        {channelRole === 'owner' ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert('Delete group permanently?', 'Messages cannot be retrieved upon deletion.', [
+                                        {
+                                            text: 'Cancel',
+                                            style: 'cancel',
+                                            onPress: () => {
+                                                return;
+                                            },
+                                        },
+                                        {
+                                            text: 'Yes',
+                                            onPress: () => {
+                                                handleDelete();
+                                            },
+                                        },
+                                    ]);
+                                }}
+                                style={{
+                                    width: 125,
+                                    paddingHorizontal: 24,
+                                    paddingVertical: 14,
+                                    backgroundColor: '#fff',
+                                    borderWidth: 1,
+                                    borderColor: '#000',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginTop: 20,
+                                }}
+                            >
+                                <Ionicons
+                                    name="trash-outline"
+                                    size={18}
+                                    color="#000"
+                                    style={{
+                                        marginRight: 8,
+                                    }}
+                                />
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        color: '#000',
+                                        fontSize: 11,
+                                        fontFamily: 'inter',
+                                        overflow: 'hidden',
+                                        textTransform: 'uppercase',
+                                    }}
+                                >
+                                    Delete
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
+                    </div>
+                ) : null}
+            </>
+        );
+    };
+
     return (
         <div
             style={{
                 display: 'flex',
                 flexDirection: 'column',
                 marginTop: 50,
+                marginBottom: 50,
                 alignItems: 'center',
             }}
         >
-            {channel.data?.image ? (
-                <Image
-                    style={{
-                        height: 100,
-                        width: 100,
-                        borderRadius: 75,
-                        // marginTop: 20,
-                        position: 'relative',
-                        alignSelf: 'center',
-                    }}
-                    source={{
-                        uri: channel.data?.image,
-                    }}
-                />
-            ) : (
-                <AvatarGroup members={members} />
-            )}
-
-            <div
-                style={{
-                    fontFamily: 'Inter',
-                    fontSize: 18,
-                    marginTop: 20,
-                }}
-            >
-                {channel.data.name}
-            </div>
-            <div
-                style={{
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    marginTop: 10,
-                    color: '#858688',
-                }}
-            >
-                {channel.data.member_count} members
-            </div>
-            <div
-                style={{
-                    fontFamily: 'Overpass',
-                    fontSize: 14,
-                    marginTop: 20,
-                    color: '#858688',
-                }}
-            >
-                {getGroupCreationText()}
-            </div>
-
-            {/* USERS */}
-            <MembersListContainer channelRole={channelRole}>
-                {channelMembers.map((user, i) => (
-                    <MemberItem index={i} user={user} channelRole={channelRole} handleToggleAdmin={handleToggleAdmin} />
-                ))}
-            </MembersListContainer>
+            {isEditingGroupProfile ? renderEditGroupInfo() : renderViewGroupInfo()}
         </div>
     );
 };

@@ -667,6 +667,21 @@ export const addUsersByEmail = gql`
         }
     }
 `;
+export const startChatMeeting = gql`
+    mutation ($userId: String!, $topic: String!, $start: String!, $end: String!, $groupId: String!) {
+        streamChat {
+            startChatMeeting(userId: $userId, start: $start, end: $end, topic: $topic, groupId: $groupId) {
+                title
+                meetingId
+                meetingProvider
+                meetingJoinLink
+                meetingStartLink
+                start
+                end
+            }
+        }
+    }
+`;
 
 /**
  * ALL
@@ -1583,6 +1598,20 @@ export const toggleAdminRole = gql`
     mutation ($groupId: String!, $userId: String!, $alreadyAdmin: Boolean!) {
         streamChat {
             toggleAdminRole(groupId: $groupId, userId: $userId, alreadyAdmin: $alreadyAdmin)
+        }
+    }
+`;
+export const deleteChannelPermanently = gql`
+    mutation ($groupId: String!) {
+        streamChat {
+            deleteChannelPermanently(groupId: $groupId)
+        }
+    }
+`;
+export const addModerators = gql`
+    mutation ($groupId: String!, $moderators: [String!]!) {
+        streamChat {
+            addModerators(groupId: $groupId, moderators: $moderators)
         }
     }
 `;

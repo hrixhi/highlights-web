@@ -12,6 +12,10 @@
 }
 
 @media screen and (max-width: 640px) {
+    .messaging__sidebar {
+        width: 100%;
+    }
+
     .messaging__channel-list {
         width: unset;
     }

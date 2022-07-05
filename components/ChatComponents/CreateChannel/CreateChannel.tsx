@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, useChatContext } from 'stream-chat-react';
+import { Avatar, useChannelStateContext, useChatContext } from 'stream-chat-react';
 import type { Channel, UserResponse } from 'stream-chat';
 import _debounce from 'lodash.debounce';
 
@@ -12,13 +12,14 @@ import './UserList.css';
 
 import type { StreamChatGenerics } from '../types';
 import { fetchAPI } from '../../../graphql/FetchAPI';
-import { getInboxDirectory } from '../../../graphql/QueriesAndMutations';
+import { addModerators, getInboxDirectory } from '../../../graphql/QueriesAndMutations';
 import { ActivityIndicator, Image } from 'react-native';
 
 // GROUP IMAGE
 import { Text, View, TouchableOpacity } from '../../Themed';
 import { Ionicons } from '@expo/vector-icons';
 import FileUpload from '../../UploadFiles';
+import Alert from '../../Alert';
 
 const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 const sections = [
@@ -312,6 +313,8 @@ type Props = {
     onClose: () => void;
     toggleMobile: () => void;
     subscriptions: any[];
+    isAddingUsersGroup: boolean;
+    setIsAddingUsersGroup: (value: boolean) => void;
 };
 
 const filterByOptions = [
@@ -326,9 +329,11 @@ const filterByOptions = [
 ];
 
 const CreateChannel = (props: Props) => {
-    const { onClose, toggleMobile } = props;
+    const { onClose, toggleMobile, isAddingUsersGroup, setIsAddingUsersGroup } = props;
 
     const { client, setActiveChannel } = useChatContext<StreamChatGenerics>();
+
+    const { channel } = useChannelStateContext<StreamChatGenerics>();
 
     console.log('Client', client);
 
@@ -362,6 +367,10 @@ const CreateChannel = (props: Props) => {
     const checkboxRef: any = useRef();
     const [checked, setChecked] = useState(false);
 
+    // ADD USERS GROUP
+    const [editChannelName, setEditChannelName] = useState('');
+    const [channelMembers, setChannelMembers] = useState<string[]>([]);
+
     // GROUP
     const [newGroup, setNewGroup] = useState(false);
     const [groupName, setGroupName] = useState('');
@@ -374,6 +383,13 @@ const CreateChannel = (props: Props) => {
         setResultsOpen(false);
         setSearchEmpty(false);
     };
+
+    useEffect(() => {
+        if (isAddingUsersGroup && channel && channel.state.members) {
+            setEditChannelName(channel.data?.name);
+            setChannelMembers(Object.keys(channel.state.members));
+        }
+    }, [isAddingUsersGroup, channel]);
 
     useEffect(() => {
         if (!newGroup) {
@@ -501,19 +517,34 @@ const CreateChannel = (props: Props) => {
         }
     }, [client]);
 
+    console.log('Channel Members', channelMembers);
+
     const findUsers = async () => {
         if (searching) return;
         setSearching(true);
 
         try {
-            const response = await client.queryUsers(
-                {
-                    id: { $ne: client.userID as string },
-                    $and: [{ name: { $autocomplete: inputText } }],
-                },
-                { id: 1 },
-                { limit: 6 }
-            );
+            let response;
+
+            if (isAddingUsersGroup) {
+                response = await client.queryUsers(
+                    {
+                        id: { $nin: channelMembers },
+                        $and: [{ name: { $autocomplete: inputText } }],
+                    },
+                    { id: 1 },
+                    { limit: 6 }
+                );
+            } else {
+                response = await client.queryUsers(
+                    {
+                        id: { $ne: client.userID as string },
+                        $and: [{ name: { $autocomplete: inputText } }],
+                    },
+                    { id: 1 },
+                    { limit: 6 }
+                );
+            }
 
             if (!response.users.length) {
                 setSearchEmpty(true);
@@ -540,6 +571,22 @@ const CreateChannel = (props: Props) => {
         }
     }, [inputText]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const addUsersToGroup = useCallback(async () => {
+        if (!channel) return;
+
+        const selectedUsersIds = selectedUsers.map((u) => u.id);
+
+        try {
+            await channel.addMembers(selectedUsersIds);
+
+            Alert('Added members successfully.');
+
+            setIsAddingUsersGroup(false);
+        } catch (e) {
+            Alert('Failed to add members. Try again.');
+        }
+    }, [selectedUsers, channel]);
+
     const createChannel = useCallback(async () => {
         const selectedUsersIds = selectedUsers.map((u) => u.id);
 
@@ -564,9 +611,19 @@ const CreateChannel = (props: Props) => {
 
         await conversation.watch();
 
-        if (groupAdmins.length > 0) {
-            // Make backend call to assign moderators;
-        }
+        // if (groupAdmins.length > 0) {
+        //     // Make backend call to assign moderators;
+
+        // }
+
+        const server = fetchAPI('');
+        server.mutate({
+            mutation: addModerators,
+            variables: {
+                groupId: conversation.id,
+                moderators: [client.userID, ...groupAdmins],
+            },
+        });
 
         setActiveChannel?.(conversation);
         setSelectedUsers([]);
@@ -585,6 +642,8 @@ const CreateChannel = (props: Props) => {
             inputRef.current.focus();
         }
     };
+
+    console.log('Active Channel', channel);
 
     const toggleUser = (value: UserResponse<StreamChatGenerics>) => {
         const isAlreadyAdded = selectedUsers.find((user) => user.id === value.id);
@@ -656,7 +715,19 @@ const CreateChannel = (props: Props) => {
         }
 
         const queryUsers = async (users: any[]) => {
-            const userIds = users.map((user: any) => user._id);
+            const userIds: string[] = [];
+
+            users.map((user: any) => {
+                if (isAddingUsersGroup && channelMembers.includes(user._id)) return;
+
+                userIds.push(user._id);
+            });
+
+            if (userIds.length === 0) {
+                setDisplayUsers([]);
+                setIsFetchingDisplayUsers(false);
+                return;
+            }
 
             const res = await client.queryUsers({ id: { $in: userIds } }, { last_active: -1 }, { presence: true });
 
@@ -764,6 +835,39 @@ const CreateChannel = (props: Props) => {
         client,
     ]);
 
+    const renderChannelInputButtons = () => {
+        if (isAddingUsersGroup) {
+            return (
+                <>
+                    {selectedUsers.length > 0 ? (
+                        <button className="create-channel-button" onClick={addUsersToGroup}>
+                            Add Users
+                        </button>
+                    ) : null}
+                </>
+            );
+        }
+
+        return (
+            <>
+                {selectedUsers.length === 1 ? (
+                    <button className="create-channel-button" onClick={createChannel}>
+                        Start chat
+                    </button>
+                ) : selectedUsers.length > 1 ? (
+                    <button
+                        className="create-channel-button"
+                        onClick={() => {
+                            setNewGroup(true);
+                        }}
+                    >
+                        Create group
+                    </button>
+                ) : null}
+            </>
+        );
+    };
+
     const renderCreateChannelInput = () => {
         return (
             <div>
@@ -801,20 +905,7 @@ const CreateChannel = (props: Props) => {
                             <XButtonBackground />
                         </div>
                     </div>
-                    {selectedUsers.length === 1 ? (
-                        <button className="create-channel-button" onClick={createChannel}>
-                            Start chat
-                        </button>
-                    ) : selectedUsers.length > 1 ? (
-                        <button
-                            className="create-channel-button"
-                            onClick={() => {
-                                setNewGroup(true);
-                            }}
-                        >
-                            Create group
-                        </button>
-                    ) : null}
+                    {renderChannelInputButtons()}
                 </header>
                 {inputText && (
                     <main>
@@ -967,7 +1058,7 @@ const CreateChannel = (props: Props) => {
                             fontSize: 18,
                         }}
                     >
-                        Browse Directory
+                        {isAddingUsersGroup ? 'Add users to ' + editChannelName : 'Browse Directory'}
                     </p>
                     {renderFilterBySwitch()}
                 </div>

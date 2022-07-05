@@ -55,6 +55,22 @@ const MessagingChannelPreview = (props: Props) => {
 
     console.log('Channel', channel);
 
+    console.log('Last message', lastMessage);
+
+    const getMostRecentMessage = () => {
+        if (!lastMessage) {
+            return 'Send a message';
+        }
+
+        if (lastMessage.text) {
+            return lastMessage.text;
+        }
+
+        if (lastMessage.attachments && lastMessage.attachments.length > 0) {
+            return lastMessage.attachments.length === 1 ? 'Attachment' : 'Attachments';
+        }
+    };
+
     return (
         <div
             className={
@@ -78,7 +94,7 @@ const MessagingChannelPreview = (props: Props) => {
                     <p className="channel-preview__content-time">{getTimeStamp(channel)}</p>
                 </div>
                 <div className="channel-preview__content-bottom">
-                    <p className="channel-preview__content-message">{lastMessage?.text ?? 'Send a message'}</p>
+                    <p className="channel-preview__content-message">{getMostRecentMessage()}</p>
                     {channel.state.unreadCount > 0 ? (
                         <p className="channel-preview__content-unread">{channel.state.unreadCount}</p>
                     ) : null}

@@ -2906,8 +2906,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last30Absences}
@@ -2932,8 +2932,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last7Absences}
@@ -3022,8 +3022,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last30Late}
@@ -3048,8 +3048,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last7Late}
@@ -3138,8 +3138,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last30Inexcused}
@@ -3164,8 +3164,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last7Inexcused}
@@ -3254,8 +3254,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last30Present}
@@ -3280,8 +3280,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: '#000',
-                                            fontFamily: 'inter',
-                                            fontSize: 24,
+                                            fontFamily: 'overpass',
+                                            fontSize: 20,
                                         }}
                                     >
                                         {last7Present}

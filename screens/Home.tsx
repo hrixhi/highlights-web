@@ -18,6 +18,8 @@ import {
     signup,
     authWithProvider,
     getOrganisation,
+    // CHAT
+    getStreamChatUserToken,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -39,11 +41,17 @@ import inbox from '../assets/images/inbox.jpeg';
 import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 import { defaultCues } from '../helpers/DefaultData';
-import { disableEmailId, origin } from '../constants/zoomCredentials';
+import { disableEmailId, origin, STREAM_CHAT_API_KEY } from '../constants/zoomCredentials';
 import { Popup } from '@mobiscroll/react5';
 // Web Notification
-import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+import OneSignal from 'react-onesignal';
 import userflow from 'userflow.js';
+
+// CHAT
+import { StreamChat } from 'stream-chat';
+import { StreamChatGenerics } from '../components/ChatComponents/types';
+import useSound from 'use-sound';
+import alertSound from '../assets/sounds/alertSound.mp3';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     // read/learn
@@ -139,6 +147,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [showVideosCreate, setShowVideosCreate] = useState(false);
 
     const [initUserFlow, setInitUserFlow] = useState(false);
+    const [streamUserToken, setStreamUserToken] = useState('');
+    const [chatClient, setChatClient] = useState<any>(undefined);
+    const [alertNotifSound] = useSound(alertSound, { volume: 0.2 });
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -205,6 +216,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [option]);
 
     useEffect(() => {
+        OneSignal.init({ appId: '78cd253e-262d-4517-a710-8719abf3ee55', allowLocalhostAsSecureOrigin: true }).then(
+            () => {
+                console.log('One Signal initialized');
+                OneSignal.showSlidedownPrompt().then(() => {
+                    // do other stuff
+                });
+            }
+        );
+    }, []);
+
+    useEffect(() => {
         (async () => {
             const u = await AsyncStorage.getItem('user');
             // const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
@@ -214,6 +236,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                 if (parsedUser._id && parsedUser._id !== '') {
                     await loadDataFromCloud();
+                    // OneSignal.setExternalUserId(parsedUser._id);
+                    fetchStreamUserToken(parsedUser._id);
                 } else {
                     // setShowLoginWindow(true);
                     window.location.href = `${origin}/login`;
@@ -224,6 +248,55 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
         })();
     }, []);
+
+    // CHAT
+    // INITIALIZE CHAT
+    useEffect(() => {
+        if (!streamUserToken && chatClient) {
+            setChatClient(undefined);
+            // Refetch user token
+            return;
+        }
+
+        if (!streamUserToken || !user) {
+            return;
+        }
+
+        const initChat = async (userObj: any, userToken: string) => {
+            try {
+                const client = StreamChat.getInstance<StreamChatGenerics>(STREAM_CHAT_API_KEY);
+                // open the WebSocket connection to start receiving events
+                // Updates the user in the application (will add/modify existing fields but will not overwrite/delete previously set fields unless the key is used)
+                const res = await client.connectUser(
+                    {
+                        id: userObj._id,
+                        name: userObj.fullName,
+                        avatar: userObj.avatar,
+                    },
+                    userToken
+                );
+
+                console.log('Res', res);
+
+                setUnreadMessages(res.me.total_unread_count);
+
+                setChatClient(client);
+            } catch (error: any) {
+                console.log('Error', error);
+                console.log('Status code', JSON.parse(error.message).StatusCode);
+            }
+        };
+
+        if (streamUserToken && !chatClient) {
+            initChat(user, streamUserToken);
+        }
+
+        return () => {
+            if (chatClient) {
+                chatClient.disconnectUser();
+            }
+        };
+    }, [streamUserToken, user]);
 
     useEffect(() => {
         if (!initUserFlow) {
@@ -252,58 +325,90 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [initUserFlow, user]);
 
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
+        if (!chatClient) return;
 
-            if (u) {
-                const user = JSON.parse(u);
+        const getUnreadCount = (event) => {
+            console.log('Get Unread count Alert');
 
-                const server = fetchAPI('');
-
-                server
-                    .query({
-                        query: totalInboxUnread,
-                        variables: {
-                            userId: user._id,
-                        },
-                    })
-                    .then((res) => {
-                        if (res.data.messageStatus.totalInboxUnread) {
-                            setUnreadMessages(res.data.messageStatus.totalInboxUnread);
-                        }
-                    });
+            if (event.total_unread_count !== undefined) {
+                setUnreadMessages(event.total_unread_count);
             }
-        })();
-    }, []);
+        };
 
-    const refreshUnreadInbox = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const user = JSON.parse(u);
-            updateInboxCount(user._id);
-        }
-    }, []);
+        const newMessageAlert = (event) => {
+            console.log('New Message Alert');
 
-    const updateInboxCount = useCallback((userId) => {
-        const server = fetchAPI('');
-        server
-            .query({
-                query: totalInboxUnread,
-                variables: {
-                    userId,
-                    channelId,
-                },
-            })
-            .then((res) => {
-                if (
-                    res.data.messageStatus.totalInboxUnread !== undefined &&
-                    res.data.messageStatus.totalInboxUnread !== null
-                ) {
-                    setUnreadMessages(res.data.messageStatus.totalInboxUnread);
-                }
-            })
-            .catch((err) => console.log(err));
-    }, []);
+            alertNotifSound();
+
+            if (event.total_unread_count !== undefined) {
+                // PLAY SOUND
+
+                setUnreadMessages(event.total_unread_count);
+            }
+        };
+
+        chatClient.on('notification.message_new', newMessageAlert);
+        chatClient.on('notification.mark_read', getUnreadCount);
+
+        return () => {
+            chatClient.off('notification.message_new', newMessageAlert);
+            chatClient.off('notification.mark_read', getUnreadCount);
+        };
+    }, [chatClient]);
+
+    // useEffect(() => {
+    //     (async () => {
+    //         const u = await AsyncStorage.getItem('user');
+
+    //         if (u) {
+    //             const user = JSON.parse(u);
+
+    //             const server = fetchAPI('');
+
+    //             server
+    //                 .query({
+    //                     query: totalInboxUnread,
+    //                     variables: {
+    //                         userId: user._id,
+    //                     },
+    //                 })
+    //                 .then((res) => {
+    //                     if (res.data.messageStatus.totalInboxUnread) {
+    //                         setUnreadMessages(res.data.messageStatus.totalInboxUnread);
+    //                     }
+    //                 });
+    //         }
+    //     })();
+    // }, []);
+
+    // const refreshUnreadInbox = useCallback(async () => {
+    //     const u = await AsyncStorage.getItem('user');
+    //     if (u) {
+    //         const user = JSON.parse(u);
+    //         updateInboxCount(user._id);
+    //     }
+    // }, []);
+
+    // const updateInboxCount = useCallback((userId) => {
+    //     const server = fetchAPI('');
+    //     server
+    //         .query({
+    //             query: totalInboxUnread,
+    //             variables: {
+    //                 userId,
+    //                 channelId,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             if (
+    //                 res.data.messageStatus.totalInboxUnread !== undefined &&
+    //                 res.data.messageStatus.totalInboxUnread !== null
+    //             ) {
+    //                 setUnreadMessages(res.data.messageStatus.totalInboxUnread);
+    //             }
+    //         })
+    //         .catch((err) => console.log(err));
+    // }, []);
 
     // imp
     const refreshChannelCues = useCallback(async () => {
@@ -432,30 +537,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, []);
 
-    useOneSignalSetup(async () => {
-        // Check current permission state
-        const currentState = await OneSignal.getNotificationPermission();
-
-        if (currentState !== 'granted') {
-            OneSignal.registerForPushNotifications();
-        } else {
-            // If permission granted and logged in then ensure user external id is added
-
-            const externalUserId = await OneSignal.getExternalUserId();
-
-            if (!externalUserId) {
-                let user = await AsyncStorage.getItem('user');
-
-                if (user) {
-                    const parsedUser = JSON.parse(user);
-                    if (parsedUser.email) {
-                        await OneSignal.setExternalUserId(parsedUser._id);
-                    }
-                }
-            }
-        }
-    });
-
     // FETCH NEW DATA
     const loadData = useCallback(
         async (saveData?: boolean) => {
@@ -560,6 +641,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         setPasswordValidError('');
     }, [password]);
+
+    const fetchStreamUserToken = useCallback(async (userId: string) => {
+        const server = fetchAPI('');
+        server
+            .mutate({
+                mutation: getStreamChatUserToken,
+                variables: {
+                    userId,
+                },
+            })
+            .then((res: any) => {
+                if (res.data && res.data.streamChat.getUserToken !== '') {
+                    setStreamUserToken(res.data.streamChat.getUserToken);
+                }
+            })
+            .catch((e) => {
+                setStreamUserToken('');
+                console.log('Error', e);
+            });
+    }, []);
 
     const handleSignup = useCallback(() => {
         if (password !== confirmPassword) {
@@ -1420,10 +1521,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 !loadingSubs &&
                 !loadingOrg &&
                 !saveDataInProgress &&
+                option !== 'Inbox' &&
                 (!selectedWorkspace || option !== 'Classroom') &&
                 // (option === 'Classroom' && modalType !== 'Create') ||
                 ((option === 'To Do' && tab !== 'Add') ||
-                (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
+                // (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
                 (option === 'Account' && !showCreate) ||
                 (option === 'Settings' && !showHelp) ? (
                     <TouchableOpacity
@@ -1633,7 +1735,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     await loadData(true);
                                 }}
                                 unreadMessages={unreadMessages}
-                                refreshUnreadInbox={refreshUnreadInbox}
+                                // refreshUnreadInbox={refreshUnreadInbox}
                                 hideNewChatButton={(hide: boolean) => setHideNewChatButton(hide)}
                                 openHelpModal={(show: boolean) => setShowOnboardModal(true)}
                                 accountTabs={accountTabs}
@@ -1654,6 +1756,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 setCreateActiveTab={(tab: any) => setCreateActiveTab(tab)}
                                 createActiveTab={createActiveTab}
                                 setDisableCreateNavbar={(disable: boolean) => setDisableCreateNavbar(disable)}
+                                chatClient={chatClient}
                             />
                         )}
                     </View>

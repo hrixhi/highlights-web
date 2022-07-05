@@ -17,8 +17,6 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 import axios from 'axios';
 
-import OneSignal, { useOneSignalSetup } from 'react-onesignal';
-
 export default function Auth({ navigation, route }: StackScreenProps<any, 'login'>) {
     const [redirectToZoom, setRedirectToZoom] = useState(false);
     const [showSignupWindow, setShowSignupWindow] = useState(false);
@@ -74,7 +72,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
 
                             const userId = u._id;
 
-                            OneSignal.setExternalUserId(userId);
+                            // OneSignal.setExternalUserId(userId);
 
                             const sU = JSON.stringify(u);
                             await AsyncStorage.setItem('jwt_token', token);
@@ -126,7 +124,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
 
                             const userId = u._id;
 
-                            OneSignal.setExternalUserId(userId);
+                            // OneSignal.setExternalUserId(userId);
 
                             const sU = JSON.stringify(u);
                             await AsyncStorage.setItem('jwt_token', token);
@@ -151,15 +149,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     });
             }
         })();
-    }, []);
-
-    useEffect(() => {
-        OneSignal.initialize('78cd253e-262d-4517-a710-8719abf3ee55', {
-            notifyButton: {
-                enable: false,
-            },
-            allowLocalhostAsSecureOrigin: true,
-        });
     }, []);
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
@@ -265,7 +254,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
 
                     const userId = u._id;
 
-                    OneSignal.setExternalUserId(userId);
+                    // OneSignal.setExternalUserId(userId);
 
                     const sU = JSON.stringify(u);
                     await AsyncStorage.setItem('jwt_token', token);

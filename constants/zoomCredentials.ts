@@ -14,3 +14,5 @@ export const origin = 'https://app.learnwithcues.com';
 
 // export const disableEmailId = 'instructor@learnwithcues.com';
 export const disableEmailId = '';
+
+export const STREAM_CHAT_API_KEY = 'fa2jhu3kqpah';

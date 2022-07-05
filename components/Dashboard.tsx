@@ -2726,7 +2726,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const renderMainHeaderMobile = () => {
-        if (props.option === 'To Do' || props.option === 'Account') return null;
+        if (props.option === 'To Do' || props.option === 'Account' || props.option === 'Inbox') return null;
 
         return (
             <View
@@ -2759,7 +2759,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </Text>
                     </View>
                 ) : null}
-                {props.option === 'Inbox' ? (
+                {/* {props.option === 'Inbox' ? (
                     <View
                         style={{
                             width: '100%',
@@ -2775,7 +2775,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Your Messages
                         </Text>
                     </View>
-                ) : null}
+                ) : null} */}
                 {props.option === 'Search' ? (
                     <View
                         style={{
@@ -3248,7 +3248,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             backgroundColor: props.option === 'To Do' ? '#f8f8f8' : '#fff',
                             height:
                                 width < 768
-                                    ? Dimensions.get('window').height - (64 + 60)
+                                    ? props.option === 'Inbox'
+                                        ? Dimensions.get('window').height - 64
+                                        : Dimensions.get('window').height - (64 + 60)
                                     : Dimensions.get('window').height - 64,
                         }}
                     >
@@ -3306,7 +3308,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             //     userId={userId}
                             //     user={props.user}
                             // />
-                            <Chat user={props.user} subscriptions={props.subscriptions} />
+                            <Chat user={props.user} subscriptions={props.subscriptions} chatClient={props.chatClient} />
                         ) : null}
                     </View>
                 )

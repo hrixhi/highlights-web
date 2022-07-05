@@ -3,32 +3,77 @@ import { Avatar, useChannelStateContext, useChatContext } from 'stream-chat-reac
 import './MessagingChannelHeader.css';
 
 import { TypingIndicator } from '../TypingIndicator/TypingIndicator';
-import { ChannelInfoIcon, ChannelSaveIcon, HamburgerIcon } from '../assets';
+import { ChannelInfoIcon, ChannelSaveIcon, HamburgerIcon, XButtonBackground } from '../assets';
 import { AvatarGroup } from '../';
 
 import type { StreamChatGenerics } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 type Props = {
     theme: string;
     toggleMobile: () => void;
     isViewing: boolean;
     setIsViewing: (value: React.SetStateAction<boolean>) => void;
+    showInstantMeeting: boolean;
+    setShowInstantMeeting: (value: React.SetStateAction<boolean>) => void;
 };
 
 const MessagingChannelHeader = (props: Props) => {
-    const { theme, toggleMobile, isViewing, setIsViewing } = props;
+    const { theme, toggleMobile, isViewing, setIsViewing, showInstantMeeting, setShowInstantMeeting } = props;
     const { client } = useChatContext<StreamChatGenerics>();
     const { channel, watcher_count } = useChannelStateContext<StreamChatGenerics>();
-    const [channelName, setChannelName] = useState(channel.data?.name || '');
+    const [groupImage, setGroupImage] = useState('');
     const [title, setTitle] = useState('');
+
+    const [meetingProvider, setMeetingProvider] = useState('');
+    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
 
     const members = Object.values(channel.state.members || {}).filter((member) => member.user?.id !== client?.user?.id);
 
+    /**
+     * @description Fetch meeting provider for org
+     */
     useEffect(() => {
-        if (!channelName) {
-            setTitle(members.map((member) => member.user?.name || member.user?.id || 'Unnamed User').join(', '));
-        }
-    }, [channelName, members]);
+        (async () => {
+            const org = await AsyncStorage.getItem('school');
+            const user = await AsyncStorage.getItem('user');
+
+            if (org) {
+                const school = JSON.parse(org);
+                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+            }
+
+            if (user) {
+                const parsedUser = JSON.parse(user);
+                setUserZoomInfo(parsedUser.zoomInfo ? parsedUser.zoomInfo : undefined);
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        const setGroupInfo = () => {
+            if (channel.data?.name) {
+                setTitle(channel.data?.name);
+            } else {
+                setTitle(members.map((member) => member.user?.name || member.user?.id || 'Unnamed User').join(', '));
+            }
+
+            if (channel.data?.image) {
+                setGroupImage(channel.data?.image);
+            } else {
+                setGroupImage('');
+            }
+        };
+
+        client.on('channel.updated', setGroupInfo);
+
+        setGroupInfo();
+
+        return () => {
+            client.off('channel.updated', setGroupInfo);
+        };
+    }, [members, client]);
 
     const renderOnlinePresence = () => {
         // Not a group
@@ -72,24 +117,47 @@ const MessagingChannelHeader = (props: Props) => {
             <div id="mobile-nav-icon" className={`${theme}`} onClick={() => toggleMobile()}>
                 <HamburgerIcon />
             </div>
-            {channel.data?.image ? (
+            {groupImage ? (
                 <div className="avatar-group__avatars">
                     {' '}
-                    <Avatar image={channel.data?.image} size={40} />{' '}
+                    <Avatar image={groupImage} size={40} />{' '}
                 </div>
             ) : (
                 <AvatarGroup members={members} />
             )}
 
             <div className="channel-header__container">
-                <div className="channel-header__name">{channelName || title}</div>
+                <div className="channel-header__name">{title}</div>
                 {renderOnlinePresence()}
             </div>
 
             <div className="messaging__channel-header__right">
                 <TypingIndicator />
 
+                {!meetingProvider && userZoomInfo && !showInstantMeeting ? (
+                    <div
+                        style={{
+                            // marginRight: 12,
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => setShowInstantMeeting(true)}
+                    >
+                        <Ionicons name={'videocam'} color={'#858688'} size={22} />
+                    </div>
+                ) : null}
                 {!isViewing && members.length > 1 ? <ChannelInfoIcon {...{ isViewing, setIsViewing }} /> : null}
+                {isViewing ? (
+                    <div
+                        style={{
+                            height: 24,
+                            cursor: 'pointer',
+                            marginLeft: 16,
+                        }}
+                        onClick={() => setIsViewing(false)}
+                    >
+                        <XButtonBackground />
+                    </div>
+                ) : null}
             </div>
         </div>
     );
