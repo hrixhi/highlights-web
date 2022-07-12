@@ -16,8 +16,9 @@ export type ChannelContainerProps = {
     onClose: () => void;
     isCreating: boolean;
     isEditing: boolean;
-    subscriptions: any[];
+    isAddingUsersGroup: boolean;
     setIsAddingUsersGroup: (value: boolean) => void;
+    subscriptions: any[];
 };
 
 const CustomAttachment = (props: { attachments: any[] }) => {
@@ -61,7 +62,7 @@ const CustomAttachment = (props: { attachments: any[] }) => {
                             marginBottom: 10,
                         }}
                     >
-                        {attachment.title ? attachment.title : 'Untitled'}
+                        {attachment.title ? attachment.title : 'Test'}
                     </div>
                     <div
                         style={{
@@ -75,6 +76,9 @@ const CustomAttachment = (props: { attachments: any[] }) => {
                 </div>
 
                 <div
+                    onClick={() => {
+                        window.open(attachment.meetingStartLink, '_blank');
+                    }}
                     style={{
                         marginLeft: 20,
                         background: '#000',
@@ -83,6 +87,7 @@ const CustomAttachment = (props: { attachments: any[] }) => {
                         fontSize: 10,
                         height: 32,
                         padding: 10,
+                        cursor: 'pointer',
                     }}
                 >
                     JOIN MEETING
@@ -95,22 +100,24 @@ const CustomAttachment = (props: { attachments: any[] }) => {
 };
 
 export const ChannelContainer = (props: ChannelContainerProps) => {
-    const { toggleMobile, theme, onClose, isCreating, subscriptions } = props;
-
-    const [isAddingUsersGroup, setIsAddingUsersGroup] = useState(false);
+    const { toggleMobile, theme, onClose, isCreating, subscriptions, isAddingUsersGroup, setIsAddingUsersGroup } =
+        props;
 
     // ADD EDIT HERE
 
-    // if (isCreating || isAddingUsersGroup) {
-    //     return (
-    //         <CreateChannel
-    //             toggleMobile={toggleMobile}
-    //             onClose={onClose}
-    //             subscriptions={subscriptions}
-    //             isAddingUsersGroup={isAddingUsersGroup}
-    //         />
-    //     );
-    // }
+    if (isCreating) {
+        return (
+            <CreateChannel
+                toggleMobile={toggleMobile}
+                onClose={onClose}
+                subscriptions={subscriptions}
+                isAddingUsersGroup={isAddingUsersGroup}
+                setIsAddingUsersGroup={setIsAddingUsersGroup}
+            />
+        );
+    }
+
+    console.log('Is creating channelContainter', isCreating);
 
     return (
         <Channel
@@ -122,7 +129,7 @@ export const ChannelContainer = (props: ChannelContainerProps) => {
             ThreadHeader={MessagingThreadHeader}
             TypingIndicator={() => null}
         >
-            {isCreating || isAddingUsersGroup ? (
+            {isAddingUsersGroup ? (
                 <CreateChannel
                     toggleMobile={toggleMobile}
                     onClose={onClose}

@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { origin } from '../constants/zoomCredentials';
 
 export const fetchAPI = (userId: any) => {
-    const uri = 'http://localhost:8081/';
+    const uri = 'http://localhost:8000/';
     // const uri = 'https://api.learnwithcues.com';
 
     const logoutUser = async () => {

@@ -53,16 +53,6 @@ const attendanceTypeOptions = [
 ];
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const [fixedPastMeetings, setFixedPastMeetings] = useState<any[]>([]);
-    const [pastMeetings, setPastMeetings] = useState<any[]>([]);
-    const [allChannelAttendances, setAllChannelAttendances] = useState<any[]>([]);
-    const [channelAttendances, setChannelAttendances] = useState<any[]>([]);
-    const [loadingMeetings, setLoadingMeetings] = useState(false);
-    const [loadingAttendances, setLoadingAttendances] = useState(false);
-    const [end, setEnd] = useState<any>(null);
-    const [start, setStart] = useState<any>(null);
-    const [attendanceTotalMap, setAttendanceTotalMap] = useState<any>({});
-    const [exportAoa, setExportAoa] = useState<any[]>();
     const [studentSearch, setStudentSearch] = useState('');
 
     const [showEditMeetingModal, setShowEditMeetingModal] = useState(false);
@@ -271,90 +261,75 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, []);
 
-    /**
-     * @description Create Structure for exporting attendance data in Spreadsheet
-     */
-    useEffect(() => {
-        if (allChannelAttendances.length === 0 || pastMeetings.length === 0) {
-            return;
-        }
+    // /**
+    //  * @description Create Structure for exporting attendance data in Spreadsheet
+    //  */
+    // useEffect(() => {
+    //     if (allChannelAttendances.length === 0 || pastMeetings.length === 0) {
+    //         return;
+    //     }
 
-        // Calculate total for each student and add it to the end
-        const studentTotalMap: any = {};
+    //     // Calculate total for each student and add it to the end
+    //     const studentTotalMap: any = {};
 
-        allChannelAttendances.forEach((att) => {
-            let count = 0;
-            pastMeetings.forEach((meeting) => {
-                const attendanceObject = att.attendances.find((s: any) => {
-                    return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-                });
+    //     allChannelAttendances.forEach((att) => {
+    //         let count = 0;
+    //         pastMeetings.forEach((meeting) => {
+    //             const attendanceObject = att.attendances.find((s: any) => {
+    //                 return s.dateId.toString().trim() === meeting.dateId.toString().trim();
+    //             });
 
-                if (attendanceObject) count++;
-            });
+    //             if (attendanceObject) count++;
+    //         });
 
-            studentTotalMap[att.userId] = count;
-        });
+    //         studentTotalMap[att.userId] = count;
+    //     });
 
-        setAttendanceTotalMap(studentTotalMap);
+    //     setAttendanceTotalMap(studentTotalMap);
 
-        const exportAoa = [];
+    //     const exportAoa = [];
 
-        // Add row 1 with past meetings and total
-        let row1 = [''];
+    //     // Add row 1 with past meetings and total
+    //     let row1 = [''];
 
-        pastMeetings.forEach((meeting) => {
-            row1.push(moment(new Date(meeting.start)).format('MMM Do, h:mm a'));
-        });
+    //     pastMeetings.forEach((meeting) => {
+    //         row1.push(moment(new Date(meeting.start)).format('MMM Do, h:mm a'));
+    //     });
 
-        row1.push('Total');
+    //     row1.push('Total');
 
-        exportAoa.push(row1);
+    //     exportAoa.push(row1);
 
-        allChannelAttendances.forEach((att) => {
-            let userRow = [];
+    //     allChannelAttendances.forEach((att) => {
+    //         let userRow = [];
 
-            userRow.push(att.fullName);
+    //         userRow.push(att.fullName);
 
-            pastMeetings.forEach((meeting) => {
-                const attendanceObject = att.attendances.find((s: any) => {
-                    return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-                });
+    //         pastMeetings.forEach((meeting) => {
+    //             const attendanceObject = att.attendances.find((s: any) => {
+    //                 return s.dateId.toString().trim() === meeting.dateId.toString().trim();
+    //             });
 
-                if (attendanceObject) {
-                    userRow.push(`Joined at ${moment(new Date(attendanceObject.joinedAt)).format('MMM Do, h:mm a')}`);
-                } else {
-                    userRow.push('-');
-                }
-            });
+    //             if (attendanceObject) {
+    //                 userRow.push(`Joined at ${moment(new Date(attendanceObject.joinedAt)).format('MMM Do, h:mm a')}`);
+    //             } else {
+    //                 userRow.push('-');
+    //             }
+    //         });
 
-            userRow.push(`${studentTotalMap[att.userId]} / ${pastMeetings.length}`);
+    //         userRow.push(`${studentTotalMap[att.userId]} / ${pastMeetings.length}`);
 
-            exportAoa.push(userRow);
-        });
+    //         exportAoa.push(userRow);
+    //     });
 
-        setExportAoa(exportAoa);
-    }, [allChannelAttendances, pastMeetings]);
+    //     setExportAoa(exportAoa);
+    // }, [allChannelAttendances, pastMeetings]);
 
     useEffect(() => {
         if (props.isOwner && props.channelId) {
             loadCourseStudents();
         }
     }, [props.isOwner, props.channelId]);
-
-    /**
-     * @description Filter meetings with start and end
-     */
-    useEffect(() => {
-        if (start && end) {
-            const filteredPastMeetings = fixedPastMeetings.filter((meeting) => {
-                return new Date(meeting.start) > start && new Date(meeting.end) < end;
-            });
-
-            setPastMeetings(filteredPastMeetings);
-        } else {
-            setPastMeetings(fixedPastMeetings);
-        }
-    }, [start, end]);
 
     function isValidHttpUrl(link: string) {
         let url;
@@ -443,89 +418,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 Alert('Failed to update Attendance Entry.');
             });
     }, [props.channelId, activeUserId, activeModifyId, activeModifyEntryType, attendanceEntry]);
-
-    /**
-     * @description API call to fetch user attendances
-     */
-    const loadChannelAttendances = useCallback(
-        (setLoading?: boolean) => {
-            if (setLoading) {
-                setLoadingAttendances(true);
-            }
-
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getAttendancesForChannel,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data && res.data.attendance.getAttendancesForChannel) {
-                        const u = await AsyncStorage.getItem('user');
-                        if (u) {
-                            const user = JSON.parse(u);
-                            if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                                // all attendances
-                                setAllChannelAttendances(res.data.attendance.getAttendancesForChannel);
-                                setChannelAttendances(res.data.attendance.getAttendancesForChannel);
-                            } else {
-                                // only user's attendances
-                                const attendances = res.data.attendance.getAttendancesForChannel.find((u: any) => {
-                                    return u.userId.toString().trim() === user._id.toString().trim();
-                                });
-                                const userAttendances = [{ ...attendances }];
-                                setAllChannelAttendances(userAttendances);
-                                setChannelAttendances(userAttendances);
-                            }
-                            setLoadingAttendances(false);
-                        }
-                    }
-                })
-                .catch((e: any) => {
-                    setLoadingAttendances(false);
-                });
-        },
-        [props.channelId, props.isOwner]
-    );
-
-    /**
-     * @description API call to fetch past meetings
-     */
-    const loadPastSchedule = useCallback(() => {
-        setLoadingMeetings(true);
-        const server = fetchAPI('');
-        server
-            .query({
-                query: getPastDates,
-                variables: {
-                    channelId: props.channelId,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.attendance.getPastDates) {
-                    setFixedPastMeetings(res.data.attendance.getPastDates);
-                    res.data.attendance.getPastDates.sort((a: any, b: any) => {
-                        const aDate = new Date(a.start);
-                        const bDate = new Date(b.start);
-
-                        if (aDate < bDate) {
-                            return 1;
-                        } else if (aDate > bDate) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    });
-                    setPastMeetings(res.data.attendance.getPastDates);
-                }
-                setLoadingMeetings(false);
-            })
-            .catch((e: any) => {
-                setLoadingMeetings(false);
-            });
-    }, [props.channelId]);
 
     /**
      * @description Fetch all course students for creating new assignment and assigning scores
@@ -795,566 +687,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             },
         ]);
     };
-
-    const renderMeetingsList = () => {
-        return (
-            <View
-                style={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    maxWidth: 1024,
-                    borderRadius: 2,
-                    borderWidth: 1,
-                    borderColor: '#cccccc',
-                    zIndex: 5000000,
-                    maxHeight: 500,
-                    position: 'relative',
-                    overflow: 'scroll',
-                }}
-            >
-                <table className="stickyTable">
-                    {/* First row  */}
-                    <thead>
-                        <tr>
-                            {/* First cell will contain search bar */}
-                            <th>
-                                <TextInput
-                                    value={studentSearch}
-                                    onChangeText={(val: string) => setStudentSearch(val)}
-                                    placeholder={'Search'}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    style={{
-                                        width: '100%',
-                                        maxWidth: 200,
-                                        borderColor: '#f2f2f2',
-                                        borderWidth: 1,
-                                        backgroundColor: '#fff',
-                                        borderRadius: 24,
-                                        fontSize: 15,
-                                        paddingVertical: 8,
-                                        marginTop: 0,
-                                        paddingHorizontal: 10,
-                                    }}
-                                />
-                            </th>
-                            {/* Total column */}
-                            <th>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontSize: 14,
-                                        color: '#000000',
-                                        fontFamily: 'inter',
-                                        marginBottom: 5,
-                                    }}
-                                >
-                                    Total
-                                </Text>
-                            </th>
-                            {/* All assignments */}
-                            {pastMeetings.map((meeting: any, col: number) => {
-                                const { title, start, end, recordingLink } = meeting;
-
-                                return (
-                                    <th
-                                        onClick={() => {
-                                            setEditMeeting(meeting);
-                                            setShowEditMeetingModal(true);
-                                            setEditMeetingTopic(meeting.title);
-                                            setEditMeetingRecordingLink(
-                                                meeting.recordingLink ? meeting.recordingLink : ''
-                                            );
-                                        }}
-                                        style={{
-                                            cursor: 'pointer',
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontSize: 14,
-                                                    color: '#000000',
-                                                    fontFamily: 'inter',
-                                                    paddingBottom: 5,
-                                                }}
-                                                numberOfLines={1}
-                                                ellipsizeMode="tail"
-                                            >
-                                                {title}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontSize: 12,
-                                                    color: '#000000',
-                                                    marginBottom: 5,
-                                                }}
-                                            >
-                                                {moment(new Date(start)).format('MMM Do YY')}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontSize: 12,
-                                                    color: '#000000',
-                                                }}
-                                            >
-                                                {moment(new Date(start)).format('h:mm')} -{' '}
-                                                {moment(new Date(end)).format('h:mm')}
-                                            </Text>
-                                            {recordingLink ? (
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        paddingTop: 4,
-                                                    }}
-                                                >
-                                                    <Ionicons name="videocam-outline" color={'#000'} size={15} />
-                                                </Text>
-                                            ) : null}
-                                        </View>
-                                    </th>
-                                );
-                            })}
-                        </tr>
-                    </thead>
-                    {/* Main Body */}
-
-                    <tbody>
-                        {channelAttendances.length === 0 ? (
-                            <View
-                                style={{
-                                    width: '100%',
-                                    padding: 20,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 18,
-                                        textAlign: 'center',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    No attendances.
-                                </Text>
-                            </View>
-                        ) : null}
-                        {channelAttendances.map((channelAttendance: any, row: number) => {
-                            const studentCount = attendanceTotalMap[channelAttendance.userId];
-
-                            return (
-                                <tr style={{}}>
-                                    <th>
-                                        <View>
-                                            <Image
-                                                style={{
-                                                    height: 37,
-                                                    width: 37,
-                                                    borderRadius: 75,
-                                                    alignSelf: 'center',
-                                                }}
-                                                source={{
-                                                    uri: channelAttendance.avatar
-                                                        ? channelAttendance.avatar
-                                                        : 'https://cues-files.s3.amazonaws.com/images/default.png',
-                                                }}
-                                            />
-                                            <Text
-                                                style={{
-                                                    marginTop: 7,
-                                                    textAlign: 'center',
-                                                    fontSize: 14,
-                                                    color: '#000000',
-                                                    fontFamily: 'inter',
-                                                }}
-                                            >
-                                                {channelAttendance.fullName}
-                                            </Text>
-                                        </View>
-                                    </th>
-                                    <td>
-                                        <View
-                                            style={{
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontSize: 14,
-                                                    color: '#000000',
-                                                    fontFamily: 'inter',
-                                                }}
-                                            >
-                                                {studentCount} / {pastMeetings.length}
-                                            </Text>
-                                        </View>
-                                    </td>
-                                    {pastMeetings.map((meeting: any, col: number) => {
-                                        const attendanceObject = channelAttendance.attendances.find((s: any) => {
-                                            return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-                                        });
-                                        return (
-                                            <td key={row.toString() + '-' + col.toString()}>
-                                                <View
-                                                    style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'center',
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    <TouchableOpacity
-                                                        disabled={!props.isOwner}
-                                                        onPress={() =>
-                                                            onChangeAttendance(
-                                                                meeting.dateId,
-                                                                channelAttendance.userId,
-                                                                attendanceObject ? false : true
-                                                            )
-                                                        }
-                                                        style={{
-                                                            marginBottom: 5,
-                                                            width: '100%',
-                                                            flexDirection: 'row',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        {attendanceObject ? (
-                                                            <Ionicons
-                                                                name="checkmark-outline"
-                                                                size={15}
-                                                                color={'#000'}
-                                                            />
-                                                        ) : props.isOwner ? (
-                                                            <Ionicons
-                                                                name="checkmark-outline"
-                                                                size={15}
-                                                                color={'#e0e0e0'}
-                                                            />
-                                                        ) : (
-                                                            '-'
-                                                        )}
-                                                    </TouchableOpacity>
-                                                    {attendanceObject ? (
-                                                        <Text
-                                                            style={{
-                                                                textAlign: 'center',
-                                                                fontSize: 14,
-                                                                color: '#000000',
-                                                                width: '100%',
-                                                            }}
-                                                        >
-                                                            {attendanceObject.joinedAt
-                                                                ? moment(new Date(attendanceObject.joinedAt)).format(
-                                                                      'h:mm a'
-                                                                  )
-                                                                : ''}
-                                                        </Text>
-                                                    ) : null}
-                                                </View>
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </View>
-        );
-    };
-
-    // const renderMeetingsListNative = () => {
-    //     return (
-    //         <View
-    //             style={{
-    //                 width: '100%',
-    //                 backgroundColor: 'white',
-    //                 maxHeight: 500,
-    //                 borderRadius: 2,
-    //                 borderWidth: 1,
-    //                 borderColor: '#cccccc',
-    //                 zIndex: 5000000,
-    //             }}
-    //             key={JSON.stringify(allChannelAttendances)}
-    //         >
-    //             <ScrollView
-    //                 showsHorizontalScrollIndicator={true}
-    //                 horizontal={true}
-    //                 contentContainerStyle={{
-    //                     height: '100%',
-    //                     maxHeight: 450,
-    //                     flexDirection: 'column',
-    //                     minWidth: '100%',
-    //                 }}
-    //                 nestedScrollEnabled={true}
-    //             >
-    //                 <View
-    //                     style={{
-    //                         backgroundColor: '#f8f8f8',
-    //                         minWidth: '100%',
-    //                     }}
-    //                 >
-    //                     <View
-    //                         style={{
-    //                             minHeight: 70,
-    //                             flexDirection: 'row',
-    //                             overflow: 'hidden',
-    //                             borderBottomWidth: 1,
-    //                             borderBottomColor: '#f2f2f2',
-    //                         }}
-    //                         key={'-'}
-    //                     >
-    //                         {props.isOwner ? (
-    //                             <View
-    //                                 style={{
-    //                                     backgroundColor: '#f8f8f8',
-    //                                     width: Dimensions.get('window').width < 768 ? 90 : 150,
-    //                                     justifyContent: 'center',
-    //                                     display: 'flex',
-    //                                     flexDirection: 'column',
-    //                                     padding: 10,
-    //                                 }}
-    //                                 key={'0,0'}
-    //                             >
-    //                                 <TextInput
-    //                                     value={studentSearch}
-    //                                     onChangeText={(val: string) => setStudentSearch(val)}
-    //                                     placeholder={'Search'}
-    //                                     placeholderTextColor={'#1F1F1F'}
-    //                                     style={{
-    //                                         width: '100%',
-    //                                         borderColor: '#f2f2f2',
-    //                                         borderBottomWidth: 1,
-    //                                         fontSize: 15,
-    //                                         paddingVertical: 8,
-    //                                         marginTop: 0,
-    //                                         paddingHorizontal: 10,
-    //                                     }}
-    //                                 />
-    //                             </View>
-    //                         ) : null}
-    //                         <View style={styles.colHeader} key={'0,0'}>
-    //                             <Text
-    //                                 style={{
-    //                                     fontSize: 14,
-    //                                     color: '#000000',
-    //                                     fontFamily: 'inter',
-    //                                     textAlign: 'center',
-    //                                 }}
-    //                             >
-    //                                 Total
-    //                             </Text>
-    //                         </View>
-    //                         {pastMeetings.map((meeting: any, col: number) => {
-    //                             const { title, start, end, recordingLink } = meeting;
-
-    //                             return (
-    //                                 <TouchableOpacity
-    //                                     style={styles.colHeader}
-    //                                     key={col.toString()}
-    //                                     onPress={() => {
-    //                                         setEditMeeting(meeting);
-    //                                         setShowEditMeetingModal(true);
-    //                                         setEditMeetingTopic(meeting.title);
-    //                                         setEditMeetingRecordingLink(
-    //                                             meeting.recordingLink ? meeting.recordingLink : ''
-    //                                         );
-    //                                     }}
-    //                                     disabled={!props.isOwner}
-    //                                 >
-    //                                     <Text
-    //                                         style={{
-    //                                             textAlign: 'center',
-    //                                             fontSize: 14,
-    //                                             color: '#000000',
-    //                                             fontFamily: 'inter',
-    //                                             paddingBottom: 5,
-    //                                         }}
-    //                                         numberOfLines={1}
-    //                                         ellipsizeMode="tail"
-    //                                     >
-    //                                         {title}
-    //                                     </Text>
-    //                                     <Text
-    //                                         style={{
-    //                                             textAlign: 'center',
-    //                                             fontSize: 12,
-    //                                             color: '#000000',
-    //                                             marginBottom: 5,
-    //                                         }}
-    //                                     >
-    //                                         {moment(new Date(start)).format('MMM Do YY')}
-    //                                     </Text>
-    //                                     <Text
-    //                                         style={{
-    //                                             textAlign: 'center',
-    //                                             fontSize: 12,
-    //                                             color: '#000000',
-    //                                         }}
-    //                                     >
-    //                                         {moment(new Date(start)).format('h:mm')} -{' '}
-    //                                         {moment(new Date(end)).format('h:mm')}
-    //                                     </Text>
-    //                                     {recordingLink ? (
-    //                                         <Text
-    //                                             style={{
-    //                                                 textAlign: 'center',
-    //                                                 paddingTop: 4,
-    //                                             }}
-    //                                         >
-    //                                             <Ionicons name="videocam-outline" color={'#000'} size={15} />
-    //                                         </Text>
-    //                                     ) : null}
-    //                                 </TouchableOpacity>
-    //                             );
-    //                         })}
-    //                     </View>
-    //                 </View>
-    //                 <ScrollView
-    //                     showsVerticalScrollIndicator={true}
-    //                     horizontal={false}
-    //                     contentContainerStyle={{
-    //                         height: '100%',
-    //                     }}
-    //                     nestedScrollEnabled={true}
-    //                 >
-    //                     {channelAttendances.map((channelAttendance: any, row: number) => {
-    //                         const studentCount = attendanceTotalMap[channelAttendance.userId];
-
-    //                         return (
-    //                             <View
-    //                                 style={{
-    //                                     minHeight: 70,
-    //                                     flexDirection: 'row',
-    //                                     overflow: 'hidden',
-    //                                     borderBottomColor: '#f2f2f2',
-    //                                     borderBottomWidth: row === channelAttendances.length - 1 ? 0 : 1,
-    //                                     borderBottomLeftRadius: row === channelAttendances.length - 1 ? 8 : 0,
-    //                                     borderBottomRightRadius: row === channelAttendances.length - 1 ? 8 : 0,
-    //                                 }}
-    //                                 key={row}
-    //                             >
-    //                                 {props.isOwner ? (
-    //                                     <View
-    //                                         style={{
-    //                                             width: Dimensions.get('window').width < 768 ? 90 : 150,
-    //                                             justifyContent: 'center',
-    //                                             display: 'flex',
-    //                                             flexDirection: 'column',
-    //                                             padding: 10,
-    //                                         }}
-    //                                     >
-    //                                         <View>
-    //                                             <Image
-    //                                                 style={{
-    //                                                     height: 37,
-    //                                                     width: 37,
-    //                                                     borderRadius: 75,
-    //                                                     alignSelf: 'center',
-    //                                                 }}
-    //                                                 source={{
-    //                                                     uri: channelAttendance.avatar
-    //                                                         ? channelAttendance.avatar
-    //                                                         : 'https://cues-files.s3.amazonaws.com/images/default.png',
-    //                                                 }}
-    //                                             />
-    //                                             <Text
-    //                                                 style={{
-    //                                                     marginTop: 7,
-    //                                                     textAlign: 'center',
-    //                                                     fontSize: 14,
-    //                                                     color: '#000000',
-    //                                                     fontFamily: 'inter',
-    //                                                 }}
-    //                                             >
-    //                                                 {channelAttendance.fullName}
-    //                                             </Text>
-    //                                         </View>
-    //                                     </View>
-    //                                 ) : null}
-    //                                 <View style={styles.col}>
-    //                                     <Text
-    //                                         style={{
-    //                                             textAlign: 'center',
-    //                                             fontSize: 14,
-    //                                             color: '#000000',
-    //                                             fontFamily: 'inter',
-    //                                         }}
-    //                                     >
-    //                                         {studentCount} / {pastMeetings.length}
-    //                                     </Text>
-    //                                 </View>
-    //                                 {pastMeetings.map((meeting: any, col: number) => {
-    //                                     const attendanceObject = channelAttendance.attendances.find((s: any) => {
-    //                                         return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-    //                                     });
-    //                                     return (
-    //                                         <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-    //                                             <TouchableOpacity
-    //                                                 disabled={!props.isOwner}
-    //                                                 onPress={() =>
-    //                                                     onChangeAttendance(
-    //                                                         meeting.dateId,
-    //                                                         channelAttendance.userId,
-    //                                                         attendanceObject ? false : true
-    //                                                     )
-    //                                                 }
-    //                                                 style={{
-    //                                                     marginBottom: 5,
-    //                                                     width: '100%',
-    //                                                     flexDirection: 'row',
-    //                                                     justifyContent: 'center',
-    //                                                 }}
-    //                                             >
-    //                                                 {attendanceObject ? (
-    //                                                     <Ionicons name="checkmark-outline" size={15} color={'#000'} />
-    //                                                 ) : props.isOwner ? (
-    //                                                     <Ionicons
-    //                                                         name="checkmark-outline"
-    //                                                         size={15}
-    //                                                         color={'#e0e0e0'}
-    //                                                     />
-    //                                                 ) : (
-    //                                                     '-'
-    //                                                 )}
-    //                                             </TouchableOpacity>
-    //                                             {attendanceObject ? (
-    //                                                 <Text
-    //                                                     style={{
-    //                                                         textAlign: 'center',
-    //                                                         fontSize: 14,
-    //                                                         color: '#000000',
-    //                                                         width: '100%',
-    //                                                     }}
-    //                                                 >
-    //                                                     {attendanceObject.joinedAt
-    //                                                         ? moment(new Date(attendanceObject.joinedAt)).format(
-    //                                                               'h:mm a'
-    //                                                           )
-    //                                                         : ''}
-    //                                                 </Text>
-    //                                             ) : null}
-    //                                         </View>
-    //                                     );
-    //                                 })}
-    //                             </View>
-    //                         );
-    //                     })}
-    //                 </ScrollView>
-    //             </ScrollView>
-    //         </View>
-    //     );
-    // };
 
     const renderStudentsMeetingsList = () => {
         return (
@@ -1644,6 +976,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const resetNewEntryForm = () => {
         setNewAttendanceTitle('');
         setNewAttendanceDate(new Date());
+        setNewAttendanceRecordingLink('');
 
         // Standard Points scored
         const studentAttendances: any[] = courseStudents.map((student: any) => {
@@ -1660,20 +993,20 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         setNewStudentAttendances(studentAttendances);
     };
 
-    /**
-     * @description Export attendance data into spreadsheet
-     */
-    const exportAttendance = () => {
-        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        const fileExtension = '.xlsx';
-        const ws = XLSX.utils.aoa_to_sheet(exportAoa);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Attendance ');
-        /* generate XLSX file and send to client */
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, 'attendances' + fileExtension);
-    };
+    // /**
+    //  * @description Export attendance data into spreadsheet
+    //  */
+    // const exportAttendance = () => {
+    //     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    //     const fileExtension = '.xlsx';
+    //     const ws = XLSX.utils.aoa_to_sheet(exportAoa);
+    //     const wb = XLSX.utils.book_new();
+    //     XLSX.utils.book_append_sheet(wb, ws, 'Attendance ');
+    //     /* generate XLSX file and send to client */
+    //     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    //     const data = new Blob([excelBuffer], { type: fileType });
+    //     FileSaver.saveAs(data, 'attendances' + fileExtension);
+    // };
 
     /**
      * @description Round time to nearest seconds
@@ -1690,6 +1023,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
             if (!newAttendanceTitle || newAttendanceTitle === '') {
                 Alert('Attendance title is required.');
+                return;
             }
 
             // Sanitize
@@ -1770,7 +1104,14 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     });
             }
         },
-        [newAttendanceTitle, newAttendanceDate, newStudentAttendances, editEntryId, editEntryType]
+        [
+            newAttendanceTitle,
+            newAttendanceDate,
+            newAttendanceRecordingLink,
+            newStudentAttendances,
+            editEntryId,
+            editEntryType,
+        ]
     );
 
     const handleDeleteAttendance = useCallback(async () => {

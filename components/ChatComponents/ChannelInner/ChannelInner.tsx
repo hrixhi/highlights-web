@@ -160,6 +160,7 @@ export const ChannelInner = (props: ChannelInnerProps) => {
                                 meetingStartLink,
                                 start,
                                 end,
+                                createdBy: client.userID,
                             },
                         ],
                     });

@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
 import moment from 'moment';
 
+import { Avatar } from 'stream-chat-react';
+
 // API
 import axios from 'axios';
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -298,8 +300,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             if (props.user.avatar) {
                 setAvatar(props.user.avatar);
-            } else {
-                setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
             }
 
             if (props.user.userCreatedOrg) {
@@ -561,7 +561,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         try {
             axios
                 .post(
-                    `https://api.learnwithcues.com/search`,
+                    `http://localhost:8000/search`,
                     {
                         term: searchTerm,
                         userId,
@@ -636,9 +636,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     });
 
                     const sortMessages = [...tempResults['Messages']];
-                    sortMessages.sort((a: any, b: any) => {
-                        const aDate = new Date(a.sentAt);
-                        const bDate = new Date(b.sentAt);
+
+                    const messages = sortMessages.map((msg) => msg.message);
+
+                    messages.sort((a: any, b: any) => {
+                        const aDate = new Date(a.created_at);
+                        const bDate = new Date(b.created_at);
 
                         if (aDate < bDate) {
                             return 1;
@@ -649,6 +652,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }
                     });
 
+                    console.log('Messages', messages);
+
                     const sortCourses = [...tempResults['Courses']];
                     sortCourses.sort((a: any, b: any) => {
                         return a.name < b.name ? 1 : -1;
@@ -658,7 +663,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         Content: sortContent,
                         Courses: sortCourses,
                         Discussion: sortThreads,
-                        Messages: sortMessages,
+                        Messages: messages,
                     };
 
                     setResults(sortedResults);
@@ -1319,8 +1324,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 let colorCode = '';
                                 let subscribed = false;
                                 let messageSenderName = '';
+                                let messageSenderChannel = '';
                                 let messageSenderAvatar = '';
                                 let createdAt = '';
+                                let messageSenderOnline = false;
 
                                 if (activeSearchResultsTab === 'Content') {
                                     const { title, subtitle } = htmlStringParser(obj.cue);
@@ -1382,33 +1389,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                     createdAt = obj.time;
                                 } else if (activeSearchResultsTab === 'Messages') {
-                                    const users = obj.groupId.users;
+                                    messageSenderName = obj.user?.name;
+                                    messageSenderAvatar = obj.user?.image;
+                                    messageSenderChannel = obj.channel?.name;
+                                    messageSenderOnline = obj.user?.online;
 
-                                    const sender = users.filter((user: any) => user._id === obj.sentBy)[0];
+                                    t = obj.text;
 
-                                    if (obj.groupId && obj.groupId.name) {
-                                        messageSenderName = obj.groupId.name + ' > ' + sender.fullName;
-                                        messageSenderAvatar = obj.groupId.image
-                                            ? obj.groupId.image
-                                            : 'https://cues-files.s3.amazonaws.com/images/default.png';
-                                    } else if (sender) {
-                                        messageSenderName = sender.fullName;
-                                        messageSenderAvatar = sender.avatar
-                                            ? sender.avatar
-                                            : 'https://cues-files.s3.amazonaws.com/images/default.png';
-                                    }
-
-                                    if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
-                                        const o = JSON.parse(obj.message);
-                                        t = o.title;
-                                        s = o.type;
-                                    } else {
-                                        const { title, subtitle } = htmlStringParser(obj.message);
-                                        t = title;
-                                        s = subtitle;
-                                    }
-
-                                    createdAt = obj.sentAt;
+                                    createdAt = obj.created_at;
                                 }
 
                                 return (
@@ -1421,7 +1409,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         option={activeSearchResultsTab}
                                         subscribed={subscribed}
                                         messageSenderName={messageSenderName}
+                                        messageSenderChannel={messageSenderChannel}
                                         messageSenderAvatar={messageSenderAvatar}
+                                        messageSenderOnline={messageSenderOnline}
                                         createdAt={createdAt}
                                         handleSub={() => handleSub(obj._id)}
                                         searchTerm={searchTerm}
@@ -3073,17 +3063,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setOption('Account');
                                     }}
                                 >
-                                    <Image
-                                        style={{
-                                            height: 30,
-                                            width: 30,
-                                            borderRadius: 75,
-                                            alignSelf: 'center',
-                                        }}
-                                        source={{
-                                            uri: avatar,
-                                        }}
-                                    />
+                                    <Avatar name={props.user.fullName} image={props.user.avatar} size={35} />
                                 </TouchableOpacity>
                             ) : null}
 

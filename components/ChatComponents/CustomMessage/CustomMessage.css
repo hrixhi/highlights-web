@@ -39,7 +39,6 @@
 }
 
 .str-chat__modal__inner {
-    height: 160px;
     /* width: 400px; */
     border: none !important;
     background: #f1f1f1;
@@ -53,7 +52,7 @@
 
 .str-chat__edit-message-form {
     position: relative;
-    top: 40px;
+    /* top: 40px; */
 }
 
 .str-chat__modal .str-chat__edit-message-form textarea {

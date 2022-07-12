@@ -21,6 +21,8 @@ import { Ionicons } from '@expo/vector-icons';
 import FileUpload from '../../UploadFiles';
 import Alert from '../../Alert';
 
+import { nanoid } from 'nanoid';
+
 const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 const sections = [
     'A',
@@ -583,6 +585,7 @@ const CreateChannel = (props: Props) => {
 
             setIsAddingUsersGroup(false);
         } catch (e) {
+            console.log('Errors', e);
             Alert('Failed to add members. Try again.');
         }
     }, [selectedUsers, channel]);
@@ -596,7 +599,7 @@ const CreateChannel = (props: Props) => {
 
         // GROUP
         if (selectedUsersIds.length > 1) {
-            conversation = await client.channel('messaging', {
+            conversation = await client.channel('messaging', nanoid(), {
                 members: [...selectedUsersIds, client.userID],
                 name: groupName,
                 image: groupImage ? groupImage : undefined,
@@ -868,6 +871,8 @@ const CreateChannel = (props: Props) => {
         );
     };
 
+    console.log('Create channel');
+
     const renderCreateChannelInput = () => {
         return (
             <div>
@@ -1040,9 +1045,10 @@ const CreateChannel = (props: Props) => {
         return (
             <div
                 style={{
-                    marginTop: 25,
+                    paddingTop: 25,
                     paddingLeft: 20,
                     paddingRight: 20,
+                    overflow: 'scroll',
                 }}
             >
                 <div
@@ -1235,7 +1241,8 @@ const CreateChannel = (props: Props) => {
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    marginTop: 50,
+                    paddingTop: 50,
+                    overflow: 'scroll',
                     alignItems: 'center',
                 }}
             >

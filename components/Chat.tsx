@@ -45,6 +45,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     // CREATING NEW CHANNEL OPTIONS
     const [isCreating, setIsCreating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isAddingUsersGroup, setIsAddingUsersGroup] = useState(false);
 
     // FILTERS
     const [channelSearch, setChannelSearch] = useState('');
@@ -169,6 +170,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         return null;
     }
 
+    console.log('Is Creating', isCreating);
+
     return (
         <div
             style={{
@@ -194,7 +197,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         sort={sort}
                         options={options}
                         List={MessagingChannelList}
-                        Preview={(props) => <MessagingChannelPreview {...props} setIsCreating={setIsCreating} />}
+                        Preview={(props) => (
+                            <MessagingChannelPreview
+                                {...props}
+                                setIsCreating={setIsCreating}
+                                setIsAddingUsersGroup={setIsAddingUsersGroup}
+                            />
+                        )}
                     />
                 </div>
 
@@ -207,6 +216,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     }}
                     isCreating={isCreating}
                     isEditing={isEditing}
+                    isAddingUsersGroup={isAddingUsersGroup}
+                    setIsAddingUsersGroup={setIsAddingUsersGroup}
                     subscriptions={props.subscriptions}
                 />
             </Chat>

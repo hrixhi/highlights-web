@@ -45,10 +45,11 @@ type Props = ChannelPreviewUIComponentProps & {
     channel: Channel;
     setIsCreating: Dispatch<SetStateAction<boolean>>;
     setActiveChannel?: ChatContextValue['setActiveChannel'];
+    setIsAddingUsersGroup: Dispatch<SetStateAction<boolean>>;
 };
 
 const MessagingChannelPreview = (props: Props) => {
-    const { channel, lastMessage, setActiveChannel, setIsCreating } = props;
+    const { channel, lastMessage, setActiveChannel, setIsCreating, setIsAddingUsersGroup } = props;
     const { channel: activeChannel, client } = useChatContext<StreamChatGenerics>();
 
     const members = Object.values(channel.state.members).filter(({ user }) => user?.id !== client.userID);
@@ -78,6 +79,7 @@ const MessagingChannelPreview = (props: Props) => {
             }
             onClick={() => {
                 setIsCreating(false);
+                setIsAddingUsersGroup(false);
                 setActiveChannel?.(channel);
             }}
         >

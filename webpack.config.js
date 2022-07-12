@@ -5,9 +5,9 @@ const createExpoWebpackConfigAsync = require('@expo/webpack-config');
 module.exports = async function (env, argv) {
     const config = await createExpoWebpackConfigAsync(env, argv);
 
-    if (env.mode === 'development') {
-        config.plugins.push(new ReactRefreshWebpackPlugin());
-    }
+    // if (env.mode === 'development') {
+    //     config.plugins.push(new ReactRefreshWebpackPlugin());
+    // }
 
     // config.module.rules.push({
     //     test: /\.jsx$/,

@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 import moment from 'moment';
 import Alert from './Alert';
+import { Avatar } from 'stream-chat-react';
 
 // COMPONENTS
 import { Text, View, TouchableOpacity } from '../components/Themed';
@@ -51,7 +52,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         <Text style={styleObject.date}>{props.channelName}</Text>
                     ) : props.option === 'Messages' ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {props.messageSenderAvatar ? (
+                            {/* {props.messageSenderAvatar ? (
                                 <Image
                                     source={{
                                         uri: props.messageSenderAvatar,
@@ -64,8 +65,18 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     }}
                                     // resizeMode="contain"
                                 />
-                            ) : null}
-                            <Text style={styleObject.date}>{props.messageSenderName}</Text>
+                            ) : null} */}
+                            <Avatar
+                                name={props.messageSenderName}
+                                image={props.messageSenderAvatar}
+                                size={24}
+                                // id={props.messageSenderName}
+                                // online={props.messageSenderOnline}
+                            />
+                            <Text style={styleObject.date}>
+                                {props.messageSenderName +
+                                    (props.messageSenderChannel ? ' in ' + props.messageSenderChannel : '')}
+                            </Text>
                         </View>
                     ) : (
                         <Text style={styleObject.date}> </Text>

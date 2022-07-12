@@ -1578,8 +1578,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Account' && activeAccountTab === 'courses' ? (
                                 <Ionicons name="add-outline" size={35} />
-                            ) : option === 'Inbox' ? (
-                                <Ionicons name="person-add-outline" size={21} />
                             ) : (
                                 <Ionicons name="help-outline" size={21} />
                             )}
