@@ -20,8 +20,11 @@ import { DISCUSS_POST_TOOLBAR_BUTTONS } from '../constants/Froala';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import FormulaGuide from './FormulaGuide';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { useAppContext } from '../contexts/AppContext';
 
 const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId } = useAppContext();
+
     const [title, setTitle] = useState('');
     const [html, setHtml] = useState('');
     const [attachments, setAttachments] = useState<any[]>([]);
@@ -55,35 +58,35 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const fileUploadEditor = useCallback(
         async (files: any) => {
-            const res = await handleFileUploadEditor(false, files.item(0), props.userId);
+            const res = await handleFileUploadEditor(false, files.item(0), userId);
 
             if (!res || res.url === '' || res.type === '') {
                 return false;
             }
             setUploadResult(res.url, res.type, res.name);
         },
-        [props.userId]
+        [userId]
     );
 
     const handleFileUpload = useCallback(async () => {
-        const res = await handleFile(false, props.userId);
+        const res = await handleFile(false, userId);
 
         if (!res || res.url === '' || res.type === '') {
             return false;
         }
         // setUploadResult(res.url, res.type);
-    }, [props.userId]);
+    }, [userId]);
 
     const videoUploadEditor = useCallback(
         async (files: any) => {
-            const res = await handleFileUploadEditor(true, files.item(0), props.userId);
+            const res = await handleFileUploadEditor(true, files.item(0), userId);
 
             if (!res || res.url === '' || res.type === '') {
                 return false;
             }
             setUploadResult(res.url, res.type, res.name);
         },
-        [props.userId]
+        [userId]
     );
 
     const setUploadResult = useCallback(
@@ -375,11 +378,11 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             // fileUploadURL: 'https://api.learnwithcues.com/upload',
                             fileMaxSize: 25 * 1024 * 1024,
                             fileAllowedTypes: ['*'],
-                            fileUploadParams: { userId: props.userId },
+                            fileUploadParams: { userId },
                             // IMAGE UPLOAD
                             imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
                             imageUploadParam: 'file',
-                            imageUploadParams: { userId: props.userId },
+                            imageUploadParams: { userId },
                             imageUploadMethod: 'POST',
                             imageMaxSize: 5 * 1024 * 1024,
                             imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -551,7 +554,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             anonymous
                         );
                     }}
-                    disabled={props.user.email === disableEmailId}
+                    disabled={user.email === disableEmailId}
                 >
                     <Text
                         style={{

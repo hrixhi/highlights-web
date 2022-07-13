@@ -22,6 +22,9 @@ import FileUpload from '../../UploadFiles';
 import Alert from '../../Alert';
 
 import { nanoid } from 'nanoid';
+import { useApolloClient } from '@apollo/client';
+import { disableEmailId } from '../../../constants/zoomCredentials';
+import { useAppContext } from '../../../contexts/AppContext';
 
 const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 const sections = [
@@ -331,6 +334,8 @@ const filterByOptions = [
 ];
 
 const CreateChannel = (props: Props) => {
+    const { userId, user, subscriptions } = useAppContext();
+
     const { onClose, toggleMobile, isAddingUsersGroup, setIsAddingUsersGroup } = props;
 
     const { client, setActiveChannel } = useChatContext<StreamChatGenerics>();
@@ -379,6 +384,8 @@ const CreateChannel = (props: Props) => {
     const [groupImage, setGroupImage] = useState<any>(undefined);
 
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const server = useApolloClient();
 
     const clearState = () => {
         setInputText('');
@@ -441,7 +448,7 @@ const CreateChannel = (props: Props) => {
     }, [client]);
 
     useEffect(() => {
-        if (props.subscriptions) {
+        if (subscriptions) {
             let subOptions = [
                 {
                     value: 'All',
@@ -449,7 +456,7 @@ const CreateChannel = (props: Props) => {
                 },
             ];
 
-            props.subscriptions.map((sub: any) => {
+            subscriptions.map((sub: any) => {
                 subOptions.push({
                     text: sub.channelName,
                     value: sub.channelId,
@@ -457,7 +464,7 @@ const CreateChannel = (props: Props) => {
             });
             setCourseDropdownOptions(subOptions);
         }
-    }, [props.subscriptions]);
+    }, [subscriptions]);
 
     // Handle Select All Checkbox
     useEffect(() => {
@@ -494,7 +501,7 @@ const CreateChannel = (props: Props) => {
     const fetchInboxDirectory = useCallback(() => {
         if (client && client.userID) {
             console.log('Client ID', client.userID);
-            const server = fetchAPI('');
+
             server
                 .query({
                     query: getInboxDirectory,
@@ -619,7 +626,6 @@ const CreateChannel = (props: Props) => {
 
         // }
 
-        const server = fetchAPI('');
         server.mutate({
             mutation: addModerators,
             variables: {
@@ -1350,7 +1356,7 @@ const CreateChannel = (props: Props) => {
                             backgroundColor: 'white',
                             borderRadius: 15,
                         }}
-                        // disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                     >
                         <Text
                             style={{

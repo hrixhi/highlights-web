@@ -11,8 +11,11 @@ import { Avatar } from 'stream-chat-react';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { disableEmailId } from '../constants/zoomCredentials';
 import Highlighter from 'react-highlight-words';
+import { useAppContext } from '../contexts/AppContext';
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user } = useAppContext();
+
     const colorScheme = 'dark';
     const styleObject = styles(colorScheme, props.colorCode || 'black', props.option);
 
@@ -166,7 +169,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                         ]);
                                     }}
                                     style={{ marginTop: 1 }}
-                                    disabled={props.user.email === disableEmailId}
+                                    disabled={user.email === disableEmailId}
                                 >
                                     <Text style={{}}>
                                         <Ionicons name="enter-outline" size={24} color="#000" />

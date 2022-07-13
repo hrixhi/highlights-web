@@ -115,7 +115,39 @@ export const createCue = gql`
                 allowedAttempts: $allowedAttempts
                 availableUntil: $availableUntil
                 totalPoints: $totalPoints
-            )
+            ) {
+                _id
+                cue
+                color
+                channelId
+                customCategory
+                unreadThreads
+                frequency
+                date
+                folderId
+                endPlayAt
+                channelName
+                starred
+                createdBy
+                shuffle
+                original
+                submission
+                deadline
+                initiateAt
+                gradeWeight
+                score
+                graded
+                comment
+                status
+                submittedAt
+                releaseSubmission
+                active
+                limitedShares
+                allowedAttempts
+                annotations
+                availableUntil
+                totalPoints
+            }
         }
     }
 `;
@@ -214,6 +246,47 @@ export const saveCuesToCloud = gql`
         }
     }
 `;
+
+export const handleSaveCue = gql`
+    mutation ($userId: String!, $cue: CueInputObject!, $create: Boolean!) {
+        cue {
+            handleSaveCue(userId: $userId, cue: $cue, create: $create) {
+                _id
+                cue
+                color
+                channelId
+                customCategory
+                unreadThreads
+                frequency
+                date
+                folderId
+                endPlayAt
+                channelName
+                starred
+                createdBy
+                shuffle
+                original
+                submission
+                deadline
+                initiateAt
+                gradeWeight
+                score
+                graded
+                comment
+                status
+                submittedAt
+                releaseSubmission
+                active
+                limitedShares
+                allowedAttempts
+                annotations
+                availableUntil
+                totalPoints
+            }
+        }
+    }
+`;
+
 export const submit = gql`
     mutation ($cueId: String!, $userId: String!, $cue: String!, $quizId: String) {
         cue {
@@ -1683,6 +1756,7 @@ export const findChannelById = gql`
                 tags
                 isPublic
                 meetingUrl
+                colorCode
             }
         }
     }

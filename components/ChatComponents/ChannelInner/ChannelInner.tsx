@@ -20,11 +20,14 @@ import { Popup, Datepicker } from '@mobiscroll/react5';
 import { TextInput } from '../../CustomTextInput';
 import { Text, View } from '../../Themed';
 import { Dimensions, ScrollView } from 'react-native';
-import { fetchAPI } from '../../../graphql/FetchAPI';
+
 import { startChatMeeting } from '../../../graphql/QueriesAndMutations';
 import Alert from '../../Alert';
 import { fileUpload } from '../../../helpers/FileUpload';
 import mime from 'mime-types';
+import { useApolloClient } from '@apollo/client';
+import { disableEmailId } from '../../../constants/zoomCredentials';
+import { useAppContext } from '../../../contexts/AppContext';
 
 export type ChannelInnerProps = {
     toggleMobile: () => void;
@@ -33,6 +36,7 @@ export type ChannelInnerProps = {
 };
 
 export const ChannelInner = (props: ChannelInnerProps) => {
+    const { user } = useAppContext();
     const { theme, toggleMobile } = props;
     const { giphyState, setGiphyState } = useGiphyContext();
 
@@ -41,6 +45,8 @@ export const ChannelInner = (props: ChannelInnerProps) => {
     const { client } = useChatContext();
 
     const { sendMessage } = useChannelActionContext<StreamChatGenerics>();
+
+    const server = useApolloClient();
 
     const [isViewing, setIsViewing] = useState(false);
     const [showInstantMeeting, setShowInstantMeeting] = useState(false);
@@ -129,7 +135,6 @@ export const ChannelInner = (props: ChannelInnerProps) => {
             return;
         }
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: startChatMeeting,
@@ -193,7 +198,7 @@ export const ChannelInner = (props: ChannelInnerProps) => {
                         handler: function (event) {
                             createInstantMeeting();
                         },
-                        // disabled: props.user.email === disableEmailId,
+                        disabled: user.email === disableEmailId,
                     },
                     {
                         text: 'Cancel',

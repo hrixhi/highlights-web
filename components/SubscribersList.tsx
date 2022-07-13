@@ -10,7 +10,7 @@ import moment from 'moment';
 import { TextInput } from './CustomTextInput';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     submitGrade,
     getQuiz,
@@ -37,8 +37,12 @@ import { Select } from '@mobiscroll/react';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user } = useAppContext();
+
     const [filterChoice, setFilterChoice] = useState('All');
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers));
     const [subscribers] = useState<any[]>(unparsedSubs.reverse());
@@ -75,6 +79,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [exportAoa, setExportAoa] = useState<any[]>();
     const [showQuizGrading, setShowQuizGrading] = useState(false);
     const [usernamesForAnnotation, setUsernamesForAnnotation] = useState<any>({});
+
+    const server = useApolloClient();
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted');
@@ -327,7 +333,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [props.cue]);
 
     const fetchUsersForAnnotations = useCallback(() => {
-        const server = fetchAPI('');
         server
             .query({
                 query: getUsernamesForAnnotation,
@@ -348,7 +353,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Setup PDFTRON Webviewer with Submission
      */
     useEffect(() => {
-        if (!props.user || !props.user._id || !subscriberName) return;
+        if (!user || !user._id || !subscriberName) return;
 
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
@@ -363,7 +368,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: url,
-                    annotationUser: props.user._id,
+                    annotationUser: user._id,
                 },
                 submissionViewerRef.current
             ).then(async (instance) => {
@@ -371,17 +376,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                 if (!documentViewer || !annotationManager) return;
 
-                // const u = await AsyncStorage.getItem('user');
-                // if (u) {
-                //     const user = JSON.parse(u);
-                //     annotationManager.setCurrentUser(user.fullName);
-                // }
-
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
 
                     // Fetch annotations from server
-                    const server = fetchAPI('');
+
                     server
                         .query({
                             query: getSubmissionAnnotations,
@@ -409,12 +408,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 });
 
                 annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
-                    if (props.user._id === id) {
-                        return props.user.fullName;
+                    if (user._id === id) {
+                        return user.fullName;
                     } else if (userId === id) {
                         return subscriberName;
                     } else if (usernamesForAnnotation[id] && usernamesForAnnotation[id] !== undefined) {
-                        console.log('Returned name', usernamesForAnnotation[id]);
                         return usernamesForAnnotation[id];
                     } else {
                         // Fetch username from server and add it to the Map
@@ -432,7 +430,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: updateAnnotation,
@@ -462,7 +459,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 );
             });
         }
-    }, [submissionAttempts, viewSubmissionTab, props.user, subscriberName, props.cueId, userId]);
+    }, [submissionAttempts, viewSubmissionTab, user, subscriberName, props.cueId, userId]);
 
     /**
      * @description if submission is a quiz then fetch Quiz
@@ -474,7 +471,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             setLoading(true);
 
             if (obj.quizId) {
-                const server = fetchAPI('');
                 server
                     .query({
                         query: getQuiz,
@@ -498,7 +494,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
      */
     const handleAnnotationsUpdate = useCallback(
         (attempts: any) => {
-            const server = fetchAPI('');
             server
                 .mutate({
                     mutation: updateAnnotation,
@@ -512,7 +507,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     if (res.data.cue.updateAnnotation) {
                         // props.reload()
                         // setShowSubmission(false)
-                        console.log('Update annotation', res.data.cue.updateAnnotation);
                     }
                 })
                 .catch((e) => {
@@ -569,7 +563,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 text: 'Yes',
                 onPress: async () => {
-                    const server = fetchAPI('');
                     server
                         .mutate({
                             mutation: submitGrade,
@@ -596,7 +589,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Modify which attempt is active for Student
      */
     const modifyActiveQuizAttempt = () => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: modifyActiveAttemptQuiz,
@@ -617,7 +609,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description On Save quiz scores
      */
     const onGradeQuiz = (problemScores: string[], problemComments: string[], score: number, comment: string) => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: gradeQuiz,
@@ -700,7 +691,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: editReleaseSubmission,
@@ -934,7 +924,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{
                                                     borderRadius: 15,
                                                 }}
-                                                disabled={props.user.email === disableEmailId}
+                                                disabled={user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -962,7 +952,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 style={{
                                                     borderRadius: 15,
                                                 }}
-                                                disabled={props.user.email === disableEmailId}
+                                                disabled={user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -1259,7 +1249,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }
                                     });
                                 }}
-                                user={props.user}
                             />
                         </ScrollView>
                     ) : (
@@ -1387,7 +1376,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 marginLeft: Dimensions.get('window').width < 768 ? 20 : 10,
                                             }}
-                                            disabled={props.user.email === disableEmailId}
+                                            disabled={user.email === disableEmailId}
                                         >
                                             <Text
                                                 style={{

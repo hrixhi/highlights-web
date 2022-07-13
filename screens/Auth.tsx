@@ -3,7 +3,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Platform, Dimensions, Image, ScrollView } from 'react-native';
 import Alert from '../components/Alert';
-import { fetchAPI } from '../graphql/FetchAPI';
 import { origin } from '../constants/zoomCredentials';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { TextInput } from '../components/CustomTextInput';
@@ -16,6 +15,8 @@ import { validateEmail } from '../helpers/emailCheck';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 import axios from 'axios';
+import { useApolloClient } from '@apollo/client';
+import { omitTypename } from '../helpers/omitTypename';
 
 export default function Auth({ navigation, route }: StackScreenProps<any, 'login'>) {
     const [redirectToZoom, setRedirectToZoom] = useState(false);
@@ -41,6 +42,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
     const weHaveEmailedPasswordAlert = PreferredLanguageText('weHaveEmailedPassword');
     const invalidCredentialsAlert = PreferredLanguageText('invalidCredentials');
 
+    const server = useApolloClient();
+
     useEffect(() => {
         (async () => {
             const code = route?.params?.code;
@@ -48,7 +51,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             if (code && code !== '') {
                 setIsLoggingIn(true);
 
-                const server = fetchAPI('');
                 server
                     .query({
                         query: loginFromSso,
@@ -64,15 +66,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                             r.data.user.loginFromSso.token &&
                             !r.data.user.loginFromSso.error
                         ) {
-                            const u = r.data.user.loginFromSso.user;
+                            const u = JSON.parse(JSON.stringify(r.data.user.loginFromSso.user), omitTypename);
                             const token = r.data.user.loginFromSso.token;
-                            if (u.__typename) {
-                                delete u.__typename;
-                            }
-
-                            const userId = u._id;
-
-                            // OneSignal.setExternalUserId(userId);
 
                             const sU = JSON.stringify(u);
                             await AsyncStorage.setItem('jwt_token', token);
@@ -105,7 +100,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             if (emailParam && emailParam !== '' && passwordParam && passwordParam !== '') {
                 setIsLoggingIn(true);
 
-                const server = fetchAPI('');
                 server
                     .query({
                         query: login,
@@ -116,11 +110,8 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
                     })
                     .then(async (r: any) => {
                         if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
-                            const u = r.data.user.login.user;
+                            const u = JSON.parse(JSON.stringify(r.data.user.login.user), omitTypename);
                             const token = r.data.user.login.token;
-                            if (u.__typename) {
-                                delete u.__typename;
-                            }
 
                             const userId = u._id;
 
@@ -206,8 +197,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
     }, [email]);
 
     const handleSsoRedirect = useCallback(() => {
-        const server = fetchAPI('');
-
         if (!isSsoEnabled) {
             return;
         }
@@ -235,7 +224,7 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
 
     const handleLogin = useCallback(() => {
         setIsLoggingIn(true);
-        const server = fetchAPI('');
+
         server
             .query({
                 query: login,
@@ -246,15 +235,9 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
             })
             .then(async (r: any) => {
                 if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
-                    const u = r.data.user.login.user;
+                    const u = JSON.parse(JSON.stringify(r.data.user.login.user), omitTypename);
+
                     const token = r.data.user.login.token;
-                    if (u.__typename) {
-                        delete u.__typename;
-                    }
-
-                    const userId = u._id;
-
-                    // OneSignal.setExternalUserId(userId);
 
                     const sU = JSON.stringify(u);
                     await AsyncStorage.setItem('jwt_token', token);
@@ -278,7 +261,6 @@ export default function Auth({ navigation, route }: StackScreenProps<any, 'login
     }, [email, password, redirectToZoom]);
 
     const forgotPassword = useCallback(() => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: resetPassword,

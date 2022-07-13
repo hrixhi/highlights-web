@@ -9,6 +9,7 @@ import { AvatarGroup } from '../';
 import type { StreamChatGenerics } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { useAppContext } from '../../../contexts/AppContext';
 
 type Props = {
     theme: string;
@@ -20,36 +21,15 @@ type Props = {
 };
 
 const MessagingChannelHeader = (props: Props) => {
+    const { user, org } = useAppContext();
+
     const { theme, toggleMobile, isViewing, setIsViewing, showInstantMeeting, setShowInstantMeeting } = props;
     const { client } = useChatContext<StreamChatGenerics>();
     const { channel, watcher_count } = useChannelStateContext<StreamChatGenerics>();
     const [groupImage, setGroupImage] = useState('');
     const [title, setTitle] = useState('');
 
-    const [meetingProvider, setMeetingProvider] = useState('');
-    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
-
     const members = Object.values(channel.state.members || {}).filter((member) => member.user?.id !== client?.user?.id);
-
-    /**
-     * @description Fetch meeting provider for org
-     */
-    useEffect(() => {
-        (async () => {
-            const org = await AsyncStorage.getItem('school');
-            const user = await AsyncStorage.getItem('user');
-
-            if (org) {
-                const school = JSON.parse(org);
-                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-            }
-
-            if (user) {
-                const parsedUser = JSON.parse(user);
-                setUserZoomInfo(parsedUser.zoomInfo ? parsedUser.zoomInfo : undefined);
-            }
-        })();
-    }, []);
 
     useEffect(() => {
         const setGroupInfo = () => {
@@ -134,7 +114,7 @@ const MessagingChannelHeader = (props: Props) => {
             <div className="messaging__channel-header__right">
                 <TypingIndicator />
 
-                {!meetingProvider && userZoomInfo && !showInstantMeeting ? (
+                {!org.meetingProvider && user.zoomInfo && !showInstantMeeting ? (
                     <div
                         style={{
                             // marginRight: 12,

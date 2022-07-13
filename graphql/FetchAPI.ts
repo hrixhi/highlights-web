@@ -4,12 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { origin } from '../constants/zoomCredentials';
 
 export const fetchAPI = (userId: any) => {
-    const uri = 'http://localhost:8000/';
-    // const uri = 'https://api.learnwithcues.com';
+    // const uri = 'http://localhost:8000/';
+    const uri = 'https://api.learnwithcues.com';
 
     const logoutUser = async () => {
-        await AsyncStorage.clear();
-        window.location.href = `${origin}/login`;
+        // await AsyncStorage.clear();
+        // window.location.href = `${origin}/login`;
     };
 
     return new ApolloClient({

@@ -4,11 +4,14 @@ import * as React from 'react';
 import { Platform, Alert } from 'react-native';
 import OneSignal from 'react-onesignal';
 import alert from '../components/Alert';
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import { connectZoom } from '../graphql/QueriesAndMutations';
 import { origin, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { useApolloClient } from '@apollo/client';
 
 export default function FinishZoomSetup({ navigation, route }: StackScreenProps<any, 'zoom_auth'>) {
+    const server = useApolloClient();
+
     React.useEffect(() => {
         (async () => {
             if (Platform.OS === 'web') {
@@ -18,16 +21,15 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                 const userId = route?.params?.state;
 
                 if (code && userId) {
-                    const server = fetchAPI('');
                     server
                         .mutate({
                             mutation: connectZoom,
                             variables: {
                                 code,
-                                userId
-                            }
+                                userId,
+                            },
                         })
-                        .then(async res => {
+                        .then(async (res) => {
                             if (res.data && res.data.user.connectZoom) {
                                 const u = await AsyncStorage.getItem('user');
                                 if (!u) {
@@ -43,7 +45,7 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                                 window.location.href = origin;
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 } else {

@@ -16,10 +16,8 @@ import _ from 'lodash';
 import { TextInput as CustomTextInput } from '../components/CustomTextInput';
 
 // GRAPHQL
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
-    getAttendancesForChannel,
-    getPastDates,
     modifyAttendance,
     editPastMeeting,
     getCourseStudents,
@@ -40,6 +38,8 @@ import Alert from './Alert';
 import { Select, Datepicker, Popup } from '@mobiscroll/react';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const attendanceTypeOptions = [
     {
@@ -53,6 +53,8 @@ const attendanceTypeOptions = [
 ];
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId, user } = useAppContext();
+
     const [studentSearch, setStudentSearch] = useState('');
 
     const [showEditMeetingModal, setShowEditMeetingModal] = useState(false);
@@ -97,6 +99,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     //
     const [attendanceBookUsersDropdownOptions, setAttendanceBookUsersDropdownOptions] = useState<any[]>([]);
     const [attendanceBookAnalyticsSelectedUser, setAttendanceBookAnalyticsSelectedUser] = useState(undefined);
+
+    const server = useApolloClient();
 
     useEffect(() => {
         if (sortByOption === 'Title') {
@@ -181,7 +185,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const fetchAttendancebookInstructor = useCallback(() => {
         setIsFetchingAttendanceBook(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getAttendanceBook,
@@ -196,8 +199,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         setAttendanceBookUsers(res.data.attendance.getAttendanceBook.users);
 
                         if (res.data.attendance.getAttendanceBook.users.length > 0) {
-                            console.log('selected user ', res.data.attendance.getAttendanceBook.users[0].userId);
-
                             const userDropdowns: any[] = res.data.attendance.getAttendanceBook.users.map(
                                 (user: any) => {
                                     return {
@@ -232,13 +233,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const fetchAttendancebookStudent = useCallback(() => {
         setIsFetchingStudentAttendanceBook(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getAttendanceBookStudent,
                     variables: {
                         channelId: props.channelId,
-                        userId: props.user._id,
+                        userId,
                     },
                 })
                 .then((res) => {
@@ -353,8 +353,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
         setUpdatingPastMeeting(true);
 
-        const server = fetchAPI(props.userId);
-
         server
             .mutate({
                 mutation: editPastMeeting,
@@ -383,8 +381,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [editMeeting, updatingPastMeeting, editMeetingTopic, editMeetingRecordingLink]);
 
     const updateAttendanceBookEntry = useCallback(() => {
-        const server = fetchAPI('');
-
         server
             .mutate({
                 mutation: handleUpdateAttendanceBookEntry,
@@ -425,7 +421,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const loadCourseStudents = useCallback(() => {
         setIsFetchingStudents(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getCourseStudents,
@@ -520,7 +515,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             // props.onSend(message, customCategory, isPrivate);
                             updatePastMeeting();
                         },
-                        disabled: props.user.email === disableEmailId,
+                        disabled: user.email === disableEmailId,
                     },
                     {
                         text: 'Cancel',
@@ -667,7 +662,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 text: 'Yes',
                 onPress: async () => {
-                    const server = fetchAPI('');
                     server
                         .mutate({
                             mutation: modifyAttendance,
@@ -973,7 +967,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     };
 
+    console.log('Attendance book', attendanceBookEntries);
+
     const resetNewEntryForm = () => {
+        setEditEntryId('');
+        setEditEntryType('');
         setNewAttendanceTitle('');
         setNewAttendanceDate(new Date());
         setNewAttendanceRecordingLink('');
@@ -1045,11 +1043,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 attendances: sanitizeAttendances,
             };
 
-            console.log('New Assignment Input', attendanceEntryInput);
-
-            // return;
-            const server = fetchAPI('');
-
             if (editing) {
                 server
                     .mutate({
@@ -1117,8 +1110,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const handleDeleteAttendance = useCallback(async () => {
         setIsDeletingAttendance(true);
 
-        const server = fetchAPI('');
-
         server
             .mutate({
                 mutation: deleteChannelAttendance,
@@ -1145,8 +1136,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 setIsDeletingAttendance(false);
             });
     }, [editEntryId, editEntryType]);
-
-    console.log('New attendance Entry id', editEntryId);
 
     if (props.showNewAttendance) {
         return (
@@ -1176,8 +1165,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 backgroundColor: 'white',
                             }}
                             onPress={() => {
-                                props.setShowNewAttendance(false);
                                 resetNewEntryForm();
+                                props.setShowNewAttendance(false);
                             }}
                         >
                             <Text
@@ -1547,7 +1536,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     marginBottom: 20,
                                 }}
                                 onPress={() => handleCreateAttendance(true)}
-                                disabled={isCreatingAttendance || props.user.email === disableEmailId}
+                                disabled={isCreatingAttendance || user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1566,7 +1555,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: 120,
                                     }}
                                 >
-                                    {isCreatingAttendance ? '...' : 'EDIT'}
+                                    {isCreatingAttendance ? 'SAVING...' : 'SAVE'}
                                 </Text>
                             </TouchableOpacity>
 
@@ -1575,7 +1564,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     marginBottom: 20,
                                 }}
                                 onPress={() => handleDeleteAttendance()}
-                                disabled={isDeletingAttendance || props.user.email === disableEmailId}
+                                disabled={isDeletingAttendance || user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1594,7 +1583,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: 120,
                                     }}
                                 >
-                                    {isDeletingAttendance ? '...' : 'DELETE'}
+                                    {isDeletingAttendance ? 'DELETING...' : 'DELETE'}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1604,7 +1593,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginBottom: 20,
                             }}
                             onPress={() => handleCreateAttendance(false)}
-                            disabled={isCreatingAttendance || props.user.email === disableEmailId}
+                            disabled={isCreatingAttendance || user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -1623,7 +1612,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     width: 120,
                                 }}
                             >
-                                {isCreatingAttendance ? '...' : 'CREATE'}
+                                {isCreatingAttendance ? 'CREATING...' : 'CREATE'}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -1933,7 +1922,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             onPress={() => {
                                                                 updateAttendanceBookEntry();
                                                             }}
-                                                            disabled={props.user.email === disableEmailId}
+                                                            disabled={user.email === disableEmailId}
                                                         >
                                                             <Ionicons
                                                                 name="checkmark-circle-outline"

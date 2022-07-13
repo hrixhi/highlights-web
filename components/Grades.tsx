@@ -23,7 +23,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 date={props.date}
                 showNewAssignment={props.showNewAssignment}
                 setShowNewAssignment={props.setShowNewAssignment}
-                user={props.user}
             />
         </View>
     );

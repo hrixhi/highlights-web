@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from './hooks/useCachedResources';
@@ -11,9 +11,91 @@ import './web/mobiscrollCustom.css';
 import { LanguageProvider } from './helpers/LanguageContext';
 import { MenuProvider } from 'react-native-popup-menu';
 
+import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider, from, ApolloLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppClient } from './hooks/initClient';
+import { AppContextProvider } from './contexts/AppContext';
+
+const uri = 'http://localhost:8000/';
+// const uri = 'https://api.learnwithcues.com';
+
 export default function App() {
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();
+
+    const { userId, isConnecting, sortByWorkspace, recentSearches } = useAppClient();
+
+    const httpLink = new HttpLink({
+        uri,
+    });
+
+    const withUserInfo = setContext(async () => {
+        const token = await AsyncStorage.getItem('jwt_token');
+        const u = await AsyncStorage.getItem('user');
+
+        if (u && token) {
+            const user: any = await JSON.parse(u);
+            return { token, userId: user._id };
+        }
+
+        return {
+            token: '',
+            userId: '',
+        };
+    });
+
+    const logoutUser = async () => {
+        await AsyncStorage.clear();
+        window.location.href = `${origin}/login`;
+    };
+
+    const withToken = new ApolloLink((operation, forward) => {
+        const { token, userId } = operation.getContext();
+        operation.setContext(() => ({
+            headers: {
+                Authorization: token ? token : '',
+                userId: userId,
+            },
+        }));
+        return forward(operation);
+    });
+
+    const resetToken = onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors) {
+            console.log('Graphql Errors', graphQLErrors);
+        }
+        if (graphQLErrors) {
+            for (let err of graphQLErrors) {
+                if (err.message === 'NOT_AUTHENTICATED') {
+                    alert('Session Timed out. You will be logged out.');
+                    logoutUser();
+                    return;
+                }
+            }
+        }
+        if (networkError) {
+            // logoutUser();
+            console.log(networkError);
+        }
+    });
+
+    // CURRENTLY DISABLING CACHE, WILL USE IN FUTURE
+    const defaultOptions = {
+        watchQuery: {
+            fetchPolicy: 'network-only',
+        },
+        query: {
+            fetchPolicy: 'network-only',
+        },
+    };
+
+    const client = new ApolloClient({
+        cache: new InMemoryCache(),
+        link: from([withUserInfo, withToken.concat(resetToken), httpLink]),
+        defaultOptions,
+    });
 
     const longerSplashScreen = useCallback(async () => {
         await SplashScreen.preventAutoHideAsync();
@@ -29,24 +111,34 @@ export default function App() {
         longerSplashScreen();
     }, []);
 
-    if (!isLoadingComplete) {
+    if (!isLoadingComplete || isConnecting) {
         return null;
     } else {
         return (
-            <SafeAreaProvider style={styles.font}>
-                <MenuProvider>
-                    <LanguageProvider>
-                        <Navigation colorScheme={colorScheme} />
-                    </LanguageProvider>
-                </MenuProvider>
-                <StatusBar />
-            </SafeAreaProvider>
+            <ApolloProvider client={client}>
+                <AppContextProvider
+                    value={{
+                        userId,
+                        sortByWorkspace,
+                        recentSearches,
+                    }}
+                >
+                    <SafeAreaProvider style={styles.font}>
+                        <MenuProvider>
+                            <LanguageProvider>
+                                <Navigation colorScheme={colorScheme} />
+                            </LanguageProvider>
+                        </MenuProvider>
+                        <StatusBar />
+                    </SafeAreaProvider>
+                </AppContextProvider>
+            </ApolloProvider>
         );
     }
 }
 
 const styles: any = StyleSheet.create({
     font: {
-        maxHeight: '100%'
-    }
+        maxHeight: '100%',
+    },
 });

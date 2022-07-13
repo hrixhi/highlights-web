@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import { updatePassword, updateUser, removeZoom } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -20,16 +20,18 @@ import FileUpload from './UploadFiles';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 // import { LanguageSelect } from '../helpers/LanguageContext';
 import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId, org, handleSetUser, logoutUser } = useAppContext();
+
     const [email, setEmail] = useState('');
-    const [userId, setUserId] = useState('');
     const [avatar, setAvatar] = useState<any>(undefined);
     const [zoomInfo, setZoomInfo] = useState<any>(undefined);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [displayName, setDisplayName] = useState('');
     const [fullName, setFullName] = useState('');
-    const [userFound, setUserFound] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
@@ -41,7 +43,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [currentFullName, setCurrentFullName] = useState('');
     const [currentDisplayName, setCurrentDisplayName] = useState('');
     const [currentAvatar, setCurrentAvatar] = useState<any>(undefined);
-    const [meetingProvider, setMeetingProvider] = useState('');
     // Alerts
     const passwordUpdatedAlert = PreferredLanguageText('passwordUpdated');
     const incorrectCurrentPasswordAlert = PreferredLanguageText('incorrectCurrentPassword');
@@ -50,29 +51,23 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const profileUpdatedAlert = PreferredLanguageText('profileUpdated');
     const passwordInvalidError = PreferredLanguageText('atleast8char');
 
+    const server = useApolloClient();
+
     // HOOKS
-
-    /**
-     * @description Fetch meeting provider for org
-     */
-    useEffect(() => {
-        (async () => {
-            const org = await AsyncStorage.getItem('school');
-
-            if (org) {
-                const school = JSON.parse(org);
-
-                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-            }
-        })();
-    }, []);
 
     /**
      * @description Fetch user on Init
      */
     useEffect(() => {
-        getUser();
-    }, []);
+        setEmail(user.email);
+        setDisplayName(user.displayName);
+        setFullName(user.fullName);
+        setAvatar(user.avatar ? user.avatar : undefined);
+        setCurrentAvatar(user.avatar ? user.avatar : undefined);
+        setZoomInfo(user.zoomInfo ? user.zoomInfo : undefined);
+        setCurrentDisplayName(user.displayName);
+        setCurrentFullName(user.fullName);
+    }, [user]);
 
     /**
      * @description Validate if submit is enabled after every state change
@@ -147,20 +142,13 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Handles submit new password or Update user profile
      */
     const handleSubmit = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (!u) {
-            return;
-        }
-        const user = JSON.parse(u);
-        const server = fetchAPI('');
-
         if (props.showSavePassword) {
             // reset password
             server
                 .mutate({
                     mutation: updatePassword,
                     variables: {
-                        userId: user._id,
+                        userId,
                         currentPassword,
                         newPassword,
                     },
@@ -185,7 +173,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 variables: {
                     displayName,
                     fullName,
-                    userId: user._id,
+                    userId,
                     avatar,
                 },
             })
@@ -194,8 +182,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     user.fullName = fullName;
                     user.displayName = displayName;
                     user.avatar = avatar;
-                    const updatedUser = JSON.stringify(user);
-                    await AsyncStorage.setItem('user', updatedUser);
+                    // const updatedUser = JSON.stringify(user);
+                    // await AsyncStorage.setItem('user', updatedUser);
+                    handleSetUser({
+                        ...user,
+                        fullName,
+                        displayName,
+                        avatar,
+                    });
                     Alert('Profile updated!');
                     props.reOpenProfile();
                 } else {
@@ -205,28 +199,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             .catch((e) => Alert(somethingWentWrongAlert));
         //}
     }, [email, avatar, displayName, fullName, confirmPassword, props.showSavePassword, newPassword, currentPassword]);
-
-    /**
-     * @description Loads User profile
-     */
-    const getUser = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            if (parsedUser.email) {
-                setEmail(parsedUser.email);
-                setDisplayName(parsedUser.displayName);
-                setFullName(parsedUser.fullName);
-                setAvatar(parsedUser.avatar ? parsedUser.avatar : undefined);
-                setCurrentAvatar(parsedUser.avatar ? parsedUser.avatar : undefined);
-                setUserId(parsedUser._id);
-                setZoomInfo(parsedUser.zoomInfo ? parsedUser.zoomInfo : undefined);
-                setCurrentDisplayName(parsedUser.displayName);
-                setCurrentFullName(parsedUser.fullName);
-            }
-            setUserFound(true);
-        }
-    }, []);
 
     /**
      * @description Log out
@@ -260,13 +232,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [zoomInfo, userId]);
 
     const handleZoomRemove = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (!u) {
-            return;
-        }
-        const user = JSON.parse(u);
-        const server = fetchAPI('');
-
         if (zoomInfo) {
             // reset password
             server
@@ -280,8 +245,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     if (res.data && res.data.user.removeZoom) {
                         const user = JSON.parse(u);
                         user.zoomInfo = undefined;
-                        const updatedUser = JSON.stringify(user);
-                        await AsyncStorage.setItem('user', updatedUser);
+                        // const updatedUser = JSON.stringify(user);
+                        // await AsyncStorage.setItem('user', updatedUser);
+                        handleSetUser({
+                            ...user,
+                            zoomInfo: undefined,
+                        });
                         Alert('Zoom account disconnected!');
                         setZoomInfo(null);
                     } else {
@@ -585,7 +554,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             justifyContent: 'center',
                             flexDirection: 'row',
                         }}
-                        disabled={isSubmitDisabled || props.user.email === disableEmailId}
+                        disabled={isSubmitDisabled || user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -619,7 +588,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: 'center',
                                 flexDirection: 'row',
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -642,7 +611,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                     ) : null}
-                    {props.showSavePassword || meetingProvider !== '' ? null : !zoomInfo ? (
+                    {props.showSavePassword || org.meetingProvider ? null : !zoomInfo ? (
                         <TouchableOpacity
                             onPress={() => handleZoomAuth()}
                             style={{
@@ -654,7 +623,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: 'center',
                                 flexDirection: 'row',
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -701,7 +670,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 justifyContent: 'center',
                                 flexDirection: 'row',
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -760,7 +729,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     {props.showSavePassword ? null : (
                         <TouchableOpacity
-                            onPress={() => logout()}
+                            onPress={() => logoutUser()}
                             style={{
                                 backgroundColor: 'white',
                                 // overflow: 'hidden',

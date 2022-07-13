@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, ActivityIndicator, Dimensions, StyleSheet, TextInput } from 'react-native';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     getCueThreads,
     getStatuses,
@@ -35,15 +35,19 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId, cues, subscriptions, handleUpdateCue, refreshCues, savingCueToCloud } = useAppContext();
+
     const [modalAnimation] = useState(new Animated.Value(1));
     const [cueId] = useState(props.cueId);
     const [createdBy] = useState(props.createdBy);
     const [channelCreatedBy] = useState(props.channelCreatedBy);
     const [threads, setThreads] = useState<any[]>([]);
     const [subscribers, setSubscribers] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingStatuses, setLoadingStatuses] = useState(true);
     const scroll2: any = useRef();
     const scroll3: any = useRef();
     const [channelOwner, setChannelOwner] = useState(false);
@@ -84,6 +88,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
     const [activeTab, setActiveTab] = useState('Content');
 
+    const server = useApolloClient();
+
     // HOOKS
 
     /**
@@ -105,13 +111,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Set course color
      */
     useEffect(() => {
-        if (
-            props.cue.channelId &&
-            props.cue.channelId !== '' &&
-            props.subscriptions &&
-            props.subscriptions.length > 0
-        ) {
-            const findCourse = props.subscriptions.find((sub: any) => {
+        if (props.cue.channelId && props.cue.channelId !== '' && subscriptions && subscriptions.length > 0) {
+            const findCourse = subscriptions.find((sub: any) => {
                 return sub.channelId === props.cue.channelId;
             });
 
@@ -119,7 +120,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 setCourseColor(findCourse.colorCode);
             }
         }
-    }, [props.cue.channelId, props.subscriptions]);
+    }, [props.cue.channelId, subscriptions]);
 
     /**
      * @description Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
@@ -184,14 +185,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Load threads and statuses
      */
     useEffect(() => {
-        loadThreadsAndStatuses();
+        loadStudentResponses();
     }, [props.cueId, props.channelId]);
 
     /**
      * @description Fetches release submission status
      */
     const checkReleaseSubmissionStatus = (cueId: string) => {
-        const server = fetchAPI('');
         server
             .query({
                 query: getReleaseSubmissionStatus,
@@ -203,30 +203,23 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 if (res.data.cue.getReleaseSubmissionStatus) {
                     // Update cue and refresh
 
-                    let subCues: any = {};
-                    try {
-                        const value = await AsyncStorage.getItem('cues');
-                        if (value) {
-                            subCues = JSON.parse(value);
-                        }
-                    } catch (e) {}
-                    if (subCues[props.cueKey].length === 0) {
-                        return;
-                    }
-
-                    const currCue = subCues[props.cueKey][props.cueIndex];
+                    const currCue = cues[props.cueKey][props.cueIndex];
 
                     const saveCue = {
                         ...currCue,
                         releaseSubmission: true,
                     };
 
-                    subCues[props.cueKey][props.cueIndex] = saveCue;
+                    handleUpdateCue(saveCue, false);
+                } else {
+                    const currCue = cues[props.cueKey][props.cueIndex];
 
-                    const stringifiedCues = JSON.stringify(subCues);
-                    await AsyncStorage.setItem('cues', stringifiedCues);
+                    const saveCue = {
+                        ...currCue,
+                        releaseSubmission: false,
+                    };
 
-                    props.reloadCueListAfterUpdate();
+                    handleUpdateCue(saveCue, false);
                 }
             })
             .catch((e) => {
@@ -244,13 +237,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Fetch all the channel folders
      */
     const fetchChannelFolders = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        let parsedUser: any = {};
-        if (u) {
-            parsedUser = JSON.parse(u);
-        }
-
-        const server = fetchAPI(parsedUser._id);
         server
             .query({
                 query: getChannelFolders,
@@ -269,24 +255,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Fetch folder cues if current cue has folder Id
      */
-    const fetchFolderCues = useCallback(async () => {
+    const fetchFolderCues = useCallback(() => {
         if (props.cue && folderId && folderId !== '') {
-            const u = await AsyncStorage.getItem('user');
-            let parsedUser: any = {};
-            if (u) {
-                parsedUser = JSON.parse(u);
-            }
-
             setLoadingFolderCues(true);
             setLoadingFolder(true);
 
-            const server = fetchAPI(parsedUser._id);
             server
                 .query({
                     query: getFolderCues,
                     variables: {
                         folderId,
-                        userId: parsedUser._id,
+                        userId,
                     },
                 })
                 .then((res) => {
@@ -324,223 +303,76 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const updateCueWithReleaseSubmission = async (releaseSubmission: boolean) => {
         // Release Submission
 
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[props.cueKey].length === 0) {
-            return;
-        }
-
-        const currCue = subCues[props.cueKey][props.cueIndex];
+        const currCue = cues[props.cueKey][props.cueIndex];
 
         const saveCue = {
             ...currCue,
             releaseSubmission,
         };
 
-        subCues[props.cueKey][props.cueIndex] = saveCue;
-
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-
-        props.reloadCueListAfterUpdate();
-    };
-
-    /**
-     * @description Update QA unread count (Not used right now)
-     */
-    const updateQAUnreadCount = async () => {
-        const u = await AsyncStorage.getItem('user');
-        let parsedUser: any = {};
-        if (u) {
-            parsedUser = JSON.parse(u);
-        }
-
-        if (Number.isNaN(Number(cueId))) {
-            const server = fetchAPI(parsedUser._id);
-
-            server
-                .query({
-                    query: getUnreadQACount,
-                    variables: {
-                        userId: parsedUser._id,
-                        cueId,
-                    },
-                })
-                .then(async (res) => {
-                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
-
-                    if (
-                        res.data.threadStatus.getUnreadQACount === null ||
-                        res.data.threadStatus.getUnreadQACount === undefined
-                    ) {
-                        return null;
-                    }
-
-                    let subCues: any = {};
-                    try {
-                        const value = await AsyncStorage.getItem('cues');
-                        if (value) {
-                            subCues = JSON.parse(value);
-                        }
-                    } catch (e) {}
-                    if (subCues[props.cueKey].length === 0) {
-                        return;
-                    }
-
-                    const currCue = subCues[props.cueKey][props.cueIndex];
-
-                    const saveCue = {
-                        ...currCue,
-                        unreadThreads: res.data.threadStatus.getUnreadQACount,
-                    };
-
-                    subCues[props.cueKey][props.cueIndex] = saveCue;
-
-                    const stringifiedCues = JSON.stringify(subCues);
-                    await AsyncStorage.setItem('cues', stringifiedCues);
-
-                    props.reloadCueListAfterUpdate();
-                });
-
-            server
-                .query({
-                    query: getCueThreads,
-                    variables: {
-                        cueId,
-                    },
-                })
-                .then(async (res) => {
-                    const u = await AsyncStorage.getItem('user');
-                    if (u) {
-                        const parsedUser = JSON.parse(u);
-                        let filteredThreads: any[] = [];
-                        if (parsedUser._id.toString().trim() === channelCreatedBy.toString().trim()) {
-                            filteredThreads = res.data.thread.findByCueId;
-                        } else {
-                            filteredThreads = res.data.thread.findByCueId.filter((thread: any) => {
-                                return !thread.isPrivate || thread.userId === parsedUser._id;
-                            });
-                        }
-                        setThreads(filteredThreads);
-                    }
-                });
-        }
+        handleUpdateCue(saveCue, false);
     };
 
     /**
      * @description Load threads and statuses
      */
-    const loadThreadsAndStatuses = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        let parsedUser: any = {};
-        if (u) {
-            parsedUser = JSON.parse(u);
-        }
-        if (Number.isNaN(Number(cueId))) {
-            setLoading(true);
-            const server = fetchAPI(parsedUser._id);
+    const loadStudentResponses = useCallback(() => {
+        if (userId === channelCreatedBy.toString().trim()) {
+            setLoadingStatuses(true);
+            setChannelOwner(true);
             server
                 .query({
-                    query: getCueThreads,
+                    query: getStatuses,
                     variables: {
                         cueId,
                     },
                 })
-                .then(async (res) => {
-                    const u = await AsyncStorage.getItem('user');
-                    if (u) {
-                        const parsedUser = JSON.parse(u);
-                        let filteredThreads: any[] = [];
-                        if (parsedUser._id.toString().trim() === channelCreatedBy.toString().trim()) {
-                            filteredThreads = res.data.thread.findByCueId;
-                        } else {
-                            filteredThreads = res.data.thread.findByCueId.filter((thread: any) => {
-                                return !thread.isPrivate || thread.userId === parsedUser._id;
+                .then((res) => {
+                    if (res.data.status && res.data.status.findByCueId) {
+                        const subs: any[] = [];
+                        const statuses = [...res.data.status.findByCueId];
+
+                        statuses.sort((a: any, b: any) => {
+                            return a.fullName > b.fullName ? -1 : 1;
+                        });
+
+                        statuses.map((status: any) => {
+                            subs.push({
+                                avatar: status.avatar,
+                                displayName: status.fullName,
+                                _id: status.userId,
+                                fullName: status.status,
+                                submission: status.submission,
+                                comment: status.comment,
+                                score: status.score,
+                                graded: status.graded,
+                                userId: status.userId,
+                                submittedAt: status.submittedAt,
+                                deadline: status.deadline,
+                                releaseSubmission: status.releaseSubmission,
+                                totalPoints: status.totalPoints,
+                                pointsScored: status.pointsScored,
                             });
-                        }
-                        setThreads(filteredThreads);
-                        if (parsedUser._id.toString().trim() === channelCreatedBy.toString().trim()) {
-                            setChannelOwner(true);
-                            server
-                                .query({
-                                    query: getStatuses,
-                                    variables: {
-                                        cueId,
-                                    },
-                                })
-                                .then((res2) => {
-                                    if (res2.data.status && res2.data.status.findByCueId) {
-                                        const subs: any[] = [];
-                                        const statuses = res2.data.status.findByCueId;
-
-                                        statuses.sort((a: any, b: any) => {
-                                            return a.fullName > b.fullName ? -1 : 1;
-                                        });
-
-                                        statuses.map((status: any) => {
-                                            subs.push({
-                                                avatar: status.avatar,
-                                                displayName: status.fullName,
-                                                _id: status.userId,
-                                                fullName: status.status,
-                                                submission: status.submission,
-                                                comment: status.comment,
-                                                score: status.score,
-                                                graded: status.graded,
-                                                userId: status.userId,
-                                                submittedAt: status.submittedAt,
-                                                deadline: status.deadline,
-                                                releaseSubmission: status.releaseSubmission,
-                                                totalPoints: status.totalPoints,
-                                                pointsScored: status.pointsScored,
-                                            });
-                                        });
-                                        setSubscribers(subs);
-                                        setLoading(false);
-                                    } else {
-                                        setLoading(false);
-                                    }
-                                })
-                                .catch((err) => {
-                                    Alert(unableToLoadStatusesAlert, checkConnectionAlert);
-                                    setLoading(false);
-                                });
-                        } else {
-                            setLoading(false);
-                        }
+                        });
+                        setSubscribers(subs);
+                        setLoadingStatuses(false);
                     } else {
-                        setThreads(res.data.thread.findByCueId);
-                        setLoading(false);
+                        setLoadingStatuses(false);
                     }
                 })
                 .catch((err) => {
-                    Alert(unableToLoadCommentsAlert, checkConnectionAlert);
-                    setLoading(false);
+                    Alert(unableToLoadStatusesAlert, checkConnectionAlert);
+                    setLoadingStatuses(false);
                 });
-        } else {
-            setLoading(false);
         }
     }, [cueId, modalAnimation, createdBy, channelCreatedBy]);
 
     /**
      * @description Reload all subscriptions responses
      */
-    const reloadStatuses = useCallback(async () => {
-        setLoading(true);
-        const u = await AsyncStorage.getItem('user');
-        let parsedUser: any = {};
-        if (u) {
-            parsedUser = JSON.parse(u);
-        } else {
-            return;
-        }
+    const reloadStatuses = useCallback(() => {
+        setLoadingStatuses(true);
 
-        const server = fetchAPI(parsedUser._id);
         server
             .query({
                 query: getStatuses,
@@ -568,14 +400,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         });
                     });
                     setSubscribers(subs);
-                    setLoading(false);
+                    setLoadingStatuses(false);
                 } else {
-                    setLoading(false);
+                    setLoadingStatuses(false);
                 }
             })
             .catch((err) => {
                 Alert(unableToLoadStatusesAlert, checkConnectionAlert);
-                setLoading(false);
+                setLoadingStatuses(false);
             });
     }, [cueId]);
 
@@ -647,22 +479,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {/* {value._id === props.cue._id ? null : ( */}
-                        <TouchableOpacity
-                            onPress={() => {
-                                const temp = [...channelCues];
-                                temp.push(value);
-                                setChannelCues(temp);
+                        {value._id === props.cue._id ? null : (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    const temp = [...channelCues];
+                                    temp.push(value);
+                                    setChannelCues(temp);
 
-                                const sCues = selectedCues.filter((c: any) => c._id !== value._id);
-                                setSelectedCues(sCues);
-                            }}
-                        >
-                            <Text style={{ color: '#f94144' }}>
-                                <Ionicons name="remove-circle-outline" size={16} />
-                            </Text>
-                        </TouchableOpacity>
-                        {/* )} */}
+                                    const sCues = selectedCues.filter((c: any) => c._id !== value._id);
+                                    setSelectedCues(sCues);
+                                }}
+                            >
+                                <Text style={{ color: '#f94144' }}>
+                                    <Ionicons name="remove-circle-outline" size={16} />
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
 
                     <View
@@ -756,22 +588,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {/* {value._id === props.cue._id ? null : ( */}
-                        <TouchableOpacity
-                            onPress={() => {
-                                const temp = [...channelCues];
-                                temp.push(value);
-                                setChannelCues(temp);
+                        {value._id === props.cue._id ? null : (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    const temp = [...channelCues];
+                                    temp.push(value);
+                                    setChannelCues(temp);
 
-                                const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id);
-                                setFolderCuesToDisplay(sCues);
-                            }}
-                        >
-                            <Text style={{ color: '#f94144' }}>
-                                <Ionicons name="remove-circle-outline" size={16} />
-                            </Text>
-                        </TouchableOpacity>
-                        {/* )} */}
+                                    const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id);
+                                    setFolderCuesToDisplay(sCues);
+                                }}
+                            >
+                                <Text style={{ color: '#f94144' }}>
+                                    <Ionicons name="remove-circle-outline" size={16} />
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
 
                     <View
@@ -1815,7 +1647,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 borderTopRightRadius: 0,
                 backgroundColor: channelOwner ? '#f8f8f8' : '#fff',
             }}
-            key={JSON.stringify(threads)}
         >
             {!viewStatus ? (
                 <UpdateControls
@@ -1823,7 +1654,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     channelId={props.channelId}
                     save={save}
                     del={del}
-                    customCategories={props.customCategories}
                     cue={props.cue}
                     cueIndex={props.cueIndex}
                     cueKey={props.cueKey}
@@ -1831,7 +1661,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     createdBy={createdBy}
                     folderId={folderId}
                     closeModal={() => props.closeModal()}
-                    reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
                     changeViewStatus={() => setViewStatus(true)}
                     viewStatus={viewStatus}
                     showOptions={showOptions}
@@ -1845,11 +1674,26 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     reloadStatuses={reloadStatuses}
                     setSave={(save: boolean) => setSave(save)}
                     setDelete={(del: boolean) => setDel(del)}
-                    user={props.user}
                 />
             ) : (
                 <View>
-                    {channelOwner ? (
+                    {loadingStatuses ? (
+                        <View
+                            style={{
+                                width: '100%',
+                                flex: 1,
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                backgroundColor: '#f8f8f8',
+                                borderTopLeftRadius: 0,
+                                borderTopRightRadius: 0,
+                                marginTop: 100,
+                            }}
+                        >
+                            <ActivityIndicator color={'#000000'} />
+                        </View>
+                    ) : (
                         <View
                             style={{
                                 backgroundColor: '#f8f8f8',
@@ -1893,17 +1737,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         channelName={props.filterChoice}
                                         channelId={props.channelId}
                                         closeModal={() => props.closeModal()}
-                                        reload={() => loadThreadsAndStatuses()}
+                                        reload={() => loadStudentResponses()}
                                         cue={props.cue}
                                         updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
                                         reloadStatuses={reloadStatuses}
                                         isQuiz={isQuiz}
-                                        user={props.user}
                                     />
                                 </View>
                             </ScrollView>
                         </View>
-                    ) : null}
+                    )}
                 </View>
             )}
         </Animated.View>
@@ -1925,7 +1768,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: 'none',
                             paddingLeft: 0,
                         }}
-                        disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1961,7 +1804,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             backgroundColor: 'none',
                             paddingLeft: 0,
                         }}
-                        disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1989,7 +1832,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             if (addingToFolder) {
                                 return;
                             }
-                            const server = fetchAPI('');
+
                             setAddingToFolder(true);
                             server
                                 .mutate({
@@ -2082,8 +1925,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             onPress={async () => {
                                 setCreatingFolder(true);
 
-                                const server = fetchAPI('');
-
                                 if (selectedCues.length < 2) {
                                     Alert('Folder must contain at least 2 items.');
                                     setCreatingFolder(false);
@@ -2117,14 +1958,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setCreatingFolder(false);
                                         setCreateNewFolder(false);
 
-                                        props.refreshCues();
+                                        refreshCues();
                                     })
                                     .catch((e) => {
                                         Alert('Could not create folder. Try again.');
                                         setCreatingFolder(false);
                                     });
                             }}
-                            disabled={creatingFolder || props.user.email === disableEmailId}
+                            disabled={creatingFolder || user.email === disableEmailId}
                             style={{
                                 backgroundColor: 'none',
                                 paddingLeft: 0,
@@ -2188,8 +2029,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {
                                         text: 'Yes',
                                         onPress: () => {
-                                            const server = fetchAPI('');
-
                                             setUpdatingFolder(true);
 
                                             const cueIds = folderCuesToDisplay.map((cue: any) => cue._id);
@@ -2235,8 +2074,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                     setUpdatingFolder(false);
                                                     setEditFolder(false);
-
-                                                    props.refreshCues();
                                                 })
                                                 .catch((e) => {
                                                     Alert('Could not update folder. Try again.');
@@ -2246,7 +2083,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     },
                                 ]);
                             }}
-                            disabled={updatingFolder || props.user.email === disableEmailId}
+                            disabled={updatingFolder || user.email === disableEmailId}
                             style={{
                                 backgroundColor: 'none',
                                 paddingLeft: 0,
@@ -2279,8 +2116,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {
                                         text: 'Yes',
                                         onPress: () => {
-                                            const server = fetchAPI('');
-
                                             setDeletingFolder(true);
 
                                             server
@@ -2303,8 +2138,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setFolderId('');
 
                                                     fetchChannelFolders();
-
-                                                    props.refreshCues();
                                                 })
                                                 .catch((e) => {
                                                     Alert('Could not delete folder. Try again.');
@@ -2318,7 +2151,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 backgroundColor: 'none',
                                 paddingLeft: 0,
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -2348,7 +2181,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 backgroundColor: 'none',
                                 paddingLeft: 0,
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -2508,7 +2341,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             backgroundColor: 'none',
                                             marginLeft: 20,
                                         }}
-                                        disabled={props.user.email === disableEmailId}
+                                        disabled={user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{
@@ -2520,7 +2353,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 color: '#fff',
                                             }}
                                         >
-                                            Save
+                                            {savingCueToCloud ? 'Saving...' : 'Save'}
                                         </Text>
                                     </TouchableOpacity>
                                 ) : null}
@@ -2538,7 +2371,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             marginLeft: 20,
                                             backgroundColor: 'none',
                                         }}
-                                        disabled={props.user.email === disableEmailId}
+                                        disabled={user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{
@@ -2606,41 +2439,24 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 borderTopRightRadius: 0,
             }}
         >
-            {loading ? (
+            <View style={{ width: '100%', position: 'relative', height: windowHeight }}>
+                {/* Header */}
+                {renderHeader()}
+                {/* Main Content */}
                 <View
                     style={{
                         width: '100%',
-                        flex: 1,
-                        justifyContent: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
                         backgroundColor: 'white',
-                        borderTopLeftRadius: 0,
-                        borderTopRightRadius: 0,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        flex: 1,
                     }}
                 >
-                    <ActivityIndicator color={'#000000'} />
+                    {ContentView}
                 </View>
-            ) : (
-                <View style={{ width: '100%', position: 'relative', height: windowHeight }}>
-                    {/* Header */}
-                    {renderHeader()}
-                    {/* Main Content */}
-                    <View
-                        style={{
-                            width: '100%',
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            flex: 1,
-                        }}
-                    >
-                        {ContentView}
-                    </View>
-                    {/* Mobile tabs */}
-                    {Dimensions.get('window').width < 768 ? mobileOptions : null}
-                </View>
-            )}
+                {/* Mobile tabs */}
+                {Dimensions.get('window').width < 768 ? mobileOptions : null}
+            </View>
         </View>
     );
 };

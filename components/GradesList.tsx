@@ -22,7 +22,7 @@ import ProgressBar from '@ramonak/react-progress-bar';
 import Alert from './Alert';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     createGradebookEntry,
     editGradebookEntry,
@@ -59,10 +59,11 @@ import {
     VictoryLine,
     VictoryVoronoiContainer,
 } from 'victory';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 class CustomLabel extends React.Component {
     render() {
-        console.log('Props', this.props);
         return (
             <g>
                 <VictoryLabel {...this.props} />
@@ -95,6 +96,8 @@ const masteryColors = {
 };
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId, user } = useAppContext();
+
     const [exportAoa, setExportAoa] = useState<any[]>();
     const [activeModifyId, setActiveModifyId] = useState('');
     const [activeUserId, setActiveUserId] = useState('');
@@ -219,6 +222,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [studentGradebook, setStudentGradebook] = useState<any>(undefined);
     const [gradebookStudentEntries, setGradebookStudentEntries] = useState<any[]>([]);
 
+    const server = useApolloClient();
+
     const newEntryTabs = [
         {
             value: 'assignment',
@@ -305,8 +310,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         setAssignPointsStandardDropdownOptions(updateStandardsDropdown);
     }, [newStandards]);
-
-    console.log('Assign points standards dropdown', assignPointsStandardDropdownOptions);
 
     useEffect(() => {
         if (props.isOwner && props.channelId) {
@@ -438,15 +441,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Remove unselected
         const filterRemoved = updatePointsScored.filter((x: any) => newAssignmentShareWithSelected.includes(x._id));
 
-        console.log('Update New assignment points scored', filterRemoved);
-
         setNewAssignmentPointsScored(filterRemoved);
     }, [newAssignmentShareWithSelected, courseStudents]);
 
     const fetchStandardsBasedGradingScale = useCallback(() => {
         setIsFetchingStandardsBasedGrading(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getStandardsBasedGradingScale,
@@ -456,8 +456,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 })
                 .then((res) => {
                     if (res.data.channel && res.data.channel.getStandardsBasedGradingScale) {
-                        console.log('Standards Based grading', res.data.channel.getStandardsBasedGradingScale);
-                        // setIntructorGradebook(res.data.gradebook.getStandardsBasedGradingScale);
                         setStandardsBasedScale(res.data.channel.getStandardsBasedGradingScale);
 
                         let highest = -1;
@@ -515,7 +513,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const fetchCourseGradingScale = useCallback(async () => {
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getCourseGradingScale,
@@ -539,7 +536,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const fetchGradebookInstructor = useCallback(() => {
         setIsFetchingGradebook(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getGradebookInstructor,
@@ -573,13 +569,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const fetchGradebookStudent = useCallback(() => {
         setIsFetchingStudentGradebook(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getGradebookStudent,
                     variables: {
                         channelId: props.channelId,
-                        userId: props.user._id,
+                        userId,
                     },
                 })
                 .then((res) => {
@@ -600,12 +595,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setIsFetchingStudentGradebook(false);
                 });
         }
-    }, [props.channelId, props.user]);
+    }, [props.channelId, userId]);
 
     const fetchStandardsBasedGradebookInstructor = useCallback(() => {
         setIsFetchingStandardsGradebook(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getStandardsGradebook,
@@ -668,8 +662,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
 
                         if (res.data.standards.getStandardsGradebook.users.length > 0) {
-                            console.log('selected user ', res.data.standards.getStandardsGradebook.users[0].userId);
-
                             const userDropdowns: any[] = res.data.standards.getStandardsGradebook.users.map(
                                 (user: any) => {
                                     return {
@@ -709,13 +701,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const fetchStandardsBasedGradebookStudent = useCallback(() => {
         setIsFetchingStandardsGradebookStudent(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getStandardsGradebookStudent,
                     variables: {
                         channelId: props.channelId,
-                        userId: props.user._id,
+                        userId,
                     },
                 })
                 .then((res) => {
@@ -772,7 +763,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             setStandardAnalyticsSelected(entries[0]._id);
                         }
 
-                        setStandardAnalyticsSelectedUser(props.user._id);
+                        setStandardAnalyticsSelectedUser(userId);
 
                         setStandardsGradebookEntriesStudent(entries);
                         setStandardsGradebookCategories(categoryCountMap);
@@ -792,12 +783,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setIsFetchingStandardsGradebookStudent(false);
                 });
         }
-    }, [props.channelId, props.user]);
+    }, [props.channelId, userId]);
 
     const fetchStandardsCategories = useCallback(() => {
         setIsFetchingStandardsCategories(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getStandardsCategories,
@@ -823,7 +813,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const fetchCourseAssignmentsAnalytics = useCallback(() => {
         setIsFetchingAssignmentAnalytics(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getAssignmentAnalytics,
@@ -850,7 +839,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const fetchStudentAnalytics = useCallback(() => {
         setIsFetchingStudentAnalytics(true);
-        const server = fetchAPI('');
+
         server
             .query({
                 query: getStudentAnalytics,
@@ -877,7 +866,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const fetchStandardsAnalytics = useCallback(() => {
         setIsFetchingStandardsAnalytics(true);
-        const server = fetchAPI('');
+
         server
             .query({
                 query: getStandardsInsights,
@@ -908,7 +897,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const loadCourseStudents = useCallback(() => {
         setIsFetchingStudents(true);
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getCourseStudents,
@@ -957,8 +945,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             const { scores } = findEntry;
 
-            console.log('Entry scores', scores);
-
             if (!findEntry) return;
 
             let shareWithAll = false;
@@ -971,8 +957,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             users.map((user: any) => {
                 const findScore = scores.find((x: any) => x.userId === user.userId);
-
-                console.log('FindScore', findScore);
 
                 if (!findScore) {
                     shareWithAll = false;
@@ -1023,8 +1007,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             return;
         }
 
-        const server = fetchAPI('');
-
         server
             .mutate({
                 mutation: updateStandardsScore,
@@ -1054,7 +1036,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const handleRevertOverride = useCallback(async () => {
         //
-        const server = fetchAPI('');
 
         server
             .mutate({
@@ -1080,8 +1061,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 Alert('Failed to revert overridden mastery level for student.');
             });
     }, [standardUserScore, standardModifyEntry]);
-
-    console.log('Gradebook points scored', newAssignmentPointsScored);
 
     /**
      * @description Round time to nearest seconds
@@ -1424,7 +1403,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const handleUpdateAssignmentScore = useCallback(
         async (totalPoints: number) => {
             async function updateScore() {
-                const server = fetchAPI('');
                 server
                     .mutate({
                         mutation: handleUpdateGradebookScore,
@@ -1545,8 +1523,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setIsDeletingAssignment(true);
 
         if (gradebookEntryType === 'assignment') {
-            const server = fetchAPI('');
-
             server
                 .mutate({
                     mutation: deleteGradebookEntry,
@@ -1574,8 +1550,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setIsDeletingAssignment(false);
                 });
         } else {
-            const server = fetchAPI('');
-
             server
                 .mutate({
                     mutation: handleDeleteStandard,
@@ -1670,10 +1644,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     scores: sanitizeScores,
                 };
 
-                console.log('New Assignment Input', gradebookEntryInput);
-
                 // return;
-                const server = fetchAPI('');
 
                 if (editing) {
                     server
@@ -1742,8 +1713,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         return;
                     }
 
-                    const server = fetchAPI('');
-
                     server
                         .mutate({
                             mutation: handleEditStandard,
@@ -1795,8 +1764,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             return scoresWithNumbers;
                         });
                     }
-
-                    const server = fetchAPI('');
 
                     server
                         .mutate({
@@ -2422,10 +2389,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             remaining = 100 - (currentElapsed / totalDifference) * 100;
                         }
 
-                        console.log('hasDeadlinePassed', hasDeadlinePassed);
-                        console.log('hasLateSubmissionPassed', hasLateSubmissionPassed);
-                        console.log('remaining', remaining);
-
                         return (
                             <View
                                 key={ind.toString()}
@@ -2825,7 +2788,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         async (entryId: string, entryType: string, releaseSubmission: boolean, deadlinePassed: boolean) => {
             async function updateReleaseSubmission() {
                 setIsFetchingAssignmentAnalytics(true);
-                const server = fetchAPI('');
+
                 server
                     .mutate({
                         mutation: handleReleaseSubmission,
@@ -2914,8 +2877,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 y: gradebookViewPoints ? user.pointsScored : user.score,
             };
         });
-
-        console.log('Top performers data', topPerformersData);
 
         const bottomPerformersData = selectedAssignment.bottomPerformers.map((user: any) => {
             return {
@@ -4020,10 +3981,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const studentScoresData: any[] = [];
 
-        console.log('Student analytics', studentAnalytics);
-
-        console.log('assignmentAnalytics', assignmentAnalytics);
-
         studentAnalytics.scores.map((score: any) => {
             const id = score.cueId ? score.cueId : score.gradebookEntryId;
 
@@ -4041,9 +3998,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 y: gradebookViewPoints ? score.pointsScored : score.score,
             });
         });
-
-        console.log('avgScoreData', avgScoreData);
-        console.log('studentScoresData', studentScoresData);
 
         return (
             <View>
@@ -4479,7 +4433,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }}
                 >
                     {standardsGradebookEntriesStudent.map((entry: any, ind: number) => {
-                        console.log('Entry', entry);
                         if (!masteryPercentageMap || !masteryColors) return null;
 
                         let percentage;
@@ -5265,7 +5218,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onPress={() => {
                                                                 handleUpdateAssignmentScore(entry.totalPoints);
                                                             }}
-                                                            disabled={props.user.email === disableEmailId}
+                                                            disabled={user.email === disableEmailId}
                                                         >
                                                             <Ionicons
                                                                 name="checkmark-circle-outline"
@@ -6908,7 +6861,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         marginBottom: 20,
                                     }}
                                     onPress={() => handleCreateAssignment(true)}
-                                    disabled={isCreatingAssignment || props.user.email === disableEmailId}
+                                    disabled={isCreatingAssignment || user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
@@ -6936,7 +6889,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         marginBottom: 20,
                                     }}
                                     onPress={() => handleDeleteAssignment()}
-                                    disabled={isDeletingAssignment || props.user.email === disableEmailId}
+                                    disabled={isDeletingAssignment || user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
@@ -6965,7 +6918,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     marginBottom: 20,
                                 }}
                                 onPress={() => handleCreateAssignment(false)}
-                                disabled={isCreatingAssignment || props.user.email === disableEmailId}
+                                disabled={isCreatingAssignment || user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -7754,7 +7707,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                           // props.onSend(message, customCategory, isPrivate);
                                           handleUpdateStandardsScore();
                                       },
-                                      disabled: props.user.email === disableEmailId,
+                                      disabled: user.email === disableEmailId,
                                   },
                                   {
                                       text: 'Revert override',
@@ -7762,7 +7715,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                       handler: function (event) {
                                           handleRevertOverride();
                                       },
-                                      disabled: props.user.email === disableEmailId,
+                                      disabled: user.email === disableEmailId,
                                   },
                                   {
                                       text: 'Cancel',
@@ -7781,7 +7734,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                           // props.onSend(message, customCategory, isPrivate);
                                           handleUpdateStandardsScore();
                                       },
-                                      disabled: props.user.email === disableEmailId,
+                                      disabled: user.email === disableEmailId,
                                   },
                                   {
                                       text: 'Cancel',

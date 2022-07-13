@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Platform, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import { View, TouchableOpacity, Text } from '../components/Themed';
 // import alert from '../components/Alert';
-// import { fetchAPI } from '../graphql/FetchAPI';
 // import { ActivityIndicator, StyleSheet } from 'react-native';
 import EquationEditor from 'equation-editor-react';
 import { Ionicons } from '@expo/vector-icons';

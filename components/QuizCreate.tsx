@@ -66,6 +66,7 @@ import ImageMarker from 'react-image-marker';
 
 import EquationEditorQuiz from './EquationEditorQuiz';
 import MathJax from 'react-mathjax-preview';
+import { useAppContext } from '../contexts/AppContext';
 
 // CONSTANTS
 const questionTypeOptions = [
@@ -127,6 +128,8 @@ const requiredOptions = [
 ];
 
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId } = useAppContext();
+
     const [problems, setProblems] = useState<any[]>(props.problems ? props.problems : []);
     const [headers, setHeaders] = useState<any>(props.headers ? props.headers : {});
     const [editQuestionNumber, setEditQuestionNumber] = useState(0);
@@ -224,8 +227,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             this.events.trigger('contentChanged');
         },
     });
-
-    console.log('Problems', problems);
 
     Froalaeditor.DefineIcon('insertTextEntryField', { NAME: 'plus', SVG_KEY: 'add' });
     Froalaeditor.RegisterCommand('insertTextEntryField', {
@@ -542,7 +543,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const handleVideoImport = useCallback(
         async (files: any, problemIndex: number) => {
-            const res = await handleFileUploadEditor(true, files.item(0), props.userId);
+            const res = await handleFileUploadEditor(true, files.item(0), userId);
 
             if (!res || res.url === '' || res.type === '' || !RichText || !RichText.current) {
                 return;
@@ -556,7 +557,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             setProblems(newProbs);
             props.setProblems(newProbs);
         },
-        [props.userId, problems, editQuestionContent, editQuestion, RichText]
+        [userId, problems, editQuestionContent, editQuestion, RichText]
     );
 
     useEffect(() => {
@@ -661,7 +662,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             videoUpload: true,
                             imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
                             imageUploadParam: 'file',
-                            imageUploadParams: { userId: props.userId },
+                            imageUploadParams: { userId },
                             imageUploadMethod: 'POST',
                             imageMaxSize: 5 * 1024 * 1024,
                             imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -1442,8 +1443,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onChange={(val: any) => {
                                                                 const updatedProblems = [...problems];
 
-                                                                console.log('val.value', val.value);
-
                                                                 // MCQs
                                                                 if (val.value === 'mcq') {
                                                                     updatedProblems[index].questionType = '';
@@ -1925,7 +1924,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         videoUpload: false,
                                         imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
                                         imageUploadParam: 'file',
-                                        imageUploadParams: { userId: props.userId },
+                                        imageUploadParams: { userId },
                                         imageUploadMethod: 'POST',
                                         imageMaxSize: 5 * 1024 * 1024,
                                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -2072,7 +2071,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         videoUpload: false,
                                         imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
                                         imageUploadParam: 'file',
-                                        imageUploadParams: { userId: props.userId },
+                                        imageUploadParams: { userId },
                                         imageUploadMethod: 'POST',
                                         imageMaxSize: 5 * 1024 * 1024,
                                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -2215,7 +2214,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         videoUpload: false,
                                         imageUploadURL: 'https://api.learnwithcues.com/api/imageUploadEditor',
                                         imageUploadParam: 'file',
-                                        imageUploadParams: { userId: props.userId },
+                                        imageUploadParams: { userId },
                                         imageUploadMethod: 'POST',
                                         imageMaxSize: 5 * 1024 * 1024,
                                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -2977,7 +2976,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 editQuestionNumber === index + 1 ? (
                                     <TouchableOpacity
                                         onPress={async () => {
-                                            const url = await handleFile(false, props.userId, true);
+                                            const url = await handleFile(false, userId, true);
                                             const updatedProblems = [...problems];
                                             if (url) {
                                                 updatedProblems[index].imgUrl = url.url;
@@ -3855,7 +3854,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         imageUploadURL:
                                                             'https://api.learnwithcues.com/api/imageUploadEditor',
                                                         imageUploadParam: 'file',
-                                                        imageUploadParams: { userId: props.userId },
+                                                        imageUploadParams: { userId },
                                                         imageUploadMethod: 'POST',
                                                         imageMaxSize: 5 * 1024 * 1024,
                                                         imageAllowedTypes: ['jpeg', 'jpg', 'png'],
@@ -4554,7 +4553,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     imageUploadURL:
                                                                         'https://api.learnwithcues.com/api/imageUploadEditor',
                                                                     imageUploadParam: 'file',
-                                                                    imageUploadParams: { userId: props.userId },
+                                                                    imageUploadParams: { userId },
                                                                     imageUploadMethod: 'POST',
                                                                     imageMaxSize: 5 * 1024 * 1024,
                                                                     imageAllowedTypes: ['jpeg', 'jpg', 'png'],

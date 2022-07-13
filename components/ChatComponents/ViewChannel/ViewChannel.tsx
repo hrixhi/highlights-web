@@ -10,11 +10,14 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 
 import './ViewChannel.css';
 import { Ionicons } from '@expo/vector-icons';
-import { fetchAPI } from '../../../graphql/FetchAPI';
+
 import { deleteChannelPermanently, toggleAdminRole } from '../../../graphql/QueriesAndMutations';
 import Alert from '../../Alert';
 import { View } from '../../Themed';
 import FileUpload from '../../UploadFiles';
+import { useApolloClient } from '@apollo/client';
+import { disableEmailId } from '../../../constants/zoomCredentials';
+import { useAppContext } from '../../../contexts/AppContext';
 
 type Props = {
     theme: string;
@@ -286,6 +289,8 @@ const GroupNameInput: React.FC<InputProps> = (props) => {
 };
 
 const ViewChannel = (props: Props) => {
+    const { user } = useAppContext();
+
     const { theme, toggleMobile } = props;
     const { client } = useChatContext<StreamChatGenerics>();
     const { channel } = useChannelStateContext<StreamChatGenerics>();
@@ -297,6 +302,8 @@ const ViewChannel = (props: Props) => {
     const [groupImage, setGroupImage] = useState('');
 
     const [isEditingGroupProfile, setIsEditingGroupProfile] = useState(false);
+
+    const server = useApolloClient();
 
     const getGroupCreationText = useCallback(() => {
         const { created_by, created_at } = channel.data;
@@ -385,7 +392,6 @@ const ViewChannel = (props: Props) => {
         (userId: string, alreadyAdmin: boolean) => {
             if (!channel) return;
 
-            const server = fetchAPI('');
             server
                 .mutate({
                     mutation: toggleAdminRole,
@@ -427,7 +433,6 @@ const ViewChannel = (props: Props) => {
     const handleDelete = useCallback(() => {
         if (!channel) return;
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: deleteChannelPermanently,
@@ -512,7 +517,7 @@ const ViewChannel = (props: Props) => {
                             backgroundColor: 'white',
                             borderRadius: 15,
                         }}
-                        // disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -547,7 +552,6 @@ const ViewChannel = (props: Props) => {
                             backgroundColor: 'white',
                             borderRadius: 15,
                         }}
-                        // disabled={props.user.email === disableEmailId}
                     >
                         <Text
                             style={{

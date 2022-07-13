@@ -3,7 +3,7 @@ import { StyleSheet, Animated, Dimensions, Switch, ScrollView } from 'react-nati
 import { Text, TouchableOpacity, View } from './Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import { getRole } from '../graphql/QueriesAndMutations';
 import Collapse from 'react-collapse';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,7 +11,7 @@ import Profile from './Profile';
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(0));
-    const [isInstructor, setIsInstructor] = useState(false);
+    // const [isInstructor, setIsInstructor] = useState(false);
     const [showSavePassword, setShowSavePassword] = useState(false);
     const [options, setOptions] = useState<any[]>([
         // instructors
@@ -264,36 +264,36 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         },
     ]);
 
-    const loadIsInstructor = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const user = JSON.parse(u);
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getRole,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.user.getRole) {
-                        if (res.data.user.getRole === 'instructor') {
-                            setIsInstructor(true);
-                        }
-                    }
-                });
-        }
-    }, []);
+    // const loadIsInstructor = useCallback(async () => {
+    //     const u = await AsyncStorage.getItem('user');
+    //     if (u) {
+    //         const user = JSON.parse(u);
+    //         const server = fetchAPI('');
+    //         server
+    //             .query({
+    //                 query: getRole,
+    //                 variables: {
+    //                     userId: user._id,
+    //                 },
+    //             })
+    //             .then((res) => {
+    //                 if (res.data && res.data.user.getRole) {
+    //                     if (res.data.user.getRole === 'instructor') {
+    //                         setIsInstructor(true);
+    //                     }
+    //                 }
+    //             });
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        loadIsInstructor();
-        Animated.timing(modalAnimation, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true,
-        }).start();
-    }, []);
+    // useEffect(() => {
+    //     loadIsInstructor();
+    //     Animated.timing(modalAnimation, {
+    //         toValue: 1,
+    //         duration: 150,
+    //         useNativeDriver: true,
+    //     }).start();
+    // }, []);
 
     return (
         <View
@@ -369,12 +369,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     >
                         <Profile
                             closeModal={() => props.closeModal()}
-                            saveDataInCloud={() => props.saveDataInCloud()}
                             reOpenProfile={() => props.reOpenProfile()}
-                            reloadData={() => props.reloadData()}
                             setShowSavePassword={(val: any) => setShowSavePassword(val)}
                             showSavePassword={showSavePassword}
-                            user={props.user}
                         />
                     </View>
                 </View>

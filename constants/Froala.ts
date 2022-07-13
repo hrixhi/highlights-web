@@ -168,6 +168,79 @@ export const QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS = {
     ],
 };
 
+export const QUIZ_UPDATE_INSTRUCTIONS_TOOLBAR_BUTTONS = {
+    moreText: {
+        buttons: [
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'subscript',
+            'superscript',
+            'fontFamily',
+            'fontSize',
+            'textColor',
+            'backgroundColor',
+            'clearFormatting',
+        ],
+        buttonsVisible: 2,
+    },
+    moreParagraph: {
+        buttons: ['formatOL', 'formatUL'],
+    },
+    moreRich: {
+        buttons: [
+            'insertLink',
+            'insertImage',
+            'insertTable',
+            'insertFormulaUpdateInstruction',
+            'emoticons',
+            'fontAwesome',
+            'specialCharacters',
+        ],
+        buttonsVisible: 2,
+    },
+    moreMisc: {
+        buttons: ['undo', 'redo'],
+        align: 'right',
+        buttonsVisible: 2,
+    },
+    pluginsEnabled: [
+        'align',
+        'charCounter',
+        'codeBeautifier',
+        'codeView',
+        'colors',
+        'draggable',
+        'embedly',
+        'emoticons',
+        'entities',
+        'file',
+        'fontAwesome',
+        'fontFamily',
+        'fontSize',
+        'fullscreen',
+        'image',
+        'imageTUI',
+        'imageManager',
+        'inlineStyle',
+        'inlineClass',
+        'lineBreaker',
+        'lineHeight',
+        'link',
+        'lists',
+        'paragraphFormat',
+        'paragraphStyle',
+        'quickInsert',
+        'quote',
+        'save',
+        'table',
+        'url',
+        'video',
+        'wordPaste',
+    ],
+};
+
 export const QUIZ_QUESTION_TOOLBAR_BUTTONS = {
     moreText: {
         buttons: [

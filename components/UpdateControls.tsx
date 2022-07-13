@@ -7,7 +7,7 @@ import lodash from 'lodash';
 import moment from 'moment';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     createCue,
     deleteCue,
@@ -77,8 +77,20 @@ import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
+import { omitTypename } from '../helpers/omitTypename';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const {
+        user,
+        userId,
+        customCategories: localCustomCategories,
+        handleUpdateCue,
+        handleDeleteCue,
+        cues,
+    } = useAppContext();
+
     const current = new Date();
     const [cue] = useState(props.cue.cue);
     const [initialSubmissionDraft, setInitialSubmissionDraft] = useState('');
@@ -201,10 +213,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
 
-    const [userId, setUserId] = useState('');
-    const [userFullName, setUserFullName] = useState('');
+    const [userFullName] = useState(user.fullName);
     const width = Dimensions.get('window').width;
     const [usernamesForAnnotation, setUsernamesForAnnotation] = useState<any>({});
+
+    const server = useApolloClient();
 
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz');
@@ -257,17 +270,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // HOOKS
 
-    /**
-     * @description Load User on Init
-     */
-    useEffect(() => {
-        loadUser();
-    }, []);
-
     // SHARE WITH ANY OTHER CHANNEL IN INSTITUTE
     // useEffect(() => {
     //     if (role === 'instructor' && school) {
-    //         const server = fetchAPI('');
+    //
     //         server
     //             .query({
     //                 query: findBySchoolId,
@@ -316,7 +322,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue]);
 
     const fetchUsersForAnnotations = useCallback(() => {
-        const server = fetchAPI('');
         server
             .query({
                 query: getUsernamesForAnnotation,
@@ -338,7 +343,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     useEffect(() => {
         loadChannelsAndSharedWith();
-    }, []);
+    }, [props.channelOwner]);
 
     /**
      * @description Load categories for Update dropdown
@@ -405,7 +410,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     // perform document operations
 
                     // Fetch annotations from server
-                    const server = fetchAPI('');
+
                     server
                         .query({
                             query: getSubmissionAnnotations,
@@ -458,7 +463,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     if (userId === id) {
                         return userFullName;
                     } else if (usernamesForAnnotation[id] && usernamesForAnnotation[id] !== undefined) {
-                        console.log('Returned name', usernamesForAnnotation[id]);
                         return usernamesForAnnotation[id];
                     } else {
                         // Fetch username from server and add it to the Map
@@ -478,7 +482,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: updateAnnotation,
@@ -612,7 +615,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     setFetchingQuiz(true);
 
                     // load quiz here and set problems
-                    const server = fetchAPI('');
+
                     server
                         .query({
                             query: getQuiz,
@@ -661,7 +664,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
 
                                 if (solutionsObject.attempts !== undefined) {
-                                    setQuizAttempts(solutionsObject.attempts);
+                                    setQuizAttempts(lodash.cloneDeep(solutionsObject.attempts));
 
                                     // FInd the active one and set it to quizSolutions
                                     solutionsObject.attempts.map((attempt: any) => {
@@ -680,7 +683,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     );
                                 }
 
-                                setProblems(res.data.quiz.getQuiz.problems);
+                                setProblems(lodash.cloneDeep(res.data.quiz.getQuiz.problems));
 
                                 const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems);
                                 setUnmodifiedProblems(deepCopy);
@@ -801,21 +804,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead();
     }, [props.cue.status]);
 
-    // const handleSaveChanges = useCallback(async () => {
-    //     if (isQuiz) {
-    //         // first try and save quiz changes and then save details
-    //     }
-
-    //     await handleUpdateContent();
-    //     await handleUpdateDetails();
-    //     await handleRestrictAccessUpdate();
-    // }, [props.save, props.channelOwner, isQuiz]);
-
     /**
      * @description Handle Save when props.save
      */
     useEffect(() => {
         if (props.save) {
+            console.log('Props.save', props.save);
+
             // Basic Validation for save content
 
             if (imported || isQuiz) {
@@ -856,24 +851,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
             }
 
-            Alert('Save changes?', '', [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                    onPress: () => {
-                        return;
-                    },
-                },
-                {
-                    text: 'Yes',
-                    onPress: async () => {
-                        await handleUpdateContent();
-                        await handleUpdateDetails();
-                        await handleRestrictAccessUpdate();
-                    },
-                },
-            ]);
             props.setSave(false);
+            updateCue();
+            handleRestrictAccessUpdate();
         }
     }, [
         props.save,
@@ -945,33 +925,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 if (!documentViewer || !annotationManager) return;
 
-                // const u = await AsyncStorage.getItem('user');
-
-                // let user: any;
-
-                // if (u) {
-                //     user = JSON.parse(u);
-                //     annotationManager.setCurrentUser(user.fullName);
-                // }
-
                 // you can now call WebViewer APIs here...
                 documentViewer.addEventListener('documentLoaded', async () => {
                     // perform document operations
 
                     // Need to modify the original property in the cue
-                    let subCues: any = {};
-                    try {
-                        const value = await AsyncStorage.getItem('cues');
-                        if (value) {
-                            subCues = JSON.parse(value);
-                        }
-                    } catch (e) {}
 
-                    if (subCues[props.cueKey].length === 0) {
-                        return;
-                    }
-
-                    const currCue = subCues[props.cueKey][props.cueIndex];
+                    const currCue = cues[props.cueKey][props.cueIndex];
 
                     if (currCue.annotations !== '') {
                         const xfdfString = currCue.annotations;
@@ -1000,30 +960,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        let subCues: any = {};
-                        try {
-                            const value = await AsyncStorage.getItem('cues');
-                            if (value) {
-                                subCues = JSON.parse(value);
-                            }
-                        } catch (e) {}
-
-                        if (subCues[props.cueKey].length === 0) {
-                            return;
-                        }
-
-                        const currCue = subCues[props.cueKey][props.cueIndex];
+                        const currCue = cues[props.cueKey][props.cueIndex];
 
                         const saveCue = {
                             ...currCue,
                             annotations: xfdfString,
                         };
 
-                        subCues[props.cueKey][props.cueIndex] = saveCue;
-
-                        const stringifiedCues = JSON.stringify(subCues);
-                        await AsyncStorage.setItem('cues', stringifiedCues);
-                        props.reloadCueListAfterUpdate();
+                        handleUpdateCue(saveCue, false);
                     }
                 );
             });
@@ -1105,6 +1049,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             });
         }
     }, [
+        cues,
         url,
         RichText,
         imported,
@@ -1156,7 +1101,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Sync user submission responses to cloud (IMP since submissions should be saved in real time)
      */
     useEffect(() => {
-        handleUpdateCue();
+        handleUpdateCueSubmission();
     }, [
         submitted,
         solutions,
@@ -1173,9 +1118,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     /**
      * @description Handle bookmark (Not used right now)
      */
-    useEffect(() => {
-        handleUpdateStarred();
-    }, [starred]);
+    // useEffect(() => {
+    //     handleUpdateStarred();
+    // }, [starred]);
 
     /**
      * @description Update submission response in Editor on Tab change
@@ -1195,82 +1140,76 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Loads all the channel categories and list of people cue has been shared with
      */
     const loadChannelsAndSharedWith = useCallback(async () => {
-        const uString: any = await AsyncStorage.getItem('user');
-        if (uString) {
-            const user = JSON.parse(uString);
-            const server = fetchAPI('');
-
-            if (props.channelId) {
-                server
-                    .query({
-                        query: getChannelCategories,
-                        variables: {
-                            channelId: props.channelId,
-                        },
-                    })
-                    .then((res) => {
-                        if (res.data.channel && res.data.channel.getChannelCategories) {
-                            setCustomCategories(res.data.channel.getChannelCategories);
-                            setInitializedCustomCategories(true);
-                        }
-                    })
-                    .catch((err) => {});
-            } else {
-                setCustomCategories(props.customCategories);
-                setInitializedCustomCategories(true);
-            }
-
+        if (props.channelId) {
             server
                 .query({
-                    query: getChannels,
+                    query: getChannelCategories,
                     variables: {
-                        userId: user._id,
+                        channelId: props.channelId,
                     },
                 })
                 .then((res) => {
-                    if (res.data.channel.findByUserId) {
-                        setChannels(res.data.channel.findByUserId);
+                    if (res.data.channel && res.data.channel.getChannelCategories) {
+                        setCustomCategories(res.data.channel.getChannelCategories);
+                        setInitializedCustomCategories(true);
                     }
                 })
                 .catch((err) => {});
-            if (props.channelOwner && props.cue.channelId && props.cue.channelId !== '') {
-                // owner
-                server
-                    .query({
-                        query: getSharedWith,
-                        variables: {
-                            channelId: props.cue.channelId,
-                            cueId: props.cue._id,
-                        },
-                    })
-                    .then((res: any) => {
-                        if (res.data && res.data.cue.getSharedWith) {
-                            const format = res.data.cue.getSharedWith.map((sub: any) => {
-                                return {
-                                    value: sub.value,
-                                    text: sub.label,
-                                };
-                            });
-
-                            setSubscribers(format);
-
-                            // clear selected
-                            const sel = res.data.cue.getSharedWith.filter((item: any) => {
-                                return item.sharedWith;
-                            });
-
-                            const formatSel = sel.map((sub: any) => {
-                                return sub.value;
-                            });
-
-                            setSelected(formatSel);
-                            setOriginalSelected(formatSel);
-                        }
-                    })
-                    .catch((err: any) => console.log(err));
-            }
+        } else {
+            setCustomCategories(localCustomCategories);
+            setInitializedCustomCategories(true);
         }
-    }, [props.cue, props.channelId]);
+
+        server
+            .query({
+                query: getChannels,
+                variables: {
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data.channel.findByUserId) {
+                    setChannels(res.data.channel.findByUserId);
+                }
+            })
+            .catch((err) => {});
+        if (props.channelOwner && props.cue.channelId && props.cue.channelId !== '') {
+            // owner
+            server
+                .query({
+                    query: getSharedWith,
+                    variables: {
+                        channelId: props.cue.channelId,
+                        cueId: props.cue._id,
+                    },
+                })
+                .then((res: any) => {
+                    if (res.data && res.data.cue.getSharedWith) {
+                        const format = res.data.cue.getSharedWith.map((sub: any) => {
+                            return {
+                                value: sub.value,
+                                text: sub.label,
+                            };
+                        });
+
+                        setSubscribers(format);
+
+                        // clear selected
+                        const sel = res.data.cue.getSharedWith.filter((item: any) => {
+                            return item.sharedWith;
+                        });
+
+                        const formatSel = sel.map((sub: any) => {
+                            return sub.value;
+                        });
+
+                        setSelected(formatSel);
+                        setOriginalSelected(formatSel);
+                    }
+                })
+                .catch((err: any) => console.log(err));
+        }
+    }, [props.cue, props.channelId, props.channelOwner]);
 
     const reactSelectStyles = {
         multiValue: (base: any, state: any) => {
@@ -1365,18 +1304,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [equation, editorRef, editorRef.current]);
 
     /**
-     * @description Fetch user organization and role
-     */
-    const loadUser = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            setUserId(parsedUser._id);
-            setUserFullName(parsedUser.fullName);
-        }
-    }, []);
-
-    /**
      * @description Initialize the quiz (Timed quiz)
      */
     const initQuiz = useCallback(async () => {
@@ -1395,7 +1322,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
 
         // const now = new Date();
-        const server = fetchAPI('');
+
         // const saveCue = JSON.stringify({
         //     solutions,
         //     initiatedAt: now,
@@ -1475,23 +1402,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     /**
      * @description Handle cue content for Submissions and Quiz responses
      */
-    const handleUpdateCue = useCallback(async () => {
-        if (isSubmitting) return;
+    const handleUpdateCueSubmission = useCallback(async () => {
+        if (isSubmitting || !cues) return;
 
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[props.cueKey] && subCues[props.cueKey].length === 0) {
-            return;
-        }
-
-        const currCue = subCues[props.cueKey][props.cueIndex];
+        const currCue = cues[props.cueKey][props.cueIndex];
 
         const currCueValue: any = currCue.cue;
+
+        if (!userId || !currCue.submission) {
+            return;
+        }
 
         // If there are no existing submissions then initiate cue obj
         let submissionObj = {
@@ -1551,9 +1471,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             updatedCue = JSON.stringify(submissionObj);
         }
 
-        if (!userId) return;
-
-        const server = fetchAPI(userId);
         server
             .mutate({
                 mutation: saveSubmissionDraft,
@@ -1572,10 +1489,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
             })
             .catch((e) => {
-                console.log('Failed to save submission', e);
                 setFailedToSaveSubmission(true);
             });
     }, [
+        cues,
         submitted,
         solutions,
         initiatedAt,
@@ -1594,31 +1511,31 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     /**
      * @description Update bookmark
      */
-    const handleUpdateStarred = useCallback(async () => {
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[props.cueKey] && subCues[props.cueKey].length === 0) {
-            return;
-        }
+    // const handleUpdateStarred = useCallback(async () => {
+    //     let subCues: any = {};
+    //     try {
+    //         const value = await AsyncStorage.getItem('cues');
+    //         if (value) {
+    //             subCues = JSON.parse(value);
+    //         }
+    //     } catch (e) {}
+    //     if (subCues[props.cueKey] && subCues[props.cueKey].length === 0) {
+    //         return;
+    //     }
 
-        const currCue = subCues[props.cueKey][props.cueIndex];
+    //     const currCue = subCues[props.cueKey][props.cueIndex];
 
-        const saveCue = {
-            ...currCue,
-            starred,
-        };
+    //     const saveCue = {
+    //         ...currCue,
+    //         starred,
+    //     };
 
-        subCues[props.cueKey][props.cueIndex] = saveCue;
+    //     subCues[props.cueKey][props.cueIndex] = saveCue;
 
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-        props.reloadCueListAfterUpdate();
-    }, [starred]);
+    //     const stringifiedCues = JSON.stringify(subCues);
+    //     await AsyncStorage.setItem('cues', stringifiedCues);
+    //     props.reloadCueListAfterUpdate();
+    // }, [starred]);
 
     /**
      * @description Handle update Cue content (Channel owner)
@@ -1627,17 +1544,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         setUpdatingCueContent(true);
 
         if (!props.cue.channelId) {
-            let subCues: any = {};
-            try {
-                const value = await AsyncStorage.getItem('cues');
-                if (value) {
-                    subCues = JSON.parse(value);
-                }
-            } catch (e) {}
-            if (subCues[props.cueKey].length === 0) {
-                return;
-            }
-
             let tempOriginal = '';
             if (imported) {
                 if (title === '') {
@@ -1656,34 +1562,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 tempOriginal = original;
             }
 
-            const currCue = subCues[props.cueKey][props.cueIndex];
+            const currCue = cues[props.cueKey][props.cueIndex];
 
             const saveCue = {
                 ...currCue,
                 cue: tempOriginal,
             };
 
-            subCues[props.cueKey][props.cueIndex] = saveCue;
-
-            const stringifiedCues = JSON.stringify(subCues);
-            await AsyncStorage.setItem('cues', stringifiedCues);
-            props.reloadCueListAfterUpdate();
+            handleUpdateCue(saveCue, false);
 
             // Update initial Value for Editor
             setInitialOriginal(tempOriginal);
             setUpdatingCueContent(false);
 
-            return;
-        }
-
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[props.cueKey].length === 0) {
             return;
         }
 
@@ -1718,20 +1609,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             tempOriginal = original;
         }
 
-        const currCue = subCues[props.cueKey][props.cueIndex];
+        const currCue = cues[props.cueKey][props.cueIndex];
 
         const saveCue = {
             ...currCue,
             original: tempOriginal,
         };
 
-        subCues[props.cueKey][props.cueIndex] = saveCue;
+        handleUpdateCue(saveCue, false);
 
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-        props.reloadCueListAfterUpdate();
-
-        // Update initial Value for Editor
         setInitialOriginal(tempOriginal);
         setUpdatingCueContent(false);
     }, [title, original, imported, type, url, isQuiz]);
@@ -1741,7 +1627,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const handleRestrictAccessUpdate = useCallback(async () => {
         // If restrict access initially and it is now turned off
-        const server = fetchAPI('');
 
         if (props.cue.limitedShares && !limitedShares) {
             server
@@ -1811,25 +1696,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [props.cue, originalSelected, selected, limitedShares]);
 
-    /**
-     * @description Handle update cue details
-     */
-    const handleUpdateDetails = useCallback(async () => {
-        setUpdatingCueDetails(true);
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[props.cueKey].length === 0) {
-            return;
-        }
-
-        const currCue = subCues[props.cueKey][props.cueIndex];
-
-        // Perform validation for dates
+    const updateCue = useCallback(async () => {
+        console.log('Update Cue Called');
         if (submission && isOwner) {
             if (initiateAt > deadline) {
                 Alert('Deadline must be after available date');
@@ -1847,33 +1715,128 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
 
-        console.log('Update deadline only', deadline);
+        let tempOriginal = '';
 
-        const saveCue = {
-            ...currCue,
-            color,
-            shuffle,
-            frequency,
-            customCategory: customCategory === 'None' ? '' : customCategory,
-            gradeWeight: graded ? gradeWeight : null,
-            endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
-            submission,
-            deadline: submission ? deadline.toISOString() : '',
-            initiateAt: submission ? initiateAt.toISOString() : '',
-            allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
-            availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
-            limitedShares,
-            totalPoints: submission && !isQuiz ? totalPoints : '',
-        };
+        let saveCue: any = undefined;
 
-        subCues[props.cueKey][props.cueIndex] = saveCue;
+        if (!props.cue.channelId) {
+            if (imported) {
+                if (title === '') {
+                    Alert('Title cannot be empty');
+                    setUpdatingCueContent(false);
+                    return;
+                }
 
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-        props.reloadCueListAfterUpdate();
+                const obj = {
+                    type,
+                    url,
+                    title,
+                };
+                tempOriginal = JSON.stringify(obj);
+            } else {
+                tempOriginal = original;
+            }
 
-        setUpdatingCueDetails(false);
+            const currCue = cues[props.cueKey][props.cueIndex];
+
+            saveCue = {
+                ...currCue,
+                _id: currCue._id.toString(),
+                color: color.toString(),
+                cue: tempOriginal,
+                shuffle,
+                frequency,
+                customCategory: customCategory === 'None' ? '' : customCategory,
+            };
+        } else {
+            if (imported) {
+                if (title === '') {
+                    Alert('Title cannot be empty');
+                    setUpdatingCueContent(false);
+                    return;
+                }
+
+                const obj = {
+                    type,
+                    url,
+                    title,
+                };
+                tempOriginal = JSON.stringify(obj);
+            } else if (isQuiz) {
+                if (title === '') {
+                    Alert('Title cannot be empty');
+                    setUpdatingCueContent(false);
+                    return;
+                }
+
+                const parse = JSON.parse(original);
+                const obj = {
+                    quizId: parse.quizId,
+                    title,
+                };
+                tempOriginal = JSON.stringify(obj);
+            } else {
+                tempOriginal = original;
+            }
+
+            const currCue = cues[props.cueKey][props.cueIndex];
+
+            saveCue = {
+                ...currCue,
+                original: tempOriginal,
+                _id: currCue._id.toString(),
+                date: new Date(currCue.date).toISOString(),
+                color: color.toString(),
+                shuffle,
+                frequency,
+                customCategory: customCategory === 'None' ? '' : customCategory,
+                gradeWeight: graded ? gradeWeight.toString() : null,
+                endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
+                submission,
+                deadline: submission ? deadline.toISOString() : '',
+                initiateAt: submission ? initiateAt.toISOString() : '',
+                allowedAttempts: unlimitedAttempts ? null : allowedAttempts.toString(),
+                availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
+                limitedShares,
+                totalPoints: submission && !isQuiz ? totalPoints : '',
+            };
+        }
+
+        const success = await handleUpdateCue(saveCue, false);
+
+        console.log('update response', success);
+
+        if (!success) {
+            Alert('Failed to update content. Try again.');
+            return;
+        } else {
+            Alert('Changes saved successfully. Continue editing?', '', [
+                {
+                    text: 'No',
+                    style: 'cancel',
+                    onPress: () => {
+                        props.closeModal();
+                    },
+                },
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        setInitialOriginal(tempOriginal);
+                    },
+                },
+            ]);
+        }
     }, [
+        cues,
+        // CONTENT
+        title,
+        original,
+        imported,
+        type,
+        url,
+        isQuiz,
+
+        // DETAILS
         submission,
         deadline,
         initiateAt,
@@ -1895,6 +1858,89 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     ]);
 
     /**
+     * @description Handle update cue details
+     */
+    // const handleUpdateDetails = useCallback(async () => {
+    //     setUpdatingCueDetails(true);
+    //     let subCues: any = {};
+    //     try {
+    //         const value = await AsyncStorage.getItem('cues');
+    //         if (value) {
+    //             subCues = JSON.parse(value);
+    //         }
+    //     } catch (e) {}
+    //     if (subCues[props.cueKey].length === 0) {
+    //         return;
+    //     }
+
+    //     const currCue = subCues[props.cueKey][props.cueIndex];
+
+    //     // Perform validation for dates
+    //     if (submission && isOwner) {
+    //         if (initiateAt > deadline) {
+    //             Alert('Deadline must be after available date');
+    //             return;
+    //         }
+
+    //         if (allowLateSubmission && availableUntil < deadline) {
+    //             Alert('Late Submission date must be after deadline');
+    //             return;
+    //         }
+
+    //         if (!isQuiz && Number.isNaN(Number(totalPoints))) {
+    //             Alert('Enter valid total points for assignment.');
+    //             return;
+    //         }
+    //     }
+
+    //     console.log('Update deadline only', deadline);
+
+    //     const saveCue = {
+    //         ...currCue,
+    //         color,
+    //         shuffle,
+    //         frequency,
+    //         customCategory: customCategory === 'None' ? '' : customCategory,
+    //         gradeWeight: graded ? gradeWeight : null,
+    //         endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
+    //         submission,
+    //         deadline: submission ? deadline.toISOString() : '',
+    //         initiateAt: submission ? initiateAt.toISOString() : '',
+    //         allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
+    //         availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : '',
+    //         limitedShares,
+    //         totalPoints: submission && !isQuiz ? totalPoints : '',
+    //     };
+
+    //     subCues[props.cueKey][props.cueIndex] = saveCue;
+
+    //     const stringifiedCues = JSON.stringify(subCues);
+    //     await AsyncStorage.setItem('cues', stringifiedCues);
+    //     props.reloadCueListAfterUpdate();
+
+    //     setUpdatingCueDetails(false);
+    // }, [
+    //     submission,
+    //     deadline,
+    //     initiateAt,
+    //     gradeWeight,
+    //     customCategory,
+    //     endPlayAt,
+    //     color,
+    //     frequency,
+    //     notify,
+    //     allowedAttempts,
+    //     unlimitedAttempts,
+    //     allowLateSubmission,
+    //     availableUntil,
+    //     isOwner,
+    //     graded,
+    //     limitedShares,
+    //     isQuiz,
+    //     totalPoints,
+    // ]);
+
+    /**
      * @description Handle delete cue
      */
     const handleDelete = useCallback(async () => {
@@ -1912,7 +1958,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 text: 'Okay',
                 onPress: async () => {
-                    const server = fetchAPI('');
                     if (props.cue.channelId && isOwner) {
                         server
                             .mutate({
@@ -1951,25 +1996,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             });
                     }
 
-                    let subCues: any = {};
-                    try {
-                        const value = await AsyncStorage.getItem('cues');
-                        if (value) {
-                            subCues = JSON.parse(value);
-                        }
-                    } catch (e) {}
-                    if (subCues[props.cueKey].length === 0) {
-                        return;
-                    }
-                    const updatedCues: any[] = [];
-                    subCues[props.cueKey].map((i: any, j: any) => {
-                        if (j !== props.cueIndex) {
-                            updatedCues.push({ ...i });
-                        }
-                    });
-                    subCues[props.cueKey] = updatedCues;
-                    const stringifiedCues = JSON.stringify(subCues);
-                    await AsyncStorage.setItem('cues', stringifiedCues);
+                    handleDeleteCue(props.cue._id);
+
                     props.closeModal();
                 },
             },
@@ -1985,7 +2013,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             initiatedAt,
         });
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: submit,
@@ -2042,7 +2069,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             saveCue = submissionDraft;
                         }
 
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: submit,
@@ -2341,25 +2367,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     const updateStatusAsRead = useCallback(async () => {
         if (props.cue.status && props.cue.status !== 'read' && !markedAsRead) {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-                const server = fetchAPI('');
-                server
-                    .mutate({
-                        mutation: markAsRead,
-                        variables: {
-                            cueId: props.cue._id,
-                            userId: user._id,
-                        },
-                    })
-                    .then((res) => {
-                        if (res.data.status.markAsRead) {
-                            setMarkedAsRead(true);
-                        }
-                    })
-                    .catch((err) => {});
-            }
+            server
+                .mutate({
+                    mutation: markAsRead,
+                    variables: {
+                        cueId: props.cue._id,
+                        userId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data.status.markAsRead) {
+                        setMarkedAsRead(true);
+                    }
+                })
+                .catch((err) => {});
         }
     }, [props.cue, markedAsRead]);
 
@@ -2418,8 +2439,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             limitedShares,
             shareWithUserIds: limitedShares ? [props.cue.createdBy] : null,
         };
-
-        const server = fetchAPI('');
 
         if (
             props.cue.channelId &&
@@ -2552,13 +2571,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         shuffleQuiz: boolean
     ) => {
         setLoadingAfterModifyingQuiz(true);
-        const server = fetchAPI('');
 
         console.log('Timer', timer);
-
-        // Update title as well
-        handleUpdateContent();
-
         // VALIDATION:
         // Check if any question without a correct answer
 
@@ -2949,24 +2963,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return;
         }
 
+        // Update title as well
+        handleUpdateContent();
+
         // Points should be a string not a number
 
         const sanitizeProblems = problems.map((prob: any) => {
-            const { options } = prob;
-            const sanitizeOptions = options.map((option: any) => {
-                const clone = option;
+            const sanitizedProb = JSON.parse(JSON.stringify(prob), omitTypename);
 
-                delete clone.__typename;
-
-                return clone;
-            });
-
-            delete prob.__typename;
-            delete prob.problemIndex;
+            delete sanitizedProb.problemIndex;
             return {
-                ...prob,
+                ...sanitizedProb,
                 points: prob.points.toString(),
-                options: sanitizeOptions,
                 maxCharCount: prob.questionType === 'freeResponse' ? Number(prob.maxCharCount) : null,
             };
         });
@@ -2997,7 +3005,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             })
             .then((res: any) => {
                 if (res.data && res.data.quiz.modifyQuiz) {
-                    const server = fetchAPI('');
                     server
                         .query({
                             query: getQuiz,
@@ -3007,7 +3014,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         })
                         .then((res) => {
                             if (res.data && res.data.quiz.getQuiz) {
-                                setProblems(res.data.quiz.getQuiz.problems);
+                                setProblems(lodash.cloneDeep(res.data.quiz.getQuiz.problems));
                                 const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems);
                                 setUnmodifiedProblems(deepCopy);
                                 setInstructions(
@@ -3486,7 +3493,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     remainingAttempts={remainingAttempts}
                                     quizAttempts={quizAttempts}
                                     userId={userId}
-                                    user={props.user}
                                     shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                     setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
                                 />
@@ -3505,7 +3511,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             flexDirection: 'row',
                                             marginVertical: 50,
                                         }}
-                                        disabled={props.user.email === disableEmailId}
+                                        disabled={user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{
@@ -3556,7 +3562,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 remainingAttempts={remainingAttempts}
                                 quizAttempts={quizAttempts}
                                 userId={userId}
-                                user={props.user}
                                 shuffleQuizAttemptOrder={shuffleQuizAttemptOrder}
                                 setShuffleQuizAttemptOrder={(order: any[]) => setShuffleQuizAttemptOrder(order)}
                             />
@@ -3753,94 +3758,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                     />
                 </View>
-                {/* <Editor
-                    onInit={(evt, editor) => (editorRef.current = editor)}
-                    initialValue={initialOriginal}
-                    disabled={!isOwner && props.cue.channelId && props.cue.channelId !== ''}
-                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                    init={{
-                        skin: 'snow',
-                        // toolbar_sticky: true,
-                        branding: false,
-                        readonly: !isOwner && props.cue.channelId && props.cue.channelId !== '',
-                        placeholder: 'Content...',
-                        min_height: 500,
-                        paste_data_images: true,
-                        images_upload_url: 'https://api.learnwithcues.com/api/imageUploadEditor',
-                        mobile: {
-                            plugins:
-                                !isOwner && props.cue.channelId && props.cue.channelId !== ''
-                                    ? 'print preview'
-                                    : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                        },
-                        plugins:
-                            !isOwner && props.cue.channelId && props.cue.channelId !== ''
-                                ? 'print preview'
-                                : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                        menu: {
-                            // this is the complete default configuration
-                            file: { title: 'File', items: 'newdocument' },
-                            edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                            insert: { title: 'Insert', items: 'link media | template hr' },
-                            view: { title: 'View', items: 'visualaid' },
-                            format: {
-                                title: 'Format',
-                                items:
-                                    'bold italic underline strikethrough superscript subscript | formats | removeformat'
-                            },
-                            table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                            tools: { title: 'Tools', items: 'spellchecker code' }
-                        },
-                        setup: (editor: any) => {
-                            const equationIcon =
-                                '<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z"/><path d="M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z"/></svg>';
-                            editor.ui.registry.addIcon('formula', equationIcon);
-
-                            editor.ui.registry.addButton('formula', {
-                                icon: 'formula',
-                                tooltip: 'Insert equation',
-                                onAction: () => {
-                                    setShowEquationEditor(!showEquationEditor);
-                                }
-                            });
-
-                            editor.ui.registry.addButton('upload', {
-                                icon: 'upload',
-                                tooltip: 'Import File (pdf, docx, media, etc.)',
-                                onAction: async () => {
-                                    const res = await handleFile(false);
-
-                                    if (!res || res.url === '' || res.type === '') {
-                                        return;
-                                    }
-
-                                    updateAfterFileImport(res.url, res.type);
-                                }
-                            });
-                        },
-                        // menubar: 'file edit view insert format tools table tc help',
-                        menubar: false,
-                        toolbar:
-                            !isOwner && props.cue.channelId && props.cue.channelId !== ''
-                                ? false
-                                : 'undo redo | bold italic underline strikethrough | table image upload link media | forecolor backcolor |  numlist bullist checklist | fontselect fontSizeselect formatselect | formula superscript subscript charmap emoticons | alignleft aligncenter alignright alignjustify | casechange permanentpen formatpainter removeformat pagebreak | preview print | outdent indent ltr rtl ',
-                        importcss_append: true,
-                        image_caption: true,
-                        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-                        noneditable_noneditable_class: 'mceNonEditable',
-                        toolbar_mode: 'sliding',
-                        // tinycomments_mode: 'embedded',
-                        // content_style: '.mymention{ color: gray; }',
-                        // contextmenu: 'link image table configurepermanentpen',
-                        // a11y_advanced_options: true,
-                        extended_valid_elements:
-                            'svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]'
-                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                        // content_css: useDarkMode ? 'dark' : 'default',
-                    }}
-                    onChange={(e: any) => setOriginal(e.target.getContent())}
-                /> */}
-                {/* {renderSaveCueButton()} */}
             </View>
         );
     };
@@ -4058,6 +3975,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         );
     };
+
+    console.log('Subscribers', subscribers);
+    console.log('LimitedShare', limitedShares);
 
     /**
      * @description Share with component
@@ -5589,7 +5509,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 // If no more remaining attempts for quiz
                                 (isQuiz && remainingAttempts === 0) ||
                                 isSubmitting ||
-                                props.user.email === disableEmailId
+                                user.email === disableEmailId
                             }
                             onPress={() => handleSubmit()}
                             style={{ borderRadius: 15, backfaceVisibility: 'hidden' }}
@@ -5893,7 +5813,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     isOwner={false}
                                     headers={headers}
                                     attempts={quizAttempts}
-                                    user={props.user}
                                 />
                             ) : (remainingAttempts === 0 ||
                                   props.cue.releaseSubmission ||
