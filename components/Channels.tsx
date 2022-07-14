@@ -25,12 +25,9 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 }}
             >
                 <ChannelControls
-                    subscriptions={props.subscriptions}
                     closeModal={() => props.closeModal()}
-                    refreshSubscriptions={props.refreshSubscriptions}
                     setShowCreate={(val: any) => props.setShowCreate(val)}
                     showCreate={props.showCreate}
-                    user={props.user}
                 />
             </ScrollView>
         </View>

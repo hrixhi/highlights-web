@@ -14,7 +14,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
 import {
     getChannels,
     getEvents,
@@ -43,8 +42,11 @@ import { zoomClientId, zoomRedirectUri, disableEmailId } from '../constants/zoom
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId, org, user, cues, subscriptions } = useAppContext();
     const [tab, setTab] = useState(props.tab);
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
@@ -69,7 +71,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [editChannelName, setEditChannelName] = useState('');
     const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
-    const [userId, setUserId] = useState('');
     const [allActivity, setAllActivity] = useState<any[]>([]);
     const [activity, setActivity] = useState<any[]>([]);
     const [unreadCount, setUnreadCount] = useState<any>(0);
@@ -99,8 +100,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: channel.name,
         });
     });
-    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
-    const [meetingProvider, setMeetingProvider] = useState('');
+    const [userZoomInfo] = useState<any>(user.zoomInfo);
+    const [meetingProvider] = useState(org.meetingProvider ? org.meetingProvider : '');
     const [showFilterPopup, setShowFilterPopup] = useState(false);
     const [filterStart, setFilterStart] = useState<any>(null);
     const [filterEnd, setFilterEnd] = useState<any>(null);
@@ -142,20 +143,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         };
     }, []);
 
+    const server = useApolloClient();
+
     /**
      * @description Fetch meeting provider for org
      */
-    useEffect(() => {
-        (async () => {
-            const org = await AsyncStorage.getItem('school');
+    // useEffect(() => {
+    //     (async () => {
+    //         const org = await AsyncStorage.getItem('school');
 
-            if (org) {
-                const school = JSON.parse(org);
+    //         if (org) {
+    //             const school = JSON.parse(org);
 
-                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-            }
-        })();
-    }, []);
+    //             setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
+    //         }
+    //     })();
+    // }, []);
 
     /**
      * @description Fetch data on Init
@@ -163,41 +166,34 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, [props.subscriptions, userId]);
+    }, []);
 
     /**
      * @description Fetch user activity
      */
     useEffect(() => {
-        if (props.user) {
-            setUserId(props.user._id);
-            if (props.user.zoomInfo) {
-                setUserZoomInfo(props.user.zoomInfo);
-            }
-            const server = fetchAPI(props.user._id);
-            server
-                .query({
-                    query: getActivity,
-                    variables: {
-                        userId: props.user._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.activity.getActivity) {
-                        const tempActivity = res.data.activity.getActivity;
-                        let unread = 0;
-                        tempActivity.map((act: any) => {
-                            if (act.status === 'unread') {
-                                unread++;
-                            }
-                        });
-                        setUnreadCount(unread);
-                        setActivity(tempActivity);
-                        setAllActivity(tempActivity);
-                    }
-                });
-        }
-    }, [props.user]);
+        server
+            .query({
+                query: getActivity,
+                variables: {
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.activity.getActivity) {
+                    const tempActivity = res.data.activity.getActivity;
+                    let unread = 0;
+                    tempActivity.map((act: any) => {
+                        if (act.status === 'unread') {
+                            unread++;
+                        }
+                    });
+                    setUnreadCount(unread);
+                    setActivity(tempActivity);
+                    setAllActivity(tempActivity);
+                }
+            });
+    }, []);
 
     /**
      * @description Validate submit for creating events
@@ -302,7 +298,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Load all channels to filter data in Activity
      */
     const loadChannels = useCallback(async () => {
-        const server = fetchAPI('');
         server
             .query({
                 query: getChannels,
@@ -349,7 +344,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const repeatDays = recurring && frequency === '1-W' ? selectedDays : '';
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: createDateV1,
@@ -423,7 +417,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     ]);
 
     const markAlertsRead = useCallback(async () => {
-        const server = fetchAPI(userId);
         server
             .mutate({
                 mutation: markActivityAsRead,
@@ -487,7 +480,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 onPress: () => {
                     setIsEditingEvents(true);
 
-                    const server = fetchAPI('');
                     server
                         .mutate({
                             mutation: editDateV1,
@@ -532,7 +524,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             setIsDeletingEvents(true);
 
-            const server = fetchAPI('');
             server
                 .mutate({
                     mutation: deleteDateV1,
@@ -585,7 +576,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
 
         setLoading(true);
-        const server = fetchAPI(userId);
+
         server
             .query({
                 query: getEvents,
@@ -606,7 +597,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                         let colorCode = '#202025';
 
-                        const matchSubscription = props.subscriptions.find((sub: any) => {
+                        const matchSubscription = subscriptions.find((sub: any) => {
                             return sub.channelName === e.channelName;
                         });
 
@@ -667,7 +658,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     useNativeDriver: true,
                 }).start();
             });
-    }, [props.subscriptions, modalAnimation, userId]);
+    }, [subscriptions, modalAnimation, userId]);
 
     // FUNCTIONS
 
@@ -726,7 +717,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {
                     text: 'Delete',
                     onPress: async () => {
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: deleteDateV1,
@@ -1116,7 +1106,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
-                        disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                         style={{ marginRight: 15 }}
                         onPress={() => {
                             if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
@@ -1182,7 +1172,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text style={{ paddingLeft: 20 }}>Zoom meeting has been deleted or has expired</Text>
                 <TouchableOpacity
                     onPress={() => {
-                        const server = fetchAPI('');
                         server
                             .mutate({
                                 mutation: regenZoomMeeting,
@@ -1275,7 +1264,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     onPress={() => {
                         handleEdit();
                     }}
-                    disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
+                    disabled={isEditingEvents || isDeletingEvents || user.email === disableEmailId}
                 >
                     <Text
                         style={{
@@ -1320,7 +1309,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             },
                         ]);
                     }}
-                    disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
+                    disabled={isEditingEvents || isDeletingEvents || user.email === disableEmailId}
                 >
                     <Text
                         style={{
@@ -1371,7 +1360,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 },
                             ]);
                         }}
-                        disabled={isEditingEvents || isDeletingEvents || props.user.email === disableEmailId}
+                        disabled={isEditingEvents || isDeletingEvents || user.email === disableEmailId}
                     >
                         <Text
                             style={{
@@ -1532,7 +1521,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             { value: 'My Events', text: 'My Events' },
         ];
 
-        props.subscriptions.map((sub: any) => {
+        subscriptions.map((sub: any) => {
             channelOptions.push({
                 value: sub.channelId,
                 text: sub.channelName,
@@ -1952,7 +1941,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         flexDirection: 'row',
                                         alignItems: 'center',
                                     }}
-                                    disabled={props.user.email === disableEmailId}
+                                    disabled={user.email === disableEmailId}
                                 >
                                     <Ionicons name="checkmark-done-outline" size={18} color="#000" />
                                     <Text
@@ -2132,19 +2121,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <TouchableOpacity
                                                             key={index.toString()}
                                                             onPress={async () => {
-                                                                const uString: any = await AsyncStorage.getItem('user');
-                                                                if (uString) {
-                                                                    const user = JSON.parse(uString);
-                                                                    const server = fetchAPI('');
-                                                                    server.mutate({
-                                                                        mutation: markActivityAsRead,
-                                                                        variables: {
-                                                                            activityId: act._id,
-                                                                            userId: user._id,
-                                                                            markAllRead: false,
-                                                                        },
-                                                                    });
-                                                                }
+                                                                server.mutate({
+                                                                    mutation: markActivityAsRead,
+                                                                    variables: {
+                                                                        activityId: act._id,
+                                                                        userId,
+                                                                        markAllRead: false,
+                                                                    },
+                                                                });
 
                                                                 // Opens the cue from the activity
                                                                 if (
@@ -2606,7 +2590,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 backgroundColor: '#f2f2f2',
                                                                 paddingHorizontal: 10,
                                                             }}
-                                                            disabled={props.user.email === disableEmailId}
+                                                            disabled={user.email === disableEmailId}
                                                         >
                                                             <Text
                                                                 style={{
@@ -2643,9 +2627,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 marginBottom: 20,
                                                             }}
                                                             onPress={() => handleCreate()}
-                                                            disabled={
-                                                                isCreatingEvents || props.user.email === disableEmailId
-                                                            }
+                                                            disabled={isCreatingEvents || user.email === disableEmailId}
                                                         >
                                                             <Text
                                                                 style={{

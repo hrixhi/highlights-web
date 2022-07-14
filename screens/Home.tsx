@@ -1,20 +1,17 @@
 // REACT
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useContext } from 'react';
 import { StyleSheet, Animated, ActivityIndicator, Dimensions, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
 import {
     getSubscriptions,
     getCues,
-    saveCuesToCloud,
     login,
     getCuesFromCloud,
     findUserById,
     resetPassword,
-    totalInboxUnread,
     signup,
     authWithProvider,
     getOrganisation,
@@ -52,23 +49,14 @@ import { StreamChat } from 'stream-chat';
 import { StreamChatGenerics } from '../components/ChatComponents/types';
 import useSound from 'use-sound';
 import alertSound from '../assets/sounds/alertSound.mp3';
+import { useApolloClient, useLazyQuery, useQuery } from '@apollo/client';
+
+import { omitTypename } from '../helpers/omitTypename';
+import { useAppContext } from '../contexts/AppContext';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    // read/learn
-    const version = 'learn';
-
-    // Dev/Prod
-    const env = 'DEV';
-
     const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
-
-    // Categories for Home
-    const [customCategories, setCustomCategories] = useState<any[]>([]);
-    // All channels
-    const [subscriptions, setSubscriptions] = useState<any[]>([]);
-    // All cues
-    const [cues, setCues] = useState<any>({});
 
     const [fadeAnimation] = useState(new Animated.Value(0));
 
@@ -98,7 +86,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
     const [openChannelId, setOpenChannelId] = useState('');
     const [passwordValidError, setPasswordValidError] = useState('');
-    const [user, setUser] = useState<any>(null);
+    // const [user, setUser] = useState<any>(null);
 
     const [tab, setTab] = useState('Agenda');
     const [showDirectory, setShowDirectory] = useState<any>(false);
@@ -114,8 +102,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const invalidCredentialsAlert = PreferredLanguageText('invalidCredentials');
     const unableToRefreshCuesAlert = PreferredLanguageText('unableToRefreshCues');
     const passwordInvalidError = PreferredLanguageText('atleast8char');
-    const [filterStart, setFilterStart] = useState<any>(new Date());
-    const [filterEnd, setFilterEnd] = useState<any>(null);
     const [showOnboardModal, setShowOnboardModal] = useState(false);
 
     const [option, setOption] = useState('To Do');
@@ -125,10 +111,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [showHome, setShowHome] = useState(true);
     const [hideNewChatButton, setHideNewChatButton] = useState(false);
 
-    const [loadingCues, setLoadingCues] = useState(true);
-    const [loadingSubs, setLoadingSubs] = useState(true);
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [loadingOrg, setLoadingOrg] = useState(true);
     const [accountTabs] = useState(['profile', 'courses']);
     const [activeAccountTab, setActiveAccountTab] = useState('profile');
 
@@ -150,6 +132,74 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [streamUserToken, setStreamUserToken] = useState('');
     const [chatClient, setChatClient] = useState<any>(undefined);
     const [alertNotifSound] = useSound(alertSound, { volume: 0.2 });
+
+    const server = useApolloClient();
+    const {
+        userId,
+        user,
+        org,
+        handleSetOrg,
+        subscriptions,
+        handleSetUser,
+        handleSetCues,
+        handleSetSubscriptions,
+        cues,
+        customCategories,
+        handleReadCue,
+    } = useAppContext();
+
+    // QUERIES
+
+    const [fetchUser, { loading: loadingUser, error: userError, data: userData }] = useLazyQuery(findUserById, {
+        variables: { id: userId },
+    });
+
+    const [fetchOrg, { loading: loadingOrg, error: orgError, data: orgData }] = useLazyQuery(getOrganisation, {
+        variables: { userId },
+    });
+
+    const [fetchCues, { loading: loadingCues, error: cuesError, data: cuesData }] = useLazyQuery(getCuesFromCloud, {
+        variables: { userId },
+    });
+
+    const [fetchSubs, { loading: loadingSubs, error: subsError, data: subsData }] = useLazyQuery(getSubscriptions, {
+        variables: { userId },
+    });
+
+    // INIT
+    useEffect(() => {
+        if (userId) {
+            fetchSubs();
+            fetchUser();
+            fetchOrg();
+            fetchCues();
+            fetchStreamUserToken(userId);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        if (userData) {
+            handleSetUser(userData.user.findById);
+        }
+    }, [userData]);
+
+    useEffect(() => {
+        if (subsData) {
+            handleSetSubscriptions(subsData.subscription.findByUserId);
+        }
+    }, [subsData]);
+
+    useEffect(() => {
+        if (orgData) {
+            handleSetOrg(orgData.school.findByUserId);
+        }
+    }, [orgData]);
+
+    useEffect(() => {
+        if (cuesData) {
+            handleSetCues(cuesData.cue.getCuesFromCloud);
+        }
+    }, [cuesData]);
 
     useEffect(() => {
         if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -192,6 +242,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, [fullName, email, password, confirmPassword, signingUp]);
 
+    // FOR NATIVE AND DESKTOP APPS WE WILL SHOW LOGIN SCREEN
+    useEffect(() => {
+        console.log('USer ID', userId);
+        if (!userId || userId === '') {
+            window.location.replace(`${origin}/login`);
+        }
+    }, [userId]);
+
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
         setDimensions({ window, screen });
@@ -226,28 +284,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         );
     }, []);
 
-    useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            // const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
+    // useEffect(() => {
+    //     (async () => {
+    //         const u = await AsyncStorage.getItem('user');
+    //         // const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
 
-            if (u) {
-                const parsedUser: any = JSON.parse(u);
+    //         if (u) {
+    //             const parsedUser: any = JSON.parse(u);
 
-                if (parsedUser._id && parsedUser._id !== '') {
-                    await loadDataFromCloud();
-                    // OneSignal.setExternalUserId(parsedUser._id);
-                    fetchStreamUserToken(parsedUser._id);
-                } else {
-                    // setShowLoginWindow(true);
-                    window.location.href = `${origin}/login`;
-                }
-            } else {
-                // setShowLoginWindow(true);
-                window.location.href = `${origin}/login`;
-            }
-        })();
-    }, []);
+    //             if (parsedUser._id && parsedUser._id !== '') {
+    //                 await loadDataFromCloud();
+    //                 // OneSignal.setExternalUserId(parsedUser._id);
+    //                 fetchStreamUserToken(parsedUser._id);
+    //             } else {
+    //                 // setShowLoginWindow(true);
+    //                 window.location.href = `${origin}/login`;
+    //             }
+    //         } else {
+    //             // setShowLoginWindow(true);
+    //             window.location.href = `${origin}/login`;
+    //         }
+    //     })();
+    // }, []);
 
     // CHAT
     // INITIALIZE CHAT
@@ -356,234 +414,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         };
     }, [chatClient]);
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const u = await AsyncStorage.getItem('user');
-
-    //         if (u) {
-    //             const user = JSON.parse(u);
-
-    //             const server = fetchAPI('');
-
-    //             server
-    //                 .query({
-    //                     query: totalInboxUnread,
-    //                     variables: {
-    //                         userId: user._id,
-    //                     },
-    //                 })
-    //                 .then((res) => {
-    //                     if (res.data.messageStatus.totalInboxUnread) {
-    //                         setUnreadMessages(res.data.messageStatus.totalInboxUnread);
-    //                     }
-    //                 });
-    //         }
-    //     })();
-    // }, []);
-
-    // const refreshUnreadInbox = useCallback(async () => {
-    //     const u = await AsyncStorage.getItem('user');
-    //     if (u) {
-    //         const user = JSON.parse(u);
-    //         updateInboxCount(user._id);
-    //     }
-    // }, []);
-
-    // const updateInboxCount = useCallback((userId) => {
-    //     const server = fetchAPI('');
-    //     server
-    //         .query({
-    //             query: totalInboxUnread,
-    //             variables: {
-    //                 userId,
-    //                 channelId,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             if (
-    //                 res.data.messageStatus.totalInboxUnread !== undefined &&
-    //                 res.data.messageStatus.totalInboxUnread !== null
-    //             ) {
-    //                 setUnreadMessages(res.data.messageStatus.totalInboxUnread);
-    //             }
-    //         })
-    //         .catch((err) => console.log(err));
-    // }, []);
-
-    // imp
-    const refreshChannelCues = useCallback(async () => {
-        let user = await AsyncStorage.getItem('user');
-        const unparsedCues = await AsyncStorage.getItem('cues');
-        if (user && unparsedCues) {
-            const allCues = JSON.parse(unparsedCues);
-            const parsedUser = JSON.parse(user);
-            const server = fetchAPI(parsedUser._id);
-
-            try {
-                const res = await server.query({
-                    query: getCues,
-                    variables: {
-                        userId: parsedUser._id,
-                    },
-                });
-
-                if (res.data.cue.findByUserId) {
-                    // Here we load all new Cues
-                    // we update statuses for the cues that are already stored and add new cues to the list
-                    // (cant directly replace the store because channel cues could be modified by the user)
-                    const receivedCues = res.data.cue.findByUserId;
-                    receivedCues.map((item: any) => {
-                        const channelId = item.channelId.toString().trim();
-                        let index = -1;
-                        if (allCues[channelId]) {
-                            index = allCues[channelId].findIndex((cue: any) => {
-                                return cue._id.toString().trim() === item._id.toString().trim();
-                            });
-                        }
-                        if (index === -1) {
-                            let cue: any = {};
-                            cue = {
-                                ...item,
-                            };
-                            delete cue.__typename;
-                            if (allCues[cue.channelId]) {
-                                allCues[cue.channelId].push(cue);
-                            } else {
-                                allCues[cue.channelId] = [cue];
-                            }
-                        } else {
-                            allCues[item.channelId][index].unreadThreads = item.unreadThreads ? item.unreadThreads : 0;
-                            allCues[item.channelId][index].status = item.status;
-                            allCues[item.channelId][index].folderId = item.folderId;
-                            if (!allCues[item.channelId][index].original) {
-                                allCues[item.channelId][index].original = item.cue;
-                            }
-                        }
-                    });
-                    const custom: any = {};
-                    setCues(allCues);
-                    if (allCues['local']) {
-                        allCues['local'].map((item: any) => {
-                            if (item.customCategory !== '') {
-                                if (!custom[item.customCategory]) {
-                                    custom[item.customCategory] = 0;
-                                }
-                            }
-                        });
-                        const customC: any[] = [];
-                        Object.keys(custom).map((item) => {
-                            customC.push(item);
-                        });
-                        customC.sort();
-                        setCustomCategories(customC);
-                    }
-                    const stringCues = JSON.stringify(allCues);
-                    await AsyncStorage.setItem('cues', stringCues);
-                    Animated.timing(fadeAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true,
-                    }).start();
-                }
-            } catch (err) {
-                Alert(unableToRefreshCuesAlert, checkConnectionAlert);
-                const custom: any = {};
-                setCues(allCues);
-                if (allCues['local']) {
-                    allCues['local'].map((item: any) => {
-                        if (item.customCategory !== '') {
-                            if (!custom[item.customCategory]) {
-                                custom[item.customCategory] = 0;
-                            }
-                        }
-                    });
-                    const customC: any[] = [];
-                    Object.keys(custom).map((item) => {
-                        customC.push(item);
-                    });
-                    customC.sort();
-                    setCustomCategories(customC);
-                }
-                Animated.timing(fadeAnimation, {
-                    toValue: 1,
-                    duration: 150,
-                    useNativeDriver: true,
-                }).start();
-            }
-        } else if (unparsedCues) {
-            const custom: any = {};
-            const allCues = JSON.parse(unparsedCues);
-            setCues(allCues);
-            if (allCues['local']) {
-                allCues['local'].map((item: any) => {
-                    if (item.customCategory !== '') {
-                        if (!custom[item.customCategory]) {
-                            custom[item.customCategory] = 0;
-                        }
-                    }
-                });
-                const customC: any[] = [];
-                Object.keys(custom).map((item) => {
-                    customC.push(item);
-                });
-                customC.sort();
-                setCustomCategories(customC);
-            }
-            Animated.timing(fadeAnimation, {
-                toValue: 1,
-                duration: 150,
-                useNativeDriver: true,
-            }).start();
-        }
-    }, []);
-
-    // FETCH NEW DATA
-    const loadData = useCallback(
-        async (saveData?: boolean) => {
-            try {
-                // const version = 'v0.9';
-                // const fO = await AsyncStorage.getItem(version);
-
-                // LOAD FIRST OPENED
-                // if (fO === undefined || fO === null) {
-                //     try {
-                //         await AsyncStorage.clear();
-                //         await AsyncStorage.setItem(version, 'SET');
-                //     } catch (e) {}
-                // }
-
-                let u = await AsyncStorage.getItem('user');
-                // const sC = await AsyncStorage.getItem('cues');
-
-                // if (sC) {
-                // await refreshChannelCues();
-                // }
-                // HANDLE PROFILE
-                if (u) {
-                    const parsedUser = JSON.parse(u);
-                    if (parsedUser.email) {
-                        if (saveData) {
-                            // Used for local cues since they are stored in Async Storage first and then saved to cloud // ALLOW OFFLINE
-                            await saveDataInCloud();
-                        } else {
-                            // REFRESH LOCAL STORAGE (USED FOR EXISTING CUES)
-                            await loadDataFromCloud();
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        },
-        [fadeAnimation]
-    );
-
     const handleSocialAuth = (user: any) => {
         const profile = user._profile;
 
         const { name, email, profilePicURL } = profile;
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: authWithProvider,
@@ -600,11 +435,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     r.data.user.authWithProvider.token &&
                     !r.data.user.authWithProvider.error
                 ) {
-                    const u = r.data.user.authWithProvider.user;
+                    const u = JSON.parse(JSON.stringify(r.data.user.authWithProvider.user), omitTypename);
                     const token = r.data.user.authWithProvider.token;
-                    if (u.__typename) {
-                        delete u.__typename;
-                    }
 
                     const userId = u._id;
 
@@ -614,7 +446,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     await AsyncStorage.setItem('jwt_token', token);
                     await AsyncStorage.setItem('user', sU);
                     setShowLoginWindow(false);
-                    loadDataFromCloud();
+                    // loadDataFromCloud();
                 } else {
                     const { error } = r.data.user.authWithProvider;
                     Alert(error);
@@ -643,7 +475,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [password]);
 
     const fetchStreamUserToken = useCallback(async (userId: string) => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: getStreamChatUserToken,
@@ -669,7 +500,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
 
         setSigningUp(true);
-        const server = fetchAPI('');
+
         server
             .mutate({
                 mutation: signup,
@@ -699,7 +530,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     // Move to profile page
     const handleLogin = useCallback(() => {
-        const server = fetchAPI('');
         server
             .query({
                 query: login,
@@ -712,9 +542,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
                     const u = r.data.user.login.user;
                     const token = r.data.user.login.token;
-                    if (u.__typename) {
-                        delete u.__typename;
-                    }
+                    // if (u.__typename) {
+                    //     delete u.__typename;
+                    // }
 
                     const userId = u._id;
 
@@ -724,7 +554,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     await AsyncStorage.setItem('jwt_token', token);
                     await AsyncStorage.setItem('user', sU);
                     setShowLoginWindow(false);
-                    loadDataFromCloud();
                 } else {
                     const { error } = r.data.user.login;
                     Alert(error);
@@ -737,238 +566,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [email, password]);
 
     // imp
-    const loadDataFromCloud = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-
-        if (u) {
-            setLoadingCues(true);
-            setLoadingSubs(true);
-            setLoadingUser(true);
-            setLoadingOrg(true);
-
-            const user = JSON.parse(u);
-            const server = fetchAPI(user._id);
-            // Get User info
-            server
-                .query({
-                    query: findUserById,
-                    variables: {
-                        id: user._id,
-                    },
-                })
-                .then(async (res) => {
-                    const u = res.data.user.findById;
-
-                    if (u) {
-                        // await AsyncStorage.setItem('cueDraft', u.currentDraft);
-                        delete u.currentDraft;
-                        delete u.__typename;
-                        const sU = JSON.stringify(u);
-                        await AsyncStorage.setItem('user', sU);
-
-                        setUser(u);
-                        setLoadingUser(false);
-                    }
-                })
-                .catch((err) => console.log(err));
-            // Get user cues
-            server
-                .query({
-                    query: getCuesFromCloud,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data.cue.getCuesFromCloud) {
-                        const allCues: any = {};
-                        res.data.cue.getCuesFromCloud.map((cue: any) => {
-                            const channelId = cue.channelId && cue.channelId !== '' ? cue.channelId : 'local';
-                            delete cue.__typename;
-                            if (allCues[channelId]) {
-                                allCues[channelId].push({ ...cue });
-                            } else {
-                                allCues[channelId] = [{ ...cue }];
-                            }
-                        });
-                        const custom: any = {};
-                        if (allCues['local']) {
-                            allCues['local'].map((item: any) => {
-                                if (item.customCategory !== '') {
-                                    if (!custom[item.customCategory]) {
-                                        custom[item.customCategory] = 0;
-                                    }
-                                }
-                            });
-                        } else {
-                            allCues['local'] = [];
-                        }
-
-                        const customC: any[] = [];
-                        Object.keys(custom).map((item) => {
-                            customC.push(item);
-                        });
-                        customC.sort();
-                        setCues(allCues);
-                        setCustomCategories(customC);
-                        const stringCues = JSON.stringify(allCues);
-                        await AsyncStorage.setItem('cues', stringCues);
-                        setLoadingCues(false);
-                    }
-                })
-                .catch((err) => console.log(err));
-            // Get subscription information
-            server
-                .query({
-                    query: getSubscriptions,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data.subscription.findByUserId) {
-                        const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
-                            if (a.channelName < b.channelName) {
-                                return -1;
-                            }
-                            if (a.channelName > b.channelName) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                        setSubscriptions(sortedSubs);
-                        const stringSub = JSON.stringify(sortedSubs);
-                        await AsyncStorage.setItem('subscriptions', stringSub);
-                        setLoadingSubs(false);
-                    }
-                })
-                .catch((err) => console.log(err));
-            server
-                .query({
-                    query: getOrganisation,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data && res.data.school.findByUserId) {
-                        const stringOrg = JSON.stringify(res.data.school.findByUserId);
-                        await AsyncStorage.setItem('school', stringOrg);
-                        setLoadingOrg(false);
-                    } else {
-                        setLoadingOrg(false);
-                    }
-                })
-                .catch((err) => console.log(err));
-        }
-    }, []);
-
-    // imp
-    const saveDataInCloud = useCallback(async () => {
-        if (saveDataInProgress) return;
-
-        const u: any = await AsyncStorage.getItem('user');
-        const parsedUser = JSON.parse(u);
-        const sC: any = await AsyncStorage.getItem('cues');
-        const parsedCues = JSON.parse(sC);
-
-        const allCuesToSave: any[] = [];
-        const allCues: any[] = [];
-
-        if (parsedCues !== {}) {
-            Object.keys(parsedCues).map((key) => {
-                parsedCues[key].map((cue: any) => {
-                    const cueInput = {
-                        ...cue,
-                        _id: cue._id.toString(),
-                        color: cue.color.toString(),
-                        date: new Date(cue.date).toISOString(),
-                        gradeWeight: cue.submission && cue.gradeWeight ? cue.gradeWeight.toString() : undefined,
-                        totalPoints: cue.submission && cue.totalPoints ? cue.totalPoints.toString() : undefined,
-                        endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? new Date(cue.endPlayAt).toISOString() : '',
-                        allowedAttempts:
-                            cue.allowedAttempts && cue.allowedAttempts !== null ? cue.allowedAttempts.toString() : null,
-                    };
-                    allCuesToSave.push({ ...cueInput });
-                    // Deleting these because they should not be changed ...
-                    // but dont delete if it is the person who has made the cue
-                    // -> because those channel Cue changes are going to be propagated
-                    delete cueInput.score;
-                    // delete cueInput.deadline;
-                    delete cueInput.graded;
-                    delete cueInput.submittedAt;
-                    // delete cueInput.gradeWeight;
-                    // delete cueInput.submission;
-                    delete cueInput.comment;
-
-                    // this change is propagated only when the user actively changes folder structure...
-                    delete cueInput.folderId;
-
-                    delete cueInput.unreadThreads;
-                    // delete cueInput.createdBy;
-                    // delete cueInput.original;
-                    delete cueInput.status;
-                    delete cueInput.channelName;
-                    delete cueInput.__typename;
-                    allCues.push(cueInput);
-                });
-            });
-        }
-
-        const server = fetchAPI('');
-
-        // UPDATE CUES
-        server
-            .mutate({
-                mutation: saveCuesToCloud,
-                variables: {
-                    userId: parsedUser._id,
-                    cues: allCues,
-                },
-            })
-            .then(async (res) => {
-                if (res.data.cue.saveCuesToCloud) {
-                    const newIds: any = res.data.cue.saveCuesToCloud;
-                    const updatedCuesArray: any[] = [];
-                    allCuesToSave.map((c: any) => {
-                        const id = c._id;
-                        const updatedItem = newIds.find((i: any) => {
-                            return id.toString().trim() === i.oldId.toString().trim();
-                        });
-                        if (updatedItem) {
-                            updatedCuesArray.push({
-                                ...c,
-                                _id: updatedItem.newId,
-                            });
-                        } else {
-                            updatedCuesArray.push(c);
-                        }
-                    });
-                    const updatedCuesObj: any = {};
-                    updatedCuesArray.map((c: any) => {
-                        if (c.channelId && c.channelId !== '') {
-                            if (updatedCuesObj[c.channelId]) {
-                                updatedCuesObj[c.channelId].push(c);
-                            } else {
-                                updatedCuesObj[c.channelId] = [c];
-                            }
-                        } else {
-                            if (updatedCuesObj['local']) {
-                                updatedCuesObj['local'].push(c);
-                            } else {
-                                updatedCuesObj['local'] = [c];
-                            }
-                        }
-                    });
-                    const updatedCues = JSON.stringify(updatedCuesObj);
-                    await AsyncStorage.setItem('cues', updatedCues);
-                    if (newIds.length !== 0) {
-                        setCues(updatedCuesObj);
-                    }
-                }
-            })
-            .catch((err) => console.log(err));
-    }, [cues]);
 
     const openModal = useCallback(
         async (type) => {
@@ -1035,44 +632,43 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         [subscriptions, selectedWorkspace]
     );
 
-    const reloadCueListAfterUpdate = useCallback(async () => {
-        const unparsedCues = await AsyncStorage.getItem('cues');
-        const u = await AsyncStorage.getItem('user');
-        if (unparsedCues) {
-            const allCues = JSON.parse(unparsedCues);
-            const custom: any = {};
-            setCues(allCues);
-            if (allCues['local']) {
-                allCues['local'].map((item: any) => {
-                    if (item.customCategory !== '') {
-                        if (!custom[item.customCategory]) {
-                            custom[item.customCategory] = 0;
-                        }
-                    }
-                });
-                const customC: any[] = [];
-                Object.keys(custom).map((item) => {
-                    customC.push(item);
-                });
-                customC.sort();
-                setCustomCategories(customC);
-            }
-            Animated.timing(fadeAnimation, {
-                toValue: 1,
-                duration: 150,
-                useNativeDriver: true,
-            }).start();
-        }
-        if (u) {
-            const user = JSON.parse(u);
-            if (user.email) {
-                await saveDataInCloud();
-            }
-        }
-    }, []);
+    // const reloadCueListAfterUpdate = useCallback(async () => {
+    //     const unparsedCues = await AsyncStorage.getItem('cues');
+    //     const u = await AsyncStorage.getItem('user');
+    //     if (unparsedCues) {
+    //         const allCues = JSON.parse(unparsedCues);
+    //         const custom: any = {};
+    //         setCues(allCues);
+    //         if (allCues['local']) {
+    //             allCues['local'].map((item: any) => {
+    //                 if (item.customCategory !== '') {
+    //                     if (!custom[item.customCategory]) {
+    //                         custom[item.customCategory] = 0;
+    //                     }
+    //                 }
+    //             });
+    //             const customC: any[] = [];
+    //             Object.keys(custom).map((item) => {
+    //                 customC.push(item);
+    //             });
+    //             customC.sort();
+    //             setCustomCategories(customC);
+    //         }
+    //         Animated.timing(fadeAnimation, {
+    //             toValue: 1,
+    //             duration: 150,
+    //             useNativeDriver: true,
+    //         }).start();
+    //     }
+    //     if (u) {
+    //         const user = JSON.parse(u);
+    //         if (user.email) {
+    //             await saveDataInCloud();
+    //         }
+    //     }
+    // }, []);
 
     const forgotPassword = useCallback(() => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: resetPassword,
@@ -1090,67 +686,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
     }, [email]);
 
-    const refreshSubscriptions = async () => {
-        const u = await AsyncStorage.getItem('user');
-
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            const server = fetchAPI(parsedUser._id);
-            server
-                .query({
-                    query: getSubscriptions,
-                    variables: {
-                        userId: parsedUser._id,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data.subscription.findByUserId) {
-                        const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
-                            if (a.channelName < b.channelName) {
-                                return -1;
-                            }
-                            if (a.channelName > b.channelName) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                        setSubscriptions(sortedSubs);
-                        const stringSub = JSON.stringify(sortedSubs);
-                        await AsyncStorage.setItem('subscriptions', stringSub);
-                    }
-                })
-                .catch((e) => {
-                    alert('Could not refresh Subscriptions');
-                });
-        }
-    };
-
     const markCueAsRead = useCallback(async () => {
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem('cues');
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) {}
-        if (subCues[updateModalKey].length === 0) {
-            return;
-        }
-
-        const unmodified = subCues ? subCues[updateModalKey][updateModalIndex] : {};
+        const unmodified = cues ? cues[updateModalKey][updateModalIndex] : {};
 
         if (!unmodified) return;
 
-        const modified = {
-            ...unmodified,
-            status: 'read',
-        };
-
-        subCues[updateModalKey][updateModalIndex] = modified;
-
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem('cues', stringifiedCues);
-        reloadCueListAfterUpdate();
+        if (unmodified.channelId) {
+            handleReadCue(unmodified._id);
+        }
     }, [cues, updateModalKey, updateModalIndex]);
 
     const closeModal = useCallback(async () => {
@@ -1172,23 +715,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setChannelId('');
         }
 
-        await loadData();
         setClosingModal(false);
     }, [fadeAnimation, modalType, option]);
-
-    const cuesArray: any[] = [];
-
-    if (cues !== {}) {
-        Object.keys(cues).map((key) => {
-            cues[key].map((cue: any, index: number) => {
-                cuesArray.push({
-                    ...cue,
-                    key,
-                    index,
-                });
-            });
-        });
-    }
 
     /**
      * @description Helpter for icon to use in navbar
@@ -1308,16 +836,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return 'Settings';
         }
     };
-
-    let dateFilteredCues: any[] = [];
-    if (filterStart && filterEnd) {
-        dateFilteredCues = cuesArray.filter((item) => {
-            const date = new Date(item.date);
-            return date >= filterStart && date <= filterEnd;
-        });
-    } else {
-        dateFilteredCues = cuesArray;
-    }
 
     return (
         <View style={styles(channelId).container} key={showHome.toString() + option.toString() + tab.toString()}>
@@ -1610,18 +1128,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0,
                         }}
                     >
-                        {loadingCues ||
-                        loadingUser ||
-                        loadingSubs ||
-                        loadingOrg ||
-                        saveDataInProgress ||
-                        closingModal ? (
+                        {!user || !org || !cues || loadingUser || loadingSubs || loadingCues || loadingOrg ? (
                             <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                                 <ActivityIndicator color={'#1F1F1F'} />
                             </View>
                         ) : (
                             <Dashboard
-                                version={version}
                                 setTab={(val: any) => setTab(val)}
                                 tab={tab}
                                 setShowCreate={(val: any) => setShowCreate(val)}
@@ -1633,30 +1145,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 setOption={(op: any) => setOption(op)}
                                 option={option}
                                 options={options}
-                                refreshSubscriptions={refreshSubscriptions}
-                                hideHome={() => {
-                                    setShowHome(false);
-                                    loadData();
-                                }}
                                 closeModal={() => {
                                     setShowHome(true);
                                     closeModal();
                                 }}
-                                saveDataInCloud={async () => await saveDataInCloud()}
                                 reOpenProfile={() => {
                                     setModalType('');
                                     openModal('Profile');
                                 }}
-                                reloadData={() => {
-                                    loadDataFromCloud();
-                                }}
                                 openCreate={() => {
                                     openModal('Create');
                                 }}
-                                cues={dateFilteredCues}
                                 setChannelId={(id: string) => setChannelId(id)}
                                 setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-                                subscriptions={subscriptions}
+                                // subscriptions={subscriptions}
                                 openDiscussion={() => openModal('Discussion')}
                                 openSubscribers={() => openModal('Subscribers')}
                                 openGrades={() => openModal('Grades')}
@@ -1746,7 +1248,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 setSelectedWorkspace={(val: any) => {
                                     setSelectedWorkspace(val);
                                 }}
-                                user={user}
                                 setShowImportCreate={(showImport: boolean) => setShowImportCreate(showImport)}
                                 showImportCreate={showImportCreate}
                                 showVideosCreate={showVideosCreate}
@@ -1775,7 +1276,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             >
                 {modalType === 'Update' ? (
                     <Update
-                        version={version}
                         key={cueId.toString()}
                         customCategories={customCategories}
                         cue={cues[updateModalKey][updateModalIndex]}
@@ -1787,10 +1287,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         channelId={channelId}
                         channelCreatedBy={channelCreatedBy}
                         channelCues={cues[channelId]}
-                        reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
                         target={target}
                         openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
-                        refreshCues={refreshChannelCues}
                         user={user}
                         subscriptions={subscriptions}
                     />

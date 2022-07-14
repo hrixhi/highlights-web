@@ -1,11 +1,11 @@
 // REACT
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions } from 'react-native';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     createCue,
     createQuiz,
@@ -57,10 +57,15 @@ import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { htmlStringParser } from '../helpers/HTMLParser';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId, user, customCategories: localCustomCategories, handleUpdateCue, handleAddCue } = useAppContext();
+
     const current = new Date();
     const [cue, setCue] = useState('<h2>Title</h2>');
+    const [init, setInit] = useState(false);
     const [cueDraft, setCueDraft] = useState('');
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [shuffle, setShuffle] = useState(false);
@@ -69,8 +74,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [color, setColor] = useState(0);
     const [frequency, setFrequency] = useState('0');
     const [customCategory, setCustomCategory] = useState('None');
-    const [localCustomCategories] = useState(props.customCategories);
-    const [customCategories, setCustomCategories] = useState(props.customCategories);
+    const [customCategories, setCustomCategories] = useState(localCustomCategories);
     const [addCustomCategory, setAddCustomCategory] = useState(false);
     const [channels, setChannels] = useState<any[]>([]);
     const [channelOptions, setChannelOptions] = useState<any[]>([]);
@@ -85,9 +89,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [modalAnimation] = useState(new Animated.Value(0));
     let RichText: any = useRef();
     let editorRef: any = useRef();
-    const [init, setInit] = useState(false);
-    const [role, setRole] = useState('');
-    const [allowQuizCreation, setAllowQuizCreation] = useState(false);
+    const [role, setRole] = useState(user.role);
+    const [allowQuizCreation, setAllowQuizCreation] = useState(user.allowQuizCreation ? true : false);
     const [submission, setSubmission] = useState(false);
     const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24));
     const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()));
@@ -123,7 +126,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const window = Dimensions.get('window');
     const screen = Dimensions.get('screen');
     const [dimensions, setDimensions] = useState({ window, screen });
-    const [userId, setUserId] = useState('');
 
     const [totalPoints, setTotalPoints] = useState('');
 
@@ -195,6 +197,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             setShowInsertYoutubeVideosModal(true);
         },
     });
+
+    const server = useApolloClient();
 
     // HOOKS
 
@@ -334,17 +338,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [url, RichText, imported, type, showOptions, showBooks, isQuiz]);
 
     /**
-     * @description Sets user role
-     */
-    useEffect(() => {
-        if (props.user) {
-            setUserId(props.user._id);
-            setRole(props.user.role);
-            setAllowQuizCreation(props.user.allowQuizCreation);
-        }
-    }, [props.user]);
-
-    /**
      * @description Loads channel categories and subscribers for Create
      */
     useEffect(() => {
@@ -408,23 +401,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const h = await AsyncStorage.getItem('cueDraft');
                 if (h && h !== '') {
                     if (h[0] === '{' && h[h.length - 1] === '}') {
-                        // const obj = JSON.parse(h);
                         setImported(true);
-                        // setUrl(obj.url);
-                        // setType(obj.type);
-                        // setTitle(obj.title);
                     } else {
                         setImported(false);
                         setUrl('');
                         setType('');
                         setTitle('');
                     }
+
                     setCue(h);
                     setCueDraft(h);
                     setReloadEditorKey(Math.random());
                 }
                 const quizDraft = await AsyncStorage.getItem('quizDraft');
-                if (quizDraft !== null) {
+
+                if (quizDraft && quizDraft !== null) {
                     const { duration, timer, problems, title, headers, quizInstructions } = JSON.parse(quizDraft);
                     setDuration(duration);
                     setTimer(timer);
@@ -433,7 +424,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setHeaders(headers);
                     setQuizInstructions(quizInstructions);
                 }
+                // setInit(true);
             } catch (e) {
+                // setInit(true);
                 console.log(e);
             }
         };
@@ -1036,9 +1029,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         });
 
-        console.log('Sanitized problems', sanitizeProblems);
-
-        const server = fetchAPI('');
         const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
         server
             .mutate({
@@ -1071,7 +1061,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         cue,
         modalAnimation,
         customCategory,
-        props.saveDataInCloud,
         isQuiz,
         gradeWeight,
         deadline,
@@ -1104,18 +1093,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     /**
      * @description Loads channel Categories and subscribers for Create optins
      */
-    const loadChannelCategoriesAndSubscribers = useCallback(async () => {
-        const uString: any = await AsyncStorage.getItem('user');
-
-        const userId = JSON.parse(uString);
-        if (userId.role) {
-            setRole(userId.role);
-        }
+    const loadChannelCategoriesAndSubscribers = useCallback(() => {
         if (channelId === '') {
             setCustomCategories(localCustomCategories);
             return;
         }
-        const server = fetchAPI('');
+
         // get categories
         server
             .query({
@@ -1126,26 +1109,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             })
             .then((res) => {
                 if (res.data.channel && res.data.channel.getChannelCategories) {
-                    if (role === 'instructor') {
-                        const categories = new Set();
+                    const fetchedCategories = [...res.data.channel.getChannelCategories];
 
-                        res.data.channel.getChannelCategories.map((category: any) => {
-                            categories.add(category);
-                        });
+                    const categories = new Set();
 
-                        categories.add('Assignments');
-                        categories.add('Homeworks');
-                        categories.add('Quizzes');
-                        categories.add('Syllabus');
-                        categories.add('Textbook');
-                        categories.add('Videos');
+                    fetchedCategories.map((category: any) => {
+                        categories.add(category);
+                    });
 
-                        const withDefaultCategories = Array.from(categories);
+                    categories.add('Assignments');
+                    categories.add('Homeworks');
+                    categories.add('Quizzes');
+                    categories.add('Syllabus');
+                    categories.add('Textbook');
+                    categories.add('Videos');
 
-                        setCustomCategories(withDefaultCategories);
-                    } else {
-                        setCustomCategories(res.data.channel.getChannelCategories);
-                    }
+                    const withDefaultCategories = Array.from(categories);
+
+                    setCustomCategories(withDefaultCategories);
                 }
             })
             .catch((err) => {});
@@ -1190,39 +1171,34 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Loads all the channels for user to create for
      */
     const loadChannels = useCallback(async () => {
-        const uString: any = await AsyncStorage.getItem('user');
-        if (uString) {
-            const user = JSON.parse(uString);
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getChannels,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.channel.findByUserId) {
-                        setChannels(res.data.channel.findByUserId);
-                        const options = [
-                            {
-                                value: 'My Notes',
-                                text: 'My Notes',
-                            },
-                        ];
+        server
+            .query({
+                query: getChannels,
+                variables: {
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data.channel.findByUserId) {
+                    setChannels(res.data.channel.findByUserId);
+                    const options = [
+                        {
+                            value: 'My Notes',
+                            text: 'My Notes',
+                        },
+                    ];
 
-                        res.data.channel.findByUserId.map((channel: any) => {
-                            options.push({
-                                value: channel._id,
-                                text: channel.name,
-                            });
+                    res.data.channel.findByUserId.map((channel: any) => {
+                        options.push({
+                            value: channel._id,
+                            text: channel.name,
                         });
+                    });
 
-                        setChannelOptions(options);
-                    }
-                })
-                .catch((err) => {});
-        }
+                    setChannelOptions(options);
+                }
+            })
+            .catch((err) => {});
         setInit(true);
     }, []);
 
@@ -1307,7 +1283,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             if (!quizId && !imported) {
                 const { title, subtitle } = htmlStringParser(cue);
 
-                console.log('Title', title);
                 if (title === 'NO_CONTENT' && !subtitle) {
                     Alert(enterContentAlert);
                     setIsSubmitting(false);
@@ -1362,47 +1337,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             // LOCAL CUE
             if (channelId === '') {
-                let subCues: any = {};
-                try {
-                    const value = await AsyncStorage.getItem('cues');
-                    if (value) {
-                        subCues = JSON.parse(value);
-                    }
-                } catch (e) {}
-                let _id = subCues['local'].length;
-                while (true) {
-                    const duplicateId = subCues['local'].findIndex((item: any) => {
-                        return item._id === _id;
-                    });
-                    if (duplicateId === -1) {
-                        break;
-                    } else {
-                        _id++;
-                    }
-                }
-                subCues['local'].push({
-                    _id,
+                const cueInput = {
+                    _id: Math.random().toString(),
                     cue: saveCue,
                     date: new Date(),
-                    color,
+                    color: color.toString(),
                     shuffle,
                     frequency,
                     starred,
                     customCategory: customCategory === 'None' ? '' : customCategory,
                     endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
-                });
-                const stringifiedCues = JSON.stringify(subCues);
-                await AsyncStorage.setItem('cues', stringifiedCues);
-                storeDraft('cueDraft', '');
-                props.closeAfterCreatingMyNotes();
-            } else {
-                // CHANNEL CUE
-                const uString = await AsyncStorage.getItem('user');
-                if (!uString) {
+                    createdBy: userId,
+                };
+
+                const success = await handleUpdateCue(cueInput, true);
+
+                if (!success) {
+                    Alert('Failed to create content. Try again.');
+                    setIsSubmitting(false);
                     return;
                 }
+                storeDraft('cueDraft', '');
+                props.closeModal();
+            } else {
+                // CHANNEL CUE
 
-                const userName = await JSON.parse(uString);
                 let ownerarray: any = selected;
                 const userSubscriptions = await AsyncStorage.getItem('subscriptions');
                 if (userSubscriptions) {
@@ -1415,9 +1374,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setSelected(ownerarray);
                 }
 
-                const user = JSON.parse(uString);
-                const server = fetchAPI('');
-
                 const variables = {
                     cue: saveCue,
                     starred,
@@ -1426,7 +1382,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     frequency,
                     customCategory: customCategory === 'None' ? '' : customCategory,
                     shuffle,
-                    createdBy: user._id,
+                    createdBy: userId,
                     gradeWeight: gradeWeight.toString(),
                     submission: submission || isQuiz,
                     deadline: submission || isQuiz ? deadline.toISOString() : '',
@@ -1453,6 +1409,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }).start(() => {
                                 storeDraft('cueDraft', '');
                                 setIsSubmitting(false);
+                                // refreshCues();
+                                handleAddCue(res.data.cue.create);
                                 props.closeModal();
                             });
                         }
@@ -1467,7 +1425,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             cue,
             modalAnimation,
             customCategory,
-            props.saveDataInCloud,
             isQuiz,
             timer,
             duration,
@@ -1494,6 +1451,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             availableUntil,
             attempts,
             totalPoints,
+            userId,
         ]
     );
 
@@ -1821,6 +1779,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             </View>
         );
     };
+
+    console.log('Cue', cue);
+
+    if (!init) {
+        return (
+            <View
+                style={{
+                    width: '100%',
+                    paddingVertical: 100,
+                    justifyContent: 'center',
+                    flex: 1,
+                    flexDirection: 'column',
+                }}
+            >
+                <ActivityIndicator color={'#1F1F1F'} />
+            </View>
+        );
+    }
 
     return (
         <View
@@ -3621,9 +3597,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     await handleCreate();
                                                 }
                                             }}
-                                            disabled={
-                                                isSubmitting || creatingQuiz || props.user.email === disableEmailId
-                                            }
+                                            disabled={isSubmitting || creatingQuiz || user.email === disableEmailId}
                                             style={
                                                 {
                                                     // borderRadius: 15,

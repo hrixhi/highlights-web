@@ -14,7 +14,7 @@ import Alert from '../components/Alert';
 import { View, Text, TouchableOpacity } from './Themed';
 import _, { uniq } from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
-import { fetchAPI } from '../graphql/FetchAPI';
+
 import {
     createMessage,
     deleteThread,
@@ -52,8 +52,12 @@ import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import FormulaGuide from './FormulaGuide';
 import { TextInput } from './CustomTextInput';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId } = useAppContext();
+
     // State
     const [loading, setLoading] = useState(false);
     const unparsedThreads: any[] = JSON.parse(JSON.stringify(props.threads));
@@ -65,7 +69,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [avatar, setAvatar] = useState('');
     const [threadCategories, setThreadCategories] = useState<any[]>([]);
     const [isOwner, setIsOwner] = useState(false);
-    const [userId, setUserId] = useState('');
     const [threadChat, setThreadChat] = useState<any[]>([]);
     const categories: any[] = [];
     const categoryObject: any = {};
@@ -86,6 +89,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [editDiscussionThreadHtml, setEditDiscussionThreadHtml] = useState<any>({});
     const [editDiscussionThreadAttachments, setEditDiscussionThreadAttachments] = useState<any[]>([]);
     const [editDiscussionThreadAnonymous, setEditDiscussionThreadAnonymous] = useState(false);
+
+    const server = useApolloClient();
 
     // ALERTS
     const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread');
@@ -155,7 +160,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }
         (async () => {
             setIsSearching(true);
-            const server = fetchAPI('');
+
             server
                 .query({
                     query: searchThreads,
@@ -211,21 +216,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * Set is Owner on init
      */
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u) {
-                const user = JSON.parse(u);
-                setUserId(user._id);
-                if (user.avatar) {
-                    setAvatar(user.avatar);
-                } else {
-                    setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
-                }
-                if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
-                    setIsOwner(true);
-                }
-            }
-        })();
+        if (user.avatar) {
+            setAvatar(user.avatar);
+        } else {
+            setAvatar('https://cues-files.s3.amazonaws.com/images/default.png');
+        }
+        if (userId.toString().trim() === props.channelCreatedBy.toString().trim()) {
+            setIsOwner(true);
+        }
     }, [props.channelCreatedBy]);
 
     /**
@@ -261,7 +259,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         if (props.channelId === undefined || props.channelId === null || props.channelId === '') {
             return;
         }
-        const server = fetchAPI('');
+
         server
             .query({
                 query: getThreadCategories,
@@ -282,7 +280,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      */
     const createNewThread = useCallback(
         async (title: string, message: any, category: any, isPrivate: boolean, anonymous: boolean) => {
-            const server = fetchAPI('');
             server
                 .mutate({
                     mutation: createMessage,
@@ -325,7 +322,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             {
                 text: 'Yes',
                 onPress: () => {
-                    const server = fetchAPI('');
                     server
                         .mutate({
                             mutation: deleteThread,
@@ -364,7 +360,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             return;
         }
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: updateThread,
@@ -409,7 +404,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
         setIsSendingReply(true);
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: createMessage,
@@ -451,53 +445,50 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
      * @description Load the entire the Thread using the thread ID
      */
     const loadCueDiscussions = useCallback(async (threadId: string) => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            props.setShowNewDiscussionPost(false);
-            const user = JSON.parse(u);
-            setThreadId(threadId);
-            setLoading(true);
-            setShowThreadCues(true);
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getThreadWithReplies,
-                    variables: {
-                        threadId,
-                    },
-                })
-                .then((res) => {
-                    const tempChat: any[] = [];
-                    res.data.thread.getThreadWithReplies.map((msg: any) => {
-                        if (msg._id !== threadId) {
-                            tempChat.push(msg);
-                        } else {
-                            setSelectedThread(msg);
-                        }
-                    });
-                    // tempChat.reverse();
-                    setThreadChat(tempChat);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    Alert(unableToLoadThreadAlert, checkConnectionAlert);
-                    setLoading(false);
-                });
-            server
-                .mutate({
-                    mutation: markThreadsAsRead,
-                    variables: {
-                        userId: user._id,
-                        threadId: threadId,
-                    },
-                })
-                .then((res) => {
-                    if (props.refreshUnreadDiscussionCount) {
-                        props.refreshUnreadDiscussionCount();
+        props.setShowNewDiscussionPost(false);
+
+        setThreadId(threadId);
+        setLoading(true);
+        setShowThreadCues(true);
+
+        server
+            .query({
+                query: getThreadWithReplies,
+                variables: {
+                    threadId,
+                },
+            })
+            .then((res) => {
+                const tempChat: any[] = [];
+                res.data.thread.getThreadWithReplies.map((msg: any) => {
+                    if (msg._id !== threadId) {
+                        tempChat.push(msg);
+                    } else {
+                        setSelectedThread(msg);
                     }
-                })
-                .catch((e) => console.log(e));
-        }
+                });
+                // tempChat.reverse();
+                setThreadChat(tempChat);
+                setLoading(false);
+            })
+            .catch((err) => {
+                Alert(unableToLoadThreadAlert, checkConnectionAlert);
+                setLoading(false);
+            });
+        server
+            .mutate({
+                mutation: markThreadsAsRead,
+                variables: {
+                    userId,
+                    threadId: threadId,
+                },
+            })
+            .then((res) => {
+                if (props.refreshUnreadDiscussionCount) {
+                    props.refreshUnreadDiscussionCount();
+                }
+            })
+            .catch((e) => console.log(e));
     }, []);
 
     // FUNCTIONS
@@ -1012,7 +1003,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         setEditDiscussionThreadAttachments(parse.attachments ? parse.attachments : []);
                                         setEditDiscussionThreadAnonymous(selectedThread.anonymous);
                                     }}
-                                    disabled={props.user.email === disableEmailId}
+                                    disabled={user.email === disableEmailId}
                                 >
                                     <Text>
                                         <Ionicons name={'pencil-outline'} size={16} color="#000" />
@@ -1027,7 +1018,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     onPress={() => {
                                         handleDeleteThread(selectedThread._id, undefined);
                                     }}
-                                    disabled={props.user.email === disableEmailId}
+                                    disabled={user.email === disableEmailId}
                                 >
                                     <Text>
                                         <Ionicons name={'trash-outline'} size={18} color="#000" />
@@ -1148,7 +1139,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 color: '#000',
                                                 fontSize: 15,
                                                 fontFamily: 'inter',
-                                                textTransform: 'uppercase',
+                                                // textTransform: 'uppercase',
                                             }}
                                         >
                                             {isSendingReply ? 'Updating...' : 'Update'}
@@ -1381,7 +1372,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 onPress={() => {
                                     handleReply();
                                 }}
-                                disabled={isSendingReply || props.user.email === disableEmailId}
+                                disabled={isSendingReply || user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1520,7 +1511,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     );
                                                     setEditDiscussionThreadAnonymous(thread.anonymous);
                                                 }}
-                                                disabled={props.user.email === disableEmailId}
+                                                disabled={user.email === disableEmailId}
                                             >
                                                 <Text>
                                                     <Ionicons name={'pencil-outline'} size={14} color="#000" />
@@ -1535,7 +1526,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 onPress={() => {
                                                     handleDeleteThread(thread._id, thread.parentId);
                                                 }}
-                                                disabled={props.user.email === disableEmailId}
+                                                disabled={user.email === disableEmailId}
                                             >
                                                 <Text>
                                                     <Ionicons name={'trash-outline'} size={16} color="#000" />
@@ -1647,7 +1638,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     onPress={() => {
                                                         handleUpdateThread();
                                                     }}
-                                                    disabled={isSendingReply || props.user.email === disableEmailId}
+                                                    disabled={isSendingReply || user.email === disableEmailId}
                                                 >
                                                     <Text
                                                         style={{
@@ -2434,7 +2425,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             onSend={createNewThread}
                             isOwner={isOwner}
                             userId={userId}
-                            user={props.user}
                         />
                     ) : showThreadCues ? (
                         renderSelectedThread()
@@ -2472,7 +2462,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     onSend={createNewThread}
                     isOwner={isOwner}
                     userId={userId}
-                    user={props.user}
                 />
             ) : null}
             {props.showNewDiscussionPost && (threads.length === 0 || Dimensions.get('window').width < 768) ? null : (

@@ -15,8 +15,11 @@ import ImageMarker from 'react-image-marker';
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import MathJax from 'react-mathjax-preview';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { useAppContext } from '../contexts/AppContext';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user } = useAppContext();
+
     const [problems] = useState<any[]>(props.problems);
     const [solutions, setSolutions] = useState<any[]>(props.solutions.solutions);
     const [problemScores, setProblemScores] = useState<any[]>(props.solutions.problemScores);
@@ -1726,7 +1729,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 // height: 35,
                                 marginBottom: 20,
                             }}
-                            disabled={props.user.email === disableEmailId}
+                            disabled={user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -1757,7 +1760,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             // overflow: 'hidden',
                             // height: 35,
                         }}
-                        disabled={props.user.email === disableEmailId}
+                        disabled={user.email === disableEmailId}
                     >
                         <Text
                             style={{

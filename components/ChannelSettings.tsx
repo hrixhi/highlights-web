@@ -1,11 +1,9 @@
 // REACT
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Dimensions, Keyboard, ActivityIndicator, Switch } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
 import {
     findChannelById,
     getOrganisation,
@@ -42,17 +40,20 @@ import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 import InviteByEmailModal from './InviteByEmailModal';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { user, userId, org, refreshSubscriptions } = useAppContext();
+
     const [loadingOrg, setLoadingOrg] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(true);
-    const [loadingChannelColor, setLoadingChannelColor] = useState(true);
+    // const [loadingChannelColor, setLoadingChannelColor] = useState(true);
     const [name, setName] = useState('');
     const [originalName, setOriginalName] = useState('');
     const [password, setPassword] = useState('');
     const [temporary, setTemporary] = useState(false);
     const [isUpdatingChannel, setIsUpdatingChannel] = useState(false);
-    const [school, setSchool] = useState<any>(null);
     const [accessCode, setAccessCode] = useState('');
     const [description, setDescription] = useState('');
     const [isPublic, setIsPublic] = useState(false);
@@ -170,22 +171,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [meetingUrl, setMeetingUrl] = useState('');
     const [showInviteByEmailsModal, setShowInviteByEmailsModal] = useState(false);
 
+    const server = useApolloClient();
+
     // HOOKS
-
-    /**
-     * @description Fetch meeting provider for org
-     */
-    useEffect(() => {
-        (async () => {
-            const org = await AsyncStorage.getItem('school');
-
-            if (org) {
-                const school = JSON.parse(org);
-
-                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-            }
-        })();
-    }, []);
 
     /**
      * @description Filter dropdown users based on Roles, Grades and Section
@@ -248,14 +236,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const addViewersWithEmail = useCallback(
         async (emails: string[]) => {
-            const server = fetchAPI('');
-
             server
                 .mutate({
                     mutation: addUsersByEmail,
                     variables: {
                         channelId: props.channelId,
-                        userId: props.userId,
+                        userId,
                         emails,
                     },
                 })
@@ -295,7 +281,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     alert('Something went wrong. Try again.');
                 });
         },
-        [props.channelId, props.userId]
+        [props.channelId, userId]
     );
 
     /**
@@ -314,262 +300,150 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [channelCreator]);
 
     const fetchChannelSettings = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
+        setLoadingOrg(true);
+        setLoadingUsers(true);
+        // setLoadingChannelColor(true);
 
-        let schoolObj: any;
+        server
+            .query({
+                query: getUserCount,
+                variables: {
+                    schoolId: user.schoolId,
+                },
+            })
+            .then((res) => {
+                const users = [...res.data.user.getSchoolUsers];
+                users.sort((a: any, b: any) => {
+                    if (a.fullName < b.fullName) {
+                        return -1;
+                    }
+                    if (a.fullName > b.fullName) {
+                        return 1;
+                    }
+                    return 0;
+                });
 
-        if (u) {
-            setLoadingOrg(true);
-            setLoadingUsers(true);
-            setLoadingChannelColor(true);
+                setAllUsers(users);
 
-            const user = JSON.parse(u);
-            const server = fetchAPI('');
-            // get all users
-            server
-                .query({
-                    query: getOrganisation,
-                    variables: {
-                        userId: user._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.school.findByUserId) {
-                        setSchool(res.data.school.findByUserId);
-                        schoolObj = res.data.school.findByUserId;
-                        const schoolId = res.data.school.findByUserId._id;
-                        if (schoolId && schoolId !== '') {
-                            server
-                                .query({
-                                    query: getUserCount,
-                                    variables: {
-                                        schoolId,
-                                    },
-                                })
-                                .then((res) => {
-                                    res.data.user.getSchoolUsers.sort((a: any, b: any) => {
-                                        if (a.fullName < b.fullName) {
-                                            return -1;
-                                        }
-                                        if (a.fullName > b.fullName) {
-                                            return 1;
-                                        }
-                                        return 0;
+                const tempUsers: any[] = [];
+                users.map((item: any, index: any) => {
+                    const x = { ...item, selected: false, index };
+                    delete x.__typename;
+                    tempUsers.push({
+                        group: item.fullName[0].toUpperCase(),
+                        text: item.fullName + ', ' + item.email,
+                        value: item._id,
+                    });
+                    return x;
+                });
+
+                // get channel details
+                server
+                    .query({
+                        query: findChannelById,
+                        variables: {
+                            channelId: props.channelId,
+                        },
+                    })
+                    .then((res) => {
+                        if (res.data && res.data.channel.findById) {
+                            setName(res.data.channel.findById.name);
+                            setOriginalName(res.data.channel.findById.name);
+                            setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '');
+                            setTemporary(res.data.channel.findById.temporary ? true : false);
+                            setChannelCreator(res.data.channel.findById.channelCreator);
+                            setIsPublic(res.data.channel.findById.isPublic ? true : false);
+                            setDescription(res.data.channel.findById.description);
+                            setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : []);
+                            setAccessCode(res.data.channel.findById.accessCode);
+                            setMeetingUrl(
+                                res.data.channel.findById.meetingUrl ? res.data.channel.findById.meetingUrl : ''
+                            );
+
+                            setColorCode(res.data.channel.findById.colorCode);
+
+                            if (res.data.channel.findById.owners) {
+                                const ownerOptions: any[] = [];
+                                tempUsers.map((item: any) => {
+                                    const u = res.data.channel.findById.owners.find((i: any) => {
+                                        return i === item.value;
                                     });
-
-                                    setAllUsers(res.data.user.getSchoolUsers);
-
-                                    const tempUsers: any[] = [];
-                                    res.data.user.getSchoolUsers.map((item: any, index: any) => {
-                                        const x = { ...item, selected: false, index };
-                                        delete x.__typename;
-                                        tempUsers.push({
-                                            group: item.fullName[0].toUpperCase(),
-                                            text: item.fullName + ', ' + item.email,
-                                            value: item._id,
-                                        });
-                                        return x;
-                                    });
-
-                                    // get channel details
-                                    server
-                                        .query({
-                                            query: findChannelById,
-                                            variables: {
-                                                channelId: props.channelId,
-                                            },
-                                        })
-                                        .then((res) => {
-                                            if (res.data && res.data.channel.findById) {
-                                                setName(res.data.channel.findById.name);
-                                                setOriginalName(res.data.channel.findById.name);
-                                                setPassword(
-                                                    res.data.channel.findById.password
-                                                        ? res.data.channel.findById.password
-                                                        : ''
-                                                );
-                                                setTemporary(res.data.channel.findById.temporary ? true : false);
-                                                setChannelCreator(res.data.channel.findById.channelCreator);
-                                                setIsPublic(res.data.channel.findById.isPublic ? true : false);
-                                                setDescription(res.data.channel.findById.description);
-                                                setTags(
-                                                    res.data.channel.findById.tags ? res.data.channel.findById.tags : []
-                                                );
-                                                setAccessCode(res.data.channel.findById.accessCode);
-                                                setMeetingUrl(
-                                                    res.data.channel.findById.meetingUrl
-                                                        ? res.data.channel.findById.meetingUrl
-                                                        : ''
-                                                );
-
-                                                if (res.data.channel.findById.owners) {
-                                                    const ownerOptions: any[] = [];
-                                                    tempUsers.map((item: any) => {
-                                                        const u = res.data.channel.findById.owners.find((i: any) => {
-                                                            return i === item.value;
-                                                        });
-                                                        if (u) {
-                                                            ownerOptions.push(item);
-                                                        }
-                                                    });
-
-                                                    // Filter out the main channel creator from the moderators list
-
-                                                    const filterOutMainOwner = ownerOptions.filter((user: any) => {
-                                                        return user.value !== res.data.channel.findById.channelCreator;
-                                                    });
-
-                                                    const mod = filterOutMainOwner.map((user: any) => user.value);
-
-                                                    setOwners(filterOutMainOwner);
-
-                                                    setSelectedModerators(mod);
-
-                                                    setLoadingOrg(false);
-                                                }
-                                            }
-                                        });
-
-                                    const sort = tempUsers.sort((a, b) => {
-                                        if (a.text < b.text) {
-                                            return -1;
-                                        }
-                                        if (a.text > b.text) {
-                                            return 1;
-                                        }
-                                        return 0;
-                                    });
-
-                                    setOptions(sort);
+                                    if (u) {
+                                        ownerOptions.push(item);
+                                    }
                                 });
+
+                                // Filter out the main channel creator from the moderators list
+
+                                const filterOutMainOwner = ownerOptions.filter((user: any) => {
+                                    return user.value !== res.data.channel.findById.channelCreator;
+                                });
+
+                                const mod = filterOutMainOwner.map((user: any) => user.value);
+
+                                setOwners(filterOutMainOwner);
+
+                                setSelectedModerators(mod);
+
+                                setLoadingOrg(false);
+                            }
                         }
-                    } else {
-                        // get channel details
-                        server
-                            .query({
-                                query: findChannelById,
-                                variables: {
-                                    channelId: props.channelId,
-                                },
-                            })
-                            .then((res) => {
-                                if (res.data && res.data.channel.findById) {
-                                    setName(res.data.channel.findById.name);
-                                    setOriginalName(res.data.channel.findById.name);
-                                    setPassword(
-                                        res.data.channel.findById.password ? res.data.channel.findById.password : ''
-                                    );
-                                    setTemporary(res.data.channel.findById.temporary ? true : false);
-                                    setChannelCreator(res.data.channel.findById.channelCreator);
+                    });
 
-                                    setIsPublic(res.data.channel.findById.isPublic ? true : false);
-                                    setDescription(res.data.channel.findById.description);
-                                    setTags(res.data.channel.findById.tags ? res.data.channel.findById.tags : []);
-                                    setAccessCode(res.data.channel.findById.accessCode);
-
-                                    server
-                                        .query({
-                                            query: getChannelModerators,
-                                            variables: {
-                                                channelId: props.channelId,
-                                            },
-                                        })
-                                        .then((res) => {
-                                            if (res.data && res.data.channel.getChannelModerators) {
-                                                const tempUsers: any[] = [];
-                                                res.data.channel.getChannelModerators.map((item: any, index: any) => {
-                                                    const x = { ...item, selected: false, index };
-
-                                                    delete x.__typename;
-                                                    tempUsers.push({
-                                                        name: item.fullName,
-                                                        id: item._id,
-                                                    });
-
-                                                    // add the user always
-                                                });
-
-                                                const tempSelectedValues: any[] = [];
-
-                                                res.data.channel.getChannelModerators.map((item: any, index: any) => {
-                                                    tempSelectedValues.push(item._id);
-                                                });
-
-                                                setOwners(tempUsers);
-                                                setSelectedModerators(tempSelectedValues);
-                                            }
-                                        });
-
-                                    setLoadingOrg(false);
-                                }
-                            });
+                const sort = tempUsers.sort((a, b) => {
+                    if (a.text < b.text) {
+                        return -1;
                     }
-                })
-                .catch((e) => {
-                    alert('Could not fetch course data. Check connection.');
+                    if (a.text > b.text) {
+                        return 1;
+                    }
+                    return 0;
                 });
 
-            // get subs
-            server
-                .query({
-                    query: getSubscribers,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.user.findByChannelId) {
-                        const tempUsers: any[] = [];
-                        res.data.user.findByChannelId.map((item: any, index: any) => {
-                            const x = { ...item, selected: false, index };
+                setOptions(sort);
+            });
 
-                            delete x.__typename;
-                            tempUsers.push({
-                                name: item.fullName,
-                                id: item._id,
-                            });
+        // get subs
+        server
+            .query({
+                query: getSubscribers,
+                variables: {
+                    channelId: props.channelId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.user.findByChannelId) {
+                    const tempUsers: any[] = [];
+                    res.data.user.findByChannelId.map((item: any, index: any) => {
+                        const x = { ...item, selected: false, index };
+
+                        delete x.__typename;
+                        tempUsers.push({
+                            name: item.fullName,
+                            id: item._id,
                         });
+                    });
 
-                        if (!schoolObj) {
-                            setAllUsers(res.data.user.findByChannelId);
-                            setOptions(tempUsers);
-                        }
+                    const tempSelectedValues: any[] = [];
 
-                        const tempSelectedValues: any[] = [];
+                    res.data.user.findByChannelId.map((item: any, index: any) => {
+                        tempSelectedValues.push(item._id);
+                    });
 
-                        res.data.user.findByChannelId.map((item: any, index: any) => {
-                            tempSelectedValues.push(item._id);
-                        });
-
-                        setSelectedValues(tempSelectedValues);
-                        setOriginalSubs(tempUsers);
-                        setSelected(tempUsers);
-                        setLoadingUsers(false);
-                    }
-                });
-
-            server
-                .query({
-                    query: getChannelColorCode,
-                    variables: {
-                        channelId: props.channelId,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.channel.getChannelColorCode) {
-                        setColorCode(res.data.channel.getChannelColorCode);
-                        setLoadingChannelColor(false);
-                    }
-                });
-        }
-    }, [props.channelId, props.user]);
+                    setSelectedValues(tempSelectedValues);
+                    setOriginalSubs(tempUsers);
+                    setSelected(tempUsers);
+                    setLoadingUsers(false);
+                }
+            });
+    }, [props.channelId]);
 
     /**
      * @description Fetches all the data for the channel
      */
     useEffect(() => {
         fetchChannelSettings();
-    }, [props.channelId, props.user]);
+    }, [props.channelId]);
 
     /**
      * @description Handles duplicating channel
@@ -584,8 +458,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             alert('Pick duplicate course color.');
             return;
         }
-
-        const server = fetchAPI('');
 
         server
             .mutate({
@@ -604,7 +476,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 if (res2.data && res2.data.channel.duplicate === 'created') {
                     alert('Course duplicated successfully.');
                     // Refresh Subscriptions for user
-                    props.refreshSubscriptions();
+                    refreshSubscriptions();
                 }
             })
             .catch((e) => {
@@ -627,7 +499,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const handleResetCode = useCallback(() => {
         setCopied(false);
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: resetAccessCode,
@@ -675,8 +546,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         setIsUpdatingChannel(true);
-
-        const server = fetchAPI('');
 
         server
             .mutate({
@@ -747,6 +616,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setOriginalSubs(updatedOriginalSubs);
 
                     props.handleUpdateChannel(name.trim(), colorCode);
+                    refreshSubscriptions();
                 } else {
                     setIsUpdatingChannel(false);
                     alert('Something went wrong. Try again.');
@@ -776,7 +646,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Handle delete channel (Note: Only temporary channels can be deleted)
      */
     const handleDelete = useCallback(async () => {
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: deleteChannel,
@@ -786,7 +655,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then((res: any) => {
                 Alert('Deleted Course successfully.');
-                props.refreshSubscriptions();
+                refreshSubscriptions();
+                props.handleDeleteChannel();
             })
             .catch((e: any) => {
                 Alert('Failed to delete Course.');
@@ -887,7 +757,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         );
     };
 
-    if (loadingOrg || loadingUsers || loadingChannelColor) {
+    if (loadingOrg || loadingUsers) {
         return (
             <View
                 style={{
@@ -988,7 +858,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     required={true}
                                 />
                             </View>
-                            {!school ? (
+                            {/* {!school ? (
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text
                                         style={{
@@ -1018,7 +888,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         onChange={(e: any) => setDescription(e.target.value)}
                                     />
                                 </View>
-                            ) : null}
+                            ) : null} */}
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
@@ -1066,7 +936,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </View>
                                 </View>
                             </View>
-                            {!school ? (
+                            {/* {!school ? (
                                 <View
                                     style={{
                                         width: '100%',
@@ -1155,7 +1025,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </View>
                                     <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
                                 </View>
-                            ) : null}
+                            ) : null} */}
                             {/* Switch to copy Subscribers */}
                             {selected.length > 0 ? (
                                 <View>
@@ -1264,7 +1134,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         // overflow: 'hidden',
                                         // height: 35,
                                     }}
-                                    disabled={props.user.email === disableEmailId}
+                                    disabled={user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
@@ -1468,7 +1338,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
 
-                    {meetingProvider && meetingProvider !== '' ? (
+                    {org.meetingProvider && org.meetingProvider !== '' ? (
                         <View style={{ backgroundColor: 'white' }}>
                             <Text
                                 style={{
@@ -1519,7 +1389,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
 
-                    {!school ? (
+                    {/* {!school ? (
                         <View
                             style={{
                                 width: '100%',
@@ -1607,7 +1477,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                             <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
                         </View>
-                    ) : null}
+                    ) : null} */}
 
                     <View
                         style={{
@@ -1644,7 +1514,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Ionicons name="help-circle-outline" size={18} color="#939699" />
                             </TouchableOpacity>
                         </View>
-                        {props.userCreatedOrg ? (
+                        {user.userCreatedOrg ? (
                             <TouchableOpacity
                                 onPress={() => setShowInviteByEmailsModal(true)}
                                 style={{
@@ -1677,7 +1547,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         ) : null}
                     </View>
 
-                    {school && !props.userCreatedOrg ? renderSubscriberFilters() : null}
+                    {!user.userCreatedOrg ? renderSubscriberFilters() : null}
                     <View
                         style={{
                             flexDirection: 'column',
@@ -1719,7 +1589,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
 
-                    {props.userId === channelCreator ? (
+                    {userId === channelCreator ? (
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -1750,7 +1620,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     ) : null}
 
-                    {props.userId === channelCreator ? (
+                    {userId === channelCreator ? (
                         <label style={{ width: '100%' }}>
                             <Select
                                 themeVariant="light"
@@ -1802,7 +1672,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // overflow: 'hidden',
                                 // height: 35,
                             }}
-                            disabled={isUpdatingChannel || props.user.email === disableEmailId}
+                            disabled={isUpdatingChannel || user.email === disableEmailId}
                         >
                             <Text
                                 style={{
@@ -1825,7 +1695,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
 
-                        {props.userId === channelCreator ? (
+                        {userId === channelCreator ? (
                             <TouchableOpacity
                                 onPress={() => setShowDuplicateChannel(true)}
                                 style={{
@@ -1883,7 +1753,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     // height: 35,
                                     marginTop: 15,
                                 }}
-                                disabled={props.user.email === disableEmailId}
+                                disabled={user.email === disableEmailId}
                             >
                                 <Text
                                     style={{

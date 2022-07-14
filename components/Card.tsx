@@ -2,16 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import _ from 'lodash';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // COMPONENTS
 import { Text, View, TouchableOpacity } from '../components/Themed';
-import { Ionicons } from '@expo/vector-icons';
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
+import { useAppContext } from '../contexts/AppContext';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId } = useAppContext();
+
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();
     const colorScheme = 'dark';
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color]);
@@ -27,15 +28,11 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      * @description Check if user is Owner
      */
     useEffect(() => {
-        (async () => {
-            const u = await AsyncStorage.getItem('user');
-            if (u && props.cue.createdBy) {
-                const parsedUser = JSON.parse(u);
-                if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
-                    setIsOwner(true);
-                }
+        if (props.cue.createdBy) {
+            if (userId === props.cue.createdBy.toString().trim()) {
+                setIsOwner(true);
             }
-        })();
+        }
     }, [props.cue]);
 
     /**

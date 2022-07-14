@@ -21,7 +21,6 @@ import { Avatar } from 'stream-chat-react';
 
 // API
 import axios from 'axios';
-import { fetchAPI } from '../graphql/FetchAPI';
 import {
     checkChannelStatus,
     subscribe,
@@ -59,12 +58,29 @@ import { disableEmailId, zoomClientId, zoomRedirectUri } from '../constants/zoom
 import { paddingResponsive } from '../helpers/paddingHelper';
 import AttendanceList from './AttendanceList';
 import Chat from './Chat';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const server = useApolloClient();
+    const {
+        userId,
+        org,
+        user,
+        subscriptions,
+        allCues,
+        sortBy,
+        setSortBy,
+        recentSearches,
+        setRecentSearches,
+        refreshSubscriptions,
+        refreshCues,
+        setOpenMessageId,
+        setOpenChannelId: setOpenChatChannelId,
+    } = useAppContext();
+
     const styles = styleObject();
-    const [userId, setUserId] = useState('');
-    const [avatar, setAvatar] = useState('');
-    const [userCreatedOrg, setUserCreatedOrg] = useState(false);
+
     // const scrollViewRef: any = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState<any>({
@@ -78,7 +94,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [filterStart, setFilterStart] = useState<any>(null);
     const [filterEnd, setFilterEnd] = useState<any>(null);
     const [searchOptions] = useState(['Content', 'Messages', 'Discussion', 'Courses']);
-    const [sortBy, setSortBy] = useState('Date ↑');
     const [cueMap, setCueMap] = useState<any>({});
     const [categoryMap, setCategoryMap] = useState<any>({});
     const [filterByChannel, setFilterByChannel] = useState('All');
@@ -115,15 +130,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [instantMeetingEnd, setInstantMeetingEnd] = useState<any>('');
     const [instantMeetingAlertUsers, setInstantMeetingAlertUsers] = useState<any>(true);
     const [ongoingMeetings, setOngoingMeetings] = useState<any[]>([]);
-    const [userZoomInfo, setUserZoomInfo] = useState<any>('');
-    const [meetingProvider, setMeetingProvider] = useState('');
     const [selectedWorkspace, setSelectedWorkspace] = useState<any>(
         props.selectedWorkspace ? props.selectedWorkspace : ''
     );
     const [showNewDiscussionPost, setShowNewDiscussionPost] = useState(false);
     const [searchResultTabs, setSearchResultTabs] = useState<string[]>([]);
     const [activeSearchResultsTab, setActiveSearchResultsTab] = useState('');
-    const [recentSearches, setRecentSearches] = useState<string[]>([]);
     const [reversedSearches, setReversedSearches] = useState<string[]>([]);
     // const [exportScores, setExportScores] = useState(false);
     const [showNewAssignment, setShowNewAssignment] = useState(false);
@@ -135,19 +147,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const somethingWrongAlert = PreferredLanguageText('somethingWentWrong');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const doesNotExistAlert = PreferredLanguageText('doesNotExists');
-
-    /**
-     * @description Save Sort by option in settings
-     */
-    useEffect(() => {
-        (async () => {
-            const sortByWorkspace = await AsyncStorage.getItem('sortByWorkspace');
-
-            if (sortByWorkspace) {
-                setSortBy(sortByWorkspace);
-            }
-        })();
-    }, []);
 
     const updateSortByAsync = useCallback(async (sortByValue: string) => {
         await AsyncStorage.setItem('sortByWorkspace', sortByValue);
@@ -225,21 +224,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     // HOOKS
 
     /**
-     * @description Fetch meeting provider for org
-     */
-    useEffect(() => {
-        (async () => {
-            const org = await AsyncStorage.getItem('school');
-
-            if (org) {
-                const school = JSON.parse(org);
-
-                setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-            }
-        })();
-    }, []);
-
-    /**
      * @description Open discussion from Activity using loadDiscussionForChannelId => It will open that Channel in ScrollView
      */
     useEffect(() => {
@@ -291,26 +275,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
     }, [openChannelId, cueMap]);
 
-    /**
-     * @description Prepares all the data to be displayed in workspace
-     */
     useEffect(() => {
-        if (props.user) {
-            setUserId(props.user._id);
-
-            if (props.user.avatar) {
-                setAvatar(props.user.avatar);
-            }
-
-            if (props.user.userCreatedOrg) {
-                setUserCreatedOrg(props.user.userCreatedOrg);
-            }
-
-            if (props.user.zoomInfo) {
-                setUserZoomInfo(props.user.zoomInfo);
-            }
-        }
-
         const temp: any = {};
         const tempCat: any = {};
         const mycues: any[] = [];
@@ -319,15 +284,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         let dateFilteredCues: any[] = [];
         if (filterStart && filterEnd) {
-            dateFilteredCues = props.cues.filter((item: any) => {
+            dateFilteredCues = allCues.filter((item: any) => {
                 const date = new Date(item.date);
                 return date >= filterStart && date <= filterEnd;
             });
         } else {
-            dateFilteredCues = props.cues;
+            dateFilteredCues = allCues;
         }
 
-        props.subscriptions.map((sub: any) => {
+        subscriptions.map((sub: any) => {
             const tempCues: any[] = [];
             const cat: any = { '': [] };
             dateFilteredCues.map((cue: any, ind: any) => {
@@ -461,25 +426,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         setCueMap(temp);
         setCategoryMap(sortedCategories);
-    }, [sortBy, filterStart, filterEnd, props.subscriptions, props.cues, props.user]);
-
-    // useEffect(() => {
-    //     const tempCollapse: any = {};
-    //     tempCollapse['My Notes'] = false;
-
-    //     props.subscriptions.map((sub: any) => {
-    //         // const tempCategories: any = {}
-    //         const key =
-    //             sub.channelName +
-    //             '-SPLIT-' +
-    //             sub.channelId +
-    //             '-SPLIT-' +
-    //             sub.channelCreatedBy +
-    //             '-SPLIT-' +
-    //             sub.colorCode;
-    //         tempCollapse[key] = false;
-    //     });
-    // }, [props.subscriptions]);
+    }, [sortBy, filterStart, filterEnd, allCues, subscriptions]);
 
     /**
      * @description Calls method to fetch any ongoing meetings
@@ -489,14 +436,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             getCurrentMeetings();
         }
     }, [userId, selectedWorkspace]);
-
-    const loadRecentSearches = useCallback(async () => {
-        const recentSearches = await AsyncStorage.getItem('recentSearches');
-
-        if (recentSearches) {
-            setRecentSearches(JSON.parse(recentSearches));
-        }
-    }, []);
 
     useEffect(() => {
         setReversedSearches(recentSearches.reverse());
@@ -561,7 +500,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         try {
             axios
                 .post(
-                    `http://localhost:8000/search`,
+                    `https://api.learnwithcues.com/search`,
                     {
                         term: searchTerm,
                         userId,
@@ -652,8 +591,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }
                     });
 
-                    console.log('Messages', messages);
-
                     const sortCourses = [...tempResults['Courses']];
                     sortCourses.sort((a: any, b: any) => {
                         return a.name < b.name ? 1 : -1;
@@ -689,8 +626,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             return;
         }
 
+        if (instantMeetingEnd < new Date()) {
+            Alert('Meeting end time must be set in the future.');
+            return;
+        } else if (instantMeetingStart > instantMeetingEnd) {
+            Alert('Meeting end time must be set after the start time.');
+            return;
+        }
+
         const startDate = new Date();
-        const server = fetchAPI('');
+
         server
             .mutate({
                 mutation: startInstantMeeting,
@@ -706,7 +651,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
             .then((res) => {
                 if (res.data && res.data.channel.startInstantMeeting !== 'error') {
-                    if (meetingProvider !== '' && res.data.channel.startInstantMeeting === 'MEETING_LINK_NOT_SET') {
+                    if (org.meetingProvider !== '' && res.data.channel.startInstantMeeting === 'MEETING_LINK_NOT_SET') {
                         Alert(
                             'No meeting link has been set for the course. Go to Course settings and add a meeting link.'
                         );
@@ -740,7 +685,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         instantMeetingChannelId,
         instantMeetingCreatedBy,
         instantMeetingAlertUsers,
-        meetingProvider,
+        org,
     ]);
 
     /**
@@ -748,7 +693,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      */
     const getCurrentMeetings = useCallback(async () => {
         if (userId !== '' && selectedWorkspace !== '') {
-            const server = fetchAPI('');
             server
                 .query({
                     query: getOngoingMeetings,
@@ -772,49 +716,42 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Handle create instant meeting for channel owners
      */
     const handleStartMeeting = async (channelId: string, channelCreatedBy: string) => {
-        const u = await AsyncStorage.getItem('user');
-
-        if (u) {
-            const user = JSON.parse(u);
-            if (user.zoomInfo || (meetingProvider && meetingProvider !== '')) {
-                setInstantMeetingChannelId(channelId);
-                setInstantMeetingCreatedBy(channelCreatedBy);
-                const current = new Date();
-                setInstantMeetingStart(current);
-                setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
-                setShowInstantMeeting(true);
-            } else {
-                // ZOOM OATH
-                Alert(
-                    'You must connect your account with Zoom to start a meeting.',
-                    'Would you like to proceed to setup?',
-                    [
-                        {
-                            text: 'Cancel',
-                            style: 'cancel',
-                            onPress: () => {
-                                return;
-                            },
-                        },
-                        {
-                            text: 'Yes',
-                            onPress: () => {
-                                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                                    zoomRedirectUri
-                                )}&state=${userId}`;
-
-                                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                                    Linking.openURL(url);
-                                } else {
-                                    window.open(url, '_blank');
-                                }
-                            },
-                        },
-                    ]
-                );
-            }
+        if (user.zoomInfo || (org.meetingProvider && org.meetingProvider !== '')) {
+            setInstantMeetingChannelId(channelId);
+            setInstantMeetingCreatedBy(channelCreatedBy);
+            const current = new Date();
+            setInstantMeetingStart(current);
+            setInstantMeetingEnd(new Date(current.getTime() + 1000 * 40 * 60));
+            setShowInstantMeeting(true);
         } else {
-            return;
+            // ZOOM OATH
+            Alert(
+                'You must connect your account with Zoom to start a meeting.',
+                'Would you like to proceed to setup?',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                        onPress: () => {
+                            return;
+                        },
+                    },
+                    {
+                        text: 'Yes',
+                        onPress: () => {
+                            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                                zoomRedirectUri
+                            )}&state=${userId}`;
+
+                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                Linking.openURL(url);
+                            } else {
+                                window.open(url, '_blank');
+                            }
+                        },
+                    },
+                ]
+            );
         }
     };
 
@@ -828,7 +765,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const user = JSON.parse(u);
             if (user.zoomInfo) {
                 // Zoom is connected
-                const server = fetchAPI('');
+
                 server
                     .mutate({
                         mutation: meetingRequest,
@@ -863,7 +800,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Fetches status of channel and depending on that handles subscription to channel
      */
     const handleSub = useCallback(async (channelId) => {
-        const server = fetchAPI('');
         server
             .query({
                 query: checkChannelStatus,
@@ -905,16 +841,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
      * @description Subscribes user to a channel
      */
     const handleSubscribe = useCallback(
-        async (channelId, pass) => {
-            const uString: any = await AsyncStorage.getItem('user');
-            const user = JSON.parse(uString);
-
-            const server = fetchAPI('');
+        (channelId, pass) => {
             server
                 .mutate({
                     mutation: subscribe,
                     variables: {
-                        userId: user._id,
+                        userId,
                         channelId,
                         password: pass,
                     },
@@ -926,7 +858,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             case 'subscribed':
                                 alert('Subscribed successfully!');
                                 setSearchTerm('');
-                                props.reloadData();
+
+                                refreshSubscriptions();
+                                refreshCues();
                                 break;
                             case 'incorrect-password':
                                 Alert(incorrectPasswordAlert);
@@ -1333,7 +1267,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     const { title, subtitle } = htmlStringParser(obj.cue);
                                     t = title;
                                     s = subtitle;
-                                    const filterChannel = props.subscriptions.filter((channel: any) => {
+                                    const filterChannel = subscriptions.filter((channel: any) => {
                                         return channel.channelId === obj.channelId;
                                     });
 
@@ -1348,7 +1282,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                     channelName = obj.name;
                                     // Determine if already subscribed or not
-                                    const existingSubscription = props.subscriptions.filter((channel: any) => {
+                                    const existingSubscription = subscriptions.filter((channel: any) => {
                                         return channel.channelId === obj._id;
                                     });
 
@@ -1378,7 +1312,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         t = title;
                                         s = subtitle;
                                     }
-                                    const filterChannel = props.subscriptions.filter((channel: any) => {
+                                    const filterChannel = subscriptions.filter((channel: any) => {
                                         return channel.channelId === obj.channelId;
                                     });
 
@@ -1437,14 +1371,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             } else if (activeSearchResultsTab === 'Messages') {
                                                 // open chat and set Chat ID and users in Async storage to open that specific chat
 
-                                                await AsyncStorage.setItem(
-                                                    'openChat',
-                                                    JSON.stringify({
-                                                        _id: obj.groupId._id,
-                                                        users: obj.users,
-                                                    })
-                                                );
-
+                                                setOpenMessageId(obj.id);
+                                                setOpenChatChannelId(obj.channel.id);
                                                 props.setOption('Inbox');
 
                                                 setSearchTerm('');
@@ -1456,7 +1384,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 }
                                             }
                                         }}
-                                        user={props.user}
                                     />
                                 );
                             })}
@@ -1586,7 +1513,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    if (meetingProvider !== '' && meeting.joinUrl) {
+                                                    if (org.meetingProvider !== '' && meeting.joinUrl) {
                                                         if (
                                                             Platform.OS === 'web' ||
                                                             Platform.OS === 'macos' ||
@@ -1596,10 +1523,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         } else {
                                                             Linking.openURL(meeting.joinUrl);
                                                         }
-                                                    } else if (meetingProvider !== '' && !meeting.joinUrl) {
+                                                    } else if (org.meetingProvider !== '' && !meeting.joinUrl) {
                                                         Alert('No meeting link found. Contact your instructor.');
                                                         return;
-                                                    } else if (!userZoomInfo || userZoomInfo.accountId === '') {
+                                                    } else if (!user.zoomInfo || user.zoomInfo.accountId === '') {
                                                         Alert('Join Meeting?', '', [
                                                             {
                                                                 text: 'Cancel',
@@ -1660,7 +1587,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }
                                                 }}
                                                 style={{}}
-                                                disabled={props.user.email === disableEmailId}
+                                                disabled={user.email === disableEmailId}
                                             >
                                                 <Text
                                                     style={{
@@ -1716,7 +1643,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         handler: function (event) {
                             createInstantMeeting();
                         },
-                        disabled: props.user.email === disableEmailId,
+                        disabled: user.email === disableEmailId,
                     },
                     {
                         text: 'Cancel',
@@ -2395,7 +2322,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             channelColor={selectedWorkspace.split('-SPLIT-')[3]}
                                             showNewDiscussionPost={showNewDiscussionPost}
                                             setShowNewDiscussionPost={setShowNewDiscussionPost}
-                                            user={props.user}
                                         />
                                     ) : // Meet
                                     props.activeWorkspaceTab === 'Meet' ? (
@@ -2417,8 +2343,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 channelCreatedBy={selectedWorkspace.split('-SPLIT-')[2]}
                                                 channelColor={selectedWorkspace.split('-SPLIT-')[3]}
                                                 isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
-                                                userId={userId}
-                                                user={props.user}
                                                 showNewAttendance={showNewAttendance}
                                                 setShowNewAttendance={(show: boolean) => setShowNewAttendance(show)}
                                             />
@@ -2426,8 +2350,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ) : // Scores
                                     props.activeWorkspaceTab === 'Scores' ? (
                                         <GradesList
-                                            user={props.user}
-                                            userId={userId}
                                             openCueFromGrades={props.openCueFromCalendar}
                                             isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                             showNewAssignment={showNewAssignment}
@@ -2437,7 +2359,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ) : (
                                         <ChannelSettings
                                             channelId={selectedWorkspace.split('-SPLIT-')[1]}
-                                            refreshSubscriptions={props.refreshSubscriptions}
                                             handleUpdateChannel={(newName: string, newColorCode: string) => {
                                                 const currentCourseDetails = selectedWorkspace.split('-SPLIT-');
 
@@ -2451,13 +2372,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     newColorCode;
 
                                                 setSelectedWorkspace(updateSelectedWorkspace);
-
-                                                props.refreshSubscriptions();
                                             }}
-                                            userId={userId}
+                                            handleDeleteChannel={() => {
+                                                setSelectedWorkspace('');
+                                                props.setSelectedWorkspace('');
+                                                props.setOpenChannelId('');
+                                                props.setWorkspaceActiveTab('Content');
+                                            }}
                                             channelColor={selectedWorkspace.split('-SPLIT-')[3]}
-                                            userCreatedOrg={userCreatedOrg}
-                                            user={props.user}
                                         />
                                     )
                                 ) : cueMap[selectedWorkspace] && cueMap[selectedWorkspace].length === 0 ? (
@@ -2610,7 +2532,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         }}
                                                                         cue={cue}
                                                                         channelId={props.channelId}
-                                                                        subscriptions={props.subscriptions}
                                                                     />
                                                                 </View>
                                                             );
@@ -2792,7 +2713,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // backgroundColor: '#f8f8f8',
                                 // borderRadius: 18,
                                 // borderBottomColor: '#cfcfcf',
-
                                 // borderBottomWidth: 1
                             }}
                             placeholder={'Search'}
@@ -2911,9 +2831,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <View nativeID={op.split(' ').join('-')}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
                                                     {op === 'Classroom'
-                                                        ? props.version === 'read'
-                                                            ? 'Library'
-                                                            : 'Workspace'
+                                                        ? 'Workspace'
                                                         : op === 'Performance'
                                                         ? 'Performance'
                                                         : op === 'To Do'
@@ -3063,7 +2981,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setOption('Account');
                                     }}
                                 >
-                                    <Avatar name={props.user.fullName} image={props.user.avatar} size={35} />
+                                    <Avatar name={user.fullName} image={user.avatar} size={35} />
                                 </TouchableOpacity>
                             ) : null}
 
@@ -3193,13 +3111,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             {searchTerm === '' ? (
                 props.modalType === 'Create' && (props.option === 'Classroom' || props.option === 'Browse') ? (
                     <Create
-                        key={JSON.stringify(props.customCategories)}
-                        customCategories={props.customCategories}
                         closeModal={() => props.closeModal()}
                         closeAfterCreatingMyNotes={() => props.closeAfterCreatingMyNotes()}
                         option={props.option}
-                        version={props.version}
-                        user={props.user}
                         courseColor={
                             selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
                                 ? '#000'
@@ -3239,12 +3153,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {props.option === 'Account' && props.activeAccountTab === 'profile' ? (
                             <Walkthrough
                                 closeModal={() => {}}
-                                saveDataInCloud={() => props.saveDataInCloud()}
                                 reOpenProfile={() => props.reOpenProfile()}
-                                reloadData={() => props.reloadData()}
                                 setShowHelp={(val: any) => props.setShowHelp(val)}
                                 showHelp={props.showHelp}
-                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Account' && props.activeAccountTab === 'courses' ? (
@@ -3252,9 +3163,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setShowCreate={(val: any) => props.setShowCreate(val)}
                                 showCreate={props.showCreate}
                                 closeModal={() => {}}
-                                subscriptions={props.subscriptions}
-                                refreshSubscriptions={props.refreshSubscriptions}
-                                user={props.user}
                             />
                         ) : null}
                         {props.option === 'Classroom' && selectedWorkspace ? renderWorkspaceNavbar() : null}
@@ -3263,33 +3171,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {props.option === 'To Do' ? (
                             <CalendarX
                                 tab={props.tab}
-                                version={props.version}
                                 setTab={(val: any) => props.setTab(val)}
                                 filterStart={filterStart}
                                 filterEnd={filterEnd}
-                                cues={props.calendarCues}
-                                subscriptions={props.subscriptions}
                                 openCueFromCalendar={props.openCueFromCalendar}
                                 openDiscussion={props.openDiscussionFromActivity}
                                 openChannel={props.openChannelFromActivity}
                                 openQA={props.openQAFromActivity}
                                 filterByChannel={filterByChannel}
                                 filterEventsType={filterEventsType}
-                                user={props.user}
                             />
                         ) : null}
-                        {props.option === 'Inbox' ? (
-                            // <Inbox
-                            //     showDirectory={props.showDirectory}
-                            //     setShowDirectory={(val: any) => props.setShowDirectory(val)}
-                            //     subscriptions={props.subscriptions}
-                            //     refreshUnreadInbox={props.refreshUnreadInbox}
-                            //     hideNewChatButton={props.hideNewChatButton}
-                            //     userId={userId}
-                            //     user={props.user}
-                            // />
-                            <Chat user={props.user} subscriptions={props.subscriptions} chatClient={props.chatClient} />
-                        ) : null}
+                        {props.option === 'Inbox' ? <Chat chatClient={props.chatClient} /> : null}
                     </View>
                 )
             ) : (

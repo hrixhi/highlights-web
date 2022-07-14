@@ -1,10 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text } from '../components/Themed';
-import { Platform, Alert } from 'react-native';
-import alert from '../components/Alert';
-import { fetchAPI } from '../graphql/FetchAPI';
+import { Platform } from 'react-native';
 import {
     fetchAnnotationsForViewer,
     updateAnnotationsFromViewer,
@@ -12,8 +9,10 @@ import {
 } from '../graphql/QueriesAndMutations';
 import WebViewer from '@pdftron/pdfjs-express';
 import { ActivityIndicator, StyleSheet } from 'react-native';
+import { useApolloClient } from '@apollo/client';
 
 export default function PDFViewerCues({ navigation, route }: StackScreenProps<any, 'pdfviewer'>) {
+    const server = useApolloClient();
     const [invalidParams, setInvalidParams] = useState(false);
     const [url, setUrl] = useState('');
     const [cueId, setCueId] = useState('');
@@ -64,7 +63,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                 setLoading(false);
                 return;
             } else if (sourceParam === 'UPDATE' || sourceParam === 'MY_NOTES') {
-                const server = fetchAPI('');
                 server
                     .query({
                         query: fetchAnnotationsForViewer,
@@ -103,7 +101,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                 sourceParam === 'FEEDBACK'
             ) {
                 //
-                const server = fetchAPI('');
                 server
                     .query({
                         query: fetchAnnotationsForViewer,
@@ -249,8 +246,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
                     if (imported) return;
 
                     const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
-
-                    const server = fetchAPI('');
 
                     server
                         .mutate({

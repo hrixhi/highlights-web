@@ -115,7 +115,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
     return (
         <View
             style={{
-                backgroundColor: '#f8f8f8',
+                backgroundColor: props.isOwner ? '#f8f8f8' : '#fff',
             }}
         >
             {/* <Text style={{ padding: 10, width: '50%', fontFamily: 'Inter', fontSize: 20  }}></Text> */}
@@ -124,7 +124,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                     width: '100%',
                     marginBottom: 40,
                     marginTop: 20,
-                    backgroundColor: '#f8f8f8',
+                    backgroundColor: props.isOwner ? '#f8f8f8' : '#fff',
                 }}
             >
                 <View
@@ -156,7 +156,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                         width: Dimensions.get('window').width < 768 ? 300 : 600,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
-                        backgroundColor: '#f8f8f8',
+                        backgroundColor: props.isOwner ? '#f8f8f8' : '#fff',
                     }}
                 >
                     {symbols.map((sym: string) => {
@@ -193,7 +193,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                             paddingLeft: 5,
                             marginRight: 12,
                             marginBottom: 12,
-                            backgroundColor: '#f8f8f8',
+                            backgroundColor: props.isOwner ? '#f8f8f8' : '#fff',
                         }}
                     >
                         <Ionicons name="trash-outline" size={24} color={'#000'} />

@@ -2,14 +2,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import Alert from '../components/Alert';
-import { fetchAPI } from '../graphql/FetchAPI';
 import { login } from '../graphql/QueriesAndMutations';
 import { View, Text } from '../components/Themed';
 import { origin } from '../constants/zoomCredentials';
 import { ActivityIndicator } from 'react-native';
+import { useApolloClient } from '@apollo/client';
 
 export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'>) {
     const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const server = useApolloClient();
 
     useEffect(() => {
         (async () => {
@@ -19,7 +21,6 @@ export default function Demo({ navigation, route }: StackScreenProps<any, 'demo'
 
                 setIsLoggingIn(true);
 
-                const server = fetchAPI('');
                 server
                     .query({
                         query: login,

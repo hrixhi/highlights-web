@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
 import { retrievePDFFromArchive } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -16,6 +15,7 @@ import alert from './Alert';
 import { Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { paddingResponsive } from '../helpers/paddingHelper';
+import { useApolloClient } from '@apollo/client';
 
 const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,6 +25,8 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [results, setResults] = useState<any[]>([]);
     const [selectedBook, setSelectedBook] = useState<any>(null);
     const [retrievingBook, setRetrievingBook] = useState<any>('');
+
+    const server = useApolloClient();
 
     // HOOKS
 
@@ -89,7 +91,6 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const retrieveBook = useCallback(() => {
         setRetrievingBook(true);
 
-        const server = fetchAPI('');
         server
             .query({
                 query: retrievePDFFromArchive,

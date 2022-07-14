@@ -1,20 +1,15 @@
 // REACT
 import React, { useState, useEffect, useCallback } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
-import { fetchAPI } from '../graphql/FetchAPI';
 import {
     checkChannelStatus,
     checkChannelStatusForCode,
     createChannel,
     findBySchoolId,
-    getOrganisation,
-    getRole,
     subscribe,
-    getChannelsOutside,
     getUserCount,
 } from '../graphql/QueriesAndMutations';
 
@@ -25,8 +20,6 @@ import Alert from '../components/Alert';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { CirclePicker } from 'react-color';
 import alert from '../components/Alert';
-import TextareaAutosize from 'react-textarea-autosize';
-import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 import { Select } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
@@ -34,21 +27,24 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { disableEmailId } from '../constants/zoomCredentials';
+import { useApolloClient } from '@apollo/client';
+import { useAppContext } from '../contexts/AppContext';
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+    const { userId, user, subscriptions, refreshSubscriptions } = useAppContext();
+
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRequired, setPasswordRequired] = useState(false);
-    const [displayName, setDisplayName] = useState('');
-    const [fullName, setFullName] = useState('');
+    const [displayName, setDisplayName] = useState(user.displayName);
+    const [fullName, setFullName] = useState(user.fullName);
     const [temporary, setTemporary] = useState(false);
     const [description, setDescription] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [tags, setTags] = useState<string[]>([]);
-    const [school, setSchool] = useState<any>(null);
-    const [role, setRole] = useState('');
-    const [userCreatedOrg, setUserCreatedOrg] = useState(false);
+    const [role, setRole] = useState(user.role);
+    const [userCreatedOrg] = useState(user.userCreatedOrg);
     const [colorCode, setColorCode] = useState('');
     const [channels, setChannels] = useState<any[]>([]);
     const [allUsers, setAllUsers] = useState<any[]>([]);
@@ -57,7 +53,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [joinWithCode, setJoinWithCode] = useState('');
     const [joinWithCodeDisabled, setJoinWithCodeDisabled] = useState(true);
-    const [userId, setUserId] = useState('');
+
     const [sortChannels, setSortChannels] = useState<any[]>([]);
     const [subIds, setSubIds] = useState<any[]>([]);
     const [activeTab, setActiveTab] = useState('create');
@@ -164,14 +160,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         return match;
     });
 
+    const server = useApolloClient();
+
     // HOOKS
 
-    /**
-     * @description Loads user on Init
-     */
     useEffect(() => {
-        loadUser();
-    }, []);
+        fetchSchoolUsers(user.schoolId);
+    }, [user]);
 
     /**
      * @description Filter dropdown users based on Roles, Grades and Section
@@ -244,21 +239,21 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         setIsSubmitDisabled(true);
-    }, [name, password, passwordRequired, props.showCreate, colorCode, school]);
+    }, [name, password, passwordRequired, props.showCreate, colorCode]);
 
     useEffect(() => {
         const subSet = new Set();
-        props.subscriptions.map((sub: any) => {
+        subscriptions.map((sub: any) => {
             subSet.add(sub.channelId);
         });
         setSubIds(Array.from(subSet.values()));
-    }, [props.subscriptions]);
+    }, [subscriptions]);
 
     useEffect(() => {
         const sort = channels.sort((a: any, b: any) => {
-            const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id);
+            const aSubscribed = subscriptions.find((sub: any) => sub.channelId === a._id);
 
-            const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id);
+            const bSubscribed = subscriptions.find((sub: any) => sub.channelId === b._id);
 
             if (aSubscribed && !bSubscribed) {
                 return -1;
@@ -270,7 +265,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         });
 
         setSortChannels(sort);
-    }, [channels, props.subscriptions]);
+    }, [channels, subscriptions]);
 
     /**
      * @description Validate submit for join channel with code
@@ -287,46 +282,39 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Fetches channels for users
      */
     useEffect(() => {
-        if (school) {
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: findBySchoolId,
-                    variables: {
-                        schoolId: school._id,
-                    },
-                })
-                .then((res: any) => {
-                    if (res.data && res.data.channel.findBySchoolId) {
-                        const sortedChannels = res.data.channel.findBySchoolId.sort((a: any, b: any) => {
-                            if (a.name < b.name) {
-                                return -1;
-                            }
-                            if (a.name > b.name) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                        // const c = res.data.channel.findBySchoolId.map((item: any, index: any) => {
-                        //     const x = { ...item, selected: false, index }
-                        //     delete x.__typename
-                        //     return x
-                        // })
-                        setChannels(sortedChannels);
-                        setLoading(false);
-                    }
-                })
-                .catch((err) => {
+        server
+            .query({
+                query: findBySchoolId,
+                variables: {
+                    schoolId: user.schoolId,
+                },
+            })
+            .then((res: any) => {
+                if (res.data && res.data.channel.findBySchoolId) {
+                    const fetchChannels = [...res.data.channel.findBySchoolId];
+
+                    const sortedChannels = fetchChannels.sort((a: any, b: any) => {
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    setChannels(sortedChannels);
                     setLoading(false);
-                });
-        }
-    }, [role, school]);
+                }
+            })
+            .catch((err) => {
+                setLoading(false);
+            });
+    }, [user]);
 
     /**
      * @description Fetch all users to allow selection for Users to create channel
      */
     const fetchSchoolUsers = useCallback((schoolId) => {
-        const server = fetchAPI('');
         server
             .query({
                 query: getUserCount,
@@ -335,7 +323,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 },
             })
             .then((res) => {
-                res.data.user.getSchoolUsers.sort((a: any, b: any) => {
+                const schoolUsers = [...res.data.user.getSchoolUsers];
+
+                schoolUsers.sort((a: any, b: any) => {
                     if (a.fullName < b.fullName) {
                         return -1;
                     }
@@ -345,10 +335,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     return 0;
                 });
 
-                setAllUsers(res.data.user.getSchoolUsers);
+                setAllUsers(schoolUsers);
 
                 const tempUsers: any[] = [];
-                res.data.user.getSchoolUsers.map((item: any, index: any) => {
+                schoolUsers.map((item: any, index: any) => {
                     const x = { ...item, selected: false, index };
                     delete x.__typename;
                     tempUsers.push({
@@ -377,16 +367,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Subscribes user to a channel
      */
     const handleSubscribe = useCallback(
-        async (channelId, pass) => {
-            const uString: any = await AsyncStorage.getItem('user');
-            const user = JSON.parse(uString);
-
-            const server = fetchAPI('');
+        (channelId, pass) => {
             server
                 .mutate({
                     mutation: subscribe,
                     variables: {
-                        userId: user._id,
+                        userId,
                         channelId,
                         password: pass,
                     },
@@ -398,7 +384,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             case 'subscribed':
                                 alert('Subscribed successfully!');
                                 // Refresh subscriptions
-                                props.refreshSubscriptions();
+                                refreshSubscriptions();
                                 break;
                             case 'incorrect-password':
                                 Alert(incorrectPasswordAlert);
@@ -427,7 +413,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
      */
     const handleSub = useCallback(
         async (channelId) => {
-            const server = fetchAPI('');
             server
                 .query({
                     query: checkChannelStatus,
@@ -471,7 +456,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Fetches status of channel using code and then handles subscription
      */
     const handleSubmitCode = useCallback(async () => {
-        const server = fetchAPI('');
         server
             .query({
                 query: checkChannelStatusForCode,
@@ -520,21 +504,17 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         setIsSubmitting(true);
 
-        const uString: any = await AsyncStorage.getItem('user');
-        const user = JSON.parse(uString);
-
         if (name.toString().trim() === '') {
             return;
         }
 
-        const server = fetchAPI('');
         server
             .mutate({
                 mutation: createChannel,
                 variables: {
                     name,
                     password,
-                    createdBy: user._id,
+                    createdBy: userId,
                     temporary,
                     colorCode,
                     description,
@@ -553,7 +533,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             Alert('Course created successfully');
                             props.setShowCreate(false);
                             // Refresh subs
-                            props.refreshSubscriptions();
+                            refreshSubscriptions();
                             break;
                         case 'invalid-name':
                             Alert(invalidChannelNameAlert);
@@ -589,99 +569,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         selectedModerators,
         selectedValues,
     ]);
-
-    /**
-     * @description Loads user
-     */
-    const loadUser = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-        if (u) {
-            const parsedUser = JSON.parse(u);
-            setUserId(parsedUser._id);
-            setRole(parsedUser.role);
-            setUserCreatedOrg(parsedUser.userCreatedOrg);
-            setDisplayName(parsedUser.displayName);
-            setFullName(parsedUser.fullName);
-            const server = fetchAPI('');
-            server
-                .query({
-                    query: getOrganisation,
-                    variables: {
-                        userId: parsedUser._id,
-                    },
-                })
-                .then((res) => {
-                    if (res.data && res.data.school.findByUserId) {
-                        setSchool(res.data.school.findByUserId);
-
-                        fetchSchoolUsers(res.data.school.findByUserId._id);
-                    }
-                });
-            // server.query({
-            //     query: getRole,
-            //     variables: {
-            //         userId: parsedUser._id
-            //     }
-            // }).then(res => {
-            //     if (res.data && res.data.user.getRole) {
-            //         setRole(res.data.user.getRole)
-            //     }
-            // })
-        }
-    }, []);
-
-    /**
-     * @description Load outside channels for user without school id
-     */
-    const loadOutsideChannels = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-
-        if (u) {
-            const server = fetchAPI('');
-
-            const parsedUser = JSON.parse(u);
-
-            server
-                .query({
-                    query: getChannelsOutside,
-                    variables: {
-                        userId: parsedUser._id,
-                    },
-                })
-                .then((res: any) => {
-                    if (res.data && res.data.channel.getChannelsOutside) {
-                        res.data.channel.getChannelsOutside.sort((a: any, b: any) => {
-                            if (a.name < b.name) {
-                                return -1;
-                            }
-                            if (a.name > b.name) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                        const c = res.data.channel.getChannelsOutside.map((item: any, index: any) => {
-                            const x = { ...item, selected: false, index };
-                            delete x.__typename;
-                            return x;
-                        });
-                        const sortedChannels = c.sort((a: any, b: any) => {
-                            if (a.name < b.name) {
-                                return -1;
-                            }
-                            if (a.name > b.name) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                        setChannels(sortedChannels);
-                        setLoading(false);
-                    }
-                })
-                .catch((err) => {
-                    setLoading(false);
-                });
-        }
-    }, []);
 
     // FUNCTIONS
 
@@ -1017,7 +904,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         },
                                                                     ]);
                                                                 }}
-                                                                disabled={props.user.email === disableEmailId}
+                                                                disabled={user.email === disableEmailId}
                                                             >
                                                                 <Text
                                                                     style={{
@@ -1121,7 +1008,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                             <TouchableOpacity
                                 onPress={() => handleSubmitCode()}
-                                disabled={joinWithCodeDisabled || props.user.email === disableEmailId}
+                                disabled={joinWithCodeDisabled || user.email === disableEmailId}
                                 style={{
                                     marginTop: 10,
                                     backgroundColor: 'white',
@@ -1248,13 +1135,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     />
                                 </View>
 
-                                {school ? (
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        {/* <View
+                                <View
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                >
+                                    {/* <View
                                             style={{
                                                 width: "100%",
                                                 paddingBottom: 15,
@@ -1265,58 +1151,58 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 color: '#000000'
                                             }}>Temporary</Text>
                                         </View> */}
-                                        <View
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            marginTop: 15,
+                                            marginBottom: 20,
+                                        }}
+                                    >
+                                        <Text
                                             style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                marginTop: 15,
-                                                marginBottom: 20,
+                                                fontSize: 15,
+                                                marginRight: 8,
+                                                color: '#000000',
+                                                fontFamily: 'Inter',
                                             }}
                                         >
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    marginRight: 8,
-                                                    color: '#000000',
-                                                    fontFamily: 'Inter',
-                                                }}
-                                            >
-                                                Temporary
-                                            </Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    Alert(
-                                                        'Courses that are not temporary can only be deleted by the school administrator.'
-                                                    );
-                                                }}
-                                            >
-                                                <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                width: '100%',
-                                                height: 30,
+                                            Temporary
+                                        </Text>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                Alert(
+                                                    'Courses that are not temporary can only be deleted by the school administrator.'
+                                                );
                                             }}
                                         >
-                                            <Switch
-                                                value={temporary}
-                                                onValueChange={() => setTemporary(!temporary)}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#f2f2f2',
-                                                    true: '#000',
-                                                }}
-                                                activeThumbColor="white"
-                                            />
-                                        </View>
-                                        {/* <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
+                                            <Ionicons name="help-circle-outline" size={18} color="#939699" />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            width: '100%',
+                                            height: 30,
+                                        }}
+                                    >
+                                        <Switch
+                                            value={temporary}
+                                            onValueChange={() => setTemporary(!temporary)}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: '#f2f2f2',
+                                                true: '#000',
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                    {/* <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
                                             Courses that are not temporary can only be deleted by the school administrator.
                                         </Text> */}
-                                    </View>
-                                ) : null}
-                                {!school ? (
+                                </View>
+
+                                {/* {!school ? (
                                     <View
                                         style={{
                                             width: '100%',
@@ -1402,7 +1288,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             Add up to 5
                                         </Text>
                                     </View>
-                                ) : null}
+                                ) : null} */}
 
                                 <View
                                     style={{
@@ -1469,108 +1355,104 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </TouchableOpacity>
                                 </View>
 
-                                {school && !userCreatedOrg ? renderSubscriberFilters() : null}
-                                {school ? (
-                                    <View
+                                {!userCreatedOrg ? renderSubscriberFilters() : null}
+                                <View
+                                    style={{
+                                        flexDirection: 'column',
+                                        marginTop: 25,
+                                    }}
+                                >
+                                    <View style={{ height: 'auto', width: '100%' }}>
+                                        <div style={{ width: '100%' }}>
+                                            <label style={{ width: '100%' }}>
+                                                <Select
+                                                    themeVariant="light"
+                                                    selectMultiple={true}
+                                                    group={true}
+                                                    groupLabel="&nbsp;"
+                                                    inputClass="mobiscrollCustomMultiInput"
+                                                    placeholder="Select..."
+                                                    touchUi={true}
+                                                    value={selectedValues}
+                                                    data={options}
+                                                    onChange={(val: any) => {
+                                                        setSelectedValues(val.value);
+                                                        // Filter out any moderator if not part of the selected values
+
+                                                        let filterRemovedModerators = selectedModerators.filter(
+                                                            (mod: any) => val.value.includes(mod)
+                                                        );
+
+                                                        setSelectedModerators(filterRemovedModerators);
+                                                    }}
+                                                    responsive={{
+                                                        small: {
+                                                            display: 'bubble',
+                                                        },
+                                                        medium: {
+                                                            touchUi: false,
+                                                        },
+                                                    }}
+                                                    minWidth={[60, 320]}
+                                                />
+                                            </label>
+                                        </div>
+                                    </View>
+                                </View>
+
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginTop: 25,
+                                        marginBottom: 20,
+                                    }}
+                                >
+                                    <Text
                                         style={{
-                                            flexDirection: 'column',
-                                            marginTop: 25,
+                                            fontSize: 15,
+                                            marginRight: 8,
+                                            color: '#000000',
+                                            fontFamily: 'Inter',
                                         }}
                                     >
-                                        <View style={{ height: 'auto', width: '100%' }}>
-                                            <div style={{ width: '100%' }}>
-                                                <label style={{ width: '100%' }}>
-                                                    <Select
-                                                        themeVariant="light"
-                                                        selectMultiple={true}
-                                                        group={true}
-                                                        groupLabel="&nbsp;"
-                                                        inputClass="mobiscrollCustomMultiInput"
-                                                        placeholder="Select..."
-                                                        touchUi={true}
-                                                        value={selectedValues}
-                                                        data={options}
-                                                        onChange={(val: any) => {
-                                                            setSelectedValues(val.value);
-                                                            // Filter out any moderator if not part of the selected values
-
-                                                            let filterRemovedModerators = selectedModerators.filter(
-                                                                (mod: any) => val.value.includes(mod)
-                                                            );
-
-                                                            setSelectedModerators(filterRemovedModerators);
-                                                        }}
-                                                        responsive={{
-                                                            small: {
-                                                                display: 'bubble',
-                                                            },
-                                                            medium: {
-                                                                touchUi: false,
-                                                            },
-                                                        }}
-                                                        minWidth={[60, 320]}
-                                                    />
-                                                </label>
-                                            </div>
-                                        </View>
-                                    </View>
-                                ) : null}
-
-                                {school ? (
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            marginTop: 25,
-                                            marginBottom: 20,
+                                        Instructors
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            Alert(
+                                                'Instructors can share content, score and view submissions for all users, initiate meetings and edit course settings, in addition to the student permissions.'
+                                            );
                                         }}
                                     >
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                marginRight: 8,
-                                                color: '#000000',
-                                                fontFamily: 'Inter',
-                                            }}
-                                        >
-                                            Instructors
-                                        </Text>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                Alert(
-                                                    'Instructors can share content, score and view submissions for all users, initiate meetings and edit course settings, in addition to the student permissions.'
-                                                );
-                                            }}
-                                        >
-                                            <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                        </TouchableOpacity>
-                                    </View>
-                                ) : null}
-                                {school ? (
-                                    <label style={{ width: '100%' }}>
-                                        <Select
-                                            themeVariant="light"
-                                            select="multiple"
-                                            selectMultiple={true}
-                                            placeholder="Select..."
-                                            inputClass="mobiscrollCustomMultiInput"
-                                            value={selectedModerators}
-                                            data={moderatorOptions}
-                                            onChange={(val: any) => {
-                                                setSelectedModerators(val.value);
-                                            }}
-                                            touchUi={true}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble',
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                },
-                                            }}
-                                        />
-                                    </label>
-                                ) : null}
+                                        <Ionicons name="help-circle-outline" size={18} color="#939699" />
+                                    </TouchableOpacity>
+                                </View>
+
+                                <label style={{ width: '100%' }}>
+                                    <Select
+                                        themeVariant="light"
+                                        select="multiple"
+                                        selectMultiple={true}
+                                        placeholder="Select..."
+                                        inputClass="mobiscrollCustomMultiInput"
+                                        value={selectedModerators}
+                                        data={moderatorOptions}
+                                        onChange={(val: any) => {
+                                            setSelectedModerators(val.value);
+                                        }}
+                                        touchUi={true}
+                                        responsive={{
+                                            small: {
+                                                display: 'bubble',
+                                            },
+                                            medium: {
+                                                touchUi: false,
+                                            },
+                                        }}
+                                    />
+                                </label>
+
                                 <View
                                     style={{
                                         flex: 1,
@@ -1592,9 +1474,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             marginTop: 15,
                                             marginBottom: 50,
                                         }}
-                                        disabled={
-                                            isSubmitDisabled || isSubmitting || props.user.email === disableEmailId
-                                        }
+                                        disabled={isSubmitDisabled || isSubmitting || user.email === disableEmailId}
                                     >
                                         <Text
                                             style={{

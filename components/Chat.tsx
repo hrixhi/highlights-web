@@ -12,10 +12,10 @@ import { View } from './Themed';
 import 'stream-chat-react/dist/css/index.css';
 import '../web/streamInbox.css';
 
-import { fetchAPI } from '../graphql/FetchAPI';
 import { getStreamChatUserToken, regenStreamChatUserToken } from '../graphql/QueriesAndMutations';
 import { ChannelContainer } from './ChatComponents/ChannelContainer/ChannelContainer';
 import { useMobileView } from '../hooks/useMobileView';
+import { useAppContext } from '../contexts/AppContext';
 
 type LocalAttachmentType = Record<string, unknown>;
 type LocalChannelType = Record<string, unknown>;
@@ -36,7 +36,8 @@ type StreamChatGenerics = {
 };
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const [userToken, setUserToken] = useState(undefined);
+    const { userId, openChannelId, setOpenChannelId } = useAppContext();
+
     const [chatClient, setChatClient] = useState<any>(undefined);
     const [chatError, setChatError] = useState('');
 
@@ -53,72 +54,27 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [options, setOptions] = useState<any>(undefined);
     const [sort, setSort] = useState<any>(undefined);
 
-    // //
-    // useEffect(() => {
-    //     if (!userToken) {
-    //         fetchStreamUserToken();
-    //     }
-    // }, []);
+    // INIT SEARCH
+    const [channelIdFromSearch, setChannelIdFromSearch] = useState('');
 
-    // // INITIALIZE CHAT
-    // useEffect(() => {
-    //     if (!userToken && chatClient) {
-    //         setChatClient(undefined);
-    //         // Refetch user token
-    //         return;
-    //     }
+    useEffect(() => {
+        if (openChannelId) {
+            setChannelIdFromSearch(openChannelId);
+        }
 
-    //     if (!userToken) {
-    //         return;
-    //     }
+        return () => {
+            setOpenChannelId('');
+        };
+    }, [openChannelId]);
 
-    //     const initChat = async (user: any, userToken: string) => {
-    //         try {
-    //             const client = StreamChat.getInstance<StreamChatGenerics>(API_KEY);
-    //             // open the WebSocket connection to start receiving events
-    //             // Updates the user in the application (will add/modify existing fields but will not overwrite/delete previously set fields unless the key is used)
-    //             const res = await client.connectUser(
-    //                 {
-    //                     id: user._id,
-    //                     name: user.fullName,
-    //                     avatar: user.avatar,
-    //                 },
-    //                 userToken
-    //             );
-
-    //             console.log('Res', res);
-    //             setFilters({ type: 'messaging', members: { $in: [user._id] } });
-    //             setOptions({ state: true, presence: true, limit: 10 });
-    //             setSort({ last_message_at: -1, updated_at: -1 });
-    //             setChatClient(client);
-    //         } catch (error: any) {
-    //             console.log('Error', error);
-    //             console.log('Status code', JSON.parse(error.message).StatusCode);
-    //             if (JSON.parse(error.message).StatusCode === 401) {
-    //                 console.log('RESET USER TOKEN');
-    //                 regenStreamUserToken();
-    //                 return;
-    //             }
-    //         }
-    //     };
-
-    //     if (userToken && !chatClient) {
-    //         initChat(props.user, userToken);
-    //     }
-
-    //     return () => {
-    //         if (chatClient) {
-    //             chatClient.disconnectUser();
-    //         }
-    //     };
-    // }, [userToken, props.user]);
+    console.log('ChannelIdFromSearch', channelIdFromSearch);
 
     // INIT CLIENT
     useEffect(() => {
         if (!props.chatClient) {
             setChatError('Failed to load chat.');
         } else {
-            setFilters({ type: 'messaging', members: { $in: [props.user._id] } });
+            setFilters({ type: 'messaging', members: { $in: [userId] } });
             setOptions({ state: true, presence: true, limit: 10 });
             setSort({ last_message_at: -1, updated_at: -1 });
             setChatClient(props.chatClient);
@@ -126,16 +82,16 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     }, [props.chatClient]);
 
     useEffect(() => {
-        if (!chatClient || !props.user) {
+        if (!chatClient) {
             return;
         }
 
         if (channelSearch === '') {
-            setFilters({ type: 'messaging', members: { $in: [props.user._id] } });
+            setFilters({ type: 'messaging', members: { $in: [userId] } });
         } else {
             setFilters({
                 type: 'messaging',
-                members: { $in: [props.user._id] },
+                members: { $in: [userId] },
                 $or: [
                     {
                         'member.user.name': { $autocomplete: channelSearch },
@@ -146,7 +102,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 ],
             });
         }
-    }, [chatClient, channelSearch, props.user]);
+    }, [chatClient, channelSearch, userId]);
 
     if (!chatClient && !chatError)
         return (
@@ -193,6 +149,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         setChannelSearch={setChannelSearch}
                     />
                     <ChannelList
+                        customActiveChannel={channelIdFromSearch}
                         filters={filters}
                         sort={sort}
                         options={options}
@@ -218,7 +175,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     isEditing={isEditing}
                     isAddingUsersGroup={isAddingUsersGroup}
                     setIsAddingUsersGroup={setIsAddingUsersGroup}
-                    subscriptions={props.subscriptions}
                 />
             </Chat>
         </div>
