@@ -3,11 +3,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, Dimensions, Image, TextInput as DefaultTextInput } from 'react-native';
 import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import moment from 'moment';
-import { TextInput } from './CustomTextInput';
 
 // API
 
@@ -490,34 +488,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [props.isQuiz]);
 
     /**
-     * @description Save instructor annotations to cloud
-     */
-    const handleAnnotationsUpdate = useCallback(
-        (attempts: any) => {
-            server
-                .mutate({
-                    mutation: updateAnnotation,
-                    variables: {
-                        cueId: props.cueId,
-                        userId,
-                        attempts: JSON.stringify(attempts),
-                    },
-                })
-                .then((res) => {
-                    if (res.data.cue.updateAnnotation) {
-                        // props.reload()
-                        // setShowSubmission(false)
-                    }
-                })
-                .catch((e) => {
-                    console.log('Error', e);
-                    Alert('Could not save annotation.');
-                });
-        },
-        [userId, props.cueId]
-    );
-
-    /**
      * @description Called when instructor saves grade
      */
     const handleGradeSubmit = useCallback(() => {
@@ -600,7 +570,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then((res) => {
                 if (res.data && res.data.cue.modifyActiveAttemptQuiz) {
-                    props.reload();
+                    props.reloadStatuses();
                 }
             });
     };
@@ -624,7 +594,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then((res) => {
                 if (res.data && res.data.cue.gradeQuiz) {
-                    props.reload();
+                    props.reloadStatuses();
                     setShowSubmission(false);
                 }
             });
@@ -691,26 +661,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        server
-                            .mutate({
-                                mutation: editReleaseSubmission,
-                                variables: {
-                                    cueId: props.cueId,
-                                    releaseSubmission: !releaseSubmission,
-                                },
-                            })
-                            .then((res: any) => {
-                                if (res.data && res.data.cue.editReleaseSubmission) {
-                                    props.updateCueWithReleaseSubmission(!releaseSubmission);
-                                    setReleaseSubmission(!releaseSubmission);
-                                } else {
-                                    alert('Something went wrong');
-                                }
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                                alert('Something went wrong');
-                            });
+                        // server
+                        //     .mutate({
+                        //         mutation: editReleaseSubmission,
+                        //         variables: {
+                        //             cueId: props.cueId,
+                        //             releaseSubmission: !releaseSubmission,
+                        //         },
+                        //     })
+                        //     .then((res: any) => {
+                        //         if (res.data && res.data.cue.editReleaseSubmission) {
+                        //             props.updateCueWithReleaseSubmission(!releaseSubmission);
+                        //             setReleaseSubmission(!releaseSubmission);
+                        //         } else {
+                        //             alert('Something went wrong');
+                        //         }
+                        //     })
+                        //     .catch((err) => {
+                        //         console.log(err);
+                        //         alert('Something went wrong');
+                        //     });
+                        props.updateCueWithReleaseSubmission(!releaseSubmission);
                     },
                 },
             ]
@@ -1425,9 +1396,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     );
 };
 
-export default React.memo(SubscribersList, (prev, next) => {
-    return _.isEqual(prev.threads, next.threads);
-});
+export default React.memo(SubscribersList);
 
 const styleObject = () => {
     return StyleSheet.create({

@@ -1,7 +1,6 @@
 // REACT
 import React, { useState, useEffect, useCallback } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
@@ -10,10 +9,7 @@ import {
     checkChannelStatusForCode,
     createChannel,
     findBySchoolId,
-    getOrganisation,
-    getRole,
     subscribe,
-    getChannelsOutside,
     getUserCount,
 } from '../graphql/QueriesAndMutations';
 
@@ -24,8 +20,6 @@ import Alert from '../components/Alert';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { CirclePicker } from 'react-color';
 import alert from '../components/Alert';
-import TextareaAutosize from 'react-textarea-autosize';
-import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 import { Select } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';

@@ -1,7 +1,6 @@
 // REACT
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Animated } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API
 

@@ -7,7 +7,6 @@ import { ChannelInfoIcon, ChannelSaveIcon, HamburgerIcon, XButtonBackground } fr
 import { AvatarGroup } from '../';
 
 import type { StreamChatGenerics } from '../types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../../../contexts/AppContext';
 

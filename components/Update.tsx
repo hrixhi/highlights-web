@@ -5,9 +5,7 @@ import { Animated, ActivityIndicator, Dimensions, StyleSheet, TextInput } from '
 // API
 
 import {
-    getCueThreads,
     getStatuses,
-    getUnreadQACount,
     creatFolder,
     getFolder,
     getFolderCues,
@@ -16,6 +14,8 @@ import {
     addToFolder,
     deleteFolder,
     getReleaseSubmissionStatus,
+    findCueById,
+    handleReleaseSubmission,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -23,7 +23,6 @@ import Alert from '../components/Alert';
 import { View, TouchableOpacity, Text } from '../components/Themed';
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
 import { Ionicons } from '@expo/vector-icons';
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc';
@@ -37,36 +36,61 @@ import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
+import { omitTypename } from '../helpers/omitTypename';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const { user, userId, cues, subscriptions, handleUpdateCue, refreshCues, savingCueToCloud } = useAppContext();
+    const {
+        user,
+        userId,
+        cues,
+        subscriptions,
+        handleUpdateCue,
+        refreshCues,
+        savingCueToCloud,
+        // SYNC FROM BACKEND
+        syncCueFromBackend,
+        changeSyncingCueFromBackend,
+        syncingCueFromBackend,
+        syncCueError,
+        onlineStatus,
+        handleCueReleaseSubmissionStatus,
+    } = useAppContext();
 
     const [modalAnimation] = useState(new Animated.Value(1));
+
+    // CUE PROPERTIES
+    const [init, setInit] = useState(false);
+    const [cue, setCue] = useState<any>();
     const [cueId] = useState(props.cueId);
     const [createdBy] = useState(props.createdBy);
+    const [submission] = useState(props.cue && props.cue.submission ? props.cue.submission : false);
     const [channelCreatedBy] = useState(props.channelCreatedBy);
-    const [threads, setThreads] = useState<any[]>([]);
+    const [channelOwner, setChannelOwner] = useState(userId === channelCreatedBy);
+    const [folderId, setFolderId] = useState(
+        props.cue && props.cue.folderId && props.cue.folderId !== '' ? props.cue.folderId : ''
+    );
+    const [courseColor, setCourseColor] = useState('#000');
+    const [isQuiz, setIsQuiz] = useState(false);
+
+    console.log('props.cueId', props.cueId);
+
+    // UI CONTEXT
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [loadingStatuses, setLoadingStatuses] = useState(true);
-    const scroll2: any = useRef();
-    const scroll3: any = useRef();
-    const [channelOwner, setChannelOwner] = useState(false);
     const [viewStatus, setViewStatus] = useState(false);
-    const [submission, setSubmission] = useState(props.cue && props.cue.submission ? props.cue.submission : false);
     const [showOriginal, setShowOriginal] = useState(true);
-    const [isQuiz, setIsQuiz] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [save, setSave] = useState(false);
     const [del, setDel] = useState(false);
+    const [activeTab, setActiveTab] = useState('Content');
+
+    // FOLDER PROPERTIES
     const [showFolder, setShowFolder] = useState(false);
     const [createNewFolder, setCreateNewFolder] = useState(false);
     const [newFolderTitle, setNewFolderTitle] = useState('');
     const [channelCues, setChannelCues] = useState<any[]>([]);
     const [selectedCues, setSelectedCues] = useState<any[]>([]);
-    const [folderId, setFolderId] = useState(
-        props.cue && props.cue.folderId && props.cue.folderId !== '' ? props.cue.folderId : ''
-    );
     const [creatingFolder, setCreatingFolder] = useState(false);
     const [channelFolders, setChannelFolders] = useState<any[]>([]);
     const [editFolder, setEditFolder] = useState(false);
@@ -80,13 +104,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [updateFolderTitle, setUpdateFolderTitle] = useState('');
     const [folderCuesToDisplay, setFolderCuesToDisplay] = useState<any[]>([]);
     const [showExistingFolder, setShowExistingFolder] = useState(false);
+
     const windowHeight = Dimensions.get('window').height;
-    const [courseColor, setCourseColor] = useState('#000');
+
     // ALERTS
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
-    const [activeTab, setActiveTab] = useState('Content');
 
     const server = useApolloClient();
 
@@ -96,8 +120,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Set if cue is a Quiz
      */
     useEffect(() => {
-        if (props.cue.channelId && props.cue.channelId !== '') {
-            const data1 = props.cue.original;
+        if (cue && cue.channelId) {
+            const data1 = cue.original;
             if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
                 const obj = JSON.parse(data1);
                 if (obj.quizId) {
@@ -105,31 +129,44 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
         }
-    }, [props.cue]);
+    }, [cue]);
 
     /**
      * @description Set course color
      */
     useEffect(() => {
-        if (props.cue.channelId && props.cue.channelId !== '' && subscriptions && subscriptions.length > 0) {
+        if (cue && cue.channelId && subscriptions && subscriptions.length > 0) {
             const findCourse = subscriptions.find((sub: any) => {
-                return sub.channelId === props.cue.channelId;
+                return sub.channelId === cue.channelId;
             });
 
             if (findCourse && findCourse.colorCode) {
                 setCourseColor(findCourse.colorCode);
             }
         }
-    }, [props.cue.channelId, subscriptions]);
+    }, [cue, subscriptions]);
 
     /**
      * @description Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
      */
+    // useEffect(() => {
+    //     if (cueId && cueId !== '') {
+    //         checkReleaseSubmissionStatus(cueId);
+    //     }
+    // }, [cueId]);
+
+    /**
+     * @description Every time a cue is opened we need to Sync the cue with the database to ensure that we have the latest object since we use multiple devices (LATER ON WE MUST SUBSCRIBE CUES TO WEBHOOKS TO MONITOR REAL TIME CHANGES)
+     */
     useEffect(() => {
-        if (cueId && cueId !== '') {
-            checkReleaseSubmissionStatus(cueId);
+        if (cueId && cueId !== '' && props.channelId && props.channelId !== '') {
+            // SYNC CUE
+            fetchCueFromBackend(cueId);
+        } else {
+            setCue(props.cue);
         }
-    }, [cueId]);
+        setInit(true);
+    }, [cueId, props.channelId]);
 
     /**
      * @description Filter out all channel Cues that already have a folderID
@@ -144,12 +181,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         // Filter out current
         if (folderId) {
             filterExisting = filterExisting.filter((cue: any) => {
-                return cue._id !== props.cue._id;
+                return cue._id !== cue._id;
             });
         }
 
         setChannelCues(filterExisting);
-    }, [props.channelCues, folderId, props.cue]);
+    }, [props.channelCues, folderId, cue]);
 
     /**
      * @description Fetch all Channel Folders
@@ -186,7 +223,36 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     useEffect(() => {
         loadStudentResponses();
-    }, [props.cueId, props.channelId]);
+    }, [cueId, props.channelId]);
+
+    const fetchCueFromBackend = (cueId: string) => {
+        changeSyncingCueFromBackend(true);
+        server
+            .query({
+                query: findCueById,
+                variables: {
+                    cueId,
+                    userId,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.cue.findCueById) {
+                    const newCue = JSON.parse(JSON.stringify(res.data.cue.findCueById), omitTypename);
+
+                    setCue(newCue);
+                    syncCueFromBackend(newCue, false);
+                } else {
+                    // FALLBACK TO DEFAULT IF NOT A SUBMISSION (MAY BE USEFUL FOR OFFLINE FUNCTIONALITY)
+                    // setCue(props.cue)
+                    syncCueFromBackend(undefined, true);
+                }
+                changeSyncingCueFromBackend(false);
+            })
+            .catch((e) => {
+                syncCueFromBackend(undefined, true);
+                changeSyncingCueFromBackend(false);
+            });
+    };
 
     /**
      * @description Fetches release submission status
@@ -256,7 +322,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * @description Fetch folder cues if current cue has folder Id
      */
     const fetchFolderCues = useCallback(() => {
-        if (props.cue && folderId && folderId !== '') {
+        if (folderId && folderId !== '') {
             setLoadingFolderCues(true);
             setLoadingFolder(true);
 
@@ -303,14 +369,35 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const updateCueWithReleaseSubmission = async (releaseSubmission: boolean) => {
         // Release Submission
 
-        const currCue = cues[props.cueKey][props.cueIndex];
+        server
+            .mutate({
+                mutation: handleReleaseSubmission,
+                variables: {
+                    entryId: cueId,
+                    gradebookEntry: false,
+                    releaseSubmission,
+                },
+            })
+            .then((res) => {
+                if (res.data && res.data.gradebook.handleReleaseSubmission) {
+                    Alert(
+                        releaseSubmission
+                            ? 'Grades are now visible to students.'
+                            : 'Grades are now hidden from students.'
+                    );
 
-        const saveCue = {
-            ...currCue,
-            releaseSubmission,
-        };
+                    handleCueReleaseSubmissionStatus(cueId, releaseSubmission);
 
-        handleUpdateCue(saveCue, false);
+                    const updateCurrentCue = { ...cue, releaseSubmission };
+
+                    setCue(updateCurrentCue);
+                } else {
+                    Alert('Failed to modify status. Try again.');
+                }
+            })
+            .catch((e) => {
+                Alert('Failed to modify status. Try again.');
+            });
     };
 
     /**
@@ -361,55 +448,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 })
                 .catch((err) => {
-                    Alert(unableToLoadStatusesAlert, checkConnectionAlert);
+                    // Alert(unableToLoadStatusesAlert, checkConnectionAlert);
                     setLoadingStatuses(false);
                 });
         }
     }, [cueId, modalAnimation, createdBy, channelCreatedBy]);
-
-    /**
-     * @description Reload all subscriptions responses
-     */
-    const reloadStatuses = useCallback(() => {
-        setLoadingStatuses(true);
-
-        server
-            .query({
-                query: getStatuses,
-                variables: {
-                    cueId,
-                },
-            })
-            .then((res2) => {
-                if (res2.data.status && res2.data.status.findByCueId) {
-                    const subs: any[] = [];
-                    const statuses = res2.data.status.findByCueId;
-                    statuses.map((status: any) => {
-                        subs.push({
-                            displayName: status.fullName,
-                            _id: status.userId,
-                            fullName: status.status,
-                            submission: status.submission,
-                            comment: status.comment,
-                            score: status.score,
-                            graded: status.graded,
-                            userId: status.userId,
-                            submittedAt: status.submittedAt,
-                            deadline: status.deadline,
-                            releaseSubmission: status.releaseSubmission,
-                        });
-                    });
-                    setSubscribers(subs);
-                    setLoadingStatuses(false);
-                } else {
-                    setLoadingStatuses(false);
-                }
-            })
-            .catch((err) => {
-                Alert(unableToLoadStatusesAlert, checkConnectionAlert);
-                setLoadingStatuses(false);
-            });
-    }, [cueId]);
 
     /**
      * @description Handle used to drage cues for sorting
@@ -479,7 +522,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {value._id === props.cue._id ? null : (
+                        {value._id === cueId ? null : (
                             <TouchableOpacity
                                 onPress={() => {
                                     const temp = [...channelCues];
@@ -588,7 +631,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 new Date(value.date).toString().split(' ')[2]}
                         </Text>
 
-                        {value._id === props.cue._id ? null : (
+                        {value._id === cueId ? null : (
                             <TouchableOpacity
                                 onPress={() => {
                                     const temp = [...channelCues];
@@ -627,7 +670,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 20,
                                 flex: 1,
                                 marginTop: 5,
-                                color: value._id === props.cue._id ? '#007AFF' : '#000000',
+                                color: value._id === cueId ? '#007AFF' : '#000000',
                             }}
                         >
                             {title}
@@ -734,7 +777,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             case 'Submission':
                 return 'Submission';
             case 'Feedback':
-                return submission || isQuiz ? 'Feedback' : 'Feedback';
+                return submission || isQuiz ? 'Feedback' : 'Status';
             default:
                 return activeTab === op ? 'person' : 'person-outline';
         }
@@ -1036,7 +1079,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setActiveTab('Feedback');
                     }}
                 >
-                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>Feedback</Text>
+                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                        {submission || isQuiz ? 'Feedback' : 'Status'}
+                    </Text>
                 </TouchableOpacity>
             )}
         </View>
@@ -1097,11 +1142,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         horizontal={true}
                         showsHorizontalScrollIndicator={true}
                     >
-                        {folderCuesToDisplay.map((cue: any, ind: number) => {
-                            if (!cue || !cue.channelId) return;
+                        {folderCuesToDisplay.map((folderCue: any, ind: number) => {
+                            if (!folderCue || !folderCue.channelId) return;
 
                             const { title } = htmlStringParser(
-                                cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
+                                folderCue.channelId && folderCue.channelId !== '' ? folderCue.original : folderCue.cue
                             );
 
                             const colorChoices: any[] = [
@@ -1112,7 +1157,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 '#3abb83',
                             ].reverse();
 
-                            const col = colorChoices[cue.color];
+                            const col = colorChoices[folderCue.color];
 
                             return (
                                 <View
@@ -1138,7 +1183,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     key={ind.toString()}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => props.openCue(cue._id)}
+                                        onPress={() => props.openCue(folderCue._id)}
                                         key={'textPage'}
                                         style={{
                                             maxWidth: 210,
@@ -1152,9 +1197,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     >
                                         <View style={styles.dateContainer}>
                                             <Text style={styles.date2}>
-                                                {new Date(props.cue.date).toString().split(' ')[1] +
+                                                {new Date(props.folderCue.date).toString().split(' ')[1] +
                                                     ' ' +
-                                                    new Date(props.cue.date).toString().split(' ')[2]}
+                                                    new Date(props.folderCue.date).toString().split(' ')[2]}
                                             </Text>
                                         </View>
                                         <View
@@ -1176,7 +1221,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     lineHeight: 20,
                                                     flex: 1,
                                                     marginTop: 5,
-                                                    color: cue._id === props.cue._id ? '#007AFF' : '#000000',
+                                                    color: folderCue._id === cueId ? '#007AFF' : '#000000',
                                                 }}
                                             >
                                                 {title}
@@ -1235,9 +1280,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={true}
                             >
-                                {channelCues.map((cue: any, ind: number) => {
+                                {channelCues.map((channelCue: any, ind: number) => {
                                     const { title } = htmlStringParser(
-                                        cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
+                                        channelCue.channelId && channelCue.channelId !== ''
+                                            ? channelCue.original
+                                            : channelCue.cue
                                     );
 
                                     const colorChoices: any[] = [
@@ -1248,7 +1295,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         '#3abb83',
                                     ].reverse();
 
-                                    const col = colorChoices[cue.color];
+                                    const col = colorChoices[channelCue.color];
 
                                     return (
                                         <View
@@ -1295,20 +1342,20 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                 >
                                                     <Text style={styles.date2}>
-                                                        {new Date(props.cue.date).toString().split(' ')[1] +
+                                                        {new Date(channelCue.date).toString().split(' ')[1] +
                                                             ' ' +
-                                                            new Date(props.cue.date).toString().split(' ')[2]}
+                                                            new Date(channelCue.date).toString().split(' ')[2]}
                                                     </Text>
 
                                                     <TouchableOpacity
                                                         onPress={() => {
                                                             const temp = [...selectedCues];
-                                                            temp.push(cue);
+                                                            temp.push(channelCue);
                                                             setSelectedCues(temp);
 
                                                             // Remove from channel Cues
                                                             const cCues = channelCues.filter(
-                                                                (c: any) => c._id !== cue._id
+                                                                (c: any) => c._id !== channelCue._id
                                                             );
                                                             setChannelCues(cCues);
                                                         }}
@@ -1454,9 +1501,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 showsHorizontalScrollIndicator={true}
                                 // showsVerticalScrollIndicator={false}
                             >
-                                {channelCues.map((cue: any, ind: number) => {
+                                {channelCues.map((channelCue: any, ind: number) => {
                                     const { title } = htmlStringParser(
-                                        cue.channelId && cue.channelId !== '' ? cue.original : cue.cue
+                                        channelCue.channelId && channelCue.channelId !== ''
+                                            ? channelCue.original
+                                            : channelCue.cue
                                     );
 
                                     const colorChoices: any[] = [
@@ -1467,7 +1516,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         '#3abb83',
                                     ].reverse();
 
-                                    const col = colorChoices[cue.color];
+                                    const col = colorChoices[channelCue.color];
 
                                     return (
                                         <View
@@ -1514,20 +1563,20 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                 >
                                                     <Text style={styles.date2}>
-                                                        {new Date(props.cue.date).toString().split(' ')[1] +
+                                                        {new Date(channelCue.date).toString().split(' ')[1] +
                                                             ' ' +
-                                                            new Date(props.cue.date).toString().split(' ')[2]}
+                                                            new Date(channelCue.date).toString().split(' ')[2]}
                                                     </Text>
 
                                                     <TouchableOpacity
                                                         onPress={() => {
                                                             const temp = [...folderCuesToDisplay];
-                                                            temp.push(cue);
+                                                            temp.push(channelCue);
                                                             setFolderCuesToDisplay(temp);
 
                                                             // Remove from channel Cues
                                                             const cCues = channelCues.filter(
-                                                                (c: any) => c._id !== cue._id
+                                                                (c: any) => c._id !== channelCue._id
                                                             );
                                                             setChannelCues(cCues);
                                                         }}
@@ -1630,7 +1679,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         );
     };
 
-    if (!props.cue) return null;
+    if (!init) return null;
 
     /**
      * @description Content view
@@ -1650,11 +1699,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         >
             {!viewStatus ? (
                 <UpdateControls
-                    // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
+                    key={JSON.stringify(cue) + props.cueId}
                     channelId={props.channelId}
                     save={save}
                     del={del}
-                    cue={props.cue}
+                    cue={cue}
                     cueIndex={props.cueIndex}
                     cueKey={props.cueKey}
                     channelOwner={channelOwner}
@@ -1671,7 +1720,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     showComments={showComments}
                     setShowComments={(s: any) => setShowComments(s)}
                     setShowFolder={(s: any) => setShowFolder(s)}
-                    reloadStatuses={reloadStatuses}
+                    reloadStatuses={loadStudentResponses}
                     setSave={(save: boolean) => setSave(save)}
                     setDelete={(del: boolean) => setDel(del)}
                 />
@@ -1710,7 +1759,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             <ScrollView
-                                ref={scroll3}
                                 contentContainerStyle={{
                                     width: '100%',
                                     height:
@@ -1737,10 +1785,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         channelName={props.filterChoice}
                                         channelId={props.channelId}
                                         closeModal={() => props.closeModal()}
-                                        reload={() => loadStudentResponses()}
-                                        cue={props.cue}
+                                        cue={cue}
                                         updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
-                                        reloadStatuses={reloadStatuses}
+                                        reloadStatuses={loadStudentResponses}
                                         isQuiz={isQuiz}
                                     />
                                 </View>
@@ -1794,9 +1841,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <TouchableOpacity
                         onPress={() => {
                             setCreateNewFolder(true);
-                            setSelectedCues([props.cue]);
+                            setSelectedCues([cue]);
                             const filter = props.channelCues.filter(
-                                (cue: any) => cue._id !== props.cue._id && (!cue.folderId || cue.folderId === '')
+                                (channelCue: any) =>
+                                    channelCue._id !== cue._id && (!channelCue.folderId || channelCue.folderId === '')
                             );
                             setChannelCues(filter);
                         }}
@@ -1838,7 +1886,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 .mutate({
                                     mutation: addToFolder,
                                     variables: {
-                                        cueId: props.cue._id,
+                                        cueId,
                                         folderId: choice,
                                     },
                                 })
@@ -1851,8 +1899,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }
 
                                     // Filter out current cue from FolderCuesToDisplay
-                                    const filterOutCurrent = folderCuesToDisplay.filter((cue: any) => {
-                                        return cue._id !== props.cue._id;
+                                    const filterOutCurrent = folderCuesToDisplay.filter((folderCue: any) => {
+                                        return folderCue._id !== cueId;
                                     });
 
                                     setFolderCuesToDisplay(filterOutCurrent);
@@ -2066,7 +2114,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }
 
                                                     // Check if current cue was removed from the list then set folder id to ""
-                                                    if (!cueIds.includes(props.cue._id)) {
+                                                    if (!cueIds.includes(cueId)) {
                                                         setFolderId('');
                                                     } else {
                                                         await fetchFolderCues();
@@ -2273,7 +2321,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </TouchableOpacity>
 
                         {/* CUE TABS IF THE DIMENSIONS IS BIGGER THAN 1024 */}
-                        {Dimensions.get('window').width >= 1024 && !createNewFolder && !editFolder ? options : null}
+                        {Dimensions.get('window').width >= 768 && !createNewFolder && !editFolder ? options : null}
 
                         {/* Render Folder Title input if Create / Edit */}
 
@@ -2341,7 +2389,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             backgroundColor: 'none',
                                             marginLeft: 20,
                                         }}
-                                        disabled={user.email === disableEmailId}
+                                        disabled={user.email === disableEmailId || syncingCueFromBackend}
                                     >
                                         <Text
                                             style={{
@@ -2371,7 +2419,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             marginLeft: 20,
                                             backgroundColor: 'none',
                                         }}
-                                        disabled={user.email === disableEmailId}
+                                        disabled={user.email === disableEmailId || syncingCueFromBackend}
                                     >
                                         <Text
                                             style={{
@@ -2387,7 +2435,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                 ) : null}
-                                {renderFolderButtons()}
+                                {syncingCueFromBackend || syncCueError ? null : renderFolderButtons()}
                             </View>
                         }
                     </View>
@@ -2442,18 +2490,128 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <View style={{ width: '100%', position: 'relative', height: windowHeight }}>
                 {/* Header */}
                 {renderHeader()}
+
                 {/* Main Content */}
-                <View
-                    style={{
-                        width: '100%',
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        flex: 1,
-                    }}
-                >
-                    {ContentView}
-                </View>
+                {syncingCueFromBackend && !syncCueError ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            flex: 1,
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <View
+                                style={{
+                                    marginTop: 10,
+                                }}
+                            >
+                                <ActivityIndicator size={20} color={'#1F1F1F'} />
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        fontFamily: 'Inter',
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    Loading...
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                ) : syncCueError || !cue ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            flex: 1,
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignSelf: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Ionicons name={'cloud-offline-outline'} size={50} />
+
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontFamily: 'Inter',
+                                    marginTop: 10,
+                                }}
+                            >
+                                Failed to fetch content. Try again.
+                            </Text>
+
+                            {syncingCueFromBackend ? (
+                                <View
+                                    style={{
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    <ActivityIndicator size={20} color={'#1F1F1F'} />
+                                </View>
+                            ) : (
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: 'white',
+                                        marginTop: 25,
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                    }}
+                                    onPress={() => {
+                                        fetchCueFromBackend(cueId);
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            borderColor: '#000',
+                                            borderWidth: 1,
+                                            color: '#fff',
+                                            backgroundColor: '#000',
+                                            fontSize: 11,
+                                            paddingHorizontal: 24,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
+                                            textTransform: 'uppercase',
+                                            width: 130,
+                                        }}
+                                    >
+                                        Reload page
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                ) : (
+                    <View
+                        style={{
+                            width: '100%',
+                            backgroundColor: 'white',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            flex: 1,
+                        }}
+                    >
+                        {ContentView}
+                    </View>
+                )}
                 {/* Mobile tabs */}
                 {Dimensions.get('window').width < 768 ? mobileOptions : null}
             </View>

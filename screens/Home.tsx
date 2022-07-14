@@ -242,6 +242,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
     }, [fullName, email, password, confirmPassword, signingUp]);
 
+    // FOR NATIVE AND DESKTOP APPS WE WILL SHOW LOGIN SCREEN
+    useEffect(() => {
+        console.log('USer ID', userId);
+        if (!userId || userId === '') {
+            window.location.replace(`${origin}/login`);
+        }
+    }, [userId]);
+
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
         setDimensions({ window, screen });

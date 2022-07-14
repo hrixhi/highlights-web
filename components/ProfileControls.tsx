@@ -548,8 +548,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
-                            // overflow: 'hidden',
-                            // height: 35,
+
                             marginTop: 15,
                             justifyContent: 'center',
                             flexDirection: 'row',

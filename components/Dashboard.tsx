@@ -75,6 +75,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setRecentSearches,
         refreshSubscriptions,
         refreshCues,
+        setOpenMessageId,
+        setOpenChannelId: setOpenChatChannelId,
     } = useAppContext();
 
     const styles = styleObject();
@@ -498,7 +500,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         try {
             axios
                 .post(
-                    `http://localhost:8000/search`,
+                    `https://api.learnwithcues.com/search`,
                     {
                         term: searchTerm,
                         userId,
@@ -1369,14 +1371,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             } else if (activeSearchResultsTab === 'Messages') {
                                                 // open chat and set Chat ID and users in Async storage to open that specific chat
 
-                                                await AsyncStorage.setItem(
-                                                    'openChat',
-                                                    JSON.stringify({
-                                                        _id: obj.groupId._id,
-                                                        users: obj.users,
-                                                    })
-                                                );
-
+                                                setOpenMessageId(obj.id);
+                                                setOpenChatChannelId(obj.channel.id);
                                                 props.setOption('Inbox');
 
                                                 setSearchTerm('');
@@ -2717,7 +2713,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // backgroundColor: '#f8f8f8',
                                 // borderRadius: 18,
                                 // borderBottomColor: '#cfcfcf',
-
                                 // borderBottomWidth: 1
                             }}
                             placeholder={'Search'}

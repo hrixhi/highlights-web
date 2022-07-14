@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { logChatPromiseExecution } from 'stream-chat';
 import {
     MessageList,
@@ -36,7 +36,7 @@ export type ChannelInnerProps = {
 };
 
 export const ChannelInner = (props: ChannelInnerProps) => {
-    const { user } = useAppContext();
+    const { user, openMessageId, setOpenMessageId } = useAppContext();
     const { theme, toggleMobile } = props;
     const { giphyState, setGiphyState } = useGiphyContext();
 
@@ -44,7 +44,7 @@ export const ChannelInner = (props: ChannelInnerProps) => {
 
     const { client } = useChatContext();
 
-    const { sendMessage } = useChannelActionContext<StreamChatGenerics>();
+    const { sendMessage, jumpToMessage } = useChannelActionContext<StreamChatGenerics>();
 
     const server = useApolloClient();
 
@@ -56,6 +56,16 @@ export const ChannelInner = (props: ChannelInnerProps) => {
     const [instantMeetingEnd, setInstantMeetingEnd] = useState<any>(
         new Date(instantMeetingStart.getTime() + 1000 * 60 * 60)
     );
+
+    useEffect(() => {
+        if (openMessageId) {
+            jumpToMessage(openMessageId);
+        }
+
+        return () => {
+            setOpenMessageId('');
+        };
+    }, [openMessageId]);
 
     const members = Object.values(channel.state.members).filter(({ user }) => user?.id !== client.userID);
 

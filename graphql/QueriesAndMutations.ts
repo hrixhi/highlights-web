@@ -2449,3 +2449,43 @@ export const getInboxDirectory = gql`
         }
     }
 `;
+
+export const findCueById = gql`
+    query ($cueId: String!, $userId: String!) {
+        cue {
+            findCueById(cueId: $cueId, userId: $userId) {
+                _id
+                cue
+                color
+                channelId
+                customCategory
+                unreadThreads
+                frequency
+                date
+                folderId
+                endPlayAt
+                channelName
+                starred
+                createdBy
+                shuffle
+                original
+                submission
+                deadline
+                initiateAt
+                gradeWeight
+                score
+                graded
+                comment
+                status
+                submittedAt
+                releaseSubmission
+                active
+                limitedShares
+                allowedAttempts
+                annotations
+                availableUntil
+                totalPoints
+            }
+        }
+    }
+`;

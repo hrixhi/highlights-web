@@ -2,11 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import _ from 'lodash';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // COMPONENTS
 import { Text, View, TouchableOpacity } from '../components/Themed';
-import { Ionicons } from '@expo/vector-icons';
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';

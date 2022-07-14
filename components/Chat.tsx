@@ -36,7 +36,7 @@ type StreamChatGenerics = {
 };
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const { userId, user } = useAppContext();
+    const { userId, openChannelId, setOpenChannelId } = useAppContext();
 
     const [chatClient, setChatClient] = useState<any>(undefined);
     const [chatError, setChatError] = useState('');
@@ -53,6 +53,21 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [filters, setFilters] = useState<any>(undefined);
     const [options, setOptions] = useState<any>(undefined);
     const [sort, setSort] = useState<any>(undefined);
+
+    // INIT SEARCH
+    const [channelIdFromSearch, setChannelIdFromSearch] = useState('');
+
+    useEffect(() => {
+        if (openChannelId) {
+            setChannelIdFromSearch(openChannelId);
+        }
+
+        return () => {
+            setOpenChannelId('');
+        };
+    }, [openChannelId]);
+
+    console.log('ChannelIdFromSearch', channelIdFromSearch);
 
     // INIT CLIENT
     useEffect(() => {
@@ -134,6 +149,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         setChannelSearch={setChannelSearch}
                     />
                     <ChannelList
+                        customActiveChannel={channelIdFromSearch}
                         filters={filters}
                         sort={sort}
                         options={options}

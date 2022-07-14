@@ -3416,6 +3416,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             ? problem.correctEquations[0]
                                             : solutions[problemIndex].equationResponse
                                     }
+                                    isOwner={props.isOwner}
                                     onChange={(eq: any) => {
                                         if (props.isOwner) {
                                             const newProbs = [...problems];

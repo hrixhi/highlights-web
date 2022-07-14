@@ -18,7 +18,7 @@ import { disableEmailId } from '../constants/zoomCredentials';
 import { useAppContext } from '../contexts/AppContext';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const { userId } = useAppContext();
+    const { user } = useAppContext();
 
     const [problems] = useState<any[]>(props.problems);
     const [solutions, setSolutions] = useState<any[]>(props.solutions.solutions);

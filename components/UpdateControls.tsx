@@ -88,12 +88,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         customCategories: localCustomCategories,
         handleUpdateCue,
         handleDeleteCue,
-        cues,
+        handleSubmissionDraftUpdate,
+        refreshCues,
     } = useAppContext();
 
     const current = new Date();
-    const [cue] = useState(props.cue.cue);
-    const [initialSubmissionDraft, setInitialSubmissionDraft] = useState('');
+    const [initializedSubmissionDraft, setInitializedSubmissionDraft] = useState(false);
     const [shuffle, setShuffle] = useState(props.cue.shuffle);
     const [starred, setStarred] = useState(props.cue.starred);
     const [color, setColor] = useState(props.cue.color);
@@ -597,14 +597,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
             const data1 = original;
-            const data2 = props.cue.cue;
-
-            if (!data2 || !data2[0] || data2[0] !== '{' || data2[data2.length - 1] !== '}') {
-                setSubmissionImported(false);
-                setSubmissionUrl('');
-                setSubmissionType('');
-                setSubmissionTitle('');
-            }
 
             if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
                 const obj = JSON.parse(data1);
@@ -627,7 +619,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             if (res.data && res.data.quiz.getQuiz) {
                                 setQuizId(obj.quizId);
 
-                                const solutionsObject = cue ? JSON.parse(cue) : {};
+                                const solutionsObject = props.cue.cue ? JSON.parse(props.cue.cue) : {};
                                 if (solutionsObject.solutions) {
                                     setSolutions(solutionsObject.solutions);
                                     setQuizSolutions(solutionsObject);
@@ -731,7 +723,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
         setLoading(false);
-    }, [props.cue, cue, loading, original]);
+    }, [props.cue, loading, original]);
 
     /**
      * @description Imports for local cues
@@ -753,12 +745,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      */
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
-            const data = cue;
+            const data = props.cue.cue;
 
             if (data && data[0] && data[0] === '{' && data[data.length - 1] === '}') {
                 const obj = JSON.parse(data);
 
-                // New Schema
                 if (obj.submissionDraft !== undefined) {
                     if (obj.submissionDraft[0] === '{' && obj.submissionDraft[obj.submissionDraft.length - 1] === '}') {
                         let parse = JSON.parse(obj.submissionDraft);
@@ -769,18 +760,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             setSubmissionType(parse.type);
                             setSubmissionTitle(parse.title);
                         }
-
-                        setSubmissionDraft(obj.submissionDraft);
-                    } else {
-                        setInitialSubmissionDraft(obj.submissionDraft);
-                        setSubmissionDraft(obj.submissionDraft);
                     }
-
-                    setSubmissionAttempts(obj.attempts);
+                    setSubmissionDraft(obj.submissionDraft);
                 }
+
+                setSubmissionAttempts(obj.attempts ? obj.attempts : []);
             }
+            setInitializedSubmissionDraft(true);
         }
-    }, [cue, props.cue.channelId]);
+    }, [props.cue]);
 
     /**
      * @description Update submissionDraft when the Submission title is updated
@@ -931,7 +919,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                     // Need to modify the original property in the cue
 
-                    const currCue = cues[props.cueKey][props.cueIndex];
+                    const currCue = props.cue;
 
                     if (currCue.annotations !== '') {
                         const xfdfString = currCue.annotations;
@@ -960,7 +948,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                         const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: false });
 
-                        const currCue = cues[props.cueKey][props.cueIndex];
+                        const currCue = props.cue;
 
                         const saveCue = {
                             ...currCue,
@@ -1049,7 +1037,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             });
         }
     }, [
-        cues,
+        props.cue,
         url,
         RichText,
         imported,
@@ -1121,13 +1109,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     // useEffect(() => {
     //     handleUpdateStarred();
     // }, [starred]);
-
-    /**
-     * @description Update submission response in Editor on Tab change
-     */
-    useEffect(() => {
-        setInitialSubmissionDraft(submissionDraft);
-    }, [props.showOriginal, props.showComments, props.showOptions]);
 
     /**
      * @description Update original value in Editor on Tab change
@@ -1403,13 +1384,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Handle cue content for Submissions and Quiz responses
      */
     const handleUpdateCueSubmission = useCallback(async () => {
-        if (isSubmitting || !cues) return;
+        if (isSubmitting) return;
 
-        const currCue = cues[props.cueKey][props.cueIndex];
+        const currCue = props.cue;
 
         const currCueValue: any = currCue.cue;
 
-        if (!userId || !currCue.submission) {
+        // ONLY UPDATE IF FOLLOWING CONDITIONS MET
+        if (!userId || !currCue.submission || !initializedSubmissionDraft) {
             return;
         }
 
@@ -1471,6 +1453,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             updatedCue = JSON.stringify(submissionObj);
         }
 
+        console.log('Initialized submission draft', initializedSubmissionDraft);
+        console.log('currCueValue', currCueValue);
+
         server
             .mutate({
                 mutation: saveSubmissionDraft,
@@ -1482,6 +1467,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             })
             .then((res) => {
                 if (res.data && res.data.cue.saveSubmissionDraft) {
+                    handleSubmissionDraftUpdate(props.cue._id, updatedCue);
                     setSubmissionSavedAt(new Date());
                     setFailedToSaveSubmission(false);
                 } else {
@@ -1492,7 +1478,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setFailedToSaveSubmission(true);
             });
     }, [
-        cues,
+        initializedSubmissionDraft,
         submitted,
         solutions,
         initiatedAt,
@@ -1562,7 +1548,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 tempOriginal = original;
             }
 
-            const currCue = cues[props.cueKey][props.cueIndex];
+            const currCue = props.cue;
 
             const saveCue = {
                 ...currCue,
@@ -1609,7 +1595,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             tempOriginal = original;
         }
 
-        const currCue = cues[props.cueKey][props.cueIndex];
+        const currCue = props.cue;
 
         const saveCue = {
             ...currCue,
@@ -1620,7 +1606,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         setInitialOriginal(tempOriginal);
         setUpdatingCueContent(false);
-    }, [title, original, imported, type, url, isQuiz]);
+    }, [title, original, imported, type, url, isQuiz, props.cue]);
 
     /**
      * @description Handle changes to restrict access
@@ -1737,7 +1723,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 tempOriginal = original;
             }
 
-            const currCue = cues[props.cueKey][props.cueIndex];
+            const currCue = props.cue;
 
             saveCue = {
                 ...currCue,
@@ -1779,7 +1765,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 tempOriginal = original;
             }
 
-            const currCue = cues[props.cueKey][props.cueIndex];
+            const currCue = props.cue;
 
             saveCue = {
                 ...currCue,
@@ -1827,7 +1813,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ]);
         }
     }, [
-        cues,
         // CONTENT
         title,
         original,
@@ -2036,7 +2021,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             .catch((err) => {
                 Alert(somethingWentWrongAlert, tryAgainLaterAlert);
             });
-    }, [cue, props.cue, isQuiz, quizId, initiatedAt, solutions, userId]);
+    }, [props.cue, isQuiz, quizId, initiatedAt, solutions, userId]);
 
     const submitResponse = useCallback(() => {
         let now = new Date();
@@ -2103,7 +2088,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     }, [
         props.cue,
-        cue,
         submissionTitle,
         submissionType,
         submissionUrl,
@@ -2347,7 +2331,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [
         props.cue,
-        cue,
         submissionTitle,
         submissionType,
         submissionUrl,
@@ -2406,7 +2389,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     } else {
                         setSubmissionImported(false);
                         setSubmissionDraft('');
-                        setInitialSubmissionDraft('');
                         setSubmissionUrl('');
                         setSubmissionType('');
                         setSubmissionTitle('');
@@ -2494,6 +2476,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 .then((res1) => {
                     if (res1.data.cue.create) {
                         Alert(sharedAlert, 'Cue has been successfully shared.');
+                        refreshCues();
                     }
                 })
                 .catch((err) => {
@@ -2502,7 +2485,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
         }
     }, [
-        cue,
         starred,
         color,
         frequency,

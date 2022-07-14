@@ -11,7 +11,6 @@ import {
     Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
 import { TextInput as CustomTextInput } from '../components/CustomTextInput';
 

@@ -1,9 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text } from '../components/Themed';
-import { Platform, Alert } from 'react-native';
-import alert from '../components/Alert';
+import { Platform } from 'react-native';
 import {
     fetchAnnotationsForViewer,
     updateAnnotationsFromViewer,

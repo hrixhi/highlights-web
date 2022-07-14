@@ -1,7 +1,7 @@
 // REACT
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions, ActivityIndicator } from 'react-native';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API

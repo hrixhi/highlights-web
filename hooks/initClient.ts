@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { origin } from '../constants/zoomCredentials';
 
 export const useAppClient = () => {
@@ -14,26 +14,27 @@ export const useAppClient = () => {
     }, []);
 
     const fetchUserFromStorage = async () => {
-        const user = await AsyncStorage.getItem('user');
-        if (user) {
+        // const user = await AsyncStorage.getItem('user');
+
+        const items = await AsyncStorage.multiGet(['user', 'sortByWorkspace', 'recentSearches']);
+
+        console.log('Items', items);
+        if (items[0] && items[0][1]) {
             // FETCH ALL ASYNC ITEMS AT ONCE
-            const parsedUser = await JSON.parse(user);
-            const sortBy = await AsyncStorage.getItem('sortByWorkspace');
-            const recentSearches = await AsyncStorage.getItem('recentSearches');
+            const parsedUser = await JSON.parse(items[0][1]);
+
+            // const sortBy = await AsyncStorage.getItem('sortByWorkspace');
+            // const recentSearches = await AsyncStorage.getItem('recentSearches');
 
             setUserId(parsedUser._id);
-            setSortByWorkspace(sortBy ? sortBy : 'Date ↑');
-            if (recentSearches) {
-                setRecentSearches(JSON.parse(recentSearches));
+            setSortByWorkspace(items[1][1] ? items[1][1] : 'Date ↑');
+            if (items[2][1]) {
+                setRecentSearches(JSON.parse(items[2][1]));
             }
         } else {
             setUserId('');
             setSortByWorkspace('');
-            setRecentSearches('');
-            // Redirect only if trying to access main app
-            if (window.location.href === `${origin}`) {
-                window.location.href = `${origin}/login`;
-            }
+            setRecentSearches([]);
         }
         setIsConnecting(false);
     };

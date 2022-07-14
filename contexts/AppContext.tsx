@@ -31,7 +31,31 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         customCategories: [],
         // LOADING STATES
         savingCueToCloud: false,
+        syncingCueFromBackend: false,
+        syncCueError: false,
     };
+
+    const [onlineStatus, setOnlineStatus] = useState<boolean>(true);
+    const [openMessageId, setOpenMessageId] = useState('');
+    const [openChannelId, setOpenChannelId] = useState('');
+
+    // useEffect(() => {
+    //     window.addEventListener('offline', () => {
+    //         setOnlineStatus(false);
+    //     });
+    //     window.addEventListener('online', () => {
+    //         setOnlineStatus(true);
+    //     });
+
+    //     return () => {
+    //         window.removeEventListener('offline', () => {
+    //             setOnlineStatus(false);
+    //         });
+    //         window.removeEventListener('online', () => {
+    //             setOnlineStatus(true);
+    //         });
+    //     };
+    // }, []);
 
     const setCuesHelper = (data: any[]) => {
         const cuesMap: any = {};
@@ -95,29 +119,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
             case 'ADD_CUE':
                 const newRes = setCuesHelper([...state.allCues, action.payload]);
 
-                // let newCueChannelId = newCue.channelId ? newCue.channelId : 'local';
-
-                // const updateCueMap = {
-                //     ...state.cues,
-                // };
-
-                // // Calculate index for new cue
-                // let currLength = updateCueMap[newCueChannelId] ? updateCueMap[newCueChannelId].length : 0;
-
-                // if (currLength === 0) {
-                //     updateCueMap[newCueChannelId] = [newCue];
-                // } else {
-                //     let updateChannelCues = [...updateCueMap[newCueChannelId]];
-                //     updateChannelCues.push(newCue);
-                //     updateCueMap[newCueChannelId] = updateChannelCues;
-                // }
-
-                // let currentCategoriesSet = new Set(customCategories);
-
-                // if (newCueChannelId === 'local' && newCue.customCategory !== '') {
-                //     currentCategoriesSet.add(newCue.customCategory);
-                // }
-
                 return {
                     ...state,
                     cues: newRes.cues,
@@ -180,6 +181,56 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                     customCategories: updateRead.customCategories,
                 };
 
+            case 'SUBMISSION_DRAFT_UPDATE':
+                let updateDraftCues = [...state.allCues];
+
+                updateDraftCues = updateDraftCues.map((cue: any) => {
+                    if (cue._id === action.payload.cueId) {
+                        return {
+                            ...cue,
+                            cue: action.payload.cue,
+                        };
+                    } else {
+                        return {
+                            ...cue,
+                        };
+                    }
+                });
+
+                const updateDraft = setCuesHelper(updateDraftCues);
+
+                return {
+                    ...state,
+                    cues: updateDraft.cues,
+                    allCues: updateDraft.allCues,
+                    customCategories: updateDraft.customCategories,
+                };
+
+            case 'RELEASE_SUBMISSION':
+                let releaseSubmissionCues = [...state.allCues];
+
+                releaseSubmissionCues = releaseSubmissionCues.map((cue: any) => {
+                    if (cue._id === action.payload) {
+                        return {
+                            ...cue,
+                            releaseSubmissionCues,
+                        };
+                    } else {
+                        return {
+                            ...cue,
+                        };
+                    }
+                });
+
+                const updateReleaseSubmission = setCuesHelper(releaseSubmissionCues);
+
+                return {
+                    ...state,
+                    cues: updateReleaseSubmission.cues,
+                    allCues: updateReleaseSubmission.allCues,
+                    customCategories: updateReleaseSubmission.customCategories,
+                };
+
             case 'SET_SUBSCRIPTIONS':
                 return {
                     ...state,
@@ -214,6 +265,40 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                     // LOADING STATES
                     savingCueToCloud: false,
                 };
+            case 'SYNCING_CUE_FROM_BACKEND':
+                return {
+                    ...state,
+                    syncingCueFromBackend: action.payload,
+                };
+            case 'SYNC_CUE_FROM_BACKEND':
+                //
+                const newCue = action.payload.cue;
+                const error = action.payload.error;
+
+                if (error) {
+                    return {
+                        ...state,
+                        syncCueError: true,
+                    };
+                }
+
+                //
+                let syncCues = [...state.allCues];
+
+                syncCues = syncCues.filter((c: any) => c._id !== newCue._id);
+
+                syncCues.push(newCue);
+
+                const syncRes = setCuesHelper(syncCues);
+
+                return {
+                    ...state,
+                    cues: syncRes.cues,
+                    allCues: syncRes.allCues,
+                    customCategories: syncRes.customCategories,
+                    syncCueError: false,
+                };
+
             default:
                 throw Error('No action matches', action.type);
         }
@@ -221,18 +306,9 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    // const [userId, setUserId] = useState(value.userId);
     const [sortBy, setSortBy] = useState(value.sortByWorkspace);
     const [recentSearches, setRecentSearches] = useState(value.recentSearches);
-    // const [user, setUser] = useState<any>(undefined);
-    // const [org, setOrg] = useState<any>(undefined);
-    // const [subscriptions, setSubscriptions] = useState<any[]>([]);
-    // // This is array of all cues
-    // const [allCues, setAllCues] = useState<any>(undefined);
-    // // This is map of cues
-    // const [cues, setCues] = useState(undefined);
-    // const [customCategories, setCustomCategories] = useState<string[]>([]);
-    // const [savingCueToCloud, setSavingCueToCloud] = useState<boolean>(false);
+
     const server = useApolloClient();
 
     console.log('STATE', state);
@@ -355,7 +431,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         });
 
         if (res.data && res.data.cue.handleSaveCue) {
-            // let updateAllCues: any[] = [...state.allCues];
             // UPDATE LOCAL STATE FOR CUES
             if (create) {
                 dispatch({
@@ -364,9 +439,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 });
             } else {
                 // Filter out modified cue
-                // updateAllCues = updateAllCues.filter((c: any) => c._id !== cue._id);
-
-                // updateAllCues.push(res.data.cue.handleSaveCue);
 
                 dispatch({
                     type: 'UPDATE_CUE',
@@ -390,11 +462,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     };
 
     const handleAddCue = (cue: any) => {
-        // let updateAllCues: any[] = [...state.allCues];
-
-        // updateAllCues.push(cue);
-
-        // handleSetCues(updateAllCues);
         dispatch({
             type: 'ADD_CUE',
             payload: cue,
@@ -402,7 +469,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     };
 
     const handleDeleteCue = (cueId: string) => {
-        // handleSetCues(updateAllCues);
         dispatch({
             type: 'REMOVE_CUE',
             payload: cueId,
@@ -410,21 +476,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     };
 
     const handleReadCue = (cueId: string) => {
-        // let updateAllCues: any[] = allCues.map((cue: any) => {
-        //     if (cue._id === cueId) {
-        //         return {
-        //             ...cue,
-        //             status: 'read',
-        //         };
-        //     } else {
-        //         return {
-        //             ...cue,
-        //         };
-        //     }
-        // });
-
-        // handleSetCues(updateAllCues);
-
         markCueRead({
             variables: {
                 cueId,
@@ -435,6 +486,40 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         dispatch({
             type: 'MARK_CUE_READ',
             payload: cueId,
+        });
+    };
+
+    const handleSubmissionDraftUpdate = (cueId: string, cue: any) => {
+        dispatch({
+            type: 'SUBMISSION_DRAFT_UPDATE',
+            payload: {
+                cueId,
+                cue,
+            },
+        });
+    };
+
+    const syncCueFromBackend = (cue: any, error: boolean) => {
+        dispatch({
+            type: 'SYNC_CUE_FROM_BACKEND',
+            payload: {
+                cue,
+                error,
+            },
+        });
+    };
+
+    const changeSyncingCueFromBackend = (syncing: boolean) => {
+        dispatch({
+            type: 'SYNCING_CUE_FROM_BACKEND',
+            payload: syncing,
+        });
+    };
+
+    const handleCueReleaseSubmissionStatus = (cueId: string, releaseSubmission: boolean) => {
+        dispatch({
+            type: 'RELEASE_SUBMISSION',
+            payload: releaseSubmission,
         });
     };
 
@@ -452,6 +537,7 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
     return (
         <AppContext.Provider
+            displayName="APP CONTEXT"
             value={{
                 userId: state.userId,
                 user: state.user,
@@ -476,6 +562,17 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 refreshCues,
                 logoutUser,
                 handleReadCue,
+                syncCueFromBackend,
+                changeSyncingCueFromBackend,
+                syncingCueFromBackend: state.syncingCueFromBackend,
+                syncCueError: state.syncCueError,
+                onlineStatus,
+                handleCueReleaseSubmissionStatus,
+                handleSubmissionDraftUpdate,
+                openMessageId,
+                setOpenMessageId,
+                openChannelId,
+                setOpenChannelId,
             }}
         >
             {children}

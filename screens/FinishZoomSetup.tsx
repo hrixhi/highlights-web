@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
-import { Platform, Alert } from 'react-native';
-import OneSignal from 'react-onesignal';
+import { Platform } from 'react-native';
 import alert from '../components/Alert';
 
 import { connectZoom } from '../graphql/QueriesAndMutations';

@@ -17,18 +17,16 @@ import { onError } from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppClient } from './hooks/initClient';
 import { AppContextProvider } from './contexts/AppContext';
-
-const uri = 'http://localhost:8000/';
-// const uri = 'https://api.learnwithcues.com';
+import { apiURL } from './constants/zoomCredentials';
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();
 
-    const { userId, isConnecting, sortByWorkspace, recentSearches } = useAppClient();
+    const { userId, isConnecting, sortByWorkspace, recentSearches, setUserId } = useAppClient();
 
     const httpLink = new HttpLink({
-        uri,
+        uri: apiURL,
     });
 
     const withUserInfo = setContext(async () => {
@@ -46,9 +44,10 @@ export default function App() {
         };
     });
 
+    // let timeoutMessageDisplayed = false;
+
     const logoutUser = async () => {
         await AsyncStorage.clear();
-        window.location.href = `${origin}/login`;
     };
 
     const withToken = new ApolloLink((operation, forward) => {
@@ -69,7 +68,9 @@ export default function App() {
         if (graphQLErrors) {
             for (let err of graphQLErrors) {
                 if (err.message === 'NOT_AUTHENTICATED') {
-                    alert('Session Timed out. You will be logged out.');
+                    // alert('Session Timed out. You will be logged out.');
+                    // timeoutMessageDisplayed = true;
+                    setUserId('');
                     logoutUser();
                     return;
                 }
@@ -122,6 +123,7 @@ export default function App() {
                         sortByWorkspace,
                         recentSearches,
                     }}
+                    key={userId}
                 >
                     <SafeAreaProvider style={styles.font}>
                         <MenuProvider>
