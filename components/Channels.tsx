@@ -24,11 +24,7 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                     backgroundColor: 'white',
                 }}
             >
-                <ChannelControls
-                    closeModal={() => props.closeModal()}
-                    setShowCreate={(val: any) => props.setShowCreate(val)}
-                    showCreate={props.showCreate}
-                />
+                <ChannelControls setShowCreate={(val: any) => props.setShowCreate(val)} showCreate={props.showCreate} />
             </ScrollView>
         </View>
     );

@@ -1,6 +1,6 @@
 // REACT
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, Dimensions, Image, TextInput as DefaultTextInput } from 'react-native';
+import { ScrollView, Dimensions, Image, TextInput as DefaultTextInput } from 'react-native';
 import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
 import XLSX from 'xlsx';
@@ -13,7 +13,6 @@ import {
     submitGrade,
     getQuiz,
     gradeQuiz,
-    editReleaseSubmission,
     updateAnnotation,
     modifyActiveAttemptQuiz,
     getSubmissionAnnotations,
@@ -24,7 +23,6 @@ import {
 import { View, Text, TouchableOpacity } from './Themed';
 import Alert from './Alert';
 import ReactPlayer from 'react-player';
-import alert from './Alert';
 import QuizGrading from './QuizGrading';
 import WebViewer from '@pdftron/pdfjs-express';
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -54,7 +52,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const RichText: any = useRef();
     const submissionViewerRef: any = useRef();
     const [comment, setComment] = useState('');
-    const [isQuiz, setIsQuiz] = useState(false);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
     const [initiatedAt, setInitiatedAt] = useState<any>({});
     const [imported, setImported] = useState(false);
@@ -84,7 +81,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         categories.push('Submitted');
         categories.push('Graded');
     }
-    const styles = styleObject();
+
     let filteredSubscribers: any = [];
     switch (filterChoice) {
         case 'All':
@@ -133,19 +130,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     };
 
     // HOOKS
-
-    // useEffect(() => {
-    //     if (props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
-    //         const obj = JSON.parse(props.cue.original);
-
-    //         if (obj.quizId) {
-    //             setIsQuiz(true);
-    //         }
-    //     }
-    // }, [props.cue]);
-    // useEffect(() => {
-    //     setIsQuiz(props.isQuiz)
-    // }, [props.isQuiz])
 
     /**
      * @description prepares export data for Assignment grades
@@ -296,7 +280,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                 setSubmissionAttempts(obj.attempts);
             } else if (obj.attempts !== undefined && props.isQuiz) {
-                // setIsQuiz(true);
                 setQuizAttempts(obj.attempts);
 
                 // Set solutions to the active quiz attempt
@@ -661,26 +644,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        // server
-                        //     .mutate({
-                        //         mutation: editReleaseSubmission,
-                        //         variables: {
-                        //             cueId: props.cueId,
-                        //             releaseSubmission: !releaseSubmission,
-                        //         },
-                        //     })
-                        //     .then((res: any) => {
-                        //         if (res.data && res.data.cue.editReleaseSubmission) {
-                        //             props.updateCueWithReleaseSubmission(!releaseSubmission);
-                        //             setReleaseSubmission(!releaseSubmission);
-                        //         } else {
-                        //             alert('Something went wrong');
-                        //         }
-                        //     })
-                        //     .catch((err) => {
-                        //         console.log(err);
-                        //         alert('Something went wrong');
-                        //     });
                         props.updateCueWithReleaseSubmission(!releaseSubmission);
                     },
                 },
@@ -1397,85 +1360,3 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 };
 
 export default React.memo(SubscribersList);
-
-const styleObject = () => {
-    return StyleSheet.create({
-        screen: {
-            flex: 1,
-        },
-        margin: {
-            height: 20,
-        },
-        marginSmall: {
-            height: 10,
-        },
-        row: {
-            flexDirection: 'row',
-            display: 'flex',
-            width: '100%',
-        },
-        col: {
-            width: '100%',
-            height: 70,
-            marginBottom: 15,
-            // flex: 1,
-        },
-        channelText: {
-            textAlign: 'center',
-            overflow: 'hidden',
-        },
-        input: {
-            width: '100%',
-            borderBottomColor: '#f2f2f2',
-            borderBottomWidth: 1,
-            fontSize: 15,
-            paddingTop: 13,
-            paddingBottom: 13,
-            marginTop: 5,
-            marginBottom: 20,
-        },
-        outline: {
-            borderRadius: 1,
-            borderWidth: 1,
-            borderColor: '#1F1F1F',
-            color: 'white',
-        },
-        cusCategory: {
-            fontSize: 15,
-
-            paddingHorizontal: 10,
-            height: 22,
-        },
-        cusCategoryOutline: {
-            fontSize: 15,
-
-            paddingHorizontal: 10,
-            height: 22,
-            borderRadius: 1,
-            borderWidth: 1,
-            borderColor: '#1F1F1F',
-            color: 'white',
-        },
-        all: {
-            fontSize: 15,
-            color: '#000000',
-            height: 24,
-            paddingHorizontal: 15,
-
-            lineHeight: 24,
-            fontFamily: 'inter',
-            // textTransform: 'uppercase'
-        },
-        allGrayFill: {
-            fontSize: 15,
-            color: '#fff',
-            paddingHorizontal: 15,
-            borderRadius: 12,
-            backgroundColor: '#000000',
-            lineHeight: 24,
-            height: 24,
-            fontFamily: 'inter',
-            // textTransform: 'uppercase'
-        },
-    });
-};

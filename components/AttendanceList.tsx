@@ -17,7 +17,6 @@ import { TextInput as CustomTextInput } from '../components/CustomTextInput';
 // GRAPHQL
 
 import {
-    modifyAttendance,
     editPastMeeting,
     getCourseStudents,
     createChannelAttendance,
@@ -367,7 +366,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     setEditMeetingTopic('');
                     setEditMeetingRecordingLink('');
                     setShowEditMeetingModal(false);
-                    loadPastSchedule();
                 } else {
                     Alert('Failed to update meeting. Try again.');
                 }
@@ -499,187 +497,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         },
         [instructorAttendanceBook]
     );
-
-    // FUNCTIONS
-
-    const renderEditDateModal = () => {
-        return (
-            <Popup
-                isOpen={showEditMeetingModal}
-                buttons={[
-                    {
-                        text: 'Update',
-                        color: 'dark',
-                        handler: function (event) {
-                            // props.onSend(message, customCategory, isPrivate);
-                            updatePastMeeting();
-                        },
-                        disabled: user.email === disableEmailId,
-                    },
-                    {
-                        text: 'Cancel',
-                        color: 'dark',
-                        handler: function (event) {
-                            setEditMeeting(false);
-                            setEditMeetingTopic('');
-                            setEditMeetingRecordingLink('');
-                            setShowEditMeetingModal(false);
-                        },
-                    },
-                ]}
-                theme="ios"
-                themeVariant="light"
-                onClose={() => props.onClose()}
-                responsive={{
-                    small: {
-                        display: 'bottom',
-                    },
-                    medium: {
-                        // Custom breakpoint
-                        display: 'center',
-                    },
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: 'column',
-                        paddingHorizontal: 20,
-                        marginVertical: 20,
-                        minWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
-                        maxWidth: Dimensions.get('window').width >= 768 ? 400 : 300,
-                        backgroundColor: '#f8f8f8',
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontSize: 16,
-                            fontFamily: 'inter',
-                        }}
-                    >
-                        Edit meeting
-                    </Text>
-                    <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
-                        <Text
-                            style={{
-                                fontSize: 14,
-                                fontFamily: 'inter',
-                                color: '#000000',
-                            }}
-                        >
-                            Topic
-                        </Text>
-                        <View style={{ marginTop: 10, marginBottom: 10 }}>
-                            <TextInput
-                                style={{
-                                    padding: 10,
-                                    fontSize: 15,
-                                    borderColor: '#ccc',
-                                    borderWidth: 1,
-                                    borderRadius: 2,
-                                    backgroundColor: '#fff',
-                                }}
-                                value={editMeetingTopic}
-                                placeholder={''}
-                                onChangeText={(val) => setEditMeetingTopic(val)}
-                                placeholderTextColor={'#1F1F1F'}
-                                // required={true}
-                            />
-                        </View>
-                    </View>
-                    {/* Time */}
-
-                    {/* <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
-                        <Text
-                            style={{
-                                fontSize: 14,
-                                fontFamily: 'inter',
-                                color: '#000000',
-                            }}
-                        >
-                            Time
-                        </Text>
-
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                                fontSize: 15,
-                                color: '#000000',
-                            }}
-                        >
-                            {moment(new Date(editMeeting.start)).format('MMM Do')}{' '}
-                            {moment(new Date(editMeeting.start)).format('h:mm')} -{' '}
-                            {moment(new Date(editMeeting.end)).format('h:mm')}
-                        </Text>
-                    </View> */}
-
-                    {/* Recording Link */}
-                    <View style={{ width: '100%', maxWidth: 400, marginTop: 20, backgroundColor: '#f8f8f8' }}>
-                        <Text
-                            style={{
-                                fontSize: 14,
-                                fontFamily: 'inter',
-                                color: '#000000',
-                            }}
-                        >
-                            Recording Link
-                        </Text>
-                        <View style={{ marginTop: 10, marginBottom: 10 }}>
-                            <TextInput
-                                style={{
-                                    padding: 10,
-                                    fontSize: 15,
-                                    borderColor: '#ccc',
-                                    borderWidth: 1,
-                                    borderRadius: 2,
-                                    backgroundColor: '#fff',
-                                }}
-                                value={editMeetingRecordingLink}
-                                placeholder={''}
-                                onChangeText={(val) => setEditMeetingRecordingLink(val)}
-                                placeholderTextColor={'#1F1F1F'}
-                                // required={true}
-                            />
-                        </View>
-                    </View>
-                </View>
-            </Popup>
-        );
-    };
-
-    /**
-     * @description Mark as present/absent
-     */
-    const onChangeAttendance = (dateId: String, userId: String, markPresent: Boolean) => {
-        Alert(markPresent ? 'Mark Present?' : 'Mark Absent?', '', [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-                onPress: () => {
-                    return;
-                },
-            },
-            {
-                text: 'Yes',
-                onPress: async () => {
-                    server
-                        .mutate({
-                            mutation: modifyAttendance,
-                            variables: {
-                                dateId,
-                                userId,
-                                channelId: props.channelId,
-                                markPresent,
-                            },
-                        })
-                        .then((res) => {
-                            if (res.data && res.data.attendance.modifyAttendance) {
-                                loadChannelAttendances(false);
-                            }
-                        });
-                },
-            },
-        ]);
-    };
 
     const renderStudentsMeetingsList = () => {
         return (
@@ -1301,7 +1118,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             placeholder={''}
                             onChangeText={(val) => setNewAttendanceRecordingLink(val)}
                             placeholderTextColor={'#1F1F1F'}
-                            required={true}
+                            required={false}
                         />
                     </View>
                 </View>
@@ -2908,7 +2725,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             }}
         >
             {props.isOwner ? renderInstructorAttendances() : renderStudentAttendances()}
-            {renderEditDateModal()}
         </View>
     );
 };

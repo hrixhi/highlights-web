@@ -6,16 +6,13 @@ import { Ionicons } from '@expo/vector-icons';
 // API
 import {
     findChannelById,
-    getOrganisation,
     getSubscribers,
     getUserCount,
     subscribe,
     unsubscribe,
     updateChannel,
-    getChannelColorCode,
     duplicateChannel,
     resetAccessCode,
-    getChannelModerators,
     deleteChannel,
     addUsersByEmail,
 } from '../graphql/QueriesAndMutations';
@@ -26,17 +23,9 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { TextInput } from './CustomTextInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CirclePicker } from 'react-color';
-// import {
-//     Menu,
-//     MenuOptions,
-//     MenuOption,
-//     MenuTrigger,
-// } from 'react-native-popup-menu';
 import { Select } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import Alert from './Alert';
-import TextareaAutosize from 'react-textarea-autosize';
-import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 import InviteByEmailModal from './InviteByEmailModal';
 import { disableEmailId } from '../constants/zoomCredentials';
@@ -48,7 +37,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const [loadingOrg, setLoadingOrg] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(true);
-    // const [loadingChannelColor, setLoadingChannelColor] = useState(true);
     const [name, setName] = useState('');
     const [originalName, setOriginalName] = useState('');
     const [password, setPassword] = useState('');
@@ -62,7 +50,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [originalSubs, setOriginalSubs] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
     const [selected, setSelected] = useState<any[]>([]);
-    const [owner, setOwner] = useState<any>({});
     const [owners, setOwners] = useState<any[]>([]);
     const [channelCreator, setChannelCreator] = useState('');
     const [colorCode, setColorCode] = useState('');
@@ -167,9 +154,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         return match;
     });
-    const [meetingProvider, setMeetingProvider] = useState('');
     const [meetingUrl, setMeetingUrl] = useState('');
     const [showInviteByEmailsModal, setShowInviteByEmailsModal] = useState(false);
+
+    //
+    const [isDuplicatingChannel, setIsDuplicatingChannel] = useState(false);
+    const [isDeletingChannel, setIsDeletingChannel] = useState(false);
 
     const server = useApolloClient();
 
@@ -302,7 +292,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const fetchChannelSettings = useCallback(async () => {
         setLoadingOrg(true);
         setLoadingUsers(true);
-        // setLoadingChannelColor(true);
 
         server
             .query({
@@ -388,6 +377,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 setLoadingOrg(false);
                             }
                         }
+                    })
+                    .catch((e) => {
+                        console.log('Error', e);
                     });
 
                 const sort = tempUsers.sort((a, b) => {
@@ -435,6 +427,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setSelected(tempUsers);
                     setLoadingUsers(false);
                 }
+            })
+            .catch((e) => {
+                console.log('Error', e);
             });
     }, [props.channelId]);
 
@@ -459,6 +454,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             return;
         }
 
+        setIsDuplicatingChannel(true);
+
         server
             .mutate({
                 mutation: duplicateChannel,
@@ -477,10 +474,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     alert('Course duplicated successfully.');
                     // Refresh Subscriptions for user
                     refreshSubscriptions();
+                    setIsDuplicatingChannel(false);
                 }
             })
             .catch((e) => {
                 alert('Something went wrong. Try again.');
+                setIsDuplicatingChannel(false);
             });
     }, [
         duplicateChannel,
@@ -646,6 +645,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
      * @description Handle delete channel (Note: Only temporary channels can be deleted)
      */
     const handleDelete = useCallback(async () => {
+        setIsDeletingChannel(true);
         server
             .mutate({
                 mutation: deleteChannel,
@@ -657,9 +657,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 Alert('Deleted Course successfully.');
                 refreshSubscriptions();
                 props.handleDeleteChannel();
+                setIsDeletingChannel(false);
             })
             .catch((e: any) => {
                 Alert('Failed to delete Course.');
+                setIsDeletingChannel(false);
                 console.log('Error', e);
             });
     }, [props.channelId]);
@@ -858,37 +860,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     required={true}
                                 />
                             </View>
-                            {/* {!school ? (
-                                <View style={{ backgroundColor: 'white' }}>
-                                    <Text
-                                        style={{
-                                            fontSize: 15,
-                                            color: '#000000',
-                                            fontFamily: 'Inter',
-                                        }}
-                                    >
-                                        Description
-                                    </Text>
-                                    <TextareaAutosize
-                                        value={description}
-                                        style={{
-                                            fontFamily: 'overpass',
-                                            width: '100%',
-                                            maxWidth: 500,
-                                            minWidth: 500,
-                                            borderBottom: '1px solid #efefef',
-                                            fontSize: 15,
-                                            padding: 10,
-                                            marginTop: 12,
-                                            marginBottom: 20,
-                                            borderRadius: 1,
-                                        }}
-                                        minRows={2}
-                                        placeholder={''}
-                                        onChange={(e: any) => setDescription(e.target.value)}
-                                    />
-                                </View>
-                            ) : null} */}
+
                             <View style={{ backgroundColor: 'white' }}>
                                 <Text
                                     style={{
@@ -936,96 +908,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </View>
                                 </View>
                             </View>
-                            {/* {!school ? (
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        marginTop: 25,
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            // paddingTop: 40,
-                                            paddingBottom: 15,
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                color: '#000000',
-                                                fontFamily: 'Inter',
-                                            }}
-                                        >
-                                            Public
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            backgroundColor: 'white',
-                                            width: '100%',
-                                            height: 30,
-                                            // marginHorizontal: 10
-                                        }}
-                                    >
-                                        <Switch
-                                            value={isPublic}
-                                            onValueChange={() => setIsPublic(!isPublic)}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: '#efefef',
-                                                true: '#000',
-                                            }}
-                                            activeThumbColor="white"
-                                        />
-                                    </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
-                                        Makes your course visible to all users
-                                    </Text>
-                                </View>
-                            ) : null}
-                            {!school ? (
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        marginTop: 25,
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            paddingBottom: 15,
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                color: '#000000',
-                                                fontFamily: 'Inter',
-                                            }}
-                                        >
-                                            Tags
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            backgroundColor: 'white',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <ReactTagInput
-                                            tags={tags}
-                                            placeholder=" "
-                                            removeOnBackspace={true}
-                                            maxTags={5}
-                                            onChange={(newTags) => setTags(newTags)}
-                                        />
-                                    </View>
-                                    <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
-                                </View>
-                            ) : null} */}
+
                             {/* Switch to copy Subscribers */}
                             {selected.length > 0 ? (
                                 <View>
@@ -1134,7 +1017,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         // overflow: 'hidden',
                                         // height: 35,
                                     }}
-                                    disabled={user.email === disableEmailId}
+                                    disabled={isDuplicatingChannel || user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
@@ -1153,7 +1036,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             width: 150,
                                         }}
                                     >
-                                        SAVE
+                                        {isDuplicatingChannel ? 'SAVING...' : 'SAVE'}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -1389,96 +1272,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
 
-                    {/* {!school ? (
-                        <View
-                            style={{
-                                width: '100%',
-                                marginTop: 25,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: '100%',
-                                    paddingBottom: 15,
-                                    backgroundColor: 'white',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Public
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    width: '100%',
-                                    height: 30,
-                                    // marginHorizontal: 10
-                                }}
-                            >
-                                <Switch
-                                    value={isPublic}
-                                    onValueChange={() => setIsPublic(!isPublic)}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: '#efefef',
-                                        true: '#000',
-                                    }}
-                                    activeThumbColor="white"
-                                />
-                            </View>
-                            <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
-                                Makes your course visible to all users
-                            </Text>
-                        </View>
-                    ) : null}
-                    {!school ? (
-                        <View
-                            style={{
-                                width: '100%',
-                                marginTop: 25,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: '100%',
-                                    paddingBottom: 15,
-                                    backgroundColor: 'white',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Tags
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    width: '100%',
-                                }}
-                            >
-                                <ReactTagInput
-                                    tags={tags}
-                                    placeholder=" "
-                                    removeOnBackspace={true}
-                                    maxTags={5}
-                                    onChange={(newTags) => setTags(newTags)}
-                                />
-                            </View>
-                            <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>Add up to 5</Text>
-                        </View>
-                    ) : null} */}
-
                     <View
                         style={{
                             display: 'flex',
@@ -1691,7 +1484,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: 150,
                                 }}
                             >
-                                {isUpdatingChannel ? 'UPDATING' : 'UPDATE'}
+                                {isUpdatingChannel ? 'UPDATING...' : 'UPDATE'}
                             </Text>
                         </TouchableOpacity>
 
@@ -1753,7 +1546,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     // height: 35,
                                     marginTop: 15,
                                 }}
-                                disabled={user.email === disableEmailId}
+                                disabled={isDeletingChannel || user.email === disableEmailId}
                             >
                                 <Text
                                     style={{
@@ -1772,7 +1565,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         width: 150,
                                     }}
                                 >
-                                    DELETE
+                                    {isDeletingChannel ? 'DELETING...' : 'DELETE'}
                                 </Text>
                             </TouchableOpacity>
                         ) : null}

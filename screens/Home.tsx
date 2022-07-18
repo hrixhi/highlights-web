@@ -1,17 +1,14 @@
 // REACT
-import React, { useState, useCallback, useRef, useEffect, useContext } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Dimensions, Image, ScrollView } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { StyleSheet, ActivityIndicator, Dimensions, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 // API
 import {
     getSubscriptions,
-    getCues,
-    login,
     getCuesFromCloud,
     findUserById,
-    resetPassword,
     signup,
     authWithProvider,
     getOrganisation,
@@ -36,8 +33,7 @@ import inbox from '../assets/images/inbox.jpeg';
 
 // HELPERS
 import { validateEmail } from '../helpers/emailCheck';
-import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
-import { defaultCues } from '../helpers/DefaultData';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { disableEmailId, origin, STREAM_CHAT_API_KEY } from '../constants/zoomCredentials';
 import { Popup } from '@mobiscroll/react5';
 // Web Notification
@@ -53,19 +49,19 @@ import { useApolloClient, useLazyQuery, useQuery } from '@apollo/client';
 
 import { omitTypename } from '../helpers/omitTypename';
 import { useAppContext } from '../contexts/AppContext';
+import { StackScreenProps } from '@react-navigation/stack';
 
-const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+function Home({ navigation, route }: StackScreenProps<any, ''>) {
     const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
 
-    const [fadeAnimation] = useState(new Animated.Value(0));
-
     // Open an existing Cue
-    const [updateModalIndex, setUpdateModalIndex] = useState(0);
-    const [updateModalKey, setUpdateModalKey] = useState('local');
+
+    const [activeCue, setActiveCue] = useState<any>(undefined);
+    const [channelCues, setChannelCues] = useState<any[]>([]);
+    const [activeChannelColor, setActiveChannelColor] = useState('#000');
 
     const [modalType, setModalType] = useState('');
-    const [pageNumber, setPageNumber] = useState(0);
     const [channelId, setChannelId] = useState('');
     const [cueId, setCueId] = useState('');
     const [createdBy, setCreatedBy] = useState('');
@@ -76,20 +72,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [fullName, setFullname] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [isSignupSubmitDisabled, setIsSignupSubmitDisabled] = useState(true);
     const [signingUp, setSigningUp] = useState(false);
-    const [saveDataInProgress, setSaveDataInProgress] = useState(false);
     const [dimensions, setDimensions] = useState({ window: win, screen });
-    const [target, setTarget] = useState('');
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
     const [openChannelId, setOpenChannelId] = useState('');
     const [passwordValidError, setPasswordValidError] = useState('');
-    // const [user, setUser] = useState<any>(null);
 
     const [tab, setTab] = useState('Agenda');
-    const [showDirectory, setShowDirectory] = useState<any>(false);
     const [showCreate, setShowCreate] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
 
@@ -97,10 +87,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [emailValidError, setEmailValidError] = useState('');
 
     const enterValidEmailError = PreferredLanguageText('enterValidEmail');
-    const checkConnectionAlert = PreferredLanguageText('checkConnection');
-    const weHaveEmailedPasswordAlert = PreferredLanguageText('weHaveEmailedPassword');
-    const invalidCredentialsAlert = PreferredLanguageText('invalidCredentials');
-    const unableToRefreshCuesAlert = PreferredLanguageText('unableToRefreshCues');
     const passwordInvalidError = PreferredLanguageText('atleast8char');
     const [showOnboardModal, setShowOnboardModal] = useState(false);
 
@@ -109,7 +95,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [mobileOptions] = useState(['To Do', 'Classroom', 'Search', 'Inbox', 'Account']);
 
     const [showHome, setShowHome] = useState(true);
-    const [hideNewChatButton, setHideNewChatButton] = useState(false);
 
     const [accountTabs] = useState(['profile', 'courses']);
     const [activeAccountTab, setActiveAccountTab] = useState('profile');
@@ -119,8 +104,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [workspaceActiveTab, setWorkspaceActiveTab] = useState('Content');
 
     const [selectedWorkspace, setSelectedWorkspace] = useState('');
-
-    const [closingModal, setClosingModal] = useState(false);
 
     const [createOptions] = useState(['Content', 'Import', 'Videos', 'Books', 'Quiz']);
     const [createActiveTab, setCreateActiveTab] = useState('Content');
@@ -143,7 +126,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         handleSetUser,
         handleSetCues,
         handleSetSubscriptions,
-        cues,
+        allCues,
         customCategories,
         handleReadCue,
     } = useAppContext();
@@ -210,48 +193,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setEmailValidError('');
     }, [email]);
 
-    //   Validate Submit on Login state change
-    useEffect(() => {
-        // Login
-        if (!showForgotPassword && email && password && !emailValidError) {
-            setIsSubmitDisabled(false);
-            return;
-        }
-
-        //
-        if (showForgotPassword && email && !emailValidError) {
-            setIsSubmitDisabled(false);
-            return;
-        }
-
-        setIsSubmitDisabled(true);
-    }, [showForgotPassword, email, password, emailValidError]);
-
-    useEffect(() => {
-        if (
-            fullName === '' ||
-            email === '' ||
-            password === '' ||
-            confirmPassword === '' ||
-            signingUp ||
-            passwordValidError
-        ) {
-            setIsSignupSubmitDisabled(true);
-        } else {
-            setIsSignupSubmitDisabled(false);
-        }
-    }, [fullName, email, password, confirmPassword, signingUp]);
-
     // FOR NATIVE AND DESKTOP APPS WE WILL SHOW LOGIN SCREEN
     useEffect(() => {
-        console.log('USer ID', userId);
         if (!userId || userId === '') {
             window.location.replace(`${origin}/login`);
         }
     }, [userId]);
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
-        // window.location.reload()
         setDimensions({ window, screen });
     }, []);
 
@@ -283,29 +232,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
         );
     }, []);
-
-    // useEffect(() => {
-    //     (async () => {
-    //         const u = await AsyncStorage.getItem('user');
-    //         // const showOnboarding = await AsyncStorage.getItem('show_onboard_modal');
-
-    //         if (u) {
-    //             const parsedUser: any = JSON.parse(u);
-
-    //             if (parsedUser._id && parsedUser._id !== '') {
-    //                 await loadDataFromCloud();
-    //                 // OneSignal.setExternalUserId(parsedUser._id);
-    //                 fetchStreamUserToken(parsedUser._id);
-    //             } else {
-    //                 // setShowLoginWindow(true);
-    //                 window.location.href = `${origin}/login`;
-    //             }
-    //         } else {
-    //             // setShowLoginWindow(true);
-    //             window.location.href = `${origin}/login`;
-    //         }
-    //     })();
-    // }, []);
 
     // CHAT
     // INITIALIZE CHAT
@@ -394,7 +320,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         };
 
         const newMessageAlert = (event) => {
-            console.log('New Message Alert');
+            console.log('New Message Alert', event);
 
             alertNotifSound();
 
@@ -446,7 +372,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     await AsyncStorage.setItem('jwt_token', token);
                     await AsyncStorage.setItem('user', sU);
                     setShowLoginWindow(false);
-                    // loadDataFromCloud();
                 } else {
                     const { error } = r.data.user.authWithProvider;
                     Alert(error);
@@ -528,195 +453,56 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             });
     }, [fullName, email, password, confirmPassword]);
 
-    // Move to profile page
-    const handleLogin = useCallback(() => {
-        server
-            .query({
-                query: login,
-                variables: {
-                    email: email.toLowerCase(),
-                    password,
-                },
-            })
-            .then(async (r: any) => {
-                if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
-                    const u = r.data.user.login.user;
-                    const token = r.data.user.login.token;
-                    // if (u.__typename) {
-                    //     delete u.__typename;
-                    // }
-
-                    const userId = u._id;
-
-                    OneSignal.setExternalUserId(userId);
-
-                    const sU = JSON.stringify(u);
-                    await AsyncStorage.setItem('jwt_token', token);
-                    await AsyncStorage.setItem('user', sU);
-                    setShowLoginWindow(false);
-                } else {
-                    const { error } = r.data.user.login;
-                    Alert(error);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-                Alert('Something went wrong. Try again.');
-            });
-    }, [email, password]);
-
     // imp
 
-    const openModal = useCallback(
-        async (type) => {
-            setModalType(type);
-        },
-        [cues, selectedWorkspace, option]
-    );
+    const openCue = useCallback(
+        (channelId, cueId, createdBy) => {
+            const findCue = allCues.find((cue: any) => cue._id === cueId);
 
-    const openCueFromCalendar = useCallback(
-        (channelId, _id, by) => {
-            let cueKey = '';
-            let cueIndex = 0;
-
-            if (cues !== {}) {
-                Object.keys(cues).map((key) => {
-                    cues[key].map((cue: any, index: number) => {
-                        if (cue._id === _id) {
-                            cueKey = key;
-                            cueIndex = index;
-                        }
-                    });
-                });
+            if (!findCue) {
+                return;
             }
 
-            setUpdateModalKey(cueKey);
-            setUpdateModalIndex(cueIndex);
-            setPageNumber(pageNumber);
-            setChannelId(channelId);
             if (channelId !== '') {
                 const sub = subscriptions.find((item: any) => {
                     return item.channelId === channelId;
                 });
                 if (sub) {
                     setChannelCreatedBy(sub.channelCreatedBy);
+                    setActiveChannelColor(sub.colorCode ? sub.colorCode : '#000');
                 }
+
+                const channelCues = allCues.filter((cue: any) => cue.channelId === channelId);
+
+                setChannelCues(channelCues);
             }
-            setCreatedBy(by);
-            setCueId(_id);
-            openModal('Update');
+            setChannelId(channelId);
+            setActiveCue(findCue);
+            setCreatedBy(createdBy);
+            setCueId(cueId);
+            setModalType('Update');
             setShowHome(false);
         },
-        [subscriptions, cues]
+        [subscriptions, allCues]
     );
-
-    const openUpdate = useCallback(
-        (key, index, pageNumber, _id, by, channId) => {
-            setUpdateModalKey(key);
-            setUpdateModalIndex(index);
-            setPageNumber(pageNumber);
-            setChannelId(channId);
-            if (channId !== '') {
-                const sub = subscriptions.find((item: any) => {
-                    return item.channelId === channId;
-                });
-                if (sub) {
-                    setChannelCreatedBy(sub.channelCreatedBy);
-                }
-            }
-            setCreatedBy(by);
-            setCueId(_id);
-            openModal('Update');
-            setShowHome(false);
-        },
-        [subscriptions, selectedWorkspace]
-    );
-
-    // const reloadCueListAfterUpdate = useCallback(async () => {
-    //     const unparsedCues = await AsyncStorage.getItem('cues');
-    //     const u = await AsyncStorage.getItem('user');
-    //     if (unparsedCues) {
-    //         const allCues = JSON.parse(unparsedCues);
-    //         const custom: any = {};
-    //         setCues(allCues);
-    //         if (allCues['local']) {
-    //             allCues['local'].map((item: any) => {
-    //                 if (item.customCategory !== '') {
-    //                     if (!custom[item.customCategory]) {
-    //                         custom[item.customCategory] = 0;
-    //                     }
-    //                 }
-    //             });
-    //             const customC: any[] = [];
-    //             Object.keys(custom).map((item) => {
-    //                 customC.push(item);
-    //             });
-    //             customC.sort();
-    //             setCustomCategories(customC);
-    //         }
-    //         Animated.timing(fadeAnimation, {
-    //             toValue: 1,
-    //             duration: 150,
-    //             useNativeDriver: true,
-    //         }).start();
-    //     }
-    //     if (u) {
-    //         const user = JSON.parse(u);
-    //         if (user.email) {
-    //             await saveDataInCloud();
-    //         }
-    //     }
-    // }, []);
-
-    const forgotPassword = useCallback(() => {
-        server
-            .mutate({
-                mutation: resetPassword,
-                variables: {
-                    email,
-                },
-            })
-            .then((res) => {
-                if (res.data && res.data.user.resetPassword) {
-                    Alert(weHaveEmailedPasswordAlert);
-                    setShowForgotPassword(false);
-                } else {
-                    Alert(invalidCredentialsAlert);
-                }
-            });
-    }, [email]);
-
-    const markCueAsRead = useCallback(async () => {
-        const unmodified = cues ? cues[updateModalKey][updateModalIndex] : {};
-
-        if (!unmodified) return;
-
-        if (unmodified.channelId) {
-            handleReadCue(unmodified._id);
-        }
-    }, [cues, updateModalKey, updateModalIndex]);
 
     const closeModal = useCallback(async () => {
-        setClosingModal(true);
-
         setModalType('');
         setCreateActiveTab('Content');
 
         // Mark as read
         if (modalType === 'Update') {
-            await markCueAsRead();
+            handleReadCue(cueId);
         }
 
+        setChannelCues([]);
+        setActiveCue(undefined);
+        setActiveChannelColor('#000');
         setCueId('');
-        setShowHome(true);
         setCreatedBy('');
-
-        if (modalType === 'Update') {
-            setChannelId('');
-        }
-
-        setClosingModal(false);
-    }, [fadeAnimation, modalType, option]);
+        setShowHome(true);
+        setChannelId('');
+    }, [modalType]);
 
     /**
      * @description Helpter for icon to use in navbar
@@ -838,8 +624,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     };
 
     return (
-        <View style={styles(channelId).container} key={showHome.toString() + option.toString() + tab.toString()}>
-            {showLoginWindow && showSignupWindow ? (
+        <View
+            style={{
+                flex: 1,
+                flexDirection: 'row',
+                height: '100%',
+            }}
+        >
+            {/* {showLoginWindow && showSignupWindow ? (
                 <View
                     style={{
                         width: '100%',
@@ -1031,33 +823,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </ScrollView>
                     </View>
                 </View>
-            ) : null}
+            ) : null} */}
 
             {showHome &&
                 !loadingCues &&
                 !loadingUser &&
                 !loadingSubs &&
                 !loadingOrg &&
-                !saveDataInProgress &&
                 option !== 'Inbox' &&
                 (!selectedWorkspace || option !== 'Classroom') &&
-                // (option === 'Classroom' && modalType !== 'Create') ||
                 ((option === 'To Do' && tab !== 'Add') ||
-                // (option === 'Inbox' && !showDirectory && !hideNewChatButton && Dimensions.get('window').width < 768) ||
                 (option === 'Account' && !showCreate) ||
                 (option === 'Settings' && !showHelp) ? (
                     <TouchableOpacity
                         onPress={() => {
-                            if (option === 'Classroom') {
-                                openModal('Create');
-                            } else if (option === 'To Do') {
+                            if (option === 'To Do') {
                                 setTab('Add');
                             } else if (option === 'Account' && activeAccountTab === 'courses') {
                                 setShowCreate(true);
                             } else if (option === 'Account' && activeAccountTab === 'profile') {
                                 window.open('https://www.learnwithcues.com/help', '_blank');
-                            } else {
-                                setShowDirectory(true);
                             }
                         }}
                         style={{
@@ -1084,15 +869,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}
                     >
                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                            {option === 'Classroom' ? (
-                                <Ionicons
-                                    name="create-outline"
-                                    size={25}
-                                    style={{
-                                        paddingLeft: 3,
-                                    }}
-                                />
-                            ) : option === 'To Do' ? (
+                            {option === 'To Do' ? (
                                 <Ionicons name="add-outline" size={35} />
                             ) : option === 'Account' && activeAccountTab === 'courses' ? (
                                 <Ionicons name="add-outline" size={35} />
@@ -1116,7 +893,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                 >
                     <View
-                        key={option}
                         style={{
                             position: 'absolute',
                             zIndex: 525,
@@ -1128,9 +904,47 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginTop: 0,
                         }}
                     >
-                        {!user || !org || !cues || loadingUser || loadingSubs || loadingCues || loadingOrg ? (
-                            <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                                <ActivityIndicator color={'#1F1F1F'} />
+                        {!user ||
+                        !org ||
+                        !allCues ||
+                        !subscriptions ||
+                        loadingUser ||
+                        loadingSubs ||
+                        loadingCues ||
+                        loadingOrg ? (
+                            <View
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: 'white',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    flex: 1,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'column',
+                                        alignSelf: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            marginTop: 10,
+                                        }}
+                                    >
+                                        <ActivityIndicator size={20} color={'#1F1F1F'} />
+                                        <Text
+                                            style={{
+                                                fontSize: 16,
+                                                fontFamily: 'Inter',
+                                                marginTop: 10,
+                                            }}
+                                        >
+                                            Loading...
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
                         ) : (
                             <Dashboard
@@ -1140,40 +954,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 showCreate={showCreate}
                                 setShowHelp={(val: any) => setShowHelp(val)}
                                 showHelp={showHelp}
-                                showDirectory={showDirectory}
-                                setShowDirectory={(val: any) => setShowDirectory(val)}
                                 setOption={(op: any) => setOption(op)}
                                 option={option}
                                 options={options}
-                                closeModal={() => {
-                                    setShowHome(true);
-                                    closeModal();
-                                }}
-                                reOpenProfile={() => {
-                                    setModalType('');
-                                    openModal('Profile');
-                                }}
+                                closeModal={closeModal}
                                 openCreate={() => {
-                                    openModal('Create');
+                                    setModalType('Create');
                                 }}
-                                setChannelId={(id: string) => setChannelId(id)}
-                                setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-                                // subscriptions={subscriptions}
-                                openDiscussion={() => openModal('Discussion')}
-                                openSubscribers={() => openModal('Subscribers')}
-                                openGrades={() => openModal('Grades')}
-                                openMeeting={() => openModal('Meeting')}
-                                openChannelSettings={() => openModal('ChannelSettings')}
-                                openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) =>
-                                    openUpdate(index, key, pageNumber, _id, by, cId)
-                                }
-                                calendarCues={cues}
-                                openCueFromCalendar={openCueFromCalendar}
+                                openCue={openCue}
                                 key={
                                     option.toString() +
                                     showHome.toString() +
                                     tab.toString() +
-                                    showDirectory.toString() +
                                     showCreate.toString() +
                                     showHelp.toString() +
                                     subscriptions.toString() +
@@ -1187,56 +979,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     setOption('Classroom');
                                     setOpenChannelId(channelId);
                                 }}
-                                openQAFromSearch={(channelId: any, cueId: string) => {
-                                    const subscription = subscriptions.find((sub: any) => {
-                                        return sub.channelId === channelId;
-                                    });
-
-                                    if (subscription) {
-                                        openCueFromCalendar(channelId, cueId, subscription.channelCreatedBy);
-                                        setTarget('Q&A');
-                                    }
-                                }}
-                                openQAFromActivity={(channelId: any, cueId: string, by: string) => {
-                                    openCueFromCalendar(channelId, cueId, by);
-                                    setTarget('Q&A');
-                                }}
                                 openDiscussionFromSearch={(channelId: any) => {
-                                    // Find channel Created By from subscriptions
                                     setOption('Classroom');
-                                }}
-                                openClassroom={(channelId: any) => {
-                                    // Find channel Created By from subscriptions
-                                    const match = subscriptions.filter((sub: any) => {
-                                        return sub.channelId === channelId;
-                                    });
-                                    if (match && match.length !== 0) {
-                                        const createdBy = match[0].channelCreatedBy;
-                                        setChannelId(channelId);
-                                        setChannelCreatedBy(createdBy);
-                                        setCreatedBy(createdBy);
-                                        openModal('Meeting');
-                                        setShowHome(false);
-                                    }
                                 }}
                                 loadDiscussionForChannelId={loadDiscussionForChannelId}
                                 setLoadDiscussionForChannelId={setLoadDiscussionForChannelId}
                                 openChannelId={openChannelId}
                                 setOpenChannelId={setOpenChannelId}
                                 modalType={modalType}
-                                customCategories={customCategories}
                                 closeCreateModal={() => {
                                     setModalType('');
-                                    setPageNumber(0);
-                                }}
-                                closeAfterCreatingMyNotes={async () => {
-                                    setModalType('');
-                                    setPageNumber(0);
-                                    await loadData(true);
                                 }}
                                 unreadMessages={unreadMessages}
-                                // refreshUnreadInbox={refreshUnreadInbox}
-                                hideNewChatButton={(hide: boolean) => setHideNewChatButton(hide)}
                                 openHelpModal={(show: boolean) => setShowOnboardModal(true)}
                                 accountTabs={accountTabs}
                                 activeAccountTab={activeAccountTab}
@@ -1278,19 +1032,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <Update
                         key={cueId.toString()}
                         customCategories={customCategories}
-                        cue={cues[updateModalKey][updateModalIndex]}
-                        cueIndex={updateModalIndex}
-                        cueKey={updateModalKey}
+                        cue={activeCue}
+                        activeChannelColor={activeChannelColor}
                         closeModal={() => closeModal()}
                         cueId={cueId}
                         createdBy={createdBy}
                         channelId={channelId}
                         channelCreatedBy={channelCreatedBy}
-                        channelCues={cues[channelId]}
-                        target={target}
-                        openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
-                        user={user}
-                        subscriptions={subscriptions}
+                        channelCues={channelCues}
+                        openCue={(cueId: string) => openCue(channelId, cueId, channelCreatedBy)}
                     />
                 ) : null}
             </View>
@@ -1513,24 +1263,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}
                                 onPress={() => {
                                     setOption(op);
-                                    if (op === 'Browse') {
-                                        // open create
-                                        setCueId('');
-                                        setModalType('');
-                                        setCreatedBy('');
-                                        if (modalType === 'Update') {
-                                            fadeAnimation.setValue(0);
-                                            if (modalType === 'Update') {
-                                                setChannelId('');
-                                            }
-                                            loadData(true);
-                                        }
-                                        openModal('Create');
-                                    }
-                                    if (op === 'Classroom') {
-                                        setModalType('');
-                                        setPageNumber(0);
-                                    }
                                 }}
                             >
                                 <View
@@ -1878,17 +1610,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
         </View>
     );
-};
+}
 
 export default Home;
 
 const styles = (channelId: string) =>
     StyleSheet.create({
-        container: {
-            flex: 1,
-            flexDirection: 'row',
-            height: '100%',
-        },
         all: {
             fontSize: 12,
             color: '#fff',

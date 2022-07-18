@@ -15,7 +15,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();
     const colorScheme = 'dark';
-    const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color]);
+    const styleObject = styles(colorScheme, colorChoices[props.cue.color]);
     const { title } = htmlStringParser(
         props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue
     );
@@ -138,7 +138,7 @@ export default React.memo(Card, (prev, next) => {
     return _.isEqual({ ...prev.cue }, { ...next.cue });
 });
 
-const styles: any = (colorScheme: any, channelId: any, col: any) =>
+const styles: any = (colorScheme: any, col: any) =>
     StyleSheet.create({
         swiper: {
             height: '100%',

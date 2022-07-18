@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StreamChat } from 'stream-chat';
-import { Chat, Channel, ChannelList } from 'stream-chat-react';
+import React, { useEffect, useState } from 'react';
+import { Chat, ChannelList } from 'stream-chat-react';
 
 // CUSTOM COMPONENTS
 import { MessagingChannelList, MessagingChannelListHeader, MessagingChannelPreview } from './ChatComponents';
@@ -12,7 +11,6 @@ import { View } from './Themed';
 import 'stream-chat-react/dist/css/index.css';
 import '../web/streamInbox.css';
 
-import { getStreamChatUserToken, regenStreamChatUserToken } from '../graphql/QueriesAndMutations';
 import { ChannelContainer } from './ChatComponents/ChannelContainer/ChannelContainer';
 import { useMobileView } from '../hooks/useMobileView';
 import { useAppContext } from '../contexts/AppContext';

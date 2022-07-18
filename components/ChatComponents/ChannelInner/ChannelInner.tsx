@@ -23,7 +23,7 @@ import { Dimensions, ScrollView } from 'react-native';
 
 import { startChatMeeting } from '../../../graphql/QueriesAndMutations';
 import Alert from '../../Alert';
-import { fileUpload } from '../../../helpers/FileUpload';
+import { fileUpload, fileUploadInbox } from '../../../helpers/FileUpload';
 import mime from 'mime-types';
 import { useApolloClient } from '@apollo/client';
 import { disableEmailId } from '../../../constants/zoomCredentials';
@@ -119,7 +119,7 @@ export const ChannelInner = (props: ChannelInnerProps) => {
 
         if (!client || !client.userID) return;
 
-        const res = await fileUpload(file, type, client.userID);
+        const res = await fileUploadInbox(file, type, client.userID);
 
         console.log('Image upload', res);
 

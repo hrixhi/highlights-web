@@ -9,9 +9,6 @@ const mime = require('mime-types');
 // COMPONENTS
 import { Text, View } from './Themed';
 
-// HELPERS
-import { PreferredLanguageText } from '../helpers/LanguageContext';
-
 const FileUpload: React.FC<any> = (props: any) => {
     const [uploading, setUploading] = useState(false);
     const handleFile = useCallback(async () => {

@@ -88,15 +88,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse();
     const [modalAnimation] = useState(new Animated.Value(0));
     let RichText: any = useRef();
-    let editorRef: any = useRef();
-    const [role, setRole] = useState(user.role);
-    const [allowQuizCreation, setAllowQuizCreation] = useState(user.allowQuizCreation ? true : false);
+    const [role] = useState(user.role);
+    const [allowQuizCreation] = useState(user.allowQuizCreation ? true : false);
     const [submission, setSubmission] = useState(false);
     const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24));
     const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()));
     const [allowLateSubmission, setAllowLateSubmission] = useState(false);
     const [availableUntil, setAvailableUntil] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 48));
-    const [showBooks, setShowBooks] = useState(props.option === 'Browse' ? true : false);
+    const [showBooks, setShowBooks] = useState(false);
     const [gradeWeight, setGradeWeight] = useState<any>('');
     const [graded, setGraded] = useState(false);
     const [imported, setImported] = useState(false);
@@ -126,7 +125,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const window = Dimensions.get('window');
     const screen = Dimensions.get('screen');
     const [dimensions, setDimensions] = useState({ window, screen });
-
     const [totalPoints, setTotalPoints] = useState('');
 
     const width = dimensions.window.width;
@@ -150,19 +148,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     // Alerts
     const enterOneProblemAlert = PreferredLanguageText('enterOneProblem');
     const invalidDurationAlert = PreferredLanguageText('invalidDuration');
-    const fillMissingProblemsAlert = PreferredLanguageText('fillMissingProblems');
-    const enterNumericPointsAlert = PreferredLanguageText('enterNumericPoints');
-    const fillMissingOptionsAlert = PreferredLanguageText('fillMissingOptions');
-    const eachOptionOneCorrectAlert = PreferredLanguageText('eachOptionOneCorrect');
     const clearQuestionAlert = PreferredLanguageText('clearQuestion');
     const cannotUndoAlert = PreferredLanguageText('cannotUndo');
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
-    const noItemsAlert = 'Create one or more items for Drag & Drop problems.';
-    const noImageAlert = 'Upload image for Hotspot problems.';
-    const noHotspotsAlert = 'Create one or more markers for Hotspot problems.';
     // new alert
 
     Froalaeditor.DefineIcon('insertFormula', {
@@ -247,6 +238,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             props.setCreateActiveTab('Content');
         }
     }, [showBooks, isQuiz]);
+
+    console.log('Show Books', showBooks);
+    console.log('Props.createActiveTab', props.createActiveTab);
 
     /**
      * @description
@@ -424,9 +418,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setHeaders(headers);
                     setQuizInstructions(quizInstructions);
                 }
-                // setInit(true);
             } catch (e) {
-                // setInit(true);
                 console.log(e);
             }
         };
@@ -1362,18 +1354,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             } else {
                 // CHANNEL CUE
 
-                let ownerarray: any = selected;
-                const userSubscriptions = await AsyncStorage.getItem('subscriptions');
-                if (userSubscriptions) {
-                    const list = JSON.parse(userSubscriptions);
-                    list.map((i: any) => {
-                        if (i.channelId === channelId) {
-                            ownerarray.push(i.channelCreatedBy);
-                        }
-                    });
-                    setSelected(ownerarray);
-                }
-
                 const variables = {
                     cue: saveCue,
                     starred,
@@ -1409,7 +1389,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }).start(() => {
                                 storeDraft('cueDraft', '');
                                 setIsSubmitting(false);
-                                // refreshCues();
                                 handleAddCue(res.data.cue.create);
                                 props.closeModal();
                             });
@@ -1779,8 +1758,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             </View>
         );
     };
-
-    console.log('Cue', cue);
 
     if (!init) {
         return (
@@ -3476,6 +3453,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 onUpload={(obj: any) => {
                                                     setCue(JSON.stringify(obj));
                                                     setShowBooks(false);
+                                                    props.setCreateActiveTab('Content');
                                                 }}
                                             />
                                         ) : null}

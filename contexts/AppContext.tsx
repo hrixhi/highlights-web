@@ -5,7 +5,7 @@ import {
     getSubscriptions,
     handleSaveCue,
     markAsRead,
-    saveCuesToCloud,
+    findUserById,
 } from '../graphql/QueriesAndMutations';
 import { omitTypename } from '../helpers/omitTypename';
 
@@ -27,7 +27,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         org: undefined,
         subscriptions: undefined,
         allCues: undefined,
-        cues: undefined,
         customCategories: [],
         // LOADING STATES
         savingCueToCloud: false,
@@ -58,9 +57,13 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     // }, []);
 
     const setCuesHelper = (data: any[]) => {
+        let sanitizedCues: any[] = [];
+
         const cuesMap: any = {};
         data.map((x: any) => {
             const cue = JSON.parse(JSON.stringify(x), omitTypename);
+
+            sanitizedCues.push(cue);
 
             const channelId = cue.channelId && cue.channelId !== '' ? cue.channelId : 'local';
 
@@ -86,21 +89,8 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         const customC: any[] = Object.keys(custom);
         customC.sort();
 
-        const cuesArray: any[] = [];
-
-        Object.keys(cuesMap).map((key) => {
-            cuesMap[key].map((cue: any, index: number) => {
-                cuesArray.push({
-                    ...cue,
-                    key,
-                    index,
-                });
-            });
-        });
-
         return {
-            cues: cuesMap,
-            allCues: cuesArray,
+            allCues: sanitizedCues,
             customCategories: customC,
         };
     };
@@ -112,7 +102,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 const res = setCuesHelper([...action.payload]);
                 return {
                     ...state,
-                    cues: res.cues,
                     allCues: res.allCues,
                     customCategories: res.customCategories,
                 };
@@ -121,7 +110,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: newRes.cues,
                     allCues: newRes.allCues,
                     customCategories: newRes.customCategories,
                 };
@@ -137,7 +125,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: updateRes.cues,
                     allCues: updateRes.allCues,
                     customCategories: updateRes.customCategories,
                 };
@@ -151,7 +138,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: deleteRes.cues,
                     allCues: deleteRes.allCues,
                     customCategories: deleteRes.customCategories,
                 };
@@ -176,7 +162,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: updateRead.cues,
                     allCues: updateRead.allCues,
                     customCategories: updateRead.customCategories,
                 };
@@ -201,7 +186,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: updateDraft.cues,
                     allCues: updateDraft.allCues,
                     customCategories: updateDraft.customCategories,
                 };
@@ -226,7 +210,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: updateReleaseSubmission.cues,
                     allCues: updateReleaseSubmission.allCues,
                     customCategories: updateReleaseSubmission.customCategories,
                 };
@@ -260,10 +243,15 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                     org: undefined,
                     subscriptions: undefined,
                     allCues: undefined,
-                    cues: undefined,
                     customCategories: [],
                     // LOADING STATES
                     savingCueToCloud: false,
+                };
+            case 'LOGIN':
+                return {
+                    ...state,
+                    userId: action.payload.userId,
+                    user: action.payload.user,
                 };
             case 'SYNCING_CUE_FROM_BACKEND':
                 return {
@@ -293,7 +281,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
 
                 return {
                     ...state,
-                    cues: syncRes.cues,
                     allCues: syncRes.allCues,
                     customCategories: syncRes.customCategories,
                     syncCueError: false,
@@ -320,6 +307,8 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     const [fetchCues, { loading: loadingCues, error: cuesError, data: cuesData }] = useLazyQuery(getCuesFromCloud, {
         variables: { userId: state.userId },
     });
+
+    const [fetchUser, { loading: loadingUser, error: userError, data: userData }] = useLazyQuery(findUserById);
 
     const [markCueRead, { loading: markingCueAsRead, data: markCueReadStatus }] = useMutation(markAsRead);
 
@@ -535,6 +524,36 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         window.location.href = `${origin}/login`;
     };
 
+    const loginUser = async (loginUserId: string, jwt_token: string) => {
+        const res = await fetchUser({
+            variables: {
+                id: loginUserId,
+            },
+        });
+
+        if (res.data && res.data.user.findById) {
+            const items: [string, string][] = [
+                ['user', JSON.stringify({ _id: loginUserId })],
+                ['jwt_token', jwt_token],
+            ];
+            await AsyncStorage.multiSet(items);
+
+            const fetchedUser = JSON.parse(JSON.stringify(res.data.user.findById), omitTypename);
+
+            dispatch({
+                type: 'LOGIN',
+                payload: {
+                    user: fetchedUser,
+                    userId: loginUserId,
+                },
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     return (
         <AppContext.Provider
             displayName="APP CONTEXT"
@@ -555,11 +574,13 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 recentSearches,
                 setRecentSearches,
                 refreshSubscriptions,
+                loadingSubs,
                 savingCueToCloud: state.savingCueToCloud,
                 handleUpdateCue,
                 handleDeleteCue,
                 handleAddCue,
                 refreshCues,
+                loadingCues,
                 logoutUser,
                 handleReadCue,
                 syncCueFromBackend,
@@ -573,6 +594,7 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 setOpenMessageId,
                 openChannelId,
                 setOpenChannelId,
+                loginUser,
             }}
         >
             {children}

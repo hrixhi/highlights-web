@@ -199,8 +199,6 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
 
             // you can now call WebViewer APIs here...
             documentViewer.addEventListener('documentLoaded', async () => {
-                // const currCue = subCues[props.cueKey][props.cueIndex];
-
                 if (annotations !== '') {
                     const xfdfString = annotations;
 
@@ -224,7 +222,7 @@ export default function PDFViewerCues({ navigation, route }: StackScreenProps<an
 
             annotationManager.setAnnotationDisplayAuthorMap((id: string) => {
                 console.log('ID', id);
-                console.log('User Id', userId);
+                console.log('usernamesForAnnotation', usernamesForAnnotation);
                 if (source !== 'FEEDBACK' && userId === id) {
                     return name;
                 } else if (source === 'FEEDBACK' && feedbackUser === id) {

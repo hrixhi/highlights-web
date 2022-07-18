@@ -10,7 +10,6 @@ import { retrievePDFFromArchive } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
 import { Text, TouchableOpacity, View } from './Themed';
-import { TextInput } from './CustomTextInput';
 import alert from './Alert';
 import { Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';

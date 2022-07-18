@@ -26,7 +26,6 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 }}
             >
                 <ProfileControls
-                    reOpenProfile={() => props.reOpenProfile()}
                     closeModal={() => props.closeModal()}
                     setShowSavePassword={(val: any) => props.setShowSavePassword(val)}
                     showSavePassword={props.showSavePassword}

@@ -291,7 +291,6 @@ const GroupNameInput: React.FC<InputProps> = (props) => {
 const ViewChannel = (props: Props) => {
     const { user } = useAppContext();
 
-    const { theme, toggleMobile } = props;
     const { client } = useChatContext<StreamChatGenerics>();
     const { channel } = useChannelStateContext<StreamChatGenerics>();
 
@@ -368,7 +367,7 @@ const ViewChannel = (props: Props) => {
 
         if (channelUser.role === 'owner') {
             setChannelRole('owner');
-        } else if (channelUser.channel_role === 'moderator') {
+        } else if (channelUser.is_moderator) {
             setChannelRole('moderator');
         } else {
             setChannelRole('member');

@@ -5,9 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 // COMPONENTS
 import { View, Text, TouchableOpacity } from './Themed';
-import { Popup } from '@mobiscroll/react';
-
-import TextareaAutosize from 'react-textarea-autosize';
 import { Select } from '@mobiscroll/react';
 
 import FroalaEditor from 'react-froala-wysiwyg';
@@ -28,10 +25,7 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [title, setTitle] = useState('');
     const [html, setHtml] = useState('');
     const [attachments, setAttachments] = useState<any[]>([]);
-    // const [message, setMessage] = useState({
-    //     html: '',
-    //     attachments: []
-    // });
+
     const [customCategory, setCustomCategory] = useState('None');
     const [addCustomCategory, setAddCustomCategory] = useState(false);
     const [isPrivate, setIsPrivate] = useState(false);
@@ -67,15 +61,6 @@ const NewPost: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         },
         [userId]
     );
-
-    const handleFileUpload = useCallback(async () => {
-        const res = await handleFile(false, userId);
-
-        if (!res || res.url === '' || res.type === '') {
-            return false;
-        }
-        // setUploadResult(res.url, res.type);
-    }, [userId]);
 
     const videoUploadEditor = useCallback(
         async (files: any) => {

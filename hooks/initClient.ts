@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { origin } from '../constants/zoomCredentials';
 
 export const useAppClient = () => {
     const [userId, setUserId] = useState<string>('');
@@ -14,8 +13,6 @@ export const useAppClient = () => {
     }, []);
 
     const fetchUserFromStorage = async () => {
-        // const user = await AsyncStorage.getItem('user');
-
         const items = await AsyncStorage.multiGet(['user', 'sortByWorkspace', 'recentSearches']);
 
         console.log('Items', items);
@@ -23,8 +20,7 @@ export const useAppClient = () => {
             // FETCH ALL ASYNC ITEMS AT ONCE
             const parsedUser = await JSON.parse(items[0][1]);
 
-            // const sortBy = await AsyncStorage.getItem('sortByWorkspace');
-            // const recentSearches = await AsyncStorage.getItem('recentSearches');
+            console.log('Async storage user', parsedUser);
 
             setUserId(parsedUser._id);
             setSortByWorkspace(items[1][1] ? items[1][1] : 'Date ↑');

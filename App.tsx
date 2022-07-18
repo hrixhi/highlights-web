@@ -1,3 +1,5 @@
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -17,7 +19,9 @@ import { onError } from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppClient } from './hooks/initClient';
 import { AppContextProvider } from './contexts/AppContext';
-import { apiURL } from './constants/zoomCredentials';
+import { apiURL, origin } from './constants/zoomCredentials';
+
+import LinkingConfiguration from './navigation/Linking';
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
@@ -48,6 +52,8 @@ export default function App() {
 
     const logoutUser = async () => {
         await AsyncStorage.clear();
+
+        window.location.href = `${origin}/login`;
     };
 
     const withToken = new ApolloLink((operation, forward) => {
@@ -55,7 +61,7 @@ export default function App() {
         operation.setContext(() => ({
             headers: {
                 Authorization: token ? token : '',
-                userId: userId,
+                userId,
             },
         }));
         return forward(operation);
@@ -116,25 +122,29 @@ export default function App() {
         return null;
     } else {
         return (
-            <ApolloProvider client={client}>
-                <AppContextProvider
-                    value={{
-                        userId,
-                        sortByWorkspace,
-                        recentSearches,
-                    }}
-                    key={userId}
-                >
-                    <SafeAreaProvider style={styles.font}>
-                        <MenuProvider>
-                            <LanguageProvider>
-                                <Navigation colorScheme={colorScheme} />
-                            </LanguageProvider>
-                        </MenuProvider>
-                        <StatusBar />
-                    </SafeAreaProvider>
-                </AppContextProvider>
-            </ApolloProvider>
+            <NavigationContainer linking={LinkingConfiguration} theme={DefaultTheme}>
+                {
+                    <ApolloProvider client={client}>
+                        <AppContextProvider
+                            value={{
+                                userId,
+                                sortByWorkspace,
+                                recentSearches,
+                            }}
+                            key={userId}
+                        >
+                            <SafeAreaProvider style={styles.font}>
+                                <MenuProvider>
+                                    <LanguageProvider>
+                                        <Navigation colorScheme={colorScheme} />
+                                    </LanguageProvider>
+                                </MenuProvider>
+                                <StatusBar />
+                            </SafeAreaProvider>
+                        </AppContextProvider>
+                    </ApolloProvider>
+                }
+            </NavigationContainer>
         );
     }
 }

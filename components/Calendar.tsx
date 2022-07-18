@@ -46,7 +46,7 @@ import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const { userId, org, user, cues, subscriptions } = useAppContext();
+    const { userId, org, user, subscriptions } = useAppContext();
     const [tab, setTab] = useState(props.tab);
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
@@ -107,21 +107,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [filterEnd, setFilterEnd] = useState<any>(null);
     const [filterByChannel, setFilterByChannel] = useState('All');
     const [filterEventsType, setFilterEventsType] = useState('All');
-    const sortbyOptions = [
-        {
-            value: 'Date ↑',
-            text: 'Date ↑',
-        },
-        {
-            value: 'Date ↓',
-            text: 'Date ↓',
-        },
-        {
-            value: 'Priority',
-            text: 'Priority',
-        },
-    ];
-    const [sortBy, setSortBy] = useState('Date ↑');
+
     // HOOKS
 
     /**
@@ -146,21 +132,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const server = useApolloClient();
 
     /**
-     * @description Fetch meeting provider for org
-     */
-    // useEffect(() => {
-    //     (async () => {
-    //         const org = await AsyncStorage.getItem('school');
-
-    //         if (org) {
-    //             const school = JSON.parse(org);
-
-    //             setMeetingProvider(school.meetingProvider ? school.meetingProvider : '');
-    //         }
-    //     })();
-    // }, []);
-
-    /**
      * @description Fetch data on Init
      */
     useEffect(() => {
@@ -181,7 +152,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
             .then((res) => {
                 if (res.data && res.data.activity.getActivity) {
-                    const tempActivity = res.data.activity.getActivity;
+                    const tempActivity = [...res.data.activity.getActivity];
                     let unread = 0;
                     tempActivity.map((act: any) => {
                         if (act.status === 'unread') {
@@ -436,7 +407,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         })
                         .then((res) => {
                             if (res.data && res.data.activity.getActivity) {
-                                const tempActivity = res.data.activity.getActivity;
+                                const tempActivity = [...res.data.activity.getActivity];
                                 let unread = 0;
                                 tempActivity.map((act: any) => {
                                     if (act.status === 'unread') {
@@ -769,7 +740,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     },
                 ]);
             } else if (event.cueId !== '') {
-                props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy);
+                props.openCue(event.channelId, event.cueId, event.createdBy);
             } else {
                 Alert(event.title, descriptionString);
             }
@@ -2138,11 +2109,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     createdBy !== '' &&
                                                                     target === 'CUE'
                                                                 ) {
-                                                                    props.openCueFromCalendar(
-                                                                        channelId,
-                                                                        cueId,
-                                                                        createdBy
-                                                                    );
+                                                                    props.openCue(channelId, cueId, createdBy);
                                                                 }
 
                                                                 if (target === 'DISCUSSION') {
@@ -2162,17 +2129,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     target === 'CHANNEL_MODERATOR_REMOVED'
                                                                 ) {
                                                                     props.openChannel(channelId);
-                                                                }
-
-                                                                if (target === 'Q&A') {
-                                                                    if (threadId && threadId !== '') {
-                                                                        await AsyncStorage.setItem(
-                                                                            'openThread',
-                                                                            threadId
-                                                                        );
-                                                                    }
-
-                                                                    props.openQA(channelId, cueId, createdBy);
                                                                 }
                                                             }}
                                                             style={{

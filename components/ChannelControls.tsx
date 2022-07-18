@@ -43,7 +43,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [description, setDescription] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [tags, setTags] = useState<string[]>([]);
-    const [role, setRole] = useState(user.role);
+    const [role] = useState(user.role);
     const [userCreatedOrg] = useState(user.userCreatedOrg);
     const [colorCode, setColorCode] = useState('');
     const [channels, setChannels] = useState<any[]>([]);
@@ -366,47 +366,44 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     /**
      * @description Subscribes user to a channel
      */
-    const handleSubscribe = useCallback(
-        (channelId, pass) => {
-            server
-                .mutate({
-                    mutation: subscribe,
-                    variables: {
-                        userId,
-                        channelId,
-                        password: pass,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.subscription && res.data.subscription.subscribe) {
-                        const subscriptionStatus = res.data.subscription.subscribe;
-                        switch (subscriptionStatus) {
-                            case 'subscribed':
-                                alert('Subscribed successfully!');
-                                // Refresh subscriptions
-                                refreshSubscriptions();
-                                break;
-                            case 'incorrect-password':
-                                Alert(incorrectPasswordAlert);
-                                break;
-                            case 'already-subbed':
-                                Alert(alreadySubscribedAlert);
-                                break;
-                            case 'error':
-                                Alert(somethingWrongAlert, checkConnectionAlert);
-                                break;
-                            default:
-                                Alert(somethingWrongAlert, checkConnectionAlert);
-                                break;
-                        }
+    const handleSubscribe = useCallback((channelId, pass) => {
+        server
+            .mutate({
+                mutation: subscribe,
+                variables: {
+                    userId,
+                    channelId,
+                    password: pass,
+                },
+            })
+            .then((res) => {
+                if (res.data.subscription && res.data.subscription.subscribe) {
+                    const subscriptionStatus = res.data.subscription.subscribe;
+                    switch (subscriptionStatus) {
+                        case 'subscribed':
+                            alert('Subscribed successfully!');
+                            // Refresh subscriptions
+                            refreshSubscriptions();
+                            break;
+                        case 'incorrect-password':
+                            Alert(incorrectPasswordAlert);
+                            break;
+                        case 'already-subbed':
+                            Alert(alreadySubscribedAlert);
+                            break;
+                        case 'error':
+                            Alert(somethingWrongAlert, checkConnectionAlert);
+                            break;
+                        default:
+                            Alert(somethingWrongAlert, checkConnectionAlert);
+                            break;
                     }
-                })
-                .catch((err) => {
-                    Alert(somethingWrongAlert, checkConnectionAlert);
-                });
-        },
-        [props.closeModal]
-    );
+                }
+            })
+            .catch((err) => {
+                Alert(somethingWrongAlert, checkConnectionAlert);
+            });
+    }, []);
 
     /**
      * @description Fetches status of channel and depending on that handles subscription to channel
@@ -449,7 +446,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     Alert(somethingWrongAlert, checkConnectionAlert);
                 });
         },
-        [props.closeModal, passwordRequired, displayName, fullName, temporary]
+        [passwordRequired, displayName, fullName, temporary]
     );
 
     /**
@@ -557,7 +554,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [
         name,
         password,
-        props.closeModal,
         passwordRequired,
         displayName,
         fullName,
@@ -1201,94 +1197,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             Courses that are not temporary can only be deleted by the school administrator.
                                         </Text> */}
                                 </View>
-
-                                {/* {!school ? (
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                width: '100%',
-                                                paddingBottom: 15,
-                                                backgroundColor: 'white',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    color: '#000000',
-                                                }}
-                                            >
-                                                Public
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                width: '100%',
-                                                height: 30,
-                                            }}
-                                        >
-                                            <Switch
-                                                value={isPublic}
-                                                onValueChange={() => setIsPublic(!isPublic)}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#f2f2f2',
-                                                    true: '#000',
-                                                }}
-                                                activeThumbColor="white"
-                                            />
-                                        </View>
-                                        <Text style={{ color: '#1F1F1F', fontSize: 13 }}>
-                                            Makes your channel visible to all users
-                                        </Text>
-                                    </View>
-                                ) : null}
-                                {!school ? (
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            marginTop: 25,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                width: '100%',
-                                                paddingBottom: 15,
-                                                backgroundColor: 'white',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    color: '#000000',
-                                                }}
-                                            >
-                                                Tags
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <ReactTagInput
-                                                tags={tags}
-                                                placeholder=" "
-                                                removeOnBackspace={true}
-                                                maxTags={5}
-                                                onChange={(newTags) => setTags(newTags)}
-                                            />
-                                        </View>
-                                        <Text style={{ color: '#1F1F1F', fontSize: 13, marginTop: 10 }}>
-                                            Add up to 5
-                                        </Text>
-                                    </View>
-                                ) : null} */}
 
                                 <View
                                     style={{

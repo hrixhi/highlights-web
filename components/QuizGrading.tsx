@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
-// import { TextInput as CustomTextInput } from './CustomTextInput'
 import { Text, View } from './Themed';
-// import EquationEditor from 'equation-editor-react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { RadioButton } from './RadioButton';
 import parser from 'html-react-parser';
@@ -1724,9 +1722,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             onPress={() => props.modifyActiveQuizAttempt()}
                             style={{
                                 backgroundColor: 'none',
-                                // borderRadius: 15,
-                                // overflow: 'hidden',
-                                // height: 35,
                                 marginBottom: 20,
                             }}
                             disabled={user.email === disableEmailId}
@@ -1756,9 +1751,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         onPress={() => props.onGradeQuiz(problemScores, problemComments, Number(percentage), comment)}
                         style={{
                             backgroundColor: 'none',
-                            // borderRadius: 15,
-                            // overflow: 'hidden',
-                            // height: 35,
                         }}
                         disabled={user.email === disableEmailId}
                     >
@@ -1793,8 +1785,6 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f2f2f2',
-        // borderBottomWidth: 1,
         fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12,

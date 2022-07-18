@@ -55,27 +55,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         <Text style={styleObject.date}>{props.channelName}</Text>
                     ) : props.option === 'Messages' ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            {/* {props.messageSenderAvatar ? (
-                                <Image
-                                    source={{
-                                        uri: props.messageSenderAvatar,
-                                    }}
-                                    style={{
-                                        width: 26,
-                                        height: 26,
-                                        borderRadius: 24,
-                                        marginRight: 10,
-                                    }}
-                                    // resizeMode="contain"
-                                />
-                            ) : null} */}
-                            <Avatar
-                                name={props.messageSenderName}
-                                image={props.messageSenderAvatar}
-                                size={24}
-                                // id={props.messageSenderName}
-                                // online={props.messageSenderOnline}
-                            />
+                            <Avatar name={props.messageSenderName} image={props.messageSenderAvatar} size={24} />
                             <Text style={styleObject.date}>
                                 {props.messageSenderName +
                                     (props.messageSenderChannel ? ' in ' + props.messageSenderChannel : '')}
@@ -91,24 +71,9 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         width: '100%',
                         flexDirection: 'row',
                         flex: 1,
-                        // height: '70%',
                     }}
                 >
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                        {/* <Text
-                            ellipsizeMode={'tail'}
-                            numberOfLines={1}
-                            style={{
-                                fontFamily: 'inter',
-                                fontSize: 15,
-                                lineHeight: 20,
-                                flex: 1,
-                                marginTop: props.option === 'Messages' ? 6 : 10,
-                                color: '#000000',
-                            }}
-                        >
-                            {props.title}
-                        </Text> */}
                         <View
                             style={{
                                 flex: 1,
@@ -203,7 +168,6 @@ const styles: any = (colorScheme: any, col: any, option: any) =>
             height: '100%',
             width: '100%',
             paddingVertical: 7,
-            // paddingHorizontal: 10,
             backgroundColor: '#fff',
         },
         dateContainer: {

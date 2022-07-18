@@ -87,6 +87,11 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
 
     let type = mime.extension(file.type);
 
+    if (type === 'txt') {
+        alert('txt files are not supported. Convert to pdf and upload.');
+        return { type: '', url: '', name: '' };
+    }
+
     if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '', name: '' };
@@ -141,6 +146,27 @@ export const fileUpload = async (file: any, type: any, userId: string) => {
     const url = 'https://api.learnwithcues.com/api/upload';
     // DEV
     // const url = 'http://localhost:8081/api/upload';
+    const formData = new FormData();
+    formData.append('attachment', file);
+    formData.append('typeOfUpload', type);
+    formData.append('userId', userId);
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data',
+        },
+    };
+    const res = await axios.post(url, formData, config);
+
+    return res;
+};
+
+export const fileUploadInbox = async (file: any, type: any, userId: string) => {
+    console.log('Type', type);
+    // LIVE
+    const url = 'https://api.learnwithcues.com/api/uploadInbox';
+
+    // DEV
+    // const url = 'http://localhost:8081/api/uploadInbox';
     const formData = new FormData();
     formData.append('attachment', file);
     formData.append('typeOfUpload', type);

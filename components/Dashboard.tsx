@@ -21,14 +21,7 @@ import { Avatar } from 'stream-chat-react';
 
 // API
 import axios from 'axios';
-import {
-    checkChannelStatus,
-    subscribe,
-    markAttendance,
-    meetingRequest,
-    startInstantMeeting,
-    getOngoingMeetings,
-} from '../graphql/QueriesAndMutations';
+import { checkChannelStatus, subscribe, startInstantMeeting, getOngoingMeetings } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
 import { View, Text, TouchableOpacity } from '../components/Themed';
@@ -36,12 +29,9 @@ import Walkthrough from './Walkthrough';
 import Channels from './Channels';
 import Create from './Create';
 import CalendarX from './Calendar';
-import { TextInput } from './CustomTextInput';
 import alert from './Alert';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
-import Performance from './Performance';
 import SearchResultCard from './SearchResultCard';
-import Inbox from './Inbox';
 import Card from './Card';
 import Alert from '../components/Alert';
 import Discussion from './Discussion';
@@ -80,8 +70,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     } = useAppContext();
 
     const styles = styleObject();
-
-    // const scrollViewRef: any = useRef(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState<any>({
         Courses: [],
@@ -104,7 +92,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
     const [openChannelId, setOpenChannelId] = useState('');
     let cancelTokenRef: any = useRef({});
-    const tabs = ['Content', 'Discuss', 'Meet', 'Scores', 'Settings'];
     const width = Dimensions.get('window').width;
     const windowHeight = width < 768 ? Dimensions.get('window').height - 0 : Dimensions.get('window').height;
     const sortbyOptions = [
@@ -137,7 +124,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [searchResultTabs, setSearchResultTabs] = useState<string[]>([]);
     const [activeSearchResultsTab, setActiveSearchResultsTab] = useState('');
     const [reversedSearches, setReversedSearches] = useState<string[]>([]);
-    // const [exportScores, setExportScores] = useState(false);
     const [showNewAssignment, setShowNewAssignment] = useState(false);
     const [showNewAttendance, setShowNewAttendance] = useState(false);
 
@@ -156,21 +142,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setSelectedWorkspace(props.selectedWorkspace);
     }, [props.selectedWorkspace]);
 
-    const getWorkspaceNavbarIconName = (op: string) => {
-        switch (op) {
-            case 'Content':
-                return props.activeWorkspaceTab === op ? 'book' : 'book-outline';
-            case 'Discuss':
-                return props.activeWorkspaceTab === op ? 'chatbubbles' : 'chatbubbles-outline';
-            case 'Meet':
-                return props.activeWorkspaceTab === op ? 'videocam' : 'videocam-outline';
-            case 'Scores':
-                return props.activeWorkspaceTab === op ? 'bar-chart' : 'bar-chart-outline';
-            default:
-                return props.activeWorkspaceTab === op ? 'build' : 'build-outline';
-        }
-    };
-
     const getWorkspaceNavbarIconColor = (op: string) => {
         if (op === props.activeWorkspaceTab) {
             return '#fff';
@@ -178,37 +149,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return '#fff';
     };
 
-    const getSearchNavbarIconName = (op: string) => {
-        switch (op) {
-            case 'Content':
-                return activeSearchResultsTab === op ? 'book' : 'book-outline';
-            case 'Messages':
-                return activeSearchResultsTab === op ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
-            case 'Discussion':
-                return activeSearchResultsTab === op ? 'chatbubbles' : 'chatbubbles-outline';
-            case 'Courses':
-                return activeSearchResultsTab === op ? 'school' : 'school-outline';
-            default:
-                return activeSearchResultsTab === op ? 'build' : 'build-outline';
-        }
-    };
-
     const getSearchNavbarIconColor = (op: string) => {
         if (op === activeSearchResultsTab) {
             return '#000';
         }
         return '#000';
-    };
-
-    const getAccountNavbarIconName = (op: string) => {
-        switch (op) {
-            case 'profile':
-                return op === props.activeAccountTab ? 'person' : 'person-outline';
-            case 'courses':
-                return op === props.activeAccountTab ? 'school' : 'school-outline';
-            default:
-                return '';
-        }
     };
 
     const getAccountNavbarIconColor = (op: string) => {
@@ -608,7 +553,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setSearchResultTabs(tabsFound);
 
                     setResultCount(totalCount);
-                    // setResults(sortedResults);
                     setLoadingSearchResults(false);
                 });
         } catch (error) {
@@ -626,15 +570,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             return;
         }
 
+        const startDate = new Date();
+
         if (instantMeetingEnd < new Date()) {
             Alert('Meeting end time must be set in the future.');
             return;
-        } else if (instantMeetingStart > instantMeetingEnd) {
+        } else if (startDate > instantMeetingEnd) {
             Alert('Meeting end time must be set after the start time.');
             return;
         }
-
-        const startDate = new Date();
 
         server
             .mutate({
@@ -756,47 +700,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     /**
-     * @description Call to enter classroom
-     */
-    const handleEnterClassroom = useCallback(async () => {
-        const u = await AsyncStorage.getItem('user');
-
-        if (u) {
-            const user = JSON.parse(u);
-            if (user.zoomInfo) {
-                // Zoom is connected
-
-                server
-                    .mutate({
-                        mutation: meetingRequest,
-                        variables: {
-                            userId,
-                            channelId: instantMeetingChannelId,
-                            isOwner: user._id.toString().trim() === instantMeetingCreatedBy,
-                        },
-                    })
-                    .then((res) => {
-                        if (res.data && res.data.channel.meetingRequest !== 'error') {
-                            server.mutate({
-                                mutation: markAttendance,
-                                variables: {
-                                    userId: userId,
-                                    channelId: props.channelId,
-                                },
-                            });
-                            window.open(res.data.channel.meetingRequest, '_blank');
-                        } else {
-                            Alert('Classroom not in session. Waiting for instructor.');
-                        }
-                    })
-                    .catch((err) => {
-                        Alert('Something went wrong.');
-                    });
-            }
-        }
-    }, [userId, instantMeetingChannelId, instantMeetingCreatedBy]);
-
-    /**
      * @description Fetches status of channel and depending on that handles subscription to channel
      */
     const handleSub = useCallback(async (channelId) => {
@@ -858,7 +761,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             case 'subscribed':
                                 alert('Subscribed successfully!');
                                 setSearchTerm('');
-
                                 refreshSubscriptions();
                                 refreshCues();
                                 break;
@@ -1085,11 +987,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     setActiveSearchResultsTab(tab);
                                                 }}
                                             >
-                                                {/* <Ionicons
-                                            name={getSearchNavbarIconName(tab)}
-                                            style={{ color: getSearchNavbarIconColor(tab) }}
-                                            size={tab === 'Courses' ? 15 : 13}
-                                        /> */}
                                                 <Text
                                                     style={{
                                                         color: getSearchNavbarIconColor(tab),
@@ -1351,7 +1248,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         searchTerm={searchTerm}
                                         onPress={async () => {
                                             if (activeSearchResultsTab === 'Content') {
-                                                props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy);
+                                                props.openCue(obj.channelId, obj._id, obj.createdBy);
                                                 setSearchTerm('');
                                             } else if (activeSearchResultsTab === 'Discussion') {
                                                 await AsyncStorage.setItem(
@@ -1359,13 +1256,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     obj.parentId && obj.parentId !== '' ? obj.parentId : obj._id
                                                 );
 
-                                                if (obj.cueId && obj.cueId !== '') {
-                                                    props.openQAFromSearch(obj.channelId, obj.cueId);
-                                                } else {
-                                                    props.openDiscussionFromSearch(obj.channelId);
+                                                props.openDiscussionFromSearch(obj.channelId);
 
-                                                    props.setLoadDiscussionForChannelId(obj.channelId);
-                                                }
+                                                props.setLoadDiscussionForChannelId(obj.channelId);
 
                                                 setSearchTerm('');
                                             } else if (activeSearchResultsTab === 'Messages') {
@@ -1423,20 +1316,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        // paddingTop: 10,
                         maxHeight: 500,
                         borderRadius: 2,
                         borderWidth: 1,
                         borderColor: '#cccccc',
-                        // borderLeftColor: colorCode,
-                        // borderLeftWidth: 3,
-                        // shadowOffset: {
-                        //     width: 2,
-                        //     height: 2,
-                        // },
-                        // shadowOpacity: 0.1,
-                        // shadowRadius: 10,
-                        // zIndex: 5000000,
                     }}
                 >
                     <ScrollView
@@ -1586,7 +1469,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         }
                                                     }
                                                 }}
-                                                style={{}}
                                                 disabled={user.email === disableEmailId}
                                             >
                                                 <Text
@@ -1734,7 +1616,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         placeholder={''}
                                         onChangeText={(val) => setInstantMeetingTitle(val)}
                                         placeholderTextColor={'#1F1F1F'}
-                                        // required={true}
                                     />
                                 </View>
                             </View>
@@ -1762,7 +1643,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         placeholder={''}
                                         onChangeText={(val) => setInstantMeetingDescription(val)}
                                         placeholderTextColor={'#1F1F1F'}
-                                        // required={true}
                                     />
                                 </View>
                             </View>
@@ -1893,27 +1773,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     activeThumbColor="white"
                                 />
                             </View>
-                            {/* <View
-                                style={{
-                                    width: '100%',
-                                    maxWidth: 400,
-                                    // paddingVertical: 15,
 
-                                    backgroundColor: '#f8f8f8'
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 11,
-                                        color: '#000000',
-                                        textTransform: 'uppercase',
-                                        lineHeight: 20,
-                                        fontFamily: 'Inter'
-                                    }}
-                                >
-                                    NOTE: You can schedule future meetings under Agenda
-                                </Text>
-                            </View> */}
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -2132,10 +1992,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         );
     };
 
-    const searchMobile = () => {
-        return <View></View>;
-    };
-
     /**
      * @description Overview nested
      */
@@ -2350,7 +2206,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ) : // Scores
                                     props.activeWorkspaceTab === 'Scores' ? (
                                         <GradesList
-                                            openCueFromGrades={props.openCueFromCalendar}
+                                            openCueFromGrades={props.openCue}
                                             isOwner={selectedWorkspace.split('-SPLIT-')[2] === userId}
                                             showNewAssignment={showNewAssignment}
                                             setShowNewAssignment={(show: boolean) => setShowNewAssignment(show)}
@@ -2518,20 +2374,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     key={index}
                                                                 >
                                                                     <Card
-                                                                        gray={true}
-                                                                        fadeAnimation={props.fadeAnimation}
                                                                         updateModal={() => {
-                                                                            props.openUpdate(
-                                                                                cue.key,
-                                                                                cue.index,
-                                                                                0,
+                                                                            props.openCue(
+                                                                                cue.channelId ? cue.channelId : '',
                                                                                 cue._id,
-                                                                                cue.createdBy ? cue.createdBy : '',
-                                                                                cue.channelId ? cue.channelId : ''
+                                                                                cue.createdBy ? cue.createdBy : ''
                                                                             );
                                                                         }}
                                                                         cue={cue}
-                                                                        channelId={props.channelId}
                                                                     />
                                                                 </View>
                                                             );
@@ -2574,7 +2424,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     selectedWorkspace.split('-SPLIT-')[2]
                                 );
                             } else if (props.activeWorkspaceTab === 'Scores') {
-                                // setExportScores(true);
                                 setShowNewAssignment(true);
                             }
                         }}
@@ -2601,13 +2450,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     : selectedWorkspace.split('-SPLIT-')[3],
                             borderColor: '#000',
                             borderWidth: 0,
-                            // shadowColor: '#000',
-                            // shadowOffset: {
-                            //     width: 4,
-                            //     height: 4,
-                            // },
-                            // shadowOpacity: 0.12,
-                            // shadowRadius: 10,
                             zIndex: 500000,
                         }}
                     >
@@ -2670,23 +2512,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </Text>
                     </View>
                 ) : null}
-                {/* {props.option === 'Inbox' ? (
-                    <View
-                        style={{
-                            width: '100%',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 25,
-                                color: '#000',
-                                fontFamily: 'Inter',
-                            }}
-                        >
-                            Your Messages
-                        </Text>
-                    </View>
-                ) : null} */}
                 {props.option === 'Search' ? (
                     <View
                         style={{
@@ -2708,19 +2533,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 fontSize: 15,
                                 flex: 1,
                                 paddingVertical: 8,
-                                // marginTop: 10,
                                 marginRight: searchTerm === '' ? 10 : 15,
-                                // backgroundColor: '#f8f8f8',
-                                // borderRadius: 18,
-                                // borderBottomColor: '#cfcfcf',
-                                // borderBottomWidth: 1
                             }}
                             placeholder={'Search'}
                             placeholderTextColor="#656565"
                             value={searchTerm}
                             autoFocus={false}
                             onChangeText={(val) => setSearchTerm(val)}
-                            // onFocus={() => setShowSearchMobile(true)}
                             returnKeyType="search"
                             onSubmitEditing={() => {
                                 updateRecentSearches();
@@ -2730,7 +2549,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {searchTerm !== '' ? (
                             <TouchableOpacity
                                 onPress={() => {
-                                    // setShowSearchMobile(!showSearchMobile);
                                     Keyboard.dismiss();
                                     setSearchTerm('');
                                 }}
@@ -2815,28 +2633,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 backgroundColor: 'none',
                                             }}
                                             onPress={() => {
-                                                if (op === 'To Do') {
-                                                    setFilterEventsType('');
-                                                    setFilterByChannel('');
-                                                }
-                                                if (op === 'Classroom') {
-                                                    props.closeCreateModal();
-                                                }
                                                 props.setOption(op);
-                                                if (op === 'Browse') {
-                                                    props.openCreate();
-                                                }
                                             }}
                                         >
                                             <View nativeID={op.split(' ').join('-')}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
-                                                    {op === 'Classroom'
-                                                        ? 'Workspace'
-                                                        : op === 'Performance'
-                                                        ? 'Performance'
-                                                        : op === 'To Do'
-                                                        ? 'Plan'
-                                                        : op}
+                                                    {op === 'Classroom' ? 'Workspace' : op === 'To Do' ? 'Plan' : op}
                                                 </Text>
 
                                                 {op === 'Inbox' && props.unreadMessages > 0 ? (
@@ -3055,12 +2857,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 height: 2,
                                             },
                                             shadowColor: '#000',
-                                            // overflow: 'hidden',
                                             shadowOpacity: 0.07,
                                             shadowRadius: 7,
                                             padding: 7,
-                                            // borderWidth: 1,
-                                            // borderColor: '#CCC'
                                         }}
                                     >
                                         {props.accountTabs.map((tab: string, ind: number) => {
@@ -3109,10 +2908,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 : null}
 
             {searchTerm === '' ? (
-                props.modalType === 'Create' && (props.option === 'Classroom' || props.option === 'Browse') ? (
+                props.modalType === 'Create' && props.option === 'Classroom' ? (
                     <Create
                         closeModal={() => props.closeModal()}
-                        closeAfterCreatingMyNotes={() => props.closeAfterCreatingMyNotes()}
                         option={props.option}
                         courseColor={
                             selectedWorkspace.split('-SPLIT-')[0] === 'My Notes'
@@ -3153,7 +2951,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {props.option === 'Account' && props.activeAccountTab === 'profile' ? (
                             <Walkthrough
                                 closeModal={() => {}}
-                                reOpenProfile={() => props.reOpenProfile()}
                                 setShowHelp={(val: any) => props.setShowHelp(val)}
                                 showHelp={props.showHelp}
                             />
@@ -3162,22 +2959,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <Channels
                                 setShowCreate={(val: any) => props.setShowCreate(val)}
                                 showCreate={props.showCreate}
-                                closeModal={() => {}}
                             />
                         ) : null}
                         {props.option === 'Classroom' && selectedWorkspace ? renderWorkspaceNavbar() : null}
                         {props.option === 'Classroom' ? overviewNested() : null}
-                        {props.option === 'Search' ? searchMobile() : null}
                         {props.option === 'To Do' ? (
                             <CalendarX
                                 tab={props.tab}
                                 setTab={(val: any) => props.setTab(val)}
                                 filterStart={filterStart}
                                 filterEnd={filterEnd}
-                                openCueFromCalendar={props.openCueFromCalendar}
+                                openCue={props.openCue}
                                 openDiscussion={props.openDiscussionFromActivity}
                                 openChannel={props.openChannelFromActivity}
-                                openQA={props.openQAFromActivity}
                                 filterByChannel={filterByChannel}
                                 filterEventsType={filterEventsType}
                             />

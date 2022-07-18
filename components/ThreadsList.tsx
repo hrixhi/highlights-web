@@ -8,7 +8,6 @@ import {
     Platform,
     Linking,
     TextInput as DefaultTextInput,
-    Switch,
 } from 'react-native';
 import Alert from '../components/Alert';
 import { View, Text, TouchableOpacity } from './Themed';
@@ -25,20 +24,11 @@ import {
     updateThread,
 } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Collapse } from 'react-collapse';
+
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import moment from 'moment';
-// import {
-//     Menu,
-//     MenuOptions,
-//     MenuOption,
-//     MenuTrigger,
-// } from 'react-native-popup-menu';
+
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { GiftedChat, Bubble, MessageText } from 'react-native-gifted-chat';
-import FileUpload from './UploadFiles';
-import { Select } from '@mobiscroll/react';
-import ReactPlayer from 'react-player';
 import NewPostModal from './NewPostModal';
 import parser from 'html-react-parser';
 
@@ -48,9 +38,8 @@ import Froalaeditor from 'froala-editor';
 import { renderMathjax } from '../helpers/FormulaHelpers';
 
 import { DISCUSS_REPLY_TOOLBAR_BUTTONS } from '../constants/Froala';
-import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
+import { handleFileUploadEditor } from '../helpers/FileUpload';
 import FormulaGuide from './FormulaGuide';
-import { TextInput } from './CustomTextInput';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
@@ -1150,7 +1139,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </View>
                     ) : (
                         <div
-                            className="mce-content-body htmlParser"
+                            className="htmlParser fr-view"
                             style={{
                                 width: '100%',
                                 color: 'black',
@@ -1658,7 +1647,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </View>
                                 ) : (
                                     <div
-                                        className="mce-content-body htmlParser"
+                                        className="fr-view htmlParser"
                                         style={{ color: 'black', marginTop: 0, paddingLeft: 55 }}
                                     >
                                         {parser(replyThreadContent)}

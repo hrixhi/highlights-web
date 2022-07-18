@@ -2,8 +2,7 @@
 import React, { useEffect, useState, useCallback, useRef, createRef } from 'react';
 import { StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Dimensions, Switch, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import lodash, { update } from 'lodash';
-import * as ImagePicker from 'expo-image-picker';
+import lodash from 'lodash';
 
 // COMPONENT
 import { Text, View } from './Themed';
@@ -12,7 +11,6 @@ import { RadioButton } from './RadioButton';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import TeXToSVG from 'tex-to-svg';
 import parser from 'html-react-parser';
-import FileUpload from './UploadFiles';
 import ReactPlayer from 'react-player';
 import FormulaGuide from './FormulaGuide';
 import useDynamicRefs from 'use-dynamic-refs';
@@ -40,7 +38,6 @@ import FroalaEditor from 'react-froala-wysiwyg';
 import Froalaeditor from 'froala-editor';
 
 import {
-    QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS,
     QUIZ_QUESTION_TOOLBAR_BUTTONS,
     QUIZ_OPTION_TOOLBAR_BUTTONS,
     QUIZ_SOLUTION_TOOLBAR_BUTTONS,
@@ -67,10 +64,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [problems, setProblems] = useState<any[]>(props.problems.slice());
     const [headers, setHeaders] = useState<any>(props.headers);
     const [instructions, setInstructions] = useState(props.instructions);
-    const [initialInstructions, setInitialInstructions] = useState(props.instructions);
     const [solutions, setSolutions] = useState<any>([]);
-    // const [initialSolutions, setInitialSolutions] = useState<any>([]);
-    const [shuffledProblems, setShuffledProblems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [duration, setDuration] = useState({
         hours: 1,
@@ -85,14 +79,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [timer, setTimer] = useState(false);
     const [equation, setEquation] = useState('');
     const [showEquationEditor, setShowEquationEditor] = useState(false);
-    const [showImportOptions, setShowImportOptions] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(props.shuffleQuiz);
     const [problemRefs, setProblemRefs] = useState<any[]>(props.problems.map(() => createRef(null)));
     const [optionRefs, setOptionRefs] = useState<any[]>([]);
     const [getMultipartEditorRef, setMultipartEditorRef] = useDynamicRefs();
 
-    const [showFormulas, setShowFormulas] = useState<any[]>(props.problems.map((prob: any) => false));
-    const [responseEquations, setResponseEquations] = useState<any[]>(props.problems.map((prob: any) => ''));
     const [showFormulaGuide, setShowFormulaGuide] = useState(false);
     const [getRef, setRef] = useDynamicRefs();
     const [optionEquations, setOptionEquations] = useState<any[]>([]);
@@ -213,7 +204,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     useEffect(() => {
         setHeaders(props.headers);
         setInstructions(props.instructions);
-        setInitialInstructions(props.instructions);
         setShuffleQuiz(props.shuffleQuiz);
         if (props.duration) {
             setTimer(true);
@@ -1115,39 +1105,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setMultipartEquations(updateMultipartEquations);
     };
 
-    /**
-     * @description Insert equation into Problem response editor
-     */
-    const insertResponseEquation = useCallback(
-        (problemIndex: number) => {
-            if (responseEquations[problemIndex] === '') {
-                alert('Equation cannot be empty.');
-                return;
-            }
-
-            let currentContent = problemRefs[problemIndex].current.getContent();
-
-            const SVGEquation = TeXToSVG(responseEquations[problemIndex]); // returns svg in html format
-            currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + '</div>';
-
-            problemRefs[problemIndex].current.setContent(currentContent);
-
-            const updatedSolution = [...solutions];
-            updatedSolution[problemIndex].response = problemRefs[problemIndex].current.getContent();
-            setSolutions(updatedSolution);
-            props.setSolutions(updatedSolution);
-
-            const updateShowFormulas = [...showFormulas];
-            updateShowFormulas[problemIndex] = false;
-            setShowFormulas(updateShowFormulas);
-
-            const updateResponseEquations = [...responseEquations];
-            updateResponseEquations[problemIndex] = '';
-            setResponseEquations(updateResponseEquations);
-        },
-        [showFormulas, problemRefs, responseEquations, solutions]
-    );
-
     // Web drag and drop
     /**
      * @description Moves an item from one list to another list.
@@ -1217,7 +1174,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             newProbs[problemIndex].question = JSON.stringify(obj);
             // setEditQuestion(newProbs[problemIndex]);
             setProblems(newProbs);
-            setShowImportOptions(false);
         },
         [userId, problems, RichText]
     );

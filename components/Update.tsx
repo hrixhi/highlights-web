@@ -13,7 +13,6 @@ import {
     updateFolder,
     addToFolder,
     deleteFolder,
-    getReleaseSubmissionStatus,
     findCueById,
     handleReleaseSubmission,
 } from '../graphql/QueriesAndMutations';
@@ -31,7 +30,6 @@ import InsetShadow from 'react-native-inset-shadow';
 
 // HELPERS
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { useApolloClient } from '@apollo/client';
@@ -42,9 +40,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const {
         user,
         userId,
-        cues,
-        subscriptions,
-        handleUpdateCue,
         refreshCues,
         savingCueToCloud,
         // SYNC FROM BACKEND
@@ -52,7 +47,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         changeSyncingCueFromBackend,
         syncingCueFromBackend,
         syncCueError,
-        onlineStatus,
         handleCueReleaseSubmissionStatus,
     } = useAppContext();
 
@@ -63,16 +57,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [cue, setCue] = useState<any>();
     const [cueId] = useState(props.cueId);
     const [createdBy] = useState(props.createdBy);
-    const [submission] = useState(props.cue && props.cue.submission ? props.cue.submission : false);
+
     const [channelCreatedBy] = useState(props.channelCreatedBy);
     const [channelOwner, setChannelOwner] = useState(userId === channelCreatedBy);
-    const [folderId, setFolderId] = useState(
-        props.cue && props.cue.folderId && props.cue.folderId !== '' ? props.cue.folderId : ''
-    );
-    const [courseColor, setCourseColor] = useState('#000');
-    const [isQuiz, setIsQuiz] = useState(false);
 
-    console.log('props.cueId', props.cueId);
+    const [submission, setSubmission] = useState(false);
+    const [isQuiz, setIsQuiz] = useState(false);
+    const [folderId, setFolderId] = useState('');
 
     // UI CONTEXT
     const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -107,11 +98,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const windowHeight = Dimensions.get('window').height;
 
-    // ALERTS
-    const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
-    const checkConnectionAlert = PreferredLanguageText('checkConnection');
-    const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments');
-
     const server = useApolloClient();
 
     // HOOKS
@@ -128,32 +114,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setIsQuiz(true);
                 }
             }
+            setSubmission(cue.submission);
+            setFolderId(cue.folderId);
         }
     }, [cue]);
-
-    /**
-     * @description Set course color
-     */
-    useEffect(() => {
-        if (cue && cue.channelId && subscriptions && subscriptions.length > 0) {
-            const findCourse = subscriptions.find((sub: any) => {
-                return sub.channelId === cue.channelId;
-            });
-
-            if (findCourse && findCourse.colorCode) {
-                setCourseColor(findCourse.colorCode);
-            }
-        }
-    }, [cue, subscriptions]);
-
-    /**
-     * @description Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
-     */
-    // useEffect(() => {
-    //     if (cueId && cueId !== '') {
-    //         checkReleaseSubmissionStatus(cueId);
-    //     }
-    // }, [cueId]);
 
     /**
      * @description Every time a cue is opened we need to Sync the cue with the database to ensure that we have the latest object since we use multiple devices (LATER ON WE MUST SUBSCRIBE CUES TO WEBHOOKS TO MONITOR REAL TIME CHANGES)
@@ -174,14 +138,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         if (!props.channelCues) return;
 
-        let filterExisting = props.channelCues.filter((cue: any) => {
-            return cue.folderId === '' || !cue.folderId;
+        let filterExisting = props.channelCues.filter((channelCue: any) => {
+            return channelCue.folderId === '' || !channelCue.folderId;
         });
 
         // Filter out current
         if (folderId) {
-            filterExisting = filterExisting.filter((cue: any) => {
-                return cue._id !== cue._id;
+            filterExisting = filterExisting.filter((channelCue: any) => {
+                return channelCue._id !== cue._id;
             });
         }
 
@@ -200,12 +164,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      */
     useEffect(() => {
         if (folderId !== '' && folder && folder !== null && folder.cueIds && folderCues && folderCues.length > 0) {
-            // const cuesInOrder = folder.cueIds.map((id: any) => {
-            //     return folderCues.find((cue: any) => cue._id === id)
-            // })
-
-            // const filterUndefined = cuesInOrder.filter((cue: any) => cue !== undefined)
-
             setFolderCuesToDisplay(folderCues);
             setUpdateFolderTitle(folder.title);
         }
@@ -253,51 +211,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 changeSyncingCueFromBackend(false);
             });
     };
-
-    /**
-     * @description Fetches release submission status
-     */
-    const checkReleaseSubmissionStatus = (cueId: string) => {
-        server
-            .query({
-                query: getReleaseSubmissionStatus,
-                variables: {
-                    cueId,
-                },
-            })
-            .then(async (res) => {
-                if (res.data.cue.getReleaseSubmissionStatus) {
-                    // Update cue and refresh
-
-                    const currCue = cues[props.cueKey][props.cueIndex];
-
-                    const saveCue = {
-                        ...currCue,
-                        releaseSubmission: true,
-                    };
-
-                    handleUpdateCue(saveCue, false);
-                } else {
-                    const currCue = cues[props.cueKey][props.cueIndex];
-
-                    const saveCue = {
-                        ...currCue,
-                        releaseSubmission: false,
-                    };
-
-                    handleUpdateCue(saveCue, false);
-                }
-            })
-            .catch((e) => {
-                // Do nothing
-            });
-    };
-
-    // useEffect(() => {
-    //     if (props.target && props.target === 'Q&A') {
-    //         setShowComments(true);
-    //     }
-    // }, [props.target]);
 
     /**
      * @description Fetch all the channel folders
@@ -818,9 +731,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shadowRadius: 12,
                 zIndex: 100,
                 elevation: 120,
-                borderTopColor: courseColor,
+                borderTopColor: props.activeChannelColor,
                 borderTopWidth: 1,
-                backgroundColor: courseColor,
+                backgroundColor: props.activeChannelColor,
             }}
         >
             <TouchableOpacity
@@ -1197,9 +1110,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     >
                                         <View style={styles.dateContainer}>
                                             <Text style={styles.date2}>
-                                                {new Date(props.folderCue.date).toString().split(' ')[1] +
+                                                {new Date(folderCue.date).toString().split(' ')[1] +
                                                     ' ' +
-                                                    new Date(props.folderCue.date).toString().split(' ')[2]}
+                                                    new Date(folderCue.date).toString().split(' ')[2]}
                                             </Text>
                                         </View>
                                         <View
@@ -1704,8 +1617,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     save={save}
                     del={del}
                     cue={cue}
-                    cueIndex={props.cueIndex}
-                    cueKey={props.cueKey}
                     channelOwner={channelOwner}
                     createdBy={createdBy}
                     folderId={folderId}
@@ -1730,17 +1641,39 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View
                             style={{
                                 width: '100%',
-                                flex: 1,
+                                flexDirection: 'row',
                                 justifyContent: 'center',
-                                display: 'flex',
-                                flexDirection: 'column',
+                                flex: 1,
                                 backgroundColor: '#f8f8f8',
-                                borderTopLeftRadius: 0,
-                                borderTopRightRadius: 0,
-                                marginTop: 100,
                             }}
                         >
-                            <ActivityIndicator color={'#000000'} />
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    alignSelf: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f8f8f8',
+                                    marginTop: 100,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        marginTop: 10,
+                                        backgroundColor: '#f8f8f8',
+                                    }}
+                                >
+                                    <ActivityIndicator size={20} color={'#1F1F1F'} />
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            fontFamily: 'Inter',
+                                            marginTop: 10,
+                                        }}
+                                    >
+                                        Loading...
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     ) : (
                         <View
@@ -1782,7 +1715,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         key={JSON.stringify(subscribers)}
                                         subscribers={subscribers}
                                         cueId={cueId}
-                                        channelName={props.filterChoice}
                                         channelId={props.channelId}
                                         closeModal={() => props.closeModal()}
                                         cue={cue}
@@ -2256,7 +2188,14 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
      * */
     const renderHeader = () => {
         return (
-            <View style={{ width: '100%', backgroundColor: courseColor, flexDirection: 'column', zIndex: 500000 }}>
+            <View
+                style={{
+                    width: '100%',
+                    backgroundColor: props.activeChannelColor,
+                    flexDirection: 'column',
+                    zIndex: 500000,
+                }}
+            >
                 {/* The first bar will be the main black bar with the back button, Cue Tabs and buttons */}
                 <View
                     style={{

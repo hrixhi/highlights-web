@@ -1,9 +1,8 @@
 // REACT
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Dimensions, TextInput as DefaultTextInput, Image, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import TeXToSVG from 'tex-to-svg';
-import lodash, { update } from 'lodash';
+import lodash from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
 
 // COMPONENTS
@@ -18,13 +17,6 @@ import useDynamicRefs from 'use-dynamic-refs';
 import { RadioButton } from './RadioButton';
 
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
-
-// import {
-//     Menu,
-//     MenuOptions,
-//     MenuOption,
-//     MenuTrigger,
-// } from "react-native-popup-menu";
 
 // HELPER
 import { PreferredLanguageText } from '../helpers/LanguageContext';
@@ -580,7 +572,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 setProblems(newProbs);
                 props.setProblems(newProbs);
             } else {
-                // setCue(modifedText);
                 const newProbs = [...problems];
                 newProbs[editQuestionNumber - 1].question = editQuestionContent;
                 setEditQuestion(newProbs[editQuestionNumber - 1]);
