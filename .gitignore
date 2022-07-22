@@ -9,7 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 
-web/
 web/ui/**
 web/ui/chunks
 

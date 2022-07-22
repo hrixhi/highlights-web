@@ -34,6 +34,7 @@ import Books from './Books';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
 import useDrivePicker from 'react-google-drive-picker';
+import { origin } from '../constants/zoomCredentials';
 
 // NEW EDITOR
 // Require Editor JS files.
@@ -1517,6 +1518,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 .catch((e) => {
                     Alert('Something went wrong. Try again.');
                 });
+        } else {
+            Alert('You must sign in with Google and give permission to access Drive.');
+            window.location.href = `${origin}/google_auth`;
         }
     };
 
