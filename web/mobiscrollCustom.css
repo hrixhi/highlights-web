@@ -588,3 +588,8 @@ input:focus {
     padding: 15px;
     border-bottom: 1px solid #f2f2f2;
 }
+
+/* FOR VICTORY CHARTS */
+svg:not(:root) {
+    overflow: visible !important;
+}

@@ -11,7 +11,9 @@ import {
     createQuiz,
     getChannelCategories,
     getChannels,
+    getGoogleAuth,
     getSharedWith,
+    uploadFileFromDrive,
 } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
@@ -31,6 +33,7 @@ import Books from './Books';
 // HELPERS
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { handleFileUploadEditor, handleFile } from '../helpers/FileUpload';
+import useDrivePicker from 'react-google-drive-picker';
 
 // NEW EDITOR
 // Require Editor JS files.
@@ -54,14 +57,17 @@ import Froalaeditor from 'froala-editor';
 import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
-import { disableEmailId } from '../constants/zoomCredentials';
+import { apiURL, disableEmailId } from '../constants/zoomCredentials';
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
+import axios from 'axios';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { userId, user, customCategories: localCustomCategories, handleUpdateCue, handleAddCue } = useAppContext();
+
+    const [openPicker, authResponse] = useDrivePicker();
 
     const current = new Date();
     const [cue, setCue] = useState('<h2>Title</h2>');
@@ -122,9 +128,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [limitedShare, setLimitedShare] = useState(false);
     const [unlimitedAttempts, setUnlimitedAttempts] = useState(false);
     const [attempts, setAttempts] = useState('1');
-    const window = Dimensions.get('window');
+    const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
-    const [dimensions, setDimensions] = useState({ window, screen });
+    const [dimensions, setDimensions] = useState({ window: win, screen });
     const [totalPoints, setTotalPoints] = useState('');
 
     const width = dimensions.window.width;
@@ -1434,6 +1440,86 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         ]
     );
 
+    const handleOpenDrivePicker = () => {
+        // If Google integrated then we fetch the access token from the backend and use that to open the picker else we display message to connect to Google Drive
+        if (user.googleIntegrated) {
+            server
+                .query({
+                    query: getGoogleAuth,
+                    variables: {
+                        userId,
+                    },
+                })
+                .then((res) => {
+                    if (res.data && res.data.user.getGoogleAuth) {
+                        const { access_token, error, authorizeUrl } = res.data.user.getGoogleAuth;
+
+                        if (error) {
+                            Alert(error);
+                            return;
+                        }
+
+                        if (authorizeUrl) {
+                            Alert('You must sign in with Google to import documents from Drive.');
+                            window.location.href = authorizeUrl;
+                            return;
+                        }
+
+                        openPicker({
+                            clientId: '944571029689-uomcavnjljb3hvnhitjeooe3uc52bsgi.apps.googleusercontent.com',
+                            developerKey: 'AIzaSyCQfeWsl2t-_wrCdhd9Pv1xv9QfGaPUg9A',
+                            viewId: 'DOCS',
+                            showUploadFolders: true,
+                            token: access_token,
+                            showUploadView: true,
+                            supportDrives: true,
+                            multiselect: false,
+                            callbackFunction: (data) => {
+                                if (data.action === 'cancel') {
+                                    console.log('User clicked cancel/close button');
+                                    return;
+                                }
+                                console.log(data);
+
+                                // return;
+
+                                if (data.action === 'picked') {
+                                    const fileId = data.docs[0].id;
+                                    const name = data.docs[0].name;
+
+                                    axios
+                                        .post(`${apiURL}/uploadPdfFromDrive`, {
+                                            fileId,
+                                            name,
+                                            userId,
+                                        })
+                                        .then((res2: any) => {
+                                            if (res2.data === 'FILE_TYPE_NOT_SUPPORTED') {
+                                                Alert('File type not supported.');
+                                                return;
+                                            }
+
+                                            if (res2.data) {
+                                                setUploadResult(res2.data, 'pdf');
+                                            } else {
+                                                Alert('Failed to import document.');
+                                            }
+                                        })
+                                        .catch((e) => {
+                                            alert('Failed to import document.');
+                                            console.log(e);
+                                        });
+                                }
+                            },
+                        });
+                    }
+                })
+                .catch((e) => {
+                    Alert('Something went wrong. Try again.');
+                });
+        }
+    };
+
     /**
      * @description Clears cue content and imports
      */
@@ -1527,7 +1613,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             color: '#fff',
                             fontSize: 15,
                             paddingHorizontal: 10,
-                            marginRight: 20,
                             fontFamily: 'inter',
                             overflow: 'hidden',
                             paddingVertical: 14,
@@ -1641,7 +1726,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </TouchableOpacity>
                             ) : null}
 
-                            {/* QUIZ BUTTON FOR INSTRUCTORS */}
+                            {!imported &&
+                            !showOptions &&
+                            !isQuiz &&
+                            !showBooks &&
+                            Dimensions.get('window').width >= 768 ? (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        handleOpenDrivePicker();
+                                    }}
+                                    style={{
+                                        backgroundColor: 'none',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            color: '#fff',
+                                            fontSize: 15,
+                                            paddingHorizontal: 10,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            paddingVertical: 14,
+                                            textTransform: 'capitalize',
+                                            backgroundColor: 'none',
+                                        }}
+                                    >
+                                        Drive
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
 
                             {/* QUIZ BUTTON FOR INSTRUCTORS */}
                             {!imported &&
@@ -1730,6 +1844,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     disabled={isSubmitting}
                                     style={{
                                         backgroundColor: 'none',
+                                        marginLeft: 20,
                                     }}
                                 >
                                     <Text

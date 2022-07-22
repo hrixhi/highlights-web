@@ -1339,7 +1339,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         // let onlyOneCorrect = true;
         let numOfCorrectAnswers = 0;
 
-        if (!problem.questionType) {
+        if (!problem.questionType || problem.questionType === 'trueFalse') {
             problem.options.map((option: any) => {
                 if (option.isCorrect) numOfCorrectAnswers++;
             });

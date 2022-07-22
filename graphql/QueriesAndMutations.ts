@@ -779,6 +779,7 @@ export const findUserById = gql`
                 orgName
                 userCreatedOrg
                 createdAt
+                googleIntegrated
             }
         }
     }
@@ -1688,6 +1689,28 @@ export const addModerators = gql`
         }
     }
 `;
+export const connectGoogleOauth = gql`
+    mutation ($userId: String!, $code: String!) {
+        user {
+            connectGoogleOauth(code: $code, userId: $userId)
+        }
+    }
+`;
+export const uploadFileFromDrive = gql`
+    mutation ($userId: String!, $fileId: String!) {
+        user {
+            uploadFileFromDrive(userId: $userId, fileId: $fileId)
+        }
+    }
+`;
+export const removeGoogleOauth = gql`
+    mutation ($userId: String!) {
+        user {
+            removeGoogleOauth(userId: $userId)
+        }
+    }
+`;
+
 // export const getPersonalMeetingLink = gql`
 // query($userId: String!, $users: [String!]!) {
 //   channel {
@@ -2485,6 +2508,18 @@ export const findCueById = gql`
                 annotations
                 availableUntil
                 totalPoints
+            }
+        }
+    }
+`;
+
+export const getGoogleAuth = gql`
+    query ($userId: String!) {
+        user {
+            getGoogleAuth(userId: $userId) {
+                access_token
+                error
+                authorizeUrl
             }
         }
     }

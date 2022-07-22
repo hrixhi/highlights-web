@@ -16,9 +16,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 maxHeight:
                     Dimensions.get('window').width < 768
                         ? Dimensions.get('window').height - (54 + 60)
-                        : // : Dimensions.get('window').width < 1024
-                          // ? Dimensions.get('window').height - (64 + 68)
-                          Dimensions.get('window').height - (64 + 54),
+                        : Dimensions.get('window').height - (64 + 54),
                 backgroundColor: '#fff',
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,

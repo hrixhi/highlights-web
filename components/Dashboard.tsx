@@ -50,6 +50,7 @@ import AttendanceList from './AttendanceList';
 import Chat from './Chat';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
+import CuesIntegrations from './Integrations';
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const server = useApolloClient();
@@ -2960,6 +2961,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setShowCreate={(val: any) => props.setShowCreate(val)}
                                 showCreate={props.showCreate}
                             />
+                        ) : null}
+                        {props.option === 'Account' && props.activeAccountTab === 'integrations' ? (
+                            <CuesIntegrations />
                         ) : null}
                         {props.option === 'Classroom' && selectedWorkspace ? renderWorkspaceNavbar() : null}
                         {props.option === 'Classroom' ? overviewNested() : null}

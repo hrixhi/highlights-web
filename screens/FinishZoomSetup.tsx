@@ -69,7 +69,8 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                             zoomRedirectUri
                         )}&state=${user._id}`;
 
-                        window.open(url, '_blank');
+                        // Open in same tab to avoid redundant tabs
+                        window.location.href = url;
                     }
                 }
             }

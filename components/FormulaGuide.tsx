@@ -511,7 +511,6 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                                 >
                                                     <Text
                                                         style={{
-                                                            backgroundColor: 'white',
                                                             fontSize: Dimensions.get('window').width < 768 ? 12 : 13,
                                                         }}
                                                     >

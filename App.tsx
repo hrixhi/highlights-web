@@ -122,29 +122,25 @@ export default function App() {
         return null;
     } else {
         return (
-            <NavigationContainer linking={LinkingConfiguration} theme={DefaultTheme}>
-                {
-                    <ApolloProvider client={client}>
-                        <AppContextProvider
-                            value={{
-                                userId,
-                                sortByWorkspace,
-                                recentSearches,
-                            }}
-                            key={userId}
-                        >
-                            <SafeAreaProvider style={styles.font}>
-                                <MenuProvider>
-                                    <LanguageProvider>
-                                        <Navigation colorScheme={colorScheme} />
-                                    </LanguageProvider>
-                                </MenuProvider>
-                                <StatusBar />
-                            </SafeAreaProvider>
-                        </AppContextProvider>
-                    </ApolloProvider>
-                }
-            </NavigationContainer>
+            <ApolloProvider client={client}>
+                <AppContextProvider
+                    value={{
+                        userId,
+                        sortByWorkspace,
+                        recentSearches,
+                    }}
+                    key={userId}
+                >
+                    <SafeAreaProvider style={styles.font}>
+                        <MenuProvider>
+                            <LanguageProvider>
+                                <Navigation colorScheme={colorScheme} />
+                            </LanguageProvider>
+                        </MenuProvider>
+                        <StatusBar />
+                    </SafeAreaProvider>
+                </AppContextProvider>
+            </ApolloProvider>
         );
     }
 }

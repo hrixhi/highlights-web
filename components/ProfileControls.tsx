@@ -194,57 +194,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             .catch((e) => Alert(somethingWentWrongAlert));
     }, [email, avatar, displayName, fullName, confirmPassword, props.showSavePassword, newPassword, currentPassword]);
 
-    /**
-     * @description Handles Zoom Auth => Connect user's zoom profile to Cues
-     */
-    const handleZoomAuth = useCallback(async () => {
-        let url = '';
-
-        if (zoomInfo) {
-            // de-auth
-            // TBD
-            url = '';
-        } else {
-            // auth
-            url = `https://app.learnwithcues.com/zoom_auth`;
-        }
-
-        if (Platform.OS === 'ios' || Platform.OS === 'android') {
-            Linking.openURL(url);
-        } else {
-            window.open(url, '_blank');
-        }
-    }, [zoomInfo, userId]);
-
-    const handleZoomRemove = useCallback(async () => {
-        if (zoomInfo) {
-            // reset password
-            server
-                .mutate({
-                    mutation: removeZoom,
-                    variables: {
-                        userId,
-                    },
-                })
-                .then(async (res) => {
-                    if (res.data && res.data.user.removeZoom) {
-                        handleSetUser({
-                            ...user,
-                            zoomInfo: undefined,
-                        });
-                        Alert('Zoom account disconnected!');
-                        setZoomInfo(null);
-                    } else {
-                        Alert('Failed to disconnect Zoom. Try again.');
-                    }
-                })
-                .catch((err) => {
-                    Alert(somethingWentWrongAlert);
-                });
-            return;
-        }
-    }, [zoomInfo, userId]);
-
     // MAIN RETURN
 
     return (
@@ -516,73 +465,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                     ) : null}
-                    {props.showSavePassword || org.meetingProvider ? null : !zoomInfo ? (
-                        <TouchableOpacity
-                            onPress={() => handleZoomAuth()}
-                            style={{
-                                backgroundColor: 'white',
-                                marginTop: 20,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}
-                            disabled={user.email === disableEmailId}
-                        >
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    color: '#000',
-                                    fontSize: 15,
-                                    paddingHorizontal: 24,
-                                    fontFamily: 'inter',
-                                    paddingVertical: 14,
-                                    textTransform: 'capitalize',
-                                    width: 175,
-                                }}
-                            >
-                                Connect Zoom
-                            </Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            onPress={() => {
-                                Alert('Disconnect your Zoom account from Cues?', '', [
-                                    {
-                                        text: 'Cancel',
-                                        style: 'cancel',
-                                        onPress: () => {
-                                            return;
-                                        },
-                                    },
-                                    {
-                                        text: 'Yes',
-                                        onPress: () => handleZoomRemove(),
-                                    },
-                                ]);
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                marginTop: 20,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}
-                            disabled={user.email === disableEmailId}
-                        >
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    color: '#000',
-                                    fontSize: 15,
-                                    paddingHorizontal: 24,
-                                    fontFamily: 'inter',
-                                    paddingVertical: 14,
-                                    textTransform: 'capitalize',
-                                    width: 175,
-                                }}
-                            >
-                                Disconnect Zoom
-                            </Text>
-                        </TouchableOpacity>
-                    )}
 
                     {props.showSavePassword ? null : (
                         <TouchableOpacity
@@ -591,7 +473,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 backgroundColor: 'white',
                                 // overflow: 'hidden',
                                 // height: 35,
-                                marginTop: 20,
+                                marginTop: 30,
                                 marginBottom: 50,
                                 width: '100%',
                                 justifyContent: 'center',

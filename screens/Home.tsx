@@ -96,7 +96,7 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
 
     const [showHome, setShowHome] = useState(true);
 
-    const [accountTabs] = useState(['profile', 'courses']);
+    const [accountTabs] = useState(['profile', 'courses', 'integrations']);
     const [activeAccountTab, setActiveAccountTab] = useState('profile');
 
     const [workspaceOptions] = useState(['Content', 'Discuss', 'Meet', 'Scores', 'Settings']);

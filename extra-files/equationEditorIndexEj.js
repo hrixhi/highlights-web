@@ -130,7 +130,9 @@ var EquationEditor = /** @class */ (function (_super) {
             this.props.disableKeyboard ? disableKeyboardConfig : config
         );
         this.mathField.latex(value || '');
-        this.mathField.focus();
+        if (!this.props.preventAutofocus) {
+            this.mathField.focus();
+        }
     };
     EquationEditor.prototype.componentDidUpdate = function (prevProps) {
         if (

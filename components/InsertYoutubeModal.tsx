@@ -19,9 +19,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
     const [searchedForResults, setSearchedForResults] = useState(false);
     const [playVideoId, setPlayVideoId] = useState('');
 
-    const YOUTUBE_API_KEY = 'AIzaSyCuYrmxNdiBEExEGhTARaHk3BudXLGtEVE';
-
-    const YOUTUBE_API_KEY_2 = 'AIzaSyA0w3FC_t-9j9DrBEKZXHfOqKVcYQaBnaM';
+    const YOUTUBE_API_KEY = 'AIzaSyCQfeWsl2t-_wrCdhd9Pv1xv9QfGaPUg9A';
 
     const SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search';
 
@@ -44,7 +42,7 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                 .get(
                     SEARCH_URL +
                         '?part=snippet&key=' +
-                        YOUTUBE_API_KEY_2 +
+                        YOUTUBE_API_KEY +
                         '&type=video&q=' +
                         searchTerm +
                         '&maxResults=50' +

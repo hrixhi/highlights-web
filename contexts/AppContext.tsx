@@ -332,8 +332,10 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         }
     }, [cuesData]);
 
-    const handleSetUser = (data: any) => {
+    const handleSetUser = async (data: any) => {
         const u = JSON.parse(JSON.stringify(data), omitTypename);
+
+        await AsyncStorage.setItem('user', JSON.stringify(u));
 
         dispatch({
             type: 'SET_USER',
@@ -515,7 +517,7 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     // AUTHENTICATION FUNCTIONS (ADD LOGIN FOR DESKTOP AND NATIVE APPS)
     const logoutUser = async () => {
         OneSignalReact.removeExternalUserId();
-        await AsyncStorage.clear();
+        await AsyncStorage.multiRemove(['user', 'jwt_token', 'cueDraft', 'quizDraft']);
 
         dispatch({
             type: 'LOGOUT',

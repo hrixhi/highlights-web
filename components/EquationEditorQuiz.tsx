@@ -148,6 +148,7 @@ const EquationEditorQuiz: React.FunctionComponent<{ [label: string]: any }> = (p
                         clearAddElementField={() => setAddElementFromButton('')}
                         clearField={clearField}
                         resetClearField={() => setClearField(false)}
+                        preventAutofocus={true}
                     />
                 </View>
 

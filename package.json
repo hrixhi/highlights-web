@@ -81,6 +81,7 @@
         "react-file-utils": "^1.1.12",
         "react-file-viewer": "^1.2.1",
         "react-froala-wysiwyg": "^4.0.8",
+        "react-google-drive-picker": "^1.2.0",
         "react-highlight-words": "^0.18.0",
         "react-html-parser": "^2.0.2",
         "react-image-marker": "^1.2.0",

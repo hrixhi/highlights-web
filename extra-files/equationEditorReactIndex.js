@@ -35,7 +35,7 @@ type EquationEditorProps = {
   keystrokeFromButton?: string;
   clearTypeFromButton?(): void;
   clearKeystrokeFromButton?(): void;
-
+  preventAutofocus?: boolean;
 };
 
 /**
@@ -106,7 +106,8 @@ class EquationEditor extends Component<EquationEditorProps> {
       autoCommands,
       autoOperatorNames,
       onEnter,
-      disableKeyboard = false
+      disableKeyboard = false,
+      preventAutofocus = false
     } = this.props;
 
     const config = {
@@ -152,7 +153,10 @@ class EquationEditor extends Component<EquationEditorProps> {
 
     this.mathField = mathQuill.MathField(this.element.current, disableKeyboard ? disableKeyboardConfig : config);
     this.mathField.latex(value || "");
-    this.mathField.focus()
+
+    if (!preventAutofocus) {
+      this.mathField.focus()
+    }
   }
 
 

@@ -6,6 +6,7 @@ export default {
         screens: {
             Root: '',
             zoom_auth: 'zoom_auth',
+            google_auth: 'google_auth',
             pdfviewer: 'pdfviewer',
             equationEditor: 'equationEditor',
             login: 'login',

@@ -2755,7 +2755,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             Overview
                         </Text>
-                        {Dimensions.get('window').width > 768 ? null : renderSwitchGradebookViewpoints()}
+                        {renderSwitchGradebookViewpoints()}
                     </View>
 
                     {renderPerformanceOverview()}
@@ -6973,9 +6973,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 Scores
                             </Text>
-                            {Dimensions.get('window').width > 768 || standardsBasedScale
-                                ? null
-                                : renderSwitchGradebookViewpoints()}
+                            {standardsBasedScale ? null : renderSwitchGradebookViewpoints()}
                         </View>
                         {isFetchingGradebook ? (
                             <View

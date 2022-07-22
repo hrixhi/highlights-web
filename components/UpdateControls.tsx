@@ -71,7 +71,7 @@ import FroalaEditor from 'react-froala-wysiwyg';
 
 import Froalaeditor from 'froala-editor';
 
-import { FULL_FLEDGED_TOOLBAR_BUTTONS, QUIZ_INSTRUCTIONS_TOOLBAR_BUTTONS } from '../constants/Froala';
+import { FULL_FLEDGED_TOOLBAR_BUTTONS } from '../constants/Froala';
 
 import { renderMathjax } from '../helpers/FormulaHelpers';
 import { disableEmailId } from '../constants/zoomCredentials';
@@ -1777,6 +1777,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
      * @description Submit quiz when time gets over
      */
     const submitQuizEndTime = useCallback(async () => {
+        // Add additional check to ensure that quiz doesn't autosubmit twice
+        if (isSubmitting) {
+            return;
+        }
+
+        // This should disable submit button also
+        setIsSubmitting(true);
+
         const saveCue = JSON.stringify({
             solutions,
             initiatedAt,
@@ -1794,7 +1802,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             })
             .then((res) => {
                 if (res.data.cue.submitModification) {
-                    Alert(submissionCompleteAlert, new Date().toString(), [
+                    Alert(submissionCompleteAlert, moment(new Date()).format('MMMM Do, h:mm a'), [
                         {
                             text: 'Okay',
                             onPress: () => window.location.reload(),
@@ -1803,9 +1811,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
             })
             .catch((err) => {
+                setIsSubmitting(false);
                 Alert(somethingWentWrongAlert, tryAgainLaterAlert);
             });
-    }, [props.cue, isQuiz, quizId, initiatedAt, solutions, userId]);
+    }, [props.cue, isQuiz, quizId, initiatedAt, solutions, userId, isSubmitting]);
 
     const submitResponse = useCallback(() => {
         let now = new Date();
@@ -1851,7 +1860,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             .then((res: any) => {
                                 if (res.data.cue.submitModification) {
                                     setIsSubmitting(false);
-                                    Alert(submissionCompleteAlert, new Date().toString(), [
+                                    Alert(submissionCompleteAlert, moment(new Date()).format('MMMM Do, h:mm a'), [
                                         {
                                             text: 'Okay',
                                             onPress: () => window.location.reload(),
@@ -2242,6 +2251,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 .then((res1) => {
                                     if (res1.data.cue.create) {
                                         Alert(sharedAlert, 'Cue has been successfully shared.');
+                                        refreshCues();
                                     }
                                 })
                                 .catch((err) => {
