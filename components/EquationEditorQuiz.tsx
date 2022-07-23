@@ -1,10 +1,10 @@
 // REACT
 import React, { useState } from 'react';
-import { ScrollView, Touchable, Text, Dimensions } from 'react-native';
+import { Text, Dimensions } from 'react-native';
 
 // COMPONENTS
 import { View, TouchableOpacity } from './Themed';
-import { Popup } from '@mobiscroll/react';
+
 import EquationEditor from 'equation-editor-react';
 import { Ionicons } from '@expo/vector-icons';
 

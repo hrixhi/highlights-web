@@ -1738,7 +1738,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         return (
             <React.Fragment>
                 {/* Edit folder button */}
-                {channelOwner && folderId !== '' && !editFolder && showOriginal ? (
+                {channelOwner && folderId && !editFolder && showOriginal ? (
                     <TouchableOpacity
                         onPress={async () => {
                             setEditFolder(true);
@@ -1764,12 +1764,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </TouchableOpacity>
                 ) : null}
                 {/* Create new folder button */}
-                {channelOwner &&
-                folderId === '' &&
-                !createNewFolder &&
-                !editFolder &&
-                showOriginal &&
-                props.channelId ? (
+                {channelOwner && !folderId && !createNewFolder && !editFolder && showOriginal && props.channelId ? (
                     <TouchableOpacity
                         onPress={() => {
                             setCreateNewFolder(true);
@@ -1803,7 +1798,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {/* Add to existing folder button */}
                 {channelFolders.length > 0 &&
                 channelOwner &&
-                folderId === '' &&
+                !folderId &&
                 !createNewFolder &&
                 !editFolder &&
                 showOriginal ? (

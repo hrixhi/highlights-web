@@ -1290,7 +1290,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     marginLeft: 10,
                                                     padding: 10,
                                                 }}
-                                                placeholder={'Enter points'}
                                                 onChangeText={(val) => setPointsScored(val)}
                                                 placeholderTextColor={'#1F1F1F'}
                                             />
