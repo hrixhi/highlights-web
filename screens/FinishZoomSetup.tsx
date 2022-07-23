@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform } from 'react-native';
-import alert from '../components/Alert';
+import Alert from '../components/Alert';
 
 import { connectZoom } from '../graphql/QueriesAndMutations';
 import { origin, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
@@ -38,7 +38,7 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                                 user.zoomInfo = res.data.user.connectZoom;
                                 const updatedUser = JSON.stringify(user);
                                 await AsyncStorage.setItem('user', updatedUser);
-                                alert('Zoom account connected!');
+                                Alert('Zoom account connected!');
 
                                 // Redirect back to /
                                 window.location.href = origin;
@@ -61,7 +61,7 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                     if (!user._id) {
                         window.location.href = `${origin}/login?redirect=zoom`;
                     } else if (user.zoomInfo) {
-                        alert('Your Zoom account is already connected!');
+                        Alert('Your Zoom account is already connected!');
                         window.location.href = origin;
                     } else {
                         // Redirect to Zoom integration

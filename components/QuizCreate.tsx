@@ -678,7 +678,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 },
                                 'image.beforeUpload': function (images: any) {
                                     if (images[0].size > 5 * 1024 * 1024) {
-                                        alert('Image size must be less than 5mb.');
+                                        Alert('Image size must be less than 5mb.');
                                         return false;
                                     }
 
@@ -853,17 +853,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             currentQuestion.questionType !== 'inlineChoice' &&
             currentQuestion.questionType !== 'highlightText'
         ) {
-            alert(`Question ${index + 1} has no content.`);
+            Alert(`Question ${index + 1} has no content.`);
             return false;
         }
 
         if (currentQuestion.points === '') {
-            alert(`Enter points for Question ${index + 1}.`);
+            Alert(`Enter points for Question ${index + 1}.`);
             return false;
         }
 
         if (currentQuestion.questionType === '' && currentQuestion.options.length < 2) {
-            alert(`Create at least 2 options for Question ${index + 1}.`);
+            Alert(`Create at least 2 options for Question ${index + 1}.`);
             return false;
         }
 
@@ -877,13 +877,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             currentQuestion.options.map((option: any) => {
                 if (option.option === '' || option.option === 'formula:') {
-                    alert(`Fill missing option for Question ${index + 1}.`);
+                    Alert(`Fill missing option for Question ${index + 1}.`);
                     error = true;
                     return;
                 }
 
                 if (option.option in keys) {
-                    alert(`Option repeated in a Question ${index + 1}.`);
+                    Alert(`Option repeated in a Question ${index + 1}.`);
                     error = true;
                     return;
                 }
@@ -896,7 +896,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (!optionFound || error) {
-                alert(`Select a correct answer for Question ${index + 1}.`);
+                Alert(`Select a correct answer for Question ${index + 1}.`);
                 return false;
             }
         }
@@ -931,7 +931,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (currentQuestion.questionType === 'dragdrop') {
             // At least 2 groups
             if (currentQuestion.dragDropHeaders.length < 2) {
-                alert(` Question ${index + 1} must have at least 2 Drag & Drop groups.`);
+                Alert(` Question ${index + 1} must have at least 2 Drag & Drop groups.`);
                 return false;
             }
 
@@ -946,7 +946,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (groupHeaderMissing) {
-                alert(`Group header is missing in Question ${index + 1}.`);
+                Alert(`Group header is missing in Question ${index + 1}.`);
                 return false;
             }
 
@@ -963,12 +963,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (labelMissing) {
-                alert(`Item missing in Question ${index + 1}.`);
+                Alert(`Item missing in Question ${index + 1}.`);
                 return false;
             }
 
             if (groupEmpty) {
-                alert(`Each group must have at least 1 item in Question ${index + 1}.`);
+                Alert(`Each group must have at least 1 item in Question ${index + 1}.`);
                 return false;
             }
         }
@@ -1007,12 +1007,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Inline Choice
         if (currentQuestion.questionType === 'inlineChoice') {
             if (currentQuestion.inlineChoiceHtml === '') {
-                alert(`Question ${index + 1} has no content.`);
+                Alert(`Question ${index + 1} has no content.`);
                 return;
             }
 
             if (currentQuestion.inlineChoiceOptions.length === 0) {
-                alert(`Question ${index + 1} must have at lease one dropdown.`);
+                Alert(`Question ${index + 1} must have at lease one dropdown.`);
                 return;
             }
 
@@ -1043,17 +1043,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 });
 
                 if (lessThan2DropdownValues) {
-                    alert(`Each dropdown in question ${index + 1} must have at lease two options.`);
+                    Alert(`Each dropdown in question ${index + 1} must have at lease two options.`);
                     return;
                 }
 
                 if (missingDropdownValue) {
-                    alert(`Each dropdown option must have a value in question ${index + 1}.`);
+                    Alert(`Each dropdown option must have a value in question ${index + 1}.`);
                     return;
                 }
 
                 if (missingCorrectAnswer) {
-                    alert(`Each dropdown must have a correct answer in question ${index + 1}.`);
+                    Alert(`Each dropdown must have a correct answer in question ${index + 1}.`);
                     return;
                 }
             }
@@ -1062,12 +1062,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Text Entry
         if (currentQuestion.questionType === 'textEntry') {
             if (currentQuestion.textEntryHtml === '') {
-                alert(`Question ${index + 1} has no content.`);
+                Alert(`Question ${index + 1} has no content.`);
                 return;
             }
 
             if (currentQuestion.textEntryOptions.length === 0) {
-                alert(`Text entry question ${index + 1} must have at lease one entry.`);
+                Alert(`Text entry question ${index + 1} must have at lease one entry.`);
                 return;
             }
 
@@ -1090,17 +1090,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (missingEntryAnswer) {
-                alert(`Each Text entry option must have an answer in question ${index + 1}.`);
+                Alert(`Each Text entry option must have an answer in question ${index + 1}.`);
                 return;
             }
 
             if (missingEntryPoints) {
-                alert(`Each Text entry must have points in question ${index + 1}.`);
+                Alert(`Each Text entry must have points in question ${index + 1}.`);
                 return;
             }
 
             if (pointsNotANumber) {
-                alert(`Each Text entry must have numeric points in question ${index + 1}.`);
+                Alert(`Each Text entry must have numeric points in question ${index + 1}.`);
                 return;
             }
         }
@@ -1108,7 +1108,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // Multipart
         if (currentQuestion.questionType === 'multipart') {
             if (currentQuestion.multipartQuestions[0] === '' || currentQuestion.multipartQuestions[1] === '') {
-                alert(`Part A and Part B questions cannot be empty in question ${index + 1}`);
+                Alert(`Part A and Part B questions cannot be empty in question ${index + 1}`);
                 return;
             }
 
@@ -1118,7 +1118,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             // At least two choices
             if (currentQuestion.multipartOptions[0].length < 2) {
-                alert(`Part A must have at least two choices in question ${index + 1}`);
+                Alert(`Part A must have at least two choices in question ${index + 1}`);
                 return;
             }
 
@@ -1133,16 +1133,16 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (!hasOneCorrect) {
-                alert(`Part A must have at least one correct choice in question ${index + 1}`);
+                Alert(`Part A must have at least one correct choice in question ${index + 1}`);
                 return;
             }
 
             if (hasMissingOption) {
-                alert(`Part A option is empty in question ${index + 1}`);
+                Alert(`Part A option is empty in question ${index + 1}`);
             }
 
             if (currentQuestion.multipartOptions[0].length < 2) {
-                alert(`Part A must have at least two choices in question ${index + 1}`);
+                Alert(`Part A must have at least two choices in question ${index + 1}`);
                 return;
             }
 
@@ -1158,19 +1158,19 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (!hasOneCorrect) {
-                alert(`Part A must have at least one correct choice in question ${index + 1}`);
+                Alert(`Part A must have at least one correct choice in question ${index + 1}`);
                 return;
             }
 
             if (hasMissingOption) {
-                alert(`Part A option is empty in question ${index + 1}`);
+                Alert(`Part A option is empty in question ${index + 1}`);
             }
         }
 
         // Equation editor
         if (currentQuestion.questionType === 'equationEditor') {
             if (currentQuestion.correctEquations[0] === '') {
-                alert(`Correct equation cannot be empty in question ${index + 1}.`);
+                Alert(`Correct equation cannot be empty in question ${index + 1}.`);
                 return;
             }
         }
@@ -1187,7 +1187,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (missingColHeader) {
-                alert(`Column header cannot be empty in question ${index + 1}.`);
+                Alert(`Column header cannot be empty in question ${index + 1}.`);
                 return;
             }
 
@@ -1198,7 +1198,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (missingRowHeader) {
-                alert(`Row header cannot be empty in question ${index + 1}.`);
+                Alert(`Row header cannot be empty in question ${index + 1}.`);
                 return;
             }
 
@@ -1221,7 +1221,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (missingCorrect) {
-                alert(`Each row must have a correct response in question ${index + 1}.`);
+                Alert(`Each row must have a correct response in question ${index + 1}.`);
                 return;
             }
         }
@@ -2295,7 +2295,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             value={problem.maxCharCount}
                                             onChangeText={(text) => {
                                                 if (Number.isNaN(Number(text))) {
-                                                    alert('Character count must be a number.');
+                                                    Alert('Character count must be a number.');
                                                     return;
                                                 }
 

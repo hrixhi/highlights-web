@@ -670,7 +670,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 },
                                 'image.beforeUpload': function (images: any) {
                                     if (images[0].size > 5 * 1024 * 1024) {
-                                        alert('Image size must be less than 5mb.');
+                                        Alert('Image size must be less than 5mb.');
                                         return false;
                                     }
 

@@ -1,6 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
 const mime = require('mime-types');
 import axios from 'axios';
+import Alert from '../components/Alert';
 
 export const handleFile = async (audioVideoOnly: boolean, userId: string, imagesOnly?: boolean) => {
     // e.preventDefault();
@@ -13,7 +14,7 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string, images
     const { file } = res;
 
     if (file.size > 26214400) {
-        alert('File size must be less than 25 mb');
+        Alert('File size must be less than 25 mb');
         return;
     }
     if (file === null) {
@@ -29,7 +30,7 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string, images
     }
 
     if (type === 'wma' || type === 'avi') {
-        alert('This video format is not supported. Upload mp4.');
+        Alert('This video format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 
@@ -38,12 +39,12 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string, images
     }
 
     if (!imagesOnly && (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif')) {
-        alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
+        Alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '' };
     }
 
     if (imagesOnly && type !== 'png' && type !== 'jpeg' && type !== 'jpg' && type !== 'gif') {
-        alert('Upload Images only.');
+        Alert('Upload Images only.');
         return { type: '', url: '' };
     }
 
@@ -51,12 +52,12 @@ export const handleFile = async (audioVideoOnly: boolean, userId: string, images
         audioVideoOnly &&
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
-        alert('Error! This file format is not supported. Upload mp4.');
+        Alert('Error! This file format is not supported. Upload mp4.');
         return { type: '', url: '' };
     }
 
     if (type === 'svg') {
-        alert('This file type is not supported.');
+        Alert('This file type is not supported.');
         return { type: '', url: '' };
     }
 
@@ -81,19 +82,19 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     }
 
     if (file.size > 26214400) {
-        alert('File size must be less than 25 mb.');
+        Alert('File size must be less than 25 mb.');
         return { type: '', url: '', name: '' };
     }
 
     let type = mime.extension(file.type);
 
     if (type === 'txt') {
-        alert('txt files are not supported. Convert to pdf and upload.');
+        Alert('txt files are not supported. Convert to pdf and upload.');
         return { type: '', url: '', name: '' };
     }
 
     if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
-        alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
+        Alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
         return { type: '', url: '', name: '' };
     }
 
@@ -101,7 +102,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
         audioVideoOnly &&
         !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
     ) {
-        alert('Error! This file format is not supported. Upload mp4.');
+        Alert('Error! This file format is not supported. Upload mp4.');
         return { type: '', url: '', name: '' };
     }
 
@@ -112,7 +113,7 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     }
 
     if (type === 'wma' || type === 'avi') {
-        alert('This video format is not supported. Upload mp4.');
+        Alert('This video format is not supported. Upload mp4.');
         return { type: '', url: '', name: '' };
     }
 
@@ -121,11 +122,11 @@ export const handleFileUploadEditor = async (audioVideoOnly: boolean, file: any,
     }
 
     if (type === 'svg') {
-        alert('This file type is not supported.');
+        Alert('This file type is not supported.');
         return { type: '', url: '', name: '' };
     }
 
-    alert('Upload in progress! Large files may take longer to process.');
+    Alert('Upload in progress! Large files may take longer to process.');
 
     const response = await fileUpload(file, type, userId);
 

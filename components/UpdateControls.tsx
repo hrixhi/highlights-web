@@ -2359,7 +2359,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 problem.questionType !== 'inlineChoice' &&
                 problem.questionType !== 'highlightText'
             ) {
-                alert(`Question ${problemIndex + 1} has no content.`);
+                Alert(`Question ${problemIndex + 1} has no content.`);
                 error = true;
             }
 
@@ -2420,7 +2420,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (groupHeaderMissing) {
-                    alert(`Group header is missing in Question ${problemIndex + 1}.`);
+                    Alert(`Group header is missing in Question ${problemIndex + 1}.`);
                     return false;
                 }
 
@@ -2437,12 +2437,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (labelMissing) {
-                    alert(`Item missing in Question ${problemIndex + 1}.`);
+                    Alert(`Item missing in Question ${problemIndex + 1}.`);
                     return false;
                 }
 
                 if (groupEmpty) {
-                    alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`);
+                    Alert(`Each group must have at least 1 item in Question ${problemIndex + 1}.`);
                     return false;
                 }
             }
@@ -2504,12 +2504,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // Inline Choice
             if (problem.questionType === 'inlineChoice') {
                 if (problem.inlineChoiceHtml === '') {
-                    alert(`Question ${problemIndex + 1} has no content.`);
+                    Alert(`Question ${problemIndex + 1} has no content.`);
                     return;
                 }
 
                 if (problem.inlineChoiceOptions.length === 0) {
-                    alert(`Question ${problemIndex + 1} must have at lease one dropdown.`);
+                    Alert(`Question ${problemIndex + 1} must have at lease one dropdown.`);
                     return;
                 }
 
@@ -2540,17 +2540,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     });
 
                     if (lessThan2DropdownValues) {
-                        alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`);
+                        Alert(`Each dropdown in question ${problemIndex + 1} must have at lease two options.`);
                         return;
                     }
 
                     if (missingDropdownValue) {
-                        alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`);
+                        Alert(`Each dropdown option must have a value in question ${problemIndex + 1}.`);
                         return;
                     }
 
                     if (missingCorrectAnswer) {
-                        alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`);
+                        Alert(`Each dropdown must have a correct answer in question ${problemIndex + 1}.`);
                         return;
                     }
                 }
@@ -2559,12 +2559,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // Text Entry
             if (problem.questionType === 'textEntry') {
                 if (problem.textEntryHtml === '') {
-                    alert(`Question ${problemIndex + 1} has no content.`);
+                    Alert(`Question ${problemIndex + 1} has no content.`);
                     return;
                 }
 
                 if (problem.textEntryOptions.length === 0) {
-                    alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`);
+                    Alert(`Text entry question ${problemIndex + 1} must have at lease one entry.`);
                     return;
                 }
 
@@ -2587,17 +2587,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (missingEntryAnswer) {
-                    alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`);
+                    Alert(`Each Text entry option must have an answer in question ${problemIndex + 1}.`);
                     return;
                 }
 
                 if (missingEntryPoints) {
-                    alert(`Each Text entry must have points in question ${problemIndex + 1}.`);
+                    Alert(`Each Text entry must have points in question ${problemIndex + 1}.`);
                     return;
                 }
 
                 if (pointsNotANumber) {
-                    alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`);
+                    Alert(`Each Text entry must have numeric points in question ${problemIndex + 1}.`);
                     return;
                 }
             }
@@ -2605,7 +2605,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // Multipart
             if (problem.questionType === 'multipart') {
                 if (problem.multipartQuestions[0] === '' || problem.multipartQuestions[1] === '') {
-                    alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
+                    Alert(`Part A and Part B questions cannot be empty in question ${problemIndex + 1}`);
                     return;
                 }
 
@@ -2615,7 +2615,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 // At least two choices
                 if (problem.multipartOptions[0].length < 2) {
-                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                    Alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 
@@ -2630,16 +2630,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (!hasOneCorrect) {
-                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    Alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    Alert(`Part A option is empty in question ${problemIndex + 1}`);
                 }
 
                 if (problem.multipartOptions[0].length < 2) {
-                    alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                    Alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 
@@ -2655,19 +2655,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (!hasOneCorrect) {
-                    alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    Alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    Alert(`Part A option is empty in question ${problemIndex + 1}`);
                 }
             }
 
             // Equation Editor
             if (problem.questionType === 'equationEditor') {
                 if (problem.correctEquations[0] === '') {
-                    alert('Correct equation cannot be empty.');
+                    Alert('Correct equation cannot be empty.');
                     return;
                 }
             }
@@ -2685,7 +2685,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (missingColHeader) {
-                    alert(`Column header cannot be empty in question ${problemIndex + 1}.`);
+                    Alert(`Column header cannot be empty in question ${problemIndex + 1}.`);
                     return;
                 }
 
@@ -2696,7 +2696,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (missingRowHeader) {
-                    alert(`Row header cannot be empty in question ${problemIndex + 1}.`);
+                    Alert(`Row header cannot be empty in question ${problemIndex + 1}.`);
                     return;
                 }
 
@@ -2719,7 +2719,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (missingCorrect) {
-                    alert(`Each row must have a correct response in question ${problemIndex + 1}.`);
+                    Alert(`Each row must have a correct response in question ${problemIndex + 1}.`);
                     return;
                 }
             }
@@ -2801,7 +2801,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 setShuffleQuiz(
                                     res.data.quiz.getQuiz.shuffleQuiz ? res.data.quiz.getQuiz.shuffleQuiz : false
                                 );
-                                alert('Quiz updated successfully');
+                                Alert('Quiz updated successfully');
                                 // Refresh all subscriber scores since there could be regrades
                                 props.reloadStatuses();
                             }
@@ -2996,7 +2996,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginTop: 20,
                             }}
                         >
-                            <Ionicons name="alert-circle-outline" size={22} color={'#D91D56'} />
+                            <Ionicons name="Alert-circle-outline" size={22} color={'#D91D56'} />
                             <Text style={{ fontSize: 15, paddingLeft: 5 }}>Not Attempted</Text>
                         </View>
                     )}
@@ -3519,7 +3519,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 },
                                 'image.beforeUpload': function (images: any) {
                                     if (images[0].size > 5 * 1024 * 1024) {
-                                        alert('Image size must be less than 5mb.');
+                                        Alert('Image size must be less than 5mb.');
                                         return false;
                                     }
 
@@ -3734,7 +3734,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             },
                             'image.beforeUpload': function (images: any) {
                                 if (images[0].size > 5 * 1024 * 1024) {
-                                    alert('Image size must be less than 5mb.');
+                                    Alert('Image size must be less than 5mb.');
                                     return false;
                                 }
 

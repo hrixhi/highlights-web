@@ -240,7 +240,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         const { success, failed, error } = res.data.channel.addUsersByEmail;
 
                         if (error) {
-                            alert(error);
+                            Alert(error);
                             return;
                         } else {
                             const successCount = success.length;
@@ -268,7 +268,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                 })
                 .catch((e) => {
-                    alert('Something went wrong. Try again.');
+                    Alert('Something went wrong. Try again.');
                 });
         },
         [props.channelId, userId]
@@ -445,12 +445,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
      */
     const handleDuplicate = useCallback(() => {
         if (duplicateChannelName.toString().trim() === '') {
-            alert('Enter duplicate course name.');
+            Alert('Enter duplicate course name.');
             return;
         }
 
         if (duplicateChannelColor === '') {
-            alert('Pick duplicate course color.');
+            Alert('Pick duplicate course color.');
             return;
         }
 
@@ -471,14 +471,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then((res2) => {
                 if (res2.data && res2.data.channel.duplicate === 'created') {
-                    alert('Course duplicated successfully.');
+                    Alert('Course duplicated successfully.');
                     // Refresh Subscriptions for user
                     refreshSubscriptions();
                     setIsDuplicatingChannel(false);
                 }
             })
             .catch((e) => {
-                alert('Something went wrong. Try again.');
+                Alert('Something went wrong. Try again.');
                 setIsDuplicatingChannel(false);
             });
     }, [
@@ -523,7 +523,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
      */
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
-            alert('Enter Course name.');
+            Alert('Enter Course name.');
             return;
         }
 
@@ -540,7 +540,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         });
 
         if (!moderatorsPresentAsSubscribers) {
-            alert('An instructor must be added as a student');
+            Alert('An instructor must be added as a student');
             return;
         }
 
@@ -598,7 +598,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     });
                     setIsUpdatingChannel(false);
 
-                    alert('Course updated successfully.');
+                    Alert('Course updated successfully.');
 
                     const updatedOriginalSubs: any[] = [];
 
@@ -618,12 +618,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     refreshSubscriptions();
                 } else {
                     setIsUpdatingChannel(false);
-                    alert('Something went wrong. Try again.');
+                    Alert('Something went wrong. Try again.');
                 }
             })
             .catch((err) => {
                 setIsUpdatingChannel(false);
-                alert('Something went wrong. Try again.');
+                Alert('Something went wrong. Try again.');
             });
     }, [
         name,

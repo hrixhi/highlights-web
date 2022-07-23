@@ -29,11 +29,10 @@ import Walkthrough from './Walkthrough';
 import Channels from './Channels';
 import Create from './Create';
 import CalendarX from './Calendar';
-import alert from './Alert';
+import Alert from './Alert';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import SearchResultCard from './SearchResultCard';
 import Card from './Card';
-import Alert from '../components/Alert';
 import Discussion from './Discussion';
 import ChannelSettings from './ChannelSettings';
 import GradesList from './GradesList';
@@ -760,7 +759,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         const subscriptionStatus = res.data.subscription.subscribe;
                         switch (subscriptionStatus) {
                             case 'subscribed':
-                                alert('Subscribed successfully!');
+                                Alert('Subscribed successfully!');
                                 setSearchTerm('');
                                 refreshSubscriptions();
                                 refreshCues();

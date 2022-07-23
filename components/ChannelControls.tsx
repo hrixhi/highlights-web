@@ -19,7 +19,6 @@ import { Text, View, TouchableOpacity } from './Themed';
 import Alert from '../components/Alert';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { CirclePicker } from 'react-color';
-import alert from '../components/Alert';
 import '@pathofdev/react-tag-input/build/index.css';
 import { Select } from '@mobiscroll/react';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
@@ -381,7 +380,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     const subscriptionStatus = res.data.subscription.subscribe;
                     switch (subscriptionStatus) {
                         case 'subscribed':
-                            alert('Subscribed successfully!');
+                            Alert('Subscribed successfully!');
                             // Refresh subscriptions
                             refreshSubscriptions();
                             break;

@@ -10,6 +10,7 @@ import Navigation from './navigation/Navigator';
 import * as SplashScreen from 'expo-splash-screen';
 import './web/htmlParser.css';
 import './web/mobiscrollCustom.css';
+import './web/vex.css';
 import { LanguageProvider } from './helpers/LanguageContext';
 import { MenuProvider } from 'react-native-popup-menu';
 

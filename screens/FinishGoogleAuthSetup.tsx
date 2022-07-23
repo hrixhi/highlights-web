@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform } from 'react-native';
-import alert from '../components/Alert';
+import Alert from '../components/Alert';
 
 import { connectGoogleOauth } from '../graphql/QueriesAndMutations';
 import { useApolloClient } from '@apollo/client';
@@ -43,12 +43,12 @@ export default function FinishGoogleAuthSetup({ navigation, route }: StackScreen
                                 user.googleIntegrated = true;
                                 const updatedUser = JSON.stringify(user);
                                 await AsyncStorage.setItem('user', updatedUser);
-                                alert('Google Integration active!');
+                                Alert('Google Integration active!');
 
                                 // Redirect back to /
                                 window.location.href = origin;
                             } else {
-                                alert('Failed to connect to Google.');
+                                Alert('Failed to connect to Google.');
                             }
                         })
                         .catch((err) => {
@@ -65,7 +65,7 @@ export default function FinishGoogleAuthSetup({ navigation, route }: StackScreen
                     if (!user._id) {
                         window.location.href = `${origin}/login?redirect=google`;
                     } else if (user.googleIntegrated) {
-                        alert('Your Google account is already connected!');
+                        Alert('Your Google account is already connected!');
                         window.location.href = origin;
                     } else {
                         // Redirect to Google integration
@@ -79,7 +79,7 @@ export default function FinishGoogleAuthSetup({ navigation, route }: StackScreen
                             window.location.href = url;
                         } else {
                             const error = response.data.error ? response.data.error : 'Failed to redirect to Google.';
-                            alert(error);
+                            Alert(error);
                         }
                     }
                 }

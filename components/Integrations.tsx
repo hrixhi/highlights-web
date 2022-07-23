@@ -10,6 +10,7 @@ import { useApolloClient } from '@apollo/client';
 import { removeGoogleOauth, removeZoom } from '../graphql/QueriesAndMutations';
 import Alert from './Alert';
 import { Ionicons } from '@expo/vector-icons';
+import googleSignInButton from '../assets/images/googleSignInButton.png';
 
 const integrationsInfo = {
     zoom: {
@@ -82,7 +83,7 @@ const CuesIntegrations: React.FunctionComponent<{ [label: string]: any }> = (pro
                             ...user,
                             zoomInfo: undefined,
                         });
-                        alert('Zoom account disconnected!');
+                        Alert('Zoom account disconnected!');
                         setZoomInfo(null);
                     } else {
                         Alert('Failed to disconnect Zoom. Try again.');
@@ -133,7 +134,7 @@ const CuesIntegrations: React.FunctionComponent<{ [label: string]: any }> = (pro
                             ...user,
                             googleIntegrated: false,
                         });
-                        alert('Google account disconnected!');
+                        Alert('Google account disconnected!');
                         setGoogleIntegrated(false);
                     } else {
                         Alert('Failed to disconnect Google. Try again.');
@@ -167,17 +168,18 @@ const CuesIntegrations: React.FunctionComponent<{ [label: string]: any }> = (pro
                     style={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        borderColor: '#000',
+                        borderColor: '#ccc',
                         borderWidth: 1,
-                        color: zoomInfo ? '#000' : '#fff',
-                        backgroundColor: zoomInfo ? '#fff' : '#000',
+                        color: '#000',
+                        backgroundColor: '#fff',
                         fontSize: 11,
                         paddingHorizontal: 24,
                         fontFamily: 'inter',
                         overflow: 'hidden',
-                        paddingVertical: 14,
+                        paddingVertical: 12,
                         textTransform: 'uppercase',
-                        width: 120,
+                        width: 190,
+                        borderRadius: 2,
                     }}
                 >
                     {!zoomInfo ? 'Connect' : 'Disconnect'}
@@ -203,25 +205,37 @@ const CuesIntegrations: React.FunctionComponent<{ [label: string]: any }> = (pro
                 }}
                 disabled={user.email === disableEmailId}
             >
-                <Text
-                    style={{
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        borderColor: '#000',
-                        borderWidth: 1,
-                        color: googleIntegrated ? '#000' : '#fff',
-                        backgroundColor: googleIntegrated ? '#fff' : '#000',
-                        fontSize: 11,
-                        paddingHorizontal: 24,
-                        fontFamily: 'inter',
-                        overflow: 'hidden',
-                        paddingVertical: 14,
-                        textTransform: 'uppercase',
-                        width: 120,
-                    }}
-                >
-                    {!googleIntegrated ? 'Connect' : 'Disconnect'}
-                </Text>
+                {!googleIntegrated ? (
+                    <Image
+                        source={googleSignInButton}
+                        style={{
+                            width: 190,
+                            height: 54,
+                        }}
+                        resizeMode={'contain'}
+                    />
+                ) : (
+                    <Text
+                        style={{
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            borderColor: '#ccc',
+                            borderWidth: 1,
+                            color: '#000',
+                            backgroundColor: '#fff',
+                            fontSize: 11,
+                            paddingHorizontal: 24,
+                            fontFamily: 'inter',
+                            overflow: 'hidden',
+                            paddingVertical: 12,
+                            textTransform: 'uppercase',
+                            width: 190,
+                            borderRadius: 2,
+                        }}
+                    >
+                        Disconnect
+                    </Text>
+                )}
             </TouchableOpacity>
         );
     };

@@ -132,6 +132,8 @@
         "use-dynamic-refs": "^1.0.0",
         "use-sound": "^4.0.1",
         "userflow.js": "^2.4.0",
+        "vex-dialog": "^1.1.0",
+        "vex-js": "^4.1.0",
         "victory": "^36.5.0",
         "volkeno-react-native-drag-drop": "^1.0.8",
         "webpack-hot-middleware": "^2.25.1",

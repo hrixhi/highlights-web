@@ -14,6 +14,7 @@ import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import MathJax from 'react-mathjax-preview';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { useAppContext } from '../contexts/AppContext';
+import Alert from './Alert';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { user } = useAppContext();
@@ -550,7 +551,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     const updateProblemScores = [...problemScores];
                                                     updateProblemScores[index] = e.target.value;
                                                     if (Number(e.target.value) > Number(problem.points)) {
-                                                        alert('Assigned score exceeds total points');
+                                                        Alert('Assigned score exceeds total points');
                                                     }
                                                     setProblemScores(updateProblemScores);
                                                 }}

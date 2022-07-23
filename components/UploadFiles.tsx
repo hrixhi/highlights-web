@@ -8,6 +8,7 @@ const mime = require('mime-types');
 
 // COMPONENTS
 import { Text, View } from './Themed';
+import Alert from './Alert';
 
 const FileUpload: React.FC<any> = (props: any) => {
     const [uploading, setUploading] = useState(false);
@@ -25,7 +26,7 @@ const FileUpload: React.FC<any> = (props: any) => {
 
         setUploading(true);
         if (file.size > 26214400) {
-            alert('File size must be less than 25 mb');
+            Alert('File size must be less than 25 mb');
             setUploading(false);
             return;
         }
@@ -43,13 +44,13 @@ const FileUpload: React.FC<any> = (props: any) => {
         }
 
         if (type === 'wma' || type === 'avi') {
-            alert('This video format is not supported. Upload mp4.');
+            Alert('This video format is not supported. Upload mp4.');
             setUploading(false);
             return;
         }
 
         if (type === 'svg') {
-            alert('This file type is not supported.');
+            Alert('This file type is not supported.');
             setUploading(false);
             return;
         }
@@ -60,7 +61,7 @@ const FileUpload: React.FC<any> = (props: any) => {
 
         if (!props.back) {
             // if (type !== 'png' && type !== 'jpeg') {
-            //     alert('Error! Invalid image format.')
+            //     Alert('Error! Invalid image format.')
             //     setUploading(false)
             //     return
             // }
@@ -68,7 +69,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') &&
             props.action !== 'message_send'
         ) {
-            alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
+            Alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.');
             setUploading(false);
             return;
         }
@@ -77,7 +78,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             props.action === 'audio/video' &&
             !(type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
         ) {
-            alert('Error! This file format is not supported. Upload mp4.');
+            Alert('Error! This file format is not supported. Upload mp4.');
             setUploading(false);
             return;
         }

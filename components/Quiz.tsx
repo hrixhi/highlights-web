@@ -57,6 +57,7 @@ import EquationEditorQuiz from './EquationEditorQuiz';
 import MathJax from 'react-mathjax-preview';
 import { disableEmailId } from '../constants/zoomCredentials';
 import { useAppContext } from '../contexts/AppContext';
+import Alert from './Alert';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { user, userId } = useAppContext();
@@ -804,7 +805,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      */
     const insertEquation = useCallback(() => {
         if (equation === '') {
-            alert('Equation cannot be empty.');
+            Alert('Equation cannot be empty.');
             return;
         }
 
@@ -1041,7 +1042,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      */
     const insertOptionEquation = (index: number) => {
         if (optionEquations[index] === '') {
-            alert('Equation cannot be empty.');
+            Alert('Equation cannot be empty.');
             return;
         }
 
@@ -1075,7 +1076,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
      */
     const insertMultipartEquation = (index: number) => {
         if (multipartEquations[index] === '') {
-            alert('Equation cannot be empty.');
+            Alert('Equation cannot be empty.');
             return;
         }
 
@@ -1273,7 +1274,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 },
                                 'image.beforeUpload': function (images: any) {
                                     if (images[0].size > 5 * 1024 * 1024) {
-                                        alert('Image size must be less than 5mb.');
+                                        Alert('Image size must be less than 5mb.');
                                         return false;
                                     }
 
@@ -1363,7 +1364,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         });
 
         if (numOfCorrectAnswers > 1 && numOfSelected === numOfCorrectAnswers) {
-            alert(
+            Alert(
                 `You can select a maximum of ${numOfCorrectAnswers} ${
                     numOfCorrectAnswers === 1 ? 'choice' : 'choices'
                 }. Unselect an existing choice to select a new one.`
@@ -2071,7 +2072,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             );
 
                                                             if (numOfCorrectAnswers === numOfSelected) {
-                                                                alert(
+                                                                Alert(
                                                                     `You can select a maximum of ${numOfCorrectAnswers} ${
                                                                         numOfCorrectAnswers === 1 ? 'choice' : 'choices'
                                                                     }. Unselect an existing choice to select a new one.`
@@ -2165,7 +2166,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             );
 
                                                             if (numOfCorrectAnswers === numOfSelected) {
-                                                                alert(
+                                                                Alert(
                                                                     `You can select a maximum of ${numOfCorrectAnswers} ${
                                                                         numOfCorrectAnswers === 1 ? 'choice' : 'choices'
                                                                     }. Unselect an existing choice to select a new one.`
@@ -2480,7 +2481,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 );
 
                                                                 if (numOfCorrectAnswers === numOfSelected) {
-                                                                    alert(
+                                                                    Alert(
                                                                         `You can select a maximum of ${numOfCorrectAnswers} ${
                                                                             numOfCorrectAnswers === 1
                                                                                 ? 'choice'
@@ -2945,7 +2946,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     type === 'number' &&
                                                                     Number.isNaN(Number(e.target.value))
                                                                 ) {
-                                                                    alert(
+                                                                    Alert(
                                                                         'You must enter a numeric value for this entry.'
                                                                     );
                                                                     return;
@@ -2990,7 +2991,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     type === 'number' &&
                                                                     Number.isNaN(Number(e.target.value))
                                                                 ) {
-                                                                    alert(
+                                                                    Alert(
                                                                         'You must enter a numeric value for this entry.'
                                                                     );
                                                                     return;
@@ -3306,7 +3307,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 });
 
                                                                 if (numOfCorrectAnswers === numOfSelected) {
-                                                                    alert(
+                                                                    Alert(
                                                                         `You can select a maximum of ${numOfCorrectAnswers} ${
                                                                             numOfCorrectAnswers === 1
                                                                                 ? 'choice'
@@ -3736,7 +3737,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             value={problem.maxCharCount}
                                             onChangeText={(text) => {
                                                 if (Number.isNaN(Number(text))) {
-                                                    alert('Character count must be a number.');
+                                                    Alert('Character count must be a number.');
                                                     return;
                                                 }
 

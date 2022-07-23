@@ -10,7 +10,7 @@ import { retrievePDFFromArchive } from '../graphql/QueriesAndMutations';
 
 // COMPONENTS
 import { Text, TouchableOpacity, View } from './Themed';
-import alert from './Alert';
+import Alert from './Alert';
 import { Popup } from '@mobiscroll/react5';
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import { paddingResponsive } from '../helpers/paddingHelper';
@@ -34,7 +34,7 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
      */
     const handleSearch = useCallback(() => {
         if (!searchTerm || searchTerm === '') {
-            alert('Enter search input.');
+            Alert('Enter search input.');
             return;
         }
         // make request here...
@@ -124,14 +124,14 @@ const Books: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         })
                         .catch((e) => {
                             setRetrievingBook(false);
-                            alert('This text is currently not available for free. Try another result.');
+                            Alert('This text is currently not available for free. Try another result.');
                             console.log(e);
                         });
                 }
             })
             .catch((e) => {
                 setRetrievingBook(false);
-                alert('This text is currently not available for free. Try another result.');
+                Alert('This text is currently not available for free. Try another result.');
                 console.log(e);
             });
     }, [selectedBook]);

@@ -9,6 +9,7 @@ import { Popup } from '@mobiscroll/react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Select } from '@mobiscroll/react';
 import { validateEmail } from '../helpers/emailCheck';
+import Alert from './Alert';
 
 const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [emails, setEmails] = useState('');
@@ -43,7 +44,7 @@ const InviteByEmailModal: React.FunctionComponent<{ [label: string]: any }> = (p
                         });
 
                         if (error) {
-                            alert('Invalid email ' + invalidEmail);
+                            Alert('Invalid email ' + invalidEmail);
                             return;
                         }
 
