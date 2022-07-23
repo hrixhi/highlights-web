@@ -1,6 +1,6 @@
 // REACT
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Switch, TextInput, Dimensions, ActivityIndicator, ScrollView, Image } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { TextInput, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from './Themed';
 import { Popup } from '@mobiscroll/react';
@@ -280,7 +280,6 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                             backgroundColor: '#f8f8f8',
                             width: '100%',
                             maxHeight: 400,
-                            overflow: 'scroll',
                             flexDirection: 'column',
                         }}
                     >
@@ -317,88 +316,120 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                 </Text>
                             </View>
                         ) : null}
-                        {searchResults.map((result: any) => {
-                            const { title, description, channelTitle } = result.snippet;
-                            const imageURL = result.snippet.thumbnails.medium.url;
-                            const { videoId } = result.id;
+                        <ScrollView horizontal={false}>
+                            {searchResults.map((result: any) => {
+                                const { title, description, channelTitle } = result.snippet;
+                                const imageURL = result.snippet.thumbnails.medium.url;
+                                const { videoId } = result.id;
 
-                            return (
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'flex-start',
-                                        backgroundColor: '#f8f8f8',
-                                        marginVertical: 20,
-                                    }}
-                                >
+                                return (
                                     <View
                                         style={{
-                                            width: '60%',
+                                            flexDirection: 'row',
+                                            alignItems: 'flex-start',
                                             backgroundColor: '#f8f8f8',
+                                            marginVertical: 20,
                                         }}
                                     >
-                                        {playVideoId === videoId ? (
-                                            <ReactPlayer
-                                                url={`https://youtube.com/embed/${videoId}`}
-                                                controls={true}
-                                                onContextMenu={(e: any) => e.preventDefault()}
-                                                config={{
-                                                    file: { attributes: { controlsList: 'nodownload' } },
-                                                }}
-                                                width={'100%'}
-                                                height={'100%'}
-                                            />
-                                        ) : (
-                                            <Image
-                                                source={{
-                                                    uri: imageURL,
-                                                }}
-                                                style={{
-                                                    height: 150,
-                                                    width: '100%',
-                                                }}
-                                            />
-                                        )}
-                                    </View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'column',
-                                            width: '40%',
-                                            paddingHorizontal: 10,
-                                            backgroundColor: '#f8f8f8',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 16,
-                                                fontFamily: 'Inter',
-                                                marginBottom: 10,
-                                            }}
-                                            numberOfLines={3}
-                                            ellipsizeMode="tail"
-                                        >
-                                            {title}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                            }}
-                                        >
-                                            {channelTitle}
-                                        </Text>
                                         <View
                                             style={{
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                paddingTop: 20,
+                                                width: '60%',
                                                 backgroundColor: '#f8f8f8',
                                             }}
                                         >
-                                            {/* Play button */}
-                                            {playVideoId === videoId ? null : (
+                                            {playVideoId === videoId ? (
+                                                <ReactPlayer
+                                                    url={`https://youtube.com/embed/${videoId}`}
+                                                    controls={true}
+                                                    onContextMenu={(e: any) => e.preventDefault()}
+                                                    config={{
+                                                        file: { attributes: { controlsList: 'nodownload' } },
+                                                    }}
+                                                    width={'100%'}
+                                                    height={'100%'}
+                                                />
+                                            ) : (
+                                                <Image
+                                                    source={{
+                                                        uri: imageURL,
+                                                    }}
+                                                    style={{
+                                                        height: 150,
+                                                        width: '100%',
+                                                    }}
+                                                />
+                                            )}
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: 'column',
+                                                width: '40%',
+                                                paddingHorizontal: 10,
+                                                backgroundColor: '#f8f8f8',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontFamily: 'Inter',
+                                                    marginBottom: 10,
+                                                }}
+                                                numberOfLines={3}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {title}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 15,
+                                                }}
+                                            >
+                                                {channelTitle}
+                                            </Text>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    paddingTop: 20,
+                                                    backgroundColor: '#f8f8f8',
+                                                }}
+                                            >
+                                                {/* Play button */}
+                                                {playVideoId === videoId ? null : (
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            marginRight: 20,
+                                                            borderRadius: 15,
+                                                            overflow: 'hidden',
+                                                            height: 30,
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                        onPress={() => {
+                                                            setPlayVideoId(videoId);
+                                                        }}
+                                                    >
+                                                        <Ionicons name="play-outline" size={18} color={'#007AFF'} />
+                                                        <Text
+                                                            style={{
+                                                                textAlign: 'center',
+                                                                color: '#007AFF',
+                                                                fontSize: 15,
+                                                                fontFamily: 'inter',
+                                                                lineHeight: 30,
+                                                                height: 30,
+                                                                textTransform: 'uppercase',
+                                                                marginLeft: 5,
+                                                            }}
+                                                        >
+                                                            Play
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                )}
+                                                {/* Add button */}
                                                 <TouchableOpacity
                                                     style={{
-                                                        marginRight: 20,
                                                         borderRadius: 15,
                                                         overflow: 'hidden',
                                                         height: 30,
@@ -407,10 +438,10 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                                         backgroundColor: '#f8f8f8',
                                                     }}
                                                     onPress={() => {
-                                                        setPlayVideoId(videoId);
+                                                        props.insertVideo(videoId);
                                                     }}
                                                 >
-                                                    <Ionicons name="play-outline" size={18} color={'#007AFF'} />
+                                                    <Ionicons name="add-outline" size={20} color={'#007AFF'} />
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
@@ -423,45 +454,15 @@ const InsertYoutubeModal: React.FunctionComponent<{ [label: string]: any }> = (p
                                                             marginLeft: 5,
                                                         }}
                                                     >
-                                                        Play
+                                                        Add
                                                     </Text>
                                                 </TouchableOpacity>
-                                            )}
-                                            {/* Add button */}
-                                            <TouchableOpacity
-                                                style={{
-                                                    borderRadius: 15,
-                                                    overflow: 'hidden',
-                                                    height: 30,
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    backgroundColor: '#f8f8f8',
-                                                }}
-                                                onPress={() => {
-                                                    props.insertVideo(videoId);
-                                                }}
-                                            >
-                                                <Ionicons name="add-outline" size={20} color={'#007AFF'} />
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        color: '#007AFF',
-                                                        fontSize: 15,
-                                                        fontFamily: 'inter',
-                                                        lineHeight: 30,
-                                                        height: 30,
-                                                        textTransform: 'uppercase',
-                                                        marginLeft: 5,
-                                                    }}
-                                                >
-                                                    Add
-                                                </Text>
-                                            </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            );
-                        })}
+                                );
+                            })}
+                        </ScrollView>
                     </View>
                 )}
 

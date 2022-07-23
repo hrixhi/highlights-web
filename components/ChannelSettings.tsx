@@ -831,216 +831,207 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         >
                             Duplicate Course
                         </Text>
-                        <ScrollView
-                            onScroll={() => {
-                                Keyboard.dismiss();
-                            }}
-                            contentContainerStyle={{
-                                maxHeight: Dimensions.get('window').height - 95,
-                                minHeight: 100,
-                            }}
-                        >
-                            <View style={{ backgroundColor: 'white' }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    {PreferredLanguageText('name')}
-                                </Text>
-                                <TextInput
-                                    value={duplicateChannelName}
-                                    placeholder={''}
-                                    onChangeText={(val) => {
-                                        setDuplicateChannelName(val);
-                                    }}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    required={true}
-                                />
-                            </View>
 
-                            <View style={{ backgroundColor: 'white' }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    {PreferredLanguageText('enrolmentPassword')}
-                                </Text>
-                                <TextInput
-                                    value={duplicateChannelPassword}
-                                    placeholder={`(${PreferredLanguageText('optional')})`}
-                                    onChangeText={(val) => setDuplicateChannelPassword(val)}
-                                    placeholderTextColor={'#1F1F1F'}
-                                    required={false}
-                                />
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                {PreferredLanguageText('name')}
+                            </Text>
+                            <TextInput
+                                value={duplicateChannelName}
+                                placeholder={''}
+                                onChangeText={(val) => {
+                                    setDuplicateChannelName(val);
+                                }}
+                                placeholderTextColor={'#1F1F1F'}
+                                required={true}
+                            />
+                        </View>
+
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                {PreferredLanguageText('enrolmentPassword')}
+                            </Text>
+                            <TextInput
+                                value={duplicateChannelPassword}
+                                placeholder={`(${PreferredLanguageText('optional')})`}
+                                onChangeText={(val) => setDuplicateChannelPassword(val)}
+                                placeholderTextColor={'#1F1F1F'}
+                                required={false}
+                            />
+                        </View>
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#000000',
+                                    fontFamily: 'Inter',
+                                }}
+                            >
+                                Theme
+                            </Text>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    marginTop: 20,
+                                }}
+                            >
+                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                    <CirclePicker
+                                        colors={colorChoices}
+                                        color={duplicateChannelColor}
+                                        onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
+                                        width={'220px'}
+                                    />
+                                </View>
                             </View>
-                            <View style={{ backgroundColor: 'white' }}>
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                    }}
-                                >
-                                    Theme
-                                </Text>
+                        </View>
+
+                        {/* Switch to copy Subscribers */}
+                        {selected.length > 0 ? (
+                            <View>
                                 <View
                                     style={{
                                         width: '100%',
-                                        display: 'flex',
-                                        flexDirection: 'row',
+                                        paddingTop: 30,
+                                        paddingBottom: 15,
                                         backgroundColor: 'white',
-                                        marginTop: 20,
                                     }}
                                 >
-                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                        <CirclePicker
-                                            colors={colorChoices}
-                                            color={duplicateChannelColor}
-                                            onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
-                                            width={'220px'}
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            color: '#000000',
+                                            fontFamily: 'Inter',
+                                        }}
+                                    >
+                                        Duplicate Students
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            height: 40,
+                                            marginRight: 10,
+                                        }}
+                                    >
+                                        <Switch
+                                            value={duplicateChannelSubscribers}
+                                            onValueChange={() => {
+                                                setDuplicateChannelSubscribers(!duplicateChannelSubscribers);
+                                            }}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: '#efefef',
+                                                true: '#000',
+                                            }}
+                                            activeThumbColor="white"
                                         />
                                     </View>
                                 </View>
                             </View>
+                        ) : null}
 
-                            {/* Switch to copy Subscribers */}
-                            {selected.length > 0 ? (
-                                <View>
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            paddingTop: 30,
-                                            paddingBottom: 15,
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                color: '#000000',
-                                                fontFamily: 'Inter',
-                                            }}
-                                        >
-                                            Duplicate Students
-                                        </Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10,
-                                            }}
-                                        >
-                                            <Switch
-                                                value={duplicateChannelSubscribers}
-                                                onValueChange={() => {
-                                                    setDuplicateChannelSubscribers(!duplicateChannelSubscribers);
-                                                }}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#efefef',
-                                                    true: '#000',
-                                                }}
-                                                activeThumbColor="white"
-                                            />
-                                        </View>
-                                    </View>
-                                </View>
-                            ) : null}
-
-                            {/* Switch to copy Moderators */}
-                            {owners.length > 0 ? (
-                                <View>
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            paddingTop: 15,
-                                            paddingBottom: 15,
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                color: '#000000',
-                                                fontFamily: 'Inter',
-                                            }}
-                                        >
-                                            Duplicate Instructors
-                                        </Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10,
-                                            }}
-                                        >
-                                            <Switch
-                                                value={duplicateChannelModerators}
-                                                onValueChange={() => {
-                                                    setDuplicateChannelModerators(!duplicateChannelModerators);
-                                                }}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#efefef',
-                                                    true: '#000',
-                                                }}
-                                                activeThumbColor="white"
-                                            />
-                                        </View>
-                                    </View>
-                                </View>
-                            ) : null}
-
-                            <View
-                                style={{
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    marginTop: 50,
-                                    paddingBottom: 50,
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => handleDuplicate()}
+                        {/* Switch to copy Moderators */}
+                        {owners.length > 0 ? (
+                            <View>
+                                <View
                                     style={{
+                                        width: '100%',
+                                        paddingTop: 15,
+                                        paddingBottom: 15,
                                         backgroundColor: 'white',
-                                        borderRadius: 15,
-                                        // overflow: 'hidden',
-                                        // height: 35,
                                     }}
-                                    disabled={isDuplicatingChannel || user.email === disableEmailId}
                                 >
                                     <Text
                                         style={{
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            borderColor: '#000',
-                                            borderWidth: 1,
-                                            color: '#fff',
-                                            backgroundColor: '#000',
-                                            fontSize: 11,
-                                            paddingHorizontal: 24,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            paddingVertical: 14,
-                                            textTransform: 'uppercase',
-                                            width: 150,
+                                            fontSize: 15,
+                                            color: '#000000',
+                                            fontFamily: 'Inter',
                                         }}
                                     >
-                                        {isDuplicatingChannel ? 'SAVING...' : 'SAVE'}
+                                        Duplicate Instructors
                                     </Text>
-                                </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View
+                                        style={{
+                                            backgroundColor: 'white',
+                                            height: 40,
+                                            marginRight: 10,
+                                        }}
+                                    >
+                                        <Switch
+                                            value={duplicateChannelModerators}
+                                            onValueChange={() => {
+                                                setDuplicateChannelModerators(!duplicateChannelModerators);
+                                            }}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: '#efefef',
+                                                true: '#000',
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                </View>
                             </View>
-                        </ScrollView>
+                        ) : null}
+
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                marginTop: 50,
+                                paddingBottom: 50,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => handleDuplicate()}
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 15,
+                                    // overflow: 'hidden',
+                                    // height: 35,
+                                }}
+                                disabled={isDuplicatingChannel || user.email === disableEmailId}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        borderColor: '#000',
+                                        borderWidth: 1,
+                                        color: '#fff',
+                                        backgroundColor: '#000',
+                                        fontSize: 11,
+                                        paddingHorizontal: 24,
+                                        fontFamily: 'inter',
+                                        overflow: 'hidden',
+                                        paddingVertical: 14,
+                                        textTransform: 'uppercase',
+                                        width: 150,
+                                    }}
+                                >
+                                    {isDuplicatingChannel ? 'SAVING...' : 'SAVE'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </View>

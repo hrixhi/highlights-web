@@ -593,3 +593,15 @@ input:focus {
 svg:not(:root) {
     overflow: visible !important;
 }
+
+.mbsc-schedule-all-day-wrapper {
+    overflow: hidden !important;
+}
+
+.mbsc-schedule-grid-scroll {
+    overflow: hidden !important;
+}
+
+.mbsc-popup-padding {
+    overflow: hidden !important;
+}

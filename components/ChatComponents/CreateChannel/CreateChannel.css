@@ -66,7 +66,7 @@
     max-width: 95%;
     flex-wrap: wrap;
     max-height: 150px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 /* .messaging-create-channel__users::-webkit-scrollbar {

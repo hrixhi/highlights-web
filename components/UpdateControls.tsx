@@ -3810,13 +3810,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View
                             style={{
                                 flexDirection: 'column',
-                                overflow: 'scroll',
                                 maxWidth: 400,
                             }}
                         >
                             <View
                                 style={{
-                                    width: '90%',
                                     padding: 5,
                                     height: 'auto',
                                     minWidth: 300,
@@ -4643,6 +4641,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     alignItems: width < 768 ? 'flex-start' : 'center',
                     paddingTop: 40,
                     borderColor: '#f2f2f2',
+                    marginBottom: 40,
                 }}
             >
                 <View

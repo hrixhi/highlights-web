@@ -2122,7 +2122,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             <View
                                                                 style={{
                                                                     flexDirection: 'column',
-                                                                    overflow: 'scroll',
                                                                 }}
                                                             >
                                                                 <View

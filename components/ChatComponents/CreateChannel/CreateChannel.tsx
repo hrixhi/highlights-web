@@ -1054,7 +1054,8 @@ const CreateChannel = (props: Props) => {
                     paddingTop: 25,
                     paddingLeft: 20,
                     paddingRight: 20,
-                    overflow: 'scroll',
+                    overflowY: 'scroll',
+                    height: '100%',
                 }}
             >
                 <div

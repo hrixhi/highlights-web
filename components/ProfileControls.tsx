@@ -215,6 +215,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Dimensions.get('window').width < 1024
                             ? Dimensions.get('window').height - 104
                             : Dimensions.get('window').height - 64,
+                    paddingBottom: 50,
                 }}
                 showsVerticalScrollIndicator={true}
             >
