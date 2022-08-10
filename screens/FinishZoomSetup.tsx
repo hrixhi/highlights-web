@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 import Alert from '../components/Alert';
 
-import { connectZoom } from '../graphql/QueriesAndMutations';
-import { origin, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
+import { connectZoom, findUserById } from '../graphql/QueriesAndMutations';
+import { adminURL, origin, zoomClientId, zoomRedirectUri } from '../constants/zoomCredentials';
 import { useApolloClient } from '@apollo/client';
 
 export default function FinishZoomSetup({ navigation, route }: StackScreenProps<any, 'zoom_auth'>) {
@@ -30,18 +30,69 @@ export default function FinishZoomSetup({ navigation, route }: StackScreenProps<
                         })
                         .then(async (res) => {
                             if (res.data && res.data.user.connectZoom) {
-                                const u = await AsyncStorage.getItem('user');
-                                if (!u) {
-                                    return;
-                                }
-                                const user = JSON.parse(u);
-                                user.zoomInfo = res.data.user.connectZoom;
-                                const updatedUser = JSON.stringify(user);
-                                await AsyncStorage.setItem('user', updatedUser);
                                 Alert('Zoom account connected!');
 
-                                // Redirect back to /
-                                window.location.href = origin;
+                                const u = await AsyncStorage.getItem('user');
+                                if (u) {
+                                    const user = JSON.parse(u);
+
+                                    if (user._id === userId) {
+                                        user.zoomInfo = res.data.user.connectZoom;
+                                        const updatedUser = JSON.stringify(user);
+                                        await AsyncStorage.setItem('user', updatedUser);
+
+                                        // Redirect back to /
+                                        window.location.href = origin;
+                                    } else {
+                                        // Check if it is a admin user and if yes then redirect to Admin Portal
+                                        server
+                                            .query({
+                                                query: findUserById,
+                                                variables: {
+                                                    id: userId,
+                                                },
+                                            })
+                                            .then((res2: any) => {
+                                                if (res2.data && res2.data.user.findById) {
+                                                    if (
+                                                        res2.data.user.findById.adminInfo &&
+                                                        res2.data.user.findById.adminInfo.role
+                                                    ) {
+                                                        window.location.href = adminURL;
+                                                    } else {
+                                                        window.location.href = origin;
+                                                    }
+                                                }
+                                            })
+                                            .catch((err) => {
+                                                window.location.href = origin;
+                                            });
+                                    }
+                                } else {
+                                    // Check if it is a admin user and if yes then redirect to Admin Portal
+                                    server
+                                        .query({
+                                            query: findUserById,
+                                            variables: {
+                                                id: userId,
+                                            },
+                                        })
+                                        .then((res2: any) => {
+                                            if (res2.data && res2.data.user.findById) {
+                                                if (
+                                                    res2.data.user.findById.adminInfo &&
+                                                    res2.data.user.findById.adminInfo.role
+                                                ) {
+                                                    window.location.href = adminURL;
+                                                } else {
+                                                    window.location.href = origin;
+                                                }
+                                            }
+                                        })
+                                        .catch((err) => {
+                                            window.location.href = origin;
+                                        });
+                                }
                             }
                         })
                         .catch((err) => {

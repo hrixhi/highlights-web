@@ -22,8 +22,6 @@ import { useAppClient } from './hooks/initClient';
 import { AppContextProvider } from './contexts/AppContext';
 import { apiURL, origin } from './constants/zoomCredentials';
 
-import LinkingConfiguration from './navigation/Linking';
-
 export default function App() {
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();

@@ -800,6 +800,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 if (hasMissingOption) {
                     Alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    return;
                 }
 
                 if (problem.multipartOptions[0].length < 2) {
@@ -819,12 +820,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 });
 
                 if (!hasOneCorrect) {
-                    Alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    Alert(`Part B must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    Alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    Alert(`Part B option is empty in question ${problemIndex + 1}`);
+                    return;
                 }
             }
 

@@ -223,7 +223,7 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
     }, [option]);
 
     useEffect(() => {
-        OneSignal.init({ appId: '78cd253e-262d-4517-a710-8719abf3ee55', allowLocalhostAsSecureOrigin: true }).then(
+        OneSignal.init({ appId: '996f32a4-1ff8-4c0b-bacc-814b8ce0504c', allowLocalhostAsSecureOrigin: true }).then(
             () => {
                 console.log('One Signal initialized');
                 OneSignal.showSlidedownPrompt().then(() => {

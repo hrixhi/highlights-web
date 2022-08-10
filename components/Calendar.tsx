@@ -44,6 +44,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
+import parser from 'html-react-parser';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { userId, org, user, subscriptions } = useAppContext();
@@ -92,6 +93,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             value: 'My Events',
             text: 'My Events',
         },
+        {
+            value: 'School Events',
+            text: 'School Events',
+        },
     ];
 
     channels.map((channel: any) => {
@@ -107,6 +112,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [filterEnd, setFilterEnd] = useState<any>(null);
     const [filterByChannel, setFilterByChannel] = useState('All');
     const [filterEventsType, setFilterEventsType] = useState('All');
+    const [viewAnnouncement, setViewAnnouncement] = useState<any>(undefined);
 
     // HOOKS
 
@@ -183,6 +189,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         let all = [...allActivity];
         if (filterByChannel === 'All') {
+        } else if (filterByChannel === 'schoolwide') {
+            all = all.filter((e: any) => e.target === 'ANNOUNCEMENT');
         } else {
             all = all.filter((e: any) => filterByChannel === e.channelId);
         }
@@ -210,7 +218,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (filterByChannel !== 'All') {
             total = total.filter((e: any) => {
                 if (filterByChannel === 'My Events') {
-                    return e.channelId === '';
+                    return e.channelId === '' && !e.schoolwide;
+                } else if (filterByChannel === 'schoolwide') {
+                    return e.schoolwide;
                 } else {
                     return filterByChannel === e.channelId;
                 }
@@ -603,6 +613,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             isNonChannelMeeting: e.isNonChannelMeeting,
                             nonChannelGroupId: e.nonChannelGroupId,
                             groupUsername: e.groupUsername,
+                            schoolwide: e.schoolwide,
                         });
                     });
                     setEvents(parsedEvents);
@@ -1384,6 +1395,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: '#1F1F1F',
                             fontSize: 15,
                             paddingTop: isMeeting && new Date() > startTime && new Date() < endTime ? 5 : 0,
+                            maxHeight: 40,
                         }}
                     >
                         {data.original.description}
@@ -1490,6 +1502,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const channelOptions = [
             { value: 'All', text: 'All' },
             { value: 'My Events', text: 'My Events' },
+            { value: 'schoolwide', text: 'Schoolwide' },
         ];
 
         subscriptions.map((sub: any) => {
@@ -1961,6 +1974,154 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         );
     };
 
+    const renderAnnouncementModal = () => {
+        if (!viewAnnouncement) return null;
+
+        const { title, subtitle, creatorAvatar, creatorProfile, createdAt } = viewAnnouncement;
+
+        const splitProfile = creatorProfile.split(',');
+        const email = splitProfile[splitProfile.length - 1];
+        splitProfile.pop();
+        const name = splitProfile.join(',');
+
+        console.log('Subtitle', subtitle);
+
+        return (
+            <Popup
+                isOpen={viewAnnouncement !== undefined}
+                buttons={[
+                    {
+                        text: 'Close',
+                        color: 'dark',
+                        handler: function (event) {
+                            setViewAnnouncement(undefined);
+                        },
+                    },
+                ]}
+                themeVariant="light"
+                theme="ios"
+                onClose={() => setShowFilterPopup(false)}
+                responsive={{
+                    small: {
+                        display: 'center',
+                    },
+                    medium: {
+                        display: 'center',
+                    },
+                }}
+            >
+                {/* Show all the settings here */}
+                <View
+                    style={{ flexDirection: 'column', padding: 15, backgroundColor: 'none', minWidth: 500 }}
+                    className="mbsc-align-center mbsc-padding"
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingBottom: 10,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'Inter',
+                                fontSize: 18,
+                            }}
+                        >
+                            Announcement - {title}
+                        </Text>
+                    </View>
+
+                    {/* Share by */}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 10,
+                        }}
+                    >
+                        <img
+                            style={{
+                                display: 'block',
+                                height: 45,
+                                width: 45,
+                                borderRadius: '100%',
+                            }}
+                            src={
+                                creatorAvatar ? creatorAvatar : 'https://cues-files.s3.amazonaws.com/images/default.png'
+                            }
+                            alt="Profile Pic"
+                        />
+
+                        <View
+                            style={{
+                                marginLeft: 8,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                {name}
+                            </Text>
+                            <a
+                                target="_blank"
+                                href={`mailto:${email}`}
+                                style={{
+                                    fontSize: 15,
+                                    flex: 1,
+                                    textDecoration: 'underline',
+                                    textDecorationColor: 'black',
+                                }}
+                            >
+                                <Text>{email}</Text>
+                            </a>
+                        </View>
+                        <View
+                            style={{
+                                marginLeft: 'auto',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            {createdAt ? (
+                                <Text
+                                    style={{
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        marginRight: 10,
+                                    }}
+                                >
+                                    {moment(new Date(createdAt)).format('MMMM Do, h:mm a')}
+                                </Text>
+                            ) : null}
+                        </View>
+                    </View>
+
+                    <div className="mt-6">
+                        <div
+                            className="htmlParser fr-view"
+                            style={{
+                                width: '100%',
+                                color: 'black',
+                                marginTop: Dimensions.get('window').width < 768 ? 0 : 25,
+                            }}
+                        >
+                            {parser(subtitle)}
+                        </div>
+                    </div>
+                </View>
+            </Popup>
+        );
+    };
+
+    function extractContent(s: string) {
+        var span = document.createElement('span');
+        span.innerHTML = s;
+        return span.textContent || span.innerText;
+    }
+
     // MAIN RETURN
     return (
         <View
@@ -2075,6 +2236,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 {activity.map((act: any, index: number) => {
                                                     const { cueId, channelId, createdBy, target, threadId } = act;
 
+                                                    console.log('Activity', act);
+
                                                     const date = new Date(act.date);
 
                                                     if (props.filterStart && props.filterEnd) {
@@ -2086,6 +2249,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         if (date > end) {
                                                             return;
                                                         }
+                                                    }
+
+                                                    let announcementDescription = '';
+
+                                                    if (target === 'ANNOUNCEMENT') {
+                                                        announcementDescription = extractContent(act.subtitle);
                                                     }
 
                                                     return (
@@ -2126,9 +2295,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 if (
                                                                     target === 'CHANNEL_SUBSCRIBED' ||
                                                                     target === 'CHANNEL_MODERATOR_ADDED' ||
-                                                                    target === 'CHANNEL_MODERATOR_REMOVED'
+                                                                    target === 'CHANNEL_MODERATOR_REMOVED' ||
+                                                                    target === 'CHANNEL_OWNER_ADDED'
                                                                 ) {
                                                                     props.openChannel(channelId);
+                                                                }
+
+                                                                if (target === 'ANNOUNCEMENT') {
+                                                                    setViewAnnouncement(act);
                                                                 }
                                                             }}
                                                             style={{
@@ -2140,16 +2314,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 paddingVertical: 5,
                                                                 backgroundColor: 'white',
                                                                 paddingHorizontal: paddingResponsive(),
-                                                                // borderLeftWidth: 3,
-                                                                // borderLeftColor: act.colorCode,
                                                             }}
-                                                            disabled={target === 'CHANNEL_UNSUBSCRIBED'}
+                                                            disabled={
+                                                                target === 'CHANNEL_UNSUBSCRIBED' ||
+                                                                target === 'CHANNEL_OWNER_REMOVED'
+                                                            }
                                                         >
                                                             <View
                                                                 style={{
                                                                     flex: 1,
                                                                     backgroundColor: 'white',
-                                                                    // paddingLeft: 20,
                                                                 }}
                                                             >
                                                                 <View
@@ -2167,7 +2341,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             width: 8,
                                                                             height: 8,
                                                                             borderRadius: 8,
-                                                                            backgroundColor: act.colorCode,
+                                                                            backgroundColor:
+                                                                                target === 'ANNOUNCEMENT'
+                                                                                    ? '#000'
+                                                                                    : act.colorCode,
                                                                             marginRight: 2,
                                                                         }}
                                                                     />
@@ -2182,7 +2359,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         }}
                                                                         ellipsizeMode="tail"
                                                                     >
-                                                                        {act.channelName}
+                                                                        {target === 'ANNOUNCEMENT'
+                                                                            ? 'Announcement - ' + act.title
+                                                                            : act.channelName}
                                                                     </Text>
                                                                 </View>
                                                                 <Text
@@ -2192,12 +2371,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 ? 13
                                                                                 : 14,
                                                                         lineHeight: 16,
-                                                                        padding: 5,
+                                                                        paddingHorizontal: 5,
+                                                                        marginVertical: 5,
                                                                         paddingLeft: 0,
                                                                     }}
                                                                     ellipsizeMode="tail"
+                                                                    numberOfLines={2}
                                                                 >
-                                                                    {act.title} - {act.subtitle}
+                                                                    {target === 'ANNOUNCEMENT'
+                                                                        ? announcementDescription
+                                                                        : `${act.title} - ${act.subtitle}`}
                                                                 </Text>
                                                             </View>
                                                             <View
@@ -2575,11 +2758,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     >
                                                         <TouchableOpacity
                                                             style={{
-                                                                // backgroundColor: 'white',
-                                                                // overflow: 'hidden',
-                                                                // height: 35,
-                                                                // justifyContent: 'center',
-                                                                // flexDirection: 'row',
                                                                 marginBottom: 20,
                                                             }}
                                                             onPress={() => handleCreate()}
@@ -2699,6 +2877,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {renderEventFilters()}
                 </View>
             </Popup>
+            {renderAnnouncementModal()}
         </View>
     );
 };

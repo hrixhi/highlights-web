@@ -211,6 +211,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [failedToSaveSubmission, setFailedToSaveSubmission] = useState(false);
 
     const [showInsertYoutubeVideosModal, setShowInsertYoutubeVideosModal] = useState(false);
+    const [twoMinuteTimerShown, setTwoMinuteTimerShown] = useState(false);
 
     const [userFullName] = useState(user.fullName);
     const width = Dimensions.get('window').width;
@@ -541,6 +542,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         availableUntil,
         props.showOriginal,
     ]);
+
+    const showTwoMinutesAlert = useCallback(() => {
+        if (twoMinuteTimerShown) return;
+
+        Alert('Two minutes left. Quiz will auto-submit when timer ends.');
+
+        setTwoMinuteTimerShown(true);
+    }, [twoMinuteTimerShown]);
 
     /**
      * @description If cue contains a Quiz, then need to fetch the quiz and set State
@@ -2636,6 +2645,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                 if (hasMissingOption) {
                     Alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    return;
                 }
 
                 if (problem.multipartOptions[0].length < 2) {
@@ -2655,12 +2665,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
 
                 if (!hasOneCorrect) {
-                    Alert(`Part A must have at least one correct choice in question ${problemIndex + 1}`);
+                    Alert(`Part B must have at least one correct choice in question ${problemIndex + 1}`);
                     return;
                 }
 
                 if (hasMissingOption) {
-                    Alert(`Part A option is empty in question ${problemIndex + 1}`);
+                    Alert(`Part B option is empty in question ${problemIndex + 1}`);
+                    return;
                 }
             }
 
@@ -2880,7 +2891,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }
 
                                         if (remainingTime === 120) {
-                                            Alert('Two minutes left. Quiz will auto-submit when timer ends.');
+                                            showTwoMinutesAlert();
                                         }
 
                                         const hours = Math.floor(remainingTime / 3600);
@@ -3446,7 +3457,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (!isOwner && props.cue.channelId && props.cue.channelId !== '') {
             return (
                 <div
-                    className="mce-content-body htmlParser"
+                    className="htmlParser fr-view"
                     style={{ width: '100%', color: 'black', marginTop: Dimensions.get('window').width < 768 ? 0 : 25 }}
                 >
                     {parser(initialOriginal)}
@@ -3642,7 +3653,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : (
                     <View style={{ width: '100%' }} key={JSON.stringify(attempt)}>
                         {viewSubmissionTab === 'mySubmission' ? (
-                            <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
+                            <div className="htmlParser fr-view" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
                             </div>
                         ) : (

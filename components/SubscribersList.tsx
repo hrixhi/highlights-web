@@ -577,9 +577,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
             .then((res) => {
                 if (res.data && res.data.cue.gradeQuiz) {
+                    Alert('Updated Quiz Score successfully.');
                     props.reloadStatuses();
                     setShowSubmission(false);
+                } else {
+                    Alert('Failed to update Quiz Score.');
                 }
+            })
+            .catch((e) => {
+                console.log('Error', e);
+                Alert('Failed to update Quiz Score.');
             });
     };
 

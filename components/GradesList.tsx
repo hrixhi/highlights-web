@@ -15,7 +15,6 @@ import ReactTagInput from '@pathofdev/react-tag-input';
 import '@pathofdev/react-tag-input/build/index.css';
 
 // HELPERS
-import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import moment from 'moment';
 import ProgressBar from '@ramonak/react-progress-bar';
@@ -98,7 +97,8 @@ const masteryColors = {
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { userId, user } = useAppContext();
 
-    const [exportAoa, setExportAoa] = useState<any[]>();
+    const [exportAoa, setExportAoa] = useState<any[]>([]);
+    const [exportError, setExportError] = useState('');
     const [activeModifyId, setActiveModifyId] = useState('');
     const [activeUserId, setActiveUserId] = useState('');
     const [activeModifyEntryType, setActiveModifyEntryType] = useState('');
@@ -1275,83 +1275,87 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     /**
      * @description Prepare export data for Grades
      */
-    // useEffect(() => {
-    //     if (props.scores.length === 0 || cues.length === 0) {
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!instructorGradebook || !instructorGradebook.entries || !instructorGradebook.users) {
+            return;
+        }
 
-    //     const exportAoa = [];
+        if (instructorGradebook.entries.length === 0) {
+            setExportError('No gradebook entries found.');
+            return;
+        }
 
-    //     // Add row 1 with past meetings and total
-    //     let row1 = [''];
+        if (instructorGradebook.users.length === 0) {
+            setExportError('No students in course.');
+            return;
+        }
 
-    //     cues.forEach((cue) => {
-    //         const { title } = htmlStringParser(cue.cue);
+        const exportAoa = [];
 
-    //         row1.push(`${title} (${cue.gradeWeight ? cue.gradeWeight : '0'}%)`);
-    //     });
+        let row1 = ['Student', 'Total'];
+        let row2 = ['', ''];
 
-    //     row1.push('Total');
+        instructorGradebook.entries.forEach((entry: any) => {
+            const { title, deadline, gradeWeight } = entry;
 
-    //     exportAoa.push(row1);
+            row1.push(title);
 
-    //     scores.forEach((score: any) => {
-    //         let totalPoints = 0;
-    //         let totalScore = 0;
-    //         score.scores.map((s: any) => {
-    //             if (s.releaseSubmission) {
-    //                 if (!s.submittedAt || !s.graded) {
-    //                     // totalPoints += (Number(s.gradeWeight) * Number(s.score))
-    //                     totalScore += Number(s.gradeWeight);
-    //                 } else {
-    //                     totalPoints += Number(s.gradeWeight) * Number(s.score);
-    //                     totalScore += Number(s.gradeWeight);
-    //                 }
-    //             }
-    //         });
+            let formattedDeadline =
+                new Date(deadline).toString().split(' ')[1] + ' ' + new Date(deadline).toString().split(' ')[2];
 
-    //         let userRow = [];
+            row2.push(`${formattedDeadline} (${gradeWeight}%)`);
+        });
 
-    //         userRow.push(score.fullName);
+        exportAoa.push(row1);
+        exportAoa.push(row2);
 
-    //         cues.forEach((cue) => {
-    //             const scoreObject = score.scores.find((s: any) => {
-    //                 return s.cueId.toString().trim() === cue._id.toString().trim();
-    //             });
+        instructorGradebook.users.map((user: any, index: number) => {
+            let studentRow = [];
 
-    //             if (!scoreObject || !scoreObject.submittedAt) {
-    //                 if (!scoreObject || !scoreObject.cueId) {
-    //                     userRow.push('N/A');
-    //                 } else {
-    //                     userRow.push('Not Submitted');
-    //                 }
-    //             } else {
-    //                 if (scoreObject && scoreObject !== undefined && scoreObject.graded && scoreObject.score) {
-    //                     userRow.push(
-    //                         scoreObject.score.replace(/\.0+$/, '') +
-    //                             '%' +
-    //                             ' ' +
-    //                             (new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline) ? '(LATE)' : '')
-    //                     );
-    //                 } else if (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= new Date(cue.deadline)) {
-    //                     userRow.push('Late');
-    //                 } else {
-    //                     userRow.push('Submitted');
-    //                 }
-    //             }
-    //         });
+            const userTotals = instructorGradebook.totals.find((x: any) => x.userId === user.userId);
 
-    //         const pointsToAdd =
-    //             totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/, '') + '%' : '0';
+            studentRow.push(user.fullName);
 
-    //         // Add Total here
-    //         userRow.push(pointsToAdd);
+            studentRow.push(
+                gradebookViewPoints
+                    ? userTotals.pointsScored + ' / ' + userTotals.totalPointsPossible
+                    : userTotals.score + '%'
+            );
 
-    //         exportAoa.push(userRow);
-    //     });
+            instructorGradebook.entries.map((entry: any, col: number) => {
+                const userScore = entry.scores.find((x: any) => x.userId === user.userId);
 
-    //     setExportAoa(exportAoa);
-    // }, [scores, cues]);
+                console.log('Entry', entry);
+                if (!userScore || !userScore.submitted) {
+                    studentRow.push(!userScore ? 'N/A' : 'Not Submitted');
+                } else {
+                    studentRow.push(
+                        `${
+                            userScore.score
+                                ? gradebookViewPoints
+                                    ? userScore.pointsScored + ' / ' + entry.totalPoints
+                                    : userScore.score + '%'
+                                : userScore.lateSubmission
+                                ? 'Late'
+                                : 'Submitted'
+                        } ${
+                            userScore && userScore.submitted && userScore.score && userScore.lateSubmission
+                                ? '(Late)'
+                                : ''
+                        }`
+                    );
+                }
+            });
+
+            console.log('Student Row', studentRow);
+
+            exportAoa.push(studentRow);
+        });
+
+        console.log('Export AOA', exportAoa);
+
+        setExportAoa(exportAoa);
+    }, [instructorGradebook, gradebookViewPoints]);
 
     function getTimeRemaining(endtime: string) {
         const total = Date.parse(endtime) - Date.parse(new Date());
@@ -1383,12 +1387,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     /**
      * @description Handles exporting of grades into Spreadsheet
      */
-    const exportGrades = () => {
+    const exportGrades = useCallback(() => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
 
-        if (!exportAoa) {
-            Alert('Processing scores. Try again.');
+        console.log('Export AoA', exportAoa);
+        if (exportError) {
+            Alert(exportError);
             return;
         }
 
@@ -1398,7 +1403,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, 'grades' + fileExtension);
-    };
+    }, [exportAoa, exportError]);
 
     const handleUpdateAssignmentScore = useCallback(
         async (totalPoints: number) => {
@@ -1576,7 +1581,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setIsDeletingAssignment(false);
                 });
         }
-    }, []);
+    }, [editEntryId]);
 
     const handleCreateAssignment = useCallback(
         async (editing?: boolean) => {
@@ -1816,60 +1821,64 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     // /**
     //  * @description Renders export button
     //  */
-    // const renderExportButton = () => {
-    //     return (
-    //         <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-    //             <View
-    //                 style={{
-    //                     flexDirection: 'row',
-    //                     flex: 1,
-    //                     justifyContent: 'flex-end',
-    //                     width: '100%',
-    //                     backgroundColor: '#fff',
-    //                     marginBottom: 30,
-    //                 }}
-    //             >
-    //                 {scores.length === 0 || cues.length === 0 || !props.isOwner ? null : (
-    //                     <TouchableOpacity
-    //                         onPress={() => {
-    //                             exportGrades();
-    //                         }}
-    //                         style={{
-    //                             backgroundColor: '#fff',
-    //                             overflow: 'hidden',
-    //                             height: 35,
-    //                             justifyContent: 'center',
-    //                             flexDirection: 'row',
-    //                         }}
-    //                     >
-    //                         <Text
-    //                             style={{
-    //                                 textAlign: 'center',
-    //                                 lineHeight: 34,
-    //                                 color: '#007AFF',
-    //                                 fontSize: 14,
-    //                                 borderColor: '#007AFF',
-    //                                 paddingHorizontal: 20,
-    //                                 fontFamily: 'inter',
-    //                                 height: 35,
-    //                                 borderWidth: 1,
-    //                                 borderRadius: 15,
-    //                                 textTransform: 'uppercase',
-    //                             }}
-    //                         >
-    //                             EXPORT
-    //                         </Text>
-    //                     </TouchableOpacity>
-    //                 )}
-    //             </View>
-    //         </View>
-    //     );
-    // };
+    const renderExportButton = () => {
+        return (
+            <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                        width: '100%',
+                        backgroundColor: '#fff',
+                        marginRight: 20,
+                    }}
+                >
+                    {!props.isOwner ? null : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                exportGrades();
+                            }}
+                            style={{
+                                backgroundColor: '#f8f8f8',
+                                paddingHorizontal: 14,
+                                paddingVertical: 7,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                borderRadius: 15,
+                            }}
+                        >
+                            <Ionicons
+                                name="download-outline"
+                                color={'#000'}
+                                style={{
+                                    marginRight: 8,
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: 12,
+                                    color: '#000',
+                                    fontFamily: 'inter',
+                                }}
+                            >
+                                Export
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
+        );
+    };
 
     const renderPerformanceOverview = () => {
         const grade = gradebookViewPoints
-            ? studentGradebook.total.pointsScored + '/' + studentGradebook.total.totalPointsPossible
-            : studentGradebook.total.score + '%';
+            ? studentGradebook.total.pointsScored.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') +
+              '/' +
+              studentGradebook.total.totalPointsPossible
+            : studentGradebook.total.score.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '%';
         const gradingScaleOutcome = studentGradebook.total.gradingScaleOutcome
             ? '(' + studentGradebook.total.gradingScaleOutcome + ')'
             : '';
@@ -2389,6 +2398,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             remaining = 100 - (currentElapsed / totalDifference) * 100;
                         }
 
+                        const displayStatus =
+                            !entry.submitted && entry.score !== undefined && entry.score !== null
+                                ? 'Missing'
+                                : entry.submitted && entry.lateSubmission
+                                ? 'Late'
+                                : undefined;
+
                         return (
                             <View
                                 key={ind.toString()}
@@ -2490,7 +2506,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            Not Submitted
+                                            {entry.score !== undefined && entry.score !== null
+                                                ? gradebookViewPoints
+                                                    ? entry.pointsScored
+                                                    : entry.score + '%'
+                                                : 'Not Submitted'}
                                         </Text>
                                     ) : (
                                         <Text
@@ -2509,16 +2529,16 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 : 'Submitted'}
                                         </Text>
                                     )}
-                                    {entry.lateSubmission && entry.score ? (
+                                    {displayStatus ? (
                                         <Text
                                             style={{
                                                 fontSize: 14,
                                                 textAlign: 'center',
-                                                color: '#f3722c',
+                                                color: displayStatus === 'Late' ? '#f3722c' : '#f94144',
                                                 marginLeft: 5,
                                             }}
                                         >
-                                            (Late)
+                                            ({displayStatus})
                                         </Text>
                                     ) : null}
                                 </View>
@@ -2805,6 +2825,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     ? 'Grades are now visible to students.'
                                     : 'Grades are now hidden from students.'
                             );
+                            fetchGradebookInstructor();
                             fetchCourseAssignmentsAnalytics();
                         } else {
                             Alert('Failed to modify status. Try again.');
@@ -3979,8 +4000,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const avgScoreData: any[] = [];
 
-        const studentScoresData: any[] = [];
-
         studentAnalytics.scores.map((score: any) => {
             const id = score.cueId ? score.cueId : score.gradebookEntryId;
 
@@ -3989,13 +4008,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             if (!findAssignment) return;
 
             avgScoreData.push({
-                x: findAssignment.title,
-                y: gradebookViewPoints ? findAssignment.meanPts : findAssignment.mean,
-            });
-
-            studentScoresData.push({
-                x: findAssignment.title,
-                y: gradebookViewPoints ? score.pointsScored : score.score,
+                title: findAssignment.title,
+                avgScore: gradebookViewPoints ? findAssignment.meanPts : findAssignment.mean + '%',
+                studentScore: gradebookViewPoints ? score.pointsScored : score.score + '%',
             });
         });
 
@@ -4153,19 +4168,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         return '';
                                     }}
                                     labelComponent={<VictoryLabel renderInPortal />}
-                                    // labelComponent={
-                                    //     <VictoryLabel
-                                    //         textAnchor="middle"
-                                    //         verticalAnchor="middle"
-                                    //         x={200}
-                                    //         y={200}
-                                    //         text={`${Math.round(
-                                    //             (studentAnalytics.graded / studentAnalytics.sharedWith) * 100
-                                    //         )}%`}
-                                    //         style={{ fontSize: 45 }}
-                                    //     />
-                                    // }
-                                    // labelComponent={<CustomLabel />}
                                 />
                             </View>
                         </View>
@@ -4192,31 +4194,152 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 Student score vs Course Average
                             </Text>
 
-                            <VictoryChart horizontal height={400} width={400} padding={40}>
-                                <VictoryStack style={{ data: { width: 25 }, labels: { fontSize: 15 } }}>
-                                    <VictoryBar
-                                        style={{ data: { fill: 'tomato' } }}
-                                        data={studentScoresData}
-                                        y={(data) => -Math.abs(data.y)}
-                                        labels={({ datum }) => `${Math.abs(datum.y)}${gradebookViewPoints ? '' : '%'}`}
-                                    />
-                                    <VictoryBar
-                                        style={{ data: { fill: 'orange' } }}
-                                        data={avgScoreData}
-                                        labels={({ datum }) => `${Math.abs(datum.y)}${gradebookViewPoints ? '' : '%'}`}
-                                    />
-                                </VictoryStack>
+                            <View
+                                style={{
+                                    marginTop: 20,
+                                    borderColor: '#ccc',
+                                    borderWidth: 1,
+                                    maxHeight: 350,
+                                    overflow: 'scroll',
+                                }}
+                            >
+                                <table className="courseAvgTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <View
+                                                    style={{
+                                                        padding: 3,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 14,
+                                                            color: '#000000',
+                                                            fontFamily: 'inter',
+                                                            marginBottom: 5,
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        Assignment
+                                                    </Text>
+                                                </View>
+                                            </th>
 
-                                <VictoryAxis
-                                    style={{
-                                        axis: { stroke: 'transparent' },
-                                        ticks: { stroke: 'transparent' },
-                                        tickLabels: { fontSize: 15, fill: 'black' },
-                                    }}
-                                    tickLabelComponent={<VictoryLabel x={400 / 2} textAnchor="middle" />}
-                                    tickValues={studentScoresData.map((point) => point.x).reverse()}
-                                />
-                            </VictoryChart>
+                                            <th>
+                                                <View
+                                                    style={{
+                                                        padding: 3,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 14,
+                                                            color: '#000000',
+                                                            fontFamily: 'inter',
+                                                            marginBottom: 5,
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        Course Average
+                                                    </Text>
+                                                </View>
+                                            </th>
+
+                                            <th>
+                                                <View
+                                                    style={{
+                                                        padding: 3,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontSize: 14,
+                                                            color: '#000000',
+                                                            fontFamily: 'inter',
+                                                            marginBottom: 5,
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        Student Score
+                                                    </Text>
+                                                </View>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {avgScoreData.map((data: any) => {
+                                            return (
+                                                <tr>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                padding: 3,
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign: 'center',
+                                                                    fontSize: 14,
+                                                                    color: '#000000',
+                                                                    fontFamily: 'Inter',
+                                                                    marginBottom: 5,
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                {data.title}
+                                                            </Text>
+                                                        </View>
+                                                    </td>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                padding: 3,
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign: 'center',
+                                                                    fontSize: 14,
+                                                                    color: '#000000',
+                                                                    fontFamily: 'overpass',
+                                                                    marginBottom: 5,
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                {data.avgScore}
+                                                            </Text>
+                                                        </View>
+                                                    </td>
+                                                    <td>
+                                                        <View
+                                                            style={{
+                                                                padding: 3,
+                                                            }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign: 'center',
+                                                                    fontSize: 14,
+                                                                    color: '#000000',
+                                                                    fontFamily: 'overpass',
+                                                                    marginBottom: 5,
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                {data.studentScore}
+                                                            </Text>
+                                                        </View>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -4970,7 +5093,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderInstructorView = () => {
         return (
-            <table className="stickyTable">
+            <table className="gradebookTable">
                 {/* First row  */}
                 <thead>
                     <tr>
@@ -5012,70 +5135,256 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {/* All assignments */}
                         {gradebookEntries.map((entry: any, col: number) => {
                             return (
-                                <th
-                                    onClick={() => {
-                                        if (entry.cueId) {
-                                            props.openCueFromGrades(
-                                                props.channelId,
-                                                entry.cueId,
-                                                props.channelCreatedBy
-                                            );
-                                        } else {
-                                            handleEditGradebookEntry(entry.gradebookEntryId);
-                                        }
-                                    }}
-                                    style={{
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontSize: 12,
-                                            color: '#000000',
-                                            marginBottom: 5,
-                                        }}
-                                    >
-                                        {new Date(entry.deadline).toString().split(' ')[1] +
-                                            ' ' +
-                                            new Date(entry.deadline).toString().split(' ')[2]}{' '}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontSize: 14,
-                                            color: '#000000',
-                                            fontFamily: 'inter',
-                                            marginTop: 3,
-                                            // marginBottom: 5,
-                                            // textAlignVertical: 'center',
-                                        }}
-                                        numberOfLines={2}
-                                        ellipsizeMode="tail"
-                                    >
-                                        {entry.title}
-                                    </Text>
-
+                                <th>
                                     <View
                                         style={{
-                                            marginTop: 3,
+                                            flexDirection: 'column',
+                                            width: '100%',
                                         }}
                                     >
-                                        <Ionicons
-                                            name={entry.cueId ? 'open-outline' : 'create-outline'}
-                                            size={15}
-                                            color="#1f1f1f"
+                                        <View
                                             style={{
-                                                fontFamily: 'Inter',
-                                                fontWeight: 'bold',
+                                                width: '100%',
                                             }}
-                                        />
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 14,
+                                                    color: '#000000',
+                                                    fontFamily: 'inter',
+                                                    paddingVertical: 4,
+                                                    flex: 1,
+                                                }}
+                                                numberOfLines={1}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {entry.title}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                marginTop: 5,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 12,
+                                                    color: '#000000',
+                                                    marginRight: 5,
+                                                }}
+                                            >
+                                                {new Date(entry.deadline).toString().split(' ')[1] +
+                                                    ' ' +
+                                                    new Date(entry.deadline).toString().split(' ')[2]}{' '}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 12,
+                                                    color: '#000000',
+                                                    marginRight: 5,
+                                                }}
+                                            >
+                                                {'•'}
+                                            </Text>
+
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: 12,
+                                                    color: '#000000',
+                                                }}
+                                            >
+                                                {entry.gradeWeight}
+                                                {'%'}
+                                            </Text>
+                                        </View>
+                                        {/* <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                marginTop: 3,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    marginRight: 5,
+                                                }}
+                                            >
+                                                <Ionicons
+                                                    name={entry.cueId ? 'open-outline' : 'create-outline'}
+                                                    size={15}
+                                                    color="#1f1f1f"
+                                                />
+                                            </View>
+
+                                            {entry.releaseSubmission ? (
+                                                <Tooltip
+                                                    // backgroundColor={'#f8f8f8'}
+                                                    popover={
+                                                        <Text
+                                                            style={{
+                                                                color: 'white',
+                                                            }}
+                                                        >
+                                                            Visible to students
+                                                        </Text>
+                                                    }
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                        }}
+                                                    >
+                                                        <Ionicons name={'eye-outline'} size={15} color="#1f1f1f" />
+                                                    </Text>
+                                                </Tooltip>
+                                            ) : (
+                                                <Tooltip
+                                                    // backgroundColor={'#f8f8f8'}
+                                                    popover={
+                                                        <Text
+                                                            style={{
+                                                                color: 'white',
+                                                            }}
+                                                        >
+                                                            Hidden from students
+                                                        </Text>
+                                                    }
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                        }}
+                                                    >
+                                                        <Ionicons name={'eye-off-outline'} size={15} color="#1f1f1f" />
+                                                    </Text>
+                                                </Tooltip>
+                                            )}
+                                        </View> */}
                                     </View>
                                 </th>
                             );
                         })}
                     </tr>
                 </thead>
+                {/* Footer */}
+                <tfoot>
+                    <tr>
+                        {/* First cell will contain search bar */}
+                        <th></th>
+                        {/* Total column */}
+                        <th></th>
+                        {/* All assignments */}
+                        {gradebookEntries.map((entry: any, col: number) => {
+                            return (
+                                <th
+                                // onClick={() => {
+                                //     if (entry.cueId) {
+                                //         props.openCueFromGrades(
+                                //             props.channelId,
+                                //             entry.cueId,
+                                //             props.channelCreatedBy
+                                //         );
+                                //     } else {
+                                //         handleEditGradebookEntry(entry.gradebookEntryId);
+                                //     }
+                                // }}
+                                // style={{
+                                //     cursor: 'pointer',
+                                // }}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                if (entry.cueId) {
+                                                    props.openCueFromGrades(
+                                                        props.channelId,
+                                                        entry.cueId,
+                                                        props.channelCreatedBy
+                                                    );
+                                                } else {
+                                                    handleEditGradebookEntry(entry.gradebookEntryId);
+                                                }
+                                            }}
+                                            style={{
+                                                // backgroundColor: '#fff',
+                                                borderRadius: 12,
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingHorizontal: 8,
+                                                paddingVertical: 4,
+                                            }}
+                                        >
+                                            <Ionicons
+                                                name={entry.cueId ? 'open-outline' : 'create-outline'}
+                                                size={12}
+                                                color="#000"
+                                            />
+                                            <Text
+                                                style={{
+                                                    marginLeft: 5,
+                                                    color: '#000',
+                                                    fontSize: 12,
+                                                }}
+                                            >
+                                                Open
+                                            </Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                modifyReleaseSubmission(
+                                                    entry.cueId ? entry.cueId : entry.gradebookEntryId,
+                                                    entry.cueId ? 'cue' : 'gradebook',
+                                                    !entry.releaseSubmission,
+                                                    new Date(entry.deadline) < new Date()
+                                                );
+                                            }}
+                                            style={{
+                                                borderRadius: 12,
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                paddingHorizontal: 8,
+                                                paddingVertical: 4,
+                                                marginLeft: 10,
+                                            }}
+                                        >
+                                            <Ionicons
+                                                name={!entry.releaseSubmission ? 'eye-outline' : 'eye-off-outline'}
+                                                size={12}
+                                                color="#000"
+                                            />
+                                            <Text
+                                                style={{
+                                                    marginLeft: 5,
+                                                    color: '#000',
+                                                    fontSize: 12,
+                                                }}
+                                            >
+                                                {entry.releaseSubmission ? 'Hide' : 'Share'}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </th>
+                            );
+                        })}
+                    </tr>
+                </tfoot>
                 {/* Main Body */}
                 <tbody>
                     {instructorGradebook.users.length === 0 ? (
@@ -5150,8 +5459,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }}
                                         >
                                             {gradebookViewPoints
-                                                ? userTotals.pointsScored + ' / ' + userTotals.totalPointsPossible
-                                                : userTotals.score + '%'}
+                                                ? userTotals.pointsScored
+                                                      .toFixed(2)
+                                                      .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') +
+                                                  ' / ' +
+                                                  userTotals.totalPointsPossible
+                                                : userTotals.score
+                                                      .toFixed(2)
+                                                      .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '%'}
                                         </Text>
                                         <Text
                                             style={{
@@ -5167,6 +5482,17 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 {/* Other scores */}
                                 {gradebookEntries.map((entry: any, col: number) => {
                                     const userScore = entry.scores.find((x: any) => x.userId === user.userId);
+
+                                    console.log('User Score', userScore);
+
+                                    const displayStatus =
+                                        !userScore.submitted &&
+                                        userScore.score !== undefined &&
+                                        userScore.score !== null
+                                            ? 'Missing'
+                                            : userScore.submitted && userScore.lateSubmission
+                                            ? 'Late'
+                                            : undefined;
 
                                     if (
                                         (activeModifyId === entry.cueId || activeModifyId === entry.gradebookEntryId) &&
@@ -5270,7 +5596,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     );
                                                 }}
                                             >
-                                                {!userScore || !userScore.submitted ? (
+                                                {!userScore || !userScore.submitted || !userScore.graded ? (
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
@@ -5278,7 +5604,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             color: '#f94144',
                                                         }}
                                                     >
-                                                        {!userScore ? 'N/A' : 'Not Submitted'}
+                                                        {!userScore
+                                                            ? 'N/A'
+                                                            : userScore.score !== undefined && userScore.score !== null
+                                                            ? gradebookViewPoints
+                                                                ? userScore.pointsScored
+                                                                : userScore.score + '%'
+                                                            : 'Not Submitted'}
                                                     </Text>
                                                 ) : (
                                                     <Text
@@ -5301,24 +5633,19 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </Text>
                                                 )}
 
-                                                {userScore &&
-                                                userScore.submitted &&
-                                                userScore.score &&
-                                                userScore.lateSubmission ? (
+                                                {displayStatus ? (
                                                     <Text
                                                         style={{
                                                             textAlign: 'center',
-                                                            fontSize: 13,
-                                                            color: '#f3722c',
+                                                            fontSize: 11,
+                                                            color: displayStatus === 'Late' ? '#f3722c' : '#f94144',
                                                             marginTop: 5,
                                                             borderWidth: 0,
-                                                            borderColor: '#f3722c',
                                                             borderRadius: 10,
-                                                            width: 60,
                                                             alignSelf: 'center',
                                                         }}
                                                     >
-                                                        (Late)
+                                                        ({displayStatus})
                                                     </Text>
                                                 ) : null}
                                             </TouchableOpacity>
@@ -6973,6 +7300,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             >
                                 Scores
                             </Text>
+
                             {standardsBasedScale ? null : renderSwitchGradebookViewpoints()}
                         </View>
                         {isFetchingGradebook ? (
@@ -7526,7 +7854,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderSwitchGradebookViewpoints = () => {
         return (
-            <View>
+            <View
+                style={{
+                    marginLeft: 'auto',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                }}
+            >
+                {renderExportButton()}
                 {selectedGradebookMode === 'assignments' ? (
                     <View
                         style={{
@@ -7688,7 +8023,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                 )
             ) : null}
-            {/* {renderExportButton()} */}
 
             {selectedGradebookMode === 'assignments' ? renderAssignmentsGradebook() : renderStandardsGradebook()}
 
@@ -7702,7 +8036,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                       text: 'Update',
                                       color: 'dark',
                                       handler: function (event) {
-                                          // props.onSend(message, customCategory, isPrivate);
                                           handleUpdateStandardsScore();
                                       },
                                       disabled: user.email === disableEmailId,

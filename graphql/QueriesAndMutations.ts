@@ -780,6 +780,9 @@ export const findUserById = gql`
                 userCreatedOrg
                 createdAt
                 googleIntegrated
+                adminInfo {
+                    role
+                }
             }
         }
     }
@@ -1165,6 +1168,7 @@ export const getEvents = gql`
                 isNonChannelMeeting
                 nonChannelGroupId
                 groupUsername
+                schoolwide
             }
         }
     }
@@ -1853,6 +1857,9 @@ export const getActivity = gql`
                 createdBy
                 target
                 threadId
+                creatorAvatar
+                creatorProfile
+                createdAt
             }
         }
     }
@@ -2132,6 +2139,7 @@ export const getGradebookInstructor = gql`
                         score
                         submittedAt
                         lateSubmission
+                        graded
                     }
                 }
                 totals {

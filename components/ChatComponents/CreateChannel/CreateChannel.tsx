@@ -356,7 +356,6 @@ const CreateChannel = (props: Props) => {
 
     // DIRECTORY
     const [isFetchingDirectory, setIsFetchingDirectory] = useState(true);
-    const [roleDropdownsOptions, setRoleDropdownOptions] = useState<any[]>([]);
     const [courseDropdownOptions, setCourseDropdownOptions] = useState<any[]>([]);
     const [filterBySelected, setFilterBySelected] = useState('courses');
     const [directory, setDirectory] = useState<any>(undefined);

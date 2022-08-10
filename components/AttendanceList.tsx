@@ -55,6 +55,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const [studentSearch, setStudentSearch] = useState('');
 
+    const [exportAoa, setExportAoa] = useState<any[]>([]);
+    const [exportError, setExportError] = useState('');
     const [showEditMeetingModal, setShowEditMeetingModal] = useState(false);
     const [editMeetingTopic, setEditMeetingTopic] = useState('');
     const [editMeetingRecordingLink, setEditMeetingRecordingLink] = useState('');
@@ -259,69 +261,104 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, []);
 
+    /**
+     * @description Handles exporting of grades into Spreadsheet
+     */
+    const exportAttendances = useCallback(() => {
+        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xlsx';
+
+        console.log('Export AoA', exportAoa);
+        if (exportError) {
+            Alert(exportError);
+            return;
+        }
+
+        const ws = XLSX.utils.aoa_to_sheet(exportAoa);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendances ');
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, 'attendances' + fileExtension);
+    }, [exportAoa, exportError]);
+
     // /**
     //  * @description Create Structure for exporting attendance data in Spreadsheet
     //  */
-    // useEffect(() => {
-    //     if (allChannelAttendances.length === 0 || pastMeetings.length === 0) {
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!instructorAttendanceBook) {
+            return;
+        }
 
-    //     // Calculate total for each student and add it to the end
-    //     const studentTotalMap: any = {};
+        if (instructorAttendanceBook.entries.length === 0) {
+            setExportError('No attendance entries found.');
+            return;
+        }
 
-    //     allChannelAttendances.forEach((att) => {
-    //         let count = 0;
-    //         pastMeetings.forEach((meeting) => {
-    //             const attendanceObject = att.attendances.find((s: any) => {
-    //                 return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-    //             });
+        if (instructorAttendanceBook.users.length === 0) {
+            setExportError('No students in course.');
+            return;
+        }
 
-    //             if (attendanceObject) count++;
-    //         });
+        // Calculate total for each student and add it to the end
+        const exportAoa = [];
 
-    //         studentTotalMap[att.userId] = count;
-    //     });
+        let row1 = ['Student', 'Total'];
+        let row2 = ['', ''];
 
-    //     setAttendanceTotalMap(studentTotalMap);
+        instructorAttendanceBook.entries.forEach((entry: any) => {
+            const { title, start } = entry;
 
-    //     const exportAoa = [];
+            row1.push(title);
 
-    //     // Add row 1 with past meetings and total
-    //     let row1 = [''];
+            let formattedStart =
+                new Date(start).toString().split(' ')[1] + ' ' + new Date(start).toString().split(' ')[2];
 
-    //     pastMeetings.forEach((meeting) => {
-    //         row1.push(moment(new Date(meeting.start)).format('MMM Do, h:mm a'));
-    //     });
+            row2.push(`${formattedStart}`);
+        });
 
-    //     row1.push('Total');
+        exportAoa.push(row1);
+        exportAoa.push(row2);
 
-    //     exportAoa.push(row1);
+        instructorAttendanceBook.users.forEach((user: any) => {
+            let studentRow = [];
 
-    //     allChannelAttendances.forEach((att) => {
-    //         let userRow = [];
+            const userTotals = instructorAttendanceBook.totals.find((x: any) => x.userId === user.userId);
 
-    //         userRow.push(att.fullName);
+            studentRow.push(user.fullName);
 
-    //         pastMeetings.forEach((meeting) => {
-    //             const attendanceObject = att.attendances.find((s: any) => {
-    //                 return s.dateId.toString().trim() === meeting.dateId.toString().trim();
-    //             });
+            studentRow.push(userTotals.totalPresent + ' / ' + userTotals.totalAttendancesPossible);
 
-    //             if (attendanceObject) {
-    //                 userRow.push(`Joined at ${moment(new Date(attendanceObject.joinedAt)).format('MMM Do, h:mm a')}`);
-    //             } else {
-    //                 userRow.push('-');
-    //             }
-    //         });
+            instructorAttendanceBook.entries.map((entry: any) => {
+                const userAttendance = entry.attendances.find((x: any) => x.userId === user.userId);
 
-    //         userRow.push(`${studentTotalMap[att.userId]} / ${pastMeetings.length}`);
+                if (!userAttendance) {
+                    studentRow.push('Absent');
+                } else {
+                    let attendanceString = '';
 
-    //         exportAoa.push(userRow);
-    //     });
+                    if (userAttendance.attendanceType === 'present') {
+                        attendanceString = 'Present';
+                        if (userAttendance.late) {
+                            attendanceString += ' (late)';
+                        }
+                    } else {
+                        attendanceString = 'Absent';
 
-    //     setExportAoa(exportAoa);
-    // }, [allChannelAttendances, pastMeetings]);
+                        if (userAttendance.excused) {
+                            attendanceString += ' (excused)';
+                        }
+                    }
+
+                    studentRow.push(attendanceString);
+                }
+            });
+
+            exportAoa.push(studentRow);
+        });
+
+        setExportAoa(exportAoa);
+    }, [instructorAttendanceBook]);
 
     useEffect(() => {
         if (props.isOwner && props.channelId) {
@@ -807,20 +844,57 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         setNewStudentAttendances(studentAttendances);
     };
 
-    // /**
-    //  * @description Export attendance data into spreadsheet
-    //  */
-    // const exportAttendance = () => {
-    //     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    //     const fileExtension = '.xlsx';
-    //     const ws = XLSX.utils.aoa_to_sheet(exportAoa);
-    //     const wb = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(wb, ws, 'Attendance ');
-    //     /* generate XLSX file and send to client */
-    //     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    //     const data = new Blob([excelBuffer], { type: fileType });
-    //     FileSaver.saveAs(data, 'attendances' + fileExtension);
-    // };
+    const renderExportButton = () => {
+        return (
+            <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                        width: '100%',
+                        backgroundColor: '#fff',
+                        marginRight: 20,
+                    }}
+                >
+                    {!props.isOwner ? null : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                exportAttendances();
+                            }}
+                            style={{
+                                backgroundColor: '#f8f8f8',
+                                paddingHorizontal: 14,
+                                paddingVertical: 7,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                borderRadius: 15,
+                            }}
+                        >
+                            <Ionicons
+                                name="download-outline"
+                                color={'#000'}
+                                style={{
+                                    marginRight: 8,
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: 12,
+                                    color: '#000',
+                                    fontFamily: 'inter',
+                                }}
+                            >
+                                Export
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
+        );
+    };
 
     /**
      * @description Round time to nearest seconds
@@ -2461,32 +2535,40 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         Attendances
                     </Text>
 
-                    <TouchableOpacity
-                        style={{}}
-                        onPress={() => {
-                            props.setShowNewAttendance(true);
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
                         }}
                     >
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                textAlign: 'center',
-                                borderColor: '#000',
-                                borderWidth: 1,
-                                color: '#fff',
-                                backgroundColor: '#000',
-                                fontSize: 12,
-                                paddingHorizontal: 24,
-                                fontFamily: 'inter',
-                                overflow: 'hidden',
-                                paddingVertical: 14,
-                                textTransform: 'uppercase',
-                                width: 100,
+                        {renderExportButton()}
+                        <TouchableOpacity
+                            style={{}}
+                            onPress={() => {
+                                props.setShowNewAttendance(true);
                             }}
                         >
-                            New
-                        </Text>
-                    </TouchableOpacity>
+                            <Text
+                                style={{
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    borderColor: '#000',
+                                    borderWidth: 1,
+                                    color: '#fff',
+                                    backgroundColor: '#000',
+                                    fontSize: 12,
+                                    paddingHorizontal: 24,
+                                    fontFamily: 'inter',
+                                    overflow: 'hidden',
+                                    paddingVertical: 14,
+                                    textTransform: 'uppercase',
+                                    width: 100,
+                                }}
+                            >
+                                New
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {isFetchingAttendanceBook ? (

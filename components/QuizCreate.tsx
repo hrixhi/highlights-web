@@ -1139,6 +1139,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             if (hasMissingOption) {
                 Alert(`Part A option is empty in question ${index + 1}`);
+                return;
             }
 
             if (currentQuestion.multipartOptions[0].length < 2) {
@@ -1158,12 +1159,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             });
 
             if (!hasOneCorrect) {
-                Alert(`Part A must have at least one correct choice in question ${index + 1}`);
+                Alert(`Part B must have at least one correct choice in question ${index + 1}`);
                 return;
             }
 
             if (hasMissingOption) {
-                Alert(`Part A option is empty in question ${index + 1}`);
+                Alert(`Part B option is empty in question ${index + 1}`);
+                return;
             }
         }
 
@@ -2488,6 +2490,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         value={choice.option}
                                                         placeholder=""
                                                         onChangeText={(text) => {
+                                                            if (
+                                                                problems[index].textEntryOptions[choiceIndex].type ===
+                                                                    'number' &&
+                                                                Number.isNaN(Number(text))
+                                                            ) {
+                                                                Alert('You must enter a numeric value for this entry.');
+                                                                return;
+                                                            }
+
                                                             const updatedProblems = [...problems];
                                                             updatedProblems[index].textEntryOptions[
                                                                 choiceIndex
@@ -2530,6 +2541,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 updatedProblems[index].textEntryOptions[
                                                                     choiceIndex
                                                                 ].type = val.value;
+
+                                                                const currentAnswer =
+                                                                    updatedProblems[index].textEntryOptions[choiceIndex]
+                                                                        .option;
+
+                                                                if (
+                                                                    val.value === 'number' &&
+                                                                    Number.isNaN(Number(currentAnswer))
+                                                                ) {
+                                                                    updatedProblems[index].textEntryOptions[
+                                                                        choiceIndex
+                                                                    ].option = '';
+                                                                }
+
                                                                 setProblems(updatedProblems);
                                                                 props.setProblems(updatedProblems);
                                                             }}
@@ -4132,6 +4157,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         setProblems(updateProblems);
                                         props.setProblems(updateProblems);
                                     }}
+                                    isOwner={true}
                                 />
                             </View>
                         ) : null}

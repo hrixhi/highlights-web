@@ -20,10 +20,13 @@ vex.registerPlugin(require('vex-dialog'));
 vex.defaultOptions.className = 'vex-theme-os';
 
 const Alert = (title: any, description?: any, options?: any) => {
-    if (!description && !options) {
+    if (!options) {
         vex.dialog.alert({
             className: 'vex-theme-os',
-            message: title,
+            unsafeMessage:
+                !description || description === ''
+                    ? `<p>${title}</p>`
+                    : `<p>${title}</p><div class="description"><p >${description}</p></div>`,
         });
         return;
     }
