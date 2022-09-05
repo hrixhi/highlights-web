@@ -38,24 +38,6 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
     const [openMessageId, setOpenMessageId] = useState('');
     const [openChannelId, setOpenChannelId] = useState('');
 
-    // useEffect(() => {
-    //     window.addEventListener('offline', () => {
-    //         setOnlineStatus(false);
-    //     });
-    //     window.addEventListener('online', () => {
-    //         setOnlineStatus(true);
-    //     });
-
-    //     return () => {
-    //         window.removeEventListener('offline', () => {
-    //             setOnlineStatus(false);
-    //         });
-    //         window.removeEventListener('online', () => {
-    //             setOnlineStatus(true);
-    //         });
-    //     };
-    // }, []);
-
     const setCuesHelper = (data: any[]) => {
         let sanitizedCues: any[] = [];
 

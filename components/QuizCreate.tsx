@@ -1142,8 +1142,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 return;
             }
 
-            if (currentQuestion.multipartOptions[0].length < 2) {
-                Alert(`Part A must have at least two choices in question ${index + 1}`);
+            hasOneCorrect = false;
+            hasMissingOption = false;
+
+            if (currentQuestion.multipartOptions[1].length < 2) {
+                Alert(`Part B must have at least two choices in question ${index + 1}`);
                 return;
             }
 

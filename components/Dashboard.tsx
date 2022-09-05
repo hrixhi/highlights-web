@@ -1882,7 +1882,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {Dimensions.get('window').width < 1024 && Dimensions.get('window').width >= 768 ? null : (
                             <Text
                                 style={{
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontFamily: 'Inter',
                                     marginRight: 75,
                                     color: Dimensions.get('window').width < 768 ? '#000' : '#fff',
@@ -2072,7 +2072,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 >
                                                     <Text
                                                         style={{
-                                                            fontSize: 20,
+                                                            fontSize: 18,
                                                             paddingVertical: 25,
                                                             fontFamily: 'inter',
                                                             flex: 1,
@@ -2339,7 +2339,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 color: '#1F1F1F',
                                                                 fontSize: 14,
                                                                 lineHeight: 25,
-                                                                fontFamily: 'inter',
+                                                                fontFamily: 'overpass',
                                                                 backgroundColor: '#fff',
                                                             }}
                                                             ellipsizeMode="tail"
@@ -2530,10 +2530,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 paddingHorizontal: 10,
                                 width: 300,
                                 color: '#000',
-                                fontSize: 15,
+                                fontSize: 13,
                                 flex: 1,
                                 paddingVertical: 8,
                                 marginRight: searchTerm === '' ? 10 : 15,
+                                fontFamily: 'overpass',
                             }}
                             placeholder={'Search'}
                             placeholderTextColor="#656565"
@@ -2682,7 +2683,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 resizeMode={'contain'}
                             />
                         ) : null}
-
+                        {/* 
                         {Dimensions.get('window').width < 768 ? null : (
                             <TouchableOpacity
                                 style={{ backgroundColor: 'none', marginRight: 15 }}
@@ -2705,7 +2706,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     />
                                 </Text>
                             </TouchableOpacity>
-                        )}
+                        )} */}
 
                         <View
                             style={{

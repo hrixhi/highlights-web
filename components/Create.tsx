@@ -247,7 +247,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [showBooks, isQuiz]);
 
     console.log('Show Books', showBooks);
-    console.log('Props.createActiveTab', props.createActiveTab);
+    // console.log('THis will work');
 
     /**
      * @description
@@ -803,8 +803,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     return;
                 }
 
-                if (problem.multipartOptions[0].length < 2) {
-                    Alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                hasOneCorrect = false;
+                hasMissingOption = false;
+
+                if (problem.multipartOptions[1].length < 2) {
+                    Alert(`Part B must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 

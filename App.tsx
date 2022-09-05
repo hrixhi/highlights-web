@@ -1,4 +1,5 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import 'flowbite';
 
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation/Navigator';
 import * as SplashScreen from 'expo-splash-screen';
+import './styles';
 import './web/htmlParser.css';
 import './web/mobiscrollCustom.css';
 import './web/vex.css';
@@ -20,7 +22,10 @@ import { onError } from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppClient } from './hooks/initClient';
 import { AppContextProvider } from './contexts/AppContext';
+import { NavigationContextProvider } from './contexts/NavigationContext';
 import { apiURL, origin } from './constants/zoomCredentials';
+
+import LinkingConfiguration from './navigation/Linking';
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
@@ -130,14 +135,16 @@ export default function App() {
                     }}
                     key={userId}
                 >
-                    <SafeAreaProvider style={styles.font}>
-                        <MenuProvider>
-                            <LanguageProvider>
-                                <Navigation colorScheme={colorScheme} />
-                            </LanguageProvider>
-                        </MenuProvider>
-                        <StatusBar />
-                    </SafeAreaProvider>
+                    <NavigationContextProvider>
+                        <SafeAreaProvider style={styles.font}>
+                            <MenuProvider>
+                                <LanguageProvider>
+                                    <Navigation colorScheme={colorScheme} />
+                                </LanguageProvider>
+                            </MenuProvider>
+                            <StatusBar />
+                        </SafeAreaProvider>
+                    </NavigationContextProvider>
                 </AppContextProvider>
             </ApolloProvider>
         );

@@ -8,6 +8,9 @@
       It's optimized for gestures by disabling global zoom.
      -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SDGX8SYLT"></script>
+        <script src="../node_modules/flowbite/dist/flowbite.js"></script>
+        <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> -->
+
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag() {
@@ -16,6 +19,17 @@
             gtag('js', new Date());
 
             gtag('config', 'G-4SDGX8SYLT');
+        </script>
+        <script>
+            // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+            if (
+                localStorage.getItem('color-theme') === 'dark' ||
+                (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         </script>
 
         <meta
@@ -54,6 +68,7 @@
                 -webkit-text-size-adjust: 100%;
                 height: 100%;
                 overflow: hidden;
+                background-color: #fff;
             }
 
             body {
@@ -67,7 +82,6 @@
                 -ms-overflow-style: none !important;
                 scrollbar-width: none !important;
                 user-select: text !important;
-                font-family: 'overpass';
             }
 
             button,
@@ -106,9 +120,9 @@
                 color: #1f1f1f;
             }
 
-            textarea {
+            /* textarea {
                 font-family: 'overpass' !important;
-            }
+            } */
 
             button,
             input,
@@ -137,8 +151,8 @@
                 margin-block-start: 0 !important;
                 margin-block-end: 0 !important;
                 background-color: none !important;
-                font-family: overpass;
-                font-size: 16px;
+                /* font-family: overpass; */
+                /* font-size: 16px; */
             }
 
             h1,
@@ -180,6 +194,7 @@
             };
         </script>
         <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
+        <script src="../node_modules/flowbite/dist/flowbite.js"></script>
         <!-- 
       A generic no script element with a reload button and a message.
       Feel free to customize this however you'd like.

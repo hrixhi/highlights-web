@@ -1316,11 +1316,17 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             studentRow.push(user.fullName);
 
-            studentRow.push(
-                gradebookViewPoints
-                    ? userTotals.pointsScored + ' / ' + userTotals.totalPointsPossible
-                    : userTotals.score + '%'
-            );
+            if (!userTotals) {
+                studentRow.push(gradebookViewPoints ? '0 / 0' : '0%');
+            } else {
+                studentRow.push(
+                    gradebookViewPoints
+                        ? userTotals.pointsScored.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') +
+                              ' / ' +
+                              userTotals.totalPointsPossible
+                        : userTotals.score.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '%'
+                );
+            }
 
             instructorGradebook.entries.map((entry: any, col: number) => {
                 const userScore = entry.scores.find((x: any) => x.userId === user.userId);
@@ -2398,12 +2404,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             remaining = 100 - (currentElapsed / totalDifference) * 100;
                         }
 
-                        const displayStatus =
-                            !entry.submitted && entry.score !== undefined && entry.score !== null
-                                ? 'Missing'
-                                : entry.submitted && entry.lateSubmission
-                                ? 'Late'
-                                : undefined;
+                        const displayStatus = !entry
+                            ? undefined
+                            : !entry.submitted && entry.score !== undefined && entry.score !== null
+                            ? 'Missing'
+                            : entry.submitted && entry.lateSubmission
+                            ? 'Late'
+                            : undefined;
 
                         return (
                             <View
@@ -4135,13 +4142,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }}
                             >
                                 <VictoryPie
-                                    colorScale={['tomato', 'orange', 'green']}
+                                    colorScale={['tomato', 'orange', 'green', '#0450b4']}
                                     data={[
                                         {
                                             x: 1,
                                             y:
                                                 studentAnalytics.sharedWith -
-                                                studentAnalytics.graded -
+                                                studentAnalytics.gradedAndReleased -
+                                                studentAnalytics.gradedAndNotReleased -
                                                 studentAnalytics.submitted,
                                         },
                                         {
@@ -4150,7 +4158,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         },
                                         {
                                             x: 3,
-                                            y: studentAnalytics.graded,
+                                            y: studentAnalytics.gradedAndReleased,
+                                        },
+                                        {
+                                            x: 4,
+                                            y: studentAnalytics.gradedAndNotReleased,
                                         },
                                     ]}
                                     style={{ labels: { fill: 'black', fontSize: 20 }, parent: { overflow: 'visible' } }}
@@ -4161,8 +4173,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 return datum.y + ' Not submitted';
                                             } else if (datum.x === 2) {
                                                 return datum.y + ' Submitted';
+                                            } else if (datum.x === 3) {
+                                                return datum.y + ' Graded (Released)';
                                             } else {
-                                                return datum.y + ' Graded';
+                                                return datum.y + ' Graded (Unreleased)';
                                             }
                                         }
                                         return '';
@@ -4271,6 +4285,24 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {avgScoreData.length === 0 ? (
+                                            <tr>
+                                                <View
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: 7,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: 'Overpass',
+                                                        }}
+                                                    >
+                                                        No assignment data to display.
+                                                    </Text>
+                                                </View>
+                                            </tr>
+                                        ) : null}
                                         {avgScoreData.map((data: any) => {
                                             return (
                                                 <tr>
@@ -5135,7 +5167,22 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {/* All assignments */}
                         {gradebookEntries.map((entry: any, col: number) => {
                             return (
-                                <th>
+                                <th
+                                    onClick={() => {
+                                        if (entry.cueId) {
+                                            props.openCueFromGrades(
+                                                props.channelId,
+                                                entry.cueId,
+                                                props.channelCreatedBy
+                                            );
+                                        } else {
+                                            handleEditGradebookEntry(entry.gradebookEntryId);
+                                        }
+                                    }}
+                                    style={{
+                                        cursor: 'pointer',
+                                    }}
+                                >
                                     <View
                                         style={{
                                             flexDirection: 'column',
@@ -5144,29 +5191,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     >
                                         <View
                                             style={{
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: 14,
-                                                    color: '#000000',
-                                                    fontFamily: 'inter',
-                                                    paddingVertical: 4,
-                                                    flex: 1,
-                                                }}
-                                                numberOfLines={1}
-                                                ellipsizeMode="tail"
-                                            >
-                                                {entry.title}
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                marginTop: 5,
                                             }}
                                         >
                                             <Text
@@ -5203,7 +5230,27 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {'%'}
                                             </Text>
                                         </View>
-                                        {/* <View
+                                        <View
+                                            style={{
+                                                width: '100%',
+                                                marginTop: 5,
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 14,
+                                                    color: '#000000',
+                                                    fontFamily: 'inter',
+                                                    flex: 1,
+                                                }}
+                                                numberOfLines={1}
+                                                ellipsizeMode="tail"
+                                            >
+                                                {entry.title}
+                                            </Text>
+                                        </View>
+
+                                        <View
                                             style={{
                                                 flexDirection: 'row',
                                                 alignItems: 'center',
@@ -5211,62 +5258,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 marginTop: 3,
                                             }}
                                         >
-                                            <View
-                                                style={{
-                                                    marginRight: 5,
-                                                }}
-                                            >
+                                            <View>
                                                 <Ionicons
                                                     name={entry.cueId ? 'open-outline' : 'create-outline'}
                                                     size={15}
                                                     color="#1f1f1f"
                                                 />
                                             </View>
-
-                                            {entry.releaseSubmission ? (
-                                                <Tooltip
-                                                    // backgroundColor={'#f8f8f8'}
-                                                    popover={
-                                                        <Text
-                                                            style={{
-                                                                color: 'white',
-                                                            }}
-                                                        >
-                                                            Visible to students
-                                                        </Text>
-                                                    }
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        <Ionicons name={'eye-outline'} size={15} color="#1f1f1f" />
-                                                    </Text>
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip
-                                                    // backgroundColor={'#f8f8f8'}
-                                                    popover={
-                                                        <Text
-                                                            style={{
-                                                                color: 'white',
-                                                            }}
-                                                        >
-                                                            Hidden from students
-                                                        </Text>
-                                                    }
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        <Ionicons name={'eye-off-outline'} size={15} color="#1f1f1f" />
-                                                    </Text>
-                                                </Tooltip>
-                                            )}
-                                        </View> */}
+                                        </View>
                                     </View>
                                 </th>
                             );
@@ -5283,68 +5282,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {/* All assignments */}
                         {gradebookEntries.map((entry: any, col: number) => {
                             return (
-                                <th
-                                // onClick={() => {
-                                //     if (entry.cueId) {
-                                //         props.openCueFromGrades(
-                                //             props.channelId,
-                                //             entry.cueId,
-                                //             props.channelCreatedBy
-                                //         );
-                                //     } else {
-                                //         handleEditGradebookEntry(entry.gradebookEntryId);
-                                //     }
-                                // }}
-                                // style={{
-                                //     cursor: 'pointer',
-                                // }}
-                                >
+                                <th>
                                     <View
                                         style={{
                                             flexDirection: 'row',
                                             justifyContent: 'center',
-                                            alignItems: 'center',
                                             width: '100%',
                                         }}
                                     >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                if (entry.cueId) {
-                                                    props.openCueFromGrades(
-                                                        props.channelId,
-                                                        entry.cueId,
-                                                        props.channelCreatedBy
-                                                    );
-                                                } else {
-                                                    handleEditGradebookEntry(entry.gradebookEntryId);
-                                                }
-                                            }}
-                                            style={{
-                                                // backgroundColor: '#fff',
-                                                borderRadius: 12,
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                paddingHorizontal: 8,
-                                                paddingVertical: 4,
-                                            }}
-                                        >
-                                            <Ionicons
-                                                name={entry.cueId ? 'open-outline' : 'create-outline'}
-                                                size={12}
-                                                color="#000"
-                                            />
-                                            <Text
-                                                style={{
-                                                    marginLeft: 5,
-                                                    color: '#000',
-                                                    fontSize: 12,
-                                                }}
-                                            >
-                                                Open
-                                            </Text>
-                                        </TouchableOpacity>
-
                                         <TouchableOpacity
                                             onPress={() => {
                                                 modifyReleaseSubmission(
@@ -5364,11 +5309,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 marginLeft: 10,
                                             }}
                                         >
-                                            <Ionicons
-                                                name={!entry.releaseSubmission ? 'eye-outline' : 'eye-off-outline'}
-                                                size={12}
-                                                color="#000"
-                                            />
                                             <Text
                                                 style={{
                                                     marginLeft: 5,
@@ -5376,7 +5316,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     fontSize: 12,
                                                 }}
                                             >
-                                                {entry.releaseSubmission ? 'Hide' : 'Share'}
+                                                {entry.releaseSubmission ? 'Hide grades' : 'Share grades'}
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -5408,6 +5348,26 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     {/* Enter no students message if there is none */}
                     {gradebookUsers.map((user: any, row: number) => {
                         const userTotals = instructorGradebook.totals.find((x: any) => x.userId === user.userId);
+
+                        let total;
+
+                        if (!userTotals) {
+                            total = gradebookViewPoints ? '0 / 0' : '0%';
+                        } else {
+                            total = gradebookViewPoints
+                                ? userTotals.pointsScored.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') +
+                                  ' / ' +
+                                  userTotals.totalPointsPossible
+                                : userTotals.score.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '%';
+                        }
+
+                        let gradingScaleOutcome;
+
+                        if (userTotals) {
+                            gradingScaleOutcome = userTotals.gradingScaleOutcome
+                                ? '(' + userTotals.gradingScaleOutcome + ')'
+                                : null;
+                        }
 
                         return (
                             <tr style={{}} key={user.userId}>
@@ -5458,41 +5418,34 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textTransform: 'uppercase',
                                             }}
                                         >
-                                            {gradebookViewPoints
-                                                ? userTotals.pointsScored
-                                                      .toFixed(2)
-                                                      .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') +
-                                                  ' / ' +
-                                                  userTotals.totalPointsPossible
-                                                : userTotals.score
-                                                      .toFixed(2)
-                                                      .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '%'}
+                                            {total}
                                         </Text>
-                                        <Text
-                                            style={{
-                                                marginLeft: 5,
-                                            }}
-                                        >
-                                            {userTotals.gradingScaleOutcome
-                                                ? '(' + userTotals.gradingScaleOutcome + ')'
-                                                : null}
-                                        </Text>
+                                        {gradingScaleOutcome ? (
+                                            <Text
+                                                style={{
+                                                    marginLeft: 5,
+                                                }}
+                                            >
+                                                ({gradingScaleOutcome})
+                                            </Text>
+                                        ) : null}
                                     </View>
                                 </td>
                                 {/* Other scores */}
                                 {gradebookEntries.map((entry: any, col: number) => {
                                     const userScore = entry.scores.find((x: any) => x.userId === user.userId);
 
-                                    console.log('User Score', userScore);
+                                    const deadlinePassed = new Date() > new Date(entry.deadline);
 
-                                    const displayStatus =
-                                        !userScore.submitted &&
-                                        userScore.score !== undefined &&
-                                        userScore.score !== null
-                                            ? 'Missing'
-                                            : userScore.submitted && userScore.lateSubmission
-                                            ? 'Late'
-                                            : undefined;
+                                    const displayStatus = !userScore
+                                        ? undefined
+                                        : !userScore.submitted &&
+                                          userScore.score !== undefined &&
+                                          userScore.score !== null
+                                        ? 'Missing'
+                                        : userScore.submitted && userScore.lateSubmission
+                                        ? 'Late'
+                                        : undefined;
 
                                     if (
                                         (activeModifyId === entry.cueId || activeModifyId === entry.gradebookEntryId) &&
@@ -5582,7 +5535,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     width: '100%',
                                                 }}
                                                 key={row.toString() + '-' + col.toString()}
-                                                disabled={!userScore}
+                                                disabled={!userScore || !deadlinePassed}
                                                 onPress={() => {
                                                     setActiveModifyId(
                                                         entry.cueId ? entry.cueId : entry.gradebookEntryId
@@ -5608,7 +5561,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             ? 'N/A'
                                                             : userScore.score !== undefined && userScore.score !== null
                                                             ? gradebookViewPoints
-                                                                ? userScore.pointsScored
+                                                                ? userScore.pointsScored + ' / ' + entry.totalPoints
                                                                 : userScore.score + '%'
                                                             : 'Not Submitted'}
                                                     </Text>
@@ -5623,7 +5576,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     : '#000000',
                                                         }}
                                                     >
-                                                        {userScore.score
+                                                        {userScore.score !== undefined && userScore.score !== null
                                                             ? gradebookViewPoints
                                                                 ? userScore.pointsScored + ' / ' + entry.totalPoints
                                                                 : userScore.score + '%'

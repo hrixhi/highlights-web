@@ -44,11 +44,15 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import { paddingResponsive } from '../helpers/paddingHelper';
 import { useApolloClient } from '@apollo/client';
 import { useAppContext } from '../contexts/AppContext';
+import { useNavigationContext } from '../contexts/NavigationContext';
 import parser from 'html-react-parser';
+
+import { PlusIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { userId, org, user, subscriptions } = useAppContext();
-    const [tab, setTab] = useState(props.tab);
+    const { theme } = useNavigationContext();
+    const [tab, setTab] = useState('To Do');
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
@@ -75,7 +79,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [allActivity, setAllActivity] = useState<any[]>([]);
     const [activity, setActivity] = useState<any[]>([]);
     const [unreadCount, setUnreadCount] = useState<any>(0);
-    const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add'];
+    const tabs = ['To Do', 'Schedule', 'Calendar'];
     const width = Dimensions.get('window').width;
     const weekDays = {
         '1': 'Sun',
@@ -357,7 +361,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setShowAddEvent(false);
                     setSelectedDays([]);
                     setSelectedStartDay('');
-                    props.setTab('Agenda');
+                    props.setTab('To Do');
                 } else if (res.data && res.data.date.createV1 === 'ZOOM_MEETING_CREATE_FAILED') {
                     Alert('Event scheduled but Zoom meeting could not be created.');
                     loadEvents();
@@ -476,9 +480,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         .then((res) => {
                             if (res.data.date.editV1) {
                                 loadEvents();
-                                props.setTab('Agenda');
                                 setEditEvent(null);
-                                setTab('Agenda');
+                                setTab('To Do');
                                 // Alert('Updated event successfully.');
                             } else {
                                 Alert('Failed to edit event. Try again.');
@@ -525,8 +528,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setRecordMeeting(false);
                         setEditEvent(null);
                         setShowAddEvent(false);
-                        props.setTab('Agenda');
-                        setTab('Agenda');
+                        setTab('To Do');
 
                         // Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
                     } else if (res.data && res.data.date.deleteV1 === 'ZOOM_MEETING_DELETE_FAILED') {
@@ -546,6 +548,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         },
         [title, start, end, description, isMeeting, recordMeeting]
     );
+
+    function classNames(...classes: string[]) {
+        return classes.filter(Boolean).join(' ');
+    }
 
     /**
      * @description Load all events for Agenda
@@ -622,23 +628,23 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setLoading(false);
                 }
                 setLoading(false);
-                modalAnimation.setValue(0);
-                Animated.timing(modalAnimation, {
-                    toValue: 1,
-                    duration: 150,
-                    useNativeDriver: true,
-                }).start();
+                // modalAnimation.setValue(0);
+                // Animated.timing(modalAnimation, {
+                //     toValue: 1,
+                //     duration: 150,
+                //     useNativeDriver: true,
+                // }).start();
             })
             .catch((err) => {
                 console.log(err);
                 Alert('Unable to load calendar.', 'Check connection.');
                 setLoading(false);
-                modalAnimation.setValue(0);
-                Animated.timing(modalAnimation, {
-                    toValue: 1,
-                    duration: 150,
-                    useNativeDriver: true,
-                }).start();
+                // modalAnimation.setValue(0);
+                // Animated.timing(modalAnimation, {
+                //     toValue: 1,
+                //     duration: 150,
+                //     useNativeDriver: true,
+                // }).start();
             });
     }, [subscriptions, modalAnimation, userId]);
 
@@ -799,7 +805,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             {recurring ? (
                 <View style={{ width: '100%', maxWidth: 400, display: 'flex', paddingVertical: 15 }}>
                     <View style={{ width: '100%' }}>
-                        <Text style={styles.text}>Interval</Text>
+                        <Text style={styles.text}>Interval 123</Text>
                     </View>
                     <View
                         style={{
@@ -1392,11 +1398,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <div className="md-custom-event-cont">
                     <div
                         style={{
-                            color: '#1F1F1F',
-                            fontSize: 15,
                             paddingTop: isMeeting && new Date() > startTime && new Date() < endTime ? 5 : 0,
-                            maxHeight: 40,
                         }}
+                        className="text-sm text-gray-500 dark:text-gray-300 "
                     >
                         {data.original.description}
                     </div>
@@ -1682,7 +1686,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 {tabs.map((option: string, ind: number) => {
                                     if (option === 'Add') return null;
                                     return (
-                                        <View nativeID={option}>
+                                        <View nativeID={option} key={ind.toString()}>
                                             <TouchableOpacity
                                                 style={{
                                                     backgroundColor: option === tab ? '#000' : '#f2f2f2',
@@ -1694,7 +1698,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 onPress={() => {
                                                     setTab(option);
                                                 }}
-                                                key={ind.toString()}
                                             >
                                                 {option === 'Activity' && unreadCount !== 0 ? (
                                                     <View
@@ -1827,6 +1830,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         style={{
                                             marginRight: 38,
                                         }}
+                                        key={ind.toString()}
                                     >
                                         <TouchableOpacity
                                             key={ind.toString()}
@@ -2099,7 +2103,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </View>
                     </View>
 
-                    <div className="mt-6">
+                    <div className="mt-12">
                         <div
                             className="htmlParser fr-view"
                             style={{
@@ -2122,679 +2126,729 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return span.textContent || span.innerText;
     }
 
+    const renderTimeMessage = () => {
+        const currentTime = new Date();
+
+        if (currentTime.getHours() < 12 && currentTime.getHours() > 0) {
+            return 'Good Morning';
+        } else if (currentTime.getHours() >= 12 && currentTime.getHours() < 17) {
+            return 'Good Afternoon';
+        } else {
+            return 'Good Evening';
+        }
+    };
+
     // MAIN RETURN
     return (
         <View
             style={{
                 flexDirection: 'column',
                 width: '100%',
-                backgroundColor: '#fff',
             }}
+            className="bg-white dark:bg-cues-dark-3"
         >
+            <div className="">
+                <div className="px-4 sm:px-6 lg:mx-auto lg:px-8">
+                    <div className="py-6 md:flex md:items-center md:justify-between ">
+                        <div className="min-w-0 flex-1">
+                            {/* Profile */}
+                            <div className="flex items-center">
+                                <img
+                                    className="hidden h-16 w-16 rounded-full sm:block"
+                                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                    alt=""
+                                />
+                                <div>
+                                    <div className="flex items-center">
+                                        <img
+                                            className="h-16 w-16 rounded-full sm:hidden"
+                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                            alt=""
+                                        />
+                                        <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:truncate sm:leading-9">
+                                            {renderTimeMessage()}, Emilia Birch
+                                        </h1>
+                                    </div>
+                                    <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
+                                        <dt className="sr-only">Account status</dt>
+                                        <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 dark:text-gray-300 sm:mr-6 sm:mt-0">
+                                            {moment().format('MMMM Do YYYY')}
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/* Render New Tabs */}
-            {renderAgendaTabs()}
-            <ScrollView
-                contentContainerStyle={{
+            {/* {renderAgendaTabs()} */}
+            <div className="hidden sm:block mb-4">
+                <div className="w-full flex items-center justify-between border-b border-gray-200 dark:border-cues-border-dark px-4 sm:px-6 lg:mx-auto lg:px-8">
+                    <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                        {tabs.map((option) => (
+                            <button
+                                key={option}
+                                className={classNames(
+                                    tab === option
+                                        ? 'border-black text-black dark:border-white dark:text-white'
+                                        : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-100',
+                                    'whitespace-nowrap py-3 px-1 border-b-2 font-medium text-md'
+                                )}
+                                aria-current={tab === option ? 'page' : undefined}
+                                onClick={() => setTab(option)}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </nav>
+                    <div className="flex items-center mb-2">
+                        <button
+                            type="button"
+                            className="mr-3 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                        >
+                            <span className="sr-only">Filter events</span>
+                            <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
+                        </button>
+                        <button
+                            type="button"
+                            className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                            <PlusIcon className="-ml-1 mr-3 h-4 w-4" aria-hidden="true" />
+                            New
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <View
+                style={{
                     width: '100%',
-                    height:
-                        width < 768
-                            ? Dimensions.get('window').height - 54 - 60
-                            : Dimensions.get('window').height - 64 - 54,
-                    backgroundColor: '#fff',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                    alignSelf: 'center',
                 }}
             >
-                <View
-                    style={{
-                        width: '100%',
-                        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                        backgroundColor: '#fff',
-                        maxWidth: 1024,
-                        alignSelf: 'center',
-                    }}
-                >
-                    {loading ? (
-                        <View
-                            style={{
-                                width: '100%',
-                                flex: 1,
-                                justifyContent: 'center',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                backgroundColor: '#fff',
-                                marginTop: 50,
-                                marginBottom: 50,
-                            }}
-                        >
-                            <ActivityIndicator color={'#1F1F1F'} />
-                        </View>
-                    ) : (
-                        <View
-                            style={{
-                                backgroundColor: '#fff',
-                                width: '100%',
-                            }}
-                        >
-                            {!showAddEvent ? (
-                                <View
-                                    style={{
-                                        backgroundColor: 'none',
-                                    }}
-                                    nativeID={'planner-wrapper'}
-                                >
-                                    {tab === tabs[0] ? (
-                                        <Eventcalendar
-                                            view={viewAgenda}
-                                            data={events}
-                                            themeVariant="light"
-                                            onEventClick={onSelectEvent}
-                                            renderEventContent={renderEventContent}
-                                            noEventsText="Click + to schedule a new event or meeting."
-                                        />
-                                    ) : tab === tabs[1] ? (
-                                        <Eventcalendar
-                                            view={viewSchedule}
-                                            data={events}
-                                            themeVariant="light"
-                                            onEventClick={onSelectEvent}
-                                            renderEventContent={renderEventContent}
-                                            star
-                                            noEventsText="Click + to schedule a new event or meeting."
-                                        />
-                                    ) : tab === tabs[2] ? (
-                                        <Eventcalendar
-                                            view={viewCalendar}
-                                            data={events}
-                                            themeVariant="light"
-                                            onEventClick={onSelectEvent}
-                                            renderEventContent={renderEventContent}
-                                        />
-                                    ) : tab === tabs[3] ? (
-                                        <View
-                                            style={{
-                                                width: Dimensions.get('window').width < 768 ? '100%' : '100%',
-                                                backgroundColor: 'white',
-                                            }}
-                                        >
-                                            {activity.length === 0 ? (
-                                                <View
+                {loading ? (
+                    <View
+                        style={{
+                            width: '100%',
+                            flex: 1,
+                            justifyContent: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginTop: 50,
+                            marginBottom: 50,
+                        }}
+                    >
+                        <ActivityIndicator color={theme === 'light' ? '#1F1F1F' : '#fff'} />
+                    </View>
+                ) : (
+                    <View
+                        style={{
+                            width: '100%',
+                        }}
+                    >
+                        {!showAddEvent ? (
+                            <View nativeID={'planner-wrapper'}>
+                                {tab === tabs[0] ? (
+                                    <Eventcalendar
+                                        view={viewAgenda}
+                                        data={events}
+                                        themeVariant={theme}
+                                        onEventClick={onSelectEvent}
+                                        renderEventContent={renderEventContent}
+                                        noEventsText="Click + to schedule a new event or meeting."
+                                    />
+                                ) : tab === tabs[1] ? (
+                                    <Eventcalendar
+                                        view={viewSchedule}
+                                        data={events}
+                                        themeVariant={theme}
+                                        onEventClick={onSelectEvent}
+                                        renderEventContent={renderEventContent}
+                                        star
+                                        noEventsText="Click + to schedule a new event or meeting."
+                                    />
+                                ) : tab === tabs[2] ? (
+                                    <Eventcalendar
+                                        view={viewCalendar}
+                                        data={events}
+                                        themeVariant={theme}
+                                        onEventClick={onSelectEvent}
+                                        renderEventContent={renderEventContent}
+                                    />
+                                ) : tab === tabs[3] ? (
+                                    <View
+                                        style={{
+                                            width: Dimensions.get('window').width < 768 ? '100%' : '100%',
+                                            backgroundColor: 'white',
+                                        }}
+                                    >
+                                        {activity.length === 0 ? (
+                                            <View
+                                                style={{
+                                                    paddingVertical: 100,
+                                                }}
+                                            >
+                                                <Text
                                                     style={{
-                                                        paddingVertical: 100,
+                                                        fontSize: 20,
+                                                        fontFamily: 'Inter',
+                                                        textAlign: 'center',
                                                     }}
                                                 >
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 20,
-                                                            fontFamily: 'Inter',
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        No Alerts
-                                                    </Text>
-                                                </View>
-                                            ) : null}
-                                            <View>
-                                                {activity.map((act: any, index: number) => {
-                                                    const { cueId, channelId, createdBy, target, threadId } = act;
+                                                    No Alerts
+                                                </Text>
+                                            </View>
+                                        ) : null}
+                                        <View>
+                                            {activity.map((act: any, index: number) => {
+                                                const { cueId, channelId, createdBy, target, threadId } = act;
 
-                                                    console.log('Activity', act);
+                                                console.log('Activity', act);
 
-                                                    const date = new Date(act.date);
+                                                const date = new Date(act.date);
 
-                                                    if (props.filterStart && props.filterEnd) {
-                                                        const start = new Date(props.filterStart);
-                                                        if (date < start) {
-                                                            return;
-                                                        }
-                                                        const end = new Date(props.filterEnd);
-                                                        if (date > end) {
-                                                            return;
-                                                        }
+                                                if (props.filterStart && props.filterEnd) {
+                                                    const start = new Date(props.filterStart);
+                                                    if (date < start) {
+                                                        return;
                                                     }
-
-                                                    let announcementDescription = '';
-
-                                                    if (target === 'ANNOUNCEMENT') {
-                                                        announcementDescription = extractContent(act.subtitle);
+                                                    const end = new Date(props.filterEnd);
+                                                    if (date > end) {
+                                                        return;
                                                     }
+                                                }
 
-                                                    return (
-                                                        <TouchableOpacity
-                                                            key={index.toString()}
-                                                            onPress={async () => {
-                                                                server.mutate({
-                                                                    mutation: markActivityAsRead,
-                                                                    variables: {
-                                                                        activityId: act._id,
-                                                                        userId,
-                                                                        markAllRead: false,
-                                                                    },
-                                                                });
+                                                let announcementDescription = '';
 
-                                                                // Opens the cue from the activity
-                                                                if (
-                                                                    cueId !== null &&
-                                                                    cueId !== '' &&
-                                                                    channelId !== '' &&
-                                                                    createdBy !== '' &&
-                                                                    target === 'CUE'
-                                                                ) {
-                                                                    props.openCue(channelId, cueId, createdBy);
-                                                                }
+                                                if (target === 'ANNOUNCEMENT') {
+                                                    announcementDescription = extractContent(act.subtitle);
+                                                }
 
-                                                                if (target === 'DISCUSSION') {
-                                                                    if (threadId && threadId !== '') {
-                                                                        await AsyncStorage.setItem(
-                                                                            'openThread',
-                                                                            threadId
-                                                                        );
-                                                                    }
+                                                return (
+                                                    <TouchableOpacity
+                                                        key={index.toString()}
+                                                        onPress={async () => {
+                                                            server.mutate({
+                                                                mutation: markActivityAsRead,
+                                                                variables: {
+                                                                    activityId: act._id,
+                                                                    userId,
+                                                                    markAllRead: false,
+                                                                },
+                                                            });
 
-                                                                    props.openDiscussion(channelId);
-                                                                }
-
-                                                                if (
-                                                                    target === 'CHANNEL_SUBSCRIBED' ||
-                                                                    target === 'CHANNEL_MODERATOR_ADDED' ||
-                                                                    target === 'CHANNEL_MODERATOR_REMOVED' ||
-                                                                    target === 'CHANNEL_OWNER_ADDED'
-                                                                ) {
-                                                                    props.openChannel(channelId);
-                                                                }
-
-                                                                if (target === 'ANNOUNCEMENT') {
-                                                                    setViewAnnouncement(act);
-                                                                }
-                                                            }}
-                                                            style={{
-                                                                flexDirection: 'row',
-                                                                borderColor: '#f2f2f2',
-                                                                borderBottomWidth:
-                                                                    index === activity.length - 1 ? 0 : 1,
-                                                                width: '100%',
-                                                                paddingVertical: 5,
-                                                                backgroundColor: 'white',
-                                                                paddingHorizontal: paddingResponsive(),
-                                                            }}
-                                                            disabled={
-                                                                target === 'CHANNEL_UNSUBSCRIBED' ||
-                                                                target === 'CHANNEL_OWNER_REMOVED'
+                                                            // Opens the cue from the activity
+                                                            if (
+                                                                cueId !== null &&
+                                                                cueId !== '' &&
+                                                                channelId !== '' &&
+                                                                createdBy !== '' &&
+                                                                target === 'CUE'
+                                                            ) {
+                                                                props.openCue(channelId, cueId, createdBy);
                                                             }
+
+                                                            if (target === 'DISCUSSION') {
+                                                                if (threadId && threadId !== '') {
+                                                                    await AsyncStorage.setItem('openThread', threadId);
+                                                                }
+
+                                                                props.openDiscussion(channelId);
+                                                            }
+
+                                                            if (
+                                                                target === 'CHANNEL_SUBSCRIBED' ||
+                                                                target === 'CHANNEL_MODERATOR_ADDED' ||
+                                                                target === 'CHANNEL_MODERATOR_REMOVED' ||
+                                                                target === 'CHANNEL_OWNER_ADDED'
+                                                            ) {
+                                                                props.openChannel(channelId);
+                                                            }
+
+                                                            if (target === 'ANNOUNCEMENT') {
+                                                                setViewAnnouncement(act);
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            borderColor: '#f2f2f2',
+                                                            borderBottomWidth: index === activity.length - 1 ? 0 : 1,
+                                                            width: '100%',
+                                                            paddingVertical: 5,
+                                                            backgroundColor: 'white',
+                                                            paddingHorizontal: paddingResponsive(),
+                                                        }}
+                                                        disabled={
+                                                            target === 'CHANNEL_UNSUBSCRIBED' ||
+                                                            target === 'CHANNEL_OWNER_REMOVED'
+                                                        }
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                flex: 1,
+                                                                backgroundColor: 'white',
+                                                            }}
                                                         >
                                                             <View
                                                                 style={{
-                                                                    flex: 1,
-                                                                    backgroundColor: 'white',
+                                                                    flexDirection: 'row',
+                                                                    alignItems: 'center',
+                                                                    marginTop:
+                                                                        Dimensions.get('window').width < 768 ? 0 : 5,
                                                                 }}
                                                             >
                                                                 <View
                                                                     style={{
-                                                                        flexDirection: 'row',
-                                                                        alignItems: 'center',
-                                                                        marginTop:
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 0
-                                                                                : 5,
+                                                                        width: 8,
+                                                                        height: 8,
+                                                                        borderRadius: 8,
+                                                                        backgroundColor:
+                                                                            target === 'ANNOUNCEMENT'
+                                                                                ? '#000'
+                                                                                : act.colorCode,
+                                                                        marginRight: 2,
                                                                     }}
-                                                                >
-                                                                    <View
-                                                                        style={{
-                                                                            width: 8,
-                                                                            height: 8,
-                                                                            borderRadius: 8,
-                                                                            backgroundColor:
-                                                                                target === 'ANNOUNCEMENT'
-                                                                                    ? '#000'
-                                                                                    : act.colorCode,
-                                                                            marginRight: 2,
-                                                                        }}
-                                                                    />
-                                                                    <Text
-                                                                        style={{
-                                                                            fontSize:
-                                                                                Dimensions.get('window').width < 768
-                                                                                    ? 15
-                                                                                    : 16,
-                                                                            padding: 5,
-                                                                            fontFamily: 'inter',
-                                                                        }}
-                                                                        ellipsizeMode="tail"
-                                                                    >
-                                                                        {target === 'ANNOUNCEMENT'
-                                                                            ? 'Announcement - ' + act.title
-                                                                            : act.channelName}
-                                                                    </Text>
-                                                                </View>
+                                                                />
                                                                 <Text
                                                                     style={{
                                                                         fontSize:
                                                                             Dimensions.get('window').width < 768
-                                                                                ? 13
-                                                                                : 14,
-                                                                        lineHeight: 16,
-                                                                        paddingHorizontal: 5,
-                                                                        marginVertical: 5,
-                                                                        paddingLeft: 0,
+                                                                                ? 15
+                                                                                : 16,
+                                                                        padding: 5,
+                                                                        fontFamily: 'inter',
                                                                     }}
                                                                     ellipsizeMode="tail"
-                                                                    numberOfLines={2}
                                                                 >
                                                                     {target === 'ANNOUNCEMENT'
-                                                                        ? announcementDescription
-                                                                        : `${act.title} - ${act.subtitle}`}
+                                                                        ? 'Announcement - ' + act.title
+                                                                        : act.channelName}
                                                                 </Text>
                                                             </View>
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor: 'white',
-                                                                    padding: 0,
-                                                                    flexDirection: 'row',
-                                                                    alignSelf: 'center',
-                                                                    // paddingRight: 10,
-                                                                    alignItems: 'center',
-                                                                }}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize: 13,
-                                                                        padding: 5,
-                                                                    }}
-                                                                    ellipsizeMode="tail"
-                                                                >
-                                                                    {act.status === 'unread' ? (
-                                                                        <Ionicons
-                                                                            name="alert-circle-outline"
-                                                                            color="#f94144"
-                                                                            size={
-                                                                                Dimensions.get('window').width < 768
-                                                                                    ? 18
-                                                                                    : 20
-                                                                            }
-                                                                        />
-                                                                    ) : null}
-                                                                </Text>
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize:
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 13
-                                                                                : 14,
-                                                                        padding: 5,
-                                                                        lineHeight: 13,
-                                                                        // fontWeight: 'bold',
-                                                                    }}
-                                                                    ellipsizeMode="tail"
-                                                                >
-                                                                    {emailTimeDisplay(act.date)}
-                                                                </Text>
-
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize: 14,
-                                                                        padding: 5,
-                                                                        paddingRight: 0,
-                                                                        lineHeight: 13,
-                                                                        width:
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 20
-                                                                                : 30,
-                                                                    }}
-                                                                    ellipsizeMode="tail"
-                                                                >
-                                                                    {target !== 'CHANNEL_UNSUBSCRIBED' ? (
-                                                                        <Ionicons
-                                                                            name="chevron-forward-outline"
-                                                                            size={
-                                                                                Dimensions.get('window').width < 768
-                                                                                    ? 18
-                                                                                    : 20
-                                                                            }
-                                                                            color="#007AFF"
-                                                                        />
-                                                                    ) : null}
-                                                                </Text>
-                                                            </View>
-                                                        </TouchableOpacity>
-                                                    );
-                                                })}
-                                            </View>
-                                        </View>
-                                    ) : (
-                                        <View
-                                            style={{
-                                                alignItems: 'center',
-                                                backgroundColor: 'white',
-                                                paddingHorizontal: width < 768 ? 20 : 0,
-                                                paddingTop: 20,
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    width: '100%',
-                                                    maxWidth: 400,
-                                                    alignSelf: 'center',
-                                                }}
-                                            >
-                                                <View style={{ width: '100%', maxWidth: 400 }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 15,
-                                                            fontFamily: 'inter',
-                                                            color: '#000000',
-                                                        }}
-                                                    >
-                                                        Topic
-                                                    </Text>
-                                                    <TextInput
-                                                        value={title}
-                                                        placeholder={''}
-                                                        onChangeText={(val) => setTitle(val)}
-                                                        placeholderTextColor={'#1F1F1F'}
-                                                        required={true}
-                                                    />
-                                                </View>
-                                                <View style={{ width: '100%', maxWidth: 400 }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 15,
-                                                            fontFamily: 'inter',
-                                                            color: '#000000',
-                                                        }}
-                                                    >
-                                                        Description
-                                                    </Text>
-                                                    <TextInput
-                                                        value={description}
-                                                        placeholder=""
-                                                        onChangeText={(val) => setDescription(val)}
-                                                        placeholderTextColor={'#1F1F1F'}
-                                                    />
-                                                </View>
-                                            </View>
-                                            {/* Put time here */}
-                                            <View style={{ display: 'flex', width: '100%', maxWidth: 400 }}>
-                                                <View
-                                                    style={{
-                                                        width: '100%',
-                                                        maxWidth: 400,
-                                                        paddingVertical: 15,
-                                                    }}
-                                                >
-                                                    <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
-                                                    <Datepicker
-                                                        controls={['date', 'time']}
-                                                        touchUi={true}
-                                                        theme="ios"
-                                                        value={start}
-                                                        themeVariant="light"
-                                                        // inputComponent="input"
-                                                        inputProps={{
-                                                            placeholder: 'Select start...',
-                                                        }}
-                                                        onChange={(event: any) => {
-                                                            const date = new Date(event.value);
-                                                            const roundOffDate = roundSeconds(date);
-                                                            setStart(roundOffDate);
-                                                        }}
-                                                        responsive={{
-                                                            xsmall: {
-                                                                controls: ['date', 'time'],
-                                                                display: 'bottom',
-                                                                touchUi: true,
-                                                            },
-                                                            medium: {
-                                                                controls: ['date', 'time'],
-                                                                display: 'anchored',
-                                                                touchUi: false,
-                                                            },
-                                                        }}
-                                                    />
-                                                </View>
-                                                <View
-                                                    style={{
-                                                        width: '100%',
-                                                        maxWidth: 400,
-                                                        paddingVertical: 15,
-                                                    }}
-                                                >
-                                                    <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
-                                                    <Datepicker
-                                                        controls={['date', 'time']}
-                                                        touchUi={true}
-                                                        theme="ios"
-                                                        value={end}
-                                                        themeVariant="light"
-                                                        // inputComponent="input"
-                                                        inputProps={{
-                                                            placeholder: 'Select end...',
-                                                        }}
-                                                        onChange={(event: any) => {
-                                                            const date = new Date(event.value);
-                                                            const roundOffDate = roundSeconds(date);
-                                                            setEnd(roundOffDate);
-                                                        }}
-                                                        responsive={{
-                                                            xsmall: {
-                                                                controls: ['date', 'time'],
-                                                                display: 'bottom',
-                                                                touchUi: true,
-                                                            },
-                                                            medium: {
-                                                                controls: ['date', 'time'],
-                                                                display: 'anchored',
-                                                                touchUi: false,
-                                                            },
-                                                        }}
-                                                    />
-                                                </View>
-                                            </View>
-                                            <View
-                                                style={{
-                                                    paddingTop: 20,
-                                                    width: '100%',
-                                                    maxWidth: 400,
-                                                }}
-                                            >
-                                                {channels.length > 0 && !editEvent ? (
-                                                    <View>
-                                                        <View style={{ width: '100%', paddingBottom: 10 }}>
                                                             <Text
                                                                 style={{
-                                                                    fontSize: 15,
-                                                                    fontFamily: 'inter',
-                                                                    color: '#000000',
+                                                                    fontSize:
+                                                                        Dimensions.get('window').width < 768 ? 13 : 14,
+                                                                    lineHeight: 16,
+                                                                    paddingHorizontal: 5,
+                                                                    marginVertical: 5,
+                                                                    paddingLeft: 0,
                                                                 }}
+                                                                ellipsizeMode="tail"
+                                                                numberOfLines={2}
                                                             >
-                                                                For
+                                                                {target === 'ANNOUNCEMENT'
+                                                                    ? announcementDescription
+                                                                    : `${act.title} - ${act.subtitle}`}
                                                             </Text>
                                                         </View>
                                                         <View
                                                             style={{
+                                                                backgroundColor: 'white',
+                                                                padding: 0,
                                                                 flexDirection: 'row',
-                                                                display: 'flex',
-                                                                backgroundColor: '#f8f8f8',
+                                                                alignSelf: 'center',
+                                                                // paddingRight: 10,
+                                                                alignItems: 'center',
                                                             }}
                                                         >
-                                                            <label
+                                                            <Text
                                                                 style={{
-                                                                    width: '100%',
-                                                                    maxWidth: 400,
-                                                                    backgroundColor: 'white',
+                                                                    fontSize: 13,
+                                                                    padding: 5,
                                                                 }}
+                                                                ellipsizeMode="tail"
                                                             >
-                                                                <Select
-                                                                    touchUi={true}
-                                                                    themeVariant="light"
-                                                                    value={selectedChannel}
-                                                                    onChange={(val: any) => {
-                                                                        setSelectedChannel(val.value);
-
-                                                                        if (val.value === 'My Events') {
-                                                                            setChannelId('');
-                                                                        } else {
-                                                                            setChannelId(val.value);
+                                                                {act.status === 'unread' ? (
+                                                                    <Ionicons
+                                                                        name="alert-circle-outline"
+                                                                        color="#f94144"
+                                                                        size={
+                                                                            Dimensions.get('window').width < 768
+                                                                                ? 18
+                                                                                : 20
                                                                         }
-                                                                    }}
-                                                                    responsive={{
-                                                                        small: {
-                                                                            display: 'bubble',
-                                                                        },
-                                                                        medium: {
-                                                                            touchUi: false,
-                                                                        },
-                                                                    }}
-                                                                    style={{
-                                                                        backgroundColor: '#f8f8f8',
-                                                                    }}
-                                                                    data={channelOptions}
-                                                                />
-                                                            </label>
+                                                                    />
+                                                                ) : null}
+                                                            </Text>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize:
+                                                                        Dimensions.get('window').width < 768 ? 13 : 14,
+                                                                    padding: 5,
+                                                                    lineHeight: 13,
+                                                                    // fontWeight: 'bold',
+                                                                }}
+                                                                ellipsizeMode="tail"
+                                                            >
+                                                                {emailTimeDisplay(act.date)}
+                                                            </Text>
+
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 14,
+                                                                    padding: 5,
+                                                                    paddingRight: 0,
+                                                                    lineHeight: 13,
+                                                                    width:
+                                                                        Dimensions.get('window').width < 768 ? 20 : 30,
+                                                                }}
+                                                                ellipsizeMode="tail"
+                                                            >
+                                                                {target !== 'CHANNEL_UNSUBSCRIBED' ? (
+                                                                    <Ionicons
+                                                                        name="chevron-forward-outline"
+                                                                        size={
+                                                                            Dimensions.get('window').width < 768
+                                                                                ? 18
+                                                                                : 20
+                                                                        }
+                                                                        color="#007AFF"
+                                                                    />
+                                                                ) : null}
+                                                            </Text>
                                                         </View>
-                                                    </View>
-                                                ) : null}
-
-                                                {renderEditMeetingInfo()}
-                                                {!editEvent && renderRecurringOptions()}
-                                                {renderMeetingOptions()}
-                                                {channelId !== '' && meetingProvider !== '' && isMeeting ? (
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            color: '#000000',
-                                                            // textTransform: 'uppercase',
-                                                            lineHeight: 20,
-                                                            fontFamily: 'Inter',
-                                                            paddingBottom: 15,
-                                                        }}
-                                                    >
-                                                        The meeting link will be same as the one in the Course Settings.
-                                                        Ensure you have a working link set at all times.
-                                                    </Text>
-                                                ) : null}
-                                                {channelId !== '' &&
-                                                userZoomInfo &&
-                                                userZoomInfo.accountId &&
-                                                !meetingProvider &&
-                                                isMeeting ? (
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 11,
-                                                            color: '#000000',
-                                                            // textTransform: 'uppercase',
-                                                            lineHeight: 20,
-                                                            fontFamily: 'Inter',
-                                                            paddingBottom: 15,
-                                                        }}
-                                                    >
-                                                        Note: You need to be a licensed Zoom user for student
-                                                        attendances to be automatically captured and visible under your
-                                                        Course past meetings.
-                                                    </Text>
-                                                ) : null}
-
-                                                {channelId !== '' &&
-                                                (!userZoomInfo || !userZoomInfo.accountId) &&
-                                                !meetingProvider ? (
-                                                    <View
-                                                        style={{
-                                                            marginVertical: 10,
-                                                            flexDirection: 'row',
-                                                            alignItems: 'center',
-                                                            padding: 10,
-                                                            backgroundColor: '#f2f2f2',
-                                                            borderRadius: 1,
-                                                        }}
-                                                    >
-                                                        <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
-                                                        <Text style={{ paddingLeft: 20 }}>
-                                                            To schedule online meetings connect your account to Zoom
-                                                        </Text>
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                // ZOOM OAUTH
-
-                                                                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                                                                    zoomRedirectUri
-                                                                )}&state=${userId}`;
-
-                                                                if (
-                                                                    Platform.OS === 'ios' ||
-                                                                    Platform.OS === 'android'
-                                                                ) {
-                                                                    Linking.openURL(url);
-                                                                } else {
-                                                                    window.open(url, '_blank');
-                                                                }
-                                                            }}
-                                                            style={{
-                                                                backgroundColor: '#f2f2f2',
-                                                                paddingHorizontal: 10,
-                                                            }}
-                                                            disabled={user.email === disableEmailId}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 15,
-                                                                    fontFamily: 'inter',
-                                                                    color: '#000',
-                                                                    backgroundColor: '#f2f2f2',
-                                                                }}
-                                                            >
-                                                                Connect
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                ) : null}
-
-                                                {tab === 'Add' && !editEvent ? (
-                                                    <View
-                                                        style={{
-                                                            width: '100%',
-                                                            flexDirection: 'row',
-                                                            display: 'flex',
-                                                            marginBottom: 10,
-                                                            paddingVertical: 25,
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                marginBottom: 20,
-                                                            }}
-                                                            onPress={() => handleCreate()}
-                                                            disabled={isCreatingEvents || user.email === disableEmailId}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontWeight: 'bold',
-                                                                    textAlign: 'center',
-                                                                    borderColor: '#000',
-                                                                    borderWidth: 1,
-                                                                    color: '#fff',
-                                                                    backgroundColor: '#000',
-                                                                    fontSize: 11,
-                                                                    paddingHorizontal: 24,
-                                                                    fontFamily: 'inter',
-                                                                    overflow: 'hidden',
-                                                                    paddingVertical: 14,
-                                                                    textTransform: 'uppercase',
-                                                                    width: 120,
-                                                                }}
-                                                            >
-                                                                {isCreatingEvents ? '...' : 'CREATE'}
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                ) : null}
-                                                {editEvent ? renderEditEventOptions() : null}
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            backgroundColor: 'white',
+                                            paddingHorizontal: width < 768 ? 20 : 0,
+                                            paddingTop: 20,
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                width: '100%',
+                                                maxWidth: 400,
+                                                alignSelf: 'center',
+                                            }}
+                                        >
+                                            <View style={{ width: '100%', maxWidth: 400 }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 15,
+                                                        fontFamily: 'inter',
+                                                        color: '#000000',
+                                                    }}
+                                                >
+                                                    Topic
+                                                </Text>
+                                                <TextInput
+                                                    value={title}
+                                                    placeholder={''}
+                                                    onChangeText={(val) => setTitle(val)}
+                                                    placeholderTextColor={'#1F1F1F'}
+                                                    required={true}
+                                                />
+                                            </View>
+                                            <View style={{ width: '100%', maxWidth: 400 }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 15,
+                                                        fontFamily: 'inter',
+                                                        color: '#000000',
+                                                    }}
+                                                >
+                                                    Description
+                                                </Text>
+                                                <TextInput
+                                                    value={description}
+                                                    placeholder=""
+                                                    onChangeText={(val) => setDescription(val)}
+                                                    placeholderTextColor={'#1F1F1F'}
+                                                />
                                             </View>
                                         </View>
-                                    )}
-                                </View>
-                            ) : null}
-                        </View>
-                    )}
-                </View>
-            </ScrollView>
+                                        {/* Put time here */}
+                                        <View style={{ display: 'flex', width: '100%', maxWidth: 400 }}>
+                                            <View
+                                                style={{
+                                                    width: '100%',
+                                                    maxWidth: 400,
+                                                    paddingVertical: 15,
+                                                }}
+                                            >
+                                                <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
+                                                <Datepicker
+                                                    controls={['date', 'time']}
+                                                    touchUi={true}
+                                                    theme="ios"
+                                                    value={start}
+                                                    themeVariant="light"
+                                                    // inputComponent="input"
+                                                    inputProps={{
+                                                        placeholder: 'Select start...',
+                                                    }}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event.value);
+                                                        const roundOffDate = roundSeconds(date);
+                                                        setStart(roundOffDate);
+                                                    }}
+                                                    responsive={{
+                                                        xsmall: {
+                                                            controls: ['date', 'time'],
+                                                            display: 'bottom',
+                                                            touchUi: true,
+                                                        },
+                                                        medium: {
+                                                            controls: ['date', 'time'],
+                                                            display: 'anchored',
+                                                            touchUi: false,
+                                                        },
+                                                    }}
+                                                />
+                                            </View>
+                                            <View
+                                                style={{
+                                                    width: '100%',
+                                                    maxWidth: 400,
+                                                    paddingVertical: 15,
+                                                }}
+                                            >
+                                                <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
+                                                <Datepicker
+                                                    controls={['date', 'time']}
+                                                    touchUi={true}
+                                                    theme="ios"
+                                                    value={end}
+                                                    themeVariant="light"
+                                                    // inputComponent="input"
+                                                    inputProps={{
+                                                        placeholder: 'Select end...',
+                                                    }}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event.value);
+                                                        const roundOffDate = roundSeconds(date);
+                                                        setEnd(roundOffDate);
+                                                    }}
+                                                    responsive={{
+                                                        xsmall: {
+                                                            controls: ['date', 'time'],
+                                                            display: 'bottom',
+                                                            touchUi: true,
+                                                        },
+                                                        medium: {
+                                                            controls: ['date', 'time'],
+                                                            display: 'anchored',
+                                                            touchUi: false,
+                                                        },
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                        <View
+                                            style={{
+                                                paddingTop: 20,
+                                                width: '100%',
+                                                maxWidth: 400,
+                                            }}
+                                        >
+                                            {channels.length > 0 && !editEvent ? (
+                                                <View>
+                                                    <View style={{ width: '100%', paddingBottom: 10 }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 15,
+                                                                fontFamily: 'inter',
+                                                                color: '#000000',
+                                                            }}
+                                                        >
+                                                            For
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            display: 'flex',
+                                                            backgroundColor: '#f8f8f8',
+                                                        }}
+                                                    >
+                                                        <label
+                                                            style={{
+                                                                width: '100%',
+                                                                maxWidth: 400,
+                                                                backgroundColor: 'white',
+                                                            }}
+                                                        >
+                                                            <Select
+                                                                touchUi={true}
+                                                                themeVariant="light"
+                                                                value={selectedChannel}
+                                                                onChange={(val: any) => {
+                                                                    setSelectedChannel(val.value);
+
+                                                                    if (val.value === 'My Events') {
+                                                                        setChannelId('');
+                                                                    } else {
+                                                                        setChannelId(val.value);
+                                                                    }
+                                                                }}
+                                                                responsive={{
+                                                                    small: {
+                                                                        display: 'bubble',
+                                                                    },
+                                                                    medium: {
+                                                                        touchUi: false,
+                                                                    },
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: '#f8f8f8',
+                                                                }}
+                                                                data={channelOptions}
+                                                            />
+                                                        </label>
+                                                    </View>
+                                                </View>
+                                            ) : null}
+
+                                            {renderEditMeetingInfo()}
+                                            {!editEvent && renderRecurringOptions()}
+                                            {renderMeetingOptions()}
+                                            {channelId !== '' && meetingProvider !== '' && isMeeting ? (
+                                                <Text
+                                                    style={{
+                                                        fontSize: 11,
+                                                        color: '#000000',
+                                                        // textTransform: 'uppercase',
+                                                        lineHeight: 20,
+                                                        fontFamily: 'Inter',
+                                                        paddingBottom: 15,
+                                                    }}
+                                                >
+                                                    The meeting link will be same as the one in the Course Settings.
+                                                    Ensure you have a working link set at all times.
+                                                </Text>
+                                            ) : null}
+                                            {channelId !== '' &&
+                                            userZoomInfo &&
+                                            userZoomInfo.accountId &&
+                                            !meetingProvider &&
+                                            isMeeting ? (
+                                                <Text
+                                                    style={{
+                                                        fontSize: 11,
+                                                        color: '#000000',
+                                                        // textTransform: 'uppercase',
+                                                        lineHeight: 20,
+                                                        fontFamily: 'Inter',
+                                                        paddingBottom: 15,
+                                                    }}
+                                                >
+                                                    Note: You need to be a licensed Zoom user for student attendances to
+                                                    be automatically captured and visible under your Course past
+                                                    meetings.
+                                                </Text>
+                                            ) : null}
+
+                                            {channelId !== '' &&
+                                            (!userZoomInfo || !userZoomInfo.accountId) &&
+                                            !meetingProvider ? (
+                                                <View
+                                                    style={{
+                                                        marginVertical: 10,
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        padding: 10,
+                                                        backgroundColor: '#f2f2f2',
+                                                        borderRadius: 1,
+                                                    }}
+                                                >
+                                                    <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
+                                                    <Text style={{ paddingLeft: 20 }}>
+                                                        To schedule online meetings connect your account to Zoom
+                                                    </Text>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            // ZOOM OAUTH
+
+                                                            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+                                                                zoomRedirectUri
+                                                            )}&state=${userId}`;
+
+                                                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                                                                Linking.openURL(url);
+                                                            } else {
+                                                                window.open(url, '_blank');
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            backgroundColor: '#f2f2f2',
+                                                            paddingHorizontal: 10,
+                                                        }}
+                                                        disabled={user.email === disableEmailId}
+                                                    >
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 15,
+                                                                fontFamily: 'inter',
+                                                                color: '#000',
+                                                                backgroundColor: '#f2f2f2',
+                                                            }}
+                                                        >
+                                                            Connect
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ) : null}
+
+                                            {tab === 'Add' && !editEvent ? (
+                                                <View
+                                                    style={{
+                                                        width: '100%',
+                                                        flexDirection: 'row',
+                                                        display: 'flex',
+                                                        marginBottom: 10,
+                                                        paddingVertical: 25,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            marginBottom: 20,
+                                                        }}
+                                                        onPress={() => handleCreate()}
+                                                        disabled={isCreatingEvents || user.email === disableEmailId}
+                                                    >
+                                                        <Text
+                                                            style={{
+                                                                fontWeight: 'bold',
+                                                                textAlign: 'center',
+                                                                borderColor: '#000',
+                                                                borderWidth: 1,
+                                                                color: '#fff',
+                                                                backgroundColor: '#000',
+                                                                fontSize: 11,
+                                                                paddingHorizontal: 24,
+                                                                fontFamily: 'inter',
+                                                                overflow: 'hidden',
+                                                                paddingVertical: 14,
+                                                                textTransform: 'uppercase',
+                                                                width: 120,
+                                                            }}
+                                                        >
+                                                            {isCreatingEvents ? '...' : 'CREATE'}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ) : null}
+                                            {editEvent ? renderEditEventOptions() : null}
+                                        </View>
+                                    </View>
+                                )}
+                            </View>
+                        ) : null}
+                    </View>
+                )}
+            </View>
+
             <Popup
                 isOpen={showFilterPopup}
                 buttons={[

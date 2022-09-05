@@ -15,8 +15,10 @@ export default function useCachedResources() {
                 // Load fonts
                 await Font.loadAsync({
                     ...Ionicons.font,
-                    inter: require('../assets/fonts/Omnes-Pro-Medium.otf'),
-                    overpass: require('../assets/fonts/Omnes-Pro-Regular.otf'),
+                    // inter: require('../assets/fonts/Omnes-Pro-Medium.otf'),
+                    // overpass: require('../assets/fonts/Omnes-Pro-Regular.otf'),
+                    inter: require('../assets/fonts/NeueHaasDisplay-Medium.ttf'),
+                    overpass: require('../assets/fonts/NeueHaasDisplay-Roman.ttf'),
                 });
             } catch (e) {
                 // We might want to provide this error information to an error reporting service

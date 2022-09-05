@@ -19,32 +19,38 @@ import FinishGoogleAuthSetup from '../screens/FinishGoogleAuthSetup';
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
     return (
         <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {/* Main app is in here */}
-                <Stack.Screen name="Root" component={Home} options={{ title: 'Cues' }} />
-                <Stack.Screen name="demo" component={Demo} options={{ title: 'Cues - Demo' }} />
-                <Stack.Screen name="login" component={Auth} options={{ title: 'Sign In - Cues' }} />
-                <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
-                <Stack.Screen
-                    name="google_auth"
-                    component={FinishGoogleAuthSetup}
-                    options={{ title: 'Connecting Google...' }}
-                />
-                <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
-                <Stack.Screen
-                    name="equationEditor"
-                    component={EquationEditorCues}
-                    options={{ title: 'Equation Editor CUES' }}
-                />
-                <Stack.Screen
-                    name="desktopSSORedirect"
-                    component={DesktopSSO}
-                    options={{ title: 'Cues - Single Sign On' }}
-                />
+            {
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    {/* Main app is in here */}
+                    <Stack.Screen name="Root" component={Home} options={{ title: 'Cues' }} />
+                    <Stack.Screen name="demo" component={Demo} options={{ title: 'Cues - Demo' }} />
+                    <Stack.Screen name="login" component={Auth} options={{ title: 'Sign In - Cues' }} />
+                    <Stack.Screen
+                        name="zoom_auth"
+                        component={FinishZoomSetup}
+                        options={{ title: 'Connecting Zoom...' }}
+                    />
+                    <Stack.Screen
+                        name="google_auth"
+                        component={FinishGoogleAuthSetup}
+                        options={{ title: 'Connecting Google...' }}
+                    />
+                    <Stack.Screen name="pdfviewer" component={PDFViewerCues} options={{ title: 'PDF Viewer CUES' }} />
+                    <Stack.Screen
+                        name="equationEditor"
+                        component={EquationEditorCues}
+                        options={{ title: 'Equation Editor CUES' }}
+                    />
+                    <Stack.Screen
+                        name="desktopSSORedirect"
+                        component={DesktopSSO}
+                        options={{ title: 'Cues - Single Sign On' }}
+                    />
 
-                {/* In case navigation ends up at a wrong location */}
-                <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-            </Stack.Navigator>
+                    {/* In case navigation ends up at a wrong location */}
+                    <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+                </Stack.Navigator>
+            }
         </NavigationContainer>
     );
 }

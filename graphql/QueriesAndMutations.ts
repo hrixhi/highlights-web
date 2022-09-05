@@ -2208,7 +2208,8 @@ export const getStudentAnalytics = gql`
             getStudentScores(channelId: $channelId, userId: $userId) {
                 score
                 sharedWith
-                graded
+                gradedAndReleased
+                gradedAndNotReleased
                 submitted
                 progress
                 scores {

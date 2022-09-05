@@ -180,24 +180,24 @@
     margin-right: 2;
     /* cursor: pointer; */
     background: #e6f0ff;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
 
 /* .highlightTextOption:hover {
-    border: 2px solid #006aff !important;
+    border: 2px solid #0067ff !important;
 } */
 
 .highlightTextActive {
-    border: 2px solid #006aff;
+    border: 2px solid #0067ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
     background: #e6f0ff;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
@@ -210,23 +210,23 @@
     margin-right: 2;
     cursor: pointer;
     background: #e6f0ff;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
 
 .highlightTextUnselected:hover {
-    border: 2px solid #006aff !important;
+    border: 2px solid #0067ff !important;
 }
 
 .highlightTextSelected {
-    border: 2px solid #006aff;
+    border: 2px solid #0067ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
     margin-right: 2;
     cursor: pointer;
-    background: #006aff;
+    background: #0067ff;
     color: #fff;
     font-family: 'Overpass';
     font-size: 15px;
@@ -263,27 +263,27 @@
     padding: 3px;
     border-radius: 3px;
     display: inline-block; */
-    border: 1px solid #006aff;
+    border: 1px solid #0067ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
     background: #e6f0ff;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
 
 .inlineTextEntry {
-    border: 1px solid #006aff;
+    border: 1px solid #0067ff;
     border-radius: 8px;
     padding: 5px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
     background: #e6f0ff;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
@@ -319,18 +319,18 @@ div#editable {
 }
 
 /* .highlightTextOption:hover {
-    border: 2px solid #006aff !important;
+    border: 2px solid #0067ff !important;
 } */
 
 .hotspotActive {
-    border: 2px solid #006aff;
+    border: 2px solid #0067ff;
     border-radius: 8px;
     padding: 7px;
     margin-left: 2;
     margin-right: 2;
     /* cursor: pointer; */
     background: #f8f8f8;
-    color: #006aff;
+    color: #0067ff;
     font-family: 'Overpass';
     font-size: 15px;
 }
@@ -340,20 +340,16 @@ div#editable {
 }
 
 .mbsc-ios.mbsc-calendar-button.mbsc-button {
-    color: '#006AFF' !important;
+    color: '#0067ff' !important;
 }
 
 .mbsc-ios.mbsc-eventcalendar .mbsc-calendar-header,
 .mbsc-ios.mbsc-eventcalendar .mbsc-calendar-week-days {
-    background: #fff !important;
+    background: #fff;
 }
 
 .mbsc-ios.mbsc-schedule-wrapper {
-    background: #fff !important;
-}
-
-.fr-toolbar.fr-top {
-    border-radius: 0px !important;
+    background: #fff;
 }
 
 .fr-second-toolbar {
@@ -756,4 +752,50 @@ svg:not(:root) {
     min-width: 100px;
     max-width: 100px;
     padding: 10px;
+}
+
+.mbsc-ios.mbsc-event-day.mbsc-list-header {
+    font-family: 'Overpass';
+    font-size: 14px !important;
+}
+
+/* DARK THEME */
+
+.mbsc-ios-dark.mbsc-calendar-cell {
+}
+
+.mbsc-ios-dark.mbsc-calendar-button.mbsc-button {
+    color: #0067ff !important;
+}
+
+.mbsc-ios-dark.mbsc-eventcalendar .mbsc-calendar-header,
+.mbsc-ios-dark.mbsc-eventcalendar .mbsc-calendar-week-days {
+    background: #1b1d21 !important;
+}
+
+.mbsc-ios-dark.mbsc-calendar-header,
+.mbsc-ios-dark.mbsc-calendar-wrapper {
+    border-color: #444444 !important;
+}
+
+.mbsc-ios-dark.mbsc-event-day.mbsc-list-header {
+    background: #1b1d21 !important;
+}
+
+/* .mbsc-ios-dark.mbsc-event.mbsc-list-item {
+    background: #1b1d21 !important;
+} */
+
+.fr-toolbar.fr-top {
+    border-radius: 0px !important;
+}
+
+.mbsc-ios-dark.mbsc-selected .mbsc-calendar-cell-text {
+    background: #0067ff !important;
+    border-color: #0067ff !important;
+}
+
+.mbsc-ios-dark.mbsc-eventcalendar-schedule .mbsc-calendar-day,
+.mbsc-ios-dark.mbsc-schedule-wrapper {
+    background: #1b1d21 !important;
 }

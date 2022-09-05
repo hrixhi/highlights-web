@@ -2648,8 +2648,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     return;
                 }
 
-                if (problem.multipartOptions[0].length < 2) {
-                    Alert(`Part A must have at least two choices in question ${problemIndex + 1}`);
+                hasOneCorrect = false;
+                hasMissingOption = false;
+
+                if (problem.multipartOptions[1].length < 2) {
+                    Alert(`Part B must have at least two choices in question ${problemIndex + 1}`);
                     return;
                 }
 

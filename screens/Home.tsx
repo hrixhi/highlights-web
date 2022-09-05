@@ -51,6 +51,8 @@ import { omitTypename } from '../helpers/omitTypename';
 import { useAppContext } from '../contexts/AppContext';
 import { StackScreenProps } from '@react-navigation/stack';
 
+import NavigationWrapper from '../fields/NavigationWrapper';
+
 function Home({ navigation, route }: StackScreenProps<any, ''>) {
     const win = Dimensions.get('window');
     const screen = Dimensions.get('screen');
@@ -538,7 +540,6 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
     };
 
     const getCreateNavbarIconName = (op: string) => {
-        console.log('Create navbar op', op);
         switch (op) {
             case 'Content':
                 return createActiveTab === op ? 'create' : 'create-outline';
@@ -622,6 +623,45 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
                 return 'Settings';
         }
     };
+
+    return !user || !org || !allCues || !subscriptions || loadingUser || loadingSubs || loadingCues || loadingOrg ? (
+        <View
+            style={{
+                width: '100%',
+                backgroundColor: 'white',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                flex: 1,
+            }}
+        >
+            <View
+                style={{
+                    flexDirection: 'column',
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <View
+                    style={{
+                        marginTop: 10,
+                    }}
+                >
+                    <ActivityIndicator size={20} color={'#1F1F1F'} />
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontFamily: 'Inter',
+                            marginTop: 10,
+                        }}
+                    >
+                        Loading...
+                    </Text>
+                </View>
+            </View>
+        </View>
+    ) : (
+        <NavigationWrapper />
+    );
 
     return (
         <View

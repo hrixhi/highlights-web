@@ -1885,12 +1885,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         style={{
                                             // backgroundColor: '#fff',
                                             flexDirection: 'row',
-                                            borderColor: '#f2f2f2',
+                                            // borderColor: '#f2f2f2',
                                             paddingVertical: 5,
                                             // borderRightWidth: 1,
-                                            borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
+                                            // borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                             // minWidth: 600, // flex: 1,
                                             width: '100%',
+                                            borderBottomColor: '#f2f2f2',
+                                            borderBottomWidth: 1,
                                         }}
                                         key={ind.toString()}
                                     >
@@ -2190,9 +2192,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                           style={{
                                               backgroundColor: threadId === thread._id ? '#f8f8f8' : '#fff',
                                               flexDirection: 'row',
-                                              borderColor: '#f8f8f8',
                                               width: '100%',
                                               borderRadius: 5,
+                                              borderBottomColor: '#f2f2f2',
+                                              borderBottomWidth: 1,
                                           }}
                                           key={ind.toString()}
                                       >

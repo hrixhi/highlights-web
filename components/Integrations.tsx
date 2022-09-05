@@ -361,7 +361,7 @@ const CuesIntegrations: React.FunctionComponent<{ [label: string]: any }> = (pro
 
                                     <View
                                         style={{
-                                            marginTop: 12,
+                                            marginTop: 8,
                                         }}
                                     >
                                         <Text

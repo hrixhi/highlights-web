@@ -191,7 +191,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return;
             }
 
-            subscriberRow.push(`${score}`);
+            subscriberRow.push(`${score}%`);
 
             const obj = JSON.parse(submission);
 
