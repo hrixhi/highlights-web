@@ -94,6 +94,7 @@
         "react-highlight-words": "^0.18.0",
         "react-html-parser": "^2.0.2",
         "react-image-marker": "^1.2.0",
+        "react-infinite-scroll-component": "^6.1.0",
         "react-mathjax-preview": "^2.2.6",
         "react-moment": "^1.1.1",
         "react-native": "^0.69.5",

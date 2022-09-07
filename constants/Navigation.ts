@@ -1,7 +1,15 @@
 export const AppNavigation = {
     // Top level are the main tabs/areas the app can have
     home: {},
-    workspace: {},
+    courses: {},
+    viewCourse: {
+        overview: {},
+        coursework: {},
+        discussion: {},
+        meetings: {},
+        grades: {},
+        settings: {},
+    },
     inbox: {},
     myNotes: {},
     profile: {},

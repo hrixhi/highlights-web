@@ -52,6 +52,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import NavigationWrapper from '../fields/NavigationWrapper';
+import { CourseContextProvider } from '../contexts/CourseContext';
 
 function Home({ navigation, route }: StackScreenProps<any, ''>) {
     const win = Dimensions.get('window');
@@ -131,6 +132,7 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
         allCues,
         customCategories,
         handleReadCue,
+        sortBy,
     } = useAppContext();
 
     // QUERIES
@@ -286,7 +288,7 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
 
     useEffect(() => {
         if (!initUserFlow) {
-            initializeUserFlow();
+            // initializeUserFlow();
         }
     }, [user, initUserFlow]);
 
@@ -660,7 +662,13 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
             </View>
         </View>
     ) : (
-        <NavigationWrapper />
+        <CourseContextProvider
+            value={{
+                sortBy,
+            }}
+        >
+            <NavigationWrapper />
+        </CourseContextProvider>
     );
 
     return (

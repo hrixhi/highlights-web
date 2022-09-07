@@ -1,5 +1,5 @@
 // REACT
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     Animated,
@@ -47,11 +47,17 @@ import { useAppContext } from '../contexts/AppContext';
 import { useNavigationContext } from '../contexts/NavigationContext';
 import parser from 'html-react-parser';
 
-import { PlusIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, AdjustmentsHorizontalIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import {
+    CheckCircleIcon,
+    ExclamationTriangleIcon,
+    InformationCircleIcon,
+    CalendarIcon,
+} from '@heroicons/react/20/solid';
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { userId, org, user, subscriptions } = useAppContext();
-    const { theme } = useNavigationContext();
+    const { theme, showAddEvent, setEditEvent, closeEventForm, home } = useNavigationContext();
     const [tab, setTab] = useState('To Do');
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
@@ -62,7 +68,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60));
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [channels, setChannels] = useState<any[]>([]);
-    const [showAddEvent, setShowAddEvent] = useState(false);
+    // const [showAddEvent, setShowAddEvent] = useState(false);
     const [channelId, setChannelId] = useState('');
     const [selectedChannel, setSelectedChannel] = useState('My Events');
     const [description, setDescription] = useState('');
@@ -72,7 +78,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [isMeeting, setIsMeeting] = useState(false);
     const [recordMeeting, setRecordMeeting] = useState(false);
     const [isCreatingEvents, setIsCreatingEvents] = useState(false);
-    const [editEvent, setEditEvent] = useState<any>(null);
+    // const [editEvent, setEditEvent] = useState<any>(null);
     const [editChannelName, setEditChannelName] = useState('');
     const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
@@ -117,6 +123,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [filterByChannel, setFilterByChannel] = useState('All');
     const [filterEventsType, setFilterEventsType] = useState('All');
     const [viewAnnouncement, setViewAnnouncement] = useState<any>(undefined);
+
+    const { showEventForm, editEvent } = home;
 
     // HOOKS
 
@@ -358,7 +366,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setRecurring(false);
                     setRecordMeeting(false);
                     setIsCreatingEvents(false);
-                    setShowAddEvent(false);
+                    // setShowAddEvent(false);
                     setSelectedDays([]);
                     setSelectedStartDay('');
                     props.setTab('To Do');
@@ -373,7 +381,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setRecurring(false);
                     setRecordMeeting(false);
                     setIsCreatingEvents(false);
-                    setShowAddEvent(false);
+                    // setShowAddEvent(false);
                     setSelectedDays([]);
                     setSelectedStartDay('');
                 } else {
@@ -527,7 +535,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setRecurring(false);
                         setRecordMeeting(false);
                         setEditEvent(null);
-                        setShowAddEvent(false);
+                        // setShowAddEvent(false);
                         setTab('To Do');
 
                         // Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.');
@@ -805,7 +813,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             {recurring ? (
                 <View style={{ width: '100%', maxWidth: 400, display: 'flex', paddingVertical: 15 }}>
                     <View style={{ width: '100%' }}>
-                        <Text style={styles.text}>Interval 123</Text>
+                        <Text style={styles.text}>Interval</Text>
                     </View>
                     <View
                         style={{
@@ -945,73 +953,158 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 'Students will be able to join the meeting directly from the Agenda or Meetings tab in your Course.';
         }
 
-        return channelId !== '' || editChannelName !== '' ? (
-            <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 5 }}>
-                {!editEvent ? (
-                    <View
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: width < 768 ? '100%' : '33.33%',
-                        }}
-                    >
-                        <View style={{ width: '100%', paddingTop: width < 768 ? 40 : 25, paddingBottom: 15 }}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 15,
-                                        color: '#000000',
-                                        fontFamily: 'Inter',
-                                        marginRight: 8,
-                                    }}
-                                >
-                                    Meeting
-                                </Text>
-                                {editEvent ? null : (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            Alert(meetingSwitchMessage, meetingSwitchSubtitle);
-                                        }}
+        return (channelId !== '' || editChannelName !== '') && !editEvent ? (
+            <div className="mb-6">
+                {!meetingProvider && (!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') ? (
+                    <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700">
+                                    You must connect your account to Zoom to schedule a meeting.{' '}
+                                    <button
+                                        onClick={() => {}}
+                                        className="font-medium text-yellow-700 underline hover:text-yellow-600"
                                     >
-                                        <Ionicons name="help-circle-outline" size={18} color="#939699" />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                        </View>
-                        <View
-                            style={{
-                                height: 40,
-                                marginRight: 10,
-                            }}
-                        >
-                            <Switch
+                                        Connect to Zoom
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col w-full">
+                        <label htmlFor="isMeeting" className="inline-flex relative items-center cursor-pointer mb-2">
+                            <input
+                                type="checkbox"
                                 value={isMeeting}
-                                disabled={
-                                    editEvent ||
-                                    ((!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') &&
-                                        !meetingProvider)
-                                }
-                                onValueChange={() => {
+                                id="isMeeting"
+                                className="sr-only peer"
+                                onChange={(e: any) => {
                                     setIsMeeting(!isMeeting);
                                 }}
-                                style={{ height: 20 }}
-                                trackColor={{
-                                    false: '#f2f2f2',
-                                    true: '#000',
-                                }}
-                                activeThumbColor="white"
                             />
-                        </View>
-                    </View>
-                ) : null}
-            </DefaultView>
+                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-cues-blue" />
+                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-white">Meeting</span>
+                        </label>
+                        <div className="text-sm font-medium text-white dark:text-gray-300 mb-2">
+                            {meetingSwitchSubtitle}
+                        </div>
+                        {channelId !== '' && meetingProvider !== '' && isMeeting ? (
+                            <div className="rounded-md bg-blue-50 p-4 ">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />
+                                    </div>
+                                    <div className="ml-3 flex-1 md:flex md:justify-between">
+                                        <p className="text-sm text-blue-700">
+                                            The meeting link will be same as the one in the Course Settings. Ensure you
+                                            have a working link set at all times.
+                                        </p>
+                                        {/* <p className="mt-3 text-sm md:mt-0 md:ml-6">
+                                        <a
+                                            href="#"
+                                            className="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600"
+                                        >
+                                            Details
+                                            <span aria-hidden="true"> &rarr;</span>
+                                        </a>
+                                    </p> */}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                )}
+            </div>
         ) : null;
     };
+    // const renderMeetingOptions = () => {
+    //     let meetingSwitchMessage =
+    //         'Students will be able to join the meeting directly from the Agenda or Meetings tab in your Course.';
+
+    //     let meetingSwitchSubtitle =
+    //         'The meeting link will be same as the one in the Course Settings. Ensure you have a working link set at all times.';
+
+    //     if ((!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') && !meetingProvider) {
+    //         meetingSwitchMessage =
+    //             'To generate Zoom meetings directly from Cues, connect to Zoom under Account > Profile.';
+    //         meetingSwitchSubtitle = '';
+    //     } else if (userZoomInfo && userZoomInfo.accountId && userZoomInfo.accountId !== '' && !meetingProvider) {
+    //         meetingSwitchMessage = 'Cues will automatically generate a Zoom meeting.';
+    //         meetingSwitchSubtitle =
+    //             'Students will be able to join the meeting directly from the Agenda or Meetings tab in your Course.';
+    //     }
+
+    //     return channelId !== '' || editChannelName !== '' ? (
+    //         <DefaultView style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 5 }}>
+    //             {!editEvent ? (
+    //                 <View
+    //                     style={{
+    //                         display: 'flex',
+    //                         flexDirection: 'column',
+    //                         width: width < 768 ? '100%' : '33.33%',
+    //                     }}
+    //                 >
+    //                     <View style={{ width: '100%', paddingTop: width < 768 ? 40 : 25, paddingBottom: 15 }}>
+    //                         <View
+    //                             style={{
+    //                                 flexDirection: 'row',
+    //                                 alignItems: 'center',
+    //                             }}
+    //                         >
+    //                             <Text
+    //                                 style={{
+    //                                     fontSize: 15,
+    //                                     color: '#000000',
+    //                                     fontFamily: 'Inter',
+    //                                     marginRight: 8,
+    //                                 }}
+    //                             >
+    //                                 Meeting
+    //                             </Text>
+    //                             {editEvent ? null : (
+    //                                 <TouchableOpacity
+    //                                     onPress={() => {
+    //                                         Alert(meetingSwitchMessage, meetingSwitchSubtitle);
+    //                                     }}
+    //                                 >
+    //                                     <Ionicons name="help-circle-outline" size={18} color="#939699" />
+    //                                 </TouchableOpacity>
+    //                             )}
+    //                         </View>
+    //                     </View>
+    //                     <View
+    //                         style={{
+    //                             height: 40,
+    //                             marginRight: 10,
+    //                         }}
+    //                     >
+    //                         <Switch
+    //                             value={isMeeting}
+    //                             disabled={
+    //                                 editEvent ||
+    //                                 ((!userZoomInfo || !userZoomInfo.accountId || userZoomInfo.accountId === '') &&
+    //                                     !meetingProvider)
+    //                             }
+    //                             onValueChange={() => {
+    //                                 setIsMeeting(!isMeeting);
+    //                             }}
+    //                             style={{ height: 20 }}
+    //                             trackColor={{
+    //                                 false: '#f2f2f2',
+    //                                 true: '#000',
+    //                             }}
+    //                             activeThumbColor="white"
+    //                         />
+    //                     </View>
+    //                 </View>
+    //             ) : null}
+    //         </DefaultView>
+    //     ) : null;
+    // };
 
     /**
      * @description When editing event, shows the name of channel
@@ -1132,17 +1225,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Copy Invite
                         </Text>
                     </TouchableOpacity>
-
-                    {/* <TouchableOpacity style={{}}>
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    fontFamily: 'inter',
-                                    color: '#F94144'
-                                }}>
-                                Delete Meeting
-                            </Text>
-                        </TouchableOpacity> */}
                 </View>
             </View>
         ) : editEvent && editEvent.meeting && userZoomInfo && userZoomInfo.accountId ? (
@@ -1524,78 +1606,143 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         ];
 
         return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text
-                        style={{
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                            color: '#000000',
-                            paddingLeft: 5,
-                            paddingBottom: 10,
+            <Fragment>
+                <div>
+                    <div className="mb-2 block">
+                        <label
+                            htmlFor="filterChannel"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                            Workspace
+                        </label>
+                    </div>
+                    <Select
+                        id="filterChannel"
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant={theme}
+                        value={filterByChannel}
+                        onChange={(val: any) => {
+                            setFilterByChannel(val.value);
                         }}
-                    >
-                        Workspace
-                    </Text>
-                    <label style={{ width: 200, backgroundColor: 'white' }}>
-                        <Select
-                            touchUi={true}
-                            theme="ios"
-                            themeVariant="light"
-                            value={filterByChannel}
-                            onChange={(val: any) => {
-                                setFilterByChannel(val.value);
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble',
-                                },
-                                medium: {
-                                    touchUi: false,
-                                },
-                            }}
-                            dropdown={false}
-                            data={channelOptions}
-                        />
-                    </label>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                    <Text
-                        style={{
-                            fontSize: 13,
-                            fontFamily: 'Inter',
-                            color: '#000000',
-                            paddingLeft: 5,
-                            paddingBottom: 10,
+                        responsive={{
+                            small: {
+                                display: 'bubble',
+                            },
+                            medium: {
+                                touchUi: false,
+                            },
                         }}
-                    >
-                        Type
-                    </Text>
-
-                    <label style={{ width: 200, backgroundColor: 'white' }}>
-                        <Select
-                            touchUi={true}
-                            theme="ios"
-                            themeVariant="light"
-                            value={filterEventsType}
-                            onChange={(val: any) => {
-                                setFilterEventsType(val.value);
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble',
-                                },
-                                medium: {
-                                    touchUi: false,
-                                },
-                            }}
-                            dropdown={false}
-                            data={typeOptions}
-                        />
-                    </label>
+                        dropdown={false}
+                        data={channelOptions}
+                    />
                 </div>
-            </div>
+                <div>
+                    <div className="mb-2 block">
+                        <label
+                            htmlFor="eventType"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                            Event Type
+                        </label>
+                    </div>
+                    <Select
+                        id="eventType"
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant={theme}
+                        value={filterEventsType}
+                        onChange={(val: any) => {
+                            setFilterEventsType(val.value);
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble',
+                            },
+                            medium: {
+                                touchUi: false,
+                            },
+                        }}
+                        dropdown={false}
+                        data={typeOptions}
+                    />
+                </div>
+            </Fragment>
         );
+
+        // return (
+        //     <div style={{ display: 'flex', flexDirection: 'column' }}>
+        //         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+        //             <Text
+        //                 style={{
+        //                     fontSize: 13,
+        //                     fontFamily: 'Inter',
+        //                     color: '#000000',
+        //                     paddingLeft: 5,
+        //                     paddingBottom: 10,
+        //                 }}
+        //             >
+        //                 Workspace
+        //             </Text>
+        //             <label style={{ width: 200, backgroundColor: 'white' }}>
+        //                 <Select
+        //                     touchUi={true}
+        //                     theme="ios"
+        //                     themeVariant="light"
+        //                     value={filterByChannel}
+        //                     onChange={(val: any) => {
+        //                         setFilterByChannel(val.value);
+        //                     }}
+        //                     responsive={{
+        //                         small: {
+        //                             display: 'bubble',
+        //                         },
+        //                         medium: {
+        //                             touchUi: false,
+        //                         },
+        //                     }}
+        //                     dropdown={false}
+        //                     data={channelOptions}
+        //                 />
+        //             </label>
+        //         </div>
+        //         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+        //             <Text
+        //                 style={{
+        //                     fontSize: 13,
+        //                     fontFamily: 'Inter',
+        //                     color: '#000000',
+        //                     paddingLeft: 5,
+        //                     paddingBottom: 10,
+        //                 }}
+        //             >
+        //                 Type
+        //             </Text>
+
+        //             <label style={{ width: 200, backgroundColor: 'white' }}>
+        //                 <Select
+        //                     touchUi={true}
+        //                     theme="ios"
+        //                     themeVariant="light"
+        //                     value={filterEventsType}
+        //                     onChange={(val: any) => {
+        //                         setFilterEventsType(val.value);
+        //                     }}
+        //                     responsive={{
+        //                         small: {
+        //                             display: 'bubble',
+        //                         },
+        //                         medium: {
+        //                             touchUi: false,
+        //                         },
+        //                     }}
+        //                     dropdown={false}
+        //                     data={typeOptions}
+        //                 />
+        //             </label>
+        //         </div>
+        //     </div>
+        // );
     };
 
     const getAgendaNavbarIconName = (op: string) => {
@@ -2138,6 +2285,702 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
     };
 
+    if (showEventForm) {
+        return (
+            <div className="flex flex-col flex-1 w-full">
+                <div className="sticky top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
+                    {/* Back Arrow */}
+                    <button
+                        type="button"
+                        className="px-8 text-gray-500 dark:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cues-blue"
+                        onClick={() => closeEventForm()}
+                    >
+                        <span className="sr-only">Back to Home</span>
+                        <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    {/* Main */}
+                    <div className="flex flex-1 justify-between px-4">
+                        <div className="flex items-center flex-1">
+                            <h1 className="text-2xl font-bold text-black dark:text-white">
+                                {editEvent ? 'Edit ' + editEvent.originalTitle : 'New Event'}
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+                <form className="p-8 lg:max-w-3xl">
+                    <div className="mb-6">
+                        <label
+                            htmlFor="event-title"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Topic
+                        </label>
+                        <input
+                            type="event-title"
+                            id="event-title"
+                            className="bg-white border border-cues-border dark:border-cues-border-dark text-gray-900 text-sm rounded-lg focus:ring-cues-blue focus:border-cues-blue block w-full p-2.5 dark:bg-cues-dark-3 dark:placeholder-gray-300 dark:text-white dark:focus:ring-cues-blue dark:focus:border-cues-blue"
+                            placeholder="ex. Group Activity"
+                            required
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-6">
+                        <label
+                            htmlFor="message"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Description
+                        </label>
+                        <textarea
+                            id="message"
+                            rows={4}
+                            className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-solid border-cues-border dark:border-cues-border-dark focus:ring-cues-blue focus:border-cues-blue dark:bg-cues-dark-3 dark:placeholder-gray-300 dark:text-white dark:focus:ring-cues-blue dark:focus:border-cues-blue"
+                            placeholder="About the event..."
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-6">
+                        <label
+                            htmlFor="message"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Start
+                        </label>
+                        <Datepicker
+                            controls={['date', 'time']}
+                            touchUi={true}
+                            theme="ios"
+                            value={start}
+                            themeVariant={theme}
+                            // inputComponent="input"
+                            inputProps={{
+                                placeholder: 'Select start...',
+                            }}
+                            onChange={(event: any) => {
+                                const date = new Date(event.value);
+                                const roundOffDate = roundSeconds(date);
+                                setStart(roundOffDate);
+                            }}
+                            responsive={{
+                                xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true,
+                                },
+                                medium: {
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false,
+                                },
+                            }}
+                        />
+                    </div>
+
+                    <div className="mb-6">
+                        <label
+                            htmlFor="message"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            End
+                        </label>
+                        <Datepicker
+                            controls={['date', 'time']}
+                            touchUi={true}
+                            theme="ios"
+                            value={end}
+                            themeVariant={theme}
+                            // inputComponent="input"
+                            inputProps={{
+                                placeholder: 'Select end...',
+                            }}
+                            onChange={(event: any) => {
+                                const date = new Date(event.value);
+                                const roundOffDate = roundSeconds(date);
+                                setEnd(roundOffDate);
+                            }}
+                            responsive={{
+                                xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true,
+                                },
+                                medium: {
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false,
+                                },
+                            }}
+                        />
+                    </div>
+
+                    {channels.length > 0 && !editEvent ? (
+                        <div className="mb-6">
+                            <label
+                                htmlFor="message"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Event For
+                            </label>
+                            <Select
+                                touchUi={true}
+                                themeVariant={theme}
+                                value={selectedChannel}
+                                onChange={(val: any) => {
+                                    setSelectedChannel(val.value);
+
+                                    if (val.value === 'My Events') {
+                                        setChannelId('');
+                                    } else {
+                                        setChannelId(val.value);
+                                    }
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble',
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    },
+                                }}
+                                style={{
+                                    backgroundColor: '#f8f8f8',
+                                }}
+                                data={channelOptions}
+                            />
+                        </div>
+                    ) : null}
+
+                    {!editEvent && (
+                        <div className="mb-6">
+                            <label htmlFor="is-recurring" className="inline-flex relative items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    value={recurring}
+                                    id="is-recurring"
+                                    className="sr-only peer"
+                                    onChange={(e: any) => {
+                                        setRecurring(!recurring);
+                                    }}
+                                />
+                                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-cues-blue" />
+                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-white">
+                                    Recurring
+                                </span>
+                            </label>
+                        </div>
+                    )}
+
+                    {recurring && (
+                        <div className="mb-6">
+                            <label
+                                htmlFor="message"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Interval
+                            </label>
+                            <Select
+                                themeVariant={theme}
+                                touchUi={true}
+                                value={frequency}
+                                onChange={(val: any) => {
+                                    setFrequency(val.value);
+                                }}
+                                rows={eventFrequencyOptions.length}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble',
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    },
+                                }}
+                                data={eventFrequencyOptions.map((item: any, index: number) => {
+                                    return {
+                                        value: item.value,
+                                        text: item.label,
+                                    };
+                                })}
+                            />
+                        </div>
+                    )}
+
+                    {recurring && frequency === '1-W' && (
+                        <div className="mb-6">
+                            <label
+                                htmlFor="message"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Occurs on
+                            </label>
+                            <div className="flex flex-wrap w-full">
+                                {Object.keys(weekDays).map((day: any, ind: number) => {
+                                    const label = weekDays[day];
+
+                                    return (
+                                        <div className="flex items-center mr-8 mb-4">
+                                            <input
+                                                id={`occurs-on-${day}`}
+                                                type="checkbox"
+                                                className="w-4 h-4 text-cues-blue bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-cues-blue dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                disabled={day === selectedStartDay}
+                                                checked={selectedDays.includes(day)}
+                                                onChange={(e: any) => {
+                                                    if (selectedDays.includes(day)) {
+                                                        const filterDays = selectedDays.filter(
+                                                            (sel: any) => sel !== day
+                                                        );
+                                                        setSelectedDays(filterDays);
+                                                    } else {
+                                                        const updatedSelectDays = [...selectedDays, day];
+                                                        setSelectedDays(updatedSelectDays);
+                                                    }
+                                                }}
+                                            />
+                                            <label
+                                                htmlFor={`occurs-on-${day}`}
+                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            >
+                                                {label}
+                                            </label>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {editEvent && editEvent.zoomMeetingId && editEvent.zoomMeetingId !== '' ? (
+                        <div className="rounded-md bg-green-50 p-4 mb-6">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-green-800">
+                                        Meeting ID: {editEvent.zoomMeetingId}
+                                    </h3>
+                                    <div className="mt-2 text-sm text-green-700">
+                                        <div className="">Invite Link</div>
+                                        <p>{editEvent.zoomJoinUrl}</p>
+                                    </div>
+                                    <div className="mt-4">
+                                        <div className="-mx-2 -my-1.5 flex">
+                                            <button
+                                                type="button"
+                                                className="rounded-md bg-green-50 px-2 py-1.5 text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none"
+                                                onClick={() => {
+                                                    if (
+                                                        Platform.OS === 'web' ||
+                                                        Platform.OS === 'macos' ||
+                                                        Platform.OS === 'windows'
+                                                    ) {
+                                                        window.open(editEvent.zoomStartUrl, '_blank');
+                                                    } else {
+                                                        Linking.openURL(editEvent.zoomStartUrl);
+                                                    }
+                                                }}
+                                            >
+                                                Start meeting
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="ml-3 rounded-md bg-green-50 px-2 py-1.5 text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none"
+                                                onClick={async () => {
+                                                    await navigator.clipboard.writeText(editEvent.zoomJoinUrl);
+                                                    Alert('Invite link copied!');
+                                                }}
+                                            >
+                                                Copy Invite
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
+
+                    {renderMeetingOptions()}
+
+                    {/* Submit buttons */}
+                    {!editEvent ? (
+                        <div className="flex flex-row justify-end">
+                            <button
+                                type="button"
+                                className="inline-flex mr-4 items-center rounded-md border border-cues-border dark:border-cues-border-dark bg-white dark:bg-cues-dark-3 px-6 py-2.5 text-sm font-medium text-black dark:text-white shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none dark:hover:border-white"
+                                onClick={() => closeEventForm()}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="inline-flex mr-4 items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none"
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-row justify-end">
+                            <button
+                                type="button"
+                                className="inline-flex mr-4 items-center rounded-md border border-cues-border dark:border-cues-border-dark bg-white dark:bg-cues-dark-3 px-6 py-2.5 text-sm font-medium text-black dark:text-white shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none dark:hover:border-white"
+                                onClick={() => closeEventForm()}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="inline-flex mr-4 items-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-700 hover:bg-indigo-200 focus:outline-none"
+                            >
+                                Delete
+                            </button>
+
+                            <button
+                                type="submit"
+                                className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    )}
+                </form>
+            </div>
+        );
+    }
+
+    // if (showEventForm) {
+    //     return (
+    //         <View
+    //             style={{
+    //                 alignItems: 'center',
+    //                 backgroundColor: 'white',
+    //                 paddingHorizontal: width < 768 ? 20 : 0,
+    //                 paddingTop: 20,
+    //             }}
+    //         >
+    //             <View
+    //                 style={{
+    //                     width: '100%',
+    //                     maxWidth: 400,
+    //                     alignSelf: 'center',
+    //                 }}
+    //             >
+    //                 <View style={{ width: '100%', maxWidth: 400 }}>
+    //                     <Text
+    //                         style={{
+    //                             fontSize: 15,
+    //                             fontFamily: 'inter',
+    //                             color: '#000000',
+    //                         }}
+    //                     >
+    //                         Topic
+    //                     </Text>
+    //                     <TextInput
+    //                         value={title}
+    //                         placeholder={''}
+    //                         onChangeText={(val) => setTitle(val)}
+    //                         placeholderTextColor={'#1F1F1F'}
+    //                         required={true}
+    //                     />
+    //                 </View>
+    //                 <View style={{ width: '100%', maxWidth: 400 }}>
+    //                     <Text
+    //                         style={{
+    //                             fontSize: 15,
+    //                             fontFamily: 'inter',
+    //                             color: '#000000',
+    //                         }}
+    //                     >
+    //                         Description
+    //                     </Text>
+    //                     <TextInput
+    //                         value={description}
+    //                         placeholder=""
+    //                         onChangeText={(val) => setDescription(val)}
+    //                         placeholderTextColor={'#1F1F1F'}
+    //                     />
+    //                 </View>
+    //             </View>
+    //             {/* Put time here */}
+    //             <View style={{ display: 'flex', width: '100%', maxWidth: 400 }}>
+    //                 <View
+    //                     style={{
+    //                         width: '100%',
+    //                         maxWidth: 400,
+    //                         paddingVertical: 15,
+    //                     }}
+    //                 >
+    //                     <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
+    //                     <Datepicker
+    //                         controls={['date', 'time']}
+    //                         touchUi={true}
+    //                         theme="ios"
+    //                         value={start}
+    //                         themeVariant="light"
+    //                         // inputComponent="input"
+    //                         inputProps={{
+    //                             placeholder: 'Select start...',
+    //                         }}
+    //                         onChange={(event: any) => {
+    //                             const date = new Date(event.value);
+    //                             const roundOffDate = roundSeconds(date);
+    //                             setStart(roundOffDate);
+    //                         }}
+    //                         responsive={{
+    //                             xsmall: {
+    //                                 controls: ['date', 'time'],
+    //                                 display: 'bottom',
+    //                                 touchUi: true,
+    //                             },
+    //                             medium: {
+    //                                 controls: ['date', 'time'],
+    //                                 display: 'anchored',
+    //                                 touchUi: false,
+    //                             },
+    //                         }}
+    //                     />
+    //                 </View>
+    //                 <View
+    //                     style={{
+    //                         width: '100%',
+    //                         maxWidth: 400,
+    //                         paddingVertical: 15,
+    //                     }}
+    //                 >
+    //                     <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
+    //                     <Datepicker
+    //                         controls={['date', 'time']}
+    //                         touchUi={true}
+    //                         theme="ios"
+    //                         value={end}
+    //                         themeVariant="light"
+    //                         // inputComponent="input"
+    //                         inputProps={{
+    //                             placeholder: 'Select end...',
+    //                         }}
+    //                         onChange={(event: any) => {
+    //                             const date = new Date(event.value);
+    //                             const roundOffDate = roundSeconds(date);
+    //                             setEnd(roundOffDate);
+    //                         }}
+    //                         responsive={{
+    //                             xsmall: {
+    //                                 controls: ['date', 'time'],
+    //                                 display: 'bottom',
+    //                                 touchUi: true,
+    //                             },
+    //                             medium: {
+    //                                 controls: ['date', 'time'],
+    //                                 display: 'anchored',
+    //                                 touchUi: false,
+    //                             },
+    //                         }}
+    //                     />
+    //                 </View>
+    //             </View>
+    //             <View
+    //                 style={{
+    //                     paddingTop: 20,
+    //                     width: '100%',
+    //                     maxWidth: 400,
+    //                 }}
+    //             >
+    //                 {channels.length > 0 && !editEvent ? (
+    //                     <View>
+    //                         <View style={{ width: '100%', paddingBottom: 10 }}>
+    //                             <Text
+    //                                 style={{
+    //                                     fontSize: 15,
+    //                                     fontFamily: 'inter',
+    //                                     color: '#000000',
+    //                                 }}
+    //                             >
+    //                                 For
+    //                             </Text>
+    //                         </View>
+    //                         <View
+    //                             style={{
+    //                                 flexDirection: 'row',
+    //                                 display: 'flex',
+    //                                 backgroundColor: '#f8f8f8',
+    //                             }}
+    //                         >
+    //                             <label
+    //                                 style={{
+    //                                     width: '100%',
+    //                                     maxWidth: 400,
+    //                                     backgroundColor: 'white',
+    //                                 }}
+    //                             >
+    //                                 <Select
+    //                                     touchUi={true}
+    //                                     themeVariant="light"
+    //                                     value={selectedChannel}
+    //                                     onChange={(val: any) => {
+    //                                         setSelectedChannel(val.value);
+
+    //                                         if (val.value === 'My Events') {
+    //                                             setChannelId('');
+    //                                         } else {
+    //                                             setChannelId(val.value);
+    //                                         }
+    //                                     }}
+    //                                     responsive={{
+    //                                         small: {
+    //                                             display: 'bubble',
+    //                                         },
+    //                                         medium: {
+    //                                             touchUi: false,
+    //                                         },
+    //                                     }}
+    //                                     style={{
+    //                                         backgroundColor: '#f8f8f8',
+    //                                     }}
+    //                                     data={channelOptions}
+    //                                 />
+    //                             </label>
+    //                         </View>
+    //                     </View>
+    //                 ) : null}
+
+    //                 {renderEditMeetingInfo()}
+    //                 {!editEvent && renderRecurringOptions()}
+    //                 {renderMeetingOptions()}
+
+    //                 {channelId !== '' && meetingProvider !== '' && isMeeting ? (
+    //                     <Text
+    //                         style={{
+    //                             fontSize: 11,
+    //                             color: '#000000',
+    //                             // textTransform: 'uppercase',
+    //                             lineHeight: 20,
+    //                             fontFamily: 'Inter',
+    //                             paddingBottom: 15,
+    //                         }}
+    //                     >
+    //                         The meeting link will be same as the one in the Course Settings. Ensure you have a working
+    //                         link set at all times.
+    //                     </Text>
+    //                 ) : null}
+    //                 {channelId !== '' && userZoomInfo && userZoomInfo.accountId && !meetingProvider && isMeeting ? (
+    //                     <Text
+    //                         style={{
+    //                             fontSize: 11,
+    //                             color: '#000000',
+    //                             // textTransform: 'uppercase',
+    //                             lineHeight: 20,
+    //                             fontFamily: 'Inter',
+    //                             paddingBottom: 15,
+    //                         }}
+    //                     >
+    //                         Note: You need to be a licensed Zoom user for student attendances to be automatically
+    //                         captured and visible under your Course past meetings.
+    //                     </Text>
+    //                 ) : null}
+
+    //                 {channelId !== '' && (!userZoomInfo || !userZoomInfo.accountId) && !meetingProvider ? (
+    //                     <View
+    //                         style={{
+    //                             marginVertical: 10,
+    //                             flexDirection: 'row',
+    //                             alignItems: 'center',
+    //                             padding: 10,
+    //                             backgroundColor: '#f2f2f2',
+    //                             borderRadius: 1,
+    //                         }}
+    //                     >
+    //                         <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
+    //                         <Text style={{ paddingLeft: 20 }}>
+    //                             To schedule online meetings connect your account to Zoom
+    //                         </Text>
+    //                         <TouchableOpacity
+    //                             onPress={() => {
+    //                                 // ZOOM OAUTH
+
+    //                                 const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
+    //                                     zoomRedirectUri
+    //                                 )}&state=${userId}`;
+
+    //                                 if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    //                                     Linking.openURL(url);
+    //                                 } else {
+    //                                     window.open(url, '_blank');
+    //                                 }
+    //                             }}
+    //                             style={{
+    //                                 backgroundColor: '#f2f2f2',
+    //                                 paddingHorizontal: 10,
+    //                             }}
+    //                             disabled={user.email === disableEmailId}
+    //                         >
+    //                             <Text
+    //                                 style={{
+    //                                     fontSize: 15,
+    //                                     fontFamily: 'inter',
+    //                                     color: '#000',
+    //                                     backgroundColor: '#f2f2f2',
+    //                                 }}
+    //                             >
+    //                                 Connect
+    //                             </Text>
+    //                         </TouchableOpacity>
+    //                     </View>
+    //                 ) : null}
+
+    //                 {tab === 'Add' && !editEvent ? (
+    //                     <View
+    //                         style={{
+    //                             width: '100%',
+    //                             flexDirection: 'row',
+    //                             display: 'flex',
+    //                             marginBottom: 10,
+    //                             paddingVertical: 25,
+    //                             justifyContent: 'center',
+    //                         }}
+    //                     >
+    //                         <TouchableOpacity
+    //                             style={{
+    //                                 // backgroundColor: 'white',
+    //                                 // overflow: 'hidden',
+    //                                 // height: 35,
+    //                                 // justifyContent: 'center',
+    //                                 // flexDirection: 'row',
+    //                                 marginBottom: 20,
+    //                             }}
+    //                             onPress={() => handleCreate()}
+    //                             disabled={isCreatingEvents || user.email === disableEmailId}
+    //                         >
+    //                             <Text
+    //                                 style={{
+    //                                     fontWeight: 'bold',
+    //                                     textAlign: 'center',
+    //                                     borderColor: '#000',
+    //                                     borderWidth: 1,
+    //                                     color: '#fff',
+    //                                     backgroundColor: '#000',
+    //                                     fontSize: 11,
+    //                                     paddingHorizontal: 24,
+    //                                     fontFamily: 'inter',
+    //                                     overflow: 'hidden',
+    //                                     paddingVertical: 14,
+    //                                     textTransform: 'uppercase',
+    //                                     width: 120,
+    //                                 }}
+    //                             >
+    //                                 {isCreatingEvents ? '...' : 'CREATE'}
+    //                             </Text>
+    //                         </TouchableOpacity>
+    //                     </View>
+    //                 ) : null}
+    //                 {editEvent ? renderEditEventOptions() : null}
+    //             </View>
+    //         </View>
+    //     );
+    // }
+
     // MAIN RETURN
     return (
         <View
@@ -2170,9 +3013,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </h1>
                                     </div>
                                     <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                                        <dt className="sr-only">Account status</dt>
+                                        <dt className="sr-only">Today's Date</dt>
                                         <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 dark:text-gray-300 sm:mr-6 sm:mt-0">
+                                            <CalendarIcon
+                                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                                aria-hidden="true"
+                                            />
                                             {moment().format('MMMM Do YYYY')}
+                                        </dd>
+                                        <dt className="sr-only">Tasks Complete</dt>
+                                        <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 dark:text-gray-300 sm:mr-6 sm:mt-0">
+                                            <CheckCircleIcon
+                                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+                                                aria-hidden="true"
+                                            />
+                                            3 tasks today
                                         </dd>
                                     </dl>
                                 </div>
@@ -2206,13 +3061,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <button
                             type="button"
                             className="mr-3 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                            onClick={() => {
+                                setShowFilterPopup(true);
+                            }}
                         >
                             <span className="sr-only">Filter events</span>
                             <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
                         <button
                             type="button"
-                            className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none"
+                            onClick={() => showAddEvent()}
                         >
                             <PlusIcon className="-ml-1 mr-3 h-4 w-4" aria-hidden="true" />
                             New
@@ -2243,609 +3102,271 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <ActivityIndicator color={theme === 'light' ? '#1F1F1F' : '#fff'} />
                     </View>
                 ) : (
-                    <View
-                        style={{
-                            width: '100%',
-                        }}
+                    <div
+                        // className="px-4 sm:px-6 lg:mx-auto lg:px-8 w-full"
+                        className="w-full"
                     >
-                        {!showAddEvent ? (
-                            <View nativeID={'planner-wrapper'}>
-                                {tab === tabs[0] ? (
-                                    <Eventcalendar
-                                        view={viewAgenda}
-                                        data={events}
-                                        themeVariant={theme}
-                                        onEventClick={onSelectEvent}
-                                        renderEventContent={renderEventContent}
-                                        noEventsText="Click + to schedule a new event or meeting."
-                                    />
-                                ) : tab === tabs[1] ? (
-                                    <Eventcalendar
-                                        view={viewSchedule}
-                                        data={events}
-                                        themeVariant={theme}
-                                        onEventClick={onSelectEvent}
-                                        renderEventContent={renderEventContent}
-                                        star
-                                        noEventsText="Click + to schedule a new event or meeting."
-                                    />
-                                ) : tab === tabs[2] ? (
-                                    <Eventcalendar
-                                        view={viewCalendar}
-                                        data={events}
-                                        themeVariant={theme}
-                                        onEventClick={onSelectEvent}
-                                        renderEventContent={renderEventContent}
-                                    />
-                                ) : tab === tabs[3] ? (
-                                    <View
-                                        style={{
-                                            width: Dimensions.get('window').width < 768 ? '100%' : '100%',
-                                            backgroundColor: 'white',
-                                        }}
-                                    >
-                                        {activity.length === 0 ? (
-                                            <View
+                        <View nativeID={'planner-wrapper'}>
+                            {tab === tabs[0] ? (
+                                <Eventcalendar
+                                    view={viewAgenda}
+                                    data={events}
+                                    themeVariant={theme}
+                                    onEventClick={onSelectEvent}
+                                    renderEventContent={renderEventContent}
+                                    noEventsText="Click + to schedule a new event or meeting."
+                                />
+                            ) : tab === tabs[1] ? (
+                                <Eventcalendar
+                                    view={viewSchedule}
+                                    data={events}
+                                    themeVariant={theme}
+                                    onEventClick={onSelectEvent}
+                                    renderEventContent={renderEventContent}
+                                    star
+                                    noEventsText="Click + to schedule a new event or meeting."
+                                />
+                            ) : tab === tabs[2] ? (
+                                <Eventcalendar
+                                    view={viewCalendar}
+                                    data={events}
+                                    themeVariant={theme}
+                                    onEventClick={onSelectEvent}
+                                    renderEventContent={renderEventContent}
+                                />
+                            ) : (
+                                <View
+                                    style={{
+                                        width: Dimensions.get('window').width < 768 ? '100%' : '100%',
+                                        backgroundColor: 'white',
+                                    }}
+                                >
+                                    {activity.length === 0 ? (
+                                        <View
+                                            style={{
+                                                paddingVertical: 100,
+                                            }}
+                                        >
+                                            <Text
                                                 style={{
-                                                    paddingVertical: 100,
+                                                    fontSize: 20,
+                                                    fontFamily: 'Inter',
+                                                    textAlign: 'center',
                                                 }}
                                             >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 20,
-                                                        fontFamily: 'Inter',
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    No Alerts
-                                                </Text>
-                                            </View>
-                                        ) : null}
-                                        <View>
-                                            {activity.map((act: any, index: number) => {
-                                                const { cueId, channelId, createdBy, target, threadId } = act;
+                                                No Alerts
+                                            </Text>
+                                        </View>
+                                    ) : null}
+                                    <View>
+                                        {activity.map((act: any, index: number) => {
+                                            const { cueId, channelId, createdBy, target, threadId } = act;
 
-                                                console.log('Activity', act);
+                                            console.log('Activity', act);
 
-                                                const date = new Date(act.date);
+                                            const date = new Date(act.date);
 
-                                                if (props.filterStart && props.filterEnd) {
-                                                    const start = new Date(props.filterStart);
-                                                    if (date < start) {
-                                                        return;
-                                                    }
-                                                    const end = new Date(props.filterEnd);
-                                                    if (date > end) {
-                                                        return;
-                                                    }
+                                            if (props.filterStart && props.filterEnd) {
+                                                const start = new Date(props.filterStart);
+                                                if (date < start) {
+                                                    return;
                                                 }
-
-                                                let announcementDescription = '';
-
-                                                if (target === 'ANNOUNCEMENT') {
-                                                    announcementDescription = extractContent(act.subtitle);
+                                                const end = new Date(props.filterEnd);
+                                                if (date > end) {
+                                                    return;
                                                 }
+                                            }
 
-                                                return (
-                                                    <TouchableOpacity
-                                                        key={index.toString()}
-                                                        onPress={async () => {
-                                                            server.mutate({
-                                                                mutation: markActivityAsRead,
-                                                                variables: {
-                                                                    activityId: act._id,
-                                                                    userId,
-                                                                    markAllRead: false,
-                                                                },
-                                                            });
+                                            let announcementDescription = '';
 
-                                                            // Opens the cue from the activity
-                                                            if (
-                                                                cueId !== null &&
-                                                                cueId !== '' &&
-                                                                channelId !== '' &&
-                                                                createdBy !== '' &&
-                                                                target === 'CUE'
-                                                            ) {
-                                                                props.openCue(channelId, cueId, createdBy);
-                                                            }
+                                            if (target === 'ANNOUNCEMENT') {
+                                                announcementDescription = extractContent(act.subtitle);
+                                            }
 
-                                                            if (target === 'DISCUSSION') {
-                                                                if (threadId && threadId !== '') {
-                                                                    await AsyncStorage.setItem('openThread', threadId);
-                                                                }
+                                            return (
+                                                <TouchableOpacity
+                                                    key={index.toString()}
+                                                    onPress={async () => {
+                                                        server.mutate({
+                                                            mutation: markActivityAsRead,
+                                                            variables: {
+                                                                activityId: act._id,
+                                                                userId,
+                                                                markAllRead: false,
+                                                            },
+                                                        });
 
-                                                                props.openDiscussion(channelId);
-                                                            }
-
-                                                            if (
-                                                                target === 'CHANNEL_SUBSCRIBED' ||
-                                                                target === 'CHANNEL_MODERATOR_ADDED' ||
-                                                                target === 'CHANNEL_MODERATOR_REMOVED' ||
-                                                                target === 'CHANNEL_OWNER_ADDED'
-                                                            ) {
-                                                                props.openChannel(channelId);
-                                                            }
-
-                                                            if (target === 'ANNOUNCEMENT') {
-                                                                setViewAnnouncement(act);
-                                                            }
-                                                        }}
-                                                        style={{
-                                                            flexDirection: 'row',
-                                                            borderColor: '#f2f2f2',
-                                                            borderBottomWidth: index === activity.length - 1 ? 0 : 1,
-                                                            width: '100%',
-                                                            paddingVertical: 5,
-                                                            backgroundColor: 'white',
-                                                            paddingHorizontal: paddingResponsive(),
-                                                        }}
-                                                        disabled={
-                                                            target === 'CHANNEL_UNSUBSCRIBED' ||
-                                                            target === 'CHANNEL_OWNER_REMOVED'
+                                                        // Opens the cue from the activity
+                                                        if (
+                                                            cueId !== null &&
+                                                            cueId !== '' &&
+                                                            channelId !== '' &&
+                                                            createdBy !== '' &&
+                                                            target === 'CUE'
+                                                        ) {
+                                                            props.openCue(channelId, cueId, createdBy);
                                                         }
+
+                                                        if (target === 'DISCUSSION') {
+                                                            if (threadId && threadId !== '') {
+                                                                await AsyncStorage.setItem('openThread', threadId);
+                                                            }
+
+                                                            props.openDiscussion(channelId);
+                                                        }
+
+                                                        if (
+                                                            target === 'CHANNEL_SUBSCRIBED' ||
+                                                            target === 'CHANNEL_MODERATOR_ADDED' ||
+                                                            target === 'CHANNEL_MODERATOR_REMOVED' ||
+                                                            target === 'CHANNEL_OWNER_ADDED'
+                                                        ) {
+                                                            props.openChannel(channelId);
+                                                        }
+
+                                                        if (target === 'ANNOUNCEMENT') {
+                                                            setViewAnnouncement(act);
+                                                        }
+                                                    }}
+                                                    style={{
+                                                        flexDirection: 'row',
+                                                        borderColor: '#f2f2f2',
+                                                        borderBottomWidth: index === activity.length - 1 ? 0 : 1,
+                                                        width: '100%',
+                                                        paddingVertical: 5,
+                                                        backgroundColor: 'white',
+                                                        paddingHorizontal: paddingResponsive(),
+                                                    }}
+                                                    disabled={
+                                                        target === 'CHANNEL_UNSUBSCRIBED' ||
+                                                        target === 'CHANNEL_OWNER_REMOVED'
+                                                    }
+                                                >
+                                                    <View
+                                                        style={{
+                                                            flex: 1,
+                                                            backgroundColor: 'white',
+                                                        }}
                                                     >
                                                         <View
                                                             style={{
-                                                                flex: 1,
-                                                                backgroundColor: 'white',
+                                                                flexDirection: 'row',
+                                                                alignItems: 'center',
+                                                                marginTop: Dimensions.get('window').width < 768 ? 0 : 5,
                                                             }}
                                                         >
                                                             <View
                                                                 style={{
-                                                                    flexDirection: 'row',
-                                                                    alignItems: 'center',
-                                                                    marginTop:
-                                                                        Dimensions.get('window').width < 768 ? 0 : 5,
+                                                                    width: 8,
+                                                                    height: 8,
+                                                                    borderRadius: 8,
+                                                                    backgroundColor:
+                                                                        target === 'ANNOUNCEMENT'
+                                                                            ? '#000'
+                                                                            : act.colorCode,
+                                                                    marginRight: 2,
                                                                 }}
-                                                            >
-                                                                <View
-                                                                    style={{
-                                                                        width: 8,
-                                                                        height: 8,
-                                                                        borderRadius: 8,
-                                                                        backgroundColor:
-                                                                            target === 'ANNOUNCEMENT'
-                                                                                ? '#000'
-                                                                                : act.colorCode,
-                                                                        marginRight: 2,
-                                                                    }}
-                                                                />
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize:
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 15
-                                                                                : 16,
-                                                                        padding: 5,
-                                                                        fontFamily: 'inter',
-                                                                    }}
-                                                                    ellipsizeMode="tail"
-                                                                >
-                                                                    {target === 'ANNOUNCEMENT'
-                                                                        ? 'Announcement - ' + act.title
-                                                                        : act.channelName}
-                                                                </Text>
-                                                            </View>
+                                                            />
                                                             <Text
                                                                 style={{
                                                                     fontSize:
-                                                                        Dimensions.get('window').width < 768 ? 13 : 14,
-                                                                    lineHeight: 16,
-                                                                    paddingHorizontal: 5,
-                                                                    marginVertical: 5,
-                                                                    paddingLeft: 0,
+                                                                        Dimensions.get('window').width < 768 ? 15 : 16,
+                                                                    padding: 5,
+                                                                    fontFamily: 'inter',
                                                                 }}
                                                                 ellipsizeMode="tail"
-                                                                numberOfLines={2}
                                                             >
                                                                 {target === 'ANNOUNCEMENT'
-                                                                    ? announcementDescription
-                                                                    : `${act.title} - ${act.subtitle}`}
+                                                                    ? 'Announcement - ' + act.title
+                                                                    : act.channelName}
                                                             </Text>
                                                         </View>
-                                                        <View
-                                                            style={{
-                                                                backgroundColor: 'white',
-                                                                padding: 0,
-                                                                flexDirection: 'row',
-                                                                alignSelf: 'center',
-                                                                // paddingRight: 10,
-                                                                alignItems: 'center',
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 13,
-                                                                    padding: 5,
-                                                                }}
-                                                                ellipsizeMode="tail"
-                                                            >
-                                                                {act.status === 'unread' ? (
-                                                                    <Ionicons
-                                                                        name="alert-circle-outline"
-                                                                        color="#f94144"
-                                                                        size={
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 18
-                                                                                : 20
-                                                                        }
-                                                                    />
-                                                                ) : null}
-                                                            </Text>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize:
-                                                                        Dimensions.get('window').width < 768 ? 13 : 14,
-                                                                    padding: 5,
-                                                                    lineHeight: 13,
-                                                                    // fontWeight: 'bold',
-                                                                }}
-                                                                ellipsizeMode="tail"
-                                                            >
-                                                                {emailTimeDisplay(act.date)}
-                                                            </Text>
-
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14,
-                                                                    padding: 5,
-                                                                    paddingRight: 0,
-                                                                    lineHeight: 13,
-                                                                    width:
-                                                                        Dimensions.get('window').width < 768 ? 20 : 30,
-                                                                }}
-                                                                ellipsizeMode="tail"
-                                                            >
-                                                                {target !== 'CHANNEL_UNSUBSCRIBED' ? (
-                                                                    <Ionicons
-                                                                        name="chevron-forward-outline"
-                                                                        size={
-                                                                            Dimensions.get('window').width < 768
-                                                                                ? 18
-                                                                                : 20
-                                                                        }
-                                                                        color="#007AFF"
-                                                                    />
-                                                                ) : null}
-                                                            </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                );
-                                            })}
-                                        </View>
-                                    </View>
-                                ) : (
-                                    <View
-                                        style={{
-                                            alignItems: 'center',
-                                            backgroundColor: 'white',
-                                            paddingHorizontal: width < 768 ? 20 : 0,
-                                            paddingTop: 20,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                width: '100%',
-                                                maxWidth: 400,
-                                                alignSelf: 'center',
-                                            }}
-                                        >
-                                            <View style={{ width: '100%', maxWidth: 400 }}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 15,
-                                                        fontFamily: 'inter',
-                                                        color: '#000000',
-                                                    }}
-                                                >
-                                                    Topic
-                                                </Text>
-                                                <TextInput
-                                                    value={title}
-                                                    placeholder={''}
-                                                    onChangeText={(val) => setTitle(val)}
-                                                    placeholderTextColor={'#1F1F1F'}
-                                                    required={true}
-                                                />
-                                            </View>
-                                            <View style={{ width: '100%', maxWidth: 400 }}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 15,
-                                                        fontFamily: 'inter',
-                                                        color: '#000000',
-                                                    }}
-                                                >
-                                                    Description
-                                                </Text>
-                                                <TextInput
-                                                    value={description}
-                                                    placeholder=""
-                                                    onChangeText={(val) => setDescription(val)}
-                                                    placeholderTextColor={'#1F1F1F'}
-                                                />
-                                            </View>
-                                        </View>
-                                        {/* Put time here */}
-                                        <View style={{ display: 'flex', width: '100%', maxWidth: 400 }}>
-                                            <View
-                                                style={{
-                                                    width: '100%',
-                                                    maxWidth: 400,
-                                                    paddingVertical: 15,
-                                                }}
-                                            >
-                                                <Text style={styles.text}>{PreferredLanguageText('start')}</Text>
-                                                <Datepicker
-                                                    controls={['date', 'time']}
-                                                    touchUi={true}
-                                                    theme="ios"
-                                                    value={start}
-                                                    themeVariant="light"
-                                                    // inputComponent="input"
-                                                    inputProps={{
-                                                        placeholder: 'Select start...',
-                                                    }}
-                                                    onChange={(event: any) => {
-                                                        const date = new Date(event.value);
-                                                        const roundOffDate = roundSeconds(date);
-                                                        setStart(roundOffDate);
-                                                    }}
-                                                    responsive={{
-                                                        xsmall: {
-                                                            controls: ['date', 'time'],
-                                                            display: 'bottom',
-                                                            touchUi: true,
-                                                        },
-                                                        medium: {
-                                                            controls: ['date', 'time'],
-                                                            display: 'anchored',
-                                                            touchUi: false,
-                                                        },
-                                                    }}
-                                                />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    width: '100%',
-                                                    maxWidth: 400,
-                                                    paddingVertical: 15,
-                                                }}
-                                            >
-                                                <Text style={styles.text}>{PreferredLanguageText('end')}</Text>
-                                                <Datepicker
-                                                    controls={['date', 'time']}
-                                                    touchUi={true}
-                                                    theme="ios"
-                                                    value={end}
-                                                    themeVariant="light"
-                                                    // inputComponent="input"
-                                                    inputProps={{
-                                                        placeholder: 'Select end...',
-                                                    }}
-                                                    onChange={(event: any) => {
-                                                        const date = new Date(event.value);
-                                                        const roundOffDate = roundSeconds(date);
-                                                        setEnd(roundOffDate);
-                                                    }}
-                                                    responsive={{
-                                                        xsmall: {
-                                                            controls: ['date', 'time'],
-                                                            display: 'bottom',
-                                                            touchUi: true,
-                                                        },
-                                                        medium: {
-                                                            controls: ['date', 'time'],
-                                                            display: 'anchored',
-                                                            touchUi: false,
-                                                        },
-                                                    }}
-                                                />
-                                            </View>
-                                        </View>
-                                        <View
-                                            style={{
-                                                paddingTop: 20,
-                                                width: '100%',
-                                                maxWidth: 400,
-                                            }}
-                                        >
-                                            {channels.length > 0 && !editEvent ? (
-                                                <View>
-                                                    <View style={{ width: '100%', paddingBottom: 10 }}>
                                                         <Text
                                                             style={{
-                                                                fontSize: 15,
-                                                                fontFamily: 'inter',
-                                                                color: '#000000',
+                                                                fontSize:
+                                                                    Dimensions.get('window').width < 768 ? 13 : 14,
+                                                                lineHeight: 16,
+                                                                paddingHorizontal: 5,
+                                                                marginVertical: 5,
+                                                                paddingLeft: 0,
                                                             }}
+                                                            ellipsizeMode="tail"
+                                                            numberOfLines={2}
                                                         >
-                                                            For
+                                                            {target === 'ANNOUNCEMENT'
+                                                                ? announcementDescription
+                                                                : `${act.title} - ${act.subtitle}`}
                                                         </Text>
                                                     </View>
                                                     <View
                                                         style={{
+                                                            backgroundColor: 'white',
+                                                            padding: 0,
                                                             flexDirection: 'row',
-                                                            display: 'flex',
-                                                            backgroundColor: '#f8f8f8',
+                                                            alignSelf: 'center',
+                                                            // paddingRight: 10,
+                                                            alignItems: 'center',
                                                         }}
                                                     >
-                                                        <label
+                                                        <Text
                                                             style={{
-                                                                width: '100%',
-                                                                maxWidth: 400,
-                                                                backgroundColor: 'white',
+                                                                fontSize: 13,
+                                                                padding: 5,
                                                             }}
+                                                            ellipsizeMode="tail"
                                                         >
-                                                            <Select
-                                                                touchUi={true}
-                                                                themeVariant="light"
-                                                                value={selectedChannel}
-                                                                onChange={(val: any) => {
-                                                                    setSelectedChannel(val.value);
-
-                                                                    if (val.value === 'My Events') {
-                                                                        setChannelId('');
-                                                                    } else {
-                                                                        setChannelId(val.value);
+                                                            {act.status === 'unread' ? (
+                                                                <Ionicons
+                                                                    name="alert-circle-outline"
+                                                                    color="#f94144"
+                                                                    size={
+                                                                        Dimensions.get('window').width < 768 ? 18 : 20
                                                                     }
-                                                                }}
-                                                                responsive={{
-                                                                    small: {
-                                                                        display: 'bubble',
-                                                                    },
-                                                                    medium: {
-                                                                        touchUi: false,
-                                                                    },
-                                                                }}
-                                                                style={{
-                                                                    backgroundColor: '#f8f8f8',
-                                                                }}
-                                                                data={channelOptions}
-                                                            />
-                                                        </label>
+                                                                />
+                                                            ) : null}
+                                                        </Text>
+                                                        <Text
+                                                            style={{
+                                                                fontSize:
+                                                                    Dimensions.get('window').width < 768 ? 13 : 14,
+                                                                padding: 5,
+                                                                lineHeight: 13,
+                                                                // fontWeight: 'bold',
+                                                            }}
+                                                            ellipsizeMode="tail"
+                                                        >
+                                                            {emailTimeDisplay(act.date)}
+                                                        </Text>
+
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 14,
+                                                                padding: 5,
+                                                                paddingRight: 0,
+                                                                lineHeight: 13,
+                                                                width: Dimensions.get('window').width < 768 ? 20 : 30,
+                                                            }}
+                                                            ellipsizeMode="tail"
+                                                        >
+                                                            {target !== 'CHANNEL_UNSUBSCRIBED' ? (
+                                                                <Ionicons
+                                                                    name="chevron-forward-outline"
+                                                                    size={
+                                                                        Dimensions.get('window').width < 768 ? 18 : 20
+                                                                    }
+                                                                    color="#007AFF"
+                                                                />
+                                                            ) : null}
+                                                        </Text>
                                                     </View>
-                                                </View>
-                                            ) : null}
-
-                                            {renderEditMeetingInfo()}
-                                            {!editEvent && renderRecurringOptions()}
-                                            {renderMeetingOptions()}
-                                            {channelId !== '' && meetingProvider !== '' && isMeeting ? (
-                                                <Text
-                                                    style={{
-                                                        fontSize: 11,
-                                                        color: '#000000',
-                                                        // textTransform: 'uppercase',
-                                                        lineHeight: 20,
-                                                        fontFamily: 'Inter',
-                                                        paddingBottom: 15,
-                                                    }}
-                                                >
-                                                    The meeting link will be same as the one in the Course Settings.
-                                                    Ensure you have a working link set at all times.
-                                                </Text>
-                                            ) : null}
-                                            {channelId !== '' &&
-                                            userZoomInfo &&
-                                            userZoomInfo.accountId &&
-                                            !meetingProvider &&
-                                            isMeeting ? (
-                                                <Text
-                                                    style={{
-                                                        fontSize: 11,
-                                                        color: '#000000',
-                                                        // textTransform: 'uppercase',
-                                                        lineHeight: 20,
-                                                        fontFamily: 'Inter',
-                                                        paddingBottom: 15,
-                                                    }}
-                                                >
-                                                    Note: You need to be a licensed Zoom user for student attendances to
-                                                    be automatically captured and visible under your Course past
-                                                    meetings.
-                                                </Text>
-                                            ) : null}
-
-                                            {channelId !== '' &&
-                                            (!userZoomInfo || !userZoomInfo.accountId) &&
-                                            !meetingProvider ? (
-                                                <View
-                                                    style={{
-                                                        marginVertical: 10,
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        padding: 10,
-                                                        backgroundColor: '#f2f2f2',
-                                                        borderRadius: 1,
-                                                    }}
-                                                >
-                                                    <Ionicons name="warning-outline" size={22} color={'#f3722c'} />
-                                                    <Text style={{ paddingLeft: 20 }}>
-                                                        To schedule online meetings connect your account to Zoom
-                                                    </Text>
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            // ZOOM OAUTH
-
-                                                            const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${zoomClientId}&redirect_uri=${encodeURIComponent(
-                                                                zoomRedirectUri
-                                                            )}&state=${userId}`;
-
-                                                            if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                                                                Linking.openURL(url);
-                                                            } else {
-                                                                window.open(url, '_blank');
-                                                            }
-                                                        }}
-                                                        style={{
-                                                            backgroundColor: '#f2f2f2',
-                                                            paddingHorizontal: 10,
-                                                        }}
-                                                        disabled={user.email === disableEmailId}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                fontSize: 15,
-                                                                fontFamily: 'inter',
-                                                                color: '#000',
-                                                                backgroundColor: '#f2f2f2',
-                                                            }}
-                                                        >
-                                                            Connect
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            ) : null}
-
-                                            {tab === 'Add' && !editEvent ? (
-                                                <View
-                                                    style={{
-                                                        width: '100%',
-                                                        flexDirection: 'row',
-                                                        display: 'flex',
-                                                        marginBottom: 10,
-                                                        paddingVertical: 25,
-                                                        justifyContent: 'center',
-                                                    }}
-                                                >
-                                                    <TouchableOpacity
-                                                        style={{
-                                                            marginBottom: 20,
-                                                        }}
-                                                        onPress={() => handleCreate()}
-                                                        disabled={isCreatingEvents || user.email === disableEmailId}
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                fontWeight: 'bold',
-                                                                textAlign: 'center',
-                                                                borderColor: '#000',
-                                                                borderWidth: 1,
-                                                                color: '#fff',
-                                                                backgroundColor: '#000',
-                                                                fontSize: 11,
-                                                                paddingHorizontal: 24,
-                                                                fontFamily: 'inter',
-                                                                overflow: 'hidden',
-                                                                paddingVertical: 14,
-                                                                textTransform: 'uppercase',
-                                                                width: 120,
-                                                            }}
-                                                        >
-                                                            {isCreatingEvents ? '...' : 'CREATE'}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                            ) : null}
-                                            {editEvent ? renderEditEventOptions() : null}
-                                        </View>
+                                                </TouchableOpacity>
+                                            );
+                                        })}
                                     </View>
-                                )}
-                            </View>
-                        ) : null}
-                    </View>
+                                </View>
+                            )}
+                        </View>
+                    </div>
                 )}
             </View>
 
@@ -2871,7 +3392,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         },
                     },
                 ]}
-                themeVariant="light"
+                themeVariant={theme}
                 theme="ios"
                 onClose={() => setShowFilterPopup(false)}
                 responsive={{
@@ -2884,52 +3405,45 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
             >
                 {/* Show all the settings here */}
-                <View
-                    style={{ flexDirection: 'column', padding: 25, backgroundColor: 'none' }}
-                    className="mbsc-align-center mbsc-padding"
-                >
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-                        <Text
-                            style={{
-                                fontSize: 13,
-                                fontFamily: 'Inter',
-                                color: '#000000',
-                                paddingLeft: 5,
-                                paddingBottom: 10,
+                <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+                    <h3 className="text-2xl font-medium text-gray-900 dark:text-white">Filter Events</h3>
+
+                    <div>
+                        <div className="mb-2 block">
+                            <label
+                                htmlFor="range"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Date Range
+                            </label>
+                        </div>
+                        <Datepicker
+                            id="range"
+                            theme="ios"
+                            themeVariant={theme}
+                            controls={['calendar']}
+                            select="range"
+                            touchUi={true}
+                            inputProps={{
+                                placeholder: 'Select',
                             }}
-                        >
-                            Filter
-                        </Text>
-
-                        <label style={{ width: 200, backgroundColor: 'white' }}>
-                            <Datepicker
-                                theme="ios"
-                                themeVariant="light"
-                                controls={['calendar']}
-                                select="range"
-                                touchUi={true}
-                                inputProps={{
-                                    placeholder: 'Select',
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble',
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    },
-                                }}
-                                value={[filterStart, filterEnd]}
-                                onChange={(val: any) => {
-                                    setFilterStart(val.value[0]);
-                                    setFilterEnd(val.value[1]);
-                                }}
-                            />
-                        </label>
+                            responsive={{
+                                small: {
+                                    display: 'bubble',
+                                },
+                                medium: {
+                                    touchUi: false,
+                                },
+                            }}
+                            value={[filterStart, filterEnd]}
+                            onChange={(val: any) => {
+                                setFilterStart(val.value[0]);
+                                setFilterEnd(val.value[1]);
+                            }}
+                        />
                     </div>
-
                     {renderEventFilters()}
-                </View>
+                </div>
             </Popup>
             {renderAnnouncementModal()}
         </View>

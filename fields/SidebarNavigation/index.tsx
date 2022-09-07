@@ -21,16 +21,17 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useNavigationContext } from '../../contexts/NavigationContext';
 
 const navigation = [
-    { name: 'Home', href: '#', icon: HomeIcon, current: true },
-    { name: 'Workspace', href: '#', icon: UsersIcon, current: false },
-    { name: 'Inbox', href: '#', icon: InboxIcon, current: false },
-    { name: 'My Notes', href: '#', icon: PencilSquareIcon, current: false },
+    { name: 'Home', icon: HomeIcon, route: 'home' },
+    { name: 'Courses', icon: UsersIcon, route: 'courses' },
+    { name: 'Inbox', icon: InboxIcon, route: 'inbox' },
+    { name: 'My Notes', icon: PencilSquareIcon, route: 'myNotes' },
 ];
 const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your Profile', route: 'profile' },
+    { name: 'Settings', route: 'settings' },
+    { name: 'Sign out' },
 ];
+
 const people = [
     { id: 1, name: 'Leslie Alexander', url: '#' },
     // More people...
@@ -43,7 +44,7 @@ function classNames(...classes: string[]) {
 export default function SidebarNavigation(props: any) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const { theme, changeTheme } = useNavigationContext();
+    const { theme, changeTheme, hideNavbar, route, switchRoute } = useNavigationContext();
 
     const [isShowing, setIsShowing] = useState(false);
 
@@ -238,11 +239,10 @@ export default function SidebarNavigation(props: any) {
                                 <div className="mt-5 h-0 flex-1 overflow-y-auto">
                                     <nav className="space-y-1 px-2">
                                         {navigation.map((item) => (
-                                            <a
+                                            <button
                                                 key={item.name}
-                                                href={item.href}
                                                 className={classNames(
-                                                    item.current
+                                                    item.route === route
                                                         ? 'bg-gray-100 text-gray-900'
                                                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                                                     'group flex items-center px-2 py-2 text-base font-medium rounded-md'
@@ -250,7 +250,7 @@ export default function SidebarNavigation(props: any) {
                                             >
                                                 <item.icon
                                                     className={classNames(
-                                                        item.current
+                                                        item.route === route
                                                             ? 'text-gray-500'
                                                             : 'text-gray-400 group-hover:text-gray-500',
                                                         'mr-4 flex-shrink-0 h-5 w-5'
@@ -258,7 +258,7 @@ export default function SidebarNavigation(props: any) {
                                                     aria-hidden="true"
                                                 />
                                                 {item.name}
-                                            </a>
+                                            </button>
                                         ))}
                                     </nav>
                                 </div>
@@ -272,7 +272,7 @@ export default function SidebarNavigation(props: any) {
             </Transition.Root>
 
             {/* Desktop */}
-            <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col ">
+            <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col z-50">
                 <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 dark:border-cues-border-dark bg-cues-gray-1 dark:bg-cues-dark-2 pt-5">
                     <div className="flex flex-shrink-0 items-center px-6">
                         <img
@@ -290,19 +290,19 @@ export default function SidebarNavigation(props: any) {
                     <div className="mt-8 flex flex-grow flex-col">
                         <nav className="flex-1 space-y-1 pb-4">
                             {navigation.map((item) => (
-                                <a
+                                <button
                                     key={item.name}
-                                    href={item.href}
                                     className={classNames(
-                                        item.current
+                                        item.route === route
                                             ? 'bg-cues-gray-2 dark:bg-cues-dark-active text-black'
                                             : 'text-gray-500 hover:bg-gray-100 hover:text-black',
-                                        'group flex items-center px-6 py-3 text-sm font-medium dark:text-white dark:hover:bg-cues-dark-1'
+                                        'w-full group flex items-center px-6 py-3 text-sm font-medium dark:text-white dark:hover:bg-cues-dark-1'
                                     )}
+                                    onClick={() => switchRoute(item.route)}
                                 >
                                     <item.icon
                                         className={classNames(
-                                            item.current
+                                            item.route === route
                                                 ? 'text-black'
                                                 : 'text-gray-500 group-hover:text-black dark:group-hover:text-white',
                                             'mr-4 flex-shrink-0 h-5 w-5 dark:text-white'
@@ -310,7 +310,7 @@ export default function SidebarNavigation(props: any) {
                                         aria-hidden="true"
                                     />
                                     {item.name}
-                                </a>
+                                </button>
                             ))}
                         </nav>
                     </div>
@@ -319,7 +319,7 @@ export default function SidebarNavigation(props: any) {
                             <div className=" flex items-center">
                                 <div className="flex flex-row flex-1 items-center">
                                     <p className="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-white ">
-                                        Quick Command
+                                        Menu
                                     </p>
                                     <div className="ml-auto flex ">
                                         <kbd className="inline-flex items-center rounded border border-gray-200 dark:border-cues-border-dark px-2 py-1 font-sans text-sm font-medium text-gray-400 dark:text-white">
@@ -333,142 +333,153 @@ export default function SidebarNavigation(props: any) {
                 </div>
             </div>
             {/* MAIN CONTENT AREA */}
-            <div className="flex flex-1 flex-col md:pl-64 h-full bg-white dark:bg-cues-dark-3">
-                <div className="sticky top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
-                    <button
-                        type="button"
-                        className="border-r border-gray-200 dark:border-cues-border-dark px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cues-blue md:hidden"
-                        onClick={() => setSidebarOpen(true)}
-                    >
-                        <span className="sr-only">Open sidebar</span>
-                        <Bars3BottomLeftIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                    <div className="flex flex-1 justify-between px-4">
-                        <div className="flex items-center flex-1">
-                            <div className="mr-4 flex items-center md:mr-6">
-                                <button
-                                    type="button"
-                                    className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                                >
-                                    <span className="sr-only">Go Back</span>
-                                    <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
-                                </button>
-                                <button
-                                    type="button"
-                                    className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                                >
-                                    <span className="sr-only">Go Front</span>
-                                    <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
-                                </button>
-                                <button
-                                    type="button"
-                                    className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                                >
-                                    <span className="sr-only">Recents</span>
-                                    <ClockIcon className="h-5 w-5" aria-hidden="true" />
-                                </button>
-                            </div>
+            <div className="flex flex-1 flex-col md:pl-64 h-screen bg-white dark:bg-cues-dark-3 overflow-hidden">
+                {!hideNavbar && (
+                    <div className="sticky top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
+                        <button
+                            type="button"
+                            className="border-r border-gray-200 dark:border-cues-border-dark px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cues-blue md:hidden"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            <span className="sr-only">Open sidebar</span>
+                            <Bars3BottomLeftIcon className="h-5 w-5" aria-hidden="true" />
+                        </button>
+                        <div className="flex flex-1 justify-between px-4">
+                            <div className="flex items-center flex-1">
+                                <div className="mr-4 flex items-center md:mr-6">
+                                    <button
+                                        type="button"
+                                        className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                                    >
+                                        <span className="sr-only">Go Back</span>
+                                        <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                                    >
+                                        <span className="sr-only">Go Front</span>
+                                        <ArrowRightIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                                    >
+                                        <span className="sr-only">Recents</span>
+                                        <ClockIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                </div>
 
-                            <form
-                                className="flex flex-1 items-center w-full max-w-lg lg:max-w-sm md:ml-0"
-                                action="#"
-                                method="GET"
-                            >
-                                <label htmlFor="search" className="sr-only">
-                                    Search
-                                </label>
-                                <div className="relative flex-1">
-                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <MagnifyingGlassIcon
-                                            className="h-5 w-5 text-gray-400 dark:text-white"
-                                            aria-hidden="true"
+                                <form
+                                    className="flex flex-1 items-center w-full max-w-lg lg:max-w-sm md:ml-0"
+                                    action="#"
+                                    method="GET"
+                                >
+                                    <label htmlFor="search" className="sr-only">
+                                        Search
+                                    </label>
+                                    <div className="relative flex-1">
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <MagnifyingGlassIcon
+                                                className="h-5 w-5 text-gray-400 dark:text-white"
+                                                aria-hidden="true"
+                                            />
+                                        </div>
+                                        <input
+                                            id="search"
+                                            name="search"
+                                            className="block w-full rounded-md border border-gray-200 dark:border-cues-border-dark dark:hover:border-white bg-white dark:bg-cues-dark-1 py-2 pl-10 pr-3 leading-5 placeholder-gray-500 dark:placeholder-gray-300 shadow-sm focus:border-cues-blue focus:placeholder-gray-400 focus:outline-none sm:text-sm dark:text-white"
+                                            placeholder="Search"
+                                            type="search"
                                         />
                                     </div>
-                                    <input
-                                        id="search"
-                                        name="search"
-                                        className="block w-full rounded-md border border-gray-200 dark:border-cues-border-dark dark:hover:border-white bg-white dark:bg-cues-dark-1 py-2 pl-10 pr-3 leading-5 placeholder-gray-500 dark:placeholder-gray-300 shadow-sm focus:border-blue-600 focus:placeholder-gray-400 focus:outline-none sm:text-sm dark:text-white"
-                                        placeholder="Search"
-                                        type="search"
-                                    />
-                                </div>
-                            </form>
-                        </div>
-                        <div className="ml-4 flex items-center md:ml-6">
-                            {/* Switch Theme Button */}
-                            <button
-                                id="theme-toggle"
-                                type="button"
-                                class="text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                            >
-                                <span className="sr-only">Change Theme</span>
-                                <MoonIcon id="theme-toggle-dark-icon" className="hidden h-5 w-5" aria-hidden="true" />
-                                <SunIcon id="theme-toggle-light-icon" className="hidden h-5 w-5" aria-hidden="true" />
-                            </button>
-                            <button
-                                data-tooltip-target="tooltip-notifications-button"
-                                type="button"
-                                className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                            >
-                                <span className="sr-only">View notifications</span>
-                                <BellIcon className="h-5 w-5" aria-hidden="true" />
-                            </button>
-                            <div
-                                id="tooltip-notifications-button"
-                                role="tooltip"
-                                class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
-                            >
-                                Notifications
-                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                </form>
                             </div>
-                            {/* Profile dropdown */}
-                            <Menu as="div" className="relative ml-3">
-                                <div>
-                                    <Menu.Button
-                                        as="button"
-                                        class="flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        <span className="sr-only">Open user menu</span>
-                                        <img
-                                            className="h-8 w-8 rounded-full"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt=""
-                                        />
-                                    </Menu.Button>
-                                </div>
-                                <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
+                            <div className="ml-4 flex items-center md:ml-6">
+                                {/* Switch Theme Button */}
+                                <button
+                                    id="theme-toggle"
+                                    type="button"
+                                    class="text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
                                 >
-                                    <Menu.Items class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        {userNavigation.map((item) => (
-                                            <Menu.Item key={item.name}>
-                                                {({ active }) => (
-                                                    <a
-                                                        href={item.href}
-                                                        class={classNames(
-                                                            active ? 'bg-gray-100' : '',
-                                                            'block py-2 px-4 text-sm text-gray-700'
-                                                        )}
-                                                    >
-                                                        {item.name}
-                                                    </a>
-                                                )}
-                                            </Menu.Item>
-                                        ))}
-                                    </Menu.Items>
-                                </Transition>
-                            </Menu>
+                                    <span className="sr-only">Change Theme</span>
+                                    <MoonIcon
+                                        id="theme-toggle-dark-icon"
+                                        className="hidden h-5 w-5"
+                                        aria-hidden="true"
+                                    />
+                                    <SunIcon
+                                        id="theme-toggle-light-icon"
+                                        className="hidden h-5 w-5"
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                                <button
+                                    data-tooltip-target="tooltip-notifications-button"
+                                    type="button"
+                                    className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+                                >
+                                    <span className="sr-only">View notifications</span>
+                                    <BellIcon className="h-5 w-5" aria-hidden="true" />
+                                </button>
+                                <div
+                                    id="tooltip-notifications-button"
+                                    role="tooltip"
+                                    class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+                                >
+                                    Notifications
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                                {/* Profile dropdown */}
+                                <Menu as="div" className="relative ml-3">
+                                    <div>
+                                        <Menu.Button
+                                            as="button"
+                                            class="flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        >
+                                            <span className="sr-only">Open user menu</span>
+                                            <img
+                                                className="h-8 w-8 rounded-full"
+                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                alt=""
+                                            />
+                                        </Menu.Button>
+                                    </div>
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            {userNavigation.map((item) => (
+                                                <Menu.Item key={item.name}>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href={item.href}
+                                                            class={classNames(
+                                                                active ? 'bg-gray-100' : '',
+                                                                'block py-2 px-4 text-sm text-gray-700'
+                                                            )}
+                                                        >
+                                                            {item.name}
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            ))}
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
 
-                <main className="flex-1">{props.children}</main>
+                {/* Disable overflow for Inbox */}
+                <main className="flex-1 overflow-y-scroll">{props.children}</main>
             </div>
         </div>
     );

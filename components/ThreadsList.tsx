@@ -2314,54 +2314,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                   </Text>
                                               </View>
                                           </View>
-                                          {/* <View
-                                        style={{
-                                            justifyContent: 'center',
-                                            flexDirection: 'column',
-                                            backgroundColor: 'none',
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                backgroundColor: 'none',
-                                                paddingHorizontal: 10,
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            {thread.isPrivate ? (
-                                                <Text
-                                                    style={{
-                                                        fontSize: 14,
-                                                        padding: 5,
-                                                        color: '#007AFF',
-                                                        textAlign: 'center',
-                                                    }}
-                                                    ellipsizeMode="tail"
-                                                >
-                                                    <Ionicons name="eye-off-outline" size={18} />
-                                                </Text>
-                                            ) : null}
-                                            {thread.unreadThreads > 0 ? (
-                                                <View
-                                                    style={{
-                                                        width: 16,
-                                                        height: 16,
-                                                        borderRadius: 8,
-                                                        marginHorizontal: 5,
-                                                        backgroundColor: '#007AFF',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        marginBottom: 3,
-                                                    }}
-                                                >
-                                                    <Text style={{ color: 'white', fontSize: 11 }}>
-                                                        {thread.unreadThreads}
-                                                    </Text>
-                                                </View>
-                                            ) : null}
-                                        </View>
-                                    </View> */}
                                       </TouchableOpacity>
                                   );
                               })}

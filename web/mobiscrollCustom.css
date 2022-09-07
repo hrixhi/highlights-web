@@ -75,7 +75,6 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 2px;
-    border: 1px solid #cccccc;
     font-size: 15px;
 }
 
@@ -145,6 +144,7 @@
 
 .mbsc-popup-padding {
     overflow: scroll;
+    padding: 2em;
 }
 
 /* FROALA EDITOR */
@@ -156,6 +156,14 @@
 /* .fr-box.fr-basic .fr-element.fr-view {
     font-family: Inter;
     font-size: 18px;
+} */
+/* 
+.fr-view ul {
+    list-style: disc !important;
+}
+
+.fr-view ol {
+    list-style: decimal !important;
 } */
 
 .noClearButtons .mbsc-textfield-tag-clear.mbsc-icon {
@@ -335,9 +343,9 @@ div#editable {
     font-size: 15px;
 }
 
-.mbsc-ios.mbsc-popup-body {
+/* .mbsc-ios.mbsc-popup-body {
     background: #f8f8f8 !important;
-}
+} */
 
 .mbsc-ios.mbsc-calendar-button.mbsc-button {
     color: '#0067ff' !important;
@@ -385,26 +393,26 @@ input:focus {
     border-radius: 2px;
 }
 
-/* .mbsc-ios.mbsc-button-flat {
-    color: #000 !important;
-    font-size: 15 !important;
+.mbsc-ios.mbsc-button-flat {
+    color: #000;
+    font-size: 15;
     font-family: 'Inter';
     text-transform: capitalize;
-} */
+}
 
-.mbsc-ios.mbsc-button-dark.mbsc-button-flat {
-    color: #000 !important;
+.mbsc-ios-dark.mbsc-button-flat {
+    color: #fff !important;
     font-size: 15 !important;
 }
 
 .mbsc-ios.mbsc-textfield-wrapper-underline {
-    background: #fff !important;
+    background: #fff;
 }
 
 .mbsc-ios.mbsc-select,
 .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-box,
 .mbsc-ios.mbsc-textarea-inner.mbsc-textfield-inner-outline {
-    background: #fff !important;
+    background: #fff;
 }
 
 .htmlParser {
@@ -798,4 +806,100 @@ svg:not(:root) {
 .mbsc-ios-dark.mbsc-eventcalendar-schedule .mbsc-calendar-day,
 .mbsc-ios-dark.mbsc-schedule-wrapper {
     background: #1b1d21 !important;
+}
+
+.mbsc-ios-dark.mbsc-popup-body {
+    background: #1b1d21 !important;
+}
+
+.mbsc-popup-overlay {
+    background: rgb(0 0 0 / 60%) !important;
+}
+
+.mbsc-ios-dark.mbsc-popup-button-flex.mbsc-button-flat.mbsc-hover {
+    background: #383838 !important;
+}
+
+.mbsc-ios-dark.mbsc-popup-button-flex.mbsc-button-flat.mbsc-active {
+    background: #4a5878 !important;
+}
+
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-select,
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-textarea-inner.mbsc-textfield-inner-box,
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-textarea-inner.mbsc-textfield-inner-outline,
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-textfield-box,
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-textfield-outline,
+.mbsc-ios-dark.mbsc-popup .mbsc-ios-dark.mbsc-textfield-wrapper-underline {
+    background: #1b1d21 !important;
+}
+
+.mbsc-label,
+.mbsc-textfield {
+    border: 1px solid #e8eaee !important;
+}
+
+.mbsc-ios-dark.mbsc-label,
+.mbsc-ios-dark.mbsc-textfield {
+    border: 1px solid #444444 !important;
+}
+
+.mbsc-popup-center {
+    min-width: 30em;
+}
+
+.mbsc-ios-dark.mbsc-scroller-pointer .mbsc-scroller-wheel-item.mbsc-selected {
+    color: #0067ff !important;
+}
+
+.mbsc-ios-dark.mbsc-scroller-wheel-item.mbsc-hover {
+    background: #4a5878 !important;
+}
+
+.mbsc-ios-dark.mbsc-calendar-today,
+.mbsc-ios-dark.mbsc-calendar-week-nr {
+    color: #0067ff;
+}
+
+.mbsc-ios-dark.mbsc-calendar-today {
+    color: #fff;
+}
+
+.mbsc-ios-dark.mbsc-hover .mbsc-calendar-cell-text {
+    background: #4a5878 !important;
+}
+
+.mbsc-ios-dark.mbsc-range-control-value.active {
+    color: #fff !important;
+}
+
+.mbsc-ios-dark.mbsc-range-day:after {
+    background: #4a5878 !important;
+}
+
+.mbsc-ios.mbsc-popup-body {
+    background: #fff;
+}
+
+.mbsc-ios-dark.mbsc-schedule-header-day.mbsc-selected {
+    background: #4a5878 !important;
+}
+
+.mbsc-ios-dark.mbsc-schedule-time-indicator {
+    border-color: #0067ff !important;
+}
+
+.mbsc-ios-dark.mbsc-schedule-time-indicator-time {
+    color: #0067ff !important;
+}
+
+.mbsc-ios-dark.mbsc-schedule-time-indicator-day:before {
+    background: #0067ff !important;
+}
+
+.fr-dark-view * {
+    color: white !important;
+}
+
+.dark-theme * {
+    color: white !important;
 }

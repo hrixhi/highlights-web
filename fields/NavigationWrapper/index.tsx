@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import SidebarNavigation from '../SidebarNavigation';
 
 import CalendarX from '../../components/Calendar';
+import Courses from '../../components/Courses';
 
 import { useNavigationContext } from '../../contexts/NavigationContext';
+import ViewCourse from '../../components/ViewCourse';
 
 const NavigationWrapper: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { route } = useNavigationContext();
@@ -25,6 +27,10 @@ const NavigationWrapper: React.FunctionComponent<{ [label: string]: any }> = (pr
                         openChannel={props.openChannelFromActivity}
                     />
                 );
+            case 'courses':
+                return <Courses />;
+            case 'viewCourse':
+                return <ViewCourse />;
         }
     };
 

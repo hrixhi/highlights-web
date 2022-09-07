@@ -50,6 +50,15 @@ module.exports = {
                 // Dark (Content Area Slack)
                 'cues-dark-3': '#1B1D21',
             },
+            ringColor: {
+                'cues-dark-3': '#1B1D21',
+            },
+            minWidth: {
+                'cues-carousel': '18em',
+            },
+            minHeight: {
+                coursework: 'calc(100vh - 56px)',
+            },
         },
     },
     darkMode: 'class',
