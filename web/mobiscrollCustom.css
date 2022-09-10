@@ -153,18 +153,26 @@
     position: sticky !important;
 }
 
-/* .fr-box.fr-basic .fr-element.fr-view {
-    font-family: Inter;
-    font-size: 18px;
-} */
-/* 
-.fr-view ul {
-    list-style: disc !important;
+.dark-theme.fr-box.fr-basic .fr-wrapper {
+    border-left-color: #444444 !important;
+    border-right-color: #444444 !important;
+    border-bottom: 0px !important;
+
+    background: #1b1d21 !important;
 }
 
-.fr-view ol {
-    list-style: decimal !important;
-} */
+.dark-theme .fr-second-toolbar {
+    border-color: #444444 !important;
+    background: #1b1d21 !important;
+}
+
+.dark.fr-view {
+    background: #1b1d21 !important;
+}
+
+.dark-theme.fr-toolbar.fr-top {
+    border-color: #444444 !important;
+}
 
 .noClearButtons .mbsc-textfield-tag-clear.mbsc-icon {
     display: none !important;
@@ -360,12 +368,12 @@ div#editable {
     background: #fff;
 }
 
-.fr-second-toolbar {
+/* .fr-second-toolbar {
     border-radius: 0px !important;
     border: none;
-}
+} */
 
-.fr-toolbar {
+/* .fr-toolbar {
     border: none !important;
 }
 
@@ -377,7 +385,7 @@ div#editable {
 .fr-toolbar .fr-newline {
     margin-left: 0px !important;
     margin-right: 0px !important;
-}
+} */
 
 *:focus {
     outline: none !important;
@@ -423,75 +431,12 @@ input:focus {
 .highlighter {
     text-overflow: ellipsis;
 }
-
+/* 
 .fr-box.fr-basic .fr-element {
     color: '#000';
-}
+} */
 
 /* New table with sticky row and column */
-
-.stickyTableContainer {
-    position: relative;
-    max-height: 300px;
-    width: 500px;
-    overflow: scroll;
-}
-
-.stickyTable {
-    white-space: nowrap;
-    margin: 0;
-    border: none;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-    min-width: 100%;
-}
-
-.stickyTable > thead th {
-    padding: 3px;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    /* width: 25vw; */
-    padding: 10px;
-    min-width: 150px;
-    max-width: 150px;
-    background-color: #f8f8f8;
-}
-
-.stickyTable > thead {
-    background-color: #f8f8f8;
-    min-width: 100%;
-}
-
-.stickyTable > thead th:first-child {
-    background-color: #f8f8f8;
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    min-width: 150px;
-    max-width: 150px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
-.stickyTable > tbody th {
-    position: sticky;
-    left: 0;
-    background: white;
-    z-index: 2;
-    min-width: 150px;
-    max-width: 150px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
-.stickyTable > tbody td {
-    z-index: 1;
-    min-width: 120px;
-    max-width: 120px;
-    padding: 10px;
-}
 
 .analyticsOverviewTable {
 }
@@ -617,88 +562,6 @@ svg:not(:root) {
     overflow: scroll;
 }
 
-.gradebookTable {
-    white-space: nowrap;
-    margin: 0;
-    border: none;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-    min-width: 100%;
-}
-
-.gradebookTable > thead th {
-    padding: 3px;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    /* width: 25vw; */
-    padding: 10px;
-    min-width: 180px;
-    max-width: 180px;
-    background-color: #f8f8f8;
-    border-right: 1px solid #f2f2f2;
-}
-
-.gradebookTable > thead {
-    background-color: #f8f8f8;
-    min-width: 100%;
-}
-
-.gradebookTable > thead th:first-child {
-    background-color: #f8f8f8;
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    min-width: 180px;
-    max-width: 180px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
-.gradebookTable > tbody th {
-    position: sticky;
-    left: 0;
-    background: white;
-    z-index: 2;
-    min-width: 180px;
-    max-width: 180px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
-.gradebookTable > tbody td {
-    z-index: 1;
-    min-width: 180px;
-    max-width: 180px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
-.gradebookTable > tfoot th {
-    padding: 3px;
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-    /* width: 25vw; */
-    padding: 10px;
-    min-width: 180px;
-    max-width: 180px;
-    background-color: #f8f8f8;
-    border-right: 1px solid #f2f2f2;
-}
-
-.gradebookTable > tfoot th:first-child {
-    background-color: #f8f8f8;
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    min-width: 180px;
-    max-width: 180px;
-    padding: 10px;
-    border-right: 1px solid #f2f2f2;
-}
-
 .courseAvgTableContainer {
     position: relative;
     max-height: 300px;
@@ -794,9 +657,9 @@ svg:not(:root) {
     background: #1b1d21 !important;
 } */
 
-.fr-toolbar.fr-top {
+/* .fr-toolbar.fr-top {
     border-radius: 0px !important;
-}
+} */
 
 .mbsc-ios-dark.mbsc-selected .mbsc-calendar-cell-text {
     background: #0067ff !important;

@@ -2,7 +2,12 @@ import { useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useReducer } from 'react';
-import { getChannelThreads } from '../graphql/QueriesAndMutations';
+import {
+    getChannelThreads,
+    getThreadWithReplies,
+    getAttendanceBook,
+    getGradebookInstructor,
+} from '../graphql/QueriesAndMutations';
 
 export const CourseContext = React.createContext<{ [label: string]: any }>({});
 
@@ -26,12 +31,27 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
             filteredAndSortedThreads: [],
             categories: [],
             selectedCategories: [],
-            error: 'Failed to fetch.',
-            selectedThreadId: '',
+            error: undefined,
+            selectedThread: undefined,
+            selectedThreadReplies: undefined,
+            selectedThreadRepliesError: undefined,
             searchTerm: '',
         },
-        grades: {},
-        meetings: {},
+        meetings: {
+            instructorAttendanceBook: undefined,
+            instructorAttendanceBookError: undefined,
+            attendanceBookEntries: [],
+            attendanceBookUsers: [],
+            attendanceBookUsersDropdownOptions: [],
+            attendanceBookAnalyticsSelectedUser: undefined,
+        },
+        grades: {
+            instructorGradebook: undefined,
+            instructorGradebookError: undefined,
+            gradebookEntries: [],
+            gradebookUsers: [],
+            courseStudents: [],
+        },
         settings: {},
     };
 
@@ -205,6 +225,94 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                         error: action.payload,
                     }),
                 };
+            case 'SET_COURSE_DISCUSSION_REPLIES':
+                const filterMainThread = action.payload.filter((thread: any) => {
+                    return thread._id !== state.discussion.selectedThread._id;
+                });
+
+                console.log('Filter Main Thread', filterMainThread);
+
+                return {
+                    ...state,
+                    discussion: Object.assign({}, state.discussion, {
+                        selectedThreadReplies: filterMainThread,
+                        selectedThreadRepliesError: undefined,
+                    }),
+                };
+            case 'SET_COURSE_DISCUSSION_REPLIES_ERROR':
+                return {
+                    ...state,
+                    discussion: Object.assign({}, state.discussion, {
+                        selectedThreadReplies: undefined,
+                        selectedThreadRepliesError: action.payload,
+                    }),
+                };
+            case 'SET_SELECTED_THREAD':
+                return {
+                    ...state,
+                    discussion: Object.assign({}, state.discussion, {
+                        selectedThread: action.payload,
+                    }),
+                };
+            case 'SET_ATTENDANCE_BOOK_INSTRUCTOR':
+                let userDropdowns = [];
+                if (action.payload.users.length > 0) {
+                    userDropdowns = action.payload.users.map((user: any) => {
+                        return {
+                            value: user.userId,
+                            text: user.fullName,
+                            img: user.avatar,
+                        };
+                    });
+                }
+
+                const selectedUser = {
+                    value: action.payload.users[0].userId,
+                    text: action.payload.users[0].fullName,
+                    img: action.payload.users[0].avatar,
+                };
+
+                return {
+                    ...state,
+                    meetings: Object.assign({}, state.meetings, {
+                        instructorAttendanceBook: action.payload,
+                        attendanceBookEntries: action.payload.entries,
+                        attendanceBookUsers: action.payload.users,
+                        instructorAttendanceBookError: undefined,
+                        attendanceBookUsersDropdownOptions: userDropdowns,
+                        attendanceBookAnalyticsSelectedUser: selectedUser,
+                    }),
+                };
+            case 'SET_ATTENDANCE_BOOK_INSTRUCTOR_ERROR':
+                return {
+                    ...state,
+                    meetings: Object.assign({}, state.meetings, {
+                        instructorAttendanceBook: undefined,
+                        attendanceBookEntries: [],
+                        attendanceBookUsers: [],
+                        instructorAttendanceBookError: action.payload,
+                    }),
+                };
+            case 'SET_GRADEBOOK_INSTRUCTOR':
+                return {
+                    ...state,
+                    grades: Object.assign({}, state.grades, {
+                        instructorGradebook: action.payload,
+                        gradebookEntries: action.payload.entries,
+                        gradebookUsers: action.payload.users,
+                        instructorGradebookError: undefined,
+                    }),
+                };
+            case 'SET_GRADEBOOK_INSTRUCTOR_ERROR':
+                return {
+                    ...state,
+                    grades: Object.assign({}, state.grades, {
+                        instructorGradebook: undefined,
+                        gradebookEntries: [],
+                        gradebookUsers: [],
+                        instructorGradebookError: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -219,6 +327,34 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
 
     const [fetchDiscussionThreads, { loading: loadingDiscussionThreads, error: threadsError, data: threadsData }] =
         useLazyQuery(getChannelThreads);
+
+    const [
+        fetchThreadWithReplies,
+        { loading: loadingThreadWithReplies, error: threadWithRepliesError, data: selectedThreadData },
+    ] = useLazyQuery(getThreadWithReplies);
+
+    const [
+        fetchAttendancebookInstructor,
+        { loading: loadingAttendanceBookInstructor, error: attendanceBookInstructorError, data: attendanceBookData },
+    ] = useLazyQuery(getAttendanceBook);
+
+    const [
+        fetchGradebookInstructor,
+        { loading: loadingGradebookInstructor, error: gradebookInstructorError, data: gradebookInstructorData },
+    ] = useLazyQuery(getGradebookInstructor);
+
+    useEffect(() => {
+        if (state.courseData && state.courseData.channelId && state.courseData.isOwner) {
+            fetchCourseAttendanceBookInstructor();
+            fetchCourseGradebookInstructor();
+        }
+    }, [state.courseData]);
+
+    useEffect(() => {
+        if (state.discussion && state.discussion.selectedThread) {
+            loadSelectedThreadReplies();
+        }
+    }, [state.discussion.selectedThread]);
 
     useEffect(() => {
         if (state.courseData && state.courseData.channelId) {
@@ -242,6 +378,68 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
             dispatch({
                 type: 'SET_COURSE_DISCUSSION_THREADS_ERROR',
                 payload: 'Failed to fetch discussion threads',
+            });
+        }
+    }, [state.courseData]);
+
+    const loadSelectedThreadReplies = useCallback(async () => {
+        const res = await fetchThreadWithReplies({
+            variables: {
+                threadId: state.discussion.selectedThread._id,
+            },
+        });
+
+        console.log('Res thread with replies', res);
+
+        if (res.data && res.data.thread.getThreadWithReplies) {
+            dispatch({
+                type: 'SET_COURSE_DISCUSSION_REPLIES',
+                payload: res.data.thread.getThreadWithReplies,
+            });
+        } else {
+            dispatch({
+                type: 'SET_COURSE_DISCUSSION_REPLIES_ERROR',
+                payload: 'Failed to fetch discussion thread responses.',
+            });
+        }
+    }, [state.discussion]);
+
+    const fetchCourseAttendanceBookInstructor = useCallback(async () => {
+        const res = await fetchAttendancebookInstructor({
+            variables: {
+                channelId: state.courseData.channelId,
+            },
+        });
+
+        if (res.data && res.data.attendance.getAttendanceBook) {
+            dispatch({
+                type: 'SET_ATTENDANCE_BOOK_INSTRUCTOR',
+                payload: res.data.attendance.getAttendanceBook,
+            });
+        } else {
+            dispatch({
+                type: 'SET_ATTENDANCE_BOOK_INSTRUCTOR_ERROR',
+                payload: 'Failed to fetch attendance book.',
+            });
+        }
+    }, [state.courseData]);
+
+    const fetchCourseGradebookInstructor = useCallback(async () => {
+        const res = await fetchGradebookInstructor({
+            variables: {
+                channelId: state.courseData.channelId,
+            },
+        });
+
+        if (res.data && res.data.gradebook.getGradebook) {
+            dispatch({
+                type: 'SET_GRADEBOOK_INSTRUCTOR',
+                payload: res.data.gradebook.getGradebook,
+            });
+        } else {
+            dispatch({
+                type: 'SET_GRADEBOOK_INSTRUCTOR_ERROR',
+                payload: 'Failed to fetch gradebook.',
             });
         }
     }, [state.courseData]);
@@ -289,6 +487,13 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
         await AsyncStorage.setItem('sortByWorkspace', sortByValue);
     };
 
+    const setSelectedThread = (data: any) => {
+        dispatch({
+            type: 'SET_SELECTED_THREAD',
+            payload: data,
+        });
+    };
+
     return (
         <CourseContext.Provider
             displayName="COURSE CONTEXT"
@@ -296,12 +501,19 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                 courseData: state.courseData,
                 coursework: state.coursework,
                 discussion: state.discussion,
+                meetings: state.meetings,
+                grades: state.grades,
                 loadingDiscussionThreads,
+                loadingThreadWithReplies,
+                loadingAttendanceBookInstructor,
+                loadingGradebookInstructor,
                 setCourseData,
                 setCourseCues,
                 setDateFilters,
                 setSortBy,
                 loadChannelDiscussion,
+                setSelectedThread,
+                loadSelectedThreadReplies,
             }}
         >
             {children}

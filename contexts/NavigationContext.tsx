@@ -27,6 +27,9 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         viewCourse: {
             courseId: undefined,
             activeCourseTab: 'overview',
+            activeClassroomTab: undefined,
+            showNewPostModal: false,
+            selectedThreadId: undefined,
         },
     };
 
@@ -107,10 +110,33 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         });
     };
 
+    // View Course
+
     const switchCourseActiveTab = (tab: string) => {
         dispatch({
             type: 'SWITCH_COURSE_TAB',
             payload: tab,
+        });
+    };
+
+    const switchClassroomActiveTab = (tab?: string) => {
+        dispatch({
+            type: 'SET_CLASSROOM_TAB',
+            payload: tab,
+        });
+    };
+
+    const setShowNewPostModal = (show: boolean) => {
+        dispatch({
+            type: 'SET_SHOW_NEW_DISCUSSION',
+            payload: show,
+        });
+    };
+
+    const setSelectedThreadId = (threadId: string) => {
+        dispatch({
+            type: 'SET_SELECTED_THREAD_ID',
+            payload: threadId,
         });
     };
 
@@ -210,6 +236,27 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                         activeCourseTab: action.payload,
                     }),
                 };
+            case 'SET_CLASSROOM_TAB':
+                return {
+                    ...state,
+                    viewCourse: Object.assign({}, state.viewCourse, {
+                        activeClassroomTab: action.payload,
+                    }),
+                };
+            case 'SET_SHOW_NEW_DISCUSSION':
+                return {
+                    ...state,
+                    viewCourse: Object.assign({}, state.viewCourse, {
+                        showNewPostModal: action.payload,
+                    }),
+                };
+            case 'SET_SELECTED_THREAD_ID':
+                return {
+                    ...state,
+                    viewCourse: Object.assign({}, state.viewCourse, {
+                        selectedThreadId: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -248,6 +295,9 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                 openCourse,
                 exitCourse,
                 switchCourseActiveTab,
+                switchClassroomActiveTab,
+                setShowNewPostModal,
+                setSelectedThreadId,
             }}
         >
             {children}

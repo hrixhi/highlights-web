@@ -347,6 +347,7 @@ export default function SidebarNavigation(props: any) {
                         <div className="flex flex-1 justify-between px-4">
                             <div className="flex items-center flex-1">
                                 <div className="mr-4 flex items-center md:mr-6">
+                                    {/* <Tooltip content="Tooltip content" trigger="hover"> */}
                                     <button
                                         type="button"
                                         className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
@@ -354,6 +355,7 @@ export default function SidebarNavigation(props: any) {
                                         <span className="sr-only">Go Back</span>
                                         <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
                                     </button>
+                                    {/* </Tooltip> */}
                                     <button
                                         type="button"
                                         className="ml-1 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"

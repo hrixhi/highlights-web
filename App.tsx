@@ -13,6 +13,10 @@ import './styles';
 import './web/htmlParser.css';
 import './web/mobiscrollCustom.css';
 import './web/vex.css';
+import './node_modules/froala-editor/css/themes/dark.min.css';
+import './node_modules/froala-editor/css/themes/gray.min.css';
+import './node_modules/froala-editor/css/themes/royal.min.css';
+
 import { LanguageProvider } from './helpers/LanguageContext';
 import { MenuProvider } from 'react-native-popup-menu';
 

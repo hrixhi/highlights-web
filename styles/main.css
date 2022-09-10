@@ -8,3 +8,149 @@
         list-style: revert;
     }
 }
+
+.stickyTableContainer {
+    position: relative;
+    max-height: 300px;
+    width: 500px;
+    overflow: scroll;
+}
+
+.stickyTable {
+    white-space: nowrap;
+    margin: 0;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: 100%;
+    @apply text-black dark:text-white;
+}
+
+.stickyTable > thead th {
+    padding: 3px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 150px;
+    max-width: 150px;
+    @apply text-black dark:text-white bg-white dark:bg-cues-dark-3 border-b border-cues-border dark:border-cues-border-dark;
+}
+
+.stickyTable > thead {
+    @apply bg-white dark:bg-cues-dark-3;
+    min-width: 100%;
+}
+
+.stickyTable > thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    @apply text-sm text-black dark:text-white bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
+}
+
+.stickyTable > tbody th {
+    position: sticky;
+    left: 0;
+    /* background: white; */
+    z-index: 2;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 10px;
+    /* border-right: 1px solid #f2f2f2; */
+    @apply bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
+}
+
+.stickyTable > tbody td {
+    z-index: 1;
+    min-width: 120px;
+    max-width: 120px;
+    padding: 10px;
+    @apply text-black dark:text-white;
+}
+
+.gradebookTable {
+    white-space: nowrap;
+    margin: 0;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: 100%;
+    @apply text-black dark:text-white;
+}
+
+.gradebookTable > thead th {
+    padding: 3px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 180px;
+    max-width: 180px;
+    @apply text-black dark:text-white bg-white dark:bg-cues-dark-3 border-b border-cues-border dark:border-cues-border-dark;
+}
+
+.gradebookTable > thead {
+    @apply bg-white dark:bg-cues-dark-3;
+    min-width: 100%;
+}
+
+.gradebookTable > thead th:first-child {
+    background-color: #f8f8f8;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 180px;
+    max-width: 180px;
+    padding: 10px;
+    @apply text-sm text-black dark:text-white bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
+}
+
+.gradebookTable > tbody th {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+    min-width: 180px;
+    max-width: 180px;
+    padding: 10px;
+    @apply bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
+}
+
+.gradebookTable > tbody td {
+    z-index: 1;
+    min-width: 180px;
+    max-width: 180px;
+    padding: 10px;
+    @apply text-black dark:text-white;
+}
+
+.gradebookTable > tfoot th {
+    padding: 3px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    /* width: 25vw; */
+    padding: 10px;
+    min-width: 180px;
+    max-width: 180px;
+    @apply text-black dark:text-white bg-white dark:bg-cues-dark-3 border-t border-cues-border dark:border-cues-border-dark;
+}
+
+.gradebookTable > tfoot th:first-child {
+    background-color: #f8f8f8;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 180px;
+    max-width: 180px;
+    padding: 10px;
+    @apply text-sm text-black dark:text-white bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
+}

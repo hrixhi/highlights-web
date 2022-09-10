@@ -50,6 +50,10 @@ module.exports = {
                 // Dark (Content Area Slack)
                 'cues-dark-3': '#1B1D21',
             },
+            divideColor: {
+                'cues-divide': '#e8eaee',
+                'cues-divide-dark': '#444444',
+            },
             ringColor: {
                 'cues-dark-3': '#1B1D21',
             },
