@@ -59,6 +59,7 @@ module.exports = {
             },
             minWidth: {
                 'cues-carousel': '18em',
+                kanban: '28rem',
             },
             minHeight: {
                 coursework: 'calc(100vh - 56px)',

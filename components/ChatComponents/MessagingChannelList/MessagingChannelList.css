@@ -1,5 +1,5 @@
 .messaging__sidebar {
-    height: 100%;
+    height: calc(100vh - 56px);
     display: grid;
     grid-template-rows: min-content;
     float: left;

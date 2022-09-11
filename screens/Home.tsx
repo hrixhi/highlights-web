@@ -667,7 +667,7 @@ function Home({ navigation, route }: StackScreenProps<any, ''>) {
                 sortBy,
             }}
         >
-            <NavigationWrapper />
+            <NavigationWrapper chatClient={chatClient} />
         </CourseContextProvider>
     );
 

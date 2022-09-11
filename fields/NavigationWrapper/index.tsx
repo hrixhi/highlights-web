@@ -4,6 +4,7 @@ import SidebarNavigation from '../SidebarNavigation';
 
 import CalendarX from '../../components/Calendar';
 import Courses from '../../components/Courses';
+import Chat from '../../components/Chat';
 
 import { useNavigationContext } from '../../contexts/NavigationContext';
 import ViewCourse from '../../components/ViewCourse';
@@ -31,6 +32,8 @@ const NavigationWrapper: React.FunctionComponent<{ [label: string]: any }> = (pr
                 return <Courses />;
             case 'viewCourse':
                 return <ViewCourse />;
+            case 'inbox':
+                return <Chat chatClient={props.chatClient} />;
         }
     };
 

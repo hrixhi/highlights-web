@@ -163,6 +163,87 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const server = useApolloClient();
 
+    const positions = [
+        {
+            id: 1,
+            title: 'Team A',
+            members: [
+                {
+                    name: 'Dries Vincent',
+                    email: 'dries.vincent@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Lindsay Walton',
+                    email: 'lindsay.walton@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Courtney Henry',
+                    email: 'courtney.henry@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Tom Cook',
+                    email: 'tom.cook@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+            ],
+        },
+        {
+            id: 2,
+            title: 'Team B',
+            members: [
+                {
+                    name: 'Whitney Francis',
+                    email: 'whitney.francis@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Leonard Krasner',
+                    email: 'leonard.krasner@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Floyd Miles',
+                    email: 'floy.dmiles@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+            ],
+        },
+        {
+            id: 3,
+            title: 'Team 3',
+            members: [
+                {
+                    name: 'Emily Selman',
+                    email: 'emily.selman@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Kristin Watson',
+                    email: 'kristin.watson@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+                {
+                    name: 'Emma Dorsey',
+                    email: 'emma.dorsey@example.com',
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1505840717430-882ce147ef2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                },
+            ],
+        },
+    ];
+
     // HOOKS
 
     /**

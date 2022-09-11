@@ -154,3 +154,12 @@
     padding: 10px;
     @apply text-sm text-black dark:text-white bg-white dark:bg-cues-dark-3 border-r border-cues-border dark:border-cues-border-dark;
 }
+
+.drag-card {
+    @apply opacity-100 !important;
+    @apply rotate-6;
+}
+
+.ghost-card {
+    @apply bg-gray-100/40 dark:bg-gray-600/40 !important;
+}

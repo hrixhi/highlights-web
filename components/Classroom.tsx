@@ -25,7 +25,7 @@ const Classroom: React.FunctionComponent<{ [label: string]: any }> = (props: any
             id: 'coursework',
             iconColor: 'text-pink-500',
             iconBackground: 'bg-pink-200',
-            title: 'Coursework',
+            title: 'Files',
             description: '',
         },
         {

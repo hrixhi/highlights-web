@@ -1,5 +1,5 @@
 // REACT
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Fragment } from 'react';
 
 import { useAppContext } from '../contexts/AppContext';
 import { useNavigationContext } from '../contexts/NavigationContext';
@@ -9,16 +9,50 @@ import { ArrowLeftIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 import { AppNavigation } from '../constants/Navigation';
 import CourseOverview from './CourseOverview';
-import { AdjustmentsHorizontalIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import {
+    AdjustmentsHorizontalIcon,
+    ChartBarSquareIcon,
+    PaintBrushIcon,
+    PlusIcon,
+    PresentationChartBarIcon,
+    RectangleGroupIcon,
+    Squares2X2Icon,
+} from '@heroicons/react/20/solid';
 import { Datepicker, Popup, Select } from '@mobiscroll/react5';
 import Discuss from './Discuss';
 import Classroom from './Classroom';
 import Meeting from './Meeting';
 import Grades from './Grades';
+import Settings from './Settings';
+import { Popover, Transition } from '@headlessui/react';
+import Organizer from './Organizer';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
+
+const appNavigationTabs = [
+    {
+        id: 'organizer',
+        label: 'Organizer',
+        tabIcon: RectangleGroupIcon,
+    },
+    {
+        id: 'whiteboard',
+        label: 'Whiteboard',
+        tabIcon: PaintBrushIcon,
+    },
+    {
+        id: 'polls',
+        label: 'Polls',
+        tabIcon: ChartBarSquareIcon,
+    },
+    {
+        id: 'presentations',
+        label: 'Presentations',
+        tabIcon: PresentationChartBarIcon,
+    },
+];
 
 const sortbyOptions = [
     {
@@ -52,6 +86,8 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const courseTabs = Object.keys(AppNavigation['viewCourse']);
     const [showFilterPopup, setShowFilterPopup] = useState(false);
+
+    const buttonRef = useRef();
 
     useEffect(() => {
         if (!viewCourse || !subscriptions) return;
@@ -361,28 +397,62 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     switchCourseActiveTab(tab);
                                 }}
                             >
-                                {tab === 'overview'
-                                    ? 'Home'
-                                    : tab === 'coursework'
-                                    ? 'Classroom'
-                                    : tab === 'discussion'
-                                    ? 'Q&A'
-                                    : tab}
+                                {tab === 'overview' ? 'Home' : tab === 'discussion' ? 'Q&A' : tab}
                             </button>
                         </li>
                     );
                 })}
                 <li className="flex items-center">
-                    <button
-                        type="button"
-                        className="ml-1 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-cues-dark-1 dark:hover:text-white focus:outline-none rounded-lg text-sm p-2.5"
-                        onClick={() => {
-                            // setShowFilterPopup(true);
-                        }}
-                    >
-                        <span className="sr-only">View Apps</span>
-                        <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-                    </button>
+                    <Popover class="relative">
+                        {({ open }) => (
+                            <>
+                                <Popover.Button
+                                    ref={buttonRef}
+                                    class={classNames(
+                                        'rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white',
+                                        'inline-block py-2.5 px-4 capitalize'
+                                    )}
+                                >
+                                    <span className="sr-only">View Apps</span>
+                                    <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+                                </Popover.Button>
+
+                                <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-200"
+                                    enterFrom="opacity-0 translate-y-1"
+                                    enterTo="opacity-100 translate-y-0"
+                                    leave="transition ease-in duration-150"
+                                    leaveFrom="opacity-100 translate-y-0"
+                                    leaveTo="opacity-0 translate-y-1"
+                                >
+                                    <Popover.Panel class="border border-cues-border dark:border-cues-border-dark absolute left-1/2 z-10 mt-3 w-screen max-w-md -translate-x-1/2 transform px-2 sm:px-0 bg-cues-gray-1 dark:bg-cues-dark-2">
+                                        <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            Apps
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 p-4">
+                                            {appNavigationTabs.map((navigation: any) => {
+                                                return (
+                                                    <button
+                                                        onClick={() => {
+                                                            buttonRef.current?.click();
+                                                            switchCourseActiveTab(navigation.id);
+                                                        }}
+                                                        className="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600"
+                                                    >
+                                                        <navigation.tabIcon className="mx-auto mb-1 w-7 h-7 text-gray-500 dark:text-gray-400" />
+                                                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                                            {navigation.label}
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </Popover.Panel>
+                                </Transition>
+                            </>
+                        )}
+                    </Popover>
                 </li>
             </ul>
         );
@@ -403,6 +473,10 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 return <Meeting />;
             case 'grades':
                 return <Grades />;
+            case 'settings':
+                return <Settings />;
+            case 'organizer':
+                return <Organizer />;
             default:
                 return null;
         }
@@ -412,7 +486,12 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
         let submenu = undefined;
 
         if (viewCourse.activeClassroomTab) {
-            submenu = viewCourse.activeClassroomTab === 'experiences' ? 'activities' : viewCourse.activeClassroomTab;
+            submenu =
+                viewCourse.activeClassroomTab === 'experiences'
+                    ? 'activities'
+                    : viewCourse.activeClassroomTab === 'coursework'
+                    ? 'Files'
+                    : viewCourse.activeClassroomTab;
         } else if (viewCourse.selectedThreadId) {
             submenu = 'Q&A';
         }

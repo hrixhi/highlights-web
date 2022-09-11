@@ -7,6 +7,8 @@ import {
     getThreadWithReplies,
     getAttendanceBook,
     getGradebookInstructor,
+    findChannelById,
+    getUserCount,
 } from '../graphql/QueriesAndMutations';
 
 export const CourseContext = React.createContext<{ [label: string]: any }>({});
@@ -52,7 +54,12 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
             gradebookUsers: [],
             courseStudents: [],
         },
-        settings: {},
+        settings: {
+            data: undefined,
+            error: undefined,
+            allUsers: undefined,
+            allUsersError: undefined,
+        },
     };
 
     const reducer = (state: any, action: any) => {
@@ -313,6 +320,38 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                         instructorGradebookError: action.payload,
                     }),
                 };
+            case 'SET_COURSE_SETTINGS_DATA':
+                return {
+                    ...state,
+                    settings: Object.assign({}, state.settings, {
+                        data: action.payload,
+                        error: undefined,
+                    }),
+                };
+            case 'SET_COURSE_SETTINGS_ERROR':
+                return {
+                    ...state,
+                    settings: Object.assign({}, state.settings, {
+                        data: undefined,
+                        error: action.payload,
+                    }),
+                };
+            case 'SET_SCHOOL_USERS_DATA':
+                return {
+                    ...state,
+                    settings: Object.assign({}, state.settings, {
+                        allUsers: action.payload,
+                        allUsersError: undefined,
+                    }),
+                };
+            case 'SET_SCHOOL_USERS_ERROR':
+                return {
+                    ...state,
+                    settings: Object.assign({}, state.settings, {
+                        allUsers: undefined,
+                        allUsersError: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -343,10 +382,17 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
         { loading: loadingGradebookInstructor, error: gradebookInstructorError, data: gradebookInstructorData },
     ] = useLazyQuery(getGradebookInstructor);
 
+    const [fetchCourseData, { loading: loadingChannelData, error: channelDataError, data: courseData }] =
+        useLazyQuery(findChannelById);
+
+    const [fetchSchoolUsers, { loading: loadingSchoolUsers, error: userCountError, data: schoolUserData }] =
+        useLazyQuery(getUserCount);
+
     useEffect(() => {
         if (state.courseData && state.courseData.channelId && state.courseData.isOwner) {
             fetchCourseAttendanceBookInstructor();
             fetchCourseGradebookInstructor();
+            fetchCourseSettingsData();
         }
     }, [state.courseData]);
 
@@ -444,6 +490,49 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
         }
     }, [state.courseData]);
 
+    const fetchCourseSettingsData = useCallback(async () => {
+        const res = await fetchCourseData({
+            variables: {
+                channelId: state.courseData.channelId,
+            },
+        });
+
+        if (res.data && res.data.channel.findById) {
+            dispatch({
+                type: 'SET_COURSE_SETTINGS_DATA',
+                payload: res.data.channel.findById,
+            });
+        } else {
+            dispatch({
+                type: 'SET_COURSE_SETTINGS_ERROR',
+                payload: 'Failed to fetch gradebook.',
+            });
+        }
+    }, [state.courseData]);
+
+    const fetchSchoolUsersData = useCallback(
+        async (schoolId: string) => {
+            const res = await fetchSchoolUsers({
+                variables: {
+                    schoolId,
+                },
+            });
+
+            if (res.data && res.data.user.getSchoolUsers) {
+                dispatch({
+                    type: 'SET_SCHOOL_USERS_DATA',
+                    payload: res.data.user.getSchoolUsers,
+                });
+            } else {
+                dispatch({
+                    type: 'SET_SCHOOL_USERS_ERROR',
+                    payload: 'Failed to fetch gradebook.',
+                });
+            }
+        },
+        [state.courseData]
+    );
+
     // ACTIONS
 
     const setCourseData = (data: any) => {
@@ -503,10 +592,13 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                 discussion: state.discussion,
                 meetings: state.meetings,
                 grades: state.grades,
+                settings: state.settings,
                 loadingDiscussionThreads,
                 loadingThreadWithReplies,
                 loadingAttendanceBookInstructor,
                 loadingGradebookInstructor,
+                loadingChannelData,
+                loadingSchoolUsers,
                 setCourseData,
                 setCourseCues,
                 setDateFilters,
@@ -514,6 +606,8 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                 loadChannelDiscussion,
                 setSelectedThread,
                 loadSelectedThreadReplies,
+                fetchCourseSettingsData,
+                fetchSchoolUsersData,
             }}
         >
             {children}
