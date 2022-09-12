@@ -945,7 +945,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </div>
                     </div>
                 ) : (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col mb-8">
                         <div className="overflow-x-scroll w-full max-w-full  border border-cues-border dark:border-cues-border-dark rounded-md">
                             {renderInstructorView()}
                         </div>

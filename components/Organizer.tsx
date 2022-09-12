@@ -214,8 +214,8 @@ const Organizer: React.FunctionComponent<{ [label: string]: any }> = (props: any
     ]);
 
     return (
-        <div>
-            <div className="flex flex-col mt-2">
+        <div className="w-full min-h-coursework bg-cues-gray-1 dark:bg-cues-dark-3">
+            <div className="flex flex-col mt-2 px-4 sm:px-6 lg:mx-auto lg:px-8">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle">
                         <div className="overflow-hidden shadow">

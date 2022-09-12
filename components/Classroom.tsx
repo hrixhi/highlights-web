@@ -5,6 +5,8 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useNavigationContext } from '../contexts/NavigationContext';
 import Coursework from './Coursework';
 import Experiences from './Experiences';
+import Explore from './Explore';
+import Playlist from './Playlist';
 
 const Classroom: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { viewCourse, switchClassroomActiveTab } = useNavigationContext();
@@ -48,14 +50,14 @@ const Classroom: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     if (viewCourse.activeClassroomTab) {
         switch (viewCourse.activeClassroomTab) {
-            case 'playlist':
-                return null;
+            case 'playlists':
+                return <Playlist />;
             case 'coursework':
                 return <Coursework />;
             case 'experiences':
                 return <Experiences />;
             case 'explore':
-                return null;
+                return <Explore />;
             default:
                 return null;
         }

@@ -26,6 +26,7 @@ import Grades from './Grades';
 import Settings from './Settings';
 import { Popover, Transition } from '@headlessui/react';
 import Organizer from './Organizer';
+import Whiteboard from './Whiteboard';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -78,6 +79,7 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setShowNewPostModal,
         setSelectedThreadId,
         switchClassroomActiveTab,
+        setSelectedPlaylist,
     } = useNavigationContext();
 
     const { userId, subscriptions, allCues } = useAppContext();
@@ -133,6 +135,7 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderCourseWorkButtons = () => {
         switch (viewCourse.activeClassroomTab) {
+            // Files
             case 'coursework':
                 return (
                     <div className="flex items-center">
@@ -377,7 +380,12 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }
 
     const renderMainCourseTabs = () => {
-        if (viewCourse.selectedThreadId || viewCourse.activeClassroomTab) {
+        if (
+            viewCourse.selectedThreadId ||
+            viewCourse.activeClassroomTab ||
+            viewCourse.activeCourseTab === 'organizer' ||
+            viewCourse.activeCourseTab === 'whiteboard'
+        ) {
             return null;
         }
 
@@ -426,11 +434,11 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     leaveFrom="opacity-100 translate-y-0"
                                     leaveTo="opacity-0 translate-y-1"
                                 >
-                                    <Popover.Panel class="border border-cues-border dark:border-cues-border-dark absolute left-1/2 z-10 mt-3 w-screen max-w-md -translate-x-1/2 transform px-2 sm:px-0 bg-cues-gray-1 dark:bg-cues-dark-2">
-                                        <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <Popover.Panel class="border border-cues-border dark:border-cues-border-dark absolute left-1/2 z-10 mt-3 w-screen max-w-md -translate-x-1/2 transform px-2 sm:px-0 bg-cues-gray-1 dark:bg-cues-dark-2 shadow-lg">
+                                        <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b border-cues-border dark:border-cues-border-dark">
                                             Apps
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4 p-4">
+                                        <div className="bg-white dark:bg-cues-dark-3 grid grid-cols-2 gap-4 p-4">
                                             {appNavigationTabs.map((navigation: any) => {
                                                 return (
                                                     <button
@@ -477,6 +485,8 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 return <Settings />;
             case 'organizer':
                 return <Organizer />;
+            case 'whiteboard':
+                return <Whiteboard />;
             default:
                 return null;
         }
@@ -484,6 +494,7 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderHeaderAndBreadcrumbs = () => {
         let submenu = undefined;
+        let subsubmenu = undefined;
 
         if (viewCourse.activeClassroomTab) {
             submenu =
@@ -494,6 +505,14 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     : viewCourse.activeClassroomTab;
         } else if (viewCourse.selectedThreadId) {
             submenu = 'Q&A';
+        } else if (viewCourse.activeCourseTab === 'organizer' || viewCourse.activeCourseTab === 'whiteboard') {
+            submenu = viewCourse.activeCourseTab;
+        }
+
+        if (viewCourse.activeClassroomTab) {
+            if (viewCourse.activeClassroomTab === 'playlists' && viewCourse.selectedPlaylist) {
+                subsubmenu = viewCourse.selectedPlaylist.title;
+            }
         }
 
         return (
@@ -515,6 +534,22 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <h1 className="text-sm text-2xl font-bold text-black dark:text-white capitalize">{submenu}</h1>
                     </div>
                 )}
+                {subsubmenu && (
+                    <div className="flex items-center">
+                        <svg
+                            className="h-8 w-8 flex-shrink-0 text-gray-300 dark:text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            aria-hidden="true"
+                        >
+                            <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
+                        </svg>
+                        <h1 className="text-sm text-2xl font-bold text-black dark:text-white capitalize">
+                            {subsubmenu}
+                        </h1>
+                    </div>
+                )}
             </div>
         );
     };
@@ -523,8 +558,12 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (viewCourse.selectedThreadId) {
             setSelectedThreadId(undefined);
             setSelectedThread(undefined);
+        } else if (viewCourse.selectedPlaylist) {
+            setSelectedPlaylist(undefined);
         } else if (viewCourse.activeClassroomTab) {
             switchClassroomActiveTab(undefined);
+        } else if (viewCourse.activeClassroomTab === 'whiteboard' || viewCourse.activeClassroomTab === 'organizer') {
+            switchClassroomActiveTab('home');
         } else {
             exitCourse();
         }

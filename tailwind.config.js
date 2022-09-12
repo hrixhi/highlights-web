@@ -64,6 +64,9 @@ module.exports = {
             minHeight: {
                 coursework: 'calc(100vh - 56px)',
             },
+            height: {
+                playlist: '180px',
+            },
         },
     },
     darkMode: 'class',

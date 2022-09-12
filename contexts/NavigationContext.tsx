@@ -30,6 +30,7 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
             activeClassroomTab: undefined,
             showNewPostModal: false,
             selectedThreadId: undefined,
+            selectedPlaylist: undefined,
         },
     };
 
@@ -137,6 +138,13 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         dispatch({
             type: 'SET_SELECTED_THREAD_ID',
             payload: threadId,
+        });
+    };
+
+    const setSelectedPlaylist = (playlist: any) => {
+        dispatch({
+            type: 'SET_SELECTED_PLAYLIST',
+            payload: playlist,
         });
     };
 
@@ -257,6 +265,13 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                         selectedThreadId: action.payload,
                     }),
                 };
+            case 'SET_SELECTED_PLAYLIST':
+                return {
+                    ...state,
+                    viewCourse: Object.assign({}, state.viewCourse, {
+                        selectedPlaylist: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -298,6 +313,7 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                 switchClassroomActiveTab,
                 setShowNewPostModal,
                 setSelectedThreadId,
+                setSelectedPlaylist,
             }}
         >
             {children}
