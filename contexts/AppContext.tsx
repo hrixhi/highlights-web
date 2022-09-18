@@ -32,6 +32,9 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         savingCueToCloud: false,
         syncingCueFromBackend: false,
         syncCueError: false,
+        myNotes: [],
+        filterAndSortedNotes: [],
+        myNotesCategories: [],
     };
 
     const [onlineStatus, setOnlineStatus] = useState<boolean>(true);
@@ -42,6 +45,7 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         let sanitizedCues: any[] = [];
 
         const cuesMap: any = {};
+
         data.map((x: any) => {
             const cue = JSON.parse(JSON.stringify(x), omitTypename);
 
@@ -55,6 +59,13 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 cuesMap[channelId] = [{ ...cue }];
             }
         });
+
+        const filterMyNotes = data.filter((cue: any) => {
+            return cue.channelId === '' || !cue.channelId;
+        });
+
+        console.log('Notes', filterMyNotes);
+
         const custom: any = {};
         if (cuesMap['local']) {
             cuesMap['local'].map((item: any) => {
@@ -71,9 +82,22 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
         const customC: any[] = Object.keys(custom);
         customC.sort();
 
+        const cueCategoriesSet: any = new Set();
+
+        filterMyNotes.map((cue: any) => {
+            if (!cue.customCategory) {
+                cueCategoriesSet.add('');
+            } else {
+                cueCategoriesSet.add(cue.customCategory);
+            }
+        });
+
         return {
             allCues: sanitizedCues,
             customCategories: customC,
+            myNotes: filterMyNotes,
+            filterAndSortedNotes: filterMyNotes,
+            myNotesCategories: Array.from(cueCategoriesSet),
         };
     };
 
@@ -82,10 +106,15 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
             // CUES LOGIC
             case 'SET_CUES':
                 const res = setCuesHelper([...action.payload]);
+
+                console.log('Res SEt CUes Helper', res);
                 return {
                     ...state,
                     allCues: res.allCues,
                     customCategories: res.customCategories,
+                    myNotes: res.myNotes,
+                    filterAndSortedNotes: res.filterAndSortedNotes,
+                    myNotesCategories: res.myNotesCategories,
                 };
             case 'ADD_CUE':
                 const newRes = setCuesHelper([...state.allCues, action.payload]);
@@ -551,6 +580,9 @@ export const AppContextProvider: React.FC<React.ReactNode> = ({ value, children 
                 handleSetSubscriptions,
                 allCues: state.allCues,
                 cues: state.cues,
+                myNotes: state.myNotes,
+                filterAndSortedNotes: state.filterAndSortedNotes,
+                myNotesCategories: state.myNotesCategories,
                 handleSetCues,
                 customCategories: state.customCategories,
                 sortBy,

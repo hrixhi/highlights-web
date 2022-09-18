@@ -138,7 +138,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, []);
     const viewSchedule: any = React.useMemo(() => {
         return {
-            schedule: { type: 'week', startDay: 1, endDay: 0 },
+            schedule: { type: 'week', startDay: 1, endDay: 0, startTime: '07:00' },
         };
     }, []);
     const viewCalendar: any = React.useMemo(() => {

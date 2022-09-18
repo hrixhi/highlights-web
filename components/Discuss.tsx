@@ -704,7 +704,7 @@ const Discuss: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     'bg-gray-100 text-gray-900 ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium'
                                 }
                             >
-                                {1}
+                                {3}
                             </span>
                         </div>
 
@@ -818,7 +818,7 @@ const Discuss: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 {/* Right Section */}
                 <div
                     aria-label="Threads Section"
-                    className="hidden w-96 flex-shrink-0 border-l border-cues-border dark:border-cues-border-dar bg-white dark:bg-cues-dark-3 xl:flex xl:flex-col px-6"
+                    className="w-96 flex-shrink-0 border-l border-cues-border dark:border-cues-border-dar bg-white dark:bg-cues-dark-3 xl:flex xl:flex-col px-6"
                 >
                     <div className="flex h-16 flex-shrink-0 items-center border-b border-cues-border dark:border-cues-border-dark px-4">
                         <div className="flex items-center">
@@ -922,7 +922,7 @@ const Discuss: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 {/* Left Pane */}
                 <div
                     aria-label="Threads Section"
-                    className="hidden w-96 flex-shrink-0 border-r border-cues-border dark:border-cues-border-dark border-blue-gray-200 bg-white dark:bg-cues-dark-3 xl:flex xl:flex-col px-6"
+                    className="w-96 flex-shrink-0 border-r border-cues-border dark:border-cues-border-dark border-blue-gray-200 bg-white dark:bg-cues-dark-3 xl:flex xl:flex-col px-6"
                 >
                     <div className="flex h-16 flex-shrink-0 items-center border-b border-cues-border dark:border-cues-border-dark border-blue-gray-200 px-4">
                         <div className="flex items-center">

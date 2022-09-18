@@ -38,7 +38,7 @@ const Organizer: React.FunctionComponent<{ [label: string]: any }> = (props: any
             completed: false,
             daysLeft: 22,
             attachment:
-                'https://images.unsplash.com/photo-1621356986575-05811227a42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
+                'https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
             members: [
                 {
                     id: 1,

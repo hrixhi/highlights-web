@@ -8,6 +8,9 @@ import Chat from '../../components/Chat';
 
 import { useNavigationContext } from '../../contexts/NavigationContext';
 import ViewCourse from '../../components/ViewCourse';
+import MyWorkspace from '../../components/MyWorkspace';
+import Settings from '../../components/AccountSettings';
+import NewCourse from '../../components/NewCourse';
 
 const NavigationWrapper: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const { route } = useNavigationContext();
@@ -34,6 +37,14 @@ const NavigationWrapper: React.FunctionComponent<{ [label: string]: any }> = (pr
                 return <ViewCourse />;
             case 'inbox':
                 return <Chat chatClient={props.chatClient} />;
+            case 'myWorkspace':
+                return <MyWorkspace />;
+            case 'settings':
+                return <Settings />;
+            case 'newCourse':
+                return <NewCourse />;
+            default:
+                return null;
         }
     };
 

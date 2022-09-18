@@ -6,6 +6,15 @@ export const NavigationContext = React.createContext<{ [label: string]: any }>({
 export const useNavigationContext = () => React.useContext(NavigationContext);
 
 export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, children }) => {
+    // All possible routes
+
+    const routes = ['home', 'courses', 'inbox', 'myWorkspace', 'profile', 'settings', 'newCourse'];
+
+    const subRoutes = {
+        viewCourse: [],
+        settings: [],
+    };
+
     const initialState = {
         // DATA
         theme: 'light',
@@ -17,8 +26,10 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         },
         courses: {},
         inbox: {},
-        myNotes: {},
-        settings: {},
+        myWorkspace: {},
+        settings: {
+            activeSettingsTab: 'Account',
+        },
         profile: {},
         notifications: {},
         create: {},
@@ -68,12 +79,12 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         });
     };
 
-    const setHideNavbar = (hide: string) => {
-        dispatch({
-            type: 'CHANGE_HIDE_NAVBAR',
-            payload: hide,
-        });
-    };
+    // const setHideNavbar = (hide: string) => {
+    //     dispatch({
+    //         type: 'CHANGE_HIDE_NAVBAR',
+    //         payload: hide,
+    //     });
+    // };
 
     // HOME
 
@@ -148,6 +159,13 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         });
     };
 
+    const switchSettingsActiveTab = (tab: any) => {
+        dispatch({
+            type: 'SWITCH_SETTINGS_TAB',
+            payload: tab,
+        });
+    };
+
     // REDUCER
 
     const reducer = (state: any, action: any) => {
@@ -160,9 +178,12 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                     theme: action.payload,
                 };
             case 'SET_ROUTE':
+                let hideNavbar = action.payload === 'newCourse';
+
                 return {
                     ...state,
                     route: action.payload,
+                    hideNavbar,
                 };
             case 'ADD_TO_HISTORY':
                 // Depending on the main route, we must store objects
@@ -272,6 +293,13 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                         selectedPlaylist: action.payload,
                     }),
                 };
+            case 'SWITCH_SETTINGS_TAB':
+                return {
+                    ...state,
+                    settings: Object.assign({}, state.settings, {
+                        activeSettingsTab: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -292,7 +320,7 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                 home: state.home,
                 courses: state.courses,
                 inbox: state.inbox,
-                myNotes: state.myNotes,
+                myWorkspace: state.myWorkspace,
                 settings: state.settings,
                 profile: state.profile,
                 notifications: state.notifications,
@@ -303,7 +331,6 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                 // ACTIONS
                 changeTheme,
                 switchRoute,
-                setHideNavbar,
                 showAddEvent,
                 setEditEvent,
                 closeEventForm,
@@ -314,6 +341,7 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
                 setShowNewPostModal,
                 setSelectedThreadId,
                 setSelectedPlaylist,
+                switchSettingsActiveTab,
             }}
         >
             {children}

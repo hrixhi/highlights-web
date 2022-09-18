@@ -220,3 +220,18 @@ export const classOrganizerDummy = [
         ],
     },
 ];
+
+export const myOrganizerDummy = [
+    {
+        id: 1,
+        title: 'To Do',
+    },
+    {
+        id: 2,
+        title: 'In Progress',
+    },
+    {
+        id: 3,
+        title: 'Done',
+    },
+];

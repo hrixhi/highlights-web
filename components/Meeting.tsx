@@ -588,7 +588,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                 //     );
                                                 // }}
                                             >
-                                                {userAttendance.attendanceType === 'present' ? (
+                                                {true ? (
                                                     <CheckIcon className="w-6 h-6 text-green-500" />
                                                 ) : (
                                                     <XMarkIcon className="w-6 h-6 text-red-500" />

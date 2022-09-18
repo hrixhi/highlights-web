@@ -24,7 +24,7 @@ const navigation = [
     { name: 'Home', icon: HomeIcon, route: 'home' },
     { name: 'Courses', icon: UsersIcon, route: 'courses' },
     { name: 'Inbox', icon: InboxIcon, route: 'inbox' },
-    { name: 'My Notes', icon: PencilSquareIcon, route: 'myNotes' },
+    { name: 'My Workspace', icon: PencilSquareIcon, route: 'myWorkspace' },
 ];
 const userNavigation = [
     { name: 'Your Profile', route: 'profile' },
@@ -442,7 +442,7 @@ export default function SidebarNavigation(props: any) {
                                             <span className="sr-only">Open user menu</span>
                                             <img
                                                 className="h-8 w-8 rounded-full"
-                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                                                 alt=""
                                             />
                                         </Menu.Button>
@@ -460,15 +460,15 @@ export default function SidebarNavigation(props: any) {
                                             {userNavigation.map((item) => (
                                                 <Menu.Item key={item.name}>
                                                     {({ active }) => (
-                                                        <a
-                                                            href={item.href}
+                                                        <button
                                                             class={classNames(
                                                                 active ? 'bg-gray-100' : '',
-                                                                'block py-2 px-4 text-sm text-gray-700'
+                                                                'block py-2 px-4 text-sm text-gray-700 w-full text-left'
                                                             )}
+                                                            onClick={() => switchRoute(item.route)}
                                                         >
                                                             {item.name}
-                                                        </a>
+                                                        </button>
                                                     )}
                                                 </Menu.Item>
                                             ))}
