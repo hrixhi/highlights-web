@@ -18,11 +18,26 @@ import { Trainingicon } from '../assets/icons/TrainingIcon';
 import { Location03Icon } from '../assets/icons/Location03Icon';
 import { Teacher01Icon } from '../assets/icons/Teacher01Icon';
 import { MonitorIcon } from '../assets/icons/MonitorIcon';
+import { integrationsDummy } from '../constants/IntegrationsDummy';
+
+// ICONS
+import { CameraVideoIcon } from '../assets/icons/CameraVideoIcon';
+import { Folder01Icon } from '../assets/icons/Folder01Icon';
+import { QuizIcon } from '../assets/icons/QuizIcon';
+import { AssignmentIcon } from '../assets/icons/AssignmentIcon';
+import { Apps01Icon } from '../assets/icons/apps01Icon';
+
+// APP ICONS
+import { CanvasIcon } from '../assets/icons/CanvasIcon';
+import { NotesEdit01Icon } from '../assets/icons/NotesEdit01Icon';
+import { BoardIcon } from '../assets/icons/BoardIcon';
+import { Grid01Icon } from '../assets/icons/Grid01Icon';
+import { BarChart01Icon } from '../assets/icons/BarChart01Icon';
 
 // Demo
 
 const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const [currentStep, setCurrentStep] = useState('1');
+    const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [pageErrors, setPageErrors] = useState([]);
 
@@ -31,6 +46,59 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ');
     }
+
+    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [selectedInstructors, setSelectedInstructors] = useState([]);
+
+    const dummySchoolStudents = [
+        {
+            value: 'Emilia Birch',
+            text: 'Emilia Birch',
+        },
+        {
+            value: 'Tom Cook',
+            text: 'Tom Cook',
+        },
+        {
+            value: 'Alana Adams',
+            text: 'Alana Adams',
+        },
+        {
+            value: 'Amy Whineberg',
+            text: 'Amy Whineberg',
+        },
+        {
+            value: 'Liam Richardson',
+            text: 'Liam Richardson',
+        },
+        {
+            value: 'Emma Avery',
+            text: 'Emma Avery',
+        },
+        {
+            value: 'Sophia Perez',
+            text: 'Sophia Perez',
+        },
+    ];
+
+    const dummySchoolInstructors = [
+        {
+            value: 'Avery Johnson',
+            text: 'Avery Johnson',
+        },
+        {
+            value: 'Mitch Marsh',
+            text: 'Mitch Marsh',
+        },
+        {
+            value: 'Steven Spielberg',
+            text: 'Steven Spielberg',
+        },
+        {
+            value: 'Ava Adams',
+            text: 'Ava Adams',
+        },
+    ];
 
     const courseSizes = [
         {
@@ -187,6 +255,37 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
         },
     ];
 
+    const cuesAppOptions = [
+        {
+            id: 1,
+            title: 'Organizer',
+            description: 'Assign & Manage tasks with deadlines for your students individually or in groups.',
+            icon: NotesEdit01Icon,
+            background: 'bg-indigo-500',
+        },
+        {
+            id: 2,
+            title: 'Whiteboard',
+            description: 'Draw, Sketch, Highlight - Bring your ideas to life & collaborate with students.',
+            icon: CanvasIcon,
+            background: 'bg-red-500',
+        },
+        {
+            id: 1,
+            title: 'Polls',
+            description: 'Conduct polls with your real-time student responses.',
+            icon: BarChart01Icon,
+            background: 'bg-teal-500',
+        },
+        {
+            id: 1,
+            title: 'Presentations',
+            description: 'Create beautiful & interactive presentations.',
+            icon: BoardIcon,
+            background: 'bg-purple-500',
+        },
+    ];
+
     // Step 1 Fields
     const [courseName, setCourseName] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
@@ -197,6 +296,8 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [selectedCourseSize, setSelectedCourseSize] = useState<any>();
     const [selectedCourseDelivery, setSelectedCourseDelivery] = useState<any>();
     const [selectedCourseMedium, setSelectedCourseMedium] = useState<any>();
+
+    const [selectedIntegrations, setSelectedIntegrations] = useState<any[]>([]);
 
     const colorChoices = [
         '#0450b4',
@@ -234,45 +335,88 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [newCourseSteps, setNewCourseSteps] = useState([
         {
-            id: '1',
+            id: 1,
             name: 'Details',
             status: 'current',
             description: 'Provide information about your course.',
         },
         {
-            id: '2',
+            id: 2,
             name: 'Delivery',
             status: 'upcoming',
             description:
                 'Select your course size & delivery mode to help us better customize your learning environment.',
         },
         {
-            id: '3',
+            id: 3,
             name: 'Customize',
             status: 'upcoming',
             description: 'Equip your courses with the right tools provided by Cues',
         },
         {
-            id: '4',
+            id: 4,
             name: 'Integrations',
             status: 'upcoming',
             description: 'Equip your courses with the 3rd party tools that seamlessly fit within Cues',
         },
         {
-            id: '5',
+            id: 5,
             name: 'Enrollments',
             status: 'upcoming',
             description: 'Add/Invite students, moderators & instructors.',
         },
         {
-            id: '6',
+            id: 6,
             name: 'Publish',
             status: 'upcoming',
         },
     ]);
 
+    const renderIntegrationsList = () => {
+        return (
+            <ul role="list" className="mt-4 w-full list-none divide-y divide-gray-200">
+                {integrationsDummy.map((integration: any) => (
+                    <li key={integration.id} className="flex items-center py-4">
+                        <img className="h-16 w-16 rounded-lg" src={integration.logo} alt="" />
+                        <div className="ml-4 flex-1">
+                            <p className="text-md font-medium text-gray-900 dark:text-white">{integration.title}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-300 line-clamp-2">
+                                {integration.description}
+                            </p>
+                        </div>
+                        <div className="ml-4">
+                            <button
+                                type="button"
+                                class={classNames(
+                                    selectedIntegrations.includes(integration.id)
+                                        ? 'bg-blue-800 dark:bg-blue-700'
+                                        : 'bg-cues-blue',
+                                    'text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1.5 focus:outline-none dark:focus:ring-blue-800'
+                                )}
+                                onClick={() => {
+                                    if (selectedIntegrations.includes(integration.id)) {
+                                        const filterIntegrations = selectedIntegrations.filter(
+                                            (selected) => selected !== integration.id
+                                        );
+                                        setSelectedIntegrations(filterIntegrations);
+                                    } else {
+                                        const updateIntegrations = [...selectedIntegrations];
+                                        updateIntegrations.push(integration.id);
+                                        setSelectedIntegrations(updateIntegrations);
+                                    }
+                                }}
+                            >
+                                {selectedIntegrations.includes(integration.id) ? 'Added' : 'Add'}
+                            </button>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
     const renderActiveCourseHeader = () => {
-        const activeTab = newCourseSteps.find((step: any) => step.status === 'current');
+        const activeTab = newCourseSteps.find((step: any) => step.id === currentStep);
 
         if (!activeTab) return null;
 
@@ -287,11 +431,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const renderActiveCourseTab = () => {
-        const activeTab = newCourseSteps.find((step: any) => step.status === 'current');
-
-        if (!activeTab) return null;
-
-        if (activeTab.id === '1') {
+        if (currentStep === 1) {
             return (
                 <div className="w-full">
                     <div className="lg:max-w-3xl">
@@ -374,7 +514,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </div>
                 </div>
             );
-        } else if (activeTab.id === '2') {
+        } else if (currentStep === 2) {
             return (
                 <div className="w-full lg:max-w-3xl">
                     <div className="">
@@ -417,7 +557,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </RadioGroup.Description> */}
                                                         <RadioGroup.Description
                                                             as="span"
-                                                            class="mt-2 text-xs font-medium text-gray-500 dark:text-gray-300"
+                                                            class="mt-4 text-xs font-medium text-gray-500 dark:text-gray-300"
                                                         >
                                                             {courseSize.users}
                                                         </RadioGroup.Description>
@@ -484,7 +624,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </RadioGroup.Description> */}
                                                         <RadioGroup.Description
                                                             as="span"
-                                                            class="mt-2 text-xs font-medium text-gray-500 dark:text-gray-300"
+                                                            class="mt-4 text-xs font-medium text-gray-500 dark:text-gray-300"
                                                         >
                                                             {courseDelivery.description}
                                                         </RadioGroup.Description>
@@ -552,7 +692,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </RadioGroup.Description> */}
                                                         <RadioGroup.Description
                                                             as="span"
-                                                            class="mt-2 text-xs font-medium text-gray-500 dark:text-gray-300"
+                                                            class="mt-4 text-xs font-medium text-gray-500 dark:text-gray-300"
                                                         >
                                                             {courseMedium.description}
                                                         </RadioGroup.Description>
@@ -581,13 +721,17 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </div>
                 </div>
             );
-        } else if (activeTab.id === '3') {
+        } else if (currentStep === 3) {
             return (
                 <div className="w-full lg:max-w-3xl">
                     {/* MEETING */}
                     {selectedCourseMedium && selectedCourseMedium.id !== 3 && (
                         <div className="mb-12 flex flex-col w-full">
-                            <div className="text-base font-medium text-gray-900 dark:text-white">Meeting</div>
+                            <div className="flex items-center w-full border-b border-cues-gray dark:border-cues-border-dark py-2">
+                                <CameraVideoIcon class="w-6 h-6" />
+                                <div className="ml-2 text-base font-medium text-gray-900 dark:text-white">Meeting</div>
+                            </div>
+
                             <fieldset className="space-y-5">
                                 <legend className="sr-only">Meeting Options</legend>
                                 {meetingOptions.map((option: any) => {
@@ -640,9 +784,11 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     )}
 
                     <div className="mb-12 flex flex-col w-full">
-                        <div className="text-base font-medium text-gray-900 dark:text-white">
-                            Coursework Organization
+                        <div className="flex items-center w-full border-b border-cues-gray py-2">
+                            <Folder01Icon class="w-6 h-6" />
+                            <div className="ml-2 text-base font-medium text-gray-900 dark:text-white">Coursework</div>
                         </div>
+
                         <fieldset className="space-y-5">
                             <legend className="sr-only">Coursework Options</legend>
                             {courseworkOrganizationOptions.map((option: any) => {
@@ -692,9 +838,15 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </div>
 
                     <div className="mb-12 flex flex-col w-full">
-                        <div className="text-base font-medium text-gray-900 dark:text-white">Collaboration Style</div>
+                        <div className="flex items-center w-full border-b border-cues-gray py-2">
+                            <QuizIcon class="w-6 h-6" />
+                            <div className="ml-2 text-base font-medium text-gray-900 dark:text-white">
+                                Collaboration
+                            </div>
+                        </div>
+
                         <fieldset className="mt-5">
-                            <legend className="sr-only">Collaboration Style</legend>
+                            <legend className="sr-only">Collaboration </legend>
                             <div className="space-y-5">
                                 {discussionOptions.map((option: any) => {
                                     const id = option.title.toLowerCase().split(' ').join('-');
@@ -744,9 +896,12 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </div>
 
                     <div className="mb-12 flex flex-col w-full">
-                        <div className="text-base font-medium text-gray-900 dark:text-white">Assessment</div>
+                        <div className="flex items-center w-full border-b border-cues-gray py-2">
+                            <AssignmentIcon class="w-6 h-6" />
+                            <div className="ml-2 text-base font-medium text-gray-900 dark:text-white">Assessment</div>
+                        </div>
                         <fieldset className="space-y-5">
-                            <legend className="sr-only">Coursework Options</legend>
+                            <legend className="sr-only">Assessment Options</legend>
                             {assessmentsOptions.map((option: any) => {
                                 const id = option.title.toLowerCase().split(' ').join('-');
 
@@ -774,9 +929,70 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             })}
                         </fieldset>
                     </div>
+
+                    <div className="mb-12 flex flex-col w-full">
+                        <div className="flex items-center w-full border-b border-cues-gray py-2">
+                            <Apps01Icon class="w-6 h-6" />
+                            <div className="ml-2 text-base font-medium text-gray-900 dark:text-white">Apps</div>
+                        </div>
+                        <ul className="mt-5">
+                            {cuesAppOptions.map((app: any) => {
+                                return (
+                                    <li key={app.id} className="flex items-center py-4">
+                                        <div
+                                            className={classNames(
+                                                'flex h-10 w-10 flex-none items-center justify-center rounded-lg',
+                                                app.background
+                                            )}
+                                        >
+                                            <app.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                                        </div>
+                                        <div className="ml-4 flex-auto">
+                                            <p className={classNames('text-sm font-medium text-gray-900')}>
+                                                {app.title}
+                                            </p>
+                                            <p
+                                                className={classNames(
+                                                    'text-sm',
+                                                    true ? 'text-gray-700' : 'text-gray-500'
+                                                )}
+                                            >
+                                                {app.description}
+                                            </p>
+                                        </div>
+                                        <div className="ml-4">
+                                            <button
+                                                type="button"
+                                                className={classNames(
+                                                    // selectedIntegrations.includes(integration.id)
+                                                    false ? 'bg-blue-800 dark:bg-blue-700' : 'bg-cues-blue',
+                                                    'text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1.5 focus:outline-none dark:focus:ring-blue-800'
+                                                )}
+                                                onClick={() => {
+                                                    // if (selectedIntegrations.includes(integration.id)) {
+                                                    //     const filterIntegrations = selectedIntegrations.filter(
+                                                    //         (selected) => selected !== integration.id
+                                                    //     );
+                                                    //     setSelectedIntegrations(filterIntegrations);
+                                                    // } else {
+                                                    //     const updateIntegrations = [...selectedIntegrations];
+                                                    //     updateIntegrations.push(integration.id);
+                                                    //     setSelectedIntegrations(updateIntegrations);
+                                                    // }
+                                                }}
+                                            >
+                                                {/* {selectedIntegrations.includes(integration.id) ? 'Added' : 'Add'} */}
+                                                Add
+                                            </button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
                 </div>
             );
-        } else if (activeTab.id === '4') {
+        } else if (currentStep === 4) {
             return (
                 <div className="w-full lg:max-w-3xl">
                     <div class="flex">
@@ -807,7 +1023,7 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 ></path>
                             </svg>
                         </button>
-                        <div
+                        {/* <div
                             id="dropdown"
                             class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
                             data-popper-reference-hidden=""
@@ -849,18 +1065,17 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </button>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
                         <div class="relative w-full">
                             <input
                                 type="search"
                                 id="search-dropdown"
                                 class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                                placeholder="Search App or Provider..."
-                                required
+                                placeholder="Search title, category, subject..."
                             />
                             <button
                                 type="submit"
-                                class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-cues-blue rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-cues-blue dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             >
                                 <svg
                                     aria-hidden="true"
@@ -881,25 +1096,90 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </button>
                         </div>
                     </div>
+
+                    {renderIntegrationsList()}
                 </div>
             );
-        }
+        } else if (currentStep === 5)
+            return (
+                <div className="w-full lg:max-w-3xl">
+                    <div className="mb-6">
+                        <div className="flex justify-between items-center w-full mb-4">
+                            <label
+                                htmlFor="message"
+                                className="block text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Students
+                            </label>
 
-        return <div></div>;
+                            <button>
+                                <p className="text-sm text-gray-700 dark:text-gray-400">Filter</p>
+                            </button>
+                        </div>
+
+                        <Select
+                            selectMultiple={true}
+                            touchUi={true}
+                            themeVariant={theme}
+                            value={selectedStudents}
+                            onChange={(val: any) => {
+                                setSelectedStudents(val.value);
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble',
+                                },
+                                medium: {
+                                    touchUi: false,
+                                },
+                            }}
+                            style={{
+                                backgroundColor: '#f8f8f8',
+                            }}
+                            data={dummySchoolStudents}
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label
+                            htmlFor="message"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Instructors
+                        </label>
+                        <Select
+                            selectMultiple={true}
+                            touchUi={true}
+                            themeVariant={theme}
+                            value={selectedInstructors}
+                            onChange={(val: any) => {
+                                setSelectedInstructors(val.value);
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble',
+                                },
+                                medium: {
+                                    touchUi: false,
+                                },
+                            }}
+                            style={{
+                                backgroundColor: '#f8f8f8',
+                            }}
+                            data={dummySchoolInstructors}
+                        />
+                    </div>
+                </div>
+            );
     };
 
     const renderCreateCourseButtons = () => {
-        const activeTab = newCourseSteps.find((step: any) => step.status === 'current');
-
-        if (!activeTab) return null;
-
         return (
             <div className="flex flex-row justify-end border-t border-cues-border pt-4">
-                {activeTab.id !== '1' && (
+                {currentStep !== 1 && (
                     <button
                         type="button"
                         className="inline-flex mr-4 items-center rounded-md border border-cues-border dark:border-cues-border-dark bg-white dark:bg-cues-dark-3 px-6 py-2.5 text-sm font-medium text-black dark:text-white shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none dark:hover:border-white"
-                        // onClick={() => closeEventForm()}
+                        onClick={() => handlePrevious()}
                     >
                         Previous
                     </button>
@@ -914,37 +1194,50 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
         );
     };
 
-    const handleSubmit = () => {
-        const activeTab = newCourseSteps.find((step: any) => step.status === 'current');
+    const handlePrevious = () => {
+        setCurrentStep(currentStep - 1);
 
-        if (!activeTab) return null;
+        var myDiv = document.getElementById('MainContainer');
+        if (myDiv) {
+            myDiv.scrollTop = 0;
+        }
+    };
+
+    const handleSubmit = () => {
+        // Check if everything has been filled out
+
+        // Update current step as complete
+
+        const updateCourseSteps = newCourseSteps.map((step: any) => {
+            if (step.id === currentStep) {
+                return {
+                    ...step,
+                    status: 'complete',
+                };
+            } else {
+                return {
+                    ...step,
+                };
+            }
+        });
+
+        setNewCourseSteps(updateCourseSteps);
 
         // Submit
-        if (activeTab.id === '6') {
+        if (currentStep === 6) {
         } else {
-            const updateSteps = newCourseSteps.map((step: any, stepIndx: number) => {
-                if ((stepIndx + 1).toString() === activeTab.id) {
-                    return {
-                        ...step,
-                        status: 'complete',
-                    };
-                } else if (Number(activeTab.id) + 1 === stepIndx + 1) {
-                    return {
-                        ...step,
-                        status: 'current',
-                    };
-                } else {
-                    return { ...step };
-                }
-            });
-            console.log('Updated Steps', updateSteps);
-            setNewCourseSteps(updateSteps);
+            setCurrentStep(currentStep + 1);
+        }
+
+        var myDiv = document.getElementById('MainContainer');
+        if (myDiv) {
+            myDiv.scrollTop = 0;
         }
     };
 
     return (
-        <div className="flex flex-col flex-1 w-full ">
-            <div className="bg-white dark:bg-cues-dark-2 sticky top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
+        <div className="flex flex-col flex-1 w-full relative">
+            <div className="bg-white dark:bg-cues-dark-2 sticky top-0 z-50 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
                 {/* Back Arrow */}
                 <button
                     type="button"
@@ -976,7 +1269,16 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 >
                     {newCourseSteps.map((step, stepIdx) => (
                         <li key={step.id} className="relative md:flex items-center">
-                            {step.status === 'complete' ? (
+                            {step.id === currentStep ? (
+                                <div className="flex items-center pr-4 py-4 text-sm font-medium" aria-current="step">
+                                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-cues-blue">
+                                        <span className="text-cues-blue">{step.id}</span>
+                                    </span>
+                                    <span className="ml-4 text-sm font-medium text-black dark:text-white">
+                                        {step.name}
+                                    </span>
+                                </div>
+                            ) : step.status === 'complete' ? (
                                 <div className="group flex items-center">
                                     <span className="flex items-center pr-4 py-4 text-sm font-medium">
                                         <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-cues-blue group-hover:bg-blue-800">
@@ -984,13 +1286,6 @@ const NewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </span>
                                         <span className="ml-4 text-sm font-medium text-gray-900">{step.name}</span>
                                     </span>
-                                </div>
-                            ) : step.status === 'current' ? (
-                                <div className="flex items-center pr-4 py-4 text-sm font-medium" aria-current="step">
-                                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-cues-blue">
-                                        <span className="text-cues-blue">{step.id}</span>
-                                    </span>
-                                    <span className="ml-4 text-sm font-medium text-black">{step.name}</span>
                                 </div>
                             ) : (
                                 <div className="flex items-center pr-4 py-4 text-sm font-medium">

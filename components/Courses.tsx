@@ -66,6 +66,53 @@ const Courses: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         },
     ];
 
+    const dummyCourses = [
+        {
+            _id: '626b38af0c62a70cee6f4f75',
+            channelName: 'Art',
+            channelId: '626b38af0c62a70cee6f4f74',
+            channelColor: '#d94a8c',
+            createdByName: 'Tom Cook',
+            createdByImg:
+                'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            term: 'Year 2022-23',
+            enrolledOn: 'Aug 12, 2022',
+        },
+        {
+            _id: '626b38510c62a70cee6f4ef1',
+            channelName: 'History',
+            channelId: '626b38510c62a70cee6f4ef0',
+            channelColor: '#ea515f',
+            createdByName: 'Mellisa Andres',
+            createdByImg:
+                'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80',
+            term: 'Year 2022-23',
+            enrolledOn: 'Aug 18, 2022',
+        },
+        {
+            _id: '626b389b0c62a70cee6f4f6d',
+            channelName: 'Literature',
+            channelId: '626b389b0c62a70cee6f4f6c',
+            channelColor: '#6fb1a0',
+            createdByName: 'Phil Foden',
+            createdByImg:
+                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80',
+            term: 'Year 2022-23',
+            enrolledOn: 'Sep 2, 2022',
+        },
+        {
+            _id: '626b383c0c62a70cee6f4ed4',
+            channelName: 'Math',
+            channelId: '626b383c0c62a70cee6f4ed3',
+            channelColor: '#1184a7',
+            createdByName: 'Rachel Cook',
+            createdByImg:
+                'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80',
+            term: 'Year 2022-23',
+            enrolledOn: 'Sep 2, 2022',
+        },
+    ];
+
     const [filesToDisplay, setFilesToDisplay] = useState(dummyFiles);
 
     useEffect(() => {
@@ -140,7 +187,7 @@ const Courses: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 </h1>
                 {/*  */}
                 <div className="mt-4 grid grid-cols-1 gap-4 md:gap-8 sm:grid-cols-2 md:grid-cols-3">
-                    {subscriptions.map((course: any, ind: number) => (
+                    {dummyCourses.map((course: any, ind: number) => (
                         <button
                             key={course._id}
                             className="flex flex-col border border-cues-border dark:border-cues-border-dark bg-white dark:bg-cues-dark-3 hover:bg-gray-100 dark:hover:bg-cues-dark-1 px-6 py-5 shadow-sm rounded-md"
@@ -157,7 +204,7 @@ const Courses: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 <div
                                     className="h-1.5 rounded-full dark:bg-blue-500"
                                     style={{
-                                        background: course.colorCode,
+                                        background: course.channelColor,
                                         width: (ind + 1) * 0.25 * 100,
                                     }}
                                 />
@@ -166,10 +213,10 @@ const Courses: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 <div className="flex items-center">
                                     <img
                                         className="inline-block h-6 w-6 rounded-full"
-                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                        src={course.createdByImg}
                                         alt=""
                                     />
-                                    <p className="text-xs ml-3 text-gray-900 dark:text-white">Tom Cook</p>
+                                    <p className="text-xs ml-3 text-gray-900 dark:text-white">{course.createdByName}</p>
                                 </div>
                                 {ind === 1 && (
                                     <span className="inline-flex items-center rounded-full bg-pink-100 px-2 py-0.5 text-xs font-medium text-pink-800">

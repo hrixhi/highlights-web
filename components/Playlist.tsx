@@ -1,32 +1,26 @@
 import { AdjustmentsHorizontalIcon, ClockIcon, PlayIcon } from '@heroicons/react/20/solid';
-import {
-    ArrowPathIcon,
-    ArrowTrendingUpIcon,
-    BookOpenIcon,
-    CheckIcon,
-    EllipsisHorizontalIcon,
-    ListBulletIcon,
-    PaintBrushIcon,
-    PencilSquareIcon,
-    PlusIcon,
-    PresentationChartLineIcon,
-    QuestionMarkCircleIcon,
-    Squares2X2Icon,
-    StarIcon,
-    UsersIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ArrowTrendingUpIcon, CheckIcon, PlusIcon } from '@heroicons/react/24/outline';
 
-import { VideoCameraIcon, PlayPauseIcon } from '@heroicons/react/24/solid';
+import { PlayPauseIcon } from '@heroicons/react/24/solid';
 
 import React, { useState } from 'react';
 import { useNavigationContext } from '../contexts/NavigationContext';
 
+import { industrializationDummy, ww1Dummy, ww2Dummy, coldWarDummy } from '../constants/PlaylistDummy';
+import { useCourseContext } from '../contexts/CourseContext';
+import { ReactSortable } from 'react-sortablejs';
+
 const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    const isExpandedIndex = useState(-1);
+    const { coursework } = useCourseContext();
 
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ');
     }
+
+    const [list1, setList1] = useState(industrializationDummy);
+    const [list2, setList2] = useState(ww1Dummy);
+    const [list3, setList3] = useState(ww2Dummy);
+    const [list4, setList4] = useState(coldWarDummy);
 
     const renderDifficultyTag = (difficulty: string) => {
         const difficultyColorMap = {
@@ -77,92 +71,41 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
         return <div className=""></div>;
     };
 
-    const renderAssignedTo = () => {
-        const assignmentOptions = [
+    const memberImgs = {
+        section1: [
             {
-                members: [
-                    {
-                        id: 1,
-                        name: 'Dries Vincent',
-                        avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 2,
-                        name: 'Lindsay Walton',
-                        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 3,
-                        name: 'Courtney Henry',
-                        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                ],
-                label: 'Section 1',
+                id: 1,
+                name: 'Dries Vincent',
+                avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
             },
             {
-                members: [
-                    {
-                        id: 1,
-                        name: 'Bonnie Green',
-                        avatar: 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 2,
-                        name: 'Whitney Francis',
-                        avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 3,
-                        name: 'Floyd Miles',
-                        avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                ],
-                label: 'Section 2',
+                id: 2,
+                name: 'Lindsay Walton',
+                avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
             },
             {
-                members: [
-                    {
-                        id: 1,
-                        name: 'Floyd Miles',
-                        avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 2,
-                        name: 'Dries Vincent',
-                        avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                    {
-                        id: 3,
-                        name: 'Bonnie Green',
-                        avatar: 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                    },
-                ],
-                label: 'All users',
+                id: 3,
+                name: 'Courtney Henry',
+                avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
             },
-        ];
-
-        let randInt = randomIntFromInterval(0, 2);
-        const members = assignmentOptions[randInt].members;
-        const label = assignmentOptions[randInt].label;
-
-        return (
-            <div className="flex items-center">
-                <div className="flex items-center justify-start mr-2">
-                    {members.map((member: any) => {
-                        return (
-                            <a href="#" className="-mr-3">
-                                <img
-                                    className="border-2 border-white rounded-full h-7 w-7 dark:border-[#1B1D21]"
-                                    src={member.avatar}
-                                    alt={member.name}
-                                />
-                            </a>
-                        );
-                    })}
-                </div>
-                <div className="ml-3 text-xs capitalize text-gray-500 dark:text-gray-300">{label}</div>
-            </div>
-        );
+        ],
+        section2: [
+            {
+                id: 1,
+                name: 'Bonnie Green',
+                avatar: 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            },
+            {
+                id: 2,
+                name: 'Whitney Francis',
+                avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            },
+            {
+                id: 3,
+                name: 'Floyd Miles',
+                avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            },
+        ],
     };
 
     const dummyPlaylistData = [
@@ -177,87 +120,6 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             start: 'Aug 18',
             end: 'Aug 30',
             progressBarColor: 'green',
-            liveLessons: [
-                {
-                    status: 'completed',
-                    lessonType: 'Learning Objectives',
-                    lessonTypeIcon: ListBulletIcon,
-                    minifiedDate: 'Aug 18',
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Aug 20',
-                    time: 'Aug 23, 8 am - 9 am',
-                    title: 'Origins of the Industrial Revolution',
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Aug 22',
-                    time: 'Aug 26, 8 am - 9 am',
-                    title: 'Global Industrialization',
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: QuestionMarkCircleIcon,
-                    lessonType: 'quiz',
-                    time: 'due Aug 30, 11:59 pm',
-                    title: 'Global Industrialization',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            selfPacedLessons: [
-                // Option of modalities &
-                {
-                    status: 'completed',
-                    lessonTypeIcon: BookOpenIcon,
-                    modalityOptions: ['audio', 'video', 'reading'],
-                    lessonType: 'Learn',
-                    time: 'Aug 20, 11:59 pm',
-                    title: 'Complete 2/3 Readings',
-                },
-                // Option of practice
-                {
-                    status: 'completed',
-                    lessonTypeIcon: Squares2X2Icon,
-                    lessonType: 'Practice',
-                    time: 'Aug 20, 11:59 pm',
-                    title: 'Complete 2/3 ',
-                },
-                // Test
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Aug 20, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-                // Optional
-                {
-                    status: 'completed',
-                    lessonTypeIcon: VideoCameraIcon,
-                    lessonType: 'Bonus: Video',
-                    title: 'Henry Ford & Assembly Line',
-                    score: 15,
-                    points: 20,
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: VideoCameraIcon,
-                    lessonType: 'Bonus: Video',
-                    title: 'Henry Ford & Assembly Line',
-                    score: 15,
-                    points: 20,
-                },
-            ],
-            // Testing
             totalPointsPossible: 120,
             score: 105,
             masteryAchieved: 'GREAT',
@@ -274,82 +136,6 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             progressBarColor: 'green',
             start: 'Sep 1',
             end: 'Sep 16',
-            liveLessons: [
-                {
-                    status: 'completed',
-                    lessonType: 'Learning Objectives',
-                    lessonTypeIcon: ListBulletIcon,
-                    minifiedDate: 'Sep 3',
-                    date: 'Sep 1, 8 am - 9 am',
-                },
-                // {
-                //     status: 'completed',
-                //     lessonTypeIcon: PresentationChartLineIcon,
-                //     lessonType: 'Lecture',
-                //     minifiedDate: 'Sep 5',
-                //     time: 'Sep 5, 8 am - 9 am',
-                //     title: 'Origins of the Industrial Revolution',
-                // },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Sep 9',
-                    time: 'Sep 9, 8 am - 9 am',
-                    title: 'Global Industrialization',
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: QuestionMarkCircleIcon,
-                    lessonType: 'quiz',
-                    minifiedDate: 'Sep 18',
-                    time: 'due Sep 18, 11:59 pm',
-                    title: 'Quiz #2',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            selfPacedLessons: [
-                // Option of modalities &
-                {
-                    status: 'completed',
-                    lessonTypeIcon: BookOpenIcon,
-                    modalityOptions: ['audio', 'video', 'reading'],
-                    lessonType: 'Learn',
-                    time: 'Sep 12, 11:59 pm',
-                    title: 'Complete 2/3 Readings',
-                },
-                // Option of practice
-                {
-                    status: 'completed',
-                    lessonTypeIcon: Squares2X2Icon,
-                    lessonType: 'Practice',
-                    time: 'Sep 14, 11:59 pm',
-                    title: 'Complete 2/3 ',
-                },
-                // Extra Credit
-                // {
-                //     status: 'completed',
-                //     lessonTypeIcon: VideoCameraIcon,
-                //     lessonType: 'Bonus: Video Quiz',
-                //     title: 'Henry Ford & Assembly Line',
-                //     time: 'Sep 14, 11:59 pm',
-                //     score: 15,
-                //     points: 20,
-                // },
-                // Test
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Sep 15, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            // Testing
             totalPointsPossible: 150,
             score: 140,
             masteryAchieved: 'GOOD',
@@ -365,81 +151,6 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             progressBarColor: 'yellow',
             start: 'Sep 20',
             end: 'Oct 12',
-            liveLessons: [
-                {
-                    status: 'completed',
-                    lessonType: 'Learning Objectives',
-                    lessonTypeIcon: ListBulletIcon,
-                    minifiedDate: 'Sep 20',
-                    date: 'Sep 20, 8 am - 9 am',
-                },
-                {
-                    status: 'in-progress',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Sep 23',
-                    time: 'Sep 23, 8 am - 9 am',
-                    title: 'Totalitarianism or Liberal Internationalism',
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: PaintBrushIcon,
-                    lessonType: 'Activity',
-                    minifiedDate: 'Sep 26',
-                    time: 'Sep 26, 9 am - 10 am',
-                    title: 'Whiteboarding Session on WWII',
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: QuestionMarkCircleIcon,
-                    lessonType: 'quiz',
-                    time: 'due Oct 12, 11:59 pm',
-                    title: 'Quiz #3',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            selfPacedLessons: [
-                // Option of modalities &
-                {
-                    status: 'completed',
-                    lessonTypeIcon: BookOpenIcon,
-                    modalityOptions: ['audio', 'video', 'reading'],
-                    lessonType: 'Learn',
-                    time: 'Sep 29, 11:59 pm',
-                    title: 'Complete 2/3 Readings',
-                },
-                // Option of practice
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: Squares2X2Icon,
-                    lessonType: 'Practice',
-                    time: 'Oct 5, 11:59 pm',
-                    title: 'Do 3/4 worksheets',
-                    difficultyLevel: 'Easy/Medium/Hard',
-                },
-                // Optional
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: VideoCameraIcon,
-                    lessonType: 'Bonus: Video',
-                    title: 'Henry Ford & Assembly Line',
-                    score: 15,
-                    points: 20,
-                },
-                // Test
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Oct 12, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-
             masteryAchieved: 'GOOD',
         },
         {
@@ -448,127 +159,15 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             title: 'End of Empire and Cold War',
             img: 'https://media.istockphoto.com/illustrations/soviet-union-and-usa-flag-together-with-dried-soil-texture-illustration-id686359674?k=20&m=686359674&s=612x612&w=0&h=ZvMajELneoqhIOH5QhpkakxgdZJ0UME459JTfwiqy8Q=',
             status: 'scheduled',
-            // difficultyLevel: 'medium',
             difficultyChoices: '',
             performance: '',
             progressBar: 0,
             progressBarColor: 'gray',
-            start: 'Oct 12',
-            end: 'Nov 1',
-            liveLessons: [
-                {
-                    status: 'to-do',
-                    lessonType: 'Learning Objectives',
-                    lessonTypeIcon: ListBulletIcon,
-                    minifiedDate: 'Sep 3',
-                    date: 'Sep 1, 8 am - 9 am',
-                },
-                {
-                    status: 'completed',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Sep 5',
-                    time: 'Sep 5, 8 am - 9 am',
-                    title: 'Origins of the Industrial Revolution',
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: PresentationChartLineIcon,
-                    lessonType: 'Lecture',
-                    minifiedDate: 'Sep 9',
-                    time: 'Sep 9, 8 am - 9 am',
-                    title: 'Global Industrialization',
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: QuestionMarkCircleIcon,
-                    lessonType: 'quiz',
-                    minifiedDate: 'Sep 18',
-                    time: 'due Sep 18, 11:59 pm',
-                    title: 'Quiz #2',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            selfPacedLessons: [
-                // Option of modalities &
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: BookOpenIcon,
-                    modalityOptions: ['audio', 'video', 'reading'],
-                    lessonType: 'Learn',
-                    time: 'Sep 12, 11:59 pm',
-                    title: 'Complete 2/3 Readings',
-                },
-                // Option of practice
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: Squares2X2Icon,
-                    lessonType: 'Practice',
-                    time: 'Sep 14, 11:59 pm',
-                    title: 'Complete 2/3 ',
-                },
-                // Extra Credit
-                // {
-                //     status: 'to-do',
-                //     lessonTypeIcon: VideoCameraIcon,
-                //     lessonType: 'Bonus: Video Quiz',
-                //     title: 'Henry Ford & Assembly Line',
-                //     time: 'Sep 14, 11:59 pm',
-                //     score: 15,
-                //     points: 20,
-                // },
-                // Test
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Sep 15, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Sep 15, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-                {
-                    status: 'to-do',
-                    lessonTypeIcon: PencilSquareIcon,
-                    lessonType: 'Assignment',
-                    time: 'Sep 15, 11:59 pm',
-                    title: 'Assignment 1',
-                    gradingStatus: 'graded',
-                    score: 45,
-                    points: 50,
-                },
-            ],
-            // Testing
+            start: 'Oct 20',
+            end: 'Nov 12',
             totalPointsPossible: 0,
             score: 120,
-            // masteryAchieved: 'GOOD',
         },
-        // {
-        //     id: 'unit4',
-        //     label: 'Unit 4',
-        //     status: 'to-do',
-        //     difficultyLevel: 'TBD',
-        //     lessons: [],
-        // },
-        // {
-        //     id: 'unit5',
-        //     label: 'Unit 5',
-        //     status: 'to-do',
-        //     difficultyLevel: 'TBD',
-        //     lessons: [],
-        // },
     ];
 
     const renderActivePlaylistContent = () => {
@@ -731,24 +330,10 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
         );
     }
 
-    return (
-        <div className="w-full flex flex-col py-8">
-            <div className="w-full px-4 sm:px-6 lg:mx-auto lg:px-8">
+    const renderListView = () => {
+        return (
+            <>
                 {dummyPlaylistData.map((unit: any, unitIndx: number) => {
-                    let liveCompleted = 0;
-                    let selfpacedCompleted = 0;
-                    unit.liveLessons.map((lesson: any) => {
-                        if (lesson.status === 'completed') {
-                            liveCompleted += 1;
-                        }
-                    });
-
-                    unit.selfPacedLessons.map((lesson: any) => {
-                        if (lesson.status === 'completed') {
-                            selfpacedCompleted += 1;
-                        }
-                    });
-
                     return (
                         <button
                             key={unit.id}
@@ -788,20 +373,20 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                                 <div className="w-full flex justify-between mt-6 ">
                                     {unit.status !== 'completed' && (
                                         <div className="flex items-center">
-                                            {unit.liveLessons.length && (
-                                                <span className="text-gray-500 dark:text-gray-300 text-sm flex items-center mr-5">
-                                                    {unit.liveLessons.length}
-                                                    {/* {'  '} Scheduled */}
-                                                    <ClockIcon className="w-4 h-4 mx-1" />
-                                                </span>
-                                            )}
-                                            {unit.selfPacedLessons.length && (
-                                                <span className="text-gray-500 dark:text-gray-300 text-sm flex items-center mr-5">
-                                                    {unit.selfPacedLessons.length}
-                                                    {/* {'  '} Self-paced */}
-                                                    <PlayPauseIcon className="w-5 h-5 mx-1" />
-                                                </span>
-                                            )}
+                                            <span className="text-gray-500 dark:text-gray-300 text-sm flex items-center mr-5">
+                                                {/* {unit.liveLessons.length} */}
+                                                {3}
+                                                {/* {'  '} Scheduled */}
+                                                <ClockIcon className="w-4 h-4 mx-1" />
+                                            </span>
+
+                                            <span className="text-gray-500 dark:text-gray-300 text-sm flex items-center mr-5">
+                                                {/* {unit.selfPacedLessons.length} */}
+                                                {4}
+                                                {/* {'  '} Self-paced */}
+                                                <PlayPauseIcon className="w-5 h-5 mx-1" />
+                                            </span>
+
                                             {unit.difficultyLevel ? (
                                                 renderDifficultyTag(unit.difficultyLevel)
                                             ) : (
@@ -822,12 +407,12 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                                     ) : unit.status === 'in-progress' ? (
                                         <div>
                                             {/* <button
-                                                type="button"
-                                                className="text-white dark:text-black bg-black dark:bg-white  focus:ring-4 focus:outline-none font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2"
-                                            >
-                                                <PlayIcon className="w-4 h-4" />
-                                                <span className="sr-only">Icon description</span>
-                                            </button> */}
+                                        type="button"
+                                        className="text-white dark:text-black bg-black dark:bg-white  focus:ring-4 focus:outline-none font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2"
+                                    >
+                                        <PlayIcon className="w-4 h-4" />
+                                        <span className="sr-only">Icon description</span>
+                                    </button> */}
                                         </div>
                                     ) : null}
                                 </div>
@@ -860,6 +445,194 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                         </button>
                     );
                 })}
+            </>
+        );
+    };
+
+    function days_between(date1, date2) {
+        // The number of milliseconds in one day
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+
+        // Calculate the difference in milliseconds
+        const differenceMs = Math.abs(date1 - date2);
+
+        // Convert back to days and return
+        return Math.round(differenceMs / ONE_DAY);
+    }
+
+    const renderBoardView = () => {
+        return (
+            <div className="overflow-x-auto">
+                <div className="inline-block min-w-full align-middle">
+                    <div className="overflow-hidden shadow">
+                        <div className="flex items-start justify-start px-4 mb-6 space-x-8">
+                            {dummyPlaylistData.map((playlist: any, listIndx: number) => {
+                                let state =
+                                    listIndx === 0 ? list1 : listIndx === 1 ? list2 : listIndx === 2 ? list3 : list4;
+                                let setState =
+                                    listIndx === 0
+                                        ? setList1
+                                        : listIndx === 1
+                                        ? setList2
+                                        : listIndx === 2
+                                        ? setList3
+                                        : setList4;
+
+                                return (
+                                    <div className="min-w-kanban">
+                                        <div className="w-full py-4 flex justify-between items-center">
+                                            <div className="flex items-center">
+                                                {/*  */}
+                                                <div
+                                                    className={classNames(
+                                                        playlist.status === 'completed'
+                                                            ? 'bg-green-500'
+                                                            : playlist.status === 'in-progress'
+                                                            ? 'bg-yellow-500'
+                                                            : 'bg-gray-500',
+                                                        'p-1 rounded-full mr-2'
+                                                    )}
+                                                >
+                                                    {playlist.status === 'completed' ? (
+                                                        <CheckIcon className="w-4 h-4 text-white" />
+                                                    ) : playlist.status === 'in-progress' ? (
+                                                        <ArrowPathIcon className="w-4 h-4 text-white" />
+                                                    ) : (
+                                                        <ClockIcon className="w-4 h-4 text-white" />
+                                                    )}
+                                                </div>
+                                                {/*  */}
+                                                <div className="text-lg font-semibold text-gray-900 dark:text-gray-300">
+                                                    {playlist.label} - {playlist.title}
+                                                </div>
+                                            </div>
+
+                                            <div className="text-sm text-gray-500 dark:text-gray-300">
+                                                {playlist.start}-{playlist.end}
+                                            </div>
+                                        </div>
+
+                                        <ReactSortable
+                                            group={'kanban'}
+                                            animation={100}
+                                            forceFallback={true}
+                                            dragClass={'drag-card'}
+                                            ghostClass={'ghost-card'}
+                                            easing={'cubic-bezier(0, 0.55, 0.45, 1)'}
+                                            list={state}
+                                            setList={setState}
+                                            class="mb-4 space-y-4 min-w-kanban"
+                                        >
+                                            {state.map((item) => {
+                                                let daysLeft = undefined;
+
+                                                if (item.status === 'to-do') {
+                                                    daysLeft = days_between(item.javascriptDate, new Date());
+                                                }
+
+                                                return (
+                                                    <div className="group flex flex-col max-w-md p-5 transform bg-white rounded-lg shadow cursor-move dark:bg-gray-800 mb-4">
+                                                        <div className="flex items-center justify-between pb-4">
+                                                            <div className="flex items-center">
+                                                                {/* <item.lessonTypeIcon className="w-4 h-4 mr-3 text-black dark:text-white" /> */}
+                                                                <div className="text-base font-semibold text-gray-900 dark:text-white">
+                                                                    {item.lessonType}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* {item.attachment && (
+                                                        <div className="flex items-center justify-center pb-4">
+                                                            <img
+                                                                className="bg-contain rounded-lg"
+                                                                src={item.attachment}
+                                                                alt="attachment"
+                                                            />
+                                                        </div>
+                                                    )} */}
+
+                                                        <div className="flex flex-col">
+                                                            {item.title && (
+                                                                <div className="pb-4 text-sm font-normal text-gray-700 dark:text-gray-400">
+                                                                    {item.title}
+                                                                </div>
+                                                            )}
+
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex items-center">
+                                                                    <div className="text-xs font-normal text-gray-700 dark:text-gray-400 mr-3">
+                                                                        {item.type === 'self-paced' ? (
+                                                                            <PlayPauseIcon className="w-4 h-4 text-pink-800" />
+                                                                        ) : (
+                                                                            <ClockIcon className="w-4 h-4 text-blue-800" />
+                                                                        )}
+                                                                    </div>
+
+                                                                    <div className="text-xs font-normal text-gray-700 dark:text-gray-400 mr-3">
+                                                                        {item.minifiedDate}
+                                                                    </div>
+
+                                                                    {item.points && (
+                                                                        <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-800 mr-3">
+                                                                            {item.points} pts
+                                                                        </span>
+                                                                    )}
+
+                                                                    {item.status === 'completed' ? (
+                                                                        <div className="flex items-center justify-center px-2.5 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-200">
+                                                                            Done
+                                                                        </div>
+                                                                    ) : daysLeft ? (
+                                                                        <div className="flex items-center justify-center px-2.5 py-0.5 text-xs font-medium text-purple-800 bg-purple-100 rounded-full dark:bg-purple-200">
+                                                                            {daysLeft} days left
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="flex items-center justify-center px-2.5 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full dark:bg-yellow-200">
+                                                                            In progress
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {item.members && item.members !== 'all' && (
+                                                                    <div className="flex items-center justify-start">
+                                                                        {memberImgs[item.members].map((member: any) => {
+                                                                            return (
+                                                                                <a href="#" className="-mr-3">
+                                                                                    <img
+                                                                                        className="border-2 border-white rounded-full h-7 w-7 dark:border-gray-800"
+                                                                                        src={member.avatar}
+                                                                                        alt={member.name}
+                                                                                    />
+                                                                                </a>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </ReactSortable>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div
+            className={classNames(
+                coursework.activePlaylistTab === 'lists' ? 'bg-white' : 'bg-cues-gray-1',
+                'w-full flex flex-col py-8 dark:bg-cues-dark-3'
+            )}
+        >
+            <div className="w-full px-4 sm:px-6 lg:mx-auto lg:px-8">
+                {coursework.activePlaylistTab === 'lists' ? renderListView() : renderBoardView()}
             </div>
         </div>
     );

@@ -12,6 +12,7 @@ import CourseOverview from './CourseOverview';
 import {
     AdjustmentsHorizontalIcon,
     ChartBarSquareIcon,
+    ListBulletIcon,
     PaintBrushIcon,
     PlusIcon,
     PresentationChartBarIcon,
@@ -70,6 +71,17 @@ const sortbyOptions = [
     },
 ];
 
+const playlistsViews = [
+    {
+        id: 'lists',
+        icon: ListBulletIcon,
+    },
+    {
+        id: 'board',
+        icon: Squares2X2Icon,
+    },
+];
+
 const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const {
         viewCourse,
@@ -83,8 +95,16 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
     } = useNavigationContext();
 
     const { userId, subscriptions, allCues } = useAppContext();
-    const { courseData, setCourseData, setCourseCues, coursework, setSortBy, setDateFilters, setSelectedThread } =
-        useCourseContext();
+    const {
+        courseData,
+        setCourseData,
+        setCourseCues,
+        coursework,
+        setSortBy,
+        setDateFilters,
+        setSelectedThread,
+        switchPlaylistView,
+    } = useCourseContext();
 
     const courseTabs = Object.keys(AppNavigation['viewCourse']);
     const [showFilterPopup, setShowFilterPopup] = useState(false);
@@ -230,6 +250,32 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <PlusIcon className="-ml-1 mr-3 h-4 w-4" aria-hidden="true" />
                             New
                         </button>
+                    </div>
+                );
+            case 'playlists':
+                return (
+                    <div className="flex items-center">
+                        <ul className="list-none flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+                            {playlistsViews.map((playlist: any) => {
+                                return (
+                                    <li key={playlist.id}>
+                                        <button
+                                            className={classNames(
+                                                playlist.id === coursework.activePlaylistTab
+                                                    ? 'text-cues-blue bg-gray-100 dark:bg-cues-dark-1'
+                                                    : ' text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-300',
+                                                'inline-flex p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-cues-dark-1 '
+                                            )}
+                                            onClick={() => {
+                                                switchPlaylistView(playlist.id);
+                                            }}
+                                        >
+                                            <playlist.icon className="w-5 h-5 " />
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     </div>
                 );
             default:

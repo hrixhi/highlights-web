@@ -20,12 +20,15 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
         courseData: undefined,
         overview: {},
         coursework: {
+            // Files
             allCues: [],
             filteredAndSortedCues: [],
             categories: [],
             sortBy: value.sortBy,
             filterStart: undefined,
             filterEnd: undefined,
+            // Playlists
+            activePlaylistTab: 'lists',
         },
         discussion: {
             //
@@ -352,6 +355,13 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                         allUsersError: action.payload,
                     }),
                 };
+            case 'SWITCH_PLAYLIST_VIEW':
+                return {
+                    ...state,
+                    coursework: Object.assign({}, state.coursework, {
+                        activePlaylistTab: action.payload,
+                    }),
+                };
             // Depending on the main route we must remove objects such as Cues, Workspaces that have been deleted
             default:
                 return {
@@ -583,6 +593,13 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
         });
     };
 
+    const switchPlaylistView = (view: any) => {
+        dispatch({
+            type: 'SWITCH_PLAYLIST_VIEW',
+            payload: view,
+        });
+    };
+
     return (
         <CourseContext.Provider
             displayName="COURSE CONTEXT"
@@ -608,6 +625,7 @@ export const CourseContextProvider: React.FC<React.ReactNode> = ({ value, childr
                 loadSelectedThreadReplies,
                 fetchCourseSettingsData,
                 fetchSchoolUsersData,
+                switchPlaylistView,
             }}
         >
             {children}

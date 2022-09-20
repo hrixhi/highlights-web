@@ -15,6 +15,13 @@ import {
     ClockIcon,
     SunIcon,
     MoonIcon,
+    ChatBubbleBottomCenterIcon,
+    CalendarIcon,
+    ChatBubbleLeftRightIcon,
+    PresentationChartLineIcon,
+    ExclamationCircleIcon,
+    PencilIcon,
+    QuestionMarkCircleIcon,
     // Test
 } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
@@ -27,7 +34,7 @@ const navigation = [
     { name: 'My Workspace', icon: PencilSquareIcon, route: 'myWorkspace' },
 ];
 const userNavigation = [
-    { name: 'Your Profile', route: 'profile' },
+    { name: 'Your Profile', route: 'settings' },
     { name: 'Settings', route: 'settings' },
     { name: 'Sign out' },
 ];
@@ -46,19 +53,66 @@ export default function SidebarNavigation(props: any) {
 
     const { theme, changeTheme, hideNavbar, route, switchRoute } = useNavigationContext();
 
-    const [isShowing, setIsShowing] = useState(false);
-
-    let [, , resetIsShowing] = useTimeoutFn(() => setIsShowing(true), 500);
-
     const [query, setQuery] = useState('');
-
     const [open, setOpen] = useState(false);
 
-    const filteredPeople =
+    const quickMenuItems = [
+        {
+            id: 0,
+            name: 'Notes',
+            description: 'Start capturing new notes instantly.',
+            color: 'bg-indigo-500',
+            icon: PencilSquareIcon,
+        },
+        {
+            id: 1,
+            name: 'Lesson',
+            description: 'Open our Content studio and start creating a new lesson.',
+            color: 'bg-cyan-500',
+            icon: PencilIcon,
+        },
+        {
+            id: 2,
+            name: 'Message',
+            description: 'Browse user directory & find a user to message.',
+            color: 'bg-red-500',
+            icon: ChatBubbleBottomCenterIcon,
+        },
+        {
+            id: 3,
+            name: 'Quiz',
+            description: 'Open our Content studio and start building your quiz.',
+            color: 'bg-blue-500',
+            icon: QuestionMarkCircleIcon,
+        },
+        {
+            id: 4,
+            name: 'Course',
+            description: 'Create a new course customized for your needs.',
+            color: 'bg-pink-500',
+            icon: PresentationChartLineIcon,
+        },
+        {
+            id: 5,
+            name: 'Discussion',
+            description: 'Create a new discussion post.',
+            color: 'bg-teal-500',
+            icon: ChatBubbleLeftRightIcon,
+        },
+        {
+            id: 6,
+            name: 'Event',
+            description: 'Open directory and search user to message.',
+            color: 'bg-green-500',
+            icon: CalendarIcon,
+        },
+    ];
+
+    const filteredItems =
         query === ''
-            ? []
-            : people.filter((person) => {
-                  return person.name.toLowerCase().includes(query.toLowerCase());
+            ? [...quickMenuItems]
+            : quickMenuItems.filter((item) => {
+                  return item.name.toLowerCase().includes(query.toLowerCase());
               });
 
     useEffect(() => {
@@ -138,7 +192,7 @@ export default function SidebarNavigation(props: any) {
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel class="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-                                <Combobox onChange={(person: any) => (window.location = person.url)}>
+                                <Combobox>
                                     <div className="relative">
                                         <MagnifyingGlassIcon
                                             className="pointer-events-none absolute top-3.5 left-4 h-5 w-5 text-gray-400"
@@ -146,32 +200,73 @@ export default function SidebarNavigation(props: any) {
                                         />
                                         <Combobox.Input
                                             class="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:ring-0 sm:text-sm"
-                                            placeholder="Search..."
+                                            placeholder="Search shortcuts..."
                                             onChange={(event: any) => setQuery(event.target.value)}
                                         />
                                     </div>
 
-                                    {filteredPeople.length > 0 && (
-                                        <Combobox.Options class="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-                                            {filteredPeople.map((person) => (
-                                                <Combobox.Option
-                                                    key={person.id}
-                                                    value={person}
-                                                    class={({ active }) =>
-                                                        classNames(
-                                                            'cursor-default select-none px-4 py-2',
-                                                            active && 'bg-indigo-600 text-white'
-                                                        )
-                                                    }
-                                                >
-                                                    {person.name}
+                                    {filteredItems.length > 0 && (
+                                        <Combobox.Options
+                                            static
+                                            class="list-none max-h-96 scroll-py-3 overflow-y-auto p-3"
+                                        >
+                                            {filteredItems.map((item) => (
+                                                <Combobox.Option key={item.id} value={item}>
+                                                    {({ active }) => (
+                                                        <div
+                                                            className={classNames(
+                                                                'flex cursor-default select-none rounded-xl p-3',
+                                                                active && 'bg-gray-100'
+                                                            )}
+                                                        >
+                                                            <div
+                                                                className={classNames(
+                                                                    'flex h-10 w-10 flex-none items-center justify-center rounded-lg',
+                                                                    item.color
+                                                                )}
+                                                            >
+                                                                <item.icon
+                                                                    className="h-6 w-6 text-white"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </div>
+                                                            <div className="ml-4 flex-auto">
+                                                                <p
+                                                                    className={classNames(
+                                                                        'text-sm font-medium',
+                                                                        active ? 'text-gray-900' : 'text-gray-700'
+                                                                    )}
+                                                                >
+                                                                    {item.name}
+                                                                </p>
+                                                                <p
+                                                                    className={classNames(
+                                                                        'text-sm',
+                                                                        active ? 'text-gray-700' : 'text-gray-500'
+                                                                    )}
+                                                                >
+                                                                    {item.description}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </Combobox.Option>
                                             ))}
                                         </Combobox.Options>
                                     )}
 
-                                    {query !== '' && filteredPeople.length === 0 && (
-                                        <p className="p-4 text-sm text-gray-500">No people found.</p>
+                                    {query !== '' && filteredItems.length === 0 && (
+                                        <div className="py-14 px-6 text-center text-sm sm:px-14">
+                                            <ExclamationCircleIcon
+                                                type="outline"
+                                                name="exclamation-circle"
+                                                className="mx-auto h-6 w-6 text-gray-400"
+                                            />
+                                            <p className="mt-4 font-semibold text-gray-900">No results found</p>
+                                            <p className="mt-2 text-gray-500">
+                                                No components found for this search term. Please try again.
+                                            </p>
+                                        </div>
                                     )}
                                 </Combobox>
                             </Dialog.Panel>
@@ -481,7 +576,9 @@ export default function SidebarNavigation(props: any) {
                 )}
 
                 {/* Disable overflow for Inbox */}
-                <main className="flex-1 overflow-y-scroll">{props.children}</main>
+                <main id="MainContainer" className="flex-1 overflow-y-scroll">
+                    {props.children}
+                </main>
             </div>
         </div>
     );
