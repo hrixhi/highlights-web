@@ -618,7 +618,7 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
     console.log('Course Data', courseData);
 
     return (
-        <div className="flex flex-col flex-1 w-full">
+        <div className="flex flex-col flex-1 w-full relative">
             <div className="sticky w-full top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark bg-white dark:bg-cues-dark-2 flex-shrink-0">
                 {/* Back Arrow */}
                 <button
@@ -640,7 +640,7 @@ const ViewCourse: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <div className="mx-4 flex items-center md:ml-auto">{renderTabButtons()}</div>
             </div>
             {/* MAIN AREA FOR INDIVIDUAL CONTENT */}
-            <div className="flex flex-1">{renderMainCourseContent()}</div>
+            <div className="flex flex-1 pb-16">{renderMainCourseContent()}</div>
             {renderCourseworkFilter()}
         </div>
     );

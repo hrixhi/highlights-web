@@ -1,4 +1,5 @@
 import { useApolloClient, useLazyQuery, useMutation } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useReducer, useState } from 'react';
 
 export const NavigationContext = React.createContext<{ [label: string]: any }>({});
@@ -17,7 +18,7 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
 
     const initialState = {
         // DATA
-        theme: 'light',
+        theme: value.theme,
         route: 'home',
         history: [],
         home: {
@@ -45,23 +46,23 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         },
     };
 
-    useEffect(() => {
-        // Change the icons inside the button based on previous settings
-        if (
-            localStorage.getItem('color-theme') === 'dark' ||
-            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
-            dispatch({
-                type: 'CHANGE_THEME',
-                payload: 'dark',
-            });
-        } else {
-            dispatch({
-                type: 'CHANGE_THEME',
-                payload: 'light',
-            });
-        }
-    }, []);
+    // useEffect(() => {
+    //     // Change the icons inside the button based on previous settings
+    //     if (
+    //         localStorage.getItem('color-theme') === 'dark' ||
+    //         (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    //     ) {
+    //         dispatch({
+    //             type: 'CHANGE_THEME',
+    //             payload: 'dark',
+    //         });
+    //     } else {
+    //         dispatch({
+    //             type: 'CHANGE_THEME',
+    //             payload: 'light',
+    //         });
+    //     }
+    // }, []);
 
     // ACTIONS
 
@@ -72,7 +73,9 @@ export const NavigationContextProvider: React.FC<React.ReactNode> = ({ value, ch
         });
     };
 
-    const changeTheme = (theme: string) => {
+    const changeTheme = async (theme: string) => {
+        await AsyncStorage.setItem('theme', theme);
+
         dispatch({
             type: 'CHANGE_THEME',
             payload: theme,

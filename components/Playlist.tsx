@@ -279,56 +279,56 @@ const Playlist: React.FunctionComponent<{ [label: string]: any }> = (props: any)
     };
 
     // Display Analytics for Playlist
-    if (viewCourse.selectedPlaylist) {
-        return (
-            <div className="w-full flex flex-col py-8">
-                <div className="w-full px-4 sm:px-6 lg:mx-auto lg:px-8">
-                    <div className="hidden sm:block mb-4">
-                        <div className="w-full flex items-center justify-between border-b border-gray-200 dark:border-cues-border-dark px-4 sm:px-6 lg:mx-auto lg:px-8">
-                            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                                {tabs.map((option) => (
-                                    <button
-                                        key={option}
-                                        className={classNames(
-                                            tab === option
-                                                ? 'border-black text-black dark:border-white dark:text-white'
-                                                : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-100',
-                                            'whitespace-nowrap py-3 px-1 border-b-2 font-medium text-md'
-                                        )}
-                                        aria-current={tab === option ? 'page' : undefined}
-                                        onClick={() => setTab(option)}
-                                    >
-                                        {option}
-                                    </button>
-                                ))}
-                            </nav>
-                            <div className="flex items-center mb-2">
-                                <button
-                                    type="button"
-                                    className="mr-3 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
-                                    onClick={() => {
-                                        // setShowFilterPopup(true);
-                                    }}
-                                >
-                                    <span className="sr-only">Filter events</span>
-                                    <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none"
-                                    // onClick={() => showAddEvent()}
-                                >
-                                    <PlusIcon className="-ml-1 mr-3 h-4 w-4" aria-hidden="true" />
-                                    New
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {renderActivePlaylistContent()}
-                </div>
-            </div>
-        );
-    }
+    // if (viewCourse.selectedPlaylist) {
+    //     return (
+    //         <div className="w-full flex flex-col py-8">
+    //             <div className="w-full px-4 sm:px-6 lg:mx-auto lg:px-8">
+    //                 <div className="hidden sm:block mb-4">
+    //                     <div className="w-full flex items-center justify-between border-b border-gray-200 dark:border-cues-border-dark px-4 sm:px-6 lg:mx-auto lg:px-8">
+    //                         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+    //                             {tabs.map((option) => (
+    //                                 <button
+    //                                     key={option}
+    //                                     className={classNames(
+    //                                         tab === option
+    //                                             ? 'border-black text-black dark:border-white dark:text-white'
+    //                                             : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-100',
+    //                                         'whitespace-nowrap py-3 px-1 border-b-2 font-medium text-md'
+    //                                     )}
+    //                                     aria-current={tab === option ? 'page' : undefined}
+    //                                     onClick={() => setTab(option)}
+    //                                 >
+    //                                     {option}
+    //                                 </button>
+    //                             ))}
+    //                         </nav>
+    //                         <div className="flex items-center mb-2">
+    //                             <button
+    //                                 type="button"
+    //                                 className="mr-3 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
+    //                                 onClick={() => {
+    //                                     // setShowFilterPopup(true);
+    //                                 }}
+    //                             >
+    //                                 <span className="sr-only">Filter events</span>
+    //                                 <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
+    //                             </button>
+    //                             <button
+    //                                 type="button"
+    //                                 className="inline-flex items-center rounded-md border border-transparent bg-cues-blue px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none"
+    //                                 // onClick={() => showAddEvent()}
+    //                             >
+    //                                 <PlusIcon className="-ml-1 mr-3 h-4 w-4" aria-hidden="true" />
+    //                                 New
+    //                             </button>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //                 {renderActivePlaylistContent()}
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     const renderListView = () => {
         return (

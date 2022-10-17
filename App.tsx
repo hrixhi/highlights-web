@@ -1,5 +1,4 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import 'flowbite';
 
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -35,7 +34,7 @@ export default function App() {
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();
 
-    const { userId, isConnecting, sortByWorkspace, recentSearches, setUserId } = useAppClient();
+    const { userId, isConnecting, sortByWorkspace, recentSearches, setUserId, theme } = useAppClient();
 
     const httpLink = new HttpLink({
         uri: apiURL,
@@ -139,7 +138,11 @@ export default function App() {
                     }}
                     key={userId}
                 >
-                    <NavigationContextProvider>
+                    <NavigationContextProvider
+                        value={{
+                            theme,
+                        }}
+                    >
                         <SafeAreaProvider style={styles.font}>
                             <MenuProvider>
                                 <LanguageProvider>

@@ -1,6 +1,5 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Combobox, Dialog, Menu, Transition, Switch } from '@headlessui/react';
-import { useTimeoutFn } from 'react-use';
 
 import {
     Bars3BottomLeftIcon,
@@ -37,11 +36,6 @@ const userNavigation = [
     { name: 'Your Profile', route: 'settings' },
     { name: 'Settings', route: 'settings' },
     { name: 'Sign out' },
-];
-
-const people = [
-    { id: 1, name: 'Leslie Alexander', url: '#' },
-    // More people...
 ];
 
 function classNames(...classes: string[]) {
@@ -116,54 +110,37 @@ export default function SidebarNavigation(props: any) {
               });
 
     useEffect(() => {
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        // var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        // var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
-        // Change the icons inside the button based on previous settings
-        var themeToggleBtn = document.getElementById('theme-toggle');
+        // // Change the icons inside the button based on previous settings
+        // var themeToggleBtn = document.getElementById('theme-toggle');
 
-        themeToggleBtn.addEventListener('click', function () {
-            // toggle icons inside button
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
+        // toggle icons inside button
+        // themeToggleDarkIcon.classList.toggle('hidden');
+        // themeToggleLightIcon.classList.toggle('hidden');
 
-            // if set via local storage previously
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                    changeTheme('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                    changeTheme('light');
-                }
+        // if set via local storage previously
 
-                // if NOT set via local storage previously
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                    changeTheme('light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                    changeTheme('dark');
-                }
-            }
-        });
-    }, []);
-
-    useEffect(() => {
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-        if (theme === 'dark') {
-            themeToggleLightIcon.classList.remove('hidden');
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+            // localStorage.setItem('color-theme', 'dark');
         } else {
-            themeToggleDarkIcon.classList.remove('hidden');
+            document.documentElement.classList.add('dark');
+            // localStorage.setItem('color-theme', 'light');
         }
     }, [theme]);
+
+    // useEffect(() => {
+    //     var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    //     var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+    //     if (theme === 'dark') {
+    //         themeToggleLightIcon.classList.remove('hidden');
+    //     } else {
+    //         themeToggleDarkIcon.classList.remove('hidden');
+    //     }
+    // }, [theme]);
 
     return (
         <div className="bg-white dark:bg-cues-dark-3 flex-1">
@@ -367,7 +344,7 @@ export default function SidebarNavigation(props: any) {
             </Transition.Root>
 
             {/* Desktop */}
-            <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col z-50">
+            <div className="hidden md:fixed md:inset-y-0 md:flex md:w-52 xl:w-64 md:flex-col z-50">
                 <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 dark:border-cues-border-dark bg-cues-gray-1 dark:bg-cues-dark-2 pt-5">
                     <div className="flex flex-shrink-0 items-center px-6">
                         <img
@@ -428,7 +405,7 @@ export default function SidebarNavigation(props: any) {
                 </div>
             </div>
             {/* MAIN CONTENT AREA */}
-            <div className="flex flex-1 flex-col md:pl-64 h-screen bg-white dark:bg-cues-dark-3 overflow-hidden">
+            <div className="flex flex-1 flex-col md:pl-52 xl:pl-64 h-screen bg-white dark:bg-cues-dark-3 overflow-hidden">
                 {!hideNavbar && (
                     <div className="sticky top-0 z-10 flex h-14 border-b border-cues-border dark:border-cues-border-dark dark:bg-cues-dark-2 flex-shrink-0">
                         <button
@@ -497,19 +474,15 @@ export default function SidebarNavigation(props: any) {
                                 <button
                                     id="theme-toggle"
                                     type="button"
+                                    onClick={() => changeTheme(theme === 'light' ? 'dark' : 'light')}
                                     class="text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-cues-dark-1 focus:outline-none rounded-lg text-sm p-2.5"
                                 >
                                     <span className="sr-only">Change Theme</span>
-                                    <MoonIcon
-                                        id="theme-toggle-dark-icon"
-                                        className="hidden h-5 w-5"
-                                        aria-hidden="true"
-                                    />
-                                    <SunIcon
-                                        id="theme-toggle-light-icon"
-                                        className="hidden h-5 w-5"
-                                        aria-hidden="true"
-                                    />
+                                    {theme === 'light' ? (
+                                        <MoonIcon id="theme-toggle-dark-icon" className="h-5 w-5" />
+                                    ) : (
+                                        <SunIcon id="theme-toggle-light-icon" className="h-5 w-5" />
+                                    )}
                                 </button>
                                 <button
                                     data-tooltip-target="tooltip-notifications-button"

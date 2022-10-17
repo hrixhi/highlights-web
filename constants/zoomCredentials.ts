@@ -3,7 +3,7 @@ const isDevelopment = false;
 
 export const zoomClientId = 'yRzKFwGRTq8bNKLQojwnA';
 export const zoomRedirectUri = 'https://app.learnwithcues.com/zoom_auth';
-export const origin = isDevelopment ? 'http://localhost:19006' : 'https://app.learnwithcues.com';
+export const origin = isDevelopment ? 'http://localhost:19006' : 'https://dev-app.learnwithcues.com';
 export const adminURL = isDevelopment ? 'http://localhost:3000' : 'https://admin.learnwithcues.com';
 
 // DEV
